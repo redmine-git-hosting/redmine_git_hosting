@@ -4,7 +4,7 @@ require 'net/ssh'
 
 module Gitosis
   # server config
-  GITOSIS_URI = 'git@plan.io:/gitosis-admin.git'
+  GITOSIS_URI = 'git@your-server.com:/gitosis-admin.git'
   GITOSIS_BASE_PATH = '/opt/gitosis/repositories/'
   
   # commands
