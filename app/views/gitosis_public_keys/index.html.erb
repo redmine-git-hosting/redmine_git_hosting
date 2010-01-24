@@ -1,0 +1,38 @@
+<h2><%= link_to l(:label_my_account), :controller => 'my', :action => 'account' %> &#187; <%=l(:label_public_keys)%></h2>
+
+<% form_tag({}, :method => :get) do %>
+<fieldset><legend><%= l(:label_filter_plural) %></legend>
+<label><%= l(:field_status) %>:</label>
+<%= select_tag 'status', gitosis_public_keys_status_options_for_select(@user, @status), :class => "small", :onchange => "this.form.submit(); return false;"  %>
+<%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+</fieldset>
+<% end %>
+&nbsp;
+
+
+<% if @gitosis_public_keys.any? %>
+
+	<table class="list">
+		<tr>
+		    <th><%= l(:field_name) %></th>
+		    <th><%= l(:field_created_on) %></th>
+		    <th style="width:15%;"><%= l(:field_active) %></th>
+		    <th align="center" style="width:10%;"> </th>
+		</tr>
+		<% @gitosis_public_keys.each do |key| %>
+		<tr class="<%= cycle('odd', 'even') %>">
+		    <td><%= link_to h(key), :action => 'edit', :id => key %></td>
+			<td><%= format_time(key.created_at) %></td>
+		    <td class="center" style="width:15%;"><%= image_tag('true.png') if key.active? %></td>
+		    <td class="buttons">
+				      <%= link_to l(key.active? ? :button_lock : :button_unlock), public_key_path(key, :public_key => {:active => key.active? ? GitosisPublicKey::STATUS_LOCKED : GitosisPublicKey::STATUS_ACTIVE}), :method => :put, :class => "icon #{key.active? ? 'icon-lock' : 'icon-unlock'}" %>
+		    </td>
+		</tr>
+		<% end %>
+	</table>
+
+<% end %>
+
+<p><%= link_to l(:label_enumeration_new), { :action => 'new'} %></p>
+
+<% html_title(l(:label_public_keys)) -%>

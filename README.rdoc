@@ -1,0 +1,9 @@
+= Redmine Gitosis
+
+A Redmine plugin which manages your gitosis configuration based on your projects and memberships in Redmine. Includes Public Key management views (extracted from http://plan.io).
+
+This plugin is provided as is and experimental. It works great in production for http://plan.io, but we don't guarantee it will work for you.
+
+== Copyright & License
+
+Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.

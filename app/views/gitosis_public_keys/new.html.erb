@@ -1,0 +1,17 @@
+<h2><%= link_to l(:label_public_keys), public_keys_path %> &#187; <%=l(:label_public_key_new)%></h2>
+
+<%= error_messages_for :gitosis_public_key %>
+
+<% form_for :public_key, @gitosis_public_key, :url => { :action => "create" },
+                          :builder => TabularFormBuilder, 
+                          :lang => current_language do |f| %>
+
+	<%= render :partial => 'form', :locals => { :f => f } %>
+	<%= submit_tag l(:button_create) %>
+<% end %>
+
+<% content_for :sidebar do %>
+	<%= render :partial => 'my/sidebar' %>
+<% end %>
+
+<% html_title(l(:label_public_keys)) -%>

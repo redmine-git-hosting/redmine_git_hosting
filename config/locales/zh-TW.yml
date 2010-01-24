@@ -1,0 +1,13 @@
+'zh-TW':
+  label_public_keys: Public keys
+  label_public_key_new: New public key
+  field_key: Key 
+  notice_public_key_updated: Public key was successfully updated.
+  notice_public_key_added: Public key was successfully added.
+  
+  label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can deactivate it and create a new one.'
+
+  activerecord:
+    errors:
+      messages:
+        'may not be changed': 'may not be changed'
