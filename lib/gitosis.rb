@@ -36,7 +36,7 @@ module Gitosis
         # fetch users
         users = project.member_principals.map(&:user).compact.uniq
         write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
-        read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) }
+        read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
     
         # write key files
         users.map{|u| u.gitosis_public_keys.active}.flatten.compact.uniq.each do |key|
@@ -52,6 +52,9 @@ module Gitosis
         conf = IniFile.new(File.join(local_dir,'gitosis','gitosis.conf'))
         original = conf.clone
         name = "#{project.identifier}"
+        
+        conf["group #{name}_readonly"]['readonly'] = name
+        conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
     
         conf["group #{name}"]['writable'] = name
         conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
