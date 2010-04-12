@@ -8,7 +8,7 @@ module Gitosis
   GITOSIS_BASE_PATH = '/opt/gitosis/repositories/'
   
   # commands
-  ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine_gitosis/extra/ssh_with_identity_file.sh')
+  ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine-gitosis/extra/ssh_with_identity_file.sh')
   
   def self.destroy_repository(project)
     path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
