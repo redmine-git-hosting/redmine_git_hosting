@@ -18,7 +18,16 @@ module Gitosis
   def self.update_repositories(projects)
     projects = (projects.is_a?(Array) ? projects : [projects])
     
-    Lockfile(File.join(Dir.tmpdir,'gitosis_lock'), :retries => 2, :sleep_inc=> 10) do
+    lockfile=File.new(File.join(Dir.tmpdir,'redmine-gitosis_lock'))
+    retries=2
+    loop do
+      break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
+      retries-=1
+      sleep 10
+      raise Lockfile::MaxTriesLockError if retries<=0
+    end
+
+    #Lockfile(File.join(Dir.tmpdir,'redmine-gitosis_lock'), :retries => 2, :sleep_inc=> 10) do
 
       # HANDLE GIT
 
@@ -71,7 +80,8 @@ module Gitosis
       # remove local copy
       `rm -Rf #{local_dir}`
           
-    end
+    #end
+    lockfile.flock(File::LOCK_UN)
     
     
   end
