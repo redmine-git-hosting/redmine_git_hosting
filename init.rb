@@ -1,5 +1,6 @@
 require 'redmine'
-require 'user'
+require_dependency 'principal'
+require_dependency 'user'
 
 require_dependency 'gitosis'
 require_dependency 'gitosis/patches/repositories_controller_patch'
