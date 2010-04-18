@@ -1,7 +1,7 @@
 'de':
   label_public_keys: Öffentliche Schlüssel 
   label_public_key_new: Neuer öffentlicher Schlüssel
-  field_key: Schlüssel
+  field_public_key: Schlüssel
   notice_public_key_updated: Öffentlicher Schlüssel wurde erfolgreich aktualisiert.
   notice_public_key_added: Öffentlicher Schlüssel wurde erfolgreich hinzugefügt.
   

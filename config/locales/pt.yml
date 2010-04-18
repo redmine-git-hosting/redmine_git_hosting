@@ -1,7 +1,7 @@
 'pt':
   label_public_keys: Public keys
   label_public_key_new: New public key
-  field_key: Key 
+  field_public_key: Key 
   notice_public_key_updated: Public key was successfully updated.
   notice_public_key_added: Public key was successfully added.
   
