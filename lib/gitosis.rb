@@ -4,11 +4,11 @@ require 'net/ssh'
 
 module Gitosis
   # server config
-  GITOSIS_URI = 'git@your-server.com:/gitosis-admin.git'
-  GITOSIS_BASE_PATH = '/opt/gitosis/repositories/'
+  GITOSIS_URI = 'git@localhost:gitosis-admin.git'
+  GITOSIS_BASE_PATH = '/opt/git/repositories/'
   
   # commands
-  ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine_gitosis/extra/ssh_with_identity_file.sh')
+  # ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine_gitosis/extra/ssh_with_identity_file.sh')
   
   def self.destroy_repository(project)
     path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
@@ -29,7 +29,7 @@ module Gitosis
 
       # clone repo
       `git clone #{GITOSIS_URI} #{local_dir}/gitosis`
-    
+
       changed = false
     
       projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -60,7 +60,6 @@ module Gitosis
           changed = true
         end
       end
-    
       if changed
         # add, commit, push, and remove local tmp dir
         `cd #{File.join(local_dir,'gitosis')} ; git add keydir/* gitosis.conf`
