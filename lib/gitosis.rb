@@ -60,11 +60,11 @@ module Gitosis
           changed = true
         end
 
-        path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
-        if !File.exist?(path) 
-          Dir.mkdir path
-          `cd #{path} ; git --bare init ; chmod o-rwx -R .`
-        end
+#        path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
+#        if !File.exist?(path) 
+#          Dir.mkdir path
+#          `cd #{path} ; git --bare init ; chmod o-rwx -R .`
+#        end
       end
       if changed
         # add, commit, push, and remove local tmp dir
