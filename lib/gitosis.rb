@@ -59,17 +59,25 @@ module Gitosis
           conf.write 
           changed = true
         end
+
+        path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
+        if !File.exist?(path) 
+          Dir.mkdir path
+          `cd #{path} ; git --bare init ; chmod o-rwx -R .`
+        end
       end
       if changed
         # add, commit, push, and remove local tmp dir
         `cd #{File.join(local_dir,'gitosis')} ; git add keydir/* gitosis.conf`
+        `cd #{File.join(local_dir,'gitosis')} ; git config user.email '#{Setting.mail_from}'`
+        `cd #{File.join(local_dir,'gitosis')} ; git config user.name 'Redmine'`
         `cd #{File.join(local_dir,'gitosis')} ; git commit -a -m 'updated by Redmine Gitosis'`
         `cd #{File.join(local_dir,'gitosis')} ; git push`
       end
     
       # remove local copy
       `rm -Rf #{local_dir}`
-          
+      
     end
     
     
