@@ -10,6 +10,7 @@ Redmine::Plugin.register :redmine_gitosis do
   author 'Jan Schulz-Hofen'
   description 'Enables Redmine to update a gitosis server.'
   version '0.0.1'
+  settings :default => {'uri' => 'git@localhost:gitosis-admin.git', 'basePath' => '/opt/git/repositories/' }, :partial => 'redmine_gitosis'
 end
 
 # initialize hook
