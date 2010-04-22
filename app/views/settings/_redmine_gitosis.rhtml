@@ -1,6 +1,6 @@
 <div class="box tabular settings">
-<p><label>Gitosi URL</label> <%= text_field_tag("settings[gitosisUrl]", settings['gitosisUrl'], :size => 60) %><br />
-<p><label>Gitosi identity file</label> <%= text_field_tag("settings[gitosisIdentityFile]", settings['gitosisIdentityFile'], :size => 60) %><br />
-<p><label>Base path</label> <%= text_field_tag("settings[basePath]", settings['basePath'], :size => 60) %><br />
-<p><label>Developer base URL</label> <%= text_field_tag("settings[developerBaseUrl]", settings['developerBaseUrl'], :size => 60) %><br />
+<p><label><%= l(:label_gitosis_url)%></label> <%= text_field_tag("settings[gitosisUrl]", settings['gitosisUrl'], :size => 60) %><br />
+<p><label><%= l(:label_gitosis_identity_file)%></label> <%= text_field_tag("settings[gitosisIdentityFile]", settings['gitosisIdentityFile'], :size => 60) %><br />
+<p><label><%= l(:label_base_path)%></label> <%= text_field_tag("settings[basePath]", settings['basePath'], :size => 60) %><br />
+<p><label><%= l(:label_developer_base_path)%></label> <%= text_field_tag("settings[developerBaseUrl]", settings['developerBaseUrl'], :size => 60) %><br />
 </div>

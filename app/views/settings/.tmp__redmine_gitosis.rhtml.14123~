@@ -1,5 +1,0 @@
-<div class="box tabular settings">
-<p>Uri: <%= text_field_tag("settings[uri]", settings['uri'], :size => 60) %><br />
-<p>Base path: <%= text_field_tag("settings[basePath]", settings['basePath'], :size => 60) %><br />
-
-</div>
