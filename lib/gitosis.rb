@@ -3,17 +3,14 @@ require 'inifile'
 require 'net/ssh'
 
 module Gitosis
-  # server config
-  GITOSIS_URI = 'git@localhost:gitosis-admin.git'
-  GITOSIS_BASE_PATH = '/opt/git/repositories/'
   
   # commands
   # ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine_gitosis/extra/ssh_with_identity_file.sh')
   
-  def self.destroy_repository(project)
-    path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
-    `rm -Rf #{path}`
-  end
+#  def self.destroy_repository(project)
+#    path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
+#    `rm -Rf #{path}`
+#  end
   
   def self.update_repositories(projects)
     projects = (projects.is_a?(Array) ? projects : [projects])
@@ -27,8 +24,17 @@ module Gitosis
 
       Dir.mkdir local_dir
 
+      ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
+      
+      File.open(ssh_with_identity_file, "w") do |f|
+        f.puts "#!/bin/bash"
+        f.puts "exec ssh -i #{Setting.plugin_redmine_gitosis['gitosisIdentityFile']} \"$@\""
+      end
+      File.chmod(0755, ssh_with_identity_file)
+      ENV['GIT_SSH'] = ssh_with_identity_file
+      
       # clone repo
-      `git clone #{GITOSIS_URI} #{local_dir}/gitosis`
+      `git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
 
       changed = false
     
@@ -60,11 +66,6 @@ module Gitosis
           changed = true
         end
 
-#        path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
-#        if !File.exist?(path) 
-#          Dir.mkdir path
-#          `cd #{path} ; git --bare init ; chmod o-rwx -R .`
-#        end
       end
       if changed
         # add, commit, push, and remove local tmp dir
