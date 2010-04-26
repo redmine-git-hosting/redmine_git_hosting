@@ -9,7 +9,7 @@ Redmine::Plugin.register :redmine_gitosis do
   name 'Redmine Gitosis plugin'
   author 'Jan Schulz-Hofen'
   description 'Enables Redmine to update a gitosis server.'
-  version '0.0.3'
+  version '0.0.4'
   settings :default => {
     'gitosisUrl' => 'git@localhost:gitosis-admin.git', 
     'gitosisIdentityFile' => '/opt/redmine/.ssh/id_rsa',
