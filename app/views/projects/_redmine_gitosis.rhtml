@@ -2,7 +2,7 @@
 <div class="box">
 	<h3>Git Repository</h3>
 	<ul>
-		<li>Developer URL: <%= Setting.plugin_redmine_gitosis['developerBaseUrl'] + @project.identifier %>.git</li>
+		<li>Developer URL: <input class="url-field" type="text" readonly="true" value="<%= Setting.plugin_redmine_gitosis['developerBaseUrl'] + @project.identifier %>.git"/></li>
 	</ul>
 </div>
 <% end %>
