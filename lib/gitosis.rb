@@ -28,13 +28,13 @@ module Gitosis
       
       File.open(ssh_with_identity_file, "w") do |f|
         f.puts "#!/bin/bash"
-        f.puts "exec ssh -i #{Setting.plugin_redmine_gitosis['gitosisIdentityFile']} \"$@\""
+        f.puts "exec ssh -o stricthostkeychecking=no -i #{Setting.plugin_redmine_gitosis['gitosisIdentityFile']} \"$@\""
       end
       File.chmod(0755, ssh_with_identity_file)
       ENV['GIT_SSH'] = ssh_with_identity_file
       
       # clone repo
-      `git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+      `env GIT_SSH=#{ssh_with_identity_file} git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
 
       changed = false
     
