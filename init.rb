@@ -14,7 +14,9 @@ Redmine::Plugin.register :redmine_gitosis do
     'gitosisUrl' => 'git@localhost:gitosis-admin.git', 
     'gitosisIdentityFile' => '/opt/redmine/.ssh/id_rsa',
     'developerBaseUrl' => 'git@localhost:',
-    'basePath' => '/opt/git/repositories/' }, :partial => 'redmine_gitosis'
+    'basePath' => '/opt/git/repositories/' 
+    }, 
+    :partial => 'redmine_gitosis'
 end
 
 # initialize hook
