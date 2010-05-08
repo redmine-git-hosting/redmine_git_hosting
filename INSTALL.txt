@@ -1,8 +1,0 @@
-Required dependencies (gem install $dependency)
-
-This is from a pretty vanilla installation of ruby1.9, so these should
-be all the gems that are required to get this working with Redmine 0.9.0.
-
-lockfile
-inifile
-net-ssh
