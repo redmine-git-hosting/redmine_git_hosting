@@ -5,12 +5,16 @@ A Redmine plugin which manages your gitosis configuration based on your projects
 This plugin was originally developed by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop.
 
 In order to use this plugin you must have the following gems installed:
+
 lockfile
+
 inifile
+
 net-ssh
 
 
 == Copyright & License
 
 Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.
+
 Copyright (c) 2010 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
