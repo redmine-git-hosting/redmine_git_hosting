@@ -2,9 +2,17 @@ require_dependency 'redmine/scm/adapters/git_adapter'
 module Gitosis
   module Patches
     module GitAdapterPatch
-
-
-      def lastrev(path,rev)
+      
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+        base.send(:alias_method_chain, :lastrev,   :time_fixed)
+        base.send(:alias_method_chain, :revisions, :time_fixed)
+      end
+      
+        GIT_BIN = "git"
+        def lastrev_with_time_fixed(path,rev)
           return nil if path.nil?
           cmd = "#{GIT_BIN} --git-dir #{target('')} log --pretty=fuller --date=rfc --no-merges -n 1 "
           cmd << " #{shell_quote rev} " if rev 
@@ -16,7 +24,7 @@ module Gitosis
               2.times { io.gets }
               time = io.gets.match('CommitDate:\s+(.*)$')[1]
 
-              Revision.new({
+              Redmine::Scm::Adapters::Revision.new({
                 :identifier => id,
                 :scmid => id,
                 :author => author, 
@@ -29,11 +37,11 @@ module Gitosis
               return nil
             end
           end
-      end
+        end
 
 
-      def revisions(path, identifier_from, identifier_to, options={})
-          revisions = Revisions.new
+        def revisions_with_time_fixed(path, identifier_from, identifier_to, options={})
+          revisions = Redmine::Scm::Adapters::Revisions.new
 
           cmd = "#{GIT_BIN} --git-dir #{target('')} log --raw --date=rfc --pretty=fuller"
           cmd << " --reverse" if options[:reverse]
@@ -56,7 +64,7 @@ module Gitosis
                 value = $1
                 if (parsing_descr == 1 || parsing_descr == 2)
                   parsing_descr = 0
-                  revision = Revision.new({
+                  revision = Redmine::Scm::Adapters::Revision.new({
                     :identifier => changeset[:commit],
                     :scmid => changeset[:commit],
                     :author => changeset[:author],
@@ -106,11 +114,11 @@ module Gitosis
             end 
 
             if changeset[:commit]
-              revision = Revision.new({
+              revision = Redmine::Scm::Adapters::Revision.new({
                 :identifier => changeset[:commit],
                 :scmid => changeset[:commit],
                 :author => changeset[:author],
-                :time => Time.parse(changeset[:date]),
+                :time => Time.rfc2822(changeset[:date]),
                 :message => changeset[:description],
                 :paths => files
               })
@@ -125,7 +133,7 @@ module Gitosis
 
           return nil if $? && $?.exitstatus != 0
           revisions
-      end
+        end
     end
   end
 end
