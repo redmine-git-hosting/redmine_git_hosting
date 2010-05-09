@@ -4,15 +4,25 @@ require 'net/ssh'
 
 module Gitosis
   
-  # commands
-  # ENV['GIT_SSH'] = SSH_WITH_IDENTITY_FILE = File.join(RAILS_ROOT, 'vendor/plugins/redmine_gitosis/extra/ssh_with_identity_file.sh')
+  def self.renderUrls(baseUrlList, projectId, isReadOnly)
+    rendered = ""
+    if(not defined?(baseUrlList.length))
+      return rendered
+    end
 
+    if(baseUrlList.length == 0)
+      return rendered
+    end
+    rendered = rendered + "<strong>" + (isReadOnly? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
+    rendered = rendered + "<ul>";
+    for baseUrl in baseUrlList do
+      rendered = rendered + "<li>" + "<input style=\"width: 95%;\" class=\"url-field\" type=\"text\" readonly=\"true\" value=\"" + baseUrl + projectId + ".git\" /></li>"
+    end
+    rendered = rendered + "</ul>\n"
+    return rendered
+  end
   
-#  def self.destroy_repository(project)
-#    path = File.join(GITOSIS_BASE_PATH, "#{project.identifier}.git")
-#    `rm -Rf #{path}`
-#  end
-  
+
   def self.update_repositories(projects)
     projects = (projects.is_a?(Array) ? projects : [projects])
     

@@ -1,8 +1,17 @@
 <% if @project.repository && @project.repository.is_a?(Repository::Git) %>
 <div class="box">
 	<h3>Git Repository</h3>
+	<p>
+		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.id, true) %>
+	</p>
+	<p>
+		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'], @project.id, false) %>
+
+	</p>
+	<!--
 	<ul>
 		<li>Developer URL: <input style="width: 95%;" class="url-field" type="text" readonly="true" value="<%= Setting.plugin_redmine_gitosis['developerBaseUrl'] + @project.identifier %>.git"/></li>
 	</ul>
+	-->
 </div>
 <% end %>
