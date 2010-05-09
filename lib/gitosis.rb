@@ -13,7 +13,7 @@ module Gitosis
     if(baseUrlList.length == 0)
       return rendered
     end
-    rendered = rendered + "<strong>" + (isReadOnly? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
+    rendered = rendered + "<strong>" + (isReadOnly ? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
     rendered = rendered + "<ul>";
     for baseUrl in baseUrlList do
       rendered = rendered + "<li>" + "<input style=\"width: 95%;\" class=\"url-field\" type=\"text\" readonly=\"true\" value=\"" + baseUrl + projectId + ".git\" /></li>"
