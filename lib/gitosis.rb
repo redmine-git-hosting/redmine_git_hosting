@@ -82,6 +82,14 @@ module Gitosis
 	
 			conf["group #{name}"]['writable'] = name
 			conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+
+			# git-daemon support for read-only anonymous access
+			if User.anonymous.allowed_to?( :view_changesets, project )
+				conf["repo #{name}"]['daemon'] = 'yes'
+			else
+				conf["repo #{name}"]['daemon'] = 'no'
+			end
+
 			unless conf.eql?(original)
 				conf.write 
 				changed = true
