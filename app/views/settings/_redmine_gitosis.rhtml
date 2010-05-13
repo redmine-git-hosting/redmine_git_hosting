@@ -1,6 +1,27 @@
 <div class="tabular settings">
-<p><label><%= l(:label_gitosis_url)%></label> <%= text_field_tag("settings[gitosisUrl]", @settings['gitosisUrl'], :size => 60) %><br />
-<p><label><%= l(:label_gitosis_identity_file)%></label> <%= text_field_tag("settings[gitosisIdentityFile]", @settings['gitosisIdentityFile'], :size => 60) %><br />
-<p><label><%= l(:label_base_path)%></label> <%= text_field_tag("settings[basePath]", @settings['basePath'], :size => 60) %><br />
-<p><label><%= l(:label_developer_base_path)%></label> <%= text_field_tag("settings[developerBaseUrl]", @settings['developerBaseUrl'], :size => 60) %><br />
+	<p>
+		<label><%= l(:label_gitosis_url)%></label> 
+		<%= text_field_tag("settings[gitosisUrl]", @settings['gitosisUrl'], :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_gitosis_identity_file)%></label>
+		<%= text_field_tag("settings[gitosisIdentityFile]", @settings['gitosisIdentityFile'], :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_base_path)%></label>
+		<%= text_field_tag("settings[basePath]", @settings['basePath'], :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_developer_base_urls)%></label>
+		<%= text_area_tag("settings[developerBaseUrls]", @settings['developerBaseUrls'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_read_only_base_urls)%></label>
+		<%= text_area_tag("settings[readOnlyBaseUrls]", @settings['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+		<br />
+	</p>
 </div>
