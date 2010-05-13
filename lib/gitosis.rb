@@ -3,12 +3,14 @@ require 'inifile'
 require 'net/ssh'
 
 module Gitosis
-	def self.renderUrls(baseUrlList, projectId, isReadOnly)
+	def self.renderUrls(baseUrlStr, projectId, isReadOnly)
 		rendered = ""
-		if(not defined?(baseUrlList.length))
+		if(baseUrlStr.length == 0)
 			return rendered
 		end
-		if(baseUrlList.length == 0)
+		baseUrlList=baseUrlStr.split(/[\r\n\t ,;]+/)
+
+		if(not defined?(baseUrlList.length))
 			return rendered
 		end
 

@@ -1,6 +1,11 @@
 'hu':
   label_public_keys: Public keys
   label_public_key_new: New public key
+  label_gitosis_url: Gitosis URL
+  label_gitosis_identity_file: Gitosis identity file
+  label_base_path: Base path
+  label_developer_base_urls: Developer base URL(s)
+  label_read_only_base_urls: Read-only base URL(s)
   field_public_key: Key 
   notice_public_key_updated: Public key was successfully updated.
   notice_public_key_added: Public key was successfully added.

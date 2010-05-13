@@ -4,7 +4,13 @@
   field_public_key: Schlüssel
   notice_public_key_updated: Öffentlicher Schlüssel wurde erfolgreich aktualisiert.
   notice_public_key_added: Öffentlicher Schlüssel wurde erfolgreich hinzugefügt.
-  
+ 
+  label_gitosis_url: Gitosis URL
+  label_gitosis_identity_file: Gitosis identity file
+  label_base_path: Base path
+  label_developer_base_urls: Developer base URL(s)
+  label_read_only_base_urls: Read-only base URL(s)
+ 
   label_key_cannot_be_changed_please_create_new_key: 'Der Schlüssel kann nicht mehr verändert werden. Sie können jedoch diesen Schlüssel deaktivieren und einen neuen anlegen.'
   
   activerecord:
