@@ -26,13 +26,20 @@ module Gitosis
 
 	def self.update_repositories(projects)
 		projects = (projects.is_a?(Array) ? projects : [projects])
-		
-		lockfile=File.new(File.join(Dir.tmpdir,'redmine-gitosis_lock'),File::CREAT|File::RDONLY)
-		retries=2
+	
+		if(defined?(@recursionCheck))
+			if(@recursionCheck)
+				return
+			end
+		end
+		@recursionCheck = true
+
+		lockfile=File.new(File.join(Dir.tmpdir,'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
+		retries=5
 		loop do
 			break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
 			retries-=1
-			sleep 10
+			sleep 2
 			raise Lockfile::MaxTriesLockError if retries<=0
 		end
 
@@ -40,7 +47,7 @@ module Gitosis
 		# HANDLE GIT
 
 		# create tmp dir
-		local_dir = File.join(Dir.tmpdir,"redmine-gitosis-#{Time.now.to_i}")
+		local_dir = File.join(Dir.tmpdir,"redmine_gitosis_#{Time.now.to_i}")
 
 		Dir.mkdir local_dir
 
@@ -111,7 +118,8 @@ module Gitosis
 		`rm -Rf #{local_dir}`
 		
 		lockfile.flock(File::LOCK_UN)
-		
+		@recursionCheck = false
+
 	end
 	
 end
