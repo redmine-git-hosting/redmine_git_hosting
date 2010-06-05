@@ -4,13 +4,13 @@
 
 <div class="box">
 <h2>Global setup:</h2>
-<pre>Download and install <a href="http://git-scm.com/download" target="_blank">Git</a>
+<pre>	Download and install <a href="http://git-scm.com/download" target="_blank">Git</a>
   git config --global user.name "<%= User.current %>"
   git config --global user.email <%= User.current.mail %>
 </pre>
 
 <h2>Next steps:</h2>
-<pre>mkdir <%= @project.identifier %>
+<pre>	mkdir <%= @project.identifier %>
   cd <%= @project.identifier %>
   git init
   touch README
