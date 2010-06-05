@@ -13,8 +13,12 @@ module Gitosis
     if (not defined?(baseUrlList.length))
       return rendered
     end
+    rendered = "<strong>Read Only Url</strong>"
+    rendered = "<ul">
     
-    rendered = baseUrlList[0] + projectId + baseUrlList[1]
+    rendered = rendered + "<li>" + baseUrlList[0] + projectId + baseUrlList[1] + "</li>"
+    
+    rendered = "</ul>"
     
     return rendered
   end
