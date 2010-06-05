@@ -3,7 +3,7 @@ require 'inifile'
 require 'net/ssh'
 
 module Gitosis
-  def self.renderReadOnlyUrls(baseUrl, projectId)
+  def self.renderReadOnlyUrls(baseUrlStr, projectId)
     rendered = ""
     if (baseUrlStr.length == 0)
       return rendered
