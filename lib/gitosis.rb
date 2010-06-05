@@ -3,6 +3,22 @@ require 'inifile'
 require 'net/ssh'
 
 module Gitosis
+  def self.renderReadOnlyUrls(baseUrl, projectId)
+    rendered = ""
+    if (baseUrlStr.length == 0)
+      return rendered
+    end
+    
+    baseUrlList = baseUrlStr.split(/[%p]+/)
+    if (not definied?(baseUrlList.length))
+      return rendered
+    end
+    
+    rendered = baseUrlList[0] + projectId + baseUrlList[1]
+    
+    return rendered
+  end
+  
 	def self.renderUrls(baseUrlStr, projectId, isReadOnly)
 		rendered = ""
 		if(baseUrlStr.length == 0)
