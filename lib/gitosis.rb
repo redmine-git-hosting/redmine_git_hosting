@@ -10,7 +10,7 @@ module Gitosis
     end
     
     baseUrlList = baseUrlStr.split(/[%p]+/)
-    if (not definied?(baseUrlList.length))
+    if (not defined?(baseUrlList.length))
       return rendered
     end
     
