@@ -1,3 +1,31 @@
-<h2><%= l(:label_repository)%></h2>
-<%# This can be used to display basic git setup instructions, like on github... %>
-<% html_title(l(:label_repository)) -%>
+<%# This is used to display basic git setup instructions, like on github... %>
+<% flash.now[:error] = "Repository does not exist. Create one using the instructions below." %>
+<div class="box">
+	
+<h2>Git Setup:</h2>
+<pre>  <a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
+  git config --global user.name "<%= User.current.login %>"
+  git config --global user.email <%= User.current.mail %>
+</pre>
+
+<h2>Permission Setup:</h2>
+<pre>  <a href="/my/public_keys">Upload SSH Public Key</a>
+  Add yourself as a project developer: <a href="/projects/<%= @project.identifier %>/settings"><%= @project %> Settings</a> -> Members Tab -> New Member
+</pre>
+
+<h2>Repository Setup:</h2>
+<pre>  cd <%= @project.identifier %>
+  git init
+  git add .
+  git commit -m 'Initializing <%= @project %> repository'
+  git remote add origin <%= Setting.plugin_redmine_gitosis['developerBaseUrls'] + @project.identifier + '.git' %>
+  git push origin master
+</pre>
+
+<h2>Existing Git Repo?</h2>
+<pre>  cd existing_git_repo
+  git remote add origin <%= Setting.plugin_redmine_gitosis['developerBaseUrls'] + @project.identifier + '.git' %>
+  git push origin master
+</pre>    
+  
+</div>
