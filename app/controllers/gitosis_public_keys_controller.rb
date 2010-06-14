@@ -12,7 +12,7 @@ class GitosisPublicKeysController < ApplicationController
     else 
       params[:status].to_i
     end
-    c = ARCondition.new(@status ? ["active=?", @status] : nil)
+    c = ARCondition.new(@status ? ["active=?", @status != 0] : nil)
 
     @gitosis_public_keys = @user.gitosis_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => c.conditions)
     respond_to do |format|
