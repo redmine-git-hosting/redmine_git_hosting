@@ -1,5 +1,4 @@
 class GitosisPublicKey < ActiveRecord::Base
-
   STATUS_ACTIVE = 1
   STATUS_LOCKED = 0
 
@@ -8,8 +7,8 @@ class GitosisPublicKey < ActiveRecord::Base
   validates_uniqueness_of :identifier, :score => :user_id
   validates_presence_of :title, :key, :identifier
   
-  named_scope :active, {:conditions => {:active => GitosisPublicKey::STATUS_ACTIVE}}
-  named_scope :inactive, {:conditions => {:active => GitosisPublicKey::STATUS_LOCKED}}
+  named_scope :active, {:conditions => {:active => GitosisPublicKey::STATUS_ACTIVE != 0}}
+  named_scope :inactive, {:conditions => {:active => GitosisPublicKey::STATUS_LOCKED == 0}}
   
   validate :has_not_been_changed
   
