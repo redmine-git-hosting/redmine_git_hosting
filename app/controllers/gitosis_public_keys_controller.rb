@@ -11,7 +11,7 @@ class GitosisPublicKeysController < ApplicationController
     elsif params[:status].blank?
         nil
     else 
-      params[:status].to_i
+      params[:status].to_i != 0
     end
     c = ARCondition.new(@status ? ["active=?", @status] : nil)
 
