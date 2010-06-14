@@ -7,8 +7,8 @@ class GitosisPublicKey < ActiveRecord::Base
   validates_uniqueness_of :identifier, :score => :user_id
   validates_presence_of :title, :key, :identifier
   
-  named_scope :active, {:conditions => {:active => GitosisPublicKey::STATUS_ACTIVE != 0}}
-  named_scope :inactive, {:conditions => {:active => GitosisPublicKey::STATUS_LOCKED == 0}}
+  named_scope :active, {:conditions => {:active => GitosisPublicKey::STATUS_ACTIVE}}
+  named_scope :inactive, {:conditions => {:active => GitosisPublicKey::STATUS_LOCKED}}
   
   validate :has_not_been_changed
   
