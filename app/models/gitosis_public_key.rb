@@ -1,6 +1,6 @@
 class GitosisPublicKey < ActiveRecord::Base
-  STATUS_ACTIVE = 1
-  STATUS_LOCKED = 0
+  STATUS_ACTIVE = true
+  STATUS_LOCKED = false
 
   belongs_to :user
   validates_uniqueness_of :title, :scope => :user_id
