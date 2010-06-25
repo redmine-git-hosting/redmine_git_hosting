@@ -34,7 +34,7 @@ module Gitosis
 		end
 		@recursionCheck = true
 
-		lockfile=File.new(File.join(Dir.tmpdir,'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
+		lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
 		retries=5
 		loop do
 			break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
@@ -47,7 +47,7 @@ module Gitosis
 		# HANDLE GIT
 
 		# create tmp dir
-		local_dir = File.join(Dir.tmpdir,"redmine_gitosis_#{Time.now.to_i}")
+		local_dir = File.join(RAILS_ROOT,"tmp","redmine_gitosis_#{Time.now.to_i}")
 
 		Dir.mkdir local_dir
 
