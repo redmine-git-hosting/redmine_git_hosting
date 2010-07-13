@@ -1,3 +1,4 @@
+require 'inifile'
 require 'orderedhash'
 # let's make the inifile use ordered hash.
 # This way the [gitosis] section stays on the top
@@ -6,6 +7,7 @@ require 'orderedhash'
 # This class represents the INI file and can be used to parse, modify,
 # and write INI files.
 #
+
 class IniFile
   #
   # call-seq:

@@ -6,7 +6,8 @@ require_dependency 'gitosis'
 require_dependency 'gitosis/patches/repositories_controller_patch'
 require_dependency 'gitosis/patches/repositories_helper_patch'
 require_dependency 'gitosis/patches/git_adapter_patch'
-require_dependenct 'lib/inifile/patches/inifile_patch'
+
+require 'inifile/inifile'
 
 Redmine::Plugin.register :redmine_gitosis do
   name 'Redmine Gitosis plugin'
