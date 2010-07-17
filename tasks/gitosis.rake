@@ -5,4 +5,9 @@ namespace :gitosis do
     puts "Updating repositories for projects #{projects.join(' ')}"
     Gitosis.update_repositories(projects)
   end
+  desc "fetch commits from gitosis repositories"
+  task :fetch_changes => [:environment] do
+    Repository.fetch_changesets
+  end
+
 end
