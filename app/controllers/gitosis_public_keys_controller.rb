@@ -1,5 +1,6 @@
 class GitosisPublicKeysController < ApplicationController
-
+  unloadable
+  
   before_filter :require_login
   before_filter :set_user_variable
   before_filter :find_gitosis_public_key, :except => [:index, :new, :create]
@@ -10,7 +11,7 @@ class GitosisPublicKeysController < ApplicationController
     elsif params[:status].blank?
         nil
     else 
-      params[:status].to_i
+      params[:status].to_i != 0
     end
     c = ARCondition.new(@status ? ["active=?", @status] : nil)
 

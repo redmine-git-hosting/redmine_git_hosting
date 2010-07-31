@@ -1,6 +1,7 @@
 require 'lockfile'
 require 'inifile'
 require 'net/ssh'
+require 'tmpdir'
 
 module Gitosis
   def self.renderReadOnlyUrls(baseUrlStr, projectId)
