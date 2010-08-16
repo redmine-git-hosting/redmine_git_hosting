@@ -73,17 +73,8 @@ module Gitosis
 
 		Dir.mkdir local_dir
 
-		ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
-			
-		File.open(ssh_with_identity_file, "w") do |f|
-			f.puts "#!/bin/bash"
-			f.puts "exec ssh -o stricthostkeychecking=no -i #{Setting.plugin_redmine_gitosis['gitosisIdentityFile']} \"$@\""
-		end
-		File.chmod(0755, ssh_with_identity_file)
-		ENV['GIT_SSH'] = ssh_with_identity_file
-		
 		# clone repo
-		`env GIT_SSH=#{ssh_with_identity_file} git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+		`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
 
 		changed = false
 	
@@ -92,7 +83,6 @@ module Gitosis
 			users = project.member_principals.map(&:user).compact.uniq
 			write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
 			read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
-	
 			# write key files
 			users.map{|u| u.gitosis_public_keys.active}.flatten.compact.uniq.each do |key|
 				File.open(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
@@ -128,12 +118,22 @@ module Gitosis
 
 		end
 		if changed
+			git_push_file = File.join(local_dir, 'git_push.bat')
+
+      new_dir= File.join(local_dir,'gitosis')
+			new_dir.gsub!(/\//, '\\')
+			File.open(git_push_file, "w") do |f|
+				f.puts "cd #{new_dir}"
+				f.puts "git add keydir/* gitosis.conf"
+				f.puts "git config user.email '#{Setting.mail_from}'"
+				f.puts "git config user.name 'Redmine'"
+				f.puts "git commit -a -m 'updated by Redmine Gitosis'"
+				f.puts "git push"
+			end
+			File.chmod(0755, git_push_file)
+
 			# add, commit, push, and remove local tmp dir
-			`cd #{File.join(local_dir,'gitosis')} ; git add keydir/* gitosis.conf`
-			`cd #{File.join(local_dir,'gitosis')} ; git config user.email '#{Setting.mail_from}'`
-			`cd #{File.join(local_dir,'gitosis')} ; git config user.name 'Redmine'`
-			`cd #{File.join(local_dir,'gitosis')} ; git commit -a -m 'updated by Redmine Gitosis'`
-			`cd #{File.join(local_dir,'gitosis')} ; git push`
+			`#{git_push_file}`
 		end
 		
 		# remove local copy
