@@ -19,11 +19,17 @@ class GitosisObserver < ActiveRecord::Observer
     case object
       when Project then Gitosis::update_repositories(object)
       when Repository then Gitosis::update_repositories(object.project)
-      when User then Gitosis::update_repositories(object.projects)
+      when User then Gitosis::update_repositories(object.projects) unless is_login_save?(object)
       when GitosisPublicKey then Gitosis::update_repositories(object.user.projects)
       when Member then Gitosis::update_repositories(object.project)
       when Role then Gitosis::update_repositories(object.members.map(&:project).uniq.compact)
     end
   end
   
+  private
+  
+  # Test for the fingerprint of changes to the user model when the User actually logs in.
+  def is_login_save?(user)
+    user.changed? && user.changed.length == 2 && user.changed.include?("updated_on") && user.changed.include?("last_login_on")
+  end
 end
