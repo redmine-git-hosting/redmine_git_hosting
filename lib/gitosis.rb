@@ -56,90 +56,92 @@ module Gitosis
 		end
 		@recursionCheck = true
 
-		lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
-		retries=5
-		loop do
-			break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
-			retries-=1
-			sleep 2
-			raise Lockfile::MaxTriesLockError if retries<=0
+		# Don't bother doing anything if none of the projects we've been handed have a Git repository
+		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
+
+			lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
+			retries=5
+			loop do
+				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
+				retries-=1
+				sleep 2
+				raise Lockfile::MaxTriesLockError if retries<=0
+			end
+
+
+			# HANDLE GIT
+
+			# create tmp dir
+			local_dir = File.join(RAILS_ROOT,"tmp","redmine_gitosis_#{Time.now.to_i}")
+
+			Dir.mkdir local_dir
+
+			# clone repo
+			`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+
+			changed = false
+			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
+				# fetch users
+				users = project.member_principals.map(&:user).compact.uniq
+				write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
+				read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
+				# write key files
+				users.map{|u| u.gitosis_public_keys.active}.flatten.compact.uniq.each do |key|
+					File.open(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+				end
+
+				# delete inactives
+				users.map{|u| u.gitosis_public_keys.inactive}.flatten.compact.uniq.each do |key|
+					File.unlink(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub")) rescue nil
+				end
+
+				# write config file
+				conf = IniFile.new(File.join(local_dir,'gitosis','gitosis.conf'))
+				original = conf.clone
+				name = "#{project.identifier}"
+
+				conf["group #{name}_readonly"]['readonly'] = name
+				conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+
+				conf["group #{name}"]['writable'] = name
+				conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+
+				# git-daemon support for read-only anonymous access
+				if User.anonymous.allowed_to?( :view_changesets, project )
+					conf["repo #{name}"]['daemon'] = 'yes'
+				else
+					conf["repo #{name}"]['daemon'] = 'no'
+				end
+
+				unless conf.eql?(original)
+					conf.write 
+					changed = true
+				end
+
+			end
+			if changed
+				git_push_file = File.join(local_dir, 'git_push.bat')
+
+	      new_dir= File.join(local_dir,'gitosis')
+				new_dir.gsub!(/\//, '\\')
+				File.open(git_push_file, "w") do |f|
+					f.puts "cd #{new_dir}"
+					f.puts "git add keydir/* gitosis.conf"
+					f.puts "git config user.email '#{Setting.mail_from}'"
+					f.puts "git config user.name 'Redmine'"
+					f.puts "git commit -a -m 'updated by Redmine Gitosis'"
+					f.puts "git push"
+				end
+				File.chmod(0755, git_push_file)
+
+				# add, commit, push, and remove local tmp dir
+				`#{git_push_file}`
+			end
+			# remove local copy
+			`rm -Rf #{local_dir}`
+
+			lockfile.flock(File::LOCK_UN)
 		end
-
-
-		# HANDLE GIT
-
-		# create tmp dir
-		local_dir = File.join(RAILS_ROOT,"tmp","redmine_gitosis_#{Time.now.to_i}")
-
-		Dir.mkdir local_dir
-
-		# clone repo
-		`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
-
-		changed = false
-	
-		projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
-			# fetch users
-			users = project.member_principals.map(&:user).compact.uniq
-			write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
-			read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
-			# write key files
-			users.map{|u| u.gitosis_public_keys.active}.flatten.compact.uniq.each do |key|
-				File.open(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
-			end
-
-			# delete inactives
-			users.map{|u| u.gitosis_public_keys.inactive}.flatten.compact.uniq.each do |key|
-				File.unlink(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub")) rescue nil
-			end
-	
-			# write config file
-			conf = IniFile.new(File.join(local_dir,'gitosis','gitosis.conf'))
-			original = conf.clone
-			name = "#{project.identifier}"
-			
-			conf["group #{name}_readonly"]['readonly'] = name
-			conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
-	
-			conf["group #{name}"]['writable'] = name
-			conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
-
-			# git-daemon support for read-only anonymous access
-			if User.anonymous.allowed_to?( :view_changesets, project )
-				conf["repo #{name}"]['daemon'] = 'yes'
-			else
-				conf["repo #{name}"]['daemon'] = 'no'
-			end
-
-			unless conf.eql?(original)
-				conf.write 
-				changed = true
-			end
-
-		end
-		if changed
-			git_push_file = File.join(local_dir, 'git_push.bat')
-
-      new_dir= File.join(local_dir,'gitosis')
-			new_dir.gsub!(/\//, '\\')
-			File.open(git_push_file, "w") do |f|
-				f.puts "cd #{new_dir}"
-				f.puts "git add keydir/* gitosis.conf"
-				f.puts "git config user.email '#{Setting.mail_from}'"
-				f.puts "git config user.name 'Redmine'"
-				f.puts "git commit -a -m 'updated by Redmine Gitosis'"
-				f.puts "git push"
-			end
-			File.chmod(0755, git_push_file)
-
-			# add, commit, push, and remove local tmp dir
-			`#{git_push_file}`
-		end
-		
-		# remove local copy
-		`rm -Rf #{local_dir}`
-		
-		lockfile.flock(File::LOCK_UN)
 		@recursionCheck = false
 
 	end
