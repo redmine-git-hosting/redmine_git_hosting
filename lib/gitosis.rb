@@ -112,6 +112,12 @@ module Gitosis
 				else
 					conf["repo #{name}"]['daemon'] = 'no'
 				end
+				# Enable/disable gitweb
+				if User.anonymous.allowed_to?( :view_gitweb, project )
+					conf["repo #{name}"]['gitweb'] = 'yes'
+				else
+					conf["repo #{name}"]['gitweb'] = 'no'
+				end
 
 				unless conf.eql?(original)
 					conf.write 
