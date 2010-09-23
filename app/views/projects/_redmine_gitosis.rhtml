@@ -1,19 +1,12 @@
 <% if @project.repository && @project.repository.is_a?(Repository::Git) %>
 <div class="box">
 	<h3>Git Repository</h3>
-	<% if @project.parent%>
 	<p>
-		<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'],@project.parent.identifier, @project.identifier) %>
+		<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier, @project.parent.identifier || false) %>
 	</p>
 	<p>
-		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'],@project.parent.identifier, @project.identifier, false)  %>
-	<%else%>
-	<p>
-		<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier) %>
-	</p>
-	<p>
-		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'], @project.identifier, false)  %>
-	<%end%>
+		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'],@project.parent.identifier, @project.identifier, false,@project.parent.identifier || false)  %>
+
 	</p>
 </div>
 <% end %>
