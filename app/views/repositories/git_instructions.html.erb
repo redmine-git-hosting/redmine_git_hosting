@@ -9,8 +9,8 @@
 </pre>
 
 <h2>Permission Setup:</h2>
-<pre>  <a href="/my/public_keys">Upload SSH Public Key</a>
-  Add yourself as a project developer: <a href="/projects/<%= @project.identifier %>/settings"><%= @project %> Settings</a> -> Members Tab -> New Member
+<pre>  <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'public_keys'} %>
+  Add yourself as a project developer: <%= link_to @project.name + " Settings", {:controller => 'projects', :action => 'settings'} %> -&gt; Members Tab -&gt; New Member
 </pre>
 
 <h2>Repository Setup:</h2>
