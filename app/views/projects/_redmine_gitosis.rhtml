@@ -2,10 +2,10 @@
 <div class="box">
 	<h3>Git Repository</h3>
 	<p>
-		<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier) %>
+		<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier, @project.parent.identifier || false) %>
 	</p>
 	<p>
-		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'], @project.identifier, false)  %>
+		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'],@project.parent.identifier, @project.identifier, false,@project.parent.identifier || false)  %>
 
 	</p>
 </div>
