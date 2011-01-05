@@ -79,7 +79,6 @@ module Gitosis
 			# clone repo
 			`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
 
-			changed = false
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
 				# fetch users
 				users = project.member_principals.map(&:user).compact.uniq
@@ -121,27 +120,24 @@ module Gitosis
 
 				unless conf.eql?(original)
 					conf.write 
-					changed = true
 				end
 
 			end
-			if changed
-				git_push_file = File.join(local_dir, 'git_push.bat')
+			git_push_file = File.join(local_dir, 'git_push.bat')
 
-	      new_dir= File.join(local_dir,'gitosis')
-				File.open(git_push_file, "w") do |f|
-					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/* gitosis.conf"
-					f.puts "git config user.email '#{Setting.mail_from}'"
-					f.puts "git config user.name 'Redmine'"
-					f.puts "git commit -a -m 'updated by Redmine Gitosis'"
-					f.puts "git push"
-				end
-				File.chmod(0755, git_push_file)
-
-				# add, commit, push, and remove local tmp dir
-				`#{git_push_file}`
+			new_dir= File.join(local_dir,'gitosis')
+			File.open(git_push_file, "w") do |f|
+				f.puts "cd #{new_dir}"
+				f.puts "git add keydir/* gitosis.conf"
+				f.puts "git config user.email '#{Setting.mail_from}'"
+				f.puts "git config user.name 'Redmine'"
+				f.puts "git commit -a -m 'updated by Redmine Gitosis'"
+				f.puts "git push"
 			end
+			File.chmod(0755, git_push_file)
+
+			# add, commit, push, and remove local tmp dir
+			`#{git_push_file}`
 			# remove local copy
 			`rm -Rf #{local_dir}`
 
