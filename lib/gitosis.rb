@@ -129,7 +129,6 @@ module Gitosis
 				git_push_file = File.join(local_dir, 'git_push.bat')
 
 	      new_dir= File.join(local_dir,'gitosis')
-				new_dir.gsub!(/\//, '\\')
 				File.open(git_push_file, "w") do |f|
 					f.puts "cd #{new_dir}"
 					f.puts "git add keydir/* gitosis.conf"
