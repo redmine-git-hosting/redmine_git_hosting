@@ -1,5 +1,5 @@
 require_dependency 'repositories_helper'
-module Gitosis
+module Gitolite
   module Patches
     module RepositoriesHelperPatch
       def git_field_tags_with_disabled_configuration(form, repository) ; '' ; end
@@ -14,4 +14,4 @@ module Gitosis
     end
   end
 end
-RepositoriesHelper.send(:include, Gitosis::Patches::RepositoriesHelperPatch) unless RepositoriesHelper.include?(Gitosis::Patches::RepositoriesHelperPatch)
+RepositoriesHelper.send(:include, Gitolite::Patches::RepositoriesHelperPatch) unless RepositoriesHelper.include?(Gitolite::Patches::RepositoriesHelperPatch)

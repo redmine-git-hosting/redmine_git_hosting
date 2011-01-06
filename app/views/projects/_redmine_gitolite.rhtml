@@ -1,0 +1,12 @@
+<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
+<div class="box">
+	<h3>Git Repository</h3>
+	<p>
+		<%= Gitolite::renderReadOnlyUrls(Setting.plugin_redmine_gitolite['readOnlyBaseUrls'], @project.identifier, @project.parent.identifier || false) %>
+	</p>
+	<p>
+		<%= Gitolite::renderUrls(Setting.plugin_redmine_gitolite['developerBaseUrls'], @project.identifier, false,@project.parent.identifier || false)  %>
+
+	</p>
+</div>
+<% end %>

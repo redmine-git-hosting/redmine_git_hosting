@@ -18,13 +18,13 @@
   git init
   git add .
   git commit -m 'Initializing <%= @project %> repository'
-  git remote add origin <%= Setting.plugin_redmine_gitosis['developerBaseUrls'] + @project.identifier + '.git' %>
+  git remote add origin <%= Setting.plugin_redmine_gitolite['developerBaseUrls'] + @project.identifier + '.git' %>
   git push origin master
 </pre>
 
 <h2>Existing Git Repo?</h2>
 <pre>  cd existing_git_repo
-  git remote add origin <%= Setting.plugin_redmine_gitosis['developerBaseUrls'] + @project.identifier + '.git' %>
+  git remote add origin <%= Setting.plugin_redmine_gitolite['developerBaseUrls'] + @project.identifier + '.git' %>
   git push origin master
 </pre>    
   

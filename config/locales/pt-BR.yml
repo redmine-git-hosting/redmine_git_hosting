@@ -1,8 +1,8 @@
 'pt-BR':
   label_public_keys: Chaves públicas
   label_public_key_new: Nova chave pública
-  label_gitosis_url: Gitosis URL
-  label_gitosis_identity_file: Arquivo de identificação do Gitosis
+  label_gitolite_url: Gitolite URL
+  label_gitolite_identity_file: Arquivo de identificação do Gitolite
   label_base_path: Caminho de base
   label_developer_base_urls: URL(s) base de Desenvolvedor
   label_read_only_base_urls: URL(s) base de Apenas-leitura

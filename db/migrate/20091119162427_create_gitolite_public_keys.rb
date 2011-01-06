@@ -1,6 +1,6 @@
-class CreateGitosisPublicKeys < ActiveRecord::Migration
+class CreateGitolitePublicKeys < ActiveRecord::Migration
   def self.up
-    create_table :gitosis_public_keys do |t|
+    create_table :gitolite_public_keys do |t|
       t.column :title, :string
       t.column :identifier, :string
       t.column :key, :text
@@ -12,6 +12,6 @@ class CreateGitosisPublicKeys < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :gitosis_public_keys
+    drop_table :gitolite_public_keys
   end
 end

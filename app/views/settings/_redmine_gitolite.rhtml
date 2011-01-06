@@ -1,12 +1,12 @@
 <div class="tabular settings">
 	<p>
-		<label><%= l(:label_gitosis_url)%></label> 
-		<%= text_field_tag("settings[gitosisUrl]", @settings['gitosisUrl'], :size => 60) %>
+		<label><%= l(:label_gitolite_url)%></label> 
+		<%= text_field_tag("settings[gitoliteUrl]", @settings['gitoliteUrl'], :size => 60) %>
 		<br />
 	</p>
 	<p>
-		<label><%= l(:label_gitosis_identity_file)%></label>
-		<%= text_field_tag("settings[gitosisIdentityFile]", @settings['gitosisIdentityFile'], :size => 60) %>
+		<label><%= l(:label_gitolite_identity_file)%></label>
+		<%= text_field_tag("settings[gitoliteIdentityFile]", @settings['gitoliteIdentityFile'], :size => 60) %>
 		<br />
 	</p>
 	<p>

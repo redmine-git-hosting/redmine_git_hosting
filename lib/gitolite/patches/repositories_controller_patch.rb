@@ -1,5 +1,5 @@
 require_dependency 'repositories_controller'
-module Gitosis
+module Gitolite
   module Patches
     module RepositoriesControllerPatch
 
@@ -14,9 +14,9 @@ module Gitosis
       def edit_with_scm_settings
         params[:repository] ||= {}
         if(@project.parent)
-          params[:repository][:url] = File.join(Setting.plugin_redmine_gitosis['basePath'],@project.parent.identifier,"#{@project.identifier}.git") if  params[:repository_scm] == 'Git'
+          params[:repository][:url] = File.join(Setting.plugin_redmine_gitolite['basePath'],@project.parent.identifier,"#{@project.identifier}.git") if  params[:repository_scm] == 'Git'
         else
-          params[:repository][:url] = File.join(Setting.plugin_redmine_gitosis['basePath'],"#{@project.identifier}.git") if  params[:repository_scm] == 'Git'
+          params[:repository][:url] = File.join(Setting.plugin_redmine_gitolite['basePath'],"#{@project.identifier}.git") if  params[:repository_scm] == 'Git'
         end  
         
         edit_without_scm_settings
@@ -33,4 +33,4 @@ module Gitosis
     end
   end
 end
-RepositoriesController.send(:include, Gitosis::Patches::RepositoriesControllerPatch) unless RepositoriesController.include?(Gitosis::Patches::RepositoriesControllerPatch)
+RepositoriesController.send(:include, Gitolite::Patches::RepositoriesControllerPatch) unless RepositoriesController.include?(Gitolite::Patches::RepositoriesControllerPatch)

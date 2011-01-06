@@ -3,7 +3,7 @@ require 'inifile'
 require 'net/ssh'
 require 'tmpdir'
 
-module Gitosis
+module Gitolite
   def self.renderReadOnlyUrls(baseUrlStr, projectId,parent)
     rendered = ""
     if (baseUrlStr.length == 0)
@@ -59,7 +59,7 @@ module Gitosis
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
 
-			lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitosis_lock'),File::CREAT|File::RDONLY)
+			lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitolite_lock'),File::CREAT|File::RDONLY)
 			retries=5
 			loop do
 				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
@@ -72,12 +72,12 @@ module Gitosis
 			# HANDLE GIT
 
 			# create tmp dir
-			local_dir = File.join(RAILS_ROOT,"tmp","redmine_gitosis_#{Time.now.to_i}")
+			local_dir = File.join(RAILS_ROOT,"tmp","redmine_gitolite_#{Time.now.to_i}")
 
 			Dir.mkdir local_dir
 
 			# clone repo
-			`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+			`git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite`
 
 			changed = false
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -86,25 +86,25 @@ module Gitosis
 				write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
 				read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
 				# write key files
-				users.map{|u| u.gitosis_public_keys.active}.flatten.compact.uniq.each do |key|
-					File.open(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+				users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+					File.open(File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
 				end
 
 				# delete inactives
-				users.map{|u| u.gitosis_public_keys.inactive}.flatten.compact.uniq.each do |key|
-					File.unlink(File.join(local_dir, 'gitosis/keydir',"#{key.identifier}.pub")) rescue nil
+				users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
+					File.unlink(File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")) rescue nil
 				end
 
 				# write config file
-				conf = IniFile.new(File.join(local_dir,'gitosis','gitosis.conf'))
+				conf = IniFile.new(File.join(local_dir,'gitolite','gitolite.conf'))
 				original = conf.clone
 				name = "#{project.identifier}"
 
 				conf["group #{name}_readonly"]['readonly'] = name
-				conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+				conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
 
 				conf["group #{name}"]['writable'] = name
-				conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+				conf["group #{name}"]['members'] = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
 
 				# git-daemon support for read-only anonymous access
 				if User.anonymous.allowed_to?( :view_changesets, project )
@@ -128,14 +128,14 @@ module Gitosis
 			if changed
 				git_push_file = File.join(local_dir, 'git_push.bat')
 
-	      new_dir= File.join(local_dir,'gitosis')
+	      new_dir= File.join(local_dir,'gitolite')
 				new_dir.gsub!(/\//, '\\')
 				File.open(git_push_file, "w") do |f|
 					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/* gitosis.conf"
+					f.puts "git add keydir/* gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
-					f.puts "git commit -a -m 'updated by Redmine Gitosis'"
+					f.puts "git commit -a -m 'updated by Redmine Gitolite'"
 					f.puts "git push"
 				end
 				File.chmod(0755, git_push_file)
