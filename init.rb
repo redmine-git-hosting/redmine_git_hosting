@@ -9,9 +9,9 @@ require_dependency 'gitolite/patches/git_adapter_patch'
 
 Redmine::Plugin.register :redmine_gitolite do
   name 'Redmine Gitolite plugin'
-  author 'Jan Schulz-Hofen'
+  author 'Joshua Hogendorn, originally Jan Schulz-Hofen'
   description 'Enables Redmine to update a gitolite server.'
-  version '0.0.5alpha'
+  version '0.0.1alpha'
   settings :default => {
     'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
     'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/id_rsa',
