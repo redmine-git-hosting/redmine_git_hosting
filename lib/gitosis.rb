@@ -4,7 +4,7 @@ require 'net/ssh'
 require 'tmpdir'
 
 module Gitosis
-  def self.renderReadOnlyUrls(baseUrlStr, projectId, parent)
+  def self.renderReadOnlyUrls(baseUrlStr, projectId)
     rendered = ""
     if (baseUrlStr.length == 0)
       return rendered
@@ -19,7 +19,7 @@ module Gitosis
     rendered = rendered + "<ul>"
     
     rendered = rendered + "<li>"
-    projectName = (parent ? "/"+parent+"/" : "")+ projectId
+    projectName = projectId
     if (baseUrlList.length > 1)
 	    rendered = rendered + baseUrlList[0] + projectName + baseUrlList[1]
     else
@@ -32,7 +32,7 @@ module Gitosis
     return rendered
   end
   
-	def self.renderUrls(baseUrlStr, projectId, isReadOnly, parent)
+	def self.renderUrls(baseUrlStr, projectId, isReadOnly)
 		rendered = ""
 		if(baseUrlStr.length == 0)
 			return rendered
@@ -47,7 +47,7 @@ module Gitosis
 		rendered = rendered + "<strong>" + (isReadOnly ? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
 				rendered = rendered + "<ul>";
 				for baseUrl in baseUrlList do
-						rendered = rendered + "<li>" + "<span style=\"width: 95%; font-size:10px\">" + baseUrl+ (parent ? "/"+parent+"/" : "") + projectId + ".git</span></li>"
+						rendered = rendered + "<li>" + "<span style=\"width: 95%; font-size:10px\">" + baseUrl + projectId + ".git</span></li>"
 				end
 		rendered = rendered + "</ul>\n"
 		return rendered
