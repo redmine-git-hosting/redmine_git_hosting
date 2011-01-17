@@ -6,6 +6,7 @@
   label_base_path: Base path
   label_developer_base_urls: Developer base URL(s)
   label_read_only_base_urls: Read-only base URL(s)
+  label_gitosis_log_file: Log file
   field_public_key: Key 
   notice_public_key_updated: Public key was successfully updated.
   notice_public_key_added: Public key was successfully added.

@@ -18,6 +18,7 @@ Redmine::Plugin.register :redmine_gitosis do
     'developerBaseUrls' => 'git@www.salamander-linux.com:,https://[user]@www.salamander-linux.com/git/',
     'readOnlyBaseUrls' => 'http://www.salamander-linux.com/git/',
     'basePath' => '/srv/projects/git/repositories/',
+    'gitosisLogFile' => '',
     }, 
     :partial => 'redmine_gitosis'
 end

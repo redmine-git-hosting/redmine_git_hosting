@@ -144,7 +144,11 @@ module Gitosis
 			File.chmod(0755, git_push_file)
 
 			# add, commit, push, and remove local tmp dir
-			`#{git_push_file}`
+			if (Setting.plugin_redmine_gitosis['gitosisLogFile'] != nil) and (Setting.plugin_redmine_gitosis['gitosisLogFile'].length > 0)
+				`#{git_push_file} >> #{Setting.plugin_redmine_gitosis['gitosisLogFile']}`
+			else
+				`#{git_push_file}`
+			end
 			# remove local copy
 			`rm -Rf #{local_dir}`
 

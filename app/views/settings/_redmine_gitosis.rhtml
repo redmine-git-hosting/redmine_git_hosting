@@ -24,4 +24,9 @@
 		<%= text_area_tag("settings[readOnlyBaseUrls]", @settings['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
 		<br />
 	</p>
+	<p>
+		<label><%= l(:label_gitosis_log_file)%></label>
+		<%= text_field_tag("settings[gitosisLogFile]", @settings['gitosisLogFile'], :size => 60) %>
+		<br />
+	</p>
 </div>
