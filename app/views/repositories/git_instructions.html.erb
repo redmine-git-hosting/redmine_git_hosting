@@ -4,7 +4,7 @@
 	
 <h2>Git Setup:</h2>
 <pre>  <a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
-  git config --global user.name "<%= User.current.login %>"
+  git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
   git config --global user.email <%= User.current.mail %>
 </pre>
 
