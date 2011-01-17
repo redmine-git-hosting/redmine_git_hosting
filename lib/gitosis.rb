@@ -134,6 +134,7 @@ module Gitosis
 
 			new_dir= File.join(local_dir,'gitosis')
 			File.open(git_push_file, "w") do |f|
+				f.puts "#!/bin/sh" if not mswin?
 				f.puts "cd #{new_dir}"
 				f.puts "git add keydir/* gitosis.conf"
 				f.puts "git config user.email '#{Setting.mail_from}'"
@@ -157,5 +158,9 @@ module Gitosis
 		@recursionCheck = false
 
 	end
-	
+
+	def self.mswin?  # copy & paste from redmine/extra/svn/reposman.rb:mswin?
+		(RUBY_PLATFORM =~ /(:?mswin|mingw)/) || (RUBY_PLATFORM == 'java' && (ENV['OS'] || ENV['os']) =~ /windows/i)
+	end
+
 end
