@@ -4,47 +4,19 @@ require 'net/ssh'
 require 'tmpdir'
 
 module Gitolite
-  def self.renderReadOnlyUrls(baseUrlStr, projectId,parent)
-    rendered = ""
-    if (baseUrlStr.length == 0)
-      return rendered
-    end
-    
-    baseUrlList = baseUrlStr.split("%p")
-    if (not defined?(baseUrlList.length))
-      return rendered
-    end
-    
-    rendered = rendered + "<strong>Read Only Url:</strong><br />"
-    rendered = rendered + "<ul>"
-    
-    rendered = rendered + "<li>" + baseUrlList[0] +(parent ? "" : "/"+parent+"/")+ projectId + baseUrlList[1] + "</li>"
-    
-    rendered = rendered + "</ul>\n"
-    
-    return rendered
-  end
-  
-	def self.renderUrls(baseUrlStr, projectId, isReadOnly, parent)
-		rendered = ""
-		if(baseUrlStr.length == 0)
-			return rendered
-		end
-		baseUrlList=baseUrlStr.split(/[\r\n\t ,;]+/)
+	def self.get_urls(project)
+		urls = {:read_only => [], :developer => []}
+		read_only_baseurls = Setting.plugin_redmine_gitolite['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/)
+		developer_baseurls = Setting.plugin_redmine_gitolite['developerBaseUrls'].split(/[\r\n\t ,;]+/)
 
-		if(not defined?(baseUrlList.length))
-			return rendered
-		end
+		project_path = ''
+		project_path += project.parent.identifier + "/" if project.parent
+		project_path += project.identifier + ".git"
 
-
-		rendered = rendered + "<strong>" + (isReadOnly ? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
-				rendered = rendered + "<ul>";
-				for baseUrl in baseUrlList do
-						rendered = rendered + "<li>" + "<span style=\"width: 95%; font-size:10px\">" + baseUrl+ (parent ? "" : "/"+parent+"/") + projectId + ".git</span></li>"
-				end
-		rendered = rendered + "</ul>\n"
-		return rendered
-	end 
+		read_only_baseurls.each {|baseurl| urls[:read_only] << baseurl + project_path}
+		developer_baseurls.each {|baseurl| urls[:developer] << baseurl + project_path}
+		return urls
+	end
 
 	def self.update_repositories(projects)
 		projects = (projects.is_a?(Array) ? projects : [projects])
@@ -129,7 +101,7 @@ module Gitolite
 				git_push_file = File.join(local_dir, 'git_push.bat')
 
 	      new_dir= File.join(local_dir,'gitolite')
-				new_dir.gsub!(/\//, '\\')
+#				new_dir.gsub!(/\//, '\\')
 				File.open(git_push_file, "w") do |f|
 					f.puts "cd #{new_dir}"
 					f.puts "git add keydir/* gitolite.conf"
