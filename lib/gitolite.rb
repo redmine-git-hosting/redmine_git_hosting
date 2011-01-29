@@ -3,6 +3,8 @@ require 'inifile'
 require 'net/ssh'
 require 'tmpdir'
 
+require 'gitolite_conf.rb'
+
 module Gitolite
 	def self.get_urls(project)
 		urls = {:read_only => [], :developer => []}
@@ -68,37 +70,22 @@ module Gitolite
 				end
 
 				# write config file
-				conf = IniFile.new(File.join(local_dir,'gitolite','gitolite.conf'))
-				original = conf.clone
-				name = "#{project.identifier}"
+				conf = Config.new(File.join(local_dir,'gitolite','gitolite.conf'))
+				repo_name = "#{project.identifier}"
+				read_users = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
+				write_users = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
+				
+				conf.add_read_user repo_name, read_users
+				conf.add_write_user repo_name, write_users
+				conf.save if conf.changed?
 
-				conf["group #{name}_readonly"]['readonly'] = name
-				conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
-
-				conf["group #{name}"]['writable'] = name
-				conf["group #{name}"]['members'] = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
-
-				# git-daemon support for read-only anonymous access
-				if User.anonymous.allowed_to?( :view_changesets, project )
-					conf["repo #{name}"]['daemon'] = 'yes'
-				else
-					conf["repo #{name}"]['daemon'] = 'no'
-				end
-				# Enable/disable gitweb
-				if User.anonymous.allowed_to?( :view_gitweb, project )
-					conf["repo #{name}"]['gitweb'] = 'yes'
-				else
-					conf["repo #{name}"]['gitweb'] = 'no'
-				end
-
-				unless conf.eql?(original)
-					conf.write 
+				if conf.changed?
+					conf.save
 					changed = true
 				end
-
 			end
 			if changed
-				git_push_file = File.join(local_dir, 'git_push.bat')
+				git_push_file = File.join(local_dir, 'git_push.sh')
 
 	      new_dir= File.join(local_dir,'gitolite')
 				File.open(git_push_file, "w") do |f|
