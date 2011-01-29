@@ -12,12 +12,20 @@ module Gitolite
 			@original_content = content
 		end
 
-		def add_write_user repo_name, user
-			repository(repo_name).add "RW+", user
+		def add_write_user repo_name, users
+			repository(repo_name).add "RW+", users
 		end
 
-		def add_read_user repo_name, user
-			repository(repo_name).add "R", user
+		def set_write_user repo_name, users
+			repository(repo_name).set "RW+", users
+		end
+
+		def add_read_user repo_name, users
+			repository(repo_name).add "R", users
+		end
+
+		def set_read_user repo_name, users
+			repository(repo_name).set "R", users
 		end
 
 		def changed?
@@ -73,6 +81,11 @@ module Gitolite
 			@rights[perm.to_sym] ||= []
 			@rights[perm.to_sym] << users
 			@rights[perm.to_sym].flatten.uniq
+		end
+
+		def set perm, users
+			@rights[perm.to_sym] = []
+			add perm, users
 		end
 
 		def each 
