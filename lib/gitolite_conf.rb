@@ -47,7 +47,7 @@ module Gitolite
 				end
 				cur_repo_right = @repositories[cur_repo_name]
 				if cur_repo_right and tokens[1] == '='
-					cur_repo_right.add tokens.first, tokens[2,]
+					cur_repo_right.add tokens.first, tokens[2..-1]
 				end
 			end
 			@original_content = @original_content.join
