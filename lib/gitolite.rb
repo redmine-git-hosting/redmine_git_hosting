@@ -1,5 +1,4 @@
 require 'lockfile'
-require 'inifile'
 require 'net/ssh'
 require 'tmpdir'
 
