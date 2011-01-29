@@ -70,7 +70,7 @@ module Gitolite
 				end
 
 				# write config file
-				conf = Config.new(File.join(local_dir,'gitolite','gitolite.conf'))
+				conf = Config.new(File.join(local_dir,'gitolite','conf', 'gitolite.conf'))
 				repo_name = "#{project.identifier}"
 				read_users = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
 				write_users = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
