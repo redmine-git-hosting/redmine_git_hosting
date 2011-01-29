@@ -63,7 +63,7 @@ module Gitolite
 			@repositories.each do |repo, rights|
 				content << "repo\t#{repo}"
 				rights.each do |perm, users|
-					content << "\t#{perm}\t=\t#{users.join(' ')}"
+					content << "\t#{perm}\t=\t#{users.join(' ')}" if users.length > 0
 				end
 				content << ""
 			end
