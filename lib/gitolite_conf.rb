@@ -21,7 +21,7 @@ module Gitolite
 		end
 
 		def changed?
-			@original_content == content
+			@original_content != content
 		end
 
 		private
