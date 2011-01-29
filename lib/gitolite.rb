@@ -3,15 +3,20 @@ require 'inifile'
 require 'net/ssh'
 require 'tmpdir'
 
+require 'gitolite_conf.rb'
+
 module Gitolite
+	def self.repository_name project
+		parent_name = project.parent ? repository_name(project.parent) : ""
+		return "#{parent_name}/#{project.identifier}".sub(/^\//, "")
+	end
+
 	def self.get_urls(project)
 		urls = {:read_only => [], :developer => []}
 		read_only_baseurls = Setting.plugin_redmine_gitolite['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/)
 		developer_baseurls = Setting.plugin_redmine_gitolite['developerBaseUrls'].split(/[\r\n\t ,;]+/)
 
-		project_path = ''
-		project_path += project.parent.identifier + "/" if project.parent
-		project_path += project.identifier + ".git"
+		project_path = repository_name(project) + ".git"
 
 		read_only_baseurls.each {|baseurl| urls[:read_only] << baseurl + project_path}
 		developer_baseurls.each {|baseurl| urls[:developer] << baseurl + project_path}
@@ -68,41 +73,25 @@ module Gitolite
 				end
 
 				# write config file
-				conf = IniFile.new(File.join(local_dir,'gitolite','gitolite.conf'))
-				original = conf.clone
-				name = "#{project.identifier}"
+				conf = Config.new(File.join(local_dir,'gitolite/conf', 'gitolite.conf'))
+				repo_name = repository_name(project)
+				read_users = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
+				write_users = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
 
-				conf["group #{name}_readonly"]['readonly'] = name
-				conf["group #{name}_readonly"]['members'] = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
+				conf.set_read_user repo_name, read_users
+				conf.set_write_user repo_name, write_users
 
-				conf["group #{name}"]['writable'] = name
-				conf["group #{name}"]['members'] = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
-
-				# git-daemon support for read-only anonymous access
-				if User.anonymous.allowed_to?( :view_changesets, project )
-					conf["repo #{name}"]['daemon'] = 'yes'
-				else
-					conf["repo #{name}"]['daemon'] = 'no'
-				end
-				# Enable/disable gitweb
-				if User.anonymous.allowed_to?( :view_gitweb, project )
-					conf["repo #{name}"]['gitweb'] = 'yes'
-				else
-					conf["repo #{name}"]['gitweb'] = 'no'
-				end
-
-				unless conf.eql?(original)
-					conf.write 
+				if conf.changed?
+					conf.save
 					changed = true
 				end
-
 			end
 			if changed
-				git_push_file = File.join(local_dir, 'git_push.bat')
+				git_push_file = File.join(local_dir, 'git_push.sh')
 
 	      new_dir= File.join(local_dir,'gitolite')
-#				new_dir.gsub!(/\//, '\\')
 				File.open(git_push_file, "w") do |f|
+				  f.puts "#!/bin/sh"
 					f.puts "cd #{new_dir}"
 					f.puts "git add keydir/* gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
