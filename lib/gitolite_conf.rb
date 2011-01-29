@@ -13,15 +13,11 @@ module Gitolite
 		end
 
 		def add_write_user repo_name, user
-			@repositories[repo_name].add "RW+", user
+			repository(repo_name).add "RW+", user
 		end
 
 		def add_read_user repo_name, user
-			@repositories[repo_name].add "R", user
-		end
-
-		def add_repository repo_name
-			@repositories[repo_name] = AccessRights.new
+			repository(repo_name).add "R", user
 		end
 
 		def changed?
@@ -48,6 +44,11 @@ module Gitolite
 			end
 			@original_content = @original_content.join
 		end
+
+		def repository repo_name
+			@repositories[repo_name] ||= AccessRights.new
+		end
+
 
 		def content
 			content = []
