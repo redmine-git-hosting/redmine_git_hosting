@@ -101,8 +101,8 @@ module Gitolite
 				git_push_file = File.join(local_dir, 'git_push.bat')
 
 	      new_dir= File.join(local_dir,'gitolite')
-#				new_dir.gsub!(/\//, '\\')
 				File.open(git_push_file, "w") do |f|
+				  f.puts "#!/bin/sh"
 					f.puts "cd #{new_dir}"
 					f.puts "git add keydir/* gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"

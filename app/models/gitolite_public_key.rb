@@ -1,6 +1,6 @@
 class GitolitePublicKey < ActiveRecord::Base
-  STATUS_ACTIVE = true
-  STATUS_LOCKED = false
+  STATUS_ACTIVE = 1
+  STATUS_LOCKED = 0
 
   belongs_to :user
   validates_uniqueness_of :title, :scope => :user_id
