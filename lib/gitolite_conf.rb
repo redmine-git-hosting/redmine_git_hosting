@@ -80,7 +80,8 @@ module Gitolite
 		def add perm, users
 			@rights[perm.to_sym] ||= []
 			@rights[perm.to_sym] << users
-			@rights[perm.to_sym].flatten.uniq
+			@rights[perm.to_sym].flatten!
+			@rights[perm.to_sym].uniq!
 		end
 
 		def set perm, users

@@ -75,11 +75,11 @@ module Gitolite
 				# write config file
 				conf = Config.new(File.join(local_dir,'gitolite/conf', 'gitolite.conf'))
 				repo_name = repository_name(project)
-				read_users = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
-				write_users = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
+				read_user_keys = read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
+				write_user_keys = write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{|key| "#{key.identifier}"}
 
-				conf.set_read_user repo_name, read_users
-				conf.set_write_user repo_name, write_users
+				conf.set_read_user repo_name, read_user_keys
+				conf.set_write_user repo_name, write_user_keys
 
 				if conf.changed?
 					conf.save
