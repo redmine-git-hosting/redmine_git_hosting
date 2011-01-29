@@ -93,7 +93,8 @@ module Gitolite
 				File.open(git_push_file, "w") do |f|
 				  f.puts "#!/bin/sh"
 					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/* gitolite.conf"
+					f.puts "git add keydir/*"
+					f.puts "git add conf/gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
 					f.puts "git commit -a -m 'updated by Redmine Gitolite'"
