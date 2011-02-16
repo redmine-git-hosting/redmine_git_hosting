@@ -113,15 +113,15 @@ module Gitosis
 				conf["group #{name}"]['members'] = write_users.map{|u| u.gitosis_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }.join(' ')
 
 				# git-daemon support for read-only anonymous access
-				if Setting.plugin_redmine_gitosis['enableGitdaemon']
-						and User.anonymous.allowed_to?( :view_changesets, project )
+				if Setting.plugin_redmine_gitosis['enableGitdaemon'] and
+						User.anonymous.allowed_to?( :view_changesets, project )
 					conf["repo #{name}"]['daemon'] = 'yes'
 				else
 					conf["repo #{name}"]['daemon'] = 'no'
 				end
 				# Enable/disable gitweb
-				if Setting.plugin_redmine_gitosis['enableGitweb']
-						and User.anonymous.allowed_to?( :view_changesets, project )
+				if Setting.plugin_redmine_gitosis['enableGitweb'] and
+						User.anonymous.allowed_to?( :view_changesets, project )
 					conf["repo #{name}"]['gitweb'] = 'yes'
 				else
 					conf["repo #{name}"]['gitweb'] = 'no'
@@ -147,8 +147,8 @@ module Gitosis
 			File.chmod(0755, git_push_file)
 
 			# add, commit, push, and remove local tmp dir
-			if (Setting.plugin_redmine_gitosis['gitosisLogFile'] != nil)
-					and (Setting.plugin_redmine_gitosis['gitosisLogFile'].length > 0)
+			if (Setting.plugin_redmine_gitosis['gitosisLogFile'] != nil) and
+					(Setting.plugin_redmine_gitosis['gitosisLogFile'].length > 0)
 				`#{git_push_file} >> #{Setting.plugin_redmine_gitosis['gitosisLogFile']}`
 			else
 				`#{git_push_file}`
