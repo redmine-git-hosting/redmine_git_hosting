@@ -17,6 +17,8 @@ Redmine::Plugin.register :redmine_gitosis do
     'gitosisIdentityFile' => '/srv/projects/redmine/miner/.ssh/id_rsa',
     'developerBaseUrls' => 'git@www.salamander-linux.com:,https://[user]@www.salamander-linux.com/git/',
     'readOnlyBaseUrls' => 'http://www.salamander-linux.com/git/',
+    'enableGitweb' => false,
+    'enableGitdaemon' => true,
     'basePath' => '/srv/projects/git/repositories/',
     'gitosisLogFile' => '',
     }, 

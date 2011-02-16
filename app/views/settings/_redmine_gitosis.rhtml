@@ -25,6 +25,16 @@
 		<br />
 	</p>
 	<p>
+		<label><%= l(:label_enable_gitdaemon)%></label>
+		<%= check_box_tag("settings[enableGitdaemon]", 1, false, :tabindex => 4) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_enable_gitweb)%></label>
+		<%= check_box_tag("settings[enableGitweb]", 1, false, :tabindex => 4) %>
+		<br />
+	</p>
+	<p>
 		<label><%= l(:label_gitosis_log_file)%></label>
 		<%= text_field_tag("settings[gitosisLogFile]", @settings['gitosisLogFile'], :size => 60) %>
 		<br />
