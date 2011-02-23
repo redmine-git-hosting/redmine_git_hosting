@@ -126,6 +126,7 @@ module Gitosis
 				else
 					conf["repo #{name}"]['gitweb'] = 'no'
 				end
+				conf["repo #{name}"]['description'] = project.name
 
 				unless conf.eql?(original)
 					conf.write 
