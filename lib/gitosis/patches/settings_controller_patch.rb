@@ -4,10 +4,15 @@ module Gitosis
     module SettingsControllerPatch
 
       def plugin_with_update_repo
-        if params[:commit] and params[:commit] == 'Apply'
+        @plugin = Redmine::Plugin.find(params[:id])
+
+        plugin_without_update_repo
+
+        if @plugin.id.to_s == 'redmine_gitosis' and
+            request.post? and params[:commit] and params[:commit] == 'Apply'
+          Setting.plugin_redmine_gitosis = Setting['plugin_redmine_gitosis']
           Gitosis.update_repositories(Project.active)
         end
-        plugin_without_update_repo
       end
 
       def self.included(base)
