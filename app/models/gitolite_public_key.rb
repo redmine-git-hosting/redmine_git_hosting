@@ -23,6 +23,7 @@ class GitolitePublicKey < ActiveRecord::Base
   end
   
   def set_identifier
+    # TODO: some better naming, id is set long AFTER this method is called. Maybe timestamp?
     self.identifier ||= "#{self.user.login.underscore}-#{self.title.underscore}-#{self.id}".gsub(/[^0-9a-zA-Z-_]/,'_')
   end
     
