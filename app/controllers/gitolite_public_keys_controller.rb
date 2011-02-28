@@ -11,9 +11,9 @@ class GitolitePublicKeysController < ApplicationController
     elsif params[:status].blank?
         nil
     else 
-      params[:status].to_i != 0
+      params[:status] == "true"
     end
-    c = ARCondition.new(@status ? ["active=?", @status] : nil)
+    c = ARCondition.new(!@status.nil? ? ["active=?", @status] : nil)
 
     @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => c.conditions)
     respond_to do |format|
