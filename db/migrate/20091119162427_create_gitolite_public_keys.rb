@@ -4,7 +4,7 @@ class CreateGitolitePublicKeys < ActiveRecord::Migration
       t.column :title, :string
       t.column :identifier, :string
       t.column :key, :text
-      t.column :active, :integer, :default => 1
+      t.column :active, :boolean, :default => true
       t.references :user
       t.timestamps
       
