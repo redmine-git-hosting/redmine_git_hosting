@@ -77,8 +77,16 @@ module Gitolite
 
       %x[mkdir "#{local_dir}"]
 
+			# Create GIT_SSH script
+			ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
+			File.open(ssh_with_identity_file, "w") do |f|
+				f.puts "#!/bin/bash"
+				f.puts "exec ssh -o stricthostkeychecking=no -i #{Setting.plugin_redmine_gitolite['gitoliteIdentityFile']} \"$@\""
+			end
+			File.chmod(0755, ssh_with_identity_file)
+
 			# clone repo
-			%x[git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite]
+			%x[env GIT_SSH=#{ssh_with_identity_file} git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite]
 
 
 			changed = false
@@ -106,7 +114,7 @@ module Gitolite
 
         # TODO: we should handle two different groups for this
 				# conf.add_users name, :rw, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
-				conf.add_users name, :rwp, write_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
+				conf.add_users name, :rwp, write_users.map{ |user| "#{user.login.underscore}" }
 
         # TODO: gitweb and git daemon support!
 
@@ -128,7 +136,7 @@ module Gitolite
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
 					f.puts "git commit -a -m 'updated by Redmine Gitolite'"
-					f.puts "git push"
+					f.puts "GIT_SSH=#{ssh_with_identity_file} git push"
 				end
 				File.chmod(0755, git_push_file)
 
