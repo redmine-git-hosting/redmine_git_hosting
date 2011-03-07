@@ -11,6 +11,10 @@ module Gitolite
       read
     end
 
+	def clear_users repo
+	  @repos[repo] = { :rwp => [], :rw => [], :r => [] }
+	end
+
     def add_users repo, type, list
       @repos[repo] ||= { :rwp => [], :rw => [], :r => [] }
       @repos[repo][type] = @repos[repo][type] | list

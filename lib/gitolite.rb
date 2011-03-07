@@ -10,22 +10,22 @@ module Gitolite
     if (baseUrlStr.length == 0)
       return rendered
     end
-    
+
     baseUrlList = baseUrlStr.split("%p")
     if (not defined?(baseUrlList.length))
       return rendered
     end
-    
+
     rendered = rendered + "<strong>Read Only Url:</strong><br />"
     rendered = rendered + "<ul>"
-    
+
     rendered = rendered + "<li>" + baseUrlList[0] +(parent ? "" : "/"+parent+"/")+ projectId + baseUrlList[1] + "</li>"
-    
+
     rendered = rendered + "</ul>\n"
-    
+
     return rendered
   end
-  
+
 	def self.renderUrls(baseUrlStr, projectId, isReadOnly, parent)
 		rendered = ""
 		if(baseUrlStr.length == 0)
@@ -45,11 +45,11 @@ module Gitolite
 				end
 		rendered = rendered + "</ul>\n"
 		return rendered
-	end 
+	end
 
 	def self.update_repositories(projects)
 		projects = (projects.is_a?(Array) ? projects : [projects])
-	
+
 		if(defined?(@recursionCheck))
 			if(@recursionCheck)
 				return
@@ -89,6 +89,9 @@ module Gitolite
 			%x[env GIT_SSH=#{ssh_with_identity_file} git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite]
 
 
+			conf = GitoliteConfig.new(File.join(local_dir,'gitolite','conf','gitolite.conf'))
+			original = conf.clone
+
 			changed = false
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
 				# fetch users
@@ -97,19 +100,25 @@ module Gitolite
 				read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
 				# write key files
 				users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
-					File.open(File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub"), 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+					unless File.exists? filename
+						File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+						changed = true
+					end
 				end
 
 				# delete inactives
 				users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
-					File.unlink(File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")) rescue nil
+					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+					if File.exists? filename
+						File.unlink() rescue nil
+						changed = true
+					end
 				end
 
-				# write config file
-				conf = GitoliteConfig.new(File.join(local_dir,'gitolite','conf','gitolite.conf'))
-				original = conf.clone
+				# update users in config file
 				name = "#{project.identifier}"
-
+				conf.clear_users name
 				conf.add_users name, :r, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
 
         # TODO: we should handle two different groups for this
@@ -118,12 +127,13 @@ module Gitolite
 
         # TODO: gitweb and git daemon support!
 
-				unless conf.eql?(original)
-					conf.write 
-					changed = true
-				end
-
 			end
+
+			unless conf.eql?(original)
+				conf.write
+				changed = true
+			end
+
 			if changed
 				git_push_file = File.join(local_dir, 'git_push.sh')
 
@@ -151,5 +161,5 @@ module Gitolite
 		@recursionCheck = false
 
 	end
-	
+
 end
