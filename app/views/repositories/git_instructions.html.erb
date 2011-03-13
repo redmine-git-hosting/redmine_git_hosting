@@ -14,10 +14,12 @@
 </pre>
 
 <h2>Repository Setup:</h2>
-<pre>  cd <%= @project.identifier %>
+<pre>  mkdir <%= @project.identifier %>
+  cd <%= @project.identifier %>
   git init
-  git add .
-  git commit -m 'Initializing <%= @project %> repository'
+  touch README
+  git add README
+  git commit -m 'initial commit'
   git remote add origin <%= Setting.plugin_redmine_gitolite['developerBaseUrls'] + @project.identifier + '.git' %>
   git push origin master
 </pre>
