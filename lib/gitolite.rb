@@ -4,6 +4,7 @@ require 'net/ssh'
 require 'tmpdir'
 require 'gitolite/gitolite_config'
 
+
 module Gitolite
   def self.renderReadOnlyUrls(baseUrlStr, projectId,parent)
     rendered = ""
@@ -74,8 +75,7 @@ module Gitolite
 
 			# create tmp dir
 			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
-
-      %x[mkdir "#{local_dir}"]
+      		%x[mkdir "#{local_dir}"]
 
 			# Create GIT_SSH script
 			ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
@@ -98,6 +98,7 @@ module Gitolite
 				users = project.member_principals.map(&:user).compact.uniq
 				write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
 				read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
+				
 				# write key files
 				users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
 					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
@@ -121,11 +122,11 @@ module Gitolite
 				conf.clear_users name
 				conf.add_users name, :r, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
 
-        # TODO: we should handle two different groups for this
+        		# TODO: we should handle two different groups for this
 				# conf.add_users name, :rw, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
 				conf.add_users name, :rwp, write_users.map{ |user| "#{user.login.underscore}" }
 
-        # TODO: gitweb and git daemon support!
+        		# TODO: gitweb and git daemon support!
 
 			end
 
@@ -137,12 +138,12 @@ module Gitolite
 			if changed
 				git_push_file = File.join(local_dir, 'git_push.sh')
 
-        # Changed to unix-style
-        # TODO: platform independent code
-	      new_dir= File.join(local_dir,'gitolite')
+        			# Changed to unix-style
+        			# TODO: platform independent code
+	      			new_dir= File.join(local_dir,'gitolite')
 				File.open(git_push_file, "w") do |f|
 					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/* gitolite.conf"
+					f.puts "git add keydir/* conf/gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
 					f.puts "git commit -a -m 'updated by Redmine Gitolite'"
@@ -163,3 +164,4 @@ module Gitolite
 	end
 
 end
+
