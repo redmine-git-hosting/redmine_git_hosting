@@ -1,3 +1,8 @@
+= Patches
+* work with gitolite
+* support subproject git repo. (e.g. git@site.name:parent_project/subproject.git)
+* fix bugs.
+
 = Redmine Gitolite
 
 A Redmine plugin which manages your gitolite configuration based on your projects and memberships in Redmine. Includes Public Key management views (extracted from http://plan.io).

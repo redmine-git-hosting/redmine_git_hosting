@@ -1,51 +1,25 @@
 require 'lockfile'
-require 'inifile'
 require 'net/ssh'
 require 'tmpdir'
-require 'gitolite/gitolite_config'
 
+require 'gitolite_conf.rb'
 
 module Gitolite
-  def self.renderReadOnlyUrls(baseUrlStr, projectId,parent)
-    rendered = ""
-    if (baseUrlStr.length == 0)
-      return rendered
-    end
+	def self.repository_name project
+		parent_name = project.parent ? repository_name(project.parent) : ""
+		return "#{parent_name}/#{project.identifier}".sub(/^\//, "")
+	end
+	
+	def self.get_urls(project)
+		urls = {:read_only => [], :developer => []}
+		read_only_baseurls = Setting.plugin_redmine_gitolite['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/)
+		developer_baseurls = Setting.plugin_redmine_gitolite['developerBaseUrls'].split(/[\r\n\t ,;]+/)
 
-    baseUrlList = baseUrlStr.split("%p")
-    if (not defined?(baseUrlList.length))
-      return rendered
-    end
+		project_path = repository_name(project) + ".git"
 
-    rendered = rendered + "<strong>Read Only Url:</strong><br />"
-    rendered = rendered + "<ul>"
-
-    rendered = rendered + "<li>" + baseUrlList[0] +(parent ? "" : "/"+parent+"/")+ projectId + baseUrlList[1] + "</li>"
-
-    rendered = rendered + "</ul>\n"
-
-    return rendered
-  end
-
-	def self.renderUrls(baseUrlStr, projectId, isReadOnly, parent)
-		rendered = ""
-		if(baseUrlStr.length == 0)
-			return rendered
-		end
-		baseUrlList=baseUrlStr.split(/[\r\n\t ,;]+/)
-
-		if(not defined?(baseUrlList.length))
-			return rendered
-		end
-
-
-		rendered = rendered + "<strong>" + (isReadOnly ? "Read Only" : "Developer") + " " + (baseUrlList.length == 1 ? "URL" : "URLs") + ": </strong><br/>"
-				rendered = rendered + "<ul>";
-				for baseUrl in baseUrlList do
-						rendered = rendered + "<li>" + "<span style=\"width: 95%; font-size:10px\">" + baseUrl+ (parent ? "" : "/"+parent+"/") + projectId + ".git</span></li>"
-				end
-		rendered = rendered + "</ul>\n"
-		return rendered
+		read_only_baseurls.each {|baseurl| urls[:read_only] << baseurl + project_path}
+		developer_baseurls.each {|baseurl| urls[:developer] << baseurl + project_path}
+		return urls
 	end
 
 	def self.update_repositories(projects)
@@ -88,9 +62,7 @@ module Gitolite
 			# clone repo
 			%x[env GIT_SSH=#{ssh_with_identity_file} git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite]
 
-
-			conf = GitoliteConfig.new(File.join(local_dir,'gitolite','conf','gitolite.conf'))
-			original = conf.clone
+			conf = Config.new(File.join(local_dir, 'gitolite', 'conf', 'gitolite.conf'))
 
 			changed = false
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -117,33 +89,31 @@ module Gitolite
 					end
 				end
 
-				# update users in config file
-				name = "#{project.identifier}"
-				conf.clear_users name
-				conf.add_users name, :r, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
+				# write config file
+				repo_name = repository_name(project)
+				read_users = read_users.map{|u| u.login.underscore}
+				write_users = write_users.map{|u| u.login.underscore}
 
-        		# TODO: we should handle two different groups for this
-				# conf.add_users name, :rw, read_users.map{|u| u.gitolite_public_keys.active}.flatten.map{ |key| "#{key.identifier}" }
-				conf.add_users name, :rwp, write_users.map{ |user| "#{user.login.underscore}" }
-
-        		# TODO: gitweb and git daemon support!
-
+				conf.set_read_user repo_name, read_users
+				conf.set_write_user repo_name, write_users
+				
+				# TODO: gitweb and git daemon support!
 			end
-
-			unless conf.eql?(original)
-				conf.write
+			
+			if conf.changed?
+				conf.save
 				changed = true
 			end
 
 			if changed
 				git_push_file = File.join(local_dir, 'git_push.sh')
-
-        			# Changed to unix-style
-        			# TODO: platform independent code
-	      			new_dir= File.join(local_dir,'gitolite')
+				new_dir= File.join(local_dir,'gitolite')
+				
 				File.open(git_push_file, "w") do |f|
+					f.puts "#!/bin/sh"
 					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/* conf/gitolite.conf"
+					f.puts "git add keydir/*"
+					f.puts "git add conf/gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
 					f.puts "git commit -a -m 'updated by Redmine Gitolite'"
