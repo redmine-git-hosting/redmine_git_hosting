@@ -83,8 +83,22 @@ module Gitosis
 
 			Dir.mkdir local_dir
 
+			git_env_ssh=""
+			if not mswin?
+				#setup custom ssh file to use specified ssh key
+				ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
+				File.open(ssh_with_identity_file, "w") do |f|
+					f.puts "#!/bin/bash"
+					f.puts "exec ssh -o stricthostkeychecking=no -i #{Setting.plugin_redmine_gitosis['gitosisIdentityFile']} \"$@\""
+				end
+				File.chmod(0755, ssh_with_identity_file)
+				ENV['GIT_SSH'] = ssh_with_identity_file
+				env_git_ssh="env GIT_SSH=#{ssh_with_identity_file} "
+			end
+
 			# clone repo
-			`git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+			`#{env_git_ssh}git clone #{Setting.plugin_redmine_gitosis['gitosisUrl']} #{local_dir}/gitosis`
+
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
 				# fetch users
@@ -143,7 +157,7 @@ module Gitosis
 				f.puts "git config user.email '#{Setting.mail_from}'"
 				f.puts "git config user.name 'Redmine'"
 				f.puts "git commit -a -m 'updated by Redmine Gitosis'"
-				f.puts "git push"
+				f.puts "#{env_git_ssh}git push"
 			end
 			File.chmod(0755, git_push_file)
 
