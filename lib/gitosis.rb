@@ -5,33 +5,6 @@ require 'tmpdir'
 
 module Gitosis
 
-	def self.renderReadOnlyUrls(baseUrlStr, projectId)
-		rendered = ""
-		if (baseUrlStr.length == 0)
-			return rendered
-		end
-		baseUrlList = baseUrlStr.split(/[\r\n\t ,;]+/)
-
-		if (not defined?(baseUrlList.length))
-			return rendered
-		end
-    
-		rendered = rendered + "<strong>Read Only Url:</strong><br />\n"
-		rendered = rendered + "<ul>"
-    
-		rendered = rendered + "<li>"
-		projectName = projectId
-		if (baseUrlList.length > 1)
-			rendered = rendered + baseUrlList[0] + projectName + baseUrlList[1]
-		else
-			rendered = rendered + baseUrlList[0] + projectName
-		end
-		rendered = rendered + "</li>\n"
-		rendered = rendered + "</ul>\n"
-    
-		return rendered
-	end
-  
 	def self.renderUrls(baseUrlStr, projectId, isReadOnly)
 		rendered = ""
 		if(baseUrlStr.length == 0)

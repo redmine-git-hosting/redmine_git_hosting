@@ -3,12 +3,11 @@
 	<h3>Git Repository</h3>
 	<p>
 		<% if User.anonymous.allowed_to?(:view_changesets, project) %>
-			<%= Gitosis::renderReadOnlyUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier) %>
+			<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['readOnlyBaseUrls'], @project.identifier, true) %>
 		<% end %>
 	</p>
 	<p>
 		<%= Gitosis::renderUrls(Setting.plugin_redmine_gitosis['developerBaseUrls'], @project.identifier, false)  %>
-
 	</p>
 </div>
 <% end %>
