@@ -7,7 +7,41 @@ require 'time'
 class GrackController < ApplicationController
 
 	def index
-		render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
+	
+	
+		p1 = params[:p1]
+		p2 = params[:p2]
+		p3 = params[:p3]
+
+		@reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
+		@rpc = ""
+		@dir = get_git_dir()	
+		
+		if p1 == "git-upload-pack"
+			@rpc = "upload-pack"
+			service_rpc 
+		elsif p1 == "git-receive-pack"
+			@rpc = "receive-pack"
+			service_rpc
+		elsif p1 == "info" && p2 == "refs"
+			get_info_refs
+		elsif p1 == "HEAD"
+			get_text_file
+		elsif p1 == "objects" && p2 == "info"
+			if p3 != packs
+				get_text_file
+			else
+				get_info_packs
+			end
+		elsif p1 == "objects" && p2 != "pack"
+			get_loose_object
+		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.pack$/)
+			get_pack_file
+		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
+			get_idx_file
+		else
+			render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
+		end
 	end
 
 	def service_rpc
@@ -101,9 +135,9 @@ class GrackController < ApplicationController
 		send_file(reqfile,  :type=>content_type, :disposition=>"inline", :buffer_size => 4096)
 	end
 
-	def get_git_dir(path)
-		root = @config[:project_root] || `pwd`
-		path = File.join(root, path)
+	def get_git_dir
+		#fix this later -- use this for debugging
+		path = "/srv/projects/git/repositories/my-git-proj1.git"
 		if File.exists?(path) # TODO: check is a valid git directory
 			return path
 		end
@@ -111,7 +145,7 @@ class GrackController < ApplicationController
 	end
 
 	def get_service_type
-		service_type = @req.params['service']
+		service_type = params['service']
 		return false if !service_type
 		return false if service_type[0, 4] != 'git-'
 		service_type.gsub('git-', '')
