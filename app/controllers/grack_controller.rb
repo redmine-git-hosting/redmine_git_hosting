@@ -16,6 +16,7 @@ class GrackController < ApplicationController
 		@reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 		@rpc = ""
 		@dir = get_git_dir()	
+		Dir.chdir(@dir)
 		
 		if p1 == "git-upload-pack"
 			@rpc = "upload-pack"
@@ -40,7 +41,8 @@ class GrackController < ApplicationController
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
 			get_idx_file
 		else
-			render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
+			send_file("/srv/www/html/index.html",  :type=>"text/plain", :disposition=>"inline", :buffer_size => 4096)
+			#render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
 		end
 	end
 
@@ -66,18 +68,16 @@ class GrackController < ApplicationController
 	def get_info_refs
 		service_name = get_service_type
 
+		#if false
 		if has_access(service_name)
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
 			refs = `#{cmd}`
 
-			@res = Rack::Response.new
-			@res.status = 200
-			@res["Content-Type"] = "application/x-git-%s-advertisement" % service_name
+			response.headers["Content-Type"] = "application/x-git-%s-advertisement" % service_name
 			hdr_nocache
-			@res.write(pkt_write("# service=git-#{service_name}\n"))
-			@res.write(pkt_flush)
-			@res.write(refs)
-			@res.finish
+			
+			response_data = pkt_write("# service=git-#{service_name}\n") + pkt_flush + refs
+			render :text=>response_data
 		else
 			dumb_info_refs
 		end
@@ -145,7 +145,7 @@ class GrackController < ApplicationController
 	end
 
 	def get_service_type
-		service_type = params['service']
+		service_type = params[:service]
 		return false if !service_type
 		return false if service_type[0, 4] != 'git-'
 		service_type.gsub('git-', '')
