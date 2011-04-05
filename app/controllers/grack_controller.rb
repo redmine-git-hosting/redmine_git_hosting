@@ -1,5 +1,4 @@
-require 'zlib'
-require 'rack/request'
+
 require 'rack/response'
 require 'rack/utils'
 require 'time'
@@ -41,28 +40,36 @@ class GrackController < ApplicationController
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
 			get_idx_file
 		else
-			send_file("/srv/www/html/index.html",  :type=>"text/plain", :disposition=>"inline", :buffer_size => 4096)
+			render_not_found
+			#render :text => proc { |response,output| output.write("ook ook ook\n") }
+			#render :text => "<html><body>" + read_body + "</body></html>"
+			#send_file("/srv/www/html/index.html",  :type=>"text/plain", :disposition=>"inline", :buffer_size => 4096)
 			#render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
 		end
 	end
 
 	def service_rpc
 		return render_no_access if !has_access(@rpc, true)
+		
 		input = read_body
 
-		@res = Rack::Response.new
-		@res.status = 200
-		@res["Content-Type"] = "application/x-git-%s-result" % @rpc
-		@res.finish do
-			command = git_command("#{@rpc} --stateless-rpc #{@dir}")
-			IO.popen(command, File::RDWR) do |pipe|
-				pipe.write(input)
-				while !pipe.eof?
-					block = pipe.read(8192) # 8M at a time
-					@res.write block				# steam it to the client
-				end
+		response.headers["Content-Type"] = "application/x-git-%s-result" % @rpc
+		command = git_command("#{@rpc} --stateless-rpc #{@dir}")
+		@control_pipe = IO.popen(command, File::RDWR)
+		@control_pipe.write(input)
+	
+		render :text => proc { |response, output| 
+			buf_length=131072
+			buf = @control_pipe.read(buf_length)
+			while(buf.length == buf_length)
+				output.write( buf )
+				buf = @control_pipe.read(buf_length)
 			end
-		end
+			if(buf.length > 0)
+				output.write( buf )
+			end
+			pipe.close
+		}
 	end
 
 	def get_info_refs
@@ -183,10 +190,11 @@ class GrackController < ApplicationController
 	end
 
 	def read_body
-		if @env["HTTP_CONTENT_ENCODING"] =~ /gzip/
-			input = Zlib::GzipReader.new(@req.body).read
+		enc_header = (request.headers['HTTP_CONTENT_ENCODING']).to_s
+		if enc_header =~ /gzip/
+			input = Zlib::GzipReader.new(request.body).read
 		else
-			input = @req.body.read
+			input = request.body.read
 		end
 	end
 
