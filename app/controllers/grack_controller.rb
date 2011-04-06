@@ -116,7 +116,7 @@ class GrackController < ApplicationController
 
 	def get_pack_file(reqfile, dir)
 
-		internal_send_file(reqfile, dir "application/x-git-packed-objects") do
+		internal_send_file(reqfile, dir, "application/x-git-packed-objects") do
 			hdr_cache_forever
 		end
 	end
@@ -164,18 +164,21 @@ class GrackController < ApplicationController
 
 
 	def has_access(rpc, check_content_type = false)
+		
+
 		return true
-		if check_content_type
-			return false if @req.content_type != "application/x-git-%s-request" % rpc
-		end
-		return false if !['upload-pack', 'receive-pack'].include? rpc
-		if rpc == 'receive-pack'
-			return @config[:receive_pack] if @config.include? :receive_pack
-		end
-		if rpc == 'upload-pack'
-			return @config[:upload_pack] if @config.include? :upload_pack
-		end
-		return get_config_setting(rpc)
+		
+		#if check_content_type
+		#	return false if @req.content_type != "application/x-git-%s-request" % rpc
+		#end
+		#return false if !['upload-pack', 'receive-pack'].include? rpc
+		#if rpc == 'receive-pack'
+		#	return @config[:receive_pack] if @config.include? :receive_pack
+		#end
+		#if rpc == 'upload-pack'
+		#	return @config[:upload_pack] if @config.include? :upload_pack
+		#end
+		#return get_config_setting(rpc)
 	end
 
 	def get_config_setting(service_name)
