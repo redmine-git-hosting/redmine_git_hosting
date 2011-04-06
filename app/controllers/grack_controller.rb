@@ -58,14 +58,11 @@ class GrackController < ApplicationController
 	private
 
 	def authenticate
-		#return true
 		is_push = params[:p1] == "git-receive-pack"	
 		project = Project.find(prams[:id])
 		allow_anonymous_read = project.is_public
 		valid = true
 		if is_push || (!allow_anonymous_read)
-			#users = project.member_principals.map(&:user).compact.uniq
-			#test_users = is_push ? users.select{ |user| user.allowed_to?( :commit_access, project ) } :  users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
 			valid = false
 			authenticate_or_request_with_http_basic do |login, password| 
 				user = User.find_by_login(login);
