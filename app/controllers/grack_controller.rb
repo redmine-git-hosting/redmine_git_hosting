@@ -18,7 +18,7 @@ class GrackController < ApplicationController
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
 		original_dir=Dir.pwd
-		dir = get_git_dir()	
+		dir = get_git_project_dir(repo_name)	
 		Dir.chdir(dir)
 		
 		if p1 == "git-upload-pack"
@@ -147,7 +147,7 @@ class GrackController < ApplicationController
 		send_file(file,  :type=>content_type, :disposition=>"inline", :buffer_size => 4096)
 	end
 
-	def get_git_dir
+	def get_git_project_dir(repo_name)
 		#fix this later -- use this for debugging
 		path = "/srv/projects/git/repositories/my-git-proj1.git"
 		if File.exists?(path) # TODO: check is a valid git directory
