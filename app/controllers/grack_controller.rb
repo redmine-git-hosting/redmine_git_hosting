@@ -15,33 +15,32 @@ class GrackController < ApplicationController
 		repo_name = params[:path]
 
 
-		@reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
-		@rpc = ""
-		@dir = get_git_dir()	
-		Dir.chdir(@dir)
+		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
+
+		original_dir=Dir.pwd
+		dir = get_git_dir()	
+		Dir.chdir(dir)
 		
 		if p1 == "git-upload-pack"
-			@rpc = "upload-pack"
-			service_rpc 
+			service_rpc(dir, "upload-pack")
 		elsif p1 == "git-receive-pack"
-			@rpc = "receive-pack"
-			service_rpc
+			service_rpc(dir, "receive-pack")
 		elsif p1 == "info" && p2 == "refs"
-			get_info_refs
+			get_info_refs(reqfile, dir)
 		elsif p1 == "HEAD"
-			get_text_file
+			get_text_file(reqfile, dir)
 		elsif p1 == "objects" && p2 == "info"
 			if p3 != packs
-				get_text_file
+				get_text_file(reqfile, dir)
 			else
-				get_info_packs
+				get_info_packs(reqfile, dir)
 			end
 		elsif p1 == "objects" && p2 != "pack"
-			get_loose_object
+			get_loose_object(reqfile, dir)
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.pack$/)
-			get_pack_file
+			get_pack_file(reqfile, dir)
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
-			get_idx_file
+			get_idx_file(reqfile, dir)
 		else
 			render_not_found
 			#render :text => proc { |response,output| output.write("ook ook ook\n") }
@@ -49,15 +48,17 @@ class GrackController < ApplicationController
 			#send_file("/srv/www/html/index.html",  :type=>"text/plain", :disposition=>"inline", :buffer_size => 4096)
 			#render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
 		end
+		Dir.chdir(original_dir)
+
 	end
 
-	def service_rpc
-		return render_no_access if !has_access(@rpc, true)
+	def service_rpc(dir, rpc)
+		return render_no_access if !has_access(rpc, true)
 		
 		input = read_body
 
-		response.headers["Content-Type"] = "application/x-git-%s-result" % @rpc
-		command = git_command("#{@rpc} --stateless-rpc #{@dir}")
+		response.headers["Content-Type"] = "application/x-git-%s-result" % rpc
+		command = git_command("#{rpc} --stateless-rpc #{dir}")
 		@git_http_control_pipe = IO.popen(command, File::RDWR)
 		@git_http_control_pipe.write(input)
 	
@@ -72,10 +73,11 @@ class GrackController < ApplicationController
 				output.write( buf )
 			end
 			@git_http_control_pipe.close
+			@git_http_control_pipe = nil
 		}
 	end
 
-	def get_info_refs
+	def get_info_refs(reqfile, dir)
 		service_name = get_service_type
 
 		if has_access(service_name)
@@ -88,44 +90,45 @@ class GrackController < ApplicationController
 			response_data = pkt_write("# service=git-#{service_name}\n") + pkt_flush + refs
 			render :text=>response_data
 		else
-			dumb_info_refs
+			dumb_info_refs(reqfile, dir)
 		end
 	end
 
-	def dumb_info_refs
+	def dumb_info_refs(reqfile, dir)
 		update_server_info
-		grack_send_file(@reqfile, "text/plain; charset=utf-8") do
+		internal_send_file(reqfile, dir, "text/plain; charset=utf-8") do
 			hdr_nocache
 		end
 	end
 
-	def get_info_packs
+	def get_info_packs(reqfile, dir)
 		# objects/info/packs
-		grack_send_file(@reqfile, "text/plain; charset=utf-8") do
+		internal_send_file(reqfile, dir, "text/plain; charset=utf-8") do
 			hdr_nocache
 		end
 	end
 
-	def get_loose_object
-		grack_send_file(@reqfile, "application/x-git-loose-object") do
+	def get_loose_object(reqfile, dir)
+		internal_send_file(reqfile, dir, "application/x-git-loose-object") do
 			hdr_cache_forever
 		end
 	end
 
-	def get_pack_file
-		grack_send_file(@reqfile, "application/x-git-packed-objects") do
+	def get_pack_file(reqfile, dir)
+
+		internal_send_file(reqfile, dir "application/x-git-packed-objects") do
 			hdr_cache_forever
 		end
 	end
 
-	def get_idx_file
-		grack_send_file(@reqfile, "application/x-git-packed-objects-toc") do
+	def get_idx_file(reqfile, dir)
+		internal_send_file(reqfile, dir, "application/x-git-packed-objects-toc") do
 			hdr_cache_forever
 		end
 	end
 
-	def get_text_file
-		grack_send_file(@reqfile, "text/plain") do
+	def get_text_file(reqfile, dir)
+		internal_send_file(reqfile, dir, "text/plain") do
 			hdr_nocache
 		end
 	end
@@ -137,11 +140,11 @@ class GrackController < ApplicationController
 	F = ::File
 
 	# some of this borrowed from the Rack::File implementation
-	def grack_send_file(reqfile, content_type)
-		reqfile = File.join(@dir, reqfile)
-		return render_not_found if !F.exists?(reqfile)
+	def internal_send_file(reqfile, dir, content_type)
+		file = File.join(dir, reqfile)
+		return render_not_found if !F.exists?(file)
 
-		send_file(reqfile,  :type=>content_type, :disposition=>"inline", :buffer_size => 4096)
+		send_file(file,  :type=>content_type, :disposition=>"inline", :buffer_size => 4096)
 	end
 
 	def get_git_dir
