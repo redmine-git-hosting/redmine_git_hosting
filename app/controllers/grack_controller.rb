@@ -11,6 +11,9 @@ class GrackController < ApplicationController
 		p1 = params[:p1]
 		p2 = params[:p2]
 		p3 = params[:p3]
+		proj_id = params[:id]
+		repo_name = params[:path]
+
 
 		@reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 		@rpc = ""
@@ -55,27 +58,26 @@ class GrackController < ApplicationController
 
 		response.headers["Content-Type"] = "application/x-git-%s-result" % @rpc
 		command = git_command("#{@rpc} --stateless-rpc #{@dir}")
-		@control_pipe = IO.popen(command, File::RDWR)
-		@control_pipe.write(input)
+		@git_http_control_pipe = IO.popen(command, File::RDWR)
+		@git_http_control_pipe.write(input)
 	
 		render :text => proc { |response, output| 
 			buf_length=131072
-			buf = @control_pipe.read(buf_length)
+			buf = @git_http_control_pipe.read(buf_length)
 			while(buf.length == buf_length)
 				output.write( buf )
-				buf = @control_pipe.read(buf_length)
+				buf = @git_http_control_pipe.read(buf_length)
 			end
 			if(buf.length > 0)
 				output.write( buf )
 			end
-			pipe.close
+			@git_http_control_pipe.close
 		}
 	end
 
 	def get_info_refs
 		service_name = get_service_type
 
-		#if false
 		if has_access(service_name)
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
 			refs = `#{cmd}`
@@ -214,7 +216,7 @@ class GrackController < ApplicationController
 	# --------------------------------------
 
 	def render_method_not_allowed
-		if @env['SERVER_PROTOCOL'] == "HTTP/1.1"
+		if request.env['SERVER_PROTOCOL'] == "HTTP/1.1"
 			head :method_not_allowed
 		else
 			head :bad_request
