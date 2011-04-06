@@ -63,13 +63,17 @@ class GrackController < ApplicationController
 		project = Project.find(prams[:id])
 		allow_anonymous_read = project.is_public
 		valid = true
-		if(is_push || (!allow_anonymous_read))
-			users = project.member_principals.map(&:user).compact.uniq
-			test_users = is_push ? users.select{ |user| user.allowed_to?( :commit_access, project ) } :  users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
-
-
-			authenticate_or_request_with_http_basic do |id, password| 
-				id == "good" && password == "good"
+		if is_push || (!allow_anonymous_read)
+			#users = project.member_principals.map(&:user).compact.uniq
+			#test_users = is_push ? users.select{ |user| user.allowed_to?( :commit_access, project ) } :  users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
+			valid = false
+			authenticate_or_request_with_http_basic do |login, password| 
+				user = User.find_by_login(login);
+				if user.is_a?(User)
+					if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
+						valid = user.check_password?(password)
+					end
+				end
 			end
 			
 		end
