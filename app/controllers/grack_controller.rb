@@ -9,14 +9,12 @@ class GrackController < ApplicationController
 
 
 	def index
-	
-	
 		p1 = params[:p1]
 		p2 = params[:p2]
 		p3 = params[:p3]
 		proj_id = params[:id]
 		repo_name = params[:path]
-
+		
 
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
@@ -24,6 +22,7 @@ class GrackController < ApplicationController
 		dir = get_git_project_dir(repo_name)	
 		Dir.chdir(dir)
 		
+
 		if p1 == "git-upload-pack"
 			service_rpc(dir, "upload-pack")
 		elsif p1 == "git-receive-pack"
@@ -59,7 +58,7 @@ class GrackController < ApplicationController
 
 	def authenticate
 		is_push = params[:p1] == "git-receive-pack"	
-		project = Project.find(prams[:id])
+		project = Project.find(params[:id])
 		allow_anonymous_read = project.is_public
 		valid = true
 		if is_push || (!allow_anonymous_read)
@@ -72,7 +71,6 @@ class GrackController < ApplicationController
 					end
 				end
 			end
-			
 		end
 
 		return valid
