@@ -1,0 +1,20 @@
+<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
+<% repo_urls = Gitolite::get_urls(@project) %>
+<div class="box">
+	<h3>Git Repository</h3>
+	<p>
+		<strong>Developer URL</strong>
+		<ul>
+			<% repo_urls[:developer].each do |url| %>
+			<li> <%= url %>
+			<% end %>
+		</ul>
+		<strong>Read-Only URL</strong>
+		<ul>
+			<% repo_urls[:read_only].each do |url| %>
+			<li> <%= url %>
+			<% end %>
+		</ul>
+	</p>
+</div>
+<% end %>

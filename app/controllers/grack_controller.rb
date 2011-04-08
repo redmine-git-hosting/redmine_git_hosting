@@ -172,7 +172,7 @@ class GrackController < ApplicationController
 	end
 
 	def get_git_project_dir(repo_name)
-		path = File.join(Setting.plugin_redmine_gitosis['gitRepositoryBasePath'], repo_name)
+		path = File.join(Setting.plugin_redmine_gitolite['gitRepositoryBasePath'], repo_name)
 		if File.exists?(path) # TODO: check is a valid git directory
 			return path
 		end

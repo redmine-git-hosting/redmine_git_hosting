@@ -1,8 +1,8 @@
 <h2><%= link_to l(:label_public_keys), public_keys_path %> &#187; <%=l(:label_public_key_new)%></h2>
 
-<%= error_messages_for :gitosis_public_key %>
+<%= error_messages_for :gitolite_public_key %>
 
-<% form_for :public_key, @gitosis_public_key, :url => { :action => "create" },
+<% form_for :public_key, @gitolite_public_key, :url => { :action => "create" },
                           :builder => TabularFormBuilder, 
                           :lang => current_language do |f| %>
 

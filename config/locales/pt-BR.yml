@@ -1,14 +1,14 @@
 'pt-BR':
   label_public_keys: Chaves públicas
   label_public_key_new: Nova chave pública
-  label_gitosis_url: Gitosis URL
-  label_gitosis_identity_file: Arquivo de identificação do Gitosis
+  label_gitolite_url: Gitolite URL
+  label_gitolite_identity_file: Arquivo de identificação do Gitolite
   label_git_repository_base_path: Caminho de base
   label_developer_base_urls: URL(s) base de Desenvolvedor
   label_read_only_base_urls: URL(s) base de Apenas-leitura
   label_enable_gitdaemon: Enable git-daemon?
   label_enable_gitweb: Enable gitweb?
-  label_gitosis_log_file: Log file
+  label_gitolite_log_file: Log file
   field_public_key: Chave
   notice_public_key_updated: Chave pública foi atualizada com sucesso.
   notice_public_key_added: Chave pública foi atualizada com sucesso.

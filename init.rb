@@ -2,20 +2,19 @@ require 'redmine'
 require_dependency 'principal'
 require_dependency 'user'
 
-require_dependency 'gitosis'
-require_dependency 'gitosis/patches/repositories_controller_patch'
-require_dependency 'gitosis/patches/settings_controller_patch'
-require_dependency 'gitosis/patches/repositories_helper_patch'
-require_dependency 'gitosis/patches/git_adapter_patch'
+require_dependency 'gitolite'
+require_dependency 'gitolite/patches/repositories_controller_patch'
+require_dependency 'gitolite/patches/repositories_helper_patch'
+require_dependency 'gitolite/patches/git_adapter_patch'
 
-Redmine::Plugin.register :redmine_gitosis do
-  name 'Redmine Gitosis plugin'
-  author 'Jan Schulz-Hofen'
-  description 'Enables Redmine to update a gitosis server.'
-  version '0.0.5alpha'
+Redmine::Plugin.register :redmine_gitolite do
+  name 'Redmine Gitolite plugin'
+  author 'Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
+  description 'Enables Redmine to update a gitolite server.'
+  version '0.1.0'
   settings :default => {
-    'gitosisUrl' => 'git@localhost:gitosis-admin.git',
-    'gitosisIdentityFile' => '/srv/projects/redmine/miner/.ssh/id_rsa',
+    'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
+    'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/id_rsa',
     'developerBaseUrls' => 'git@www.salamander-linux.com:,https://[user]@www.salamander-linux.com/git/',
     'readOnlyBaseUrls' => 'http://www.salamander-linux.com/git/',
     'enableGitweb' => false,
@@ -23,20 +22,20 @@ Redmine::Plugin.register :redmine_gitosis do
     'gitRepositoryBasePath' => '/srv/projects/git/repositories/',
     'gitosisLogFile' => '',
     }, 
-    :partial => 'redmine_gitosis'
+    :partial => 'redmine_gitolite'
 end
 
 # initialize hook
-class GitosisPublicKeyHook < Redmine::Hook::ViewListener
+class GitolitePublicKeyHook < Redmine::Hook::ViewListener
   render_on :view_my_account_contextual, :inline => "| <%= link_to(l(:label_public_keys), public_keys_path) %>" 
 end
 
-class GitosisProjectShowHook < Redmine::Hook::ViewListener
-  render_on :view_projects_show_left, :partial => 'redmine_gitosis'
+class GitoliteProjectShowHook < Redmine::Hook::ViewListener
+  render_on :view_projects_show_left, :partial => 'redmine_gitolite'
 end
 
 # initialize association from user -> public keys
-User.send(:has_many, :gitosis_public_keys, :dependent => :destroy)
+User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
 
 # initialize observer
-ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitosisObserver
+ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitoliteObserver
