@@ -1,3 +1,7 @@
+=WARNING 
+Be aware that as of now (4/8/2011) the master branch is rather unstable -- I'm working to integrate a lot of new functionality.   I do NOT recommend cloning from this repo unless you're interested in working on this code yourself, as it really isn't anywhere near ready for production right now.  I'll remove this warning when I'm more confident this seems to be working properly.
+
+
 = Patches
 * work with gitolite
 * support subproject git repo. (e.g. git@site.name:parent_project/subproject.git)
