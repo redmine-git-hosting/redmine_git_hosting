@@ -20,7 +20,7 @@ Redmine::Plugin.register :redmine_gitolite do
     'enableGitweb' => false,
     'enableGitdaemon' => true,
     'gitRepositoryBasePath' => '/srv/projects/git/repositories/',
-    'gitosisLogFile' => '',
+    'gitoliteLogFile' => '',
     }, 
     :partial => 'redmine_gitolite'
 end
