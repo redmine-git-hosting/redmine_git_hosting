@@ -37,5 +37,8 @@ end
 # initialize association from user -> public keys
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
 
+#initialize association from repository -> git_repo_hosting_options
+Repository.send(:has_one, :git_repo_hosting_options, :dependent => :destroy)
+
 # initialize observer
 ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitoliteObserver
