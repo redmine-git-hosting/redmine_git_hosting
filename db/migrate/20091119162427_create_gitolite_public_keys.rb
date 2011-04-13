@@ -8,8 +8,9 @@ class CreateGitolitePublicKeys < ActiveRecord::Migration
 			t.references :user
 			t.timestamps
 		end
-		create_table :git_repo_hosting_options do |t|
-			t.column :repo_id, :integer
+
+		create_table( :git_repo_hosting_options, :id => false, :primary_key =>:repository_id) do |t|
+			t.references :repository,
 			t.column :git_daemon_active, :integer, :default => 0
 			t.column :smart_http_pull, :integer, :default => 0
 			t.column :smart_http_push, :integer, :default => 0
