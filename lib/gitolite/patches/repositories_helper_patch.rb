@@ -10,12 +10,13 @@ module Gitolite
 				https_only_label = "HTTPS Only"
 				https_and_http_label = "HTTPS and HTTP"
 
-				gd = @project.is_public ? 1 : 0
+				gd = 1
 				gh = 1
 				if repository
 					gd = repository.git_daemon ? repository.git_daemon : gd
 					gh = repository.git_http ? repository.git_http : gh
 				end
+				gd = @project.is_public ? gd : 0
 				
 				gdd = gd == 0 ? " selected='selected' " : ""
 				gde = gd == 1 ? " selected='selected' " : ""

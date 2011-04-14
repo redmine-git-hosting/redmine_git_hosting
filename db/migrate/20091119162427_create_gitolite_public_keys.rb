@@ -9,8 +9,8 @@ class CreateGitolitePublicKeys < ActiveRecord::Migration
 			t.timestamps
 		end
 
-		add_column :repositories, :git_daemon, :integer, :default =>0
-		add_column :repositories, :git_http, :integer, :default=>0
+		add_column :repositories, :git_daemon, :integer, :default =>1
+		add_column :repositories, :git_http, :integer, :default=>1
 
 	end
 
