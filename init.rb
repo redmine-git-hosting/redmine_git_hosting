@@ -8,28 +8,33 @@ require_dependency 'gitolite/patches/repositories_helper_patch'
 require_dependency 'gitolite/patches/git_adapter_patch'
 
 Redmine::Plugin.register :redmine_gitolite do
-  name 'Redmine Gitolite plugin'
-  author 'Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
-  description 'Enables Redmine to update a gitolite server.'
-  version '0.1.0'
-  settings :default => {
-    'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
-    'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/id_rsa',
-    'gitRepositoryBasePath' => '/srv/projects/git/repositories/',
-    'allProjectsUseGit' => 'false',
-    'readOnlyBaseUrls' => "",
-    'developerBaseUrls' => ""
-    }, 
-    :partial => 'redmine_gitolite'
+	name 'Redmine Gitolite plugin'
+	author 'Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
+	description 'Enables Redmine to update a gitolite server.'
+	version '0.1.0'
+	settings :default => {
+		'gitUser' => 'git',
+		'gitServer' => 'localhost',
+		'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/gitolite_admin_id_rsa',
+		'gitUserIdentityFile'  => '/srv/projects/redmine/miner/.ssh/git_user_id_rsa',
+		'allProjectsUseGit' => 'false',
+		
+		#these are somewhat deprecated, will be removed in the future in favor of the settings above 
+		'gitRepositoryBasePath' => '/srv/projects/git/repositories/',
+		'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
+		'readOnlyBaseUrls' => "",
+		'developerBaseUrls' => ""
+		}, 
+		:partial => 'redmine_gitolite'
 end
 
 # initialize hook
 class GitolitePublicKeyHook < Redmine::Hook::ViewListener
-  render_on :view_my_account_contextual, :inline => "| <%= link_to(l(:label_public_keys), public_keys_path) %>" 
+	render_on :view_my_account_contextual, :inline => "| <%= link_to(l(:label_public_keys), public_keys_path) %>" 
 end
 
 class GitoliteProjectShowHook < Redmine::Hook::ViewListener
-  render_on :view_projects_show_left, :partial => 'redmine_gitolite'
+	render_on :view_projects_show_left, :partial => 'redmine_gitolite'
 end
 
 # initialize association from user -> public keys
