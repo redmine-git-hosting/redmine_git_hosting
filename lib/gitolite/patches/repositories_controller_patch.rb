@@ -18,6 +18,8 @@ module Gitolite
 				end
 				
 				edit_without_scm_settings
+			
+				Gitolite::update_repositories(@project)
 			end
 
 			def self.included(base)
