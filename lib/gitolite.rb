@@ -22,6 +22,8 @@ module Gitolite
 		return urls
 	end
 
+
+
 	def self.update_repositories(projects)
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
@@ -65,8 +67,8 @@ module Gitolite
 				env_git_ssh="env GIT_SSH=#{ssh_with_identity_file} "
 			end
 
-			# clone repo
-			%x[#{env_git_ssh} git clone #{Setting.plugin_redmine_gitolite['gitoliteUrl']} #{local_dir}/gitolite]
+			# clone admin repo
+			%x[#{env_git_ssh} git clone #{Setting.plugin_redmine_gitolite['gitUser']}@#{Setting.plugin_redmine_gitolite['gitServer']}:gitolite-admin.git #{local_dir}/gitolite]
 
 			conf = Config.new(File.join(local_dir, 'gitolite', 'conf', 'gitolite.conf'))
 
