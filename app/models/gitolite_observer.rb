@@ -2,12 +2,12 @@ class GitoliteObserver < ActiveRecord::Observer
 	observe :project, :user, :gitolite_public_key, :member, :role, :repository
 	
 	
-	def before_create(object)
+	def after_create(object)
 		if object.is_a?(Project)
 			users = object.member_principals.map(&:user).compact.uniq
 			if users.length == 0
 				membership = Member.new(
-					:principal=>User.current
+					:principal=>User.current,
 					:project_id=>object.id,
 					:role_ids=>[3]
 					)
@@ -18,13 +18,13 @@ class GitoliteObserver < ActiveRecord::Observer
 				repo_name= object.parent ? File.join(object.parent.identifier,object.identifier) : object.identifier
 				repo.url = repo.root_url = File.join(Setting.plugin_redmine_gitolite['gitRepositoryBasePath'], "#{repo_name}.git")
 				object.repository = repo
-				update_repositories(object)
 			end
+		else
+			update_repositories(object)
 		end
 	end
 	
 
-	def after_create(object)  ; update_repositories(object) ; end
 	def after_save(object)    ; update_repositories(object) ; end
 	def after_destroy(object) ; update_repositories(object) ; end
 	
