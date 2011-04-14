@@ -2,14 +2,28 @@ class GitoliteObserver < ActiveRecord::Observer
 	observe :project, :user, :gitolite_public_key, :member, :role, :repository
 	
 	
-#  def before_create(object)
-#    if object.is_a?(Project)
-#      repo = Repository::Git.new
-#      repo.url = repo.root_url = File.join(Gitolite::GITOSIS_BASE_PATH,"#{object.identifier}.git")
-#      object.repository = repo
-#    end
-#  end
+	def before_create(object)
+		if object.is_a?(Project)
+			users = object.member_principals.map(&:user).compact.uniq
+			if users.length == 0
+				membership = Member.new(
+					:principal=>User.current
+					:project_id=>object.id,
+					:role_ids=>[3]
+					)
+				membership.save
+			end
+			if Setting.plugin_redmine_gitolite['allProjectsUseGit'] == "true"
+				repo = Repository::Git.new
+				repo_name= object.parent ? File.join(object.parent.identifier,object.identifier) : object.identifier
+				repo.url = repo.root_url = File.join(Setting.plugin_redmine_gitolite['gitRepositoryBasePath'], "#{repo_name}.git")
+				object.repository = repo
+				update_repositories(object)
+			end
+		end
+	end
 	
+
 	def after_create(object)  ; update_repositories(object) ; end
 	def after_save(object)    ; update_repositories(object) ; end
 	def after_destroy(object) ; update_repositories(object) ; end
