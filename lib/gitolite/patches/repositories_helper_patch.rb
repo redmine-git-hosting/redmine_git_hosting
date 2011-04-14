@@ -31,8 +31,8 @@ module Gitolite
 					hoption = hoption +1
 				end
 				
-				git_daemon_control = "<label for='git_daemon'>#{git_daemon_label}:</label><select id='git_daemon'>" + git_daemon_options + "</select>";
-				git_http_control = "<label for='git_http'>#{git_http_label}:</label><select id='git_http'>" + git_http_options + "</select>";
+				git_daemon_control = "<label for='git_daemon'>#{git_daemon_label}:</label><select id='repository_git_daemon' name='repository[git_daemon]'>" + git_daemon_options + "</select>";
+				git_http_control = "<label for='git_http'>#{git_http_label}:</label><select id='repository_git_http' name='repository[git_http]'>" + git_http_options + "</select>";
 
 				return "\n<p>" + git_daemon_control + "</p>\n<p>" +  git_http_control + "</p>\n"
 
