@@ -20,28 +20,27 @@ class GitHttpController < ApplicationController
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
 		
-		Dir.chdir(dir)
 
 		if p1 == "git-upload-pack"
-			service_rpc(dir, "upload-pack")
+			service_rpc("upload-pack")
 		elsif p1 == "git-receive-pack"
-			service_rpc(dir, "receive-pack")
+			service_rpc("receive-pack")
 		elsif p1 == "info" && p2 == "refs"
-			get_info_refs(reqfile, dir)
+			get_info_refs(reqfile)
 		elsif p1 == "HEAD"
-			get_text_file(reqfile, dir)
+			get_text_file(reqfile)
 		elsif p1 == "objects" && p2 == "info"
 			if p3 != packs
-				get_text_file(reqfile, dir)
+				get_text_file(reqfile)
 			else
-				get_info_packs(reqfile, dir)
+				get_info_packs(reqfile)
 			end
 		elsif p1 == "objects" && p2 != "pack"
-			get_loose_object(reqfile, dir)
+			get_loose_object(reqfile)
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.pack$/)
-			get_pack_file(reqfile, dir)
+			get_pack_file(reqfile)
 		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
-			get_idx_file(reqfile, dir)
+			get_idx_file(reqfile)
 		else
 			render_not_found
 			#render :text => proc { |response,output| output.write("ook ook ook\n") }
@@ -74,13 +73,13 @@ class GitHttpController < ApplicationController
 		return valid
 	end
 
-	def service_rpc(dir, rpc)
+	def service_rpc(rpc)
 		return render_no_access if !has_access(rpc, true)
 		
 		input = read_body
 
 		response.headers["Content-Type"] = "application/x-git-%s-result" % rpc
-		command = git_command("#{rpc} --stateless-rpc #{dir}")
+		command = git_command("#{rpc} --stateless-rpc .")
 		@git_http_control_pipe = IO.popen(command, File::RDWR)
 		@git_http_control_pipe.write(input)
 	
@@ -99,7 +98,7 @@ class GitHttpController < ApplicationController
 		}
 	end
 
-	def get_info_refs(reqfile, dir)
+	def get_info_refs(reqfile)
 		service_name = get_service_type
 
 		if has_access(service_name)
