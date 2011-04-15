@@ -17,15 +17,9 @@ class GitHttpController < ApplicationController
 		
 		@git_http_repo_path = (params[:path]).gsub(/\.git$/, "")
 		
-		`echo at start >/tmp/at_start.txt`	
-
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
-		`echo reqfile=#{reqfile} >>/tmp/at_start.txt`	
-		return dumb_info_refs(reqfile)
 		
-
-
 		if p1 == "git-upload-pack"
 			service_rpc("upload-pack")
 		elsif p1 == "git-receive-pack"
@@ -122,7 +116,6 @@ class GitHttpController < ApplicationController
 
 	def dumb_info_refs(reqfile)
 		update_server_info
-		`echo 'updated' >> /tmp/at_start.txt`
 		internal_send_file(reqfile,  "text/plain; charset=utf-8") do
 			hdr_nocache
 		end
@@ -166,7 +159,6 @@ class GitHttpController < ApplicationController
 
 	# some of this borrowed from the Rack::File implementation
 	def internal_send_file(reqfile, content_type)
-		`echo 'updated' >> /tmp/at_start.txt`
 		
 		response.headers["Content-Type"] = content_type
 		if !file_exists(reqfile)
@@ -196,15 +188,12 @@ class GitHttpController < ApplicationController
 
 	def file_exists(reqfile)
 		
-		`echo 'exist_test, file = #{reqfile}' >> /tmp/at_start.txt`
-		
 		cmd="#{get_ssh_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
 		File.open("/tmp/cmd.txt", "w"){ |f| 
 			f.write(cmd)
 		}
 		is_found=%x[#{cmd}]
 		is_found.chomp!
-		`echo 'exist_test, is_found = #{is_found.to_s}' >> /tmp/at_start.txt`
 		return is_found == "found"
 	end
 
