@@ -14,8 +14,8 @@ class GitHttpController < ApplicationController
 		p3 = params[:p3]
 		proj_id = params[:id]
 		
-		@git_http_repo_path = params[:path]
-		
+		@git_http_repo_path = (params[:path]).gsub(/\.git$/, "")
+			
 
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
@@ -164,7 +164,7 @@ class GitHttpController < ApplicationController
 		if !file_exists(reqfile)
 			return render_not_found 
 		else
-			command = "#{get_ssh_prefix()} dd if=#{reqfile} '")
+			command = "#{get_ssh_prefix()} dd if=#{reqfile} '"
 			@git_http_control_pipe = IO.popen(command, File::RDWR)
 			render :text => proc { |response, output| 
 				buf_length=131072
