@@ -14,12 +14,17 @@ class GitHttpController < ApplicationController
 		p3 = params[:p3]
 		proj_id = params[:id]
 		
+		
 		@git_http_repo_path = (params[:path]).gsub(/\.git$/, "")
-			
+		
+		`echo at start >/tmp/at_start.txt`	
 
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
+		`echo reqfile=#{reqfile} >>/tmp/at_start.txt`	
+		return dumb_info_refs(reqfile)
 		
+
 
 		if p1 == "git-upload-pack"
 			service_rpc("upload-pack")
@@ -101,9 +106,9 @@ class GitHttpController < ApplicationController
 	def get_info_refs(reqfile)
 		service_name = get_service_type
 
-		if has_access(service_name)
+		if service_name
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
-			refs = `#{cmd}`
+			refs = %x[#{cmd}]
 
 			response.headers["Content-Type"] = "application/x-git-%s-advertisement" % service_name
 			hdr_nocache
@@ -117,6 +122,7 @@ class GitHttpController < ApplicationController
 
 	def dumb_info_refs(reqfile)
 		update_server_info
+		`echo 'updated' >> /tmp/at_start.txt`
 		internal_send_file(reqfile,  "text/plain; charset=utf-8") do
 			hdr_nocache
 		end
@@ -160,6 +166,8 @@ class GitHttpController < ApplicationController
 
 	# some of this borrowed from the Rack::File implementation
 	def internal_send_file(reqfile, content_type)
+		`echo 'updated' >> /tmp/at_start.txt`
+		
 		response.headers["Content-Type"] = content_type
 		if !file_exists(reqfile)
 			return render_not_found 
@@ -187,8 +195,16 @@ class GitHttpController < ApplicationController
 	end
 
 	def file_exists(reqfile)
-		is_found=`#{get_ssh_prefix()} if [ -e "#{reqfile}" ] ; then echo found ; else echo bad ; fi '`
+		
+		`echo 'exist_test, file = #{reqfile}' >> /tmp/at_start.txt`
+		
+		cmd="#{get_ssh_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
+		File.open("/tmp/cmd.txt", "w"){ |f| 
+			f.write(cmd)
+		}
+		is_found=%x[#{cmd}]
 		is_found.chomp!
+		`echo 'exist_test, is_found = #{is_found.to_s}' >> /tmp/at_start.txt`
 		return is_found == "found"
 	end
 
@@ -232,7 +248,7 @@ class GitHttpController < ApplicationController
 
 	def get_git_config(config_name)
 		cmd = git_command("config #{config_name}")
-		`#{cmd}`.chomp
+		%x[#{cmd}].chomp
 	end
 
 	def read_body
@@ -246,7 +262,7 @@ class GitHttpController < ApplicationController
 
 	def update_server_info
 		cmd = git_command("update-server-info")
-		`#{cmd}`
+		%x[#{cmd}]
 	end
 
 	def git_command(command)
