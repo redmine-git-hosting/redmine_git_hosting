@@ -19,7 +19,6 @@ class GitHttpController < ApplicationController
 		
 		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
 
-		
 		if p1 == "git-upload-pack"
 			service_rpc("upload-pack")
 		elsif p1 == "git-receive-pack"
@@ -180,18 +179,11 @@ class GitHttpController < ApplicationController
 				@git_http_control_pipe = nil
 			}
 		end
-
-		#file = File.join(dir, reqfile)
-		#return render_not_found if !F.exists?(file)
-		#send_file(file,  :type=>content_type, :disposition=>"inline", :buffer_size => 4096)
 	end
 
 	def file_exists(reqfile)
 		
 		cmd="#{get_ssh_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
-		File.open("/tmp/cmd.txt", "w"){ |f| 
-			f.write(cmd)
-		}
 		is_found=%x[#{cmd}]
 		is_found.chomp!
 		return is_found == "found"
@@ -255,7 +247,7 @@ class GitHttpController < ApplicationController
 	end
 
 	def git_command(command)
-		return "#{get_ssh_prefix()} git #{command} '"
+		return "#{get_ssh_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command} '"
 	end
 
 	
