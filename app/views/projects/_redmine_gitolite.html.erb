@@ -1,5 +1,5 @@
 <% if @project.repository && @project.repository.is_a?(Repository::Git) %>
-<% repo_urls = Gitolite::get_urls(@project) %>
+<% repo_urls = GitHosting::get_urls(@project) %>
 <div class="box">
 	<h3>Git Repository</h3>
 	<p>

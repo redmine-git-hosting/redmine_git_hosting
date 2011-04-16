@@ -253,7 +253,7 @@ class GitHttpController < ApplicationController
 	
 	#note command needs to be terminated with a quote!
 	def get_ssh_prefix
-		return "ssh -o BatchMode=yes -o PubkeyAuthentication=yes -o StrictHostKeyChecking=no -i #{Setting.plugin_redmine_gitolite['gitUserIdentityFile']} #{Setting.plugin_redmine_gitolite['gitUser']}@#{Setting.plugin_redmine_gitolite['gitServer']}  'cd repositories/#{@git_http_repo_path}.git ; "
+		return "ssh -o BatchMode=yes -o PubkeyAuthentication=yes -o StrictHostKeyChecking=no -i #{Setting.plugin_redmine_git_hosting['gitUserIdentityFile']} #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}  'cd repositories/#{@git_http_repo_path}.git ; "
 	end
 
 

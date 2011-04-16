@@ -1,5 +1,5 @@
 require_dependency 'repositories_helper'
-module Gitolite
+module GitHosting
 	module Patches
 		module RepositoriesHelperPatch
 			def git_field_tags_with_hosting_configuration(form, repository)
@@ -49,4 +49,4 @@ module Gitolite
 		end
 	end
 end
-RepositoriesHelper.send(:include, Gitolite::Patches::RepositoriesHelperPatch) unless RepositoriesHelper.include?(Gitolite::Patches::RepositoriesHelperPatch)
+RepositoriesHelper.send(:include, GitHosting::Patches::RepositoriesHelperPatch) unless RepositoriesHelper.include?(GitHosting::Patches::RepositoriesHelperPatch)

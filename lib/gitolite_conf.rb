@@ -1,5 +1,5 @@
-module Gitolite
-  class Config
+module GitHosting
+  class GitoliteConfig
 		def initialize file_path
 			@path = file_path
 			load
@@ -42,7 +42,7 @@ module Gitolite
 				tokens = line.strip.split
 				if tokens.first == 'repo'
 					cur_repo_name = tokens.last
-					@repositories[cur_repo_name] = AccessRights.new
+					@repositories[cur_repo_name] = GitoliteAccessRights.new
 					next
 				end
 				cur_repo_right = @repositories[cur_repo_name]
@@ -54,7 +54,7 @@ module Gitolite
 		end
 
 		def repository repo_name
-			@repositories[repo_name] ||= AccessRights.new
+			@repositories[repo_name] ||= GitoliteAccessRights.new
 		end
 
 
@@ -72,7 +72,7 @@ module Gitolite
 
 	end
 
-	class AccessRights
+	class GitoliteAccessRights
 		def initialize
 			@rights = {}
 		end

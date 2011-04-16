@@ -2,15 +2,15 @@ require 'redmine'
 require_dependency 'principal'
 require_dependency 'user'
 
-require_dependency 'gitolite'
-require_dependency 'gitolite/patches/repositories_controller_patch'
-require_dependency 'gitolite/patches/repositories_helper_patch'
-require_dependency 'gitolite/patches/git_adapter_patch'
+require_dependency 'git_hosting'
+require_dependency 'git_hosting/patches/repositories_controller_patch'
+require_dependency 'git_hosting/patches/repositories_helper_patch'
+require_dependency 'git_hosting/patches/git_adapter_patch'
 
-Redmine::Plugin.register :redmine_gitolite do
-	name 'Redmine Gitolite plugin'
+Redmine::Plugin.register :redmine_git_hosting do
+	name 'Redmine Git Hosting Plugin'
 	author 'Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
-	description 'Enables Redmine to update a gitolite server.'
+	description 'Enables Redmine to control hosting of git repositories'
 	version '0.1.0'
 	settings :default => {
 		'gitUser' => 'git',
@@ -25,7 +25,7 @@ Redmine::Plugin.register :redmine_gitolite do
 		'readOnlyBaseUrls' => "",
 		'developerBaseUrls' => ""
 		}, 
-		:partial => 'redmine_gitolite'
+		:partial => 'redmine_git_hosting'
 end
 
 # initialize hook
@@ -34,7 +34,7 @@ class GitolitePublicKeyHook < Redmine::Hook::ViewListener
 end
 
 class GitoliteProjectShowHook < Redmine::Hook::ViewListener
-	render_on :view_projects_show_left, :partial => 'redmine_gitolite'
+	render_on :view_projects_show_left, :partial => 'redmine_git_hosting'
 end
 
 # initialize association from user -> public keys
@@ -44,4 +44,4 @@ User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
 Repository.send(:has_one, :git_repo_hosting_options, :dependent => :destroy)
 
 # initialize observer
-ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitoliteObserver
+ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver

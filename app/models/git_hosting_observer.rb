@@ -1,4 +1,4 @@
-class GitoliteObserver < ActiveRecord::Observer
+class GitHostingObserver < ActiveRecord::Observer
 	observe :project, :user, :gitolite_public_key, :member, :role, :repository
 	
 	
@@ -13,10 +13,10 @@ class GitoliteObserver < ActiveRecord::Observer
 					)
 				membership.save
 			end
-			if Setting.plugin_redmine_gitolite['allProjectsUseGit'] == "true"
+			if Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
 				repo = Repository::Git.new
 				repo_name= object.parent ? File.join(object.parent.identifier,object.identifier) : object.identifier
-				repo.url = repo.root_url = File.join(Setting.plugin_redmine_gitolite['gitRepositoryBasePath'], "#{repo_name}.git")
+				repo.url = repo.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
 				object.repository = repo
 			end
 		else
@@ -32,11 +32,11 @@ class GitoliteObserver < ActiveRecord::Observer
 	
 	def update_repositories(object)
 		case object
-			when Repository then Gitolite::update_repositories(object.project)
-			when User then Gitolite::update_repositories(object.projects) unless is_login_save?(object)
-			when GitolitePublicKey then Gitolite::update_repositories(object.user.projects)
-			when Member then Gitolite::update_repositories(object.project)
-			when Role then Gitolite::update_repositories(object.members.map(&:project).uniq.compact)
+			when Repository then GitHosting::update_repositories(object.project)
+			when User then GitHosting::update_repositories(object.projects) unless is_login_save?(object)
+			when GitHostingPublicKey then GitHosting::update_repositories(object.user.projects)
+			when Member then GitHosting::update_repositories(object.project)
+			when Role then GitHosting::update_repositories(object.members.map(&:project).uniq.compact)
 		end
 	end
 	
