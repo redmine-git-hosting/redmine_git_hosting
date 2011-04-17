@@ -103,7 +103,7 @@ module GitHosting
 				write_users = write_users.map{|u| u.login.underscore}
 
 				#git daemon
-				if repository.git_daemon == 1 && repository.is_public
+				if project.repository.git_daemon == 1 && project.repository.is_public
 					read_users.push "daemon"
 				end
 
