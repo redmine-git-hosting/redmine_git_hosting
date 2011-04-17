@@ -34,7 +34,7 @@ class GitHostingObserver < ActiveRecord::Observer
 		case object
 			when Repository then GitHosting::update_repositories(object.project)
 			when User then GitHosting::update_repositories(object.projects) unless is_login_save?(object)
-			when GitHostingPublicKey then GitHosting::update_repositories(object.user.projects)
+			when GitolitePublicKey then GitHosting::update_repositories(object.user.projects)
 			when Member then GitHosting::update_repositories(object.project)
 			when Role then GitHosting::update_repositories(object.members.map(&:project).uniq.compact)
 		end
