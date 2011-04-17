@@ -99,16 +99,23 @@ module GitHosting
 
 				# update users
 				repo_name = repository_name(project)
-				read_users = read_users.map{|u| u.login.underscore}
-				write_users = write_users.map{|u| u.login.underscore}
-
-				#git daemon
-				if project.repository.git_daemon == 1 && project.repository.is_public
-					read_users.push "daemon"
+				read_user_keys = []
+				write_user_keys = []
+				read_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+					read_user_keys.push key.identifier
+				end
+				write_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+					write_user_keys.push key.identifier
 				end
 
-				conf.set_read_user repo_name, read_users
-				conf.set_write_user repo_name, write_users	
+
+				#git daemon
+				if (project.repository.git_daemon == 1 || project.repository.git_daemon == nil )  && project.repository.is_public
+					read_user_keys.push "daemon"
+				end
+
+				conf.set_read_user repo_name, read_user_keys
+				conf.set_write_user repo_name, write_user_keys	
 			end
 			
 			if conf.changed?
