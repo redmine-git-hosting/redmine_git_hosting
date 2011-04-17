@@ -9,9 +9,10 @@
                           :builder => TabularFormBuilder, 
                           :lang => current_language,
                           :html => { :id => 'my_account_form' } do |f| %>
-<div class="splitcontentleft">
-<h3><%=l(:label_information_plural)%></h3>
-<div class="box tabular">
+<div class="splitcontentright">
+<div class="box">
+<div class="tabular">
+<h4><%=l(:label_information_plural)%></h4>
 <p><%= f.text_field :firstname, :required => true %></p>
 <p><%= f.text_field :lastname, :required => true %></p>
 <p><%= f.text_field :mail, :required => true %></p>
@@ -26,22 +27,14 @@
 <%= call_hook(:view_my_account, :user => @user, :form => f) %>
 </div>
 
-<%= submit_tag l(:button_save) %>
-</div>
-
-<div class="splitcontentright">
-<h3><%=l(:field_mail_notification)%></h3>
-<div class="box">
+<h4><%=l(:field_mail_notification)%></h4>
 <%= render :partial => 'users/mail_notifications' %>
-</div>
-
-<h3><%=l(:label_preferences)%></h3>
-<div class="box tabular">
+<div class="tabular">
+<h4><%=l(:label_preferences)%></h4>
 <%= render :partial => 'users/preferences' %>
 </div>
-
-</div>
 <% end %>
+<%= submit_tag l(:button_save) %>
 
 <% content_for :sidebar do %>
 <%= render :partial => 'sidebar' %>
