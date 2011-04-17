@@ -7,11 +7,6 @@
 
 
 <div class="splitcontentleft">
-	<% form_for :user, @user, :url => { :action => "account" }, 
-					:builder => TabularFormBuilder, 
-					:lang => current_language,
-					:html => { :id => 'my_public_key_form' } do |f| %>
-
 	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC') %>
 	<% if @gitolite_public_keys.any? %>
 		<table class="list">
@@ -23,8 +18,8 @@
 				<tr class="<%= cycle('odd', 'even') %>">
 					<td><%= h(key) %></td>
 					<td class="buttons">
-						<%= link_to(l(:button_edit),   '#', :class => 'icon icon-edit') %>
-						<%= link_to(l(:button_delete), '#', :class => 'icon icon-del') %>
+						<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.identifier }, :class => 'icon icon-edit') %>
+						<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.identifier }, :class => 'icon icon-del') %>
 					</td>
 				</tr>
 			<% end %>
@@ -33,7 +28,7 @@
 	<div class="box">
 		<h4><%=l(:label_public_key_new)%></h4>
 		<%= error_messages_for :gitolite_public_key %>
-		<% form_for :public_key, @gitolite_public_key, :url => { :action => "create" }, :builder => TabularFormBuilder, :lang => current_language do |f| %>
+		<% form_for :public_key, @gitolite_public_key, :url => { :controller => 'gitolite_public_keys', :action => "create" }, :builder => TabularFormBuilder, :lang => current_language do |f| %>
 			<p>
 				<label for="public_key_title"><%=l(:field_identifier)%></label>
 				<br/>
@@ -43,7 +38,6 @@
 			<%= submit_tag l(:button_create) %>
 		<% end %>
 	</div>
-	<% end %>
 </div>		
 <div class="splitcontentright">
 	<% form_for :user, @user, :url => { :action => "account" }, 
