@@ -97,15 +97,18 @@ module GitHosting
 					end
 				end
 
-				# write config file
+				# update users
 				repo_name = repository_name(project)
 				read_users = read_users.map{|u| u.login.underscore}
 				write_users = write_users.map{|u| u.login.underscore}
 
+				#git daemon
+				if repository.git_daemon == 1 && repository.is_public
+					read_users.push "daemon"
+				end
+
 				conf.set_read_user repo_name, read_users
-				conf.set_write_user repo_name, write_users
-				
-				# TODO: gitweb and git daemon support!
+				conf.set_write_user repo_name, write_users	
 			end
 			
 			if conf.changed?

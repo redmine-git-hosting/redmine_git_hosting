@@ -1,5 +1,5 @@
 module GitHosting
-  class GitoliteConfig
+	class GitoliteConfig
 		def initialize file_path
 			@path = file_path
 			load
