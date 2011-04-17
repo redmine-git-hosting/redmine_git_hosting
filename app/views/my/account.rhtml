@@ -6,9 +6,42 @@
 <%= error_messages_for 'user' %>
 
 <% form_for :user, @user, :url => { :action => "account" }, 
-                          :builder => TabularFormBuilder, 
-                          :lang => current_language,
-                          :html => { :id => 'my_account_form' } do |f| %>
+					:builder => TabularFormBuilder, 
+					:lang => current_language,
+					:html => { :id => 'my_account_form' } do |f| %>
+<div class="splitcontentleft">
+	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC') %>
+	<h4><%=l(:label_public_keys)%></h4>
+	<% if @gitolite_public_keys.any? %>
+		<table class="list">
+			<tr>
+				<th style="text-align:left;" ><%= l(:field_name) %></th>
+				<th style="width:10%;"> </th>
+			</tr>
+			<% @gitolite_public_keys.each do |key| %>
+				<tr class="<%= cycle('odd', 'even') %>">
+					<td><%= link_to h(key), :action => 'edit', :id => key %></td>
+					<td class="buttons">
+						<%= link_to(l(:button_delete), '#', :class => 'icon icon-del') %>
+					</td>
+				</tr>
+			<% end %>
+		</table>
+	<% end %>
+	<div class="box">
+		<h4><%=l(:label_public_key_new)%></h4>
+		<%= error_messages_for :gitolite_public_key %>
+		<% form_for :public_key, @gitolite_public_key, :url => { :action => "create" }, :builder => TabularFormBuilder, :lang => current_language do |f| %>
+			<p>
+				<label for="public_key_title"><%=l(:field_identifier)%></label>
+				<br/>
+				<input id="public_key_title" name="public_key[title]" size="30" type="text" />
+			</p>
+			<p><%= f.text_area :key, :style => 'width:99%;height:140px;', :label => :field_public_key %></p>
+			<%= submit_tag l(:button_create) %>
+		<% end %>
+	</div>
+</div>		
 <div class="splitcontentright">
 	<div class="box">
 		<div class="tabular">
