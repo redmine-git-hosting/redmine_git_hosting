@@ -70,7 +70,11 @@ class GitHttpController < ApplicationController
 				end
 			end
 		end
-		access_granted
+		if !access_granted
+			render_no_access
+		end
+
+		return access_granted
 	end
 
 	def service_rpc(rpc)
