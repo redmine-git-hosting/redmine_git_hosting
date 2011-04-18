@@ -8,23 +8,26 @@
 
 <div class="splitcontentleft">
 	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => "active=1") %>
-	<% if @gitolite_public_keys.any? %>
-		<table class="list">
-			<tr>
+	<table class="list">
+		<tr>
+			<% if @gitolite_public_keys.any? %>
 				<th style="text-align:left;" ><h4><%=l(:label_public_keys)%></h4></th>
-				<th style="width:10%;"> </th>
-			</tr>
-			<% @gitolite_public_keys.each do |key| %>
-				<tr class="<%= cycle('odd', 'even') %>">
-					<td><%= h(key) %></td>
-					<td class="buttons">
-						<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.id }, :class => 'icon icon-edit') %>
-						<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.id }, :class => 'icon icon-del') %>
-					</td>
-				</tr>
+			<% else %>
+				<th style="text-align:left;" ><h4>No Pubic Keys Defined</h4></th>
 			<% end %>
-		</table>
-	<% end %>
+			<th style="width:10%;"></th>
+		</tr>
+		<% @gitolite_public_keys.each do |key| %>
+			<tr class="<%= cycle('odd', 'even') %>">
+				<td><%= h(key) %></td>
+				<td class="buttons">
+					<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.id }, :class => 'icon icon-edit') %>
+					<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.id }, :class => 'icon icon-del') %>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+	
 	<div class="box">
 		<h4><%=l(:label_public_key_new)%></h4>
 		<%= error_messages_for :gitolite_public_key %>
