@@ -2,8 +2,8 @@ class GitolitePublicKeysController < ApplicationController
 	unloadable
 	
 	before_filter :require_login
-	before_filter :set_user_variable
-	before_filter :find_gitolite_public_key, :except => [:index, :new, :create]
+	#before_filter :set_user_variable
+	#before_filter :find_gitolite_public_key, :except => [:index, :new, :create]
 
 	def index
 		@status = if (session[:gitolite_public_key_filter_status]=params[:status]).nil?
