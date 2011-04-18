@@ -41,14 +41,14 @@ class GitolitePublicKeysController < ApplicationController
 		end
 	end
 	
-	def new
-		@gitolite_public_key = GitolitePublicKey.new(:user => @user)
-	end
 	
 	def create
 		@gitolite_public_key = GitolitePublicKey.new(params[:public_key].merge(:user => @user))
-		@gitolite_public_key.save
-		flash[:notice] = l(:notice_public_key_added)
+		if @gitolite_public_key.save
+			flash[:notice] = l(:notice_public_key_added)
+		else
+			@gitolite_public_key = GitolitePublicKey.new(:user => @user)
+		end
 		redirect_to url_for(:controller => 'my', :action => 'account')
 	end
 	
