@@ -50,9 +50,10 @@ class GitHttpController < ApplicationController
 	def authenticate
 		is_push = params[:p1] == "git-receive-pack"	
 		project = Project.find(params[:id])
+		repository = project != nil ? project.repository : nil
 		access_granted = false
-		if(project != nil) 
-			if project[:git_http] == 2 || (project[:git_http] == 1 && is_ssl?)
+		if(project != nil && repository !=nil) 
+			if repository[:git_http] == 2 || (repository[:git_http] == 1 && is_ssl?)
 				access_granted = true
 				allow_anonymous_read = project.is_public	
 				if is_push || (!allow_anonymous_read)
@@ -69,7 +70,7 @@ class GitHttpController < ApplicationController
 				end
 			end
 		end
-		return true
+		access_granted
 	end
 
 	def service_rpc(rpc)
@@ -97,7 +98,6 @@ class GitHttpController < ApplicationController
 
 	def get_info_refs(reqfile)
 		service_name = get_service_type
-
 		if service_name 
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
 			refs = %x[#{cmd}]
