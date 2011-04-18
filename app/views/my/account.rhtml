@@ -7,7 +7,7 @@
 
 
 <div class="splitcontentleft">
-	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC') %>
+	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => {:active=1}) %>
 	<% if @gitolite_public_keys.any? %>
 		<table class="list">
 			<tr>
