@@ -41,38 +41,38 @@ class GitHttpController < ApplicationController
 			get_idx_file(reqfile)
 		else
 			render_not_found
-			#render :text => proc { |response,output| output.write("ook ook ook\n") }
-			#render :text => "<html><body>" + read_body + "</body></html>"
-			#send_file("/srv/www/html/index.html",  :type=>"text/plain", :disposition=>"inline", :buffer_size => 4096)
-			#render :text=>"<html><body>p1=" + params[:p1] + "<br>p2=" + params[:p2] + "<br>p3=" + params[:p3] + "</body></body>\n"
 		end
 
 	end
 
 	private
 
+	#always return true, but sets @access_granted for use later
 	def authenticate
 		is_push = params[:p1] == "git-receive-pack"	
 		project = Project.find(params[:id])
-		allow_anonymous_read = project.is_public
-		valid = true
-		if is_push || (!allow_anonymous_read)
-			valid = false
-			authenticate_or_request_with_http_basic do |login, password| 
-				user = User.find_by_login(login);
-				if user.is_a?(User)
-					if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
-						valid = user.check_password?(password)
+		@access_granted = false
+		if(project != nil) 
+			if project[:git_http] == 2 || (project[:git_http] == 1 && is_ssl?)
+				@access_granted = true
+				allow_anonymous_read = project.is_public	
+				if is_push || (!allow_anonymous_read)
+					@access_granted = false
+					authenticate_or_request_with_http_basic do |login, password| 
+					user = User.find_by_login(login);
+					if user.is_a?(User)
+						if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
+							@access_granted = user.check_password?(password)
+						end
 					end
 				end
 			end
 		end
-
-		return valid
+		return true
 	end
 
 	def service_rpc(rpc)
-		return render_no_access if !has_access(rpc, true)
+		return render_no_access if !@access_granted
 		
 		input = read_body
 
@@ -99,7 +99,7 @@ class GitHttpController < ApplicationController
 	def get_info_refs(reqfile)
 		service_name = get_service_type
 
-		if service_name
+		if service_name && @access_granted
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
 			refs = %x[#{cmd}]
 
@@ -199,24 +199,6 @@ class GitHttpController < ApplicationController
 	end
 
 
-	def has_access(rpc, check_content_type = false)
-		
-
-		return true
-		
-		#if check_content_type
-		#	return false if @req.content_type != "application/x-git-%s-request" % rpc
-		#end
-		#return false if !['upload-pack', 'receive-pack'].include? rpc
-		#if rpc == 'receive-pack'
-		#	return @config[:receive_pack] if @config.include? :receive_pack
-		#end
-		#if rpc == 'upload-pack'
-		#	return @config[:upload_pack] if @config.include? :upload_pack
-		#end
-		#return get_config_setting(rpc)
-	end
-
 	def get_config_setting(service_name)
 		service_name = service_name.gsub('-', '')
 		setting = get_git_config("http.#{service_name}")
@@ -256,6 +238,9 @@ class GitHttpController < ApplicationController
 		return "ssh -o BatchMode=yes -o PubkeyAuthentication=yes -o StrictHostKeyChecking=no -i #{Setting.plugin_redmine_git_hosting['gitUserIdentityFile']} #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}  'cd repositories/#{@git_http_repo_path}.git ; "
 	end
 
+	def is_ssl?
+		return @env['HTTPS'] == 'on' || @env['HTTP_X_FORWARDED_PROTO'] == 'https' || @env['HTTP_X_FORWARDED_SSL'] == 'on'
+	end
 
 	# --------------------------------------
 	# HTTP error response handling functions
