@@ -2,8 +2,8 @@ class GitolitePublicKeysController < ApplicationController
 	unloadable
 	
 	before_filter :require_login
-	#before_filter :set_user_variable
-	#before_filter :find_gitolite_public_key, :except => [:index, :new, :create]
+	before_filter :set_user_variable
+	before_filter :find_gitolite_public_key, :except => [:index, :new, :create]
 
 	def index
 		@status = if (session[:gitolite_public_key_filter_status]=params[:status]).nil?
@@ -23,11 +23,11 @@ class GitolitePublicKeysController < ApplicationController
 	end
 	
 	def edit
-		redirect_to url_for(:controller => 'my' :action => 'account')
+		redirect_to url_for(:controller => 'my', :action => 'account')
 	end
 
 	def delete
-		redirect_to url_for(:controller => 'my' :action => 'account')
+		redirect_to url_for(:controller => 'my', :action => 'account')
 	end
 
 	def update

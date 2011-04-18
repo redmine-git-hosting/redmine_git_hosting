@@ -18,8 +18,8 @@
 				<tr class="<%= cycle('odd', 'even') %>">
 					<td><%= h(key) %></td>
 					<td class="buttons">
-						<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.identifier }, :class => 'icon icon-edit') %>
-						<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.identifier }, :class => 'icon icon-del') %>
+						<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.id }, :class => 'icon icon-edit') %>
+						<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.id }, :class => 'icon icon-del') %>
 					</td>
 				</tr>
 			<% end %>
