@@ -47,22 +47,21 @@ class GitHttpController < ApplicationController
 
 	private
 
-	#always return true, but sets @access_granted for use later
 	def authenticate
 		is_push = params[:p1] == "git-receive-pack"	
 		project = Project.find(params[:id])
-		@access_granted = false
+		access_granted = false
 		if(project != nil) 
 			if project[:git_http] == 2 || (project[:git_http] == 1 && is_ssl?)
-				@access_granted = true
+				access_granted = true
 				allow_anonymous_read = project.is_public	
 				if is_push || (!allow_anonymous_read)
-					@access_granted = false
+					access_granted = false
 					authenticate_or_request_with_http_basic do |login, password| 
 					user = User.find_by_login(login);
 					if user.is_a?(User)
 						if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
-							@access_granted = user.check_password?(password)
+							access_granted = user.check_password?(password)
 						end
 					end
 				end
@@ -72,8 +71,6 @@ class GitHttpController < ApplicationController
 	end
 
 	def service_rpc(rpc)
-		return render_no_access if !@access_granted
-		
 		input = read_body
 
 		response.headers["Content-Type"] = "application/x-git-%s-result" % rpc
@@ -99,7 +96,7 @@ class GitHttpController < ApplicationController
 	def get_info_refs(reqfile)
 		service_name = get_service_type
 
-		if service_name && @access_granted
+		if service_name 
 			cmd = git_command("#{service_name} --stateless-rpc --advertise-refs .")
 			refs = %x[#{cmd}]
 
@@ -239,7 +236,7 @@ class GitHttpController < ApplicationController
 	end
 
 	def is_ssl?
-		return @env['HTTPS'] == 'on' || @env['HTTP_X_FORWARDED_PROTO'] == 'https' || @env['HTTP_X_FORWARDED_SSL'] == 'on'
+		return (request.env['HTTPS']).to_s == 'on' || (request.env['HTTP_X_FORWARDED_PROTO']).to_s == 'https' || (request.env['HTTP_X_FORWARDED_SSL']).to_s == 'on'
 	end
 
 	# --------------------------------------
