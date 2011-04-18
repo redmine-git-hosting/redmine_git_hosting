@@ -58,11 +58,13 @@ class GitHttpController < ApplicationController
 				if is_push || (!allow_anonymous_read)
 					access_granted = false
 					authenticate_or_request_with_http_basic do |login, password| 
-					user = User.find_by_login(login);
-					if user.is_a?(User)
-						if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
-							access_granted = user.check_password?(password)
+						user = User.find_by_login(login);
+						if user.is_a?(User)
+							if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
+								access_granted = user.check_password?(password)
+							end
 						end
+				
 					end
 				end
 			end
