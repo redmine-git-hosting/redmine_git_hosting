@@ -29,10 +29,6 @@ Redmine::Plugin.register :redmine_git_hosting do
 end
 
 # initialize hook
-class GitolitePublicKeyHook < Redmine::Hook::ViewListener
-	render_on :view_my_account_contextual, :inline => "| <%= link_to(l(:label_public_keys), public_keys_path) %>" 
-end
-
 class GitoliteProjectShowHook < Redmine::Hook::ViewListener
 	render_on :view_projects_show_left, :partial => 'redmine_git_hosting'
 end
