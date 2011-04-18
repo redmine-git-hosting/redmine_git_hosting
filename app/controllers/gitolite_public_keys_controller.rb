@@ -47,12 +47,9 @@ class GitolitePublicKeysController < ApplicationController
 	
 	def create
 		@gitolite_public_key = GitolitePublicKey.new(params[:public_key].merge(:user => @user))
-		if @gitolite_public_key.save
-			flash[:notice] = l(:notice_public_key_added)
-			redirect_to url_for(:action => 'index', :status => session[:gitolite_public_key_filter_status])
-		else
-			render :action => 'new'
-		end
+		@gitolite_public_key.save
+		flash[:notice] = l(:notice_public_key_added)
+		redirect_to url_for(:controller => 'my', :action => 'account')
 	end
 	
 	def show
