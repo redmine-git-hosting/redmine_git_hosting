@@ -4,45 +4,9 @@
 </div>
 <h2><%=l(:label_my_account)%></h2>
 <%= error_messages_for 'user' %>
-
+<%= error_messages_for :gitolite_public_key %>
 
 <div class="splitcontentleft">
-	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => "active=1") %>
-	<table class="list">
-		<tr>
-			<% if @gitolite_public_keys.any? %>
-				<th style="text-align:left;" ><h4><%=l(:label_public_keys)%></h4></th>
-			<% else %>
-				<th style="text-align:left;" ><h4>No Pubic Keys Defined</h4></th>
-			<% end %>
-			<th style="width:10%;"></th>
-		</tr>
-		<% @gitolite_public_keys.each do |key| %>
-			<tr class="<%= cycle('odd', 'even') %>">
-				<td><%= h(key) %></td>
-				<td class="buttons">
-					<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.id }, :class => 'icon icon-edit') %>
-					<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.id }, :class => 'icon icon-del') %>
-				</td>
-			</tr>
-		<% end %>
-	</table>
-	
-	<div class="box">
-		<h4><%=l(:label_public_key_new)%></h4>
-		<%= error_messages_for :gitolite_public_key %>
-		<% form_for :public_key, @gitolite_public_key, :url => { :controller => 'gitolite_public_keys', :action => "create" }, :builder => TabularFormBuilder, :lang => current_language do |f| %>
-			<p>
-				<label for="public_key_title"><%=l(:field_identifier)%></label>
-				<br/>
-				<input id="public_key_title" name="public_key[title]" size="30" type="text" />
-			</p>
-			<p><%= f.text_area :key, :style => 'width:99%;height:140px;', :label => :field_public_key %></p>
-			<%= submit_tag l(:button_create) %>
-		<% end %>
-	</div>
-</div>		
-<div class="splitcontentright">
 	<% form_for :user, @user, :url => { :action => "account" }, 
 					:builder => TabularFormBuilder, 
 					:lang => current_language,
@@ -75,6 +39,43 @@
 	</div>
 	<% end %>
 </div>
+
+<div class="splitcontentright">
+	<% @gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => "active=1") %>
+	<table class="list">
+		<tr>
+			<% if @gitolite_public_keys.any? %>
+				<th style="text-align:left;" ><h4><%=l(:label_public_keys)%></h4></th>
+			<% else %>
+				<th style="text-align:left;" ><h4>No Pubic Keys Defined</h4></th>
+			<% end %>
+			<th style="width:10%;"></th>
+		</tr>
+		<% @gitolite_public_keys.each do |key| %>
+			<tr class="<%= cycle('odd', 'even') %>">
+				<td><%= h(key) %></td>
+				<td class="buttons">
+					<%= link_to(l(:button_edit),   { :controller => 'gitolite_public_keys', :action => 'edit', :id => key.id }, :class => 'icon icon-edit') %>
+					<%= link_to(l(:button_delete), { :controller => 'gitolite_public_keys', :action => 'delete', :id => key.id }, :class => 'icon icon-del') %>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+	
+	<div class="box">
+		<h4><%=l(:label_public_key_new)%></h4>
+		<% form_for :public_key, @gitolite_public_key, :url => { :controller => 'gitolite_public_keys', :action => "create" }, :builder => TabularFormBuilder, :lang => current_language do |f| %>
+			<p>
+				<label for="public_key_title"><%=l(:field_identifier)%></label>
+				<br/>
+				<input id="public_key_title" name="public_key[title]" size="30" type="text" />
+			</p>
+			<p><%= f.text_area :key, :style => 'width:99%;height:140px;', :label => :field_public_key %></p>
+			<%= submit_tag l(:button_create) %>
+		<% end %>
+	</div>
+</div>		
+
 <% content_for :sidebar do %>
 	<%= render :partial => 'sidebar' %>
 <% end %>
