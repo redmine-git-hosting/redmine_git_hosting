@@ -86,22 +86,26 @@ module GitHosting
 
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
+			
+			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
+			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
+			%x[mkdir "#{local_dir}"]
+			if !File.exists local_dir
+				return
+			end
 
+			#lock
 			lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitolite_lock'),File::CREAT|File::RDONLY)
 			retries=5
 			loop do
 				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
 				retries-=1
 				sleep 2
-				raise Lockfile::MaxTriesLockError if retries<=0
+				if retries<=0
+					%x[rm -Rf #{local_dir}]
+					return
+				end
 			end
-
-
-			# HANDLE GIT
-
-			# create tmp dir
-			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
-			%x[mkdir "#{local_dir}"]
 
 
 			# clone admin repo
