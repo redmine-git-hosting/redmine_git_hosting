@@ -39,7 +39,7 @@ module GitHosting
 		return git_exec_path()
 	end
 	def self.gitolite_ssh
-		if !File.exists(gitolite_ssh_name())
+		if !File.exists(gitolite_ssh_path())
 			update_git_exec
 		end
 		return gitolite_ssh_path()
