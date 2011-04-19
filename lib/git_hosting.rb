@@ -59,7 +59,7 @@ module GitHosting
 			f.puts "#!/bin/sh"
 			f.puts "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
 		end
-		File.open(gitolite_ssh_path(), "w") do
+		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
 		end
