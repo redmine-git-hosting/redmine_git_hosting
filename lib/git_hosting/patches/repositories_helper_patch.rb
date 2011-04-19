@@ -13,8 +13,8 @@ module GitHosting
 				gd = 1
 				gh = 1
 				if repository
-					gd = repository.git_daemon ? repository.git_daemon : gd
-					gh = repository.git_http ? repository.git_http : gh
+					gd = repository[:git_daemon] ? repository[:git_daemon] : gd
+					gh = repository[:git_http] ? repository[:git_http] : gh
 				end
 				gd = @project.is_public ? gd : 0
 				
