@@ -9,9 +9,24 @@ module GitHosting
 				end
 				base.send(:alias_method_chain, :lastrev,   :time_fixed)
 				base.send(:alias_method_chain, :revisions, :time_fixed)
+				base.extend(ClassMethods)
+				base.class_eval do
+					class << self
+						alias_method_chain :sq_bin, :ssh
+					end
+				end
+			
 			end
 			
-			GIT_BIN = "git"
+			module ClassMethods
+				def sq_bin_with_ssh
+					return shell_quote(GitHosting::git_exec())
+				end
+			end		
+
+
+			GIT_BIN = shell_quote(Redmine::Scm::Adapters::GitAdapter::sq_bin())
+
 			def lastrev_with_time_fixed(path,rev)
 				return nil if path.nil?
 				cmd = "#{GIT_BIN} --git-dir #{target('')} log --pretty=fuller --date=rfc --no-merges -n 1 "
