@@ -90,7 +90,7 @@ module GitHosting
 			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
 			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
 			%x[mkdir "#{local_dir}"]
-			if !File.exists local_dir
+			if !File.exists? local_dir
 				return
 			end
 
