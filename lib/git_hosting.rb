@@ -33,19 +33,19 @@ module GitHosting
 	end
 
 	def self.git_exec
-		if !File.exists(git_exec_path())
+		if !File.exists?(git_exec_path())
 			update_git_exec
 		end
 		return git_exec_path()
 	end
 	def self.gitolite_ssh
-		if !File.exists(gitolite_ssh_path())
+		if !File.exists?(gitolite_ssh_path())
 			update_git_exec
 		end
 		return gitolite_ssh_path()
 	end
 	def self.git_user_runner
-		if !File.exists(git_user_runner_path())
+		if !File.exists?(git_user_runner_path())
 			update_git_exec
 		end
 		return git_user_runner_path()
