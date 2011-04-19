@@ -25,10 +25,12 @@ module GitHosting
 	def self.git_exec_path
 		return File.join(RAILS_ROOT, "run_git_as_git_user")
 	end
-	def self.gitoite_ssh_path
+	def self.gitolite_ssh_path
 		return File.join(RAILS_ROOT, "gitolite_admin_ssh")
 	end
-
+	def self.git_user_runner_path
+		return File.join(RAILS_ROOT, "run_as_git_user")
+	end
 
 	def self.git_exec
 		if !File.exists(git_exec_path())
@@ -42,6 +44,12 @@ module GitHosting
 		end
 		return gitolite_ssh_path()
 	end
+	def self.git_user_runner
+		if !File.exists(git_user_runner_path())
+			update_git_exec
+		end
+		return git_user_runner_path()
+	end
 
 	def self.update_git_exec
 		git_user_server=Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer']
@@ -54,9 +62,16 @@ module GitHosting
 		File.open(gitolite_ssh_path(), "w") do
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
-		end	
+		end
+		File.open(git_user_runner_path(), "w") do |f|
+			f.puts "#!/bin/sh"
+			f.puts "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"$@\""
+		end
+
 		File.chmod(0700, git_exec_path())
 		File.chmod(0700, gitolite_ssh_path())
+		File.chmod(0700, git_user_runner_path())
+
 	end
 
 	def self.update_repositories(projects)
@@ -93,9 +108,19 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite]
 
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite', 'conf', 'gitolite.conf'))
-
+			orig_repos = conf.all_repos
+			new_repos = []
 			changed = false
+
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
+				
+				#check whether we're adding a new repo
+				repo_name = repository_name(project)
+				if orig_repos[ repo_name ] == nil
+					changed = true
+					new_repos.push repo_name
+				end
+				
 				# fetch users
 				users = project.member_principals.map(&:user).compact.uniq
 				write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
@@ -120,7 +145,6 @@ module GitHosting
 				end
 
 				# update users
-				repo_name = repository_name(project)
 				read_user_keys = []
 				write_user_keys = []
 				read_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
@@ -163,6 +187,19 @@ module GitHosting
 				# add, commit, push, and remove local tmp dir
 				%x[sh #{git_push_file}]
 			end
+
+			#set post recieve hooks
+			#need to do this AFTER push, otherwise necessary repos may not be created yet
+			if new_repos.length > 0
+				server_test = %x[#{git_user_runner} 'test=$(ruby #{RAILS_ROOT}/script/runner -e production exit 2>&1) ; if [ -n "$test" ] echo "bad" ; else echo "good" fi']
+				if server_test.match(/good/)
+					new_projects.each do |project|
+						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + project + "/hooks/post-receive"
+						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file} ; echo "ruby #{RAILS_ROOT}/script/runner -e production Repository.fetch_changesets" >>#{hook_file} ; chmod 700 #{hook_file} ']
+					end
+				end
+			end
+
 			# remove local copy
 			%x[rm -Rf #{local_dir}]
 

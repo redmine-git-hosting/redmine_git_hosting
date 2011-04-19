@@ -31,6 +31,15 @@ module GitHosting
 		def changed?
 			@original_content != content
 		end
+		
+		def all_repos
+			repos={}
+			@repositories.each do |repo, rights|
+				repos[repo] = 1
+			end
+			return repos
+		end
+
 
 		private
 		def load
