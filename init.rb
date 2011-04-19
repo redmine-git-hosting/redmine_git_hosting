@@ -18,9 +18,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/gitolite_admin_id_rsa',
 		'gitUserIdentityFile'  => '/srv/projects/redmine/miner/.ssh/git_user_id_rsa',
 		'allProjectsUseGit' => 'false',
+		'gitRepositoryBasePath' => 'repositories/',
 		
 		#these are somewhat deprecated, will be removed in the future in favor of the settings above 
-		'gitRepositoryBasePath' => '/srv/projects/git/repositories/',
 		'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
 		'readOnlyBaseUrls' => "",
 		'developerBaseUrls' => ""
