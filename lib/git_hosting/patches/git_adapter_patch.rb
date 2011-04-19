@@ -20,12 +20,12 @@ module GitHosting
 			
 			module ClassMethods
 				def sq_bin_with_ssh
-					return shell_quote(GitHosting::git_exec())
+					return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting::git_exec())
 				end
-			end		
+			end
 
 
-			GIT_BIN = shell_quote(Redmine::Scm::Adapters::GitAdapter::sq_bin())
+			GIT_BIN = Redmine::Scm::Adapters::GitAdapter::shell_quote(Redmine::Scm::Adapters::GitAdapter::sq_bin())
 
 			def lastrev_with_time_fixed(path,rev)
 				return nil if path.nil?
