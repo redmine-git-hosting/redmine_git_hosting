@@ -191,7 +191,7 @@ module GitHosting
 			#set post recieve hooks
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_repos.length > 0
-				server_test = %x[#{git_user_runner} 'test=$(ruby #{RAILS_ROOT}/script/runner -e production "print \"good\"" 2>/dev/null) ; if [ "good" = "$test" ] ; then echo "good" ; else echo "bad" ; fi']
+				server_test = %x[#{git_user_runner} 'ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\"" 2>/dev/null']
 				if server_test.match(/good/)
 					new_repos.each do |repo_name|
 						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + "/hooks/post-receive"
