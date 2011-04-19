@@ -22,7 +22,42 @@ module GitHosting
 		return urls
 	end
 
+	def self.git_exec_path
+		return File.join(RAILS_ROOT, "run_git_as_git_user")
+	end
+	def self.gitoite_ssh_path
+		return File.join(RAILS_ROOT, "gitolite_admin_ssh")
+	end
 
+
+	def self.git_exec
+		if !File.exists(git_exec_path())
+			update_git_exec
+		end
+		return git_exec_path()
+	end
+	def self.gitolite_ssh
+		if !File.exists(gitolite_ssh_name())
+			update_git_exec
+		end
+		return gitolite_ssh_path()
+	end
+
+	def self.update_git_exec
+		git_user_server=Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer']
+		git_user_key=Setting.plugin_redmine_git_hosting['gitUserIdentityFile']
+		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+		File.open(git_exec_path(), "w") do |f|
+			f.puts "#!/bin/bash"
+			f.puts "ssh -o stricthostkeychecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
+		end
+		File.open(gitolite_ssh_path(), "w") do
+			f.puts "#!/bin/bash"
+			f.puts "exec ssh -o stricthostkeychecking=no -i #{gitolite_key} \"$@\""
+		end	
+		File.chmod(0700, git_exec_path())
+		File.chmod(0700, gitolite_ssh_path())
+	end
 
 	def self.update_repositories(projects)
 		projects = (projects.is_a?(Array) ? projects : [projects])
@@ -92,7 +127,7 @@ module GitHosting
 				users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
 					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
 					if File.exists? filename
-						File.unlink() rescue nil
+						File.unlink(filename) rescue nil
 						changed = true
 					end
 				end
