@@ -48,12 +48,12 @@ module GitHosting
 		git_user_key=Setting.plugin_redmine_git_hosting['gitUserIdentityFile']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 		File.open(git_exec_path(), "w") do |f|
-			f.puts "#!/bin/bash"
-			f.puts "ssh -o stricthostkeychecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
+			f.puts "#!/bin/sh"
+			f.puts "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
 		end
 		File.open(gitolite_ssh_path(), "w") do
-			f.puts "#!/bin/bash"
-			f.puts "exec ssh -o stricthostkeychecking=no -i #{gitolite_key} \"$@\""
+			f.puts "#!/bin/sh"
+			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
 		end	
 		File.chmod(0700, git_exec_path())
 		File.chmod(0700, gitolite_ssh_path())
@@ -88,22 +88,9 @@ module GitHosting
 			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
 			%x[mkdir "#{local_dir}"]
 
-			# Create GIT_SSH script
-			git_env_ssh=""
-			if not mswin?
-				#setup custom ssh file to use specified ssh key
-				ssh_with_identity_file = File.join(local_dir, 'ssh_with_identity_file.sh')
-				File.open(ssh_with_identity_file, "w") do |f|
-					f.puts "#!/bin/bash"
-					f.puts "exec ssh -o stricthostkeychecking=no -i #{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']} \"$@\""
-				end
-				File.chmod(0755, ssh_with_identity_file)
-				ENV['GIT_SSH'] = ssh_with_identity_file
-				env_git_ssh="env GIT_SSH=#{ssh_with_identity_file} "
-			end
 
 			# clone admin repo
-			%x[#{env_git_ssh} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite]
+			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite]
 
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite', 'conf', 'gitolite.conf'))
 
@@ -161,16 +148,15 @@ module GitHosting
 			if changed
 				git_push_file = File.join(local_dir, 'git_push.bat')
 				new_dir= File.join(local_dir,'gitolite')
-				
 				File.open(git_push_file, "w") do |f|
-					f.puts "#!/bin/sh" if not mswin?
+					f.puts "#!/bin/sh" 
 					f.puts "cd #{new_dir}"
 					f.puts "git add keydir/*"
 					f.puts "git add conf/gitolite.conf"
 					f.puts "git config user.email '#{Setting.mail_from}'"
 					f.puts "git config user.name 'Redmine'"
 					f.puts "git commit -a -m 'updated by Redmine'"
-					f.puts "#{env_git_ssh}git push"
+					f.puts "env GIT_SSH=#{gitolite_ssh()} git push"
 				end
 				File.chmod(0755, git_push_file)
 
@@ -186,8 +172,5 @@ module GitHosting
 
 	end
 
-	def self.mswin?  # copy & paste from redmine/extra/svn/reposman.rb:mswin?
-		(RUBY_PLATFORM =~ /(:?mswin|mingw)/) || (RUBY_PLATFORM == 'java' && (ENV['OS'] || ENV['os']) =~ /windows/i)
-	end
 end
 
