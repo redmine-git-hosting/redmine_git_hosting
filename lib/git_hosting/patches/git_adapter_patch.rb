@@ -25,11 +25,11 @@ module GitHosting
 			end
 
 
-			GIT_BIN = Redmine::Scm::Adapters::GitAdapter::sq_bin()
 
 			def lastrev_with_time_fixed(path,rev)
 				return nil if path.nil?
-				cmd = "#{GIT_BIN} --git-dir #{target('')} log --pretty=fuller --date=rfc --no-merges -n 1 "
+				git_bin = Redmine::Scm::Adapters::GitAdapter::sq_bin()
+				cmd = "#{git_bin} --git-dir #{target('')} log --pretty=fuller --date=rfc --no-merges -n 1 "
 				cmd << " #{shell_quote rev} " if rev 
 				cmd <<  "-- #{path} " unless path.empty?
 				shellout(cmd) do |io|
@@ -58,7 +58,8 @@ module GitHosting
 			def revisions_with_time_fixed(path, identifier_from, identifier_to, options={})
 				revisions = Redmine::Scm::Adapters::Revisions.new
 
-				cmd = "#{GIT_BIN} --git-dir #{target('')} log --raw --date=rfc --pretty=fuller"
+				git_bin = Redmine::Scm::Adapters::GitAdapter::sq_bin()
+				cmd = "#{git_bin} --git-dir #{target('')} log --raw --date=rfc --pretty=fuller"
 				cmd << " --reverse" if options[:reverse]
 				cmd << " --all" if options[:all]
 				cmd << " -n #{options[:limit]} " if options[:limit]
