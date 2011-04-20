@@ -57,13 +57,14 @@ module GitHosting
 		git_user_key=Setting.plugin_redmine_git_hosting['gitUserIdentityFile']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 		File.open(git_exec_path(), "w") do |f|
-			f.puts "#!/bin/sh"
+			f.puts '#!/bin/sh'
+			f.puts 'cmd=$(printf "\"%s\" " "$@")'
 			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
-			f.puts "	cd ~"
-			f.puts "	git $@"
+			f.puts '	cd ~'
+			f.puts '	eval "git $cmd"'
 			f.puts "else"
-			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
-			f.puts "fi"
+			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $cmd\""
+			f.puts 'fi'
 		end
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
