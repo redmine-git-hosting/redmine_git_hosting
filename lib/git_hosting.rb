@@ -22,6 +22,30 @@ module GitHosting
 		return urls
 	end
 
+	def self.add_route_for_project(p)
+		
+		if defined? map
+			add_route_for_project_with_map p, map
+		else
+			ActionController::Routing::Routes.draw do |map|
+				add_route_for_project_with_map p, map
+			end
+		end
+	end
+	def self.add_route_for_project_with_map(p,m)
+		repo = p.repository
+		if repo.is_a?(Repository::Git)
+			repo_path=repo.url.gsub(/^.*\//, '')
+			m.connect repo_path,                  :controller => 'git_http', :p1 => '', :p2 =>'', :p3 =>'', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
+			m.connect repo_path + "/:p1",         :controller => 'git_http', :p2 => '', :p3 =>'', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
+			m.connect repo_path + "/:p1/:p2",     :controller => 'git_http', :p3 => '', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
+			m.connect repo_path + "/:p1/:p2/:p3", :controller => 'git_http', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
+		end
+
+	end
+
+
+
 	def self.git_exec_path
 		return File.join(RAILS_ROOT, "run_git_as_git_user")
 	end
@@ -134,6 +158,7 @@ module GitHosting
 				repo_name = repository_name(project)
 				if orig_repos[ repo_name ] == nil
 					changed = true
+					add_route_for_project(project)
 					new_repos.push repo_name
 				end
 				
