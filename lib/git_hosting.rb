@@ -52,12 +52,18 @@ module GitHosting
 	end
 
 	def self.update_git_exec
-		git_user_server=Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer']
+		git_user=Setting.plugin_redmine_git_hosting['gitUser'] 
+		git_user_server=git_user + "@" + Setting.plugin_redmine_git_hosting['gitServer']
 		git_user_key=Setting.plugin_redmine_git_hosting['gitUserIdentityFile']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 		File.open(git_exec_path(), "w") do |f|
 			f.puts "#!/bin/sh"
-			f.puts "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
+			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
+			f.puts "	cd ~"
+			f.puts "	git $@"
+			f.puts "else"
+			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $@\""
+			f.puts "fi"
 		end
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
@@ -65,12 +71,17 @@ module GitHosting
 		end
 		File.open(git_user_runner_path(), "w") do |f|
 			f.puts "#!/bin/sh"
-			f.puts "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"$@\""
+			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
+			f.puts "	cd ~"
+			f.puts "	$@"
+			f.puts "else"
+			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"$@\""
+			f.puts "fi"
 		end
 
-		File.chmod(0700, git_exec_path())
-		File.chmod(0700, gitolite_ssh_path())
-		File.chmod(0700, git_user_runner_path())
+		File.chmod(0777, git_exec_path())
+		File.chmod(0777, gitolite_ssh_path())
+		File.chmod(0777, git_user_runner_path())
 
 	end
 
