@@ -25,7 +25,7 @@ module GitHosting
 			end
 
 
-			GIT_BIN = Redmine::Scm::Adapters::GitAdapter::shell_quote(Redmine::Scm::Adapters::GitAdapter::sq_bin())
+			GIT_BIN = Redmine::Scm::Adapters::GitAdapter::sq_bin()
 
 			def lastrev_with_time_fixed(path,rev)
 				return nil if path.nil?
