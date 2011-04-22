@@ -49,32 +49,38 @@ class GitHttpController < ApplicationController
 
 	def authenticate
 		is_push = params[:p1] == "git-receive-pack"	
+		query_valid = false
+		authentication_valid = true
+		
 		project = Project.find(params[:id])
 		repository = project != nil ? project.repository : nil
-		access_granted = false
 		if(project != nil && repository !=nil) 
 			if repository[:git_http] == 2 || (repository[:git_http] == 1 && is_ssl?)
-				access_granted = true
+				query_valid = true
 				allow_anonymous_read = project.is_public	
 				if is_push || (!allow_anonymous_read)
-					access_granted = false
+					authentication_valid = false
 					authenticate_or_request_with_http_basic do |login, password| 
 						user = User.find_by_login(login);
 						if user.is_a?(User)
 							if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
-								access_granted = user.check_password?(password)
+								authentication_valid = user.check_password?(password)
 							end
 						end
-				
+						authentication_valid
 					end
 				end
 			end
 		end
-		if !access_granted
-			render_no_access
+
+		#if authentication failed, error already rendered
+		#so, just render case where user queried a project 
+		#that's nonexistant or for which smart http isn't active
+		if !query_valid
+			render_not_found
 		end
 
-		return access_granted
+		return query_valid && authentication_valid
 	end
 
 	def service_rpc(rpc)
