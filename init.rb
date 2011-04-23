@@ -15,6 +15,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 	settings :default => {
 		'gitUser' => 'git',
 		'gitServer' => 'localhost',
+		'httpServer' => 'localhost',
 		'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/gitolite_admin_id_rsa',
 		'gitUserIdentityFile'  => '/srv/projects/redmine/miner/.ssh/git_user_id_rsa',
 		'allProjectsUseGit' => 'false',

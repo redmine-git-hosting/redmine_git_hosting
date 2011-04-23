@@ -1,3 +1,5 @@
+<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
+
 <% content_for :header_tags do %>
 	<style>
 		#git_url_box
@@ -132,11 +134,16 @@
 	<script type="text/javascript">
 		function update_git_url(el)
 		{
+			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
+			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
+			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
+			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" + "/" + ("<%= request.url  %>").replace(/^[^\/]+[\/]+[^\/]+\//, "").replace(/projects\/[^\/]+\/repository.?$/, "")
+			httpBase = httpBase.replace(/\/$/, "")
 			
 			var urls=[]
-			urls["git_url_ssh"]  = ["git@localhost:thisproj.git", true]
-			urls["git_url_http"] = ["https://localhost/thisproj.git", true]
-			urls["git_url_git"]  = ["git://localhost/thisproj.git", false]
+			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, true]
+			urls["git_url_http"] = ["http://" + httpBase + "/" + projectName, true]
+			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
 			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 
 			var selected_id = el.id
@@ -153,7 +160,6 @@
 	</script>
 <% end %>
 
-<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
 <div id="git_url_box">
 	<ul id="git_url_list" >
 		<li>
