@@ -129,24 +129,46 @@
 		}
 		
 	</style>
+	<script type="text/javascript">
+		function update_git_url(el)
+		{
+			
+			var urls=[]
+			urls["git_url_ssh"]  = ["git@localhost:thisproj.git", true]
+			urls["git_url_http"] = ["https://localhost/thisproj.git", true]
+			urls["git_url_git"]  = ["git://localhost/thisproj.git", false]
+			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
+
+			var selected_id = el.id
+			document.getElementById("git_url_text").value = urls[selected_id][0];
+			document.getElementById("git_url_access").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only"
+			
+			var i
+			for(i=0;i<all_ids.length; i++)
+			{
+				var test_id = all_ids[i];
+				document.getElementById(test_id).className = test_id == selected_id ? "selected" : ""
+			}
+		}
+	</script>
 <% end %>
 
 <% if @project.repository && @project.repository.is_a?(Repository::Git) %>
 <div id="git_url_box">
 	<ul id="git_url_list" >
 		<li>
-			<a id="git_url_ssh" href="#">SSH</a>
+			<a id="git_url_ssh" onclick="update_git_url(this)" href="#">SSH</a>
 		</li>
 		<li>
-			<a id="git_url_http" href="#">HTTP</a>
+			<a id="git_url_http" onclick="update_git_url(this)" href="#">HTTP</a>
 		</li>
 		<li>
-			<a id="git_url_git" class="selected" href="#">Git</a>
+			<a id="git_url_git" onclick="update_git_url(this)" href="#">Git</a>
 		</li>
 	</ul>
-	<input style="float:left;" id="git_url_text" name="git_url_text" type="text" value="" />
-	<span style="float:left;" id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
-
+	<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
+	<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
+	<script type="text/javascript"> update_git_url(document.getElementById("git_url_git")) </script>
 </div>
 <br/>
 
