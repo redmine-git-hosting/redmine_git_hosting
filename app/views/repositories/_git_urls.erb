@@ -134,6 +134,7 @@
 	<script type="text/javascript">
 		function update_git_url(el)
 		{
+			var user = "<%= User.current.login %>"
 			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
@@ -142,7 +143,7 @@
 			
 			var urls=[]
 			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, true]
-			urls["git_url_http"] = ["http://" + httpBase + "/" + projectName, true]
+			urls["git_url_http"] = ["http://" + (<%= (User.current.allowed_to?( :commit_access, @project) ||  (!project.is_public)) ? "true" : "false" %> ? user + "@" : "") + httpBase + "/" + projectName, true]
 			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
 			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 
