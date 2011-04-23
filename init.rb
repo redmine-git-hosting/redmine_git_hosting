@@ -28,10 +28,15 @@ Redmine::Plugin.register :redmine_git_hosting do
 		:partial => 'redmine_git_hosting'
 end
 
-# initialize hook
-class GitoliteProjectShowHook < Redmine::Hook::ViewListener
+# initialize hooks
+class GitProjectShowHook < Redmine::Hook::ViewListener
 	render_on :view_projects_show_left, :partial => 'redmine_git_hosting'
 end
+
+class GitRepoUrlHook < Redmine::Hook::ViewListener
+	render_on :view_repositories_show_contextual, :partial => 'git_urls'
+end
+
 
 # initialize association from user -> public keys
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
