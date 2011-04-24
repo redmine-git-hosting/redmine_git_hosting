@@ -134,6 +134,8 @@
 	<script type="text/javascript">
 		function update_git_url(el)
 		{
+			var p = <%= project.is_public.to_s %>
+			var rgd =  <%= project.repository[:git_daemon].to_s %>
 			var user = "<%= User.current.login %>"
 			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
@@ -156,27 +158,27 @@
 			{
 				var test_id = all_ids[i];
 				var test_el = document.getElementById(test_id)
-				if test_el != null
+				if (test_el != null)
 				{
-					document.test_el.className = test_id == selected_id ? "selected" : ""
+					test_el.className = test_id == selected_id ? "selected" : ""
 				}
 			}
 		}
 	</script>
 <% end %>
 
-<% if (!User.current.anonymous?) || @project.repository[:git_http] >= 1 || (@project.public && @project.repository[:git_daemon] == 1) %>
+<% if (!User.current.anonymous?) || project.repository[:git_http].to_s != "0" || (project.is_public && project.repository[:git_daemon].to_s != "0" ) %>
 <div id="git_url_box">
 	<ul id="git_url_list" >
 		<% if !User.current.anonymous? %>
 			<li><a id="git_url_ssh" onclick="update_git_url(this)" href="javascript:void(0)">SSH</a></li>
 		<% end %>
-		<% if @project.repository[:git_http] >= 1%>
+		<% if project.repository[:git_http].to_s != "0" %>
 			<li><a id="git_url_http" onclick="update_git_url(this)" href="javascript:void(0)">HTTP</a></li>
 		<% end %>
-		<% if @project.public && @project.repository[:git_daemon] == 1%>
+		<%  if project.is_public && project.repository[:git_daemon].to_s != "0" %>
 			<li><a id="git_url_git" onclick="update_git_url(this)" href="javascript:void(0)">Git</a></li>
-		<% end %>
+		<%  end %>
 
 	</ul>
 	<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
