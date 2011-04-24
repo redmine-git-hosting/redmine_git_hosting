@@ -32,16 +32,22 @@ module GitHosting
 
 	end
 
-
+	def self.get_tmp_dir
+		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting_#{Time.now.to_i}")
+		if !File.directory?(@@git_hosting_tmp_dir)
+			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
+		end
+		return @@git_hosting_tmp_dir
+	end
 
 	def self.git_exec_path
-		return File.join(RAILS_ROOT, "run_git_as_git_user")
+		return File.join(get_tmp_dir(), "run_git_as_git_user")
 	end
 	def self.gitolite_ssh_path
-		return File.join(RAILS_ROOT, "gitolite_admin_ssh")
+		return File.join(get_tmp_dir(), "gitolite_admin_ssh")
 	end
 	def self.git_user_runner_path
-		return File.join(RAILS_ROOT, "run_as_git_user")
+		return File.join(get_tmp_dir(), "run_as_git_user")
 	end
 
 	def self.git_exec
@@ -111,15 +117,21 @@ module GitHosting
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
 			
+			#return cleanly if we don't have permissions to load identity file, which we need
+			if !File.owned?(Setting.plugin_redmine_git_hosting['gitUserIdentityFile'])
+				return
+			end
+
+
 			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-			local_dir = File.join(RAILS_ROOT, "tmp","redmine_gitolite_#{Time.now.to_i}")
-			%x[mkdir "#{local_dir}"]
+			local_dir = File.join(get_tmp_dir(), "tmp_#{Time.now.to_i}")
+			%x[mkdir -p "#{local_dir}"]
 			if !File.exists? local_dir
 				return
 			end
 
 			#lock
-			lockfile=File.new(File.join(RAILS_ROOT,"tmp",'redmine_gitolite_lock'),File::CREAT|File::RDONLY)
+			lockfile=File.new(File.join(get_tmp_dir(),'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
 			retries=5
 			loop do
 				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
@@ -199,7 +211,7 @@ module GitHosting
 			end
 
 			if changed
-				git_push_file = File.join(local_dir, 'git_push.bat')
+				git_push_file = File.join(local_dir, 'git_push.sh')
 				new_dir= File.join(local_dir,'gitolite')
 				File.open(git_push_file, "w") do |f|
 					f.puts "#!/bin/sh" 
