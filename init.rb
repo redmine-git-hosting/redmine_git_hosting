@@ -31,7 +31,7 @@ end
 
 # initialize hooks
 class GitProjectShowHook < Redmine::Hook::ViewListener
-	render_on :view_projects_show_left, :partial => 'redmine_git_hosting'
+	render_on :view_projects_show_left, :partial => 'git_urls'
 end
 
 class GitRepoUrlHook < Redmine::Hook::ViewListener
