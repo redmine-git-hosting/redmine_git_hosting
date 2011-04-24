@@ -134,8 +134,9 @@
 	<script type="text/javascript">
 		function update_git_url(el)
 		{
-			var p = <%= project.is_public.to_s %>
-			var rgd =  <%= project.repository[:git_daemon].to_s %>
+			var project_is_public = <%= project.is_public.to_s %>
+			var user_is_committer =  <%=  User.current.allowed_to?(:commit_access, project) ? "true" : false %>
+
 			var user = "<%= User.current.login %>"
 			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
@@ -144,8 +145,8 @@
 			httpBase = httpBase.replace(/\/$/, "")
 			
 			var urls=[]
-			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, true]
-			urls["git_url_http"] = ["http://" + (<%= (User.current.allowed_to?( :commit_access, @project) ||  (!project.is_public)) ? "true" : "false" %> ? user + "@" : "") + httpBase + "/" + projectName, true]
+			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, user_is_committer]
+			urls["git_url_http"] = ["http://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
 			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
 			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 
