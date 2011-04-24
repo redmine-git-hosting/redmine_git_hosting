@@ -1,21 +1,27 @@
-'es':
+'en':
+  label_all_git: Automatically Initialize Git Repositories
+  label_git_server: Gitolite Server Domain
+  label_http_server: HTTP Server Domain (for git http urls)
+  label_git_user: Git Username 
+  label_git_user_identity_file: Git User SSH Identity File
+  label_gitolite_identity_file: Gitolite SSH Identity File
+  label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
+
+  label_git_daemon: Git Daemon
+  label_git_http: Git Smart HTTP
+  label_enabled: Enabled
+  label_disabled: Disabled
+  label_https_only: HTTPS Only
+  label_https_and_http: HTTPS and HTTP
+
   label_public_keys: Public keys
   label_public_key_new: New public key
-  label_gitolite_url: Gitolite URL
-  label_gitolite_identity_file: Gitolite identity file
-  label_git_repository_base_path: Git Repository Base Path
-  label_developer_base_urls: Developer base URL(s)
-  label_read_only_base_urls: Read-only base URL(s)
-  label_enable_gitdaemon: Enable git-daemon?
-  label_enable_gitweb: Enable gitweb?
-  label_gitolite_log_file: Log file
   field_public_key: Key 
   notice_public_key_updated: Public key was successfully updated.
   notice_public_key_added: Public key was successfully added.
-  
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can deactivate it and create a new one.'
-
   activerecord:
     errors:
       messages:
         'may not be changed': 'may not be changed'
+
