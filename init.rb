@@ -9,7 +9,7 @@ require_dependency 'git_hosting/patches/git_adapter_patch'
 
 Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
-	author 'Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
+	author 'Eric Bishop, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
 	description 'Enables Redmine to control hosting of git repositories'
 	version '0.1.0'
 	settings :default => {
