@@ -155,28 +155,35 @@
 			for(i=0;i<all_ids.length; i++)
 			{
 				var test_id = all_ids[i];
-				document.getElementById(test_id).className = test_id == selected_id ? "selected" : ""
+				var test_el = document.getElementById(test_id)
+				if test_el != null
+				{
+					document.test_el.className = test_id == selected_id ? "selected" : ""
+				}
 			}
 		}
 	</script>
 <% end %>
 
+<% if (!User.current.anonymous?) || @project.repository[:git_http] >= 1 || (@project.public && @project.repository[:git_daemon] == 1) %>
 <div id="git_url_box">
 	<ul id="git_url_list" >
-		<li>
-			<a id="git_url_ssh" onclick="update_git_url(this)" href="javascript:void(0)">SSH</a>
-		</li>
-		<li>
-			<a id="git_url_http" onclick="update_git_url(this)" href="javascript:void(0)">HTTP</a>
-		</li>
-		<li>
-			<a id="git_url_git" onclick="update_git_url(this)" href="javascript:void(0)">Git</a>
-		</li>
+		<% if !User.current.anonymous? %>
+			<li><a id="git_url_ssh" onclick="update_git_url(this)" href="javascript:void(0)">SSH</a></li>
+		<% end %>
+		<% if @project.repository[:git_http] >= 1%>
+			<li><a id="git_url_http" onclick="update_git_url(this)" href="javascript:void(0)">HTTP</a></li>
+		<% end %>
+		<% if @project.public && @project.repository[:git_daemon] == 1%>
+			<li><a id="git_url_git" onclick="update_git_url(this)" href="javascript:void(0)">Git</a></li>
+		<% end %>
+
 	</ul>
 	<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
 	<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
 	<script type="text/javascript"> update_git_url(document.getElementById("git_url_git")) </script>
 </div>
 <br/>
+<% end %>
 
 <% end %>
