@@ -13,18 +13,13 @@ Redmine::Plugin.register :redmine_git_hosting do
 	description 'Enables Redmine to control hosting of git repositories'
 	version '0.1.0'
 	settings :default => {
-		'gitUser' => 'git',
+		'allProjectsUseGit' => 'false',
 		'gitServer' => 'localhost',
 		'httpServer' => 'localhost',
-		'gitoliteIdentityFile' => '/srv/projects/redmine/miner/.ssh/gitolite_admin_id_rsa',
-		'gitUserIdentityFile'  => '/srv/projects/redmine/miner/.ssh/git_user_id_rsa',
-		'allProjectsUseGit' => 'false',
-		'gitRepositoryBasePath' => 'repositories/',
-		
-		#these are somewhat deprecated, will be removed in the future in favor of the settings above 
-		'gitoliteUrl' => 'git@localhost:gitolite-admin.git',
-		'readOnlyBaseUrls' => "",
-		'developerBaseUrls' => ""
+		'gitUser' => 'git',
+		'gitUserIdentityFile'  => RAILS_ROOT + '/.ssh/git_user_id_rsa',
+		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
+		'gitRepositoryBasePath' => 'repositories/'
 		}, 
 		:partial => 'redmine_git_hosting'
 end

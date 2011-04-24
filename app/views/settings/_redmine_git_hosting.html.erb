@@ -1,7 +1,27 @@
 <div class="tabular settings">
 	<p>
-		<label><%= l(:label_gitolite_url)%></label> 
-		<%= text_field_tag("settings[gitoliteUrl]", @settings['gitoliteUrl'], :size => 60) %>
+		<label><%= l(:label_all_git)%></label> 
+		<%= text_field_tag("settings[allProjectsUseGit]", @settings['allProjectsUseGit'], :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_server)%></label>
+		<%= text_area_tag("settings[gitServer]", @settings['gitServer'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_http_server)%></label>
+		<%= text_area_tag("settings[httpServer]", @settings['httpServer'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_user)%></label>
+		<%= text_area_tag("settings[gitUser]", @settings['gitUser'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_user_identity_file)%></label>
+		<%= text_field_tag("settings[gitUserIdentityFile]", @settings['gitUserIdentityFile'], :size => 60) %>
 		<br />
 	</p>
 	<p>
@@ -12,31 +32,6 @@
 	<p>
 		<label><%= l(:label_git_repository_base_path)%></label>
 		<%= text_field_tag("settings[gitRepositoryBasePath]", @settings['gitRepositoryBasePath'], :size => 60) %>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_developer_base_urls)%></label>
-		<%= text_area_tag("settings[developerBaseUrls]", @settings['developerBaseUrls'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_read_only_base_urls)%></label>
-		<%= text_area_tag("settings[readOnlyBaseUrls]", @settings['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_enable_gitdaemon)%></label>
-		<%= check_box_tag("settings[enableGitdaemon]", 1, Setting.plugin_redmine_git_hosting['enableGitdaemon'], :tabindex => 4) %>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_enable_gitweb)%></label>
-		<%= check_box_tag("settings[enableGitweb]", 1, Setting.plugin_redmine_git_hosting['enableGitweb'], :tabindex => 4) %>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_gitolite_log_file)%></label>
-		<%= text_field_tag("settings[gitoliteLogFile]", @settings['gitoliteLogFile'], :size => 60) %>
 		<br />
 	</p>
 </div>
