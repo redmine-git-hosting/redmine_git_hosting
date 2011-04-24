@@ -1,5 +1,5 @@
 'en':
-  label_all_git: Automatically Initialize Git Repositories
+  label_all_git: Automatically Initialize Git Repositories For New Projects
   label_git_server: Gitolite Server Domain
   label_http_server: HTTP Server Domain (for git http urls)
   label_git_user: Git Username 
