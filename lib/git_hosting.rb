@@ -10,18 +10,6 @@ module GitHosting
 		return "#{parent_name}/#{project.identifier}".sub(/^\//, "")
 	end
 	
-	def self.get_urls(project)
-		urls = {:read_only => [], :developer => []}
-		read_only_baseurls = Setting.plugin_redmine_git_hosting['readOnlyBaseUrls'].split(/[\r\n\t ,;]+/)
-		developer_baseurls = Setting.plugin_redmine_git_hosting['developerBaseUrls'].split(/[\r\n\t ,;]+/)
-
-		project_path = repository_name(project) + ".git"
-
-		read_only_baseurls.each {|baseurl| urls[:read_only] << baseurl + project_path}
-		developer_baseurls.each {|baseurl| urls[:developer] << baseurl + project_path}
-		return urls
-	end
-
 	def self.add_route_for_project(p)
 		
 		if defined? map
