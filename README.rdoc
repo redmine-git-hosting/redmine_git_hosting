@@ -1,17 +1,30 @@
-=WARNING 
-Be aware that as of now (4/8/2011) the master branch is rather unstable -- I'm working to integrate a lot of new functionality.   I do NOT recommend cloning from this repo unless you're interested in working on this code yourself, as it really isn't anywhere near ready for production right now.  I'll remove this warning when I'm more confident this seems to be working properly.
+= Redmine Git Hosting Plugin
+
+A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
+
+== Configuration
+
+One major problem when configuring Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by running git via SSH, as a specified git user, which owns the repositories.  The plugin requires two distinct (private) SSH keys: The "Gitolite Identity" key and the "Git User Identity" key.  The Gitolite Identity key is a key that has permission to clone the gitolite-admin.git repository.  The Git User Identity keys is one that has permission to ssh into the git account normally and run commands as the git user.  You will need to setup this second key manually after installing gitolite by adding the necessary public key to the [git_user_home]/.ssh/authorized_keys file (outside the comments/keys added by gitolite in this file).  These two keys cannot be the same.  These private keys should be owned by the web server username (e.g. www-data), with permissions set to 600 (read/write allowed only for owner).
+
+This solution of accessing git via SSH has several advantages.  First, the gitolite server can be either local or remote.  Second, permissions will be preserved properly for all git repositories, no need to grant more permissions than is necessary so that the web server can manipulate them.  Finally, while the information for the web server to login as the git user will be technically available, unless an attacker knows that this plugin is installed, they won't know where to look to gain access to this alternate account.  Thus it is slightly more secure solution than running the web server as the git user (though technically the improvement does fall into the category of security by obscurity, which is frowned upon, there's no way around giving the web server permission to manipulate the git repsitories if we're implementing this functionality).
+
+While this setup will work with remotely hosted repositories, ideally the repositories and the web server should be on the same host.  The advantage of this is that this plugin automatically sets up a post-recieve hook that updates the ChiliProject/Redmine database with the latest changesets, whenever a user pushes data to the server.  However, this doesn't work (though it will fail cleanly and without problem) if the repositories aren't on the same server, or if the git user doesn't have read access to the directory where ChiliProject/Redmine is installed.
+
+The user needs to specify the location of the two ssh key files, the name of the git user and the name of the git server.  This server name is used in the git URL display, so it is best if the real DNS name is used instead of just "localhost" even if the repositorie are hosted on the same server as the web server.  The "http server domain" also needs to be set, which specifies the domain associated with the web server that should be included in the git (smart) http URLs.
+
+== Fast Deployment with YourChili Bash Library
+
+Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and passnger.  Just run the init_nginx_stack.sh script folloed by the chili_test.sh script, modifying the variables in those scripts as desired.
+
+== Tested Configurations
+
+This plugin has been primarily tested on Ubuntu Server 10.10 (32 and 64 bit) with ChiliProject v1.2.0, with PostgreSQL as the database (April, 2011).  It is possible that some debugging will be necessary for other configurations.
 
 
-= Patches
-* work with gitolite
-* support subproject git repo. (e.g. git@site.name:parent_project/subproject.git)
-* fix bugs.
+This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin
 
-= Redmine Gitolite
 
-A Redmine plugin which manages your gitolite configuration based on your projects and memberships in Redmine. Includes Public Key management views (extracted from http://plan.io).
-
-This plugin was originally developed by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop.
+== Required gems
 
 In order to use this plugin you must have the following gems installed:
 
@@ -24,6 +37,7 @@ net-ssh
 
 == Copyright & License
 
+Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
+
 Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.
 
-Copyright (c) 2010 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
