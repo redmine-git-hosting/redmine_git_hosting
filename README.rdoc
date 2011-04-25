@@ -4,7 +4,7 @@ A ChiliProject/Redmine plugin which makes configuring your own git hosting easy.
 
 == Configuration
 
-One major problem when configuring Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by running git via SSH, as a specified git user, which owns the repositories.  The plugin requires two distinct (private) SSH keys: The "Gitolite Identity" key and the "Git User Identity" key.  The Gitolite Identity key is a key that has permission to clone the gitolite-admin.git repository.  The Git User Identity keys is one that has permission to ssh into the git account normally and run commands as the git user.  You will need to setup this second key manually after installing gitolite by adding the necessary public key to the [git_user_home]/.ssh/authorized_keys file (outside the comments/keys added by gitolite in this file).  These two keys cannot be the same.  These private keys should be owned by the web server username (e.g. www-data), with permissions set to 600 (read/write allowed only for owner).
+One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by running git via SSH, as a specified git user, which owns the repositories.  The plugin requires two distinct (private) SSH keys: The "Gitolite Identity" key and the "Git User Identity" key.  The Gitolite Identity key is a key that has permission to clone the gitolite-admin.git repository.  The Git User Identity keys is one that has permission to ssh into the git account normally and run commands as the git user.  You will need to setup this second key manually after installing gitolite by adding the necessary public key to the [git_user_home]/.ssh/authorized_keys file (outside the comments/keys added by gitolite in this file).  These two keys cannot be the same.  These private keys should be owned by the web server username (e.g. www-data), with permissions set to 600 (read/write allowed only for owner).
 
 This solution of accessing git via SSH has several advantages.  First, the gitolite server can be either local or remote.  Second, permissions will be preserved properly for all git repositories, no need to grant more permissions than is necessary so that the web server can manipulate them.  Finally, while the information for the web server to login as the git user will be technically available, unless an attacker knows that this plugin is installed, they won't know where to look to gain access to this alternate account.  Thus it is slightly more secure solution than running the web server as the git user (though technically the improvement does fall into the category of security by obscurity, which is frowned upon, there's no way around giving the web server permission to manipulate the git repsitories if we're implementing this functionality).
 
@@ -14,14 +14,11 @@ The user needs to specify the location of the two ssh key files, the name of the
 
 == Fast Deployment with YourChili Bash Library
 
-Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and passnger.  Just run the init_nginx_stack.sh script folloed by the chili_test.sh script, modifying the variables in those scripts as desired.
+Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init_nginx_stack.sh script folloed by the chili_test.sh script, modifying the variables in those scripts as desired.
 
 == Tested Configurations
 
 This plugin has been primarily tested on Ubuntu Server 10.10 (32 and 64 bit) with ChiliProject v1.2.0, with PostgreSQL as the database (April, 2011).  It is possible that some debugging will be necessary for other configurations.
-
-
-This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin
 
 
 == Required gems
@@ -36,6 +33,8 @@ net-ssh
 
 
 == Copyright & License
+
+This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin
 
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
 
