@@ -3,8 +3,8 @@
   label_git_server: Gitolite Server Domain
   label_http_server: HTTP Server Domain (for git http urls)
   label_git_user: Git Username 
-  label_git_user_identity_file: Git User SSH Identity File
-  label_gitolite_identity_file: Gitolite SSH Identity File
+  label_git_user_identity_file: Git User SSH Identity File (Private Key)
+  label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
 
   label_git_daemon: Git Daemon
