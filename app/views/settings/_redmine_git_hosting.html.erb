@@ -5,6 +5,11 @@
 		<br />
 	</p>
 	<p>
+		<label><%= l(:label_delete_git_repositories)%></label>
+		<%= select_tag("settings[deleteGitRepositories]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['deleteGitRepositories'])) %>
+		<br />
+	</p>
+	<p>
 		<label><%= l(:label_git_server)%></label>
 		<%= text_field_tag("settings[gitServer]", @settings['gitServer'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
 		<br />
