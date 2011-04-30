@@ -103,7 +103,7 @@ module GitHosting
 
 	end
 
-	def self.update_repositories(projects)
+	def self.update_repositories(projects, is_repo_delete)
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
 		if(defined?(@recursionCheck))
@@ -153,55 +153,66 @@ module GitHosting
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
 				
-				#check whether we're adding a new repo
 				repo_name = repository_name(project)
-				if orig_repos[ repo_name ] == nil
-					changed = true
-					add_route_for_project(project)
-					new_repos.push repo_name
-				end
 				
-				# fetch users
-				users = project.member_principals.map(&:user).compact.uniq
-				write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
-				read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
+				#check for delete -- if delete we can just
+				#delete repo, and ignore updating users/public keys
+				if is_repo_delete
+					if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true"
+						conf.delete_repo(repo_name)
+					end
+				else
+					#check whether we're adding a new repo
+					if orig_repos[ repo_name ] == nil
+						changed = true
+						add_route_for_project(project)
+						new_repos.push repo_name
+					end
+
+
+					# fetch users
+					users = project.member_principals.map(&:user).compact.uniq
+					write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
+					read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
 				
-				# write key files
-				users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
-					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
-					unless File.exists? filename
-						File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
-						changed = true
+					# write key files
+					users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+						filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+						unless File.exists? filename
+							File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+							changed = true
+						end
 					end
-				end
 
-				# delete inactives
-				users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
-					filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
-					if File.exists? filename
-						File.unlink(filename) rescue nil
-						changed = true
+				
+
+					# delete inactives
+					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
+						filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+						if File.exists? filename
+							File.unlink(filename) rescue nil
+							changed = true
+						end
 					end
-				end
 
-				# update users
-				read_user_keys = []
-				write_user_keys = []
-				read_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
-					read_user_keys.push key.identifier
-				end
-				write_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
-					write_user_keys.push key.identifier
-				end
+					# update users
+					read_user_keys = []
+					write_user_keys = []
+					read_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+						read_user_keys.push key.identifier
+					end
+					write_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+						write_user_keys.push key.identifier
+					end
 
+					#git daemon
+					if (project.repository.git_daemon == 1 || project.repository.git_daemon == nil )  && project.is_public
+						read_user_keys.push "daemon"
+					end
 
-				#git daemon
-				if (project.repository.git_daemon == 1 || project.repository.git_daemon == nil )  && project.is_public
-					read_user_keys.push "daemon"
+					conf.set_read_user repo_name, read_user_keys
+					conf.set_write_user repo_name, write_user_keys	
 				end
-
-				conf.set_read_user repo_name, read_user_keys
-				conf.set_write_user repo_name, write_user_keys	
 			end
 			
 			if conf.changed?

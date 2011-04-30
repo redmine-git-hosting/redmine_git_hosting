@@ -28,6 +28,10 @@ module GitHosting
 			repository(repo_name).set "R", users
 		end
 
+		def delete_repo repo_name
+			@repositories.delete(repo_name)
+		end
+
 		def changed?
 			@original_content != content
 		end
