@@ -26,13 +26,23 @@ class GitHostingObserver < ActiveRecord::Observer
 	
 
 	def after_save(object)    ; update_repositories(object) ; end
-	def after_destroy(object) ; update_repositories(object) ; end
 	
+	def after_destroy(object)
+		update_repositories(object)
+		if object.is_a?(Repository::Git)
+			if Setting.plugin_redmine_git_hosting['destroyGitRepositoriesWhenDeleted'] == "true"
+				runner= GitHosting::git_user_runner
+				%x[#{git_user_runner} 'rm -rf #{object.url}' ]
+			end
+		end
+	end
+
+
 	protected
 	
 	def update_repositories(object)
 		case object
-			when Repository then GitHosting::update_repositories(object.project)
+			when Repository::Git then GitHosting::update_repositories(object.project)
 			when User then GitHosting::update_repositories(object.projects) unless is_login_save?(object)
 			when GitolitePublicKey then GitHosting::update_repositories(object.user.projects)
 			when Member then GitHosting::update_repositories(object.project)
