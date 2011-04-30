@@ -18,6 +18,8 @@ module GitHosting
 				end
 				
 				edit_without_scm_settings
+
+				GitHosting::update_repositories(@project, false)
 			end
 
 			def self.included(base)
