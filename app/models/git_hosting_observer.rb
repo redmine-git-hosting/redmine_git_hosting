@@ -31,8 +31,7 @@ class GitHostingObserver < ActiveRecord::Observer
 		update_repositories(object)
 		if object.is_a?(Repository::Git)
 			if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true"
-				runner= GitHosting::git_user_runner
-				%x[#{git_user_runner} 'rm -rf #{object.url}' ]
+				%x[#{GitHosting::git_user_runner} 'rm -rf #{object.url}' ]
 			end
 		end
 	end
