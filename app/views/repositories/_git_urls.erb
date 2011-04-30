@@ -132,6 +132,7 @@
 		
 	</style>
 	<script type="text/javascript">
+		var all_git_url_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 		function update_git_url(el)
 		{
 			var project_is_public = <%= project.is_public.to_s %>
@@ -149,16 +150,15 @@
 			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, user_is_committer]
 			urls["git_url_http"] = [ httpProto + "://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
 			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
-			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 
 			var selected_id = el.id
 			document.getElementById("git_url_text").value = urls[selected_id][0];
 			document.getElementById("git_url_access").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only"
 			
 			var i
-			for(i=0;i<all_ids.length; i++)
+			for(i=0;i<all_git_url_ids.length; i++)
 			{
-				var test_id = all_ids[i];
+				var test_id = all_git_url_ids[i];
 				var test_el = document.getElementById(test_id)
 				if (test_el != null)
 				{
@@ -166,6 +166,23 @@
 				}
 			}
 		}
+
+		window.onload = function()
+		{
+			var i
+			var firstEl = null
+			for(i=0;i<all_git_url_ids.length; i++)
+			{
+				var el = document.getElementById(all_git_url_ids[i]);
+				if(el != null)
+				{
+					firstEl = firstEl == null ? el : firstEl
+					el.setAttribute("onclick", "update_git_url(this)")
+				}
+			}
+			update_git_url(firstEl)
+		}
+
 	</script>
 <% end %>
 
@@ -173,19 +190,18 @@
 <div id="git_url_box">
 	<ul id="git_url_list" >
 		<% if !User.current.anonymous? %>
-			<li><a id="git_url_ssh" onclick="update_git_url(this)" href="javascript:void(0)">SSH</a></li>
+			<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
 		<% end %>
 		<% if project.repository[:git_http].to_s != "0" %>
-			<li><a id="git_url_http" onclick="update_git_url(this)" href="javascript:void(0)">HTTP</a></li>
+			<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
 		<% end %>
 		<%  if project.is_public && project.repository[:git_daemon].to_s != "0" %>
-			<li><a id="git_url_git" onclick="update_git_url(this)" href="javascript:void(0)">Git</a></li>
+			<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
 		<%  end %>
 
 	</ul>
 	<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
 	<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
-	<script type="text/javascript"> update_git_url(document.getElementById("git_url_git")) </script>
 </div>
 <br/>
 <% end %>
