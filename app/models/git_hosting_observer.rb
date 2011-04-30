@@ -26,14 +26,18 @@ class GitHostingObserver < ActiveRecord::Observer
 	
 
 	def after_save(object)    ; update_repositories(object) ; end
-	
-	def after_destroy(object)
+
+
+	def before_destroy(object)
 		if object.is_a?(Repository::Git)
-			GitHosting::update_repositories(object.project, true)
 			if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true"
+				GitHosting::update_repositories(object.project, true)
 				%x[#{GitHosting::git_user_runner} 'rm -rf #{object.url}' ]
 			end
-		else
+		end
+	end
+	def after_destroy(object)
+		if !object.is_a?(Repository::Git)
 			update_repositories(object)
 		end
 	end
