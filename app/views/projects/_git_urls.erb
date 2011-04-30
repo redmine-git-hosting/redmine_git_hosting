@@ -142,11 +142,12 @@
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
 			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" + "/" + ("<%= request.url  %>").replace(/^[^\/]+[\/]+[^\/]+\//, "").replace(/projects\/[^\/]+.?$/, "")
+			var httpProto = "<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
 			httpBase = httpBase.replace(/\/$/, "")
 			
 			var urls=[]
 			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, user_is_committer]
-			urls["git_url_http"] = ["http://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
+			urls["git_url_http"] = [httpProto + "://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
 			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
 			var all_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
 
