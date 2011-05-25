@@ -139,7 +139,11 @@
 			var user_is_committer =  <%=  User.current.allowed_to?(:commit_access, project) ? "true" : false %>
 
 			var user = "<%= User.current.login %>"
+			<% if @project.parent %>
+			var projectName = "<%= @project.parent.identifier.to_s  %>" + "/" + ("<%= @project.repository.url %>").replace(/^.*\//, "")
+			<% else %>
 			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
+			<% end %>
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
 			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" + "/" + ("<%= request.url  %>").replace(/^[^\/]+[\/]+[^\/]+\//, "").replace(/projects\/[^\/]+.?$/, "")
