@@ -32,10 +32,11 @@ module GitHosting
 	end
 
 	def self.get_tmp_dir
-		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting_#{Time.now.to_i}")
+		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
 		end
+		%x[echo #{@@git_hosting_tmp_dir} >>/tmp/the_tmp_dir.txt]
 		return @@git_hosting_tmp_dir
 	end
 
@@ -122,31 +123,32 @@ module GitHosting
 			end
 
 
-			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-			local_dir = File.join(get_tmp_dir(), "tmp_#{Time.now.to_i}")
-			%x[mkdir -p "#{local_dir}"]
-			if !File.exists? local_dir
-				return
-			end
 
+			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
+			local_dir = get_tmp_dir()
+			
 			#lock
-			lockfile=File.new(File.join(get_tmp_dir(),'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
+			lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
 			retries=5
 			loop do
 				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
 				retries-=1
 				sleep 2
 				if retries<=0
-					%x[rm -Rf #{local_dir}]
 					return
 				end
 			end
+			
 
 
-			# clone admin repo
-			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite]
-
-			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite', 'conf', 'gitolite.conf'))
+			# clone/pull from admin repo
+			if File.exists? "#{local_dir}/gitolite-admin"
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' pull]
+			else
+				%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
+			end
+			%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
 			changed = false
@@ -177,7 +179,7 @@ module GitHosting
 				
 					# write key files
 					users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
-						filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+						filename = File.join(local_dir, 'gitolite-admin/keydir',"#{key.identifier}.pub")
 						unless File.exists? filename
 							File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
 							changed = true
@@ -188,7 +190,7 @@ module GitHosting
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
-						filename = File.join(local_dir, 'gitolite/keydir',"#{key.identifier}.pub")
+						filename = File.join(local_dir, 'gitolite-admin/keydir',"#{key.identifier}.pub")
 						if File.exists? filename
 							File.unlink(filename) rescue nil
 							changed = true
@@ -221,22 +223,29 @@ module GitHosting
 			end
 
 			if changed
-				git_push_file = File.join(local_dir, 'git_push.sh')
-				new_dir= File.join(local_dir,'gitolite')
-				File.open(git_push_file, "w") do |f|
-					f.puts "#!/bin/sh" 
-					f.puts "cd #{new_dir}"
-					f.puts "git add keydir/*"
-					f.puts "git add conf/gitolite.conf"
-					f.puts "git config user.email '#{Setting.mail_from}'"
-					f.puts "git config user.name 'Redmine'"
-					f.puts "git commit -a -m 'updated by Redmine'"
-					f.puts "env GIT_SSH=#{gitolite_ssh()} git push"
-				end
-				File.chmod(0755, git_push_file)
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add keydir/*]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add conf/gitolite.conf]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.email '#{Setting.mail_from}']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
+
+				#git_push_file = File.join(local_dir, 'git_push.sh')
+				#new_dir= File.join(local_dir,'gitolite')
+				#File.open(git_push_file, "w") do |f|
+				#	f.puts "#!/bin/sh" 
+				#	f.puts "cd #{new_dir}"
+				#	f.puts "git add keydir/*"
+				#	f.puts "git add conf/gitolite.conf"
+				#	f.puts "git config user.email '#{Setting.mail_from}'"
+				#	f.puts "git config user.name 'Redmine'"
+				#	f.puts "git commit -a -m 'updated by Redmine'"
+				#	f.puts "env GIT_SSH=#{gitolite_ssh()} git push"
+				#end
+				#File.chmod(0755, git_push_file)
 
 				# add, commit, push, and remove local tmp dir
-				%x[sh #{git_push_file}]
+				#%x[sh #{git_push_file}]
 			end
 
 			#set post recieve hooks
@@ -250,9 +259,6 @@ module GitHosting
 					end
 				end
 			end
-
-			# remove local copy
-			%x[rm -Rf #{local_dir}]
 
 			lockfile.flock(File::LOCK_UN)
 		end
