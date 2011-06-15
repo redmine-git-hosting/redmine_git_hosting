@@ -36,7 +36,6 @@ module GitHosting
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
 		end
-		%x[echo #{@@git_hosting_tmp_dir} >>/tmp/the_tmp_dir.txt]
 		return @@git_hosting_tmp_dir
 	end
 
