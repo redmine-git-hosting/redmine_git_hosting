@@ -3,6 +3,7 @@ require_dependency 'principal'
 require_dependency 'user'
 
 require_dependency 'git_hosting'
+require_dependency 'git_hosting/patches/projects_controller_patch'
 require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/repositories_helper_patch'
 require_dependency 'git_hosting/patches/git_adapter_patch'

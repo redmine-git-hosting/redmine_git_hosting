@@ -3,23 +3,7 @@ class GitHostingObserver < ActiveRecord::Observer
 	
 	
 	def after_create(object)
-		if object.is_a?(Project)
-			users = object.member_principals.map(&:user).compact.uniq
-			if users.length == 0
-				membership = Member.new(
-					:principal=>User.current,
-					:project_id=>object.id,
-					:role_ids=>[3]
-					)
-				membership.save
-			end
-			if Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
-				repo = Repository::Git.new
-				repo_name= object.parent ? File.join(object.parent.identifier,object.identifier) : object.identifier
-				repo.url = repo.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
-				object.repository = repo
-			end
-		else
+		if not object.is_a?(Project)
 			update_repositories(object)
 		end
 	end
