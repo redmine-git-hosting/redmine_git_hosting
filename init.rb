@@ -20,7 +20,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitUser' => 'git',
 		'gitUserIdentityFile'  => RAILS_ROOT + '/.ssh/git_user_id_rsa',
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
-		'gitRepositoryBasePath' => 'repositories/',
+		'gitRepositoryBasePath' => '/home/git/repositories/',
 		'deleteGitRepositories' => 'false'
 		}, 
 		:partial => 'redmine_git_hosting'
