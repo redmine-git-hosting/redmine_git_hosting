@@ -1,4 +1,4 @@
-<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
+<% if @project.repository && @project.repository.is_a?(Repository::Git) && Setting.plugin_redmine_git_hosting['gitRepositoriesShowUrl'].to_s != "false" %>
 
 <% content_for :header_tags do %>
 	<style>
