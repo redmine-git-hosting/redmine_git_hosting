@@ -9,21 +9,52 @@ module GitHosting
 				end
 				base.send(:alias_method_chain, :lastrev,   :time_fixed)
 				base.send(:alias_method_chain, :revisions, :time_fixed)
+				
+				begin			
+					base.send(:alias_method_chain, :scm_cmd, :ssh)
+				rescue Exception =>e
+				end
+				
 				base.extend(ClassMethods)
 				base.class_eval do
 					class << self
 						alias_method_chain :sq_bin, :ssh
+						begin
+							alias_method_chain :client_command, :ssh
+						rescue Exception =>e
+						end
 					end
 				end
 			
 			end
-			
+	
+
+
 			module ClassMethods
 				def sq_bin_with_ssh
 					return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting::git_exec())
 				end
+                                def client_command_with_ssh
+            				return GitHosting::git_exec()
+                                end
 			end
 
+			
+			
+			def scm_cmd_with_ssh(*args, &block)
+				repo_path = root_url || url
+				full_args = [GitHosting::git_exec(), '--git-dir', repo_path]
+				if self.class.client_version_above?([1, 7, 2])
+					full_args << '-c' << 'core.quotepath=false'
+					full_args << '-c' << 'log.decorate=no'
+				end
+				full_args += args
+				ret = shellout(full_args.map { |e| shell_quote e.to_s }.join(' '), &block)
+				if $? && $?.exitstatus != 0
+					raise ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
+				end
+				ret
+			end
 
 
 			def lastrev_with_time_fixed(path,rev)
