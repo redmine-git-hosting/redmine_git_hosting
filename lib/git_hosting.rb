@@ -80,7 +80,7 @@ module GitHosting
 			f.puts '	cd ~'
 			f.puts '	eval "git $cmd"'
 			f.puts "else"
-			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"git $cmd\""
+			f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
 			f.puts 'fi'
 		end
 		File.open(gitolite_ssh_path(), "w") do |f|
@@ -93,7 +93,7 @@ module GitHosting
 			f.puts "	cd ~"
 			f.puts "	$@"
 			f.puts "else"
-			f.puts "	ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_key} #{git_user_server} \"$@\""
+			f.puts "	sudo -u #{git_user} -i eval \"$@\"" 
 			f.puts "fi"
 		end
 
@@ -229,22 +229,6 @@ module GitHosting
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
 
-				#git_push_file = File.join(local_dir, 'git_push.sh')
-				#new_dir= File.join(local_dir,'gitolite')
-				#File.open(git_push_file, "w") do |f|
-				#	f.puts "#!/bin/sh" 
-				#	f.puts "cd #{new_dir}"
-				#	f.puts "git add keydir/*"
-				#	f.puts "git add conf/gitolite.conf"
-				#	f.puts "git config user.email '#{Setting.mail_from}'"
-				#	f.puts "git config user.name 'Redmine'"
-				#	f.puts "git commit -a -m 'updated by Redmine'"
-				#	f.puts "env GIT_SSH=#{gitolite_ssh()} git push"
-				#end
-				#File.chmod(0755, git_push_file)
-
-				# add, commit, push, and remove local tmp dir
-				#%x[sh #{git_push_file}]
 			end
 
 			#set post recieve hooks
