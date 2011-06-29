@@ -172,7 +172,7 @@ class GitHttpController < ApplicationController
 		if !file_exists(reqfile)
 			return render_not_found 
 		else
-			command = "#{get_ssh_prefix()} dd if=#{reqfile} '"
+			command = "#{run_git_prefix()} dd if=#{reqfile} '"
 			@git_http_control_pipe = IO.popen(command, File::RDWR)
 			render :text => proc { |response, output| 
 				buf_length=131072
@@ -192,7 +192,7 @@ class GitHttpController < ApplicationController
 
 	def file_exists(reqfile)
 		
-		cmd="#{get_ssh_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
+		cmd="#{run_git_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
 		is_found=%x[#{cmd}]
 		is_found.chomp!
 		return is_found == "found"
@@ -238,13 +238,13 @@ class GitHttpController < ApplicationController
 	end
 
 	def git_command(command)
-		return "#{get_ssh_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command} '"
+		return "#{run_git_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command} '"
 	end
 
 	
 	#note command needs to be terminated with a quote!
-	def get_ssh_prefix
-		return "ssh -o BatchMode=yes -o PubkeyAuthentication=yes -o StrictHostKeyChecking=no -i #{Setting.plugin_redmine_git_hosting['gitUserIdentityFile']} #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}  'cd repositories/#{@git_http_repo_path}.git ; "
+	def run_git_prefix
+		return "#{GitHosting::git_user_runner()} 'cd repositories/#{@git_http_repo_path}.git ; "
 	end
 
 	def is_ssl?
