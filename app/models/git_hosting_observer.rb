@@ -1,6 +1,7 @@
 class GitHostingObserver < ActiveRecord::Observer
-	observe :project, :user, :gitolite_public_key, :member, :role, :repository
+	observe :project, :user, :gitolite_public_key, :member, :role, :repository, :group
 
+	@@changing_group = false
 
 	def before_create(object)
 		set_changing_group(object, true)
