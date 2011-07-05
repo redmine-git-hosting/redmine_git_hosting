@@ -71,7 +71,6 @@ module GitHosting
 	def self.update_git_exec
 		git_user=Setting.plugin_redmine_git_hosting['gitUser'] 
 		git_user_server=git_user + "@" + Setting.plugin_redmine_git_hosting['gitServer']
-		git_user_key=Setting.plugin_redmine_git_hosting['gitUserIdentityFile']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
@@ -116,12 +115,6 @@ module GitHosting
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
 			
-			#return cleanly if we don't have permissions to load identity file, which we need
-			if !File.owned?(Setting.plugin_redmine_git_hosting['gitUserIdentityFile'])
-				return
-			end
-
-
 
 			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
 			local_dir = get_tmp_dir()
