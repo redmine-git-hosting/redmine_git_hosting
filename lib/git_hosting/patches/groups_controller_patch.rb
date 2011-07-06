@@ -3,16 +3,22 @@ module GitHosting
 	module Patches
 		module GroupsControllerPatch
 			
-			@@original_projects = nil
+			@@original_projects = []
 
 			def disable_git_observer_updates
-				
+				GitHostingObserver.set_update_active(false)
+				@@original_projects = @group.users.map(&:projects).uniq.compact
 			end
 			
 			def do_single_update
-			
+				new_projects = @group.users.map(&:projects).uniq.compact
+				new_projects.push(@@original_projects)
+				all_projects = new_projects.uniq.compact
 
-				@@original_projects = nil
+
+				@@original_projects = []
+				GitHostingObserver.set_update_active(true) 
+				GitHosting::update_repositories(all_projects, false)
 			end
 
 
