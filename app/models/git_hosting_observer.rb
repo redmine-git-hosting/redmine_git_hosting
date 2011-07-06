@@ -2,9 +2,17 @@ class GitHostingObserver < ActiveRecord::Observer
 	observe :project, :user, :gitolite_public_key, :member, :role, :repository
 
 	@@updating_active = true
+	@@cached_project_updates = []
 
 	def self.set_update_active(is_active)
 		@@updating_active = is_active
+		if is_active
+			if @@cached_project_updates.length > 0
+				@@cached_project_updates = @@cached_project_updates.flatten.uniq.compact
+				GitHosting::update_repositories(projects, false)
+			end
+		end
+		@@cached_project_updates = []
 	end
 
 	
@@ -43,13 +51,19 @@ class GitHostingObserver < ActiveRecord::Observer
 
 	def update_repositories(object)
 		
-		if (@@updating_active)
-			case object
-				when Repository::Git then GitHosting::update_repositories(object.project, false)
-				when User then GitHosting::update_repositories(object.projects, false) unless is_login_save?(object)
-				when GitolitePublicKey then GitHosting::update_repositories(object.user.projects, false)
-				when Member then GitHosting::update_repositories(object.project, false)
-				when Role then GitHosting::update_repositories(object.members.map(&:project).flatten.uniq.compact, false)
+		projects = []
+		case object
+			when Repository::Git then projects.push(object.project)
+			when User then projects = object.projects unless is_login_save?(object)
+			when GitolitePublicKey then projects = object.user.projects
+			when Member then projects.push(object.project)
+			when Role then projects = object.members.map(&:project).flatten.uniq.compact
+		end
+		if(projects.length > 0)	
+			if (@@updating_active)
+				GitHosting::update_repositories(projects, false)
+			else
+				@@cached_project_updates.concat(projects)
 			end
 		end
 	end
