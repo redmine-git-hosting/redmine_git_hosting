@@ -8,9 +8,9 @@ module GitHosting
 
 	def self.get_full_parent_path(project, is_file_path)
 		parent_parts = [];
-		p = project.parent
+		p = project
 		while p.parent
-			parent_id = project.parent.identifier.to_s
+			parent_id = p.parent.identifier.to_s
 			parent_parts.unshift(parent_id)
 			p = p.parent
 		end
