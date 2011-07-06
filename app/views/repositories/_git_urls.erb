@@ -140,7 +140,7 @@
 
 			var user = "<%= User.current.login %>"
 			<% if @project.parent %>
-			var projectName = "<%= @project.parent.identifier.to_s  %>" + "/" + ("<%= @project.repository.url %>").replace(/^.*\//, "")
+			var projectName = "<%= GitHosting::get_full_parent_path(@project, true)  %>" + "/" + ("<%= @project.repository.url %>").replace(/^.*\//, "")
 			<% else %>
 			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
 			<% end %>

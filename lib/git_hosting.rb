@@ -5,9 +5,20 @@ require 'tmpdir'
 require 'gitolite_conf.rb'
 
 module GitHosting
+
+	def self.get_full_parent_path(project, is_file_path)
+		parent_parts = [];
+		p = project.parent
+		while p.parent
+			parent_id = project.parent.identifier.to_s
+			parent_parts.unshift(parent_id)
+			p = p.parent
+		end
+		return is_file_path ? File.join(parent_parts) : parent_parts.join("/")
+	end
+
 	def self.repository_name project
-		parent_name = project.parent ? repository_name(project.parent) : ""
-		return "#{parent_name}/#{project.identifier}".sub(/^\//, "")
+		return "#{get_full_parent_path(project, false)}/#{project.identifier}".sub(/^\//, "")
 	end
 	
 	def self.add_route_for_project(p)
@@ -101,6 +112,7 @@ module GitHosting
 		File.chmod(0777, git_user_runner_path())
 
 	end
+
 
 	def self.update_repositories(projects, is_repo_delete)
 		projects = (projects.is_a?(Array) ? projects : [projects])

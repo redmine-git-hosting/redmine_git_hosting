@@ -16,7 +16,7 @@ module GitHosting
 				end
 				if Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
 					repo = Repository::Git.new
-					repo_name= @project.parent ? File.join(@project.parent.identifier,@project.identifier) : @project.identifier
+					repo_name= @project.parent ? File.join(GitHosting::get_full_parent_path(@project, true),@project.identifier) : @project.identifier
 					repo.url = repo.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
 					@project.repository = repo
 				end
