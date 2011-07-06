@@ -7,6 +7,7 @@ require_dependency 'git_hosting/patches/projects_controller_patch'
 require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/groups_controller_patch'
 require_dependency 'git_hosting/patches/repositories_helper_patch'
+require_dependency 'git_hosting/patches/repository_patch'
 require_dependency 'git_hosting/patches/git_adapter_patch'
 
 Redmine::Plugin.register :redmine_git_hosting do
