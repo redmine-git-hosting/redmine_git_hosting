@@ -233,7 +233,7 @@ module GitHosting
 					new_repos.each do |repo_name|
 						proj_name=repo_name.gsub(/^.*\//, '')
 						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
-						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file} ; echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production Repository.fetch_changesets_for_project(\"#{proj_name}\") >/dev/null 2>&1" >>#{hook_file} ; chmod 700 #{hook_file} ']
+						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file} ; echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \"Repository.fetch_changesets_for_project(\\\"#{proj_name}\\\")\" >/dev/null 2>&1" >>#{hook_file} ; chmod 700 #{hook_file} ']
 					end
 				end
 			end
