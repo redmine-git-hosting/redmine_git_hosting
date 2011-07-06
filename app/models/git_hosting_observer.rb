@@ -9,7 +9,7 @@ class GitHostingObserver < ActiveRecord::Observer
 		if is_active
 			if @@cached_project_updates.length > 0
 				@@cached_project_updates = @@cached_project_updates.flatten.uniq.compact
-				GitHosting::update_repositories(projects, false)
+				GitHosting::update_repositories(@@cached_project_updates, false)
 			end
 		end
 		@@cached_project_updates = []
