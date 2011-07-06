@@ -6,13 +6,17 @@ module GitHosting
 			@@original_projects = []
 
 			def disable_git_observer_updates
+				@group = Group.find(params[:id])
 				GitHostingObserver.set_update_active(false)
-				@@original_projects = @group.users.map(&:projects).uniq.compact
+				@@original_projects = @group.users.map(&:projects).flatten.uniq.compact
 			end
 			
 			def do_single_update
-				new_projects = @group.users.map(&:projects).uniq.compact
-				new_projects.push(@@original_projects)
+				new_projects = []
+				if(@group != nil)
+					new_projects = @group.users.map(&:projects).flatten.uniq.compact
+				end
+				new_projects.concat(@@original_projects)
 				all_projects = new_projects.uniq.compact
 
 
