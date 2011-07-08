@@ -244,7 +244,7 @@ class GitHttpController < ApplicationController
 	
 	#note command needs to be terminated with a quote!
 	def run_git_prefix
-		return "#{GitHosting::git_user_runner()} 'cd repositories/#{@git_http_repo_path}.git ; "
+		return "#{GitHosting::git_user_runner()} 'cd #{Setting.plugin_redmine_git_hosting['gitRepositoryBasePath']}/#{@git_http_repo_path}.git ; "
 	end
 
 	def is_ssl?
