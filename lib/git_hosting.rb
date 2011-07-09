@@ -143,7 +143,7 @@ module GitHosting
 		
 		# rename in conf file
 		conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
-		conf.rename_repo( old_name new_name )
+		conf.rename_repo( old_name, new_name )
 
 		# physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
 		%x[#{git_user_runner} 'mv "#{old_path}" "#{new_path}]

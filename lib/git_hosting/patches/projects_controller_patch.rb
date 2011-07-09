@@ -39,6 +39,8 @@ module GitHosting
 					if @project.repository.is_a?(Repository::Git)
 						old_parent_id = @project.parent ? @project.parent.id : nil
 						new_parent_id = params[:project].has_key?('parent_id') ? params[:project]['parent_id'] : nil
+						old_parent_id = old_parent_id.to_s.strip.chomp == "" ? nil : old_parent_id
+						new_parent_id = new_parent_id.to_s.strip.chomp == "" ? nil : new_parent_id
 						if old_parent_id.to_s != new_parent_id.to_s
 							old_parent = old_parent_id ? Project.find_by_id(old_parent_id) : nil
 							new_parent = new_parent_id ? Project.find_by_id(new_parent_id) : nil
