@@ -34,7 +34,7 @@ module GitHosting
 
 		def rename_repo old_name, new_name
 			if @repositories.has_key?(old_name)
-				perms = @repositories.delete(repo_name)
+				perms = @repositories.delete(old_name)
 				@repositories[new_name] = perms
 			end
 		end
