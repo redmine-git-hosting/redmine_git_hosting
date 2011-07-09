@@ -114,6 +114,56 @@ module GitHosting
 
 	end
 
+	def self.move_repository(old_name, new_name)
+		old_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{old_name}.git")
+		new_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
+
+		# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
+		local_dir = get_tmp_dir()
+			
+		#lock
+		lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
+		retries=5
+		loop do
+			break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
+			retries-=1
+			sleep 2
+			if retries<=0
+				return
+			end
+		end
+		
+		# clone/pull from admin repo
+		if File.exists? "#{local_dir}/gitolite-admin"
+			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' pull]
+		else
+			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
+		end
+		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		
+		# rename in conf file
+		conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
+		conf.rename_repo( old_name new_name )
+
+		# physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
+		%x[#{git_user_runner} 'mv "#{old_path}" "#{new_path}]
+
+
+		# commit / push changes to gitolite admin repo
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add keydir/*]
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add conf/gitolite.conf]
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.email '#{Setting.mail_from}']
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
+		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
+
+
+
+
+		# unlock
+		lockfile.flock(File::LOCK_UN)
+
+	end
 
 	def self.update_repositories(projects, is_repo_delete)
 		projects = (projects.is_a?(Array) ? projects : [projects])

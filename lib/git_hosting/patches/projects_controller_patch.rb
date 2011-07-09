@@ -25,16 +25,33 @@ module GitHosting
 			
 			def disable_git_daemon_if_not_public
 				if @project.repository != nil
-					if @project.repository != nil
-						if @project.repository.is_a?(Repository::Git)
-							if @project.repository.git_daemon == 1 && (not @project.is_public )
-								@project.repository.git_daemon = 0;
-								@project.repository.save
-							end
+					if @project.repository.is_a?(Repository::Git)
+						if @project.repository.git_daemon == 1 && (not @project.is_public )
+							@project.repository.git_daemon = 0;
+							@project.repository.save
 						end
 					end
 				end
 			end
+
+			def update_git_repo_for_new_parent
+				if @project.repository != nil
+					if @project.repository.is_a?(Repository::Git)
+						old_parent_id = @project.parent ? @project.parent.id : nil
+						new_parent_id = params[:project].has_key?('parent_id') ? params[:project]['parent_id'] : nil
+						if old_parent_id.to_s != new_parent_id.to_s
+							old_parent = old_parent_id ? Project.find_by_id(old_parent_id) : nil
+							new_parent = new_parent_id ? Project.find_by_id(new_parent_id) : nil
+							old_name = old_parent ? File.join(GitHosting::get_full_parent_path(old_parent, true),@project.identifier) :  @project.identifier
+							new_name = new_parent ? File.join(GitHosting::get_full_parent_path(new_parent, true),@project.identifier) :  @project.identifier
+							GitHosting::move_repository( old_name, new_name )
+							@project.repository.url = @project.repository.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
+							@project.repository.save
+						end
+					end
+				end
+			end
+
 
 
 			def self.included(base)
@@ -42,6 +59,8 @@ module GitHosting
 					unloadable
 				end
 				base.send(:after_filter, :git_repo_init, :only=>:create)
+				
+				base.send(:before_filter, :update_git_repo_for_new_parent, :only=>:update
 				base.send(:after_filter, :disable_git_daemon_if_not_public, :only=>:update)
 			end
 		end
