@@ -32,7 +32,7 @@ module GitHosting
 			@repositories.delete(repo_name)
 		end
 
-		def rename_repo old_name new_name
+		def rename_repo old_name, new_name
 			if @repos.has_key?(old_name)
 				perms = @repositories.delete(repo_name)
 				@repositories[new_name] = perms

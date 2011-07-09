@@ -60,7 +60,7 @@ module GitHosting
 				end
 				base.send(:after_filter, :git_repo_init, :only=>:create)
 				
-				base.send(:before_filter, :update_git_repo_for_new_parent, :only=>:update
+				base.send(:before_filter, :update_git_repo_for_new_parent, :only=>:update)
 				base.send(:after_filter, :disable_git_daemon_if_not_public, :only=>:update)
 			end
 		end
