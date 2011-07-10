@@ -42,10 +42,12 @@ module GitHosting
 						old_parent_id = old_parent_id.to_s.strip.chomp == "" ? nil : old_parent_id
 						new_parent_id = new_parent_id.to_s.strip.chomp == "" ? nil : new_parent_id
 						if old_parent_id.to_s != new_parent_id.to_s
-							old_parent = old_parent_id ? Project.find_by_id(old_parent_id) : nil
-							new_parent = new_parent_id ? Project.find_by_id(new_parent_id) : nil
-							old_name = old_parent ? File.join(GitHosting::get_full_parent_path(old_parent, true),@project.identifier) :  @project.identifier
-							new_name = new_parent ? File.join(GitHosting::get_full_parent_path(new_parent, true),@project.identifier) :  @project.identifier
+							old_parent = old_parent_id != nil ? Project.find_by_id(old_parent_id) : nil
+							new_parent = new_parent_id != nil ? Project.find_by_id(new_parent_id) : nil
+							
+							old_name = old_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(old_parent, true), old_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
+							new_name = new_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(new_parent, true), new_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
+							
 							GitHosting::move_repository( old_name, new_name )
 							@project.repository.url = @project.repository.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
 							@project.repository.save
