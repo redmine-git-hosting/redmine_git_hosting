@@ -2,19 +2,47 @@
 
 A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
 
-== Configuration
+== Configuration Strategy
 
-One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by running git via SSH, as a specified git user, which owns the repositories.  The plugin requires two distinct (private) SSH keys: The "Gitolite Identity" key and the "Git User Identity" key.  The Gitolite Identity key is a key that has permission to clone the gitolite-admin.git repository.  The Git User Identity keys is one that has permission to ssh into the git account normally and run commands as the git user.  You will need to setup this second key manually after installing gitolite by adding the necessary public key to the [git_user_home]/.ssh/authorized_keys file (outside the comments/keys added by gitolite in this file).  These two keys cannot be the same.  These private keys should be owned by the web server username (e.g. www-data), with permissions set to 600 (read/write allowed only for owner).
+One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by allowing the web server user to run git via sudo.  A previous version of this plugin (see ssh branch) requires the configuration of git to run through ssh, but using sudo to allow the web server user to run commands as the git user is much faster.  To configure your sudoers file to allow your web server user to run commands as git, and your git user to run commands as the web server user add these two lines to your sudoers file (run visudo to edit this file):
 
-This solution of accessing git via SSH has several advantages.  First, the gitolite server can be either local or remote.  Second, permissions will be preserved properly for all git repositories, no need to grant more permissions than is necessary so that the web server can manipulate them.  Finally, while the information for the web server to login as the git user will be technically available, unless an attacker knows that this plugin is installed, they won't know where to look to gain access to this alternate account.  Thus it is slightly more secure solution than running the web server as the git user (though technically the improvement does fall into the category of security by obscurity, which is frowned upon, there's no way around giving the web server permission to manipulate the git repsitories if we're implementing this functionality).
+www-data        ALL=(git)       NOPASSWD:ALL
+git             ALL=(www-data)  NOPASSWD:ALL
 
-While this setup will work with remotely hosted repositories, ideally the repositories and the web server should be on the same host.  The advantage of this is that this plugin automatically sets up a post-recieve hook that updates the ChiliProject/Redmine database with the latest changesets, whenever a user pushes data to the server.  However, this doesn't work (though it will fail cleanly and without problem) if the repositories aren't on the same server, or if the git user doesn't have read access to the directory where ChiliProject/Redmine is installed.
+This assumes www-data is your web server user, and git is your git user (the user gitolite is installed under).  This will allow www-data to execute commands as git without prompting for a password and git to execute commands as www-data without prompting for a password.  No other access (e.g. no root access, permissions to run commands as other users) are granted by these lines.  These lines are only there to facilitate communication between the web server user and the git user, no other users, keeping the system secure.
 
-The user needs to specify the location of the two ssh key files, the name of the git user and the name of the git server.  This server name is used in the git URL display, so it is best if the real DNS name is used instead of just "localhost" even if the repositorie are hosted on the same server as the web server.  The "http server domain" also needs to be set, which specifies the domain associated with the web server that should be included in the git (smart) http URLs.
+
+== Step-By-Step configuration instructions
+
+(1) Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume that gitolite has been installed for user "git", and you have an ssh key called "git_gitolite_admin_id_rsa" for which access to the gitolite-admin repository has been granted.
+
+(2) If you want to enable anonymous access to your repositories via the git:// protocol you will need to install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there are lots of available guies out there).  This step is optional -- if you don't want to enable anonymous access you can skip it.
+
+(3) Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file, listed above.  Assuming your web server is run as www-data and gitolite is installed as git, you need to add this to your sudoers file:
+www-data        ALL=(git)       NOPASSWD:ALL
+git             ALL=(www-data)  NOPASSWD:ALL
+
+(4) In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin root, and not the public directory -- create a directory called .ssh, and copy the "gitolite_admin_id_rsa"  private key file from step one into this directory. Then change the owner of this file to www-data and the permissions to 600
+cd [remine_rails_root]
+mkdir .ssh
+cp [somewhere-or-other]/gitolite_admin_id_rsa .ssh/gitolite_admin_id_rsa
+chown www-data -R .ssh
+chmod 600 .ssh/gitolite_admin_id_rsa
+
+
+(5) Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject root directory:
+cd vendor/plugins
+git clone https://github.com/ericpaulbishop/redmine_git_hosting.git
+rm -rf redmine_git_hosting/.git
+cd ../..
+
+(6) Run the rake db:migrate_plugins task to update the database.  You will need to do this once for every rails environment you have configured (e.g. production, development, testing).  For the production environment run:
+RAILS_ENV=production rake db:migrate_plugins
+
 
 == Fast Deployment with YourChili Bash Library
 
-Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init_nginx_stack.sh script folloed by the chili_test.sh script, modifying the variables in those scripts as desired.
+Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init_nginx_stack.sh script folloed by the chili_test.sh script, modifying the variables in those scripts as desired.  This library is still under development, so these instructions may need to be updated in the near future.
 
 == Tested Configurations
 
