@@ -300,7 +300,7 @@ module GitHosting
 						proj_name=repo_name.gsub(/^.*\//, '')
 						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
 						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"Repository.fetch_changesets_for_project(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
+						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_update_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
 						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
 					end
 				end
@@ -310,6 +310,11 @@ module GitHosting
 		end
 		@recursionCheck = false
 
+	end
+
+
+	def self.run_post_update_hook proj_identifier
+		Repository.fetch_changesets_for_project(proj_identifier)
 	end
 
 end
