@@ -98,14 +98,26 @@ module GitHosting
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
 		end
+
+		# use perl script for git_user_runner so we can 
+		# escape output more easily
 		File.open(git_user_runner_path(), "w") do |f|
-			f.puts "#!/bin/sh"
-			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
-			f.puts "	cd ~"
-			f.puts "	$@"
-			f.puts "else"
-			f.puts "	sudo -u #{git_user} -i eval \"$@\"" 
-			f.puts "fi"
+			f.puts '#!/usr/bin/perl'
+			f.puts ''
+			f.puts 'my $command = join(" ", @ARGV);'
+			f.puts ''
+			f.puts 'my $user = `echo \$USER`;'
+			f.puts 'chomp $user;'
+			f.puts 'if ($user eq "' + git_user + '")'
+			f.puts '{'
+			f.puts '	exec("cd ~ ; $command")'
+			f.puts '}'
+			f.puts 'else'
+			f.puts '{'
+			f.puts '	$command =~ s/\\/\\\\/g;'
+			f.puts '	$command =~ s/"/\\"/g;'
+			f.puts '	exec("sudo -u ' + git_user + ' -i \"$command\"");'
+			f.puts '}'
 		end
 
 		File.chmod(0777, git_exec_path())
