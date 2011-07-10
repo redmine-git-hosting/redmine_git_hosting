@@ -9,6 +9,7 @@
 
   label_git_daemon: Git Daemon
   label_git_http: Git Smart HTTP
+  label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
   label_disabled: Disabled
   label_https_only: HTTPS Only
