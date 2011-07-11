@@ -117,7 +117,7 @@ module GitHosting
 			f.puts '{'
 			f.puts '	$command =~ s/\\\\/\\\\\\\\/g;'
 			f.puts '	$command =~ s/"/\\\\"/g;'
-			f.puts '	exec("sudo -u ' + git_user + ' -i \"$command\"");'
+			f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			f.puts '}'
 		end
 
