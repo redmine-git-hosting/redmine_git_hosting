@@ -51,7 +51,7 @@ module GitHosting
 				full_args += args
 				ret = shellout(full_args.map { |e| shell_quote e.to_s }.join(' '), &block)
 				if $? && $?.exitstatus != 0
-					raise ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
+					raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
 				end
 				ret
 			end
