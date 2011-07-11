@@ -140,9 +140,9 @@ module GitHosting
 			f.puts '	$command =~ s/\\\\/\\\\\\\\/g;'
 			f.puts '	$command =~ s/"/\\\\"/g;'
 			if sudo_version < sudo_version_switch
-				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
-			else
 				f.puts '	exec("sudo -u ' + git_user + ' -i \"$command\"");'
+			else
+				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			end
 			f.puts '}'
 		end
