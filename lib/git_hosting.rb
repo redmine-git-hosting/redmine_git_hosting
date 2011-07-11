@@ -82,8 +82,29 @@ module GitHosting
 
 	def self.update_git_exec
 		git_user=Setting.plugin_redmine_git_hosting['gitUser'] 
-		git_user_server=git_user + "@" + Setting.plugin_redmine_git_hosting['gitServer']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+		
+		File.open(gitolite_ssh_path(), "w") do |f|
+			f.puts "#!/bin/sh"
+			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
+		end
+
+		##############################################################################################################################
+		# So... older versions of sudo are completely different than newer versions of sudo
+		# Try running sudo -i [user] 'ls -l' on sudo > 1.7.4 and you get an error that command 'ls -l' doesn't exist
+		# do it on version < 1.7.3 and it runs just fine.  Different levels of escaping are necessary depending on which
+		# version of sudo you are using... which just completely CRAZY, but I don't know how to avoid it
+		#
+		# Note: I don't know whether the switch is at 1.7.3 or 1.7.4, the switch is between ubuntu 10.10 which uses 1.7.2 
+		# and ubuntu 11.04 which uses 1.7.4.  I have tested that the latest 1.8.1p2 seems to have identical behavior to 1.7.4
+		##############################################################################################################################
+		sudo_version_str=%x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
+		split_version = sudo_version_str.split(/\./)
+		sudo_version = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
+		sudo_version_switch = (100*100*1) + (100 * 7) + 3
+
+
+		
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
 			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
@@ -91,13 +112,14 @@ module GitHosting
 			f.puts '	cd ~'
 			f.puts '	eval "git $cmd"'
 			f.puts "else"
-			f.puts '	cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-			f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
+			if sudo_version < sudo_version_switch
+				f.puts '	cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
+				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
+			else
+				f.puts '	cmd=$(printf "\\"%s\\" " "$@")'
+				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
+			end
 			f.puts 'fi'
-		end
-		File.open(gitolite_ssh_path(), "w") do |f|
-			f.puts "#!/bin/sh"
-			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
 		end
 
 		# use perl script for git_user_runner so we can 
@@ -117,7 +139,11 @@ module GitHosting
 			f.puts '{'
 			f.puts '	$command =~ s/\\\\/\\\\\\\\/g;'
 			f.puts '	$command =~ s/"/\\\\"/g;'
-			f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
+			if sudo_version < sudo_version_switch
+				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
+			else
+				f.puts '	exec("sudo -u ' + git_user + ' -i \"$command\"");'
+			end
 			f.puts '}'
 		end
 
