@@ -6,6 +6,10 @@ require 'gitolite_conf.rb'
 
 module GitHosting
 
+	def self.logger
+		return RAILS_DEFAULT_LOGGER
+	end
+
 	def self.get_full_parent_path(project, is_file_path)
 		parent_parts = [];
 		p = project
@@ -20,9 +24,9 @@ module GitHosting
 	def self.repository_name project
 		return "#{get_full_parent_path(project, false)}/#{project.identifier}".sub(/^\//, "")
 	end
-	
+
 	def self.add_route_for_project(p)
-		
+
 		if defined? map
 			add_route_for_project_with_map p, map
 		else
@@ -81,9 +85,10 @@ module GitHosting
 	end
 
 	def self.update_git_exec
-		git_user=Setting.plugin_redmine_git_hosting['gitUser'] 
+		logger.info "[RedmineGitHosting] Setting up #{get_tmp_dir()}"
+		git_user=Setting.plugin_redmine_git_hosting['gitUser']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
-		
+
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
@@ -95,7 +100,7 @@ module GitHosting
 		# do it on version < 1.7.3 and it runs just fine.  Different levels of escaping are necessary depending on which
 		# version of sudo you are using... which just completely CRAZY, but I don't know how to avoid it
 		#
-		# Note: I don't know whether the switch is at 1.7.3 or 1.7.4, the switch is between ubuntu 10.10 which uses 1.7.2 
+		# Note: I don't know whether the switch is at 1.7.3 or 1.7.4, the switch is between ubuntu 10.10 which uses 1.7.2
 		# and ubuntu 11.04 which uses 1.7.4.  I have tested that the latest 1.8.1p2 seems to have identical behavior to 1.7.4
 		##############################################################################################################################
 		sudo_version_str=%x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
@@ -104,7 +109,7 @@ module GitHosting
 		sudo_version_switch = (100*100*1) + (100 * 7) + 3
 
 
-		
+
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
 			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
@@ -114,15 +119,15 @@ module GitHosting
 			f.puts "else"
 			if sudo_version < sudo_version_switch
 				f.puts '	cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
+				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\""
 			else
 				f.puts '	cmd=$(printf "\\"%s\\" " "$@")'
-				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\"" 
+				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\""
 			end
 			f.puts 'fi'
 		end
 
-		# use perl script for git_user_runner so we can 
+		# use perl script for git_user_runner so we can
 		# escape output more easily
 		File.open(git_user_runner_path(), "w") do |f|
 			f.puts '#!/usr/bin/perl'
@@ -159,7 +164,7 @@ module GitHosting
 
 		# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
 		local_dir = get_tmp_dir()
-			
+
 		#lock
 		lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
 		retries=5
@@ -171,7 +176,7 @@ module GitHosting
 				return
 			end
 		end
-		
+
 		# clone/pull from admin repo
 		if File.exists? "#{local_dir}/gitolite-admin"
 			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
@@ -180,7 +185,7 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
-		
+
 		# rename in conf file
 		conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 		conf.rename_repo( old_name, new_name )
@@ -209,6 +214,7 @@ module GitHosting
 	end
 
 	def self.update_repositories(projects, is_repo_delete)
+		logger.debug "[RedmineGitHosting] updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
 		if(defined?(@recursionCheck))
@@ -220,11 +226,11 @@ module GitHosting
 
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
-			
+
 
 			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
 			local_dir = get_tmp_dir()
-			
+
 			#lock
 			lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
 			retries=5
@@ -236,7 +242,7 @@ module GitHosting
 					return
 				end
 			end
-			
+
 
 
 			# clone/pull from admin repo
@@ -253,9 +259,9 @@ module GitHosting
 			changed = false
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
-				
+
 				repo_name = repository_name(project)
-				
+
 				#check for delete -- if delete we can just
 				#delete repo, and ignore updating users/public keys
 				if is_repo_delete
@@ -275,7 +281,7 @@ module GitHosting
 					users = project.member_principals.map(&:user).compact.uniq
 					write_users = users.select{ |user| user.allowed_to?( :commit_access, project ) }
 					read_users = users.select{ |user| user.allowed_to?( :view_changesets, project ) && !user.allowed_to?( :commit_access, project ) }
-				
+
 					# write key files
 					users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
 						filename = File.join(local_dir, 'gitolite-admin/keydir',"#{key.identifier}.pub")
@@ -285,7 +291,7 @@ module GitHosting
 						end
 					end
 
-				
+
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
@@ -312,10 +318,10 @@ module GitHosting
 					end
 
 					conf.set_read_user repo_name, read_user_keys
-					conf.set_write_user repo_name, write_user_keys	
+					conf.set_write_user repo_name, write_user_keys
 				end
 			end
-			
+
 			if conf.changed?
 				conf.save
 				changed = true
@@ -334,8 +340,10 @@ module GitHosting
 			#set post recieve hooks
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_repos.length > 0
-				web_user=(%x[echo $USER]).chomp.strip
-				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\"" 2>/dev/null']
+				logger.info "[RedmineGitHosting] New repository found, setting up \"post-receive\" hook..."
+				web_user=(%x[whoami]).chomp.strip
+				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
+
 				if server_test.match(/good/)
 					new_repos.each do |repo_name|
 						proj_name=repo_name.gsub(/^.*\//, '')
@@ -344,6 +352,9 @@ module GitHosting
 						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_update_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
 						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
 					end
+					logger.error "[RedmineGitHosting] Hook setup completed"
+				else
+					logger.error "[RedmineGitHosting] An error ocurred, see above"
 				end
 			end
 
