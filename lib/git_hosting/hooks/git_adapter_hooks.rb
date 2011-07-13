@@ -21,7 +21,8 @@ module GitHosting
 			end
 
 			def self.check_hooks_installed
-				post_receive_exists = %x[#{GitHosting.git_user_runner} test -r '#{gitolite_hooks_dir}/post-receive.redmine_gitolite' && echo 'yes' || echo 'no']
+				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
+				post_receive_exists = %x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
 				if post_receive_exists.match(/no/)
 					logger.info "[RedmineGitHosting] \"post-receive.redmine_gitolite\" not handled by gitolite, installing it..."
 					install_hook("post-receive.redmine_gitolite")
@@ -35,12 +36,19 @@ module GitHosting
 			end
 
 			def self.install_hook(hook_name)
-				hook_path = File.join(package_hooks_dir, hook_name)
-				logger.info "[RedmineGitHosting] Installing \"#{hook_name}\" from #{hook_path}"
-				if Setting.plugin_redmine_git_hosting['gitUser'] == GitHosting.web_user
-					%x[#{GitHosting.git_user_runner} 'cp #{hook_path} #{gitolite_hooks_dir}']
+				hook_source_path = File.join(package_hooks_dir, hook_name)
+				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
+				logger.info "[RedmineGitHosting] Installing \"#{hook_name}\" from #{hook_source_path}"
+				git_user = Setting.plugin_redmine_git_hosting['gitUser']
+				if git_user == GitHosting.web_user
+					%x[#{GitHosting.git_user_runner} 'cp #{hook_source_path} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				else
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} cp #{hook_path} #{gitolite_hooks_dir}']
+					# TODO: Need to test this with diferent users
+					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} cp #{hook_source_path} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chmod 700 #{hook_dest_path}']
 				end
 			end
 
