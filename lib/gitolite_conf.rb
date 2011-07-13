@@ -54,8 +54,8 @@ module GitHosting
 
 		private
 		def load
-			@original_content = []	
-			@repositories = {}
+			@original_content = []
+			@repositories = ActiveSupport::OrderedHash.new
 			cur_repo_name = nil
 			File.open(@path).each_line do |line|
 				@original_content << line
@@ -94,7 +94,7 @@ module GitHosting
 
 	class GitoliteAccessRights
 		def initialize
-			@rights = {}
+			@rights = ActiveSupport::OrderedHash.new
 		end
 
 		def add perm, users
