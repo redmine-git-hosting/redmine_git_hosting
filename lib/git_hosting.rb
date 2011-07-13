@@ -6,8 +6,17 @@ require 'gitolite_conf.rb'
 
 module GitHosting
 
+	@@web_user = nil
+
 	def self.logger
 		return RAILS_DEFAULT_LOGGER
+	end
+
+	def self.web_user
+		if @@web_user.nil?
+			@@web_user = (%x[whoami]).chomp.strip
+		end
+		return @@web_user
 	end
 
 	def self.get_full_parent_path(project, is_file_path)
@@ -112,7 +121,7 @@ module GitHosting
 
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
-			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
+			f.puts "if [ \"\$(whoami)\" = \"#{git_user}\" ] ; then"
 			f.puts '	cmd=$(printf "\\"%s\\" " "$@")'
 			f.puts '	cd ~'
 			f.puts '	eval "git $cmd"'
@@ -134,7 +143,7 @@ module GitHosting
 			f.puts ''
 			f.puts 'my $command = join(" ", @ARGV);'
 			f.puts ''
-			f.puts 'my $user = `echo \$USER`;'
+			f.puts 'my $user = `whoami`;'
 			f.puts 'chomp $user;'
 			f.puts 'if ($user eq "' + git_user + '")'
 			f.puts '{'
@@ -256,6 +265,7 @@ module GitHosting
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
+			new_projects = []
 			changed = false
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -274,6 +284,7 @@ module GitHosting
 						changed = true
 						add_route_for_project(project)
 						new_repos.push repo_name
+						new_projects.push project
 					end
 
 
@@ -339,23 +350,8 @@ module GitHosting
 
 			#set post recieve hooks
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
-			if new_repos.length > 0
-				logger.info "[RedmineGitHosting] New repository found, setting up \"post-receive\" hook..."
-				web_user=(%x[whoami]).chomp.strip
-				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
-
-				if server_test.match(/good/)
-					new_repos.each do |repo_name|
-						proj_name=repo_name.gsub(/^.*\//, '')
-						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
-						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_update_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
-						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
-					end
-					logger.error "[RedmineGitHosting] Hook setup completed"
-				else
-					logger.error "[RedmineGitHosting] An error ocurred, see above"
-				end
+			if new_projects.length > 0
+				GitHosting::Hooks::GitAdapterHooks.setup_hooks(new_projects)
 			end
 
 			lockfile.flock(File::LOCK_UN)

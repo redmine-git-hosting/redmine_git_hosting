@@ -1,6 +1,6 @@
 <div class="tabular settings">
 	<p>
-		<label><%= l(:label_all_git)%></label> 
+		<label><%= l(:label_all_git)%></label>
 		<%= select_tag("settings[allProjectsUseGit]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['allProjectsUseGit'])) %>
 		<br />
 	</p>
@@ -34,9 +34,21 @@
 		<%= text_field_tag("settings[gitRepositoryBasePath]", @settings['gitRepositoryBasePath'], :size => 60) %>
 		<br />
 	</p>
-    <p>
-        <label><%= l(:label_git_show_urls)%></label>
-        <%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
-        <br />
-    </p>
+	<p>
+		<label><%= l(:label_git_show_urls)%></label>
+		<%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
+		<br />
+	</p>
+	<br/>
+	<h3><%= l(:label_git_hook_header)%></h3>
+	<p>
+		<label><%= l(:label_git_hook_debug)%></label>
+		<%= select_tag("settings[gitDebugPostUpdateHook]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitDebugPostUpdateHook'])) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_hook_curl_security_ignore)%></label>
+		<%= select_tag("settings[gitPostUpdateHookCurlIgnore]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitPostUpdateHookCurlIgnore'])) %>
+		<br />
+	</p>
 </div>

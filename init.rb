@@ -3,6 +3,7 @@ require_dependency 'principal'
 require_dependency 'user'
 
 require_dependency 'git_hosting'
+require_dependency 'git_hosting/hooks/git_adapter_hooks'
 require_dependency 'git_hosting/patches/projects_controller_patch'
 require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/groups_controller_patch'
@@ -23,8 +24,10 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitRepositoryBasePath' => 'repositories/',
 		'deleteGitRepositories' => 'false',
-		'gitRepositoriesShowUrl' => 'true'
-		}, 
+		'gitRepositoriesShowUrl' => 'true',
+		'gitDebugPostUpdateHook' => 'false',
+		'gitPostUpdateHookCurlIgnore' => 'false'
+		},
 		:partial => 'redmine_git_hosting'
 end
 
