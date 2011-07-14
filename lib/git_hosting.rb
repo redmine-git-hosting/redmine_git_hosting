@@ -24,11 +24,12 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no" ]
+		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>&1 && echo "yes" ]
 		if test.match(/yes/)
 			return true
 		end
-		return false
+		logger.warn "Error while testing sudo_git_to_web_user: #{test}"
+		return test
 	end
 
 	def self.sudo_web_to_git_user
@@ -36,11 +37,12 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[sudo -nu #{git_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no"]
+		test = %x[sudo -nu #{git_user} -i "echo -n" 2>&1 && echo "yes"]
 		if test.match(/yes/)
 			return true
 		end
-		return false
+		logger.warn "Error while testing sudo_web_to_git_user: #{test}"
+		return test
 	end
 
 	def self.get_full_parent_path(project, is_file_path)
