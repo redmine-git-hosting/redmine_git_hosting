@@ -1,6 +1,6 @@
 <div class="tabular settings">
 	<p>
-		<label><%= l(:label_all_git)%></label> 
+		<label><%= l(:label_all_git)%></label>
 		<%= select_tag("settings[allProjectsUseGit]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['allProjectsUseGit'])) %>
 		<br />
 	</p>
@@ -34,9 +34,21 @@
 		<%= text_field_tag("settings[gitRepositoryBasePath]", @settings['gitRepositoryBasePath'], :size => 60) %>
 		<br />
 	</p>
-    <p>
-        <label><%= l(:label_git_show_urls)%></label>
-        <%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
-        <br />
-    </p>
+	<p>
+		<label><%= l(:label_git_show_urls)%></label>
+		<%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
+		<br />
+	</p>
+
+	<p>
+		<label><%= l(:label_sudo_git_to_web_user)%></label>
+		<%= image_tag((GitHosting.sudo_git_to_web_user ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_sudo_web_to_git_user)%></label>
+		<%= image_tag((GitHosting.sudo_web_to_git_user ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<br />
+	</p>
+	<br/>
 </div>

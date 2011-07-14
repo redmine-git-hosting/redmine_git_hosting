@@ -15,6 +15,9 @@
   label_https_only: HTTPS Only
   label_https_and_http: HTTPS and HTTP
 
+  label_sudo_web_to_git_user: Web user is able to sudo to Git user?
+  label_sudo_git_to_web_user: Git user is able to sudo to Web user?
+
   label_public_keys: Public keys
   label_public_key_new: New public key
   field_public_key: Key 
