@@ -145,7 +145,7 @@ module GitHosting
 
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
-			f.puts "if [ \"\$USER\" = \"#{git_user}\" ] ; then"
+			f.puts "if [ \"\$(whoami)\" = \"#{git_user}\" ] ; then"
 			f.puts '	cmd=$(printf "\\"%s\\" " "$@")'
 			f.puts '	cd ~'
 			f.puts '	eval "git $cmd"'
@@ -167,7 +167,7 @@ module GitHosting
 			f.puts ''
 			f.puts 'my $command = join(" ", @ARGV);'
 			f.puts ''
-			f.puts 'my $user = `echo \$USER`;'
+			f.puts 'my $user = `whoami`;'
 			f.puts 'chomp $user;'
 			f.puts 'if ($user eq "' + git_user + '")'
 			f.puts '{'
