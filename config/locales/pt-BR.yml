@@ -1,8 +1,8 @@
-'en':
+pt-BR:
   label_all_git: Inicializar automáticamente o repositórios Git para projectos novos
   label_delete_git_repositories: Apagar o repositório Git quando o projecto fôr apagado
   label_git_server: Domínio do servidor Gitolite
-  label_http_server: Domínio do servidor HTTP (para os url's git http)
+  label_http_server: "Domínio do servidor HTTP (para os url's git http)"
   label_git_user: Nome de Utilizador Git
   label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
@@ -15,6 +15,7 @@
   label_https_only: Apenas HTTPS
   label_https_and_http: HTTPS e HTTP
 
+  label_permissions_header: Permissões Necessárias
   label_sudo_web_to_git_user: O uilizador Web é capaz de sudo para o utilizador Git?
   label_sudo_git_to_web_user: O uilizador Git é capaz de sudo para o utilizador Web?
 
