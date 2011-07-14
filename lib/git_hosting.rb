@@ -21,7 +21,7 @@ module GitHosting
 
 	def self.sudo_git_to_web_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
-		if git_user == GitHosting.web_user
+		if git_user == web_user
 			return true
 		end
 		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no" ]
@@ -33,7 +33,7 @@ module GitHosting
 
 	def self.sudo_web_to_git_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
-		if git_user == GitHosting.web_user
+		if git_user == web_user
 			return true
 		end
 		test = %x[sudo -nu #{git_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no"]
