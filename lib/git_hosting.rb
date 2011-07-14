@@ -6,8 +6,41 @@ require 'gitolite_conf.rb'
 
 module GitHosting
 
+	@@web_user = nil
+
 	def self.logger
 		return RAILS_DEFAULT_LOGGER
+	end
+
+	def self.web_user
+		if @@web_user.nil?
+			@@web_user = (%x[whoami]).chomp.strip
+		end
+		return @@web_user
+	end
+
+	def self.sudo_git_to_web_user
+		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		if git_user == web_user
+			return true
+		end
+		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no" ]
+		if test.match(/yes/)
+			return true
+		end
+		return false
+	end
+
+	def self.sudo_web_to_git_user
+		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		if git_user == web_user
+			return true
+		end
+		test = %x[sudo -nu #{git_user} -i "echo -n" 2>/dev/null && echo "yes" || echo "no"]
+		if test.match(/yes/)
+			return true
+		end
+		return false
 	end
 
 	def self.get_full_parent_path(project, is_file_path)
@@ -341,7 +374,6 @@ module GitHosting
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_repos.length > 0
 				logger.info "[RedmineGitHosting] New repository found, setting up \"post-receive\" hook..."
-				web_user=(%x[whoami]).chomp.strip
 				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
 
 				if server_test.match(/good/)
