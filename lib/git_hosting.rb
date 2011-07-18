@@ -24,7 +24,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>&1 && echo "yes" ]
+		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
 		if test.match(/yes/)
 			return true
 		end
@@ -37,7 +37,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[sudo -nu #{git_user} -i "echo -n" 2>&1 && echo "yes"]
+		test = %x[sudo -nu #{git_user} echo "yes"]
 		if test.match(/yes/)
 			return true
 		end
