@@ -7,8 +7,6 @@ module GitHosting
 				base.class_eval do
 					unloadable
 				end
-				base.send(:alias_method_chain, :lastrev,   :time_fixed)
-				base.send(:alias_method_chain, :revisions, :time_fixed)
 				
 				begin			
 					base.send(:alias_method_chain, :scm_cmd, :ssh)
