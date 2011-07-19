@@ -1,4 +1,4 @@
-class CreateGitCache < ActiveRecord::Migration
+class CreateGitCaches < ActiveRecord::Migration
 	def self.up
 		create_table :git_caches do |t|
 			t.column :command, :string
