@@ -56,7 +56,7 @@ module GitHosting
 				ret=""
 				cached=GitCache.find_by_command(cmd_str)
 				if cached != nil
-					cur_time = self.class.default_timezone == :utc ? Time.now.utc : Time.now
+					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
 					if cur_time.to_i - cached.created_at.to_i < cache_time && cache_time >= 0
 						ret = cached.output.to_s
 					else
