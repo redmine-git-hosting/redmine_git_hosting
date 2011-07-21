@@ -73,15 +73,7 @@ module GitHosting
 					if $? && $?.exitstatus != 0
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
 					else
-						proj_id=""
-						gitdir_index=args.index("--git-dir")
-						if gitdir_index > 0
-							git_dir=args[ gitdir_index + 1 ]
-							if git_dir != nil
-								proj_id = git_dir.gsub(/\.git$/, "").gsub(/^.*\//, "");
-							end
-						end
-
+						proj_id=repo_path.gsub(/\.git$/, "").gsub(/^.*\//, "")
 						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s, :proj_identifier=>proj_id )
 						gitc.save
 						if GitCache.count > max_cache && max_cache >= 0
