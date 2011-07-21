@@ -95,6 +95,7 @@ module GitHosting
 				end
 				
 				if retio == nil
+					out = out == nil ? "" : out
 					retio = StringIO.new(string=out)
 					if block_given?
 						block.call(retio)
