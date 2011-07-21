@@ -146,7 +146,7 @@
 			<% end %>
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
-			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" + "/" + ("<%= request.url  %>").replace(/^[^\/]+[\/]+[^\/]+\//, "").replace(/projects\/[^\/]+\/repository.?$/, "")
+			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" 
 			var httpProto = "<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
 			httpBase = httpBase.replace(/\/$/, "")
 			
