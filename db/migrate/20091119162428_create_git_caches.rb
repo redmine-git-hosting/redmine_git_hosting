@@ -3,7 +3,7 @@ class CreateGitCaches < ActiveRecord::Migration
 		create_table :git_caches do |t|
 			t.column :command, :text
 			t.column :command_output, :text
-			t.column :used_count, :integer, :default =>1
+			t.column :proj_identifier, :string
 			t.timestamps
 			t.index :command 
 		end
