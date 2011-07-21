@@ -57,12 +57,11 @@ module GitHosting
 				cmd_str=full_args.map { |e| shell_quote e.to_s }.join(' ')
 				out=nil
 				cached=GitCache.find_by_command(cmd_str)
-				%x[ echo 'cmd_str = #{cmd_str}' > /tmp/cmd_str.txt ]
 				if cached != nil
 					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
 					if cur_time.to_i - cached.created_at.to_i < cache_time && cache_time >= 0
 						out = cached.command_output
-						%x[ echo '#{cached.command_output}' > /tmp/command_output.txt ]
+						#File.open("/tmp/command_output.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 					else
 						GitCache.destroy(cached.id)
 					end
@@ -74,7 +73,6 @@ module GitHosting
 					if $? && $?.exitstatus != 0
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
 					else
-						%x[ echo '#{out}' > /tmp/out.txt ]
 						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s )
 						gitc.save
 						if GitCache.count > max_cache && max_cache >= 0
@@ -82,6 +80,7 @@ module GitHosting
 							GitCache.destroy(oldest.id)
 						end
 					end
+					#File.open("/tmp/non_cached.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 				end
 				sio = StringIO.new(string=out)
 				if block_given?
