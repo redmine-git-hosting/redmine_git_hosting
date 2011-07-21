@@ -402,7 +402,7 @@ module GitHosting
 	def self.run_post_receive_hook proj_identifier
 		
 		#clear cache
-		old_cached=GitCache.find_all_by_project_identifier(proj_identifier)
+		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
 		if old_cached != nil
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
