@@ -72,9 +72,11 @@ module GitHosting
 					shellout(cmd_str) do |io|
 						out = io.read(max_cache_size + 1)
 					end
+					out_length = out == nil ? 0 : out.length;
+
 					if $? && $?.exitstatus != 0
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
-					elsif out.length <= max_cache_size
+					elsif out_length <= max_cache_size
 						proj_id=repo_path.gsub(/\.git$/, "").gsub(/^.*\//, "")
 						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s, :proj_identifier=>proj_id )
 						gitc.save
