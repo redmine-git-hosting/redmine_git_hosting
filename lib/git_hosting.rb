@@ -383,7 +383,7 @@ module GitHosting
 						proj_name=repo_name.gsub(/^.*\//, '')
 						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
 						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_update_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
+						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_receive_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
 						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
 					end
 					logger.error "[RedmineGitHosting] Hook setup completed"
@@ -399,7 +399,7 @@ module GitHosting
 	end
 
 
-	def self.run_post_update_hook proj_identifier
+	def self.run_post_receive_hook proj_identifier
 		
 		#clear cache
 		old_cached=GitCache.find_all_by_project_identifier(proj_identifier)
