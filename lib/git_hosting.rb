@@ -193,6 +193,20 @@ module GitHosting
 
 	end
 
+	def self.clone_or_pull_gitolite_admin
+		# clone/pull from admin repo
+		local_dir = get_tmp_dir()
+		if File.exists? "#{local_dir}/gitolite-admin"
+			logger.info "[RedmineGitHosting] Fethcing changes for #{local_dir}/gitolite-admin"
+			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
+			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
+		else
+			logger.info "[RedmineGitHosting] Cloning gitolite-admin repository"
+			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
+		end
+		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+	end
+
 	def self.move_repository(old_name, new_name)
 		old_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{old_name}.git")
 		new_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
@@ -212,14 +226,8 @@ module GitHosting
 			end
 		end
 
-		# clone/pull from admin repo
-		if File.exists? "#{local_dir}/gitolite-admin"
-			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
-			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
-		else
-			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
-		end
-		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		# Make sure we have gitoite-admin cloned
+		clone_or_pull_gitolite_admin
 
 		# rename in conf file
 		conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
@@ -249,6 +257,9 @@ module GitHosting
 	end
 
 	def self.update_repositories(projects, is_repo_delete)
+		# Make sure we have gitoite-admin cloned
+		clone_or_pull_gitolite_admin
+
 		logger.debug "[RedmineGitHosting] updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
