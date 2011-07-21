@@ -43,8 +43,9 @@ module GitHosting
 			
 			def scm_cmd_with_ssh(*args, &block)
 				
-				cache_time = 60
-				max_cache = 10000
+				max_cache_time     = 60            # one minute
+				max_cache_elements = 100           # 100 element
+				max_cache_size     = 16*1024*1024  # 16MB
 				
 				repo_path = root_url || url
 				full_args = [GitHosting::git_exec(), '--git-dir', repo_path]
@@ -56,10 +57,11 @@ module GitHosting
 				
 				cmd_str=full_args.map { |e| shell_quote e.to_s }.join(' ')
 				out=nil
+				retio = nil
 				cached=GitCache.find_by_command(cmd_str)
 				if cached != nil
 					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-					if cur_time.to_i - cached.created_at.to_i < cache_time && cache_time >= 0
+					if cur_time.to_i - cached.created_at.to_i < max_cache_time && max_cache_time >= 0
 						out = cached.command_output
 						#File.open("/tmp/command_output.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 					else
@@ -68,26 +70,35 @@ module GitHosting
 				end
 				if out == nil
 					shellout(cmd_str) do |io|
-						out = io.read
+						out = io.read(max_cache_size + 1)
 					end
 					if $? && $?.exitstatus != 0
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
-					else
+					elsif out.length <= max_cache_size
 						proj_id=repo_path.gsub(/\.git$/, "").gsub(/^.*\//, "")
 						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s, :proj_identifier=>proj_id )
 						gitc.save
-						if GitCache.count > max_cache && max_cache >= 0
+						if GitCache.count > max_cache_elements && max_cache_elements >= 0
 							oldest = GitCache.find(:last, :order => "created_on DESC")
 							GitCache.destroy(oldest.id)
 						end
+						#File.open("/tmp/non_cached.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
+					else
+						retio = shellout(cmd_str, &block)
+						if $? && $?.exitstatus != 0
+							raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
+						end
+
 					end
-					#File.open("/tmp/non_cached.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 				end
-				sio = StringIO.new(string=out)
-				if block_given?
-					block.call(sio)
+				
+				if retio == nil
+					retio = StringIO.new(string=out)
+					if block_given?
+						block.call(retio)
+					end
 				end
-				sio
+				retio
 			end
 
 
