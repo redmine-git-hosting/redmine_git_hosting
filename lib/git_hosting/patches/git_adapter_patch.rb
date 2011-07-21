@@ -43,9 +43,9 @@ module GitHosting
 			
 			def scm_cmd_with_ssh(*args, &block)
 				
-				max_cache_time     = 60            # one minute
-				max_cache_elements = 100           # 100 element
-				max_cache_size     = 16*1024*1024  # 16MB
+				max_cache_time     = (Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i             # in seconds, default = 60
+				max_cache_elements = (Setting.plugin_redmine_git_hosting['gitCacheMaxElements']).to_i         # default = 100
+				max_cache_size     = (Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024   # In MB, default = 16MB, converted to bytes
 				
 				repo_path = root_url || url
 				full_args = [GitHosting::git_exec(), '--git-dir', repo_path]
