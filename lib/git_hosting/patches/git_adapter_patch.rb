@@ -61,8 +61,8 @@ module GitHosting
 				if cached != nil
 					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
 					if cur_time.to_i - cached.created_at.to_i < cache_time && cache_time >= 0
-						out = cached.output
-						%x[ echo '#{cached.output}' > /tmp/output.txt ]
+						out = cached.command_output
+						%x[ echo '#{cached.command_output}' > /tmp/command_output.txt ]
 					else
 						GitCache.destroy(cached.id)
 					end
@@ -75,7 +75,8 @@ module GitHosting
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
 					else
 						%x[ echo '#{out}' > /tmp/out.txt ]
-						GitCache.create( :command=>cmd_str, :output=>out.to_s )
+						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s )
+						gitc.save
 						if GitCache.count > max_cache && max_cache >= 0
 							oldest = GitCache.find(:last, :order => "created_on DESC")
 							GitCache.destroy(oldest.id)
