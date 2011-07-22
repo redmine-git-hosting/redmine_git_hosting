@@ -40,6 +40,23 @@
 		<br />
 	</p>
 
+	<h3><%= l(:label_git_cache_parameters)%></h3>
+	<p>
+		<label><%= l(:label_git_cache_max_elements)%></label>
+		<%= text_field_tag("settings[gitCacheMaxElements]", @settings['gitCacheMaxElements'], :size => 20) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_cache_max_size)%></label>
+		<%= text_field_tag("settings[gitCacheMaxSize]", @settings['gitCacheMaxSize'], :size => 20) %><em> MB</em>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_git_cache_max_time)%></label>
+		<%= select_tag("settings[gitCacheMaxTime]", @settings['gitCacheMaxTime'], options_for_select([["until next commit", "-1"], ["1 minute or until next commit", "60"], ["15 minutes or until next commit", "900"], ["1 hour or until next commit", "3600"], ["1 day or until next commit", "86400"]] ) %>
+		<br />
+	</p>
+
 	<h3><%= l(:label_permissions_header)%></h3>
 	<p>
 		<label><%= l(:label_sudo_git_to_web_user)%></label>
