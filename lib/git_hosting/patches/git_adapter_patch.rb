@@ -61,7 +61,7 @@ module GitHosting
 				cached=GitCache.find_by_command(cmd_str)
 				if cached != nil
 					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-					if cur_time.to_i - cached.created_at.to_i < max_cache_time && max_cache_time >= 0
+					if cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0
 						out = cached.command_output
 						#File.open("/tmp/command_output.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 					else
