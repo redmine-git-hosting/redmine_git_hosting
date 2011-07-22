@@ -31,6 +31,6 @@ pt:
         'não pode ser mudada': 'não pode ser mudada'
 
   label_git_cache_max_time: Max Cache Time
-  label_git_cache_max_time: Max Cache Elements
-  label_git_cache_max_time: Max Cache Element Size
+  label_git_cache_max_elements: Max Cache Elements
+  label_git_cache_max_size: Max Cache Element Size
   label_git_cache_parameters: Git Cache Parameters
