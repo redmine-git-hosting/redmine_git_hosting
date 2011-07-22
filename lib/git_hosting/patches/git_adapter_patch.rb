@@ -11,16 +11,16 @@ module GitHosting
 				end
 				
 				begin			
-					base.send(:alias_method_chain, :scm_cmd, :ssh)
+					base.send(:alias_method_chain, :scm_cmd, :sudo)
 				rescue Exception =>e
 				end
 				
 				base.extend(ClassMethods)
 				base.class_eval do
 					class << self
-						alias_method_chain :sq_bin, :ssh
+						alias_method_chain :sq_bin, :sudo
 						begin
-							alias_method_chain :client_command, :ssh
+							alias_method_chain :client_command, :sudo
 						rescue Exception =>e
 						end
 					end
@@ -31,17 +31,17 @@ module GitHosting
 
 
 			module ClassMethods
-				def sq_bin_with_ssh
+				def sq_bin_with_sudo
 					return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting::git_exec())
 				end
-                                def client_command_with_ssh
+                                def client_command_with_sudo
             				return GitHosting::git_exec()
                                 end
 			end
 
 			
 			
-			def scm_cmd_with_ssh(*args, &block)
+			def scm_cmd_with_sudo(*args, &block)
 				
 				max_cache_time     = (Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i             # in seconds, default = 60
 				max_cache_elements = (Setting.plugin_redmine_git_hosting['gitCacheMaxElements']).to_i         # default = 100
