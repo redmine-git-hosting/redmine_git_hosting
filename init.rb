@@ -23,8 +23,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitRepositoryBasePath' => 'repositories/',
 		'deleteGitRepositories' => 'false',
-		'gitRepositoriesShowUrl' => 'true'
-		}, 
+		'gitRepositoriesShowUrl' => 'true',
+		'loggingEnabled' => 'false'
+		},
 		:partial => 'redmine_git_hosting'
 end
 
