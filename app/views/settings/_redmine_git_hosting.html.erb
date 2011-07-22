@@ -53,7 +53,7 @@
 	</p>
 	<p>
 		<label><%= l(:label_git_cache_max_time)%></label>
-		<%= select_tag("settings[gitCacheMaxTime]", options_for_select([["until next commit", "-1"], ["1 minute or until next commit", "60"], ["15 minutes or until next commit", "900"], ["1 hour or until next commit", "3600"], ["1 day or until next commit", "86400"]], @settings['gitCacheMaxTime'] ) %>
+		<%= select_tag("settings[gitCacheMaxTime]", options_for_select([["until next commit", "-1"], ["1 minute or until next commit", "60"], ["15 minutes or until next commit", "900"], ["1 hour or until next commit", "3600"], ["1 day or until next commit", "86400"]], @settings['gitCacheMaxTime'] )) %>
 		<br />
 	</p>
 
