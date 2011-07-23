@@ -81,7 +81,7 @@ module GitHosting
 						gitc = GitCache.create( :command=>cmd_str, :command_output=>out, :proj_identifier=>proj_id )
 						gitc.save
 						if GitCache.count > max_cache_elements && max_cache_elements >= 0
-							oldest = GitCache.find(:last, :order => "created_on DESC")
+							oldest = GitCache.find(:last, :order => "created_at DESC")
 							GitCache.destroy(oldest.id)
 						end
 						#File.open("/tmp/non_cached.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
