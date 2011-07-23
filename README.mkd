@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin
+# Redmine Git Hosting Plugin (v0.3.0)
 
 A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
 
@@ -44,6 +44,21 @@ This assumes www-data is your web server user, and git is your git user (the use
 
     RAILS_ENV=production rake db:migrate_plugins
 
+## Caching Options
+
+As of the latest version (0.3) this plugin includes code for caching output of the git command, which is called to display the details of the git repository.  Redmine/ChiliProject by default calls git directly every time this information is needed.  This can result in relatively long page load times.  
+
+This plugin caches the output of git commands to dramatically improve page load times, roughly a 10x speed increase.  On a 1GB VM running Ubuntu 11.04 median repository page load times dropped from 2300ms to 180ms.  Testing was done with ab utility in the apache2-utils package.
+
+There are three configurable caching parameters in the plugins settings page: Max Cache Elements, Max Cache Element Size and Max Cache Time.  
+
+*Max Cache Elements* is the maximum number of git commands for which to cache the output.  
+
+*Max Cache Element Size* is the maximum size of the git output to cache.   Anything above this size won't be cached, and git will be called directly every time this command is run.  
+
+*Max Cache Time* is the maximum amount of time the git command will be cached.  No matter what, the output of git commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is called.
+
+This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible with ChiliProject 1.x the caching functionality is not.
 
 ## Fast Deployment with YourChili Bash Library
 
@@ -51,7 +66,7 @@ Instead of installing/configuring by hand, one option for quickly deploying a fu
 
 ## Tested Configurations
 
-This plugin has been primarily tested on Ubuntu Server 10.10 (32 and 64 bit) with ChiliProject v1.2.0, with PostgreSQL as the database (April, 2011).  It is possible that some debugging will be necessary for other configurations.
+This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x, ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It is possible that some debugging will be necessary for other configurations.
 
 
 ## Required gems
