@@ -26,7 +26,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitDebugPostUpdateHook' => 'false',
-		'gitPostUpdateHookCurlIgnore' => 'false'
+		'gitPostUpdateHookCurlIgnore' => 'false',
 		'loggingEnabled' => 'false'
 		},
 		:partial => 'redmine_git_hosting'
