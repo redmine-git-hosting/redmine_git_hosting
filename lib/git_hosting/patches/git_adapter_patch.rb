@@ -62,7 +62,7 @@ module GitHosting
 				if cached != nil
 					cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
 					if cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0
-						out = cached.command_output
+						out = cached.command_output == nil ? "" : cached.command_output
 						#File.open("/tmp/command_output.txt", "a") { |f| f.write("COMMAND:#{cmd_str}\n#{out}\n") }
 					else
 						GitCache.destroy(cached.id)
@@ -72,13 +72,13 @@ module GitHosting
 					shellout(cmd_str) do |io|
 						out = io.read(max_cache_size + 1)
 					end
-					out_length = out == nil ? 0 : out.length;
+					out = out == nil ? "" : out
 
 					if $? && $?.exitstatus != 0
 						raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
-					elsif out_length <= max_cache_size
+					elsif out.length <= max_cache_size
 						proj_id=repo_path.gsub(/\.git$/, "").gsub(/^.*\//, "")
-						gitc = GitCache.create( :command=>cmd_str, :command_output=>out.to_s, :proj_identifier=>proj_id )
+						gitc = GitCache.create( :command=>cmd_str, :command_output=>out, :proj_identifier=>proj_id )
 						gitc.save
 						if GitCache.count > max_cache_elements && max_cache_elements >= 0
 							oldest = GitCache.find(:last, :order => "created_on DESC")
@@ -95,7 +95,6 @@ module GitHosting
 				end
 				
 				if retio == nil
-					out = out == nil ? "" : out
 					retio = StringIO.new(string=out)
 					if block_given?
 						block.call(retio)
