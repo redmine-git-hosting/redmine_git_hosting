@@ -23,6 +23,9 @@
   label_git_hook_debug: Run hooks in Debug mode
   label_git_hook_curl_security_ignore: Ignore curl security issues
 
+  label_logging: Enable Logging
+  label_logging_warning: This might have a performance penalty. Requires a server restart.
+
   label_public_keys: Public keys
   label_public_key_new: New public key
   field_public_key: Key 
