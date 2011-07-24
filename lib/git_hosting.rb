@@ -34,6 +34,7 @@ module GitHosting
 
 	def self.sudo_git_to_web_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		logger.info "Testing if \"#{git_user}\" can sudo to \"#{web_user}\""
 		if git_user == web_user
 			return true
 		end
@@ -47,6 +48,7 @@ module GitHosting
 
 	def self.sudo_web_to_git_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		logger.info "Testing if \"#{web_user}\" can sudo to \"#{git_user}\""
 		if git_user == web_user
 			return true
 		end
