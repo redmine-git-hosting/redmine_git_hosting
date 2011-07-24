@@ -1,6 +1,8 @@
 # Redmine Git Hosting Plugin (v0.3.0)
 
-A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
+A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.  This plugin also implements caching functionality to speed page-load times for viewing git repositories.
+
+
 
 ## Configuration Strategy
 
