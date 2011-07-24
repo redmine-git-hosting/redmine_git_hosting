@@ -6,12 +6,24 @@ require 'gitolite_conf.rb'
 
 module GitHosting
 
-	@@web_user = nil
-
-	def self.logger
-		return RAILS_DEFAULT_LOGGER
+	class GitHostingLogger < Logger
+		# This is not the buffered logger used in rails on purpose, the idea is to log as soon as we get
+		# the messages, yet, this has a performance penalty, only enable it if your having troubles.
+		def format_message(severity, timestamp, progname, msg)
+			"[%s] %-5s [%s] %s\n" % [timestamp.to_formatted_s(:db), severity, progname, msg]
+		end
 	end
 
+	@@logger = nil
+	def self.logger
+		if @@logger.nil?
+			@@logger = GitHostingLogger.new((Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')? STDOUT : '/dev/null')
+			@@logger.progname = 'RedmineGitHosting'
+		end
+		return @@logger
+	end
+
+	@@web_user = nil
 	def self.web_user
 		if @@web_user.nil?
 			@@web_user = (%x[whoami]).chomp.strip
@@ -120,7 +132,7 @@ module GitHosting
 	end
 
 	def self.update_git_exec
-		logger.info "[RedmineGitHosting] Setting up #{get_tmp_dir()}"
+		logger.info "Setting up #{get_tmp_dir()}"
 		git_user=Setting.plugin_redmine_git_hosting['gitUser']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 
@@ -193,6 +205,20 @@ module GitHosting
 
 	end
 
+	def self.clone_or_pull_gitolite_admin
+		# clone/pull from admin repo
+		local_dir = get_tmp_dir()
+		if File.exists? "#{local_dir}/gitolite-admin"
+			logger.info "Fethcing changes for #{local_dir}/gitolite-admin"
+			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
+			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
+		else
+			logger.info "Cloning gitolite-admin repository"
+			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
+		end
+		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+	end
+
 	def self.move_repository(old_name, new_name)
 		old_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{old_name}.git")
 		new_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
@@ -212,14 +238,8 @@ module GitHosting
 			end
 		end
 
-		# clone/pull from admin repo
-		if File.exists? "#{local_dir}/gitolite-admin"
-			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
-			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
-		else
-			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
-		end
-		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		# Make sure we have gitoite-admin cloned
+		clone_or_pull_gitolite_admin
 
 		# rename in conf file
 		conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
@@ -249,7 +269,10 @@ module GitHosting
 	end
 
 	def self.update_repositories(projects, is_repo_delete)
-		logger.debug "[RedmineGitHosting] updating repositories..."
+		# Make sure we have gitoite-admin cloned
+		clone_or_pull_gitolite_admin
+
+		logger.debug "Updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
 		if(defined?(@recursionCheck))
@@ -375,7 +398,7 @@ module GitHosting
 			#set post recieve hooks
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_repos.length > 0
-				logger.info "[RedmineGitHosting] New repository found, setting up \"post-receive\" hook..."
+				logger.info "New repository(ies) found, setting up \"post-receive\" hook..."
 				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
 
 				if server_test.match(/good/)
@@ -386,9 +409,9 @@ module GitHosting
 						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_receive_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
 						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
 					end
-					logger.error "[RedmineGitHosting] Hook setup completed"
+					logger.error "Hook setup completed"
 				else
-					logger.error "[RedmineGitHosting] An error ocurred, see above"
+					logger.error "An error ocurred, see above"
 				end
 			end
 
