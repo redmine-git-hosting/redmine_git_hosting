@@ -36,7 +36,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>&1 && echo "yes" ]
+		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
 		if test.match(/yes/)
 			return true
 		end
@@ -49,7 +49,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[sudo -nu #{git_user} -i "echo -n" 2>&1 && echo "yes"]
+		test = %x[sudo -nu #{git_user} echo "yes"]
 		if test.match(/yes/)
 			return true
 		end
@@ -406,7 +406,7 @@ module GitHosting
 						proj_name=repo_name.gsub(/^.*\//, '')
 						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
 						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_update_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
+						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_receive_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
 						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
 					end
 					logger.error "Hook setup completed"
@@ -422,7 +422,16 @@ module GitHosting
 	end
 
 
-	def self.run_post_update_hook proj_identifier
+	def self.run_post_receive_hook proj_identifier
+		
+		#clear cache
+		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+		if old_cached != nil
+			old_ids = old_cached.collect(&:id)
+			GitCache.destroy(old_ids)
+		end
+
+		#fetch updates into repo
 		Repository.fetch_changesets_for_project(proj_identifier)
 	end
 
