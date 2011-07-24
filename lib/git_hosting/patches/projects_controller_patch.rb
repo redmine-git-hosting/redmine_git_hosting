@@ -2,9 +2,9 @@ require_dependency 'projects_controller'
 module GitHosting
 	module Patches
 		module ProjectsControllerPatch
-			
+
 			def git_repo_init
-				
+
 				users = @project.member_principals.map(&:user).compact.uniq
 				if users.length == 0
 					membership = Member.new(
@@ -22,7 +22,7 @@ module GitHosting
 				end
 
 			end
-			
+
 			def disable_git_daemon_if_not_public
 				if @project.repository != nil
 					if @project.repository.is_a?(Repository::Git)
@@ -44,10 +44,10 @@ module GitHosting
 						if old_parent_id.to_s != new_parent_id.to_s
 							old_parent = old_parent_id != nil ? Project.find_by_id(old_parent_id) : nil
 							new_parent = new_parent_id != nil ? Project.find_by_id(new_parent_id) : nil
-							
+
 							old_name = old_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(old_parent, true), old_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
 							new_name = new_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(new_parent, true), new_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
-							
+
 							@project.repository.url = @project.repository.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
 							@project.repository.save
 							GitHosting::move_repository( old_name, new_name )
@@ -63,7 +63,7 @@ module GitHosting
 					unloadable
 				end
 				base.send(:after_filter, :git_repo_init, :only=>:create)
-				
+
 				base.send(:before_filter, :update_git_repo_for_new_parent, :only=>:update)
 				base.send(:after_filter, :disable_git_daemon_if_not_public, :only=>:update)
 			end

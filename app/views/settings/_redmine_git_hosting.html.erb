@@ -74,5 +74,11 @@
 		<%= select_tag("settings[gitPostUpdateHookCurlIgnore]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitPostUpdateHookCurlIgnore'])) %>
 		<br />
 	</p>
+	<p>
+		<label><%= l(:label_hook_installed)%></label>
+		<%= image_tag((GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<em><%= (GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? '' : GitHosting::Hooks::GitAdapterHooks.check_hooks_installed) %></em>
+		<br />
+	</p>
 	<br/>
 </div>

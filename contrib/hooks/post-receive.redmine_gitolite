@@ -97,17 +97,16 @@ log ""
 log "Notifying ChiliProject/Redmine (${REDMINE_SERVER}) about changes to this repo (${GL_REPO} => ${REDMINE_PROJECT_ID})"
 log ""
 
-# Read from stdin
+refs=""
 while read old new refname; do
-		log "Hitting the ChiliProject/Redmine Gitolite hook for $old $new $refname"
-		log_n "Response: "
-		log $(curl $CURL_IGNORE_SECURITY -S -s -d "oldrev=$old&newrev=$new&refname=$refname&user=$GL_USER" "$REDMINE_SERVER/$HOOK_URL?project_id=$REDMINE_PROJECT_ID")
-		log ""
-		log ""
-		log "Hitting the Redmine fetch changesets URL"
-		log $(curl -S -s $CURL_IGNORE_SECURITY "$REDMINE_SERVER/$FETCH_URL?id=$REDMINE_PROJECT_ID&key=$KEY")
-		log ""
+	refs="$refs&refs[]=$old,$new,$refname"
 done
+
+log "Hitting the ChiliProject/Redmine Gitolite hook for $old $new $refname"
+log_n "Response: "
+r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=$REDMINE_PROJECT_ID&key=$KEY${refs}" "http://$REDMINE_SERVER/sys/hooks/post-receive")
+log "$r"
+log ""
 
 log "Complete"
 exit 0

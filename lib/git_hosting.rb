@@ -18,6 +18,7 @@ module GitHosting
 	def self.logger
 		if @@logger.nil?
 			@@logger = GitHostingLogger.new((Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')? STDOUT : '/dev/null')
+			@@logger.level = GitHostingLogger::DEBUG
 			@@logger.progname = 'RedmineGitHosting'
 		end
 		return @@logger
@@ -217,6 +218,8 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		# Make sure we have out hooks setup
+		Hooks::GitAdapterHooks.check_hooks_installed
 	end
 
 	def self.move_repository(old_name, new_name)
@@ -259,9 +262,6 @@ module GitHosting
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
-
-
-
 
 		# unlock
 		lockfile.flock(File::LOCK_UN)
