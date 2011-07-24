@@ -20,7 +20,7 @@ class GitoliteHooksController < SysController
 		#} if not params[:refs].nil?
 
 		#clear cache
-    old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+    old_cached=GitCache.find_all_by_proj_identifier(project.identifier)
     if old_cached != nil
       old_ids = old_cached.collect(&:id)
       GitCache.destroy(old_ids)
