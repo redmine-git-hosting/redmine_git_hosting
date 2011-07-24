@@ -42,12 +42,12 @@ module GitHosting
 				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
 				logger.info "Installing \"#{hook_name}\" from #{hook_source_path}"
 				git_user = Setting.plugin_redmine_git_hosting['gitUser']
-				if git_user == GitHosting.web_user
+				web_user = GitHosting.web_user
+				if git_user == web_user
 					%x[#{GitHosting.git_user_runner} 'cp #{hook_source_path} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				else
-					# TODO: Need to test this with diferent users
 					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} cp #{hook_source_path} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chown #{git_user}:#{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chmod 700 #{hook_dest_path}']
