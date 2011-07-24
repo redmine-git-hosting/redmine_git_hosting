@@ -17,7 +17,10 @@ module GitHosting
 	@@logger = nil
 	def self.logger
 		if @@logger.nil?
-			@@logger = GitHostingLogger.new((Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')? STDOUT : '/dev/null')
+			@@logger = GitHostingLogger.new(
+				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
+					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
+			@@logger.level = GitHostingLogger::DEBUG
 			@@logger.progname = 'RedmineGitHosting'
 		end
 		return @@logger
@@ -417,7 +420,7 @@ module GitHosting
 
 
 	def self.run_post_receive_hook proj_identifier
-		
+
 		#clear cache
 		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
 		if old_cached != nil
