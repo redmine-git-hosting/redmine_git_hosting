@@ -306,11 +306,6 @@ module GitHosting
 				end
 			end
 
-
-
-			# clone/pull from admin repo
-			clone_or_pull_gitolite_admin
-
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
