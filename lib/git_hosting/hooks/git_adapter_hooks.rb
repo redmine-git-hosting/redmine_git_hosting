@@ -8,8 +8,9 @@ module GitHosting
 			def self.check_hooks_installed
 				create_hooks_digests
 
-				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
-				post_receive_exists = %x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
+				hook_dest_dir = File.join(local_dir, "gitolite-admin", "hooks", "common")
+				post_receive_hook_path = File.join(hook_dest_dir, 'post-receive')
+				post_receive_exists = %x[ test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
 				if post_receive_exists.match(/no/)
 					logger.info "\"post-receive\" not handled by gitolite, installing it..."
 					if python_available == true
@@ -38,20 +39,25 @@ module GitHosting
 			end
 
 			def self.install_hook(hook_name)
+				
+				GitHosting::clone_or_pull_gitolite_admin
+				
+				local_dir = get_tmp_dir()
 				hook_source_path = File.join(package_hooks_dir, hook_name)
-				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
+				hook_dest_dir = File.join(local_dir, "gitolite-admin", "hooks", "common")
+				hook_dest_path = File.join(hook_dest_dir,  hook_name.split('.')[0])
 				logger.info "Installing \"#{hook_name}\" from #{hook_source_path}"
-				git_user = Setting.plugin_redmine_git_hosting['gitUser']
-				web_user = GitHosting.web_user
-				if git_user == web_user
-					%x[#{GitHosting.git_user_runner} 'cp #{hook_source_path} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-				else
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} cp #{hook_source_path} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chown #{git_user}:#{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chmod 700 #{hook_dest_path}']
-				end
+				
+				%x[ mkdir -p '#{hook_dest_dir}' ]
+				%x[ cp -r '#{hook_source_path}' '#{hook_dest_path}' ]
+				%x[ chmod 700 '#{hook_dest_path}' ]
+
+				# commit / push changes to gitolite admin repo
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add hooks/common/*]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.email '#{Setting.mail_from}']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
 			end
 
 			def self.setup_hooks_for_project(project)
@@ -84,11 +90,6 @@ module GitHosting
 			end
 
 			@@package_hooks_dir = nil
-
-			def self.gitolite_hooks_dir
-				return '~/.gitolite/hooks/common'
-			end
-
 			def self.package_hooks_dir
 				if @@package_hooks_dir.nil?
 					@@package_hooks_dir = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), 'contrib', 'hooks')
