@@ -57,8 +57,8 @@ module GitHosting
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				else
 					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{hook_source_path} | cat - >  #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} chown #{git_user}:#{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} chmod 700 #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				end
 			end
 
