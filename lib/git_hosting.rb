@@ -17,7 +17,10 @@ module GitHosting
 	@@logger = nil
 	def self.logger
 		if @@logger.nil?
-			@@logger = GitHostingLogger.new((Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')? STDOUT : '/dev/null')
+			@@logger = GitHostingLogger.new(
+				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
+					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
+			@@logger.level = GitHostingLogger::DEBUG
 			@@logger.progname = 'RedmineGitHosting'
 		end
 		return @@logger
@@ -33,6 +36,7 @@ module GitHosting
 
 	def self.sudo_git_to_web_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		logger.info "Testing if \"#{git_user}\" can sudo to \"#{web_user}\""
 		if git_user == web_user
 			return true
 		end
@@ -46,6 +50,7 @@ module GitHosting
 
 	def self.sudo_web_to_git_user
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		logger.info "Testing if \"#{web_user}\" can sudo to \"#{git_user}\""
 		if git_user == web_user
 			return true
 		end
@@ -217,6 +222,8 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		# Make sure we have out hooks setup
+		Hooks::GitAdapterHooks.check_hooks_installed
 	end
 
 	def self.move_repository(old_name, new_name)
@@ -259,9 +266,6 @@ module GitHosting
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
-
-
-
 
 		# unlock
 		lockfile.flock(File::LOCK_UN)
@@ -308,6 +312,7 @@ module GitHosting
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
+			new_projects = []
 			changed = false
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -326,6 +331,7 @@ module GitHosting
 						changed = true
 						add_route_for_project(project)
 						new_repos.push repo_name
+						new_projects.push project
 					end
 
 
@@ -391,22 +397,8 @@ module GitHosting
 
 			#set post recieve hooks
 			#need to do this AFTER push, otherwise necessary repos may not be created yet
-			if new_repos.length > 0
-				logger.info "New repository(ies) found, setting up \"post-receive\" hook..."
-				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
-
-				if server_test.match(/good/)
-					new_repos.each do |repo_name|
-						proj_name=repo_name.gsub(/^.*\//, '')
-						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
-						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_receive_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
-						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
-					end
-					logger.error "Hook setup completed"
-				else
-					logger.error "An error ocurred, see above"
-				end
+			if new_projects.length > 0
+				GitHosting::Hooks::GitAdapterHooks.setup_hooks(new_projects)
 			end
 
 			lockfile.flock(File::LOCK_UN)
@@ -417,7 +409,7 @@ module GitHosting
 
 
 	def self.run_post_receive_hook proj_identifier
-		
+
 		#clear cache
 		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
 		if old_cached != nil

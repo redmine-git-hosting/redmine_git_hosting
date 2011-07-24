@@ -22,6 +22,11 @@ pt-BR:
   label_logging: 'Habilitar "logging"'
   label_logging_warning: Poderá causar um impacto na performance. Necessita de re-iniciar o servidor.
 
+  label_git_hook_header: Hooks dos Repositórios
+  label_git_hook_debug: Correr os hooks em mode Debug
+  label_git_hook_curl_security_ignore: Ignorar os erros de segurança do curl
+  label_hook_installed: '"Hook" instalado'
+
   label_public_keys: Chaves públicas
   label_public_key_new: Nova chave pública
   field_public_key: Chave
