@@ -15,7 +15,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
 	author 'Eric Bishop, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
 	description 'Enables Redmine / ChiliProject to control hosting of git repositories'
-	version '0.2.0'
+	version '0.3.0'
 	settings :default => {
 		'allProjectsUseGit' => 'false',
 		'gitServer' => 'localhost',
@@ -25,9 +25,12 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitRepositoryBasePath' => 'repositories/',
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
-		'gitDebugPostUpdateHook' => 'false',
-		'gitPostUpdateHookCurlIgnore' => 'false',
-		'loggingEnabled' => 'false'
+		'loggingEnabled' => 'false',
+		'gitCacheMaxTime' => '-1',
+		'gitCacheMaxElements' => '100',
+		'gitCacheMaxSize' => '16',
+    'gitDebugPostUpdateHook' => 'false',
+    'gitPostUpdateHookCurlIgnore' => 'false',
 		},
 		:partial => 'redmine_git_hosting'
 end

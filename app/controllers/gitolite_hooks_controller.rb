@@ -19,6 +19,13 @@ class GitoliteHooksController < SysController
 		#	GitHosting.logger.info "Ref:  OLD=>#{old} NEW=>#{new} REFNAME=>#{refname}"
 		#} if not params[:refs].nil?
 
+		#clear cache
+    old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+    if old_cached != nil
+      old_ids = old_cached.collect(&:id)
+      GitCache.destroy(old_ids)
+    end
+
 		Repository.fetch_changesets_for_project(params[:project_id])
 		render(:text => 'OK')
 	end

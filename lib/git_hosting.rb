@@ -37,7 +37,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} -i "echo -n" 2>&1 && echo "yes" ]
+		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
 		if test.match(/yes/)
 			return true
 		end
@@ -50,7 +50,7 @@ module GitHosting
 		if git_user == web_user
 			return true
 		end
-		test = %x[sudo -nu #{git_user} -i "echo -n" 2>&1 && echo "yes"]
+		test = %x[sudo -nu #{git_user} echo "yes"]
 		if test.match(/yes/)
 			return true
 		end
@@ -305,13 +305,8 @@ module GitHosting
 
 
 			# clone/pull from admin repo
-			if File.exists? "#{local_dir}/gitolite-admin"
-				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
-				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
-			else
-				%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
-			end
-			%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+			clone_or_pull_gitolite_admin
+
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
@@ -411,7 +406,16 @@ module GitHosting
 	end
 
 
-	def self.run_post_update_hook proj_identifier
+	def self.run_post_receive_hook proj_identifier
+
+		#clear cache
+		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+		if old_cached != nil
+			old_ids = old_cached.collect(&:id)
+			GitCache.destroy(old_ids)
+		end
+
+		#fetch updates into repo
 		Repository.fetch_changesets_for_project(proj_identifier)
 	end
 
