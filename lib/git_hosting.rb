@@ -136,6 +136,15 @@ module GitHosting
 		return git_user_runner_path()
 	end
 
+	def self.update_key
+		key=Setting.plugin_redmine_git_hosting['updateKey']
+		if key == "UNDEFINED"
+			key = (0...20+rand(20) ).map{65.+(rand(25)).chr}.join
+			Setting.plugin_redmine_git_hosting['updateKey'] = key
+		end
+		key
+	end
+
 	def self.update_git_exec
 		logger.info "Setting up #{get_tmp_dir()}"
 		git_user=Setting.plugin_redmine_git_hosting['gitUser']
