@@ -74,7 +74,7 @@ log("\nNotifying ChiliProject/Redmine (%s) about changes to this repo (%s => %s)
 log("Hitting the ChiliProject/Redmine Gitolite hook")
 log("Response: ", False)
 
-req = urllib2.urlopen("http://%s/sys/hooks/post-receive " % (server), urllib.urlencode(params))
+req = urllib2.urlopen("http://%s/sys/githooks/post-receive " % (server), urllib.urlencode(params))
 log(req.read().strip())
 
 log("Complete")
