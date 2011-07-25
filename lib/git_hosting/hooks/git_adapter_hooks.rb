@@ -40,7 +40,7 @@ module GitHosting
 
 			def self.install_hook(hook_name)
 				
-				GitHosting.clone_or_pull_gitolite_admin
+				GitHosting::clone_or_pull_gitolite_admin
 				
 				local_dir = get_tmp_dir()
 				hook_source_path = File.join(package_hooks_dir, hook_name)
@@ -53,11 +53,11 @@ module GitHosting
 				%x[ chmod 700 '#{hook_dest_path}' ]
 
 				# commit / push changes to gitolite admin repo
-				%x[env GIT_SSH=#{GitHosting.gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add hooks/common/*]
-				%x[env GIT_SSH=#{GitHosting.gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.email '#{Setting.mail_from}']
-				%x[env GIT_SSH=#{GitHosting.gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
-				%x[env GIT_SSH=#{GitHosting.gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
-				%x[env GIT_SSH=#{GitHosting.gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' add hooks/common/*]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.email '#{Setting.mail_from}']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
+				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
 			end
 
 			def self.setup_hooks_for_project(project)
