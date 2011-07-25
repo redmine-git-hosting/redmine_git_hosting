@@ -4,7 +4,7 @@ class GitoliteHooksController < ApplicationController
 	def post_receive
 
 		test_key=params[:key]
-		if test_key == GitHosting.update_key
+		if test_key == GitHookKey.get
 			project = Project.find_by_identifier(params[:project_id])
 			if project.nil?
 				render(:text => "No project found with identifier '#{params[:project_id]}'") if project.nil?

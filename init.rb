@@ -30,8 +30,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitCacheMaxElements' => '100',
 		'gitCacheMaxSize' => '16',
 		'gitDebugPostUpdateHook' => 'false',
-		'gitPostUpdateHookCurlIgnore' => 'false',
-    		'updateKey' => "UNDEFINED"
+		'gitPostUpdateHookCurlIgnore' => 'false'
 		},
 		:partial => 'redmine_git_hosting'
 end
