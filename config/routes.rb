@@ -4,11 +4,11 @@ for p in projects do
 end
 if defined? map
 	map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
-	map.connect 'sys/githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
+	map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
 else
 	ActionController::Routing::Routes.draw do |map|
 		map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
-		map.connect 'sys/githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
+		map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
 	end
 end
 

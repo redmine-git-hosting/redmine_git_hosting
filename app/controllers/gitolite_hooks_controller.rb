@@ -1,5 +1,5 @@
 
-class GitoliteHooksController < SysController
+class GitoliteHooksController < ApplicationController
 
 	def post_receive
 
