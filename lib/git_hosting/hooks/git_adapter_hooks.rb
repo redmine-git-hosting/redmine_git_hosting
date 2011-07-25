@@ -8,7 +8,6 @@ module GitHosting
 			def self.check_hooks_installed
 				create_hooks_digests
 
-				local_dir = GitHosting.get_tmp_dir()
 				hook_dest_dir = File.join(local_dir, "gitolite-admin", "hooks", "common")
 				post_receive_hook_path = File.join(hook_dest_dir, 'post-receive')
 				post_receive_exists = %x[ test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
@@ -43,7 +42,7 @@ module GitHosting
 				
 				GitHosting.clone_or_pull_gitolite_admin
 				
-				local_dir = GitHosting.get_tmp_dir()
+				local_dir = get_tmp_dir()
 				hook_source_path = File.join(package_hooks_dir, hook_name)
 				hook_dest_dir = File.join(local_dir, "gitolite-admin", "hooks", "common")
 				hook_dest_path = File.join(hook_dest_dir,  hook_name.split('.')[0])
