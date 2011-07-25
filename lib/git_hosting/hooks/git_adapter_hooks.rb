@@ -24,7 +24,15 @@ module GitHosting
 					logger.info "Finished installing hooks in the gitolite install..."
 					return true
 				else
-					digest = Digest::MD5.file(File.expand_path(post_receive_hook_path))
+					git_user = Setting.plugin_redmine_git_hosting['gitUser']
+					web_user = GitHosting.web_user
+					if git_user == web_user
+						digest = Digest::MD5.file(File.expand_path(post_receive_hook_path))
+					else
+						contents = %x[#{GitHosting.git_user_runner} 'cat #{post_receive_hook_path}']
+						digest = Digest::MD5.hexdigest(contents)
+					end
+
 					logger.debug "Installed hook digest: #{digest}"
 					if @@hook_digests.include? digest
 						logger.info "Our hook is already installed"
@@ -40,7 +48,7 @@ module GitHosting
 			def self.install_hook(hook_name)
 				hook_source_path = File.join(package_hooks_dir, hook_name)
 				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
-				logger.info "Installing \"#{hook_name}\" from #{hook_source_path}"
+				logger.info "Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
 				git_user = Setting.plugin_redmine_git_hosting['gitUser']
 				web_user = GitHosting.web_user
 				if git_user == web_user
@@ -48,9 +56,9 @@ module GitHosting
 					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				else
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} cp #{hook_source_path} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chown #{git_user}:#{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'sudo -u #{web_user} chmod 700 #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{hook_source_path} | cat - >  #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				end
 			end
 

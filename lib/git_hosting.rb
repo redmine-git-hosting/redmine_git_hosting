@@ -274,7 +274,6 @@ module GitHosting
 
 	def self.update_repositories(projects, is_repo_delete)
 
-
 		logger.debug "Updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
@@ -303,7 +302,6 @@ module GitHosting
 					return
 				end
 			end
-
 
 			# Make sure we have gitoite-admin cloned
 			clone_or_pull_gitolite_admin
