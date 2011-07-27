@@ -14,6 +14,7 @@
   label_disabled: Disabled
   label_https_only: HTTPS Only
   label_https_and_http: HTTPS and HTTP
+  label_notify_cia: Notify CIA
 
   label_permissions_header: Required Permissions
   label_sudo_web_to_git_user: Web user is able to sudo to Git user?
