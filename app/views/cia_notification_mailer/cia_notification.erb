@@ -1,8 +1,8 @@
 <message>
   <generator>
-    <name><%= Redmine::Plugin.find('redmine_git_hosting').name %></name>
-    <version><%= Redmine::Plugin.find('redmine_git_hosting').version %></version>
-    <url><%= Redmine::Plugin.find('redmine_git_hosting').url %></url>
+    <name><%= @plugin.name %></name>
+    <version><%= @plugin.version %></version>
+    <url><%= @plugin.url %></url>
   </generator>
   <source>
     <project><%= @revision.project.name %></project>

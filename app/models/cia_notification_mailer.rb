@@ -12,7 +12,10 @@ class CiaNotificationMailer < ActionMailer::Base
 		@content_type = "text/xml"
 		from "CIABOT-NOREPLY@#{ Setting['host_name'].match('localhost')? Setting['mail_from'].split('@')[-1] : Setting['host_name'] }"
 		@sent_on = Time.now
-		@body = render_message("cia_notification.erb", :revision => revision, :branch => branch)
+		@body = render_message(
+			"cia_notification.erb", :revision => revision, :branch => branch,
+			:plugin => Redmine::Plugin.find('redmine_git_hosting')
+		)
 		GitHosting.logger.debug "---8<----8<--- CIA Notification Body ---8<----8<---\n#{body}---8<----8<--- CIA Notification Body ---8<----8<---"
 		@headers = {
 			"Message-ID" => "<#{revision.revision}.#{revision.author}@#{revision.project.name}>"
