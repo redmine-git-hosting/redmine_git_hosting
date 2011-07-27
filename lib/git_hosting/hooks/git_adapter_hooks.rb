@@ -67,8 +67,8 @@ module GitHosting
 				debug_hook = Setting.plugin_redmine_git_hosting['gitDebugPostUpdateHook']
 				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitPostUpdateHookCurlIgnore']
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key #{Setting['sys_api_key']}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.server #{Setting['host_name']}]
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key #{GitHookKey.get}]
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.server #{Setting.plugin_redmine_git_hosting['httpServer']}]
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid #{project.identifier}]
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug #{debug_hook}]
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity #{curl_ignore_security}]

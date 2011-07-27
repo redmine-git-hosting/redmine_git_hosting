@@ -104,7 +104,7 @@ done
 
 log "Hitting the ChiliProject/Redmine Gitolite hook for $old $new $refname"
 log_n "Response: "
-r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=$REDMINE_PROJECT_ID&key=$KEY${refs}" "http://$REDMINE_SERVER/sys/hooks/post-receive")
+r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=$REDMINE_PROJECT_ID&key=$KEY${refs}" "http://$REDMINE_SERVER/githooks/post-receive")
 log "$r"
 log ""
 

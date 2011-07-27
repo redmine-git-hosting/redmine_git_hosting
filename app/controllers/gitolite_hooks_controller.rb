@@ -1,10 +1,19 @@
 
-class GitoliteHooksController < SysController
+class GitoliteHooksController < ApplicationController
 
 	helper :cia_commits
 	include CiaCommitsHelper
 
 	def post_receive
+
+		api_key = params[:key]
+
+		# If there's no key param, for sure it's not our hook
+		render :status => 403, :text => 'Required API Key not present' if not api_key
+
+		# If there's a key but it does not match, it's a misconfiguration issue
+		render :status => 403, :text => 'The used API Key is not valid!' if api_key != GitHookKey.get
+
 		project = Project.find_by_identifier(params[:project_id])
 		if project.nil?
 			render(:text => "No project found with identifier '#{params[:project_id]}'") if project.nil?

@@ -254,7 +254,7 @@ module GitHosting
 		conf.save
 
 		# physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
-		%x[#{git_user_runner} 'mdkir -p "#{new_path}"']
+		%x[#{git_user_runner} 'mkdir -p "#{new_path}"']
 		%x[#{git_user_runner} 'rmdir "#{new_path}"']
 		%x[#{git_user_runner} 'mv "#{old_path}" "#{new_path}"']
 
@@ -273,11 +273,8 @@ module GitHosting
 	end
 
 	def self.update_repositories(projects, is_repo_delete)
-		# Make sure we have gitoite-admin cloned
-		clone_or_pull_gitolite_admin
 
 		logger.debug "Updating repositories..."
-
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
 		if(defined?(@recursionCheck))
@@ -305,6 +302,10 @@ module GitHosting
 					return
 				end
 			end
+
+			# Make sure we have gitoite-admin cloned
+			clone_or_pull_gitolite_admin
+
 
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
