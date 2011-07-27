@@ -1,16 +1,17 @@
 <message>
   <generator>
-    <name>Redmine GitHosting Plugin</name>
-    <version>3.0</version>
+    <name>Redmine Git Hosting Plugin</name>
+    <version><%= Redmine::Plugin.registered_plugins[:redmine_git_hosting].version %></version>
+    <url>https://github.com/ericpaulbishop/redmine_git_hosting</url>
   </generator>
   <source>
-    <project>TestChiliprojectHook</project>
+    <project><%= @revision.project.name %></project>
     <branch><%= @branch %></branch>
   </source>
   <timestamp><%= @revision.committed_on.to_i %></timestamp>
   <body>
     <commit>
-      <revision><%= @revision.revision[0..12] %></revision>
+      <revision><%= @revision.revision[0..10] %></revision>
       <author><%= @revision.author %></author>
       <log><%= @revision.comments %></log>
       <url><%= url_for_revision(@revision) %></url>
