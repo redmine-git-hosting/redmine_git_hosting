@@ -250,7 +250,7 @@ module GitHosting
 		conf.save
 
 		# physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
-		%x[#{git_user_runner} 'mdkir -p "#{new_path}"']
+		%x[#{git_user_runner} 'mkdir -p "#{new_path}"']
 		%x[#{git_user_runner} 'rmdir "#{new_path}"']
 		%x[#{git_user_runner} 'mv "#{old_path}" "#{new_path}"']
 
