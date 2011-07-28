@@ -1,6 +1,8 @@
 
 class GitoliteHooksController < ApplicationController
 
+	skip_before_filter :verify_authenticity_token, :check_if_login_required
+
 	helper :cia_commits
 	include CiaCommitsHelper
 
@@ -8,11 +10,19 @@ class GitoliteHooksController < ApplicationController
 
 		api_key = params[:key]
 
-		# If there's no key param, for sure it's not our hook
-		render :status => 403, :text => 'Required API Key not present' if not api_key
+		if not api_key
+			# If there's no key param, for sure it's not our hook
+			GitHosting.logger.warn "No API key was passed"
+			render(:status => 403, :text => 'Required API Key not present')
+			return
+		end
 
-		# If there's a key but it does not match, it's a misconfiguration issue
-		render :status => 403, :text => 'The used API Key is not valid!' if api_key != GitHookKey.get
+		if api_key != GitHookKey.get
+			# If there's a key but it does not match, it's a misconfiguration issue
+			GitHosting.logger.warn "The passed API key is not valid"
+			render(:status => 403, :text => 'The used API Key is not valid!')
+			return
+		end
 
 		project = Project.find_by_identifier(params[:project_id])
 		if project.nil?
@@ -23,11 +33,13 @@ class GitoliteHooksController < ApplicationController
 		# Clear existing cache
 		old_cached=GitCache.find_all_by_proj_identifier(project.identifier)
 		if old_cached != nil
+			GitHosting.logger.debug "Clearing git cache for project #{project.name}"
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
 		end
 
 		# Fetch commits from the repository
+		GitHosting.logger.debug "Fetching changesets for #{project.name}'s repository"
 		Repository.fetch_changesets_for_project(params[:project_id])
 
 		# Notify CIA
