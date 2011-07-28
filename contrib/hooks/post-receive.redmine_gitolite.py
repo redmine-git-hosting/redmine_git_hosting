@@ -48,22 +48,6 @@ if not project_id:
 	log("Repository %s does not have \"hooks.redmine_gitolite.key\" set. Skipping..." % gl_repo)
 	sys.exit(0)
 
-## Let's read the refs passed to us
-#refs = []
-#for line in fileinput.input():
-#	old, new, refname = [item.strip() for item in line.split()]
-#	refs.append(",".join([old, new, refname]))
-#
-#log("Refs")
-#log(refs)
-#log("")
-#log(urllib.urlencode({
-#		"key": key,
-#		"project_id": project_id,
-#		"refs": refs
-#	}))
-#log("")
-
 params = [("key", key), ("project_id", project_id)]
 # Let's read the refs passed to us
 for line in fileinput.input():
