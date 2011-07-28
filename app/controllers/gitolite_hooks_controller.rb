@@ -48,14 +48,15 @@ class GitoliteHooksController < ApplicationController
 			GitHosting.logger.info "Processing: REFNAME => #{refname} OLD => #{oldhead}  NEW => #{newhead}"
 			repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 
-			#revlist = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list #{oldhead}..#{newhead}]
-			#GitHosting.logger.info "Revlist: #{revlist}"
-			branch = refname.gsub('refs/heads/', '')
-			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{oldhead}..#{newhead}].each{|rev|
-				revision = project.repository.find_changeset_by_name(rev.strip)
-				GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
-				CiaNotificationMailer.deliver_notification(revision, branch)
+			Thread.new{
+				branch = refname.gsub('refs/heads/', '')
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{oldhead}..#{newhead}].each{|rev|
+					revision = project.repository.find_changeset_by_name(rev.strip)
+					GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
+					CiaNotificationMailer.deliver_notification(revision, branch)
+				}
 			}
+
 		} if not params[:refs].nil? and project.repository.notify_cia==1
 
 		render(:text => 'OK')
