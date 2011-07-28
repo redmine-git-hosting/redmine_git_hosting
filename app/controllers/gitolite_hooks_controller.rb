@@ -51,7 +51,7 @@ class GitoliteHooksController < ApplicationController
 			#revlist = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list #{oldhead}..#{newhead}]
 			#GitHosting.logger.info "Revlist: #{revlist}"
 			branch = refname.gsub('refs/heads/', '')
-			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list #{oldhead}..#{newhead}].reverse_each{|rev|
+			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{oldhead}..#{newhead}].each{|rev|
 				revision = project.repository.find_changeset_by_name(rev.strip)
 				GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
 				CiaNotificationMailer.deliver_notification(revision, branch)
