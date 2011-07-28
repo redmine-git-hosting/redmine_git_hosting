@@ -44,16 +44,34 @@ class GitoliteHooksController < ApplicationController
 
 		# Notify CIA
 		Thread.new(project, params[:refs]) {|project, refs|
+			repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 			refs.each {|ref|
 				oldhead, newhead, refname = ref.split(',')
-				GitHosting.logger.info "Processing: REFNAME => #{refname} OLD => #{oldhead}  NEW => #{newhead}"
-				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
+
+				# Only pay attention to branch updates
+				next if not refname.match(/refs\/heads\//)
 
 				branch = refname.gsub('refs/heads/', '')
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{oldhead}..#{newhead}].each{|rev|
+
+				if newhead == "0000000000000000000000000000000000000000"
+					# Deleting a branch
+					GitHosting.logger.debug "Deleting branch \"#{branch}\""
+					next
+				elsif oldhead == "0000000000000000000000000000000000000000"
+					# Creating a branch
+					GitHosting.logger.debug "Creating branch \"#{branch}\""
+					range = newhead
+				else
+					range = "#{oldhead}..#{newhead}"
+				end
+
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{range}].each{|rev|
 					revision = project.repository.find_changeset_by_name(rev.strip)
-					GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
+					next if revision.notified_cia == 1   # Already notified about this commit
+					GitHosting.logger.info "Notifying CIA: Branch => #{branch} RANGE => #{revision.revision}"
 					CiaNotificationMailer.deliver_notification(revision, branch)
+					revision.notified_cia = 1
+					revision.save
 				}
 			}
 		} if not params[:refs].nil? and project.repository.notify_cia==1
