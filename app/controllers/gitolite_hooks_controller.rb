@@ -53,11 +53,11 @@ class GitoliteHooksController < ApplicationController
 
 				branch = refname.gsub('refs/heads/', '')
 
-				if newhead == "0000000000000000000000000000000000000000"
+				if newhead.match(/^0{40}$/)
 					# Deleting a branch
 					GitHosting.logger.debug "Deleting branch \"#{branch}\""
 					next
-				elsif oldhead == "0000000000000000000000000000000000000000"
+				elsif oldhead.match(/^0{40}$/)
 					# Creating a branch
 					GitHosting.logger.debug "Creating branch \"#{branch}\""
 					range = newhead
