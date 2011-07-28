@@ -1,7 +1,7 @@
 
 class GitoliteHooksController < ApplicationController
 
-	skip_before_filter :verify_authenticity_token, :check_if_login_required
+	skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
 
 	helper :cia_commits
 	include CiaCommitsHelper
@@ -44,7 +44,7 @@ class GitoliteHooksController < ApplicationController
 
 		# Notify CIA
 		Thread.new(project, params[:refs]) {|project, refs|
-			repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
+			repo_path = GitHosting.repository_path(project)
 			refs.each {|ref|
 				oldhead, newhead, refname = ref.split(',')
 
@@ -77,5 +77,31 @@ class GitoliteHooksController < ApplicationController
 		} if not params[:refs].nil? and project.repository.notify_cia==1
 
 		render(:text => 'OK')
+	end
+
+	def test
+		project = Project.find_by_identifier(params[:project_id])
+		if project.nil?
+			render(:text => "No project found with identifier '#{params[:project_id]}'") if project.nil?
+			return
+		end
+
+		# Deny access if user is not a manager for this project
+		manager_role = Role.find(:first, :conditions => ["name = ?", "Manager"])
+		return render(
+			:text => "Not enough permissions", :status => 403
+		) if not User.current.roles_for_project(project).include? manager_role
+
+		repo_path = GitHosting.repository_path(project)
+
+		# Get the last revision we have on the database for this project
+		revision = project.repository.changesets.find(:first)
+		# Find out to which branch this commit belongs to
+		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' branch --contains  #{revision.scmid}].split('\n')[0].strip
+
+		# Send the test notification
+		GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
+		CiaNotificationMailer.deliver_notification(revision, branch)
+		render(:text => 'CIA notification sent')
 	end
 end

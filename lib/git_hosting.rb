@@ -77,6 +77,10 @@ module GitHosting
 		return "#{get_full_parent_path(project, false)}/#{project.identifier}".sub(/^\//, "")
 	end
 
+	def self.repository_path project
+		return File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], repository_name(project))
+	end
+
 	def self.add_route_for_project(p)
 
 		if defined? map
