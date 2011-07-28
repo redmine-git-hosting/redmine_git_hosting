@@ -43,12 +43,12 @@ class GitoliteHooksController < ApplicationController
 		Repository.fetch_changesets_for_project(params[:project_id])
 
 		# Notify CIA
-		params[:refs].each {|ref|
-			oldhead, newhead, refname = ref.split(',')
-			GitHosting.logger.info "Processing: REFNAME => #{refname} OLD => #{oldhead}  NEW => #{newhead}"
-			repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
+		Thread.new(project, params[:refs]) {|project, refs|
+			refs.each {|ref|
+				oldhead, newhead, refname = ref.split(',')
+				GitHosting.logger.info "Processing: REFNAME => #{refname} OLD => #{oldhead}  NEW => #{newhead}"
+				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 
-			Thread.new{
 				branch = refname.gsub('refs/heads/', '')
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{oldhead}..#{newhead}].each{|rev|
 					revision = project.repository.find_changeset_by_name(rev.strip)
@@ -56,7 +56,6 @@ class GitoliteHooksController < ApplicationController
 					CiaNotificationMailer.deliver_notification(revision, branch)
 				}
 			}
-
 		} if not params[:refs].nil? and project.repository.notify_cia==1
 
 		render(:text => 'OK')
