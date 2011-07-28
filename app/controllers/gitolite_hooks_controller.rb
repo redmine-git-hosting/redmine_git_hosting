@@ -53,13 +53,8 @@ class GitoliteHooksController < ApplicationController
 			branch = refname.gsub('refs/heads/', '')
 			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list #{oldhead}..#{newhead}].reverse_each{|rev|
 				revision = project.repository.find_changeset_by_name(rev.strip)
-				if revision.notified_cia != 1
-					GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
-					CiaNotificationMailer.deliver_notification(revision, branch)
-					# Bellow is to avoid notifing again when a merge is happening
-					revision.notified_cia = 1
-					revision.save
-				end
+				GitHosting.logger.info "Notifying CIA: Branch => #{branch} REV => #{revision.revision}"
+				CiaNotificationMailer.deliver_notification(revision, branch)
 			}
 		} if not params[:refs].nil? and project.repository.notify_cia==1
 
