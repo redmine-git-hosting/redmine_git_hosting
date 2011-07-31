@@ -2,8 +2,8 @@ require "xmlrpc/client"
 
 class CiaNotificationMailer < ActionMailer::Base
 
-	helper :cia_commits
-	include CiaCommitsHelper
+	helper :git_hosting
+	include GitHostingHelper
 
 	def notification(revision, branch)
 		@subject = "DeliverXML"

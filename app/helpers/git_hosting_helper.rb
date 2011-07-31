@@ -1,7 +1,7 @@
 require "uri"
 require "net/http"
 
-module CiaCommitsHelper
+module GitHostingHelper
 
 	@@file_actions = {
 		"a" => "add",
@@ -52,6 +52,47 @@ module CiaCommitsHelper
 		rescue Exception => e
 			GitHosting.logger.warn "Failed to shorten url: #{e}"
 			return url
+		end
+	end
+
+
+	def self.git_daemon_enabled(project, value)
+		if not project.repository
+			return ""
+		end
+		gd = 1
+		project.repository[:git_daemon] ? project.repository[:git_daemon] : gd
+		gd = project.is_public ? gd : 0
+		if gd == value
+			return "selected='selected'"
+		else
+			return ""
+		end
+	end
+
+	def self.git_http_enabled(project, value)
+		if not project.repository
+			return ""
+		end
+		gh = 1
+		project.repository[:git_http] ? project.repository[:git_http] : gh
+		if gh == value
+			return "selected='selected'"
+		else
+			return ""
+		end
+	end
+
+	def self.notify_cia_enabled(project, value)
+		if not project.repository
+			return ""
+		end
+		nc = 0
+		project.repository[:notify_cia] ? project.repository[:notify_cia] : nc
+		if nc == value
+			return "selected='selected'"
+		else
+			return ""
 		end
 	end
 end

@@ -2,9 +2,10 @@
 class GitoliteHooksController < ApplicationController
 
 	skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
+	before_filter  :find_project
 
-	helper :cia_commits
-	include CiaCommitsHelper
+	helper :git_hosting
+	include GitHostingHelper
 
 	def post_receive
 
@@ -24,26 +25,20 @@ class GitoliteHooksController < ApplicationController
 			return
 		end
 
-		project = Project.find_by_identifier(params[:project_id])
-		if project.nil?
-			render(:text => "No project found with identifier '#{params[:project_id]}'") if project.nil?
-			return
-		end
-
 		# Clear existing cache
-		old_cached=GitCache.find_all_by_proj_identifier(project.identifier)
+		old_cached=GitCache.find_all_by_proj_identifier(@project.identifier)
 		if old_cached != nil
-			GitHosting.logger.debug "Clearing git cache for project #{project.name}"
+			GitHosting.logger.debug "Clearing git cache for project #{@project.name}"
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
 		end
 
 		# Fetch commits from the repository
-		GitHosting.logger.debug "Fetching changesets for #{project.name}'s repository"
-		Repository.fetch_changesets_for_project(params[:project_id])
+		GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
+		Repository.fetch_changesets_for_project(@project.identifier)
 
 		# Notify CIA
-		Thread.new(project, params[:refs]) {|project, refs|
+		Thread.new(@project, params[:refs]) {|project, refs|
 			repo_path = GitHosting.repository_path(project)
 			refs.each {|ref|
 				oldhead, newhead, refname = ref.split(',')
@@ -74,34 +69,40 @@ class GitoliteHooksController < ApplicationController
 					revision.save
 				}
 			}
-		} if not params[:refs].nil? and project.repository.notify_cia==1
+		} if not params[:refs].nil? and @project.repository.notify_cia==1
 
 		render(:text => 'OK')
 	end
 
 	def test
-		project = Project.find_by_identifier(params[:project_id])
-		if project.nil?
-			render(:text => "No project found with identifier '#{params[:project_id]}'") if project.nil?
-			return
-		end
+		# Deny access if the curreent user is not allowed to manage the project's repositoy
+		not_enough_perms = true
+		User.current.roles_for_project(@project).each{|role|
+			if role.allowed_to? :manage_repository
+				not_enough_perms = false
+				break
+			end
+		}
+		return render(:text => l(:cia_not_enough_permissions), :status => 403) if not_enough_perms
 
-		# Deny access if user is not a manager for this project
-		manager_role = Role.find(:first, :conditions => ["name = ?", "Manager"])
-		return render(
-			:text => "Not enough permissions", :status => 403
-		) if not User.current.roles_for_project(project).include? manager_role
-
-		repo_path = GitHosting.repository_path(project)
-
+		# Grab the repository path
+		repo_path = GitHosting.repository_path(@project)
 		# Get the last revision we have on the database for this project
-		revision = project.repository.changesets.find(:first)
+		revision = @project.repository.changesets.find(:first)
 		# Find out to which branch this commit belongs to
 		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' branch --contains  #{revision.scmid}].split('\n')[0].strip
 
 		# Send the test notification
 		GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
 		CiaNotificationMailer.deliver_notification(revision, branch)
-		render(:text => 'CIA notification sent')
+		render(:text => l(:cia_notification_ok))
+	end
+
+	def find_project
+		@project = Project.find_by_identifier(params[:project_id])
+		if @project.nil?
+			render(:text => l(:project_not_found, :identifier => params[:project_id])) if @project.nil?
+			return
+		end
 	end
 end

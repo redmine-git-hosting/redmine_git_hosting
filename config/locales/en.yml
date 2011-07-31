@@ -43,3 +43,7 @@
   label_git_cache_max_elements: Max Cache Elements
   label_git_cache_max_size: Max Cache Element Size
   label_git_cache_parameters: Git Cache Parameters
+
+  project_not_found: 'No project was found with the identifier "%{identifier}"'
+  cia_not_enough_permissions: You don't have the required permissions to test CIA notifications.
+  cia_notification_ok: Notification to CIA sent.
