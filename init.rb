@@ -10,6 +10,7 @@ require_dependency 'git_hosting/patches/groups_controller_patch'
 require_dependency 'git_hosting/patches/repositories_helper_patch'
 require_dependency 'git_hosting/patches/repository_patch'
 require_dependency 'git_hosting/patches/git_adapter_patch'
+require_dependency 'git_hosting/patches/git_hosting_settings_patch'
 
 Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
@@ -29,8 +30,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
 		'gitCacheMaxSize' => '16',
-		'gitDebugPostUpdateHook' => 'false',
-		'gitPostUpdateHookCurlIgnore' => 'false'
+		'gitHooksDebug' => 'false',
+		'gitHooksCurlIgnore' => 'false',
+		'gitHooksUrl' => ''
 		},
 		:partial => 'redmine_git_hosting'
 end

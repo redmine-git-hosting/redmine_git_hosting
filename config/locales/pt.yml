@@ -42,3 +42,5 @@ pt:
   label_git_cache_max_elements: Max Cache Elements
   label_git_cache_max_size: Max Cache Element Size
   label_git_cache_parameters: Git Cache Parameters
+
+  label_update_all_hooks: Actualizar as preferências em TODOS os repositórios

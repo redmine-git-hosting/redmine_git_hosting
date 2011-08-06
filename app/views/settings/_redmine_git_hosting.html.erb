@@ -80,12 +80,12 @@
 	<h3><%= l(:label_git_hook_header)%></h3>
 	<p>
 		<label><%= l(:label_git_hook_debug)%></label>
-		<%= select_tag("settings[gitDebugPostUpdateHook]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitDebugPostUpdateHook'])) %>
+		<%= select_tag("settings[gitHooksDebug]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksDebug'])) %>
 		<br />
 	</p>
 	<p>
 		<label><%= l(:label_git_hook_curl_security_ignore)%></label>
-		<%= select_tag("settings[gitPostUpdateHookCurlIgnore]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitPostUpdateHookCurlIgnore'])) %>
+		<%= select_tag("settings[gitHooksCurlIgnore]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksCurlIgnore'])) %>
 		<br />
 	</p>
 	<p>
@@ -94,5 +94,10 @@
 		<em><%= (GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? '' : GitHosting::Hooks::GitAdapterHooks.check_hooks_installed) %></em>
 		<br />
 	</p>
-	<br/>
+	<p>
+		<label><%= l(:label_update_all_hooks)%></label>
+		<input type="checkbox" id="settings_updateAllHooks" name="settings[updateAllHooks]" value="yes"/>
+		<br />
+	</p>
+	<input type="hidden" id="settings_gitHooksUrl" name="settings[gitHooksUrl]" value="<%= url_for(:controller => 'gitolite_hooks', :action => 'stub', :only_path => false, :host => Setting['host_name'], :protocol => Setting['protocol']) %>"
 </div>

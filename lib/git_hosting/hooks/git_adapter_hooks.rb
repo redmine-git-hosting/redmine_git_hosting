@@ -64,14 +64,28 @@ module GitHosting
 
 			def self.setup_hooks_for_project(project)
 				logger.info "Setting up hooks for project #{project.identifier}"
-				debug_hook = Setting.plugin_redmine_git_hosting['gitDebugPostUpdateHook']
-				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitPostUpdateHookCurlIgnore']
+
+
+
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key #{GitHookKey.get}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.server #{Setting.plugin_redmine_git_hosting['httpServer']}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid #{project.identifier}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug #{debug_hook}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity #{curl_ignore_security}]
+				logger.debug "Repository Path: #{repo_path}"
+
+				logger.debug "Hook KEY: #{GitHookKey.get}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{GitHookKey.get}"]
+
+				hook_url = Setting.plugin_redmine_git_hosting['gitHooksUrl']
+				logger.debug "Hook URL: #{hook_url}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.url "#{hook_url}"]
+
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
+
+				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
+				logger.debug "Debug Hook: #{debug_hook}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
+
+				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitHooksCurlIgnore']
+				logger.debug "Hook Ignore Curl Security: #{curl_ignore_security}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity "#{curl_ignore_security}"]
 			end
 
 			def self.setup_hooks(projects=nil)
@@ -79,6 +93,8 @@ module GitHosting
 				check_hooks_installed()
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
+				elsif projects.instance_of? Project
+					projects = [projects]
 				end
 				projects.each do |project|
 					setup_hooks_for_project(project)

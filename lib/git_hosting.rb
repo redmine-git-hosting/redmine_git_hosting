@@ -390,11 +390,10 @@ module GitHosting
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
-
 			end
 
-			#set post recieve hooks
-			#need to do this AFTER push, otherwise necessary repos may not be created yet
+			# Set post recieve hooks for new projects
+			# We need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_projects.length > 0
 				GitHosting::Hooks::GitAdapterHooks.setup_hooks(new_projects)
 			end
