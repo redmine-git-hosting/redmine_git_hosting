@@ -5,7 +5,13 @@ module GitHosting
 	module Hooks
 		module GitAdapterHooks
 
+			@@check_hooks_installed_stamp = nil
+			@@check_hooks_installed_cached = nil
 			def self.check_hooks_installed
+				if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5):
+					return @@check_hooks_installed_cached
+				end
+
 				create_hooks_digests
 
 				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
@@ -22,7 +28,9 @@ module GitHosting
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
 					logger.info "Finished installing hooks in the gitolite install..."
-					return true
+					@@check_hooks_installed_stamp = Time.new
+					@@check_hooks_installed_cached = true
+					return @@check_hooks_installed_cached
 				else
 					git_user = Setting.plugin_redmine_git_hosting['gitUser']
 					web_user = GitHosting.web_user
@@ -36,11 +44,15 @@ module GitHosting
 					logger.debug "Installed hook digest: #{digest}"
 					if @@hook_digests.include? digest
 						logger.info "Our hook is already installed"
-						return true
+						@@check_hooks_installed_stamp = Time.new
+						@@check_hooks_installed_cached = true
+						return @@check_hooks_installed_cached
 					else
 						error_msg = "\"post-receive\" is alreay present but it's not ours!"
 						logger.warn error_msg
-						return error_msg
+						@@check_hooks_installed_stamp = Time.new
+						@@check_hooks_installed_cached = error_msg
+						return @@check_hooks_installed_cached
 					end
 				end
 			end
