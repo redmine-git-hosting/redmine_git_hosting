@@ -1,6 +1,11 @@
 
 class GitoliteHooksController < ApplicationController
 
+	def stub
+		# Stub method simply to generate correct urls, just return a 404 to any user requesting this
+		render(:code => 404)
+	end
+
 	def post_receive
 
 		test_key=params[:key]

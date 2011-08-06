@@ -34,32 +34,54 @@ module GitHosting
 		return @@web_user
 	end
 
+	@@sudo_git_to_web_user_stamp = nil
+	@@sudo_git_to_web_user_cached = nil
 	def self.sudo_git_to_web_user
+		if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 0.5):
+			return @@sudo_git_to_web_user_cached
+		end
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
-		logger.info "Testing if \"#{git_user}\" can sudo to \"#{web_user}\""
+		logger.info "Testing if git user(\"#{git_user}\") can sudo to web user(\"#{web_user}\")"
 		if git_user == web_user
-			return true
+			@@sudo_git_to_web_user_cached = true
+			@@sudo_git_to_web_user_stamp = Time.new
+			return @@sudo_git_to_web_user_cached
 		end
 		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
 		if test.match(/yes/)
-			return true
+			@@sudo_git_to_web_user_cached = true
+			@@sudo_git_to_web_user_stamp = Time.new
+			return @@sudo_git_to_web_user_cached
 		end
 		logger.warn "Error while testing sudo_git_to_web_user: #{test}"
-		return test
+		@@sudo_git_to_web_user_cached = test
+		@@sudo_git_to_web_user_stamp = Time.new
+		return @@sudo_git_to_web_user_cached
 	end
 
+	@@sudo_web_to_git_user_stamp = nil
+	@@sudo_web_to_git_user_cached = nil
 	def self.sudo_web_to_git_user
+		if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 0.5):
+			return @@sudo_web_to_git_user_cached
+		end
 		git_user = Setting.plugin_redmine_git_hosting['gitUser']
-		logger.info "Testing if \"#{web_user}\" can sudo to \"#{git_user}\""
+		logger.info "Testing if web user(\"#{web_user}\") can sudo to git user(\"#{git_user}\")"
 		if git_user == web_user
-			return true
+			@@sudo_web_to_git_user_cached = true
+			@@sudo_web_to_git_user_stamp = Time.new
+			return @@sudo_web_to_git_user_cached
 		end
 		test = %x[sudo -nu #{git_user} echo "yes"]
 		if test.match(/yes/)
-			return true
+			@@sudo_web_to_git_user_cached = true
+			@@sudo_web_to_git_user_stamp = Time.new
+			return @@sudo_web_to_git_user_cached
 		end
 		logger.warn "Error while testing sudo_web_to_git_user: #{test}"
-		return test
+		@@sudo_web_to_git_user_cached = test
+		@@sudo_web_to_git_user_stamp = Time.new
+		return @@sudo_web_to_git_user_cached
 	end
 
 	def self.get_full_parent_path(project, is_file_path)
@@ -390,11 +412,10 @@ module GitHosting
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
-
 			end
 
-			#set post recieve hooks
-			#need to do this AFTER push, otherwise necessary repos may not be created yet
+			# Set post recieve hooks for new projects
+			# We need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_projects.length > 0
 				GitHosting::Hooks::GitAdapterHooks.setup_hooks(new_projects)
 			end

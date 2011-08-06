@@ -69,9 +69,9 @@ if [ -z "$KEY" ]; then
 	clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.key\" set. Skipping..."
 fi
 
-REDMINE_SERVER=$(git config hooks.redmine_gitolite.server 2>/dev/null)
-if [ -z "$REDMINE_SERVER" ]; then
-		clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.server\" set. Skipping..."
+REDMINE_HOOK_URL=$(git config hooks.redmine_gitolite.url 2>/dev/null)
+if [ -z "$REDMINE_HOOK_URL" ]; then
+		clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.url\" set. Skipping..."
 fi
 
 REDMINE_PROJECT_ID=$(git config hooks.redmine_gitolite.projectid 2>/dev/null)
@@ -93,20 +93,13 @@ case "$CURL_IGNORE_SECURITY_CFG" in
 				;;
 esac
 
-log ""
-log "Notifying ChiliProject/Redmine (${REDMINE_SERVER}) about changes to this repo (${GL_REPO} => ${REDMINE_PROJECT_ID})"
-log ""
+log "Notifying ChiliProject/Redmine project ${REDMINE_PROJECT_ID} about changes to its repo ${GL_REPO}.git ..."
 
 refs=""
 while read old new refname; do
 	refs="$refs&refs[]=$old,$new,$refname"
 done
 
-log "Hitting the ChiliProject/Redmine Gitolite hook for $old $new $refname"
-log_n "Response: "
-r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=$REDMINE_PROJECT_ID&key=$KEY${refs}" "http://$REDMINE_SERVER/githooks/post-receive")
-log "$r"
-log ""
-
-log "Complete"
+r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=${REDMINE_PROJECT_ID}&key=${KEY}${refs}" "${REDMINE_HOOK_URL}/post-receive")
+log "Response: ${r}"
 exit 0
