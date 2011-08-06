@@ -7,6 +7,11 @@ class GitoliteHooksController < ApplicationController
 	helper :git_hosting
 	include GitHostingHelper
 
+	def stub
+		# Stub method simply to generate correct urls, just return a 404 to any user requesting this
+		render(:code => 404)
+	end
+
 	def post_receive
 
 		api_key = params[:key]

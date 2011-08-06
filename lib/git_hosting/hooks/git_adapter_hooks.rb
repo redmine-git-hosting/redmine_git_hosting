@@ -5,7 +5,13 @@ module GitHosting
 	module Hooks
 		module GitAdapterHooks
 
+			@@check_hooks_installed_stamp = nil
+			@@check_hooks_installed_cached = nil
 			def self.check_hooks_installed
+				if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5):
+					return @@check_hooks_installed_cached
+				end
+
 				create_hooks_digests
 
 				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
@@ -22,7 +28,9 @@ module GitHosting
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
 					logger.info "Finished installing hooks in the gitolite install..."
-					return true
+					@@check_hooks_installed_stamp = Time.new
+					@@check_hooks_installed_cached = true
+					return @@check_hooks_installed_cached
 				else
 					git_user = Setting.plugin_redmine_git_hosting['gitUser']
 					web_user = GitHosting.web_user
@@ -36,11 +44,15 @@ module GitHosting
 					logger.debug "Installed hook digest: #{digest}"
 					if @@hook_digests.include? digest
 						logger.info "Our hook is already installed"
-						return true
+						@@check_hooks_installed_stamp = Time.new
+						@@check_hooks_installed_cached = true
+						return @@check_hooks_installed_cached
 					else
 						error_msg = "\"post-receive\" is alreay present but it's not ours!"
 						logger.warn error_msg
-						return error_msg
+						@@check_hooks_installed_stamp = Time.new
+						@@check_hooks_installed_cached = error_msg
+						return @@check_hooks_installed_cached
 					end
 				end
 			end
@@ -64,14 +76,28 @@ module GitHosting
 
 			def self.setup_hooks_for_project(project)
 				logger.info "Setting up hooks for project #{project.identifier}"
-				debug_hook = Setting.plugin_redmine_git_hosting['gitDebugPostUpdateHook']
-				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitPostUpdateHookCurlIgnore']
+
+
+
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key #{GitHookKey.get}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.server #{Setting.plugin_redmine_git_hosting['httpServer']}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid #{project.identifier}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug #{debug_hook}]
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity #{curl_ignore_security}]
+				logger.debug "Repository Path: #{repo_path}"
+
+				logger.debug "Hook KEY: #{GitHookKey.get}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{GitHookKey.get}"]
+
+				hook_url = Setting.plugin_redmine_git_hosting['gitHooksUrl']
+				logger.debug "Hook URL: #{hook_url}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.url "#{hook_url}"]
+
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
+
+				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
+				logger.debug "Debug Hook: #{debug_hook}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
+
+				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitHooksCurlIgnore']
+				logger.debug "Hook Ignore Curl Security: #{curl_ignore_security}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity "#{curl_ignore_security}"]
 			end
 
 			def self.setup_hooks(projects=nil)
@@ -79,6 +105,8 @@ module GitHosting
 				check_hooks_installed()
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
+				elsif projects.instance_of? Project
+					projects = [projects]
 				end
 				projects.each do |project|
 					setup_hooks_for_project(project)

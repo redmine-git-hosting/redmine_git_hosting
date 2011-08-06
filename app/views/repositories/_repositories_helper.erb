@@ -32,7 +32,6 @@
 		Event.stop(event);
 		new Ajax.Request('<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @project.identifier) %>', {
 			onSuccess: function(transport) {
-				console.log("ARRRRR");
 				console.log(transport.responseText);
 				$('notify_cia_result').update(transport.responseText)
 			},
