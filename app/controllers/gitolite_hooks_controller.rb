@@ -95,7 +95,8 @@ class GitoliteHooksController < ApplicationController
 		# Get the last revision we have on the database for this project
 		revision = @project.repository.changesets.find(:first)
 		# Find out to which branch this commit belongs to
-		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' branch --contains  #{revision.scmid}].split('\n')[0].strip
+		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
+		GitHosting.logger.debug "Revision #{revision.scmid} found on branches #{branch}"
 
 		# Send the test notification
 		GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"

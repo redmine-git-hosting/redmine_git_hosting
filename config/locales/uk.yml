@@ -46,6 +46,7 @@
 
   project_not_found: 'No project was found with the identifier "%{identifier}"'
   cia_not_enough_permissions: You don't have the required permissions to test CIA notifications.
+  label_notify_cia_test: Test Notification
   cia_notification_ok: Notification to CIA sent.
 
   label_update_all_hooks: Update ALL repositories hook settings
