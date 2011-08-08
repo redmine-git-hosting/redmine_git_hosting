@@ -1,0 +1,32 @@
+<% remote_form_for :repository_mirrors, @repository,
+					:url => { :controller => 'repository_mirrors', :action => 'index', :id => @project },
+					:builder => TabularFormBuilder,
+					:lang => current_language do |f| %>
+
+<%= error_messages_for 'repository_mirrors' %>
+
+<div class="box tabular">
+	<% if @project.repository.repository_mirrors.any? %>
+	<table>
+		<thead>
+			<th>Public Key</th>
+			<th>URL</th>
+			<th>&nbsp;</th>
+		</thead>
+		<tbody>
+		<% @project.repository.repository_mirrors.each do |mirror| %>
+			<tr>
+				<td><%= h mirror.gitolite_public_key.title %></td>
+				<td><%= h mirror.url %></td>
+				<td>Edit</td>
+			</tr>
+		<% else %>
+		</tbody>
+	</table>
+	<% else %>
+	<p>No Mirrors Defined</p>
+	<% end %>
+</div>
+
+<% end %>
+

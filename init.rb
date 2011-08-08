@@ -36,6 +36,11 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitHooksUrl' => ''
 		},
 		:partial => 'redmine_git_hosting'
+		project_module :repository_mirrors do
+			permission :create_repository_mirrors, :repository_mirrors => :create
+			permission :view_repository_mirrors, :repository_mirrors => :index
+			permission :edit_repository_mirrors, :repository_mirrors => :edit
+		end
 end
 
 # initialize hooks
