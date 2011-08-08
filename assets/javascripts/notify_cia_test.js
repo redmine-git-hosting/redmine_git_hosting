@@ -1,4 +1,5 @@
 document.observe("dom:loaded", function() {
+	console.log("Binding click event to test cia notification");
 	Event.observe("notify_cia_test", 'click', function(event) {
 		console.log("Notification Test Link Clicked");
 		Event.stop(event);
