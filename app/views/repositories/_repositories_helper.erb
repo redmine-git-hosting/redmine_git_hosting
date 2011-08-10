@@ -29,3 +29,44 @@
 </p>
 
 <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
+<br/>
+
+<% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_create_mirrors(@repository.project) %>
+<div class="contextual">
+	<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add') %>
+</div>
+<% end %>
+<% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_view_mirrors(@repository.project) %>
+	<h2>Mirrors</h2>
+	<% if @repository.project.repository_mirrors.any? %>
+	<div class="autoscroll">
+	<table class="list" style="margin: 0 auto; width: 96%">
+		<thead>
+			<tr>
+				<th>URL</th>
+				<th>Active</th>
+				<th>Created At</th>
+				<th>Updated At</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+		<% @repository.project.repository_mirrors.each do |mirror| %>
+			<tr class="<%= cycle('odd', 'even') %>">
+				<td class="name"><%= h mirror.url %></td>
+				<td class="center"><%= checked_image mirror.active? %></td>
+				<td align="center"><%= h(format_date(mirror.created_at)) %></td>
+				<td align="center"><%= h(format_date(mirror.updated_at)) %></td>
+				<td class="buttons"><% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
+					<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit') %>
+					<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'delete', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del') %>
+				<% end %></td>
+			</tr>
+		<% end %>
+		</tbody>
+	</table>
+	</div>
+	<% else %>
+	<p class="nodata" style="margin: 0 auto; width: 96%; padding: 8px;">No Mirrors Defined</p>
+	<% end %>
+<% end %>

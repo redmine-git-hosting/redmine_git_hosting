@@ -29,11 +29,18 @@ module GitHostingHelper
 	end
 
 	def self.return_selected_string(found_value, to_check_value)
-		if found_value == to_check_value
-			return "selected='selected'"
-		else
-			return ""
-		end
+		return "selected='selected'" if (found_value == to_check_value)
+		return ""
+	end
+
+	def self.can_create_mirrors(project)
+		return User.current.allowed_to?(:create_repository_mirrors, project)
+	end
+	def self.can_view_mirrors(project)
+		return User.current.allowed_to?(:view_repository_mirrors, project)
+	end
+	def self.can_edit_mirrors(project)
+		return User.current.allowed_to?(:edit_repository_mirrors, project)
 	end
 
 	@@file_actions = {

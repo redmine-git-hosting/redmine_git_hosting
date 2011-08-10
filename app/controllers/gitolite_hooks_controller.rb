@@ -1,4 +1,3 @@
-
 class GitoliteHooksController < ApplicationController
 
 	skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
@@ -38,45 +37,86 @@ class GitoliteHooksController < ApplicationController
 			GitCache.destroy(old_ids)
 		end
 
-		# Fetch commits from the repository
-		GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
-		Repository.fetch_changesets_for_project(@project.identifier)
 
-		# Notify CIA
-		Thread.new(@project, params[:refs]) {|project, refs|
-			repo_path = GitHosting.repository_path(project)
-			refs.each {|ref|
-				oldhead, newhead, refname = ref.split(',')
+		repo_path = GitHosting.repository_path(@project)
 
-				# Only pay attention to branch updates
-				next if not refname.match(/refs\/heads\//)
 
-				branch = refname.gsub('refs/heads/', '')
 
-				if newhead.match(/^0{40}$/)
-					# Deleting a branch
-					GitHosting.logger.debug "Deleting branch \"#{branch}\""
-					next
-				elsif oldhead.match(/^0{40}$/)
-					# Creating a branch
-					GitHosting.logger.debug "Creating branch \"#{branch}\""
-					range = newhead
+		render :text => Proc.new { |response, output|
+			response.headers["Content-Type"] = "text/plain;"
+
+			# Fetch commits from the repository
+			GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
+			output.write("Fetching changesets for #{@project.name}'s repository ... ")
+			output.flush
+			Repository.fetch_changesets_for_project(@project.identifier)
+			output.write("Done\n")
+			output.flush
+
+			@project.repository_mirrors.each {|mirror|
+				GitHosting.logger.debug "Pushing changes to mirror #{mirror.url}"
+				output.write("Pushing changes to mirror #{mirror.url} ... ")
+				output.flush
+				shellout = %x{ export GIT_MIRROR_IDENTITY_FILE=#{GitHosting.git_mirror_identity_file(mirror)}; export GIT_SSH='#{GitHosting.git_exec_mirror}'; #{GitHosting.git_exec} --git-dir='#{repo_path}.git' push --mirror '#{mirror.url}' 2>&1 }
+				if $?.to_i != 0:
+					output.write("Failed!\n")
+					ms = " #{mirror.url} push error "
+					nr = (70-ms.length)/2
+					GitHosting.logger.debug "Failed:\n%{nrs} #{ms} %{nrs}\n#{shellout}%{nre} #{ms} %{nre}\n" % {:nrs => ">"*nr, :nre => "<"*nr}
+					output.write("%{nrs} #{ms} %{nrs}\n" % {:nrs => ">"*nr})
+					output.write("#{shellout}")
+					output.write("%{nre} #{ms} %{nre}\n" % {:nre => "<"*nr})
+					output.flush
 				else
-					range = "#{oldhead}..#{newhead}"
+					output.write("Done\n")
+					output.flush
 				end
 
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' rev-list --reverse #{range}].each{|rev|
-					revision = project.repository.find_changeset_by_name(rev.strip)
-					next if revision.notified_cia == 1   # Already notified about this commit
-					GitHosting.logger.info "Notifying CIA: Branch => #{branch} RANGE => #{revision.revision}"
-					CiaNotificationMailer.deliver_notification(revision, branch)
-					revision.notified_cia = 1
-					revision.save
-				}
-			}
-		} if not params[:refs].nil? and @project.repository.notify_cia==1
+			} if @project.repository_mirrors.any?
 
-		render(:text => 'OK')
+			# Notify CIA
+			output.write("Notifying CIA\n") if not params[:refs].nil? and @project.repository.notify_cia==1
+			output.flush if not params[:refs].nil? and @project.repository.notify_cia==1
+			Thread.new(@project, params[:refs]) {|project, refs|
+				GitHosting.logger.debug "Notifying CIA"
+				output.write("Notifying CIA\n")
+				output.flush
+				refs.each {|ref|
+					oldhead, newhead, refname = ref.split(',')
+
+					# Only pay attention to branch updates
+					next if not refname.match(/refs\/heads\//)
+
+					branch = refname.gsub('refs/heads/', '')
+
+					if newhead.match(/^0{40}$/)
+						# Deleting a branch
+						GitHosting.logger.debug "Deleting branch \"#{branch}\""
+						next
+					elsif oldhead.match(/^0{40}$/)
+						# Creating a branch
+						GitHosting.logger.debug "Creating branch \"#{branch}\""
+						range = newhead
+					else
+						range = "#{oldhead}..#{newhead}"
+					end
+
+					revisions = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' rev-list --reverse #{range}]
+					#GitHosting.logger.debug "Revisions: #{revisions.split().join(' ')}"
+
+					revisions.split().each{|rev|
+						revision = project.repository.find_changeset_by_name(rev.strip)
+						#GitHosting.logger.debug "Revision Found: #{revision}"
+						next if revision.notified_cia == 1   # Already notified about this commit
+						GitHosting.logger.info "Notifying CIA: Branch => #{branch} RANGE => #{revision.revision}"
+						CiaNotificationMailer.deliver_notification(revision, branch)
+						revision.notified_cia = 1
+						revision.save
+					}
+				}
+			} if not params[:refs].nil? and @project.repository.notify_cia==1
+		}, :layout => false
+
 	end
 
 	def test

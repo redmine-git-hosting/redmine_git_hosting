@@ -55,6 +55,7 @@ end
 
 # initialize association from user -> public keys
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
+Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 
 # initialize observer
 ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver

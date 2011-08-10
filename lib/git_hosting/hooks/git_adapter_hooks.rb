@@ -77,8 +77,6 @@ module GitHosting
 			def self.setup_hooks_for_project(project)
 				logger.info "Setting up hooks for project #{project.identifier}"
 
-
-
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 				logger.debug "Repository Path: #{repo_path}"
 

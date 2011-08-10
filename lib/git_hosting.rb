@@ -133,6 +133,15 @@ module GitHosting
 		return @@git_hosting_tmp_dir
 	end
 
+	def self.get_mirror_identities_dir
+		@@mirror_identities_dir = File.join(@@git_hosting_tmp_dir, 'mirror_identities')
+		if !File.directory?(@@mirror_identities_dir)
+			%x[mkdir -p "#{@@mirror_identities_dir}"]
+			File.chmod(0700, @@mirror_identities_dir)
+		end
+		return @@mirror_identities_dir
+	end
+
 	def self.git_exec_path
 		return File.join(get_tmp_dir(), "run_git_as_git_user")
 	end
@@ -141,6 +150,9 @@ module GitHosting
 	end
 	def self.git_user_runner_path
 		return File.join(get_tmp_dir(), "run_as_git_user")
+	end
+	def self.git_exec_mirror_path
+		return File.join(get_tmp_dir(), "run_git_under_another_identity")
 	end
 
 	def self.git_exec
@@ -160,6 +172,23 @@ module GitHosting
 			update_git_exec
 		end
 		return git_user_runner_path()
+	end
+	def self.git_exec_mirror
+		if !File.exists?(git_exec_mirror_path())
+			update_git_exec
+		end
+		return git_exec_mirror_path()
+	end
+
+	def self.git_mirror_identity_file(mirror)
+		identity_file_path = File.join(get_mirror_identities_dir(), mirror.to_s)
+		if !File.exists?(identity_file_path)
+			File.open(identity_file_path, "w") do |f|
+				f.puts "#{mirror.private_key}"
+			end
+			File.chmod(0600, identity_file_path)
+		end
+		return identity_file_path
 	end
 
 	def self.update_git_exec
@@ -230,9 +259,27 @@ module GitHosting
 			f.puts '}'
 		end
 
+		File.open(git_exec_mirror_path(), "w") do |f|
+			f.puts '#!/bin/sh'
+			f.puts "if [ \"\$(whoami)\" = \"#{git_user}\" ] ; then"
+			f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
+			f.puts '  cd ~'
+			f.puts '  eval "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd"'
+			f.puts "else"
+			if sudo_version < sudo_version_switch
+				f.puts '  cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
+				f.puts "  sudo -u #{git_user} -i eval \"ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd\""
+			else
+				f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
+				f.puts "  sudo -u #{git_user} -i eval \"ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd\""
+			end
+			f.puts 'fi'
+		end
+
 		File.chmod(0777, git_exec_path())
 		File.chmod(0777, gitolite_ssh_path())
 		File.chmod(0777, git_user_runner_path())
+		File.chmod(0777, git_exec_mirror_path())
 
 	end
 

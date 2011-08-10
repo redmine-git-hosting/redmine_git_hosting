@@ -18,7 +18,10 @@
 			<tr>
 				<td><%= h mirror.gitolite_public_key.title %></td>
 				<td><%= h mirror.url %></td>
-				<td>Edit</td>
+				<td>
+					<%= link_to(l(:button_delete), 'foo', :class => 'icon icon-del') %>
+					<%= link_to(l(:button_edit), 'nar', :class => 'icon icon-edit') %>
+				</td>
 			</tr>
 		<% else %>
 		</tbody>
