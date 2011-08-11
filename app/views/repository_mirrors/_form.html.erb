@@ -1,0 +1,13 @@
+<%= error_messages_for 'repository_mirrors' %>
+
+<div class="box">
+<!--[form:repository_mirrors]-->
+	<p><%= f.text_field :url, :required => true, :size => 65 %></p>
+	<p>
+		<%= f.text_area :private_key, :required => true, :rows => 10, :cols => 65 %><br/>
+		<label>&nbsp;</label>
+		<span style="color: red; font-weight: bold;"><%= l(:field_private_key_warning) %></span>
+	</p>
+	<p><%= f.check_box :active %></p>
+</div>
+<!--[eoform:repository_mirrors]-->

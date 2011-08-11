@@ -53,13 +53,13 @@
 		<tbody>
 		<% @repository.project.repository_mirrors.each do |mirror| %>
 			<tr class="<%= cycle('odd', 'even') %>">
-				<td class="name"><%= h mirror.url %></td>
+				<td class="name"><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %></td>
 				<td class="center"><%= checked_image mirror.active? %></td>
 				<td align="center"><%= h(format_date(mirror.created_at)) %></td>
 				<td align="center"><%= h(format_date(mirror.updated_at)) %></td>
 				<td class="buttons"><% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
-					<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit') %>
-					<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'delete', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del') %>
+					<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
+					<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
 				<% end %></td>
 			</tr>
 		<% end %>

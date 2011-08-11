@@ -50,3 +50,13 @@
   cia_notification_ok: Notification to CIA sent.
 
   label_update_all_hooks: Update ALL repositories hook settings
+
+  field_private_key: Private Key
+  field_private_key_warning: "Do not use your own Private Key!<br/>Please generate a new one and upload it to the mirror server."
+  label_mirror_create: Create Repository Mirror
+  label_mirror_delete: Delete Repository Mirror
+  label_mirror_edit: Edit Repository Mirror
+  mirror_notice_deleted: Mirror was successfully deleted
+  mirror_notice_created: Mirror was successfully created
+  mirror_notice_updated: Mirror was successfully updated
+  mirror_notice_create_failed: Failed to create mirror

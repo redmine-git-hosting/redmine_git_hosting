@@ -14,17 +14,78 @@ class RepositoryMirrorsController < ApplicationController
 	end
 
 	def create
+		@mirror = RepositoryMirror.new(params[:repository_mirrors])
+		if request.get?
+			# display create view
+		else
+			@mirror.update_attributes(params[:repository_mirrors])
+			@mirror.project = @project
 
+			if @mirror.save
+				respond_to do |format|
+					format.html {
+						redirect_to(
+							url_for(
+								:controller => 'projects',
+								:action => 'settings',
+								:id => @mirror.project.identifier,
+								:tab => 'repository'
+							),
+							:notice => l(:mirror_notice_created)
+						)
+					}
+				end
+			else
+				respond_to do |format|
+					flash[:notice] = l(:mirror_notice_create_failed)
+				end
+			end
+		end
 	end
 
 	def edit
+		GitHosting.logger.debug "REQ METH: #{request.method}"
 	end
 
 	def update
+		respond_to do |format|
+			if @mirror.update_attributes(params[:repository_mirrors])
+				format.html {
+					redirect_to(
+						url_for(
+							:controller => 'projects',
+							:action => 'settings',
+							:id => @mirror.project.identifier,
+							:tab => 'repository'
+						),
+						:notice => l(:mirror_notice_updated)
+					)
+				}
+			else
+				format.html { render :action => "edit" }
+			end
+		end
+
 
 	end
 
-	def delete
+	def destroy
+		if request.get?
+			# display confirmation view
+		else
+			if params[:confirm]
+				redirect_url = url_for(
+					:controller => 'projects',
+					:action => 'settings',
+					:id => @mirror.project.identifier,
+					:tab => 'repository'
+				)
+				@mirror.destroy
+				respond_to do |format|
+					format.html {redirect_to(redirect_url, :notice => l(:mirror_notice_deleted))}
+				end
+			end
+		end
 
 	end
 
@@ -38,15 +99,15 @@ class RepositoryMirrorsController < ApplicationController
 	end
 
 	def set_poject_variable
-		@project = params[:project_id]
+		@project = Project.find(:first, :conditions => ["identifier = ?", params[:project_id]])
 	end
 
 	def find_repository_mirror
 		mirror = RepositoryMirror.find_by_id(params[:id])
 
-		@mirrors = @project.repository.repository_mirrors
+		@mirrors = @project.repository_mirrors
 
-		if mirror and mirror.user == @user
+		if mirror and mirror.project == @project
 			@mirror = mirror
 		elsif mirror
 			render_403
