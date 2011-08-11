@@ -5,9 +5,12 @@ class RepositoryMirrorsController < ApplicationController
 	before_filter :set_user_variable
 	before_filter :set_poject_variable
 	before_filter :check_required_permissions
+	before_filter :check_xhr_request
 	before_filter :find_repository_mirror, :except => [:index, :create]
 
 	menu_item :settings, :only => :settings
+
+	layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
 	def index
 		render_404
@@ -132,4 +135,9 @@ class RepositoryMirrorsController < ApplicationController
 			render_403
 		end
 	end
+
+	def check_xhr_request
+		@is_xhr ||= request.xhr?
+	end
+
 end

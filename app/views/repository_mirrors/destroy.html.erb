@@ -1,4 +1,4 @@
-<h2><%=l(:label_mirror_delete)%></h2>
+<% if not @is_xhr %><h2><%=l(:label_mirror_delete)%></h2><% end %>
 <div class="warning">
 	<p>
 		<strong><%= @mirror.url %></strong><br/>

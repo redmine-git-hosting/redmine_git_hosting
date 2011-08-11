@@ -33,7 +33,7 @@
 
 <% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_create_mirrors(@repository.project) %>
 <div class="contextual">
-	<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add') %>
+	<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror') %>
 </div>
 <% end %>
 <% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_view_mirrors(@repository.project) %>
@@ -70,3 +70,48 @@
 	<p class="nodata" style="margin: 0 auto; width: 96%; padding: 8px;">No Mirrors Defined</p>
 	<% end %>
 <% end %>
+
+<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
+<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+
+<script type="text/javascript">
+	document.observe("dom:loaded", function() {
+		$$(".add-mirror").each(function(elem) {
+			Event.observe(elem, 'click', function(event) {
+				Event.stop(event);
+				Modalbox.show(
+					elem.href, {
+						title: "<%=l(:label_mirror_create)%>",
+						width: 700
+					}
+				)
+				return false;
+			})
+		})
+		$$(".edit-mirror").each(function(elem) {
+			Event.observe(elem, 'click', function(event) {
+				Event.stop(event);
+				Modalbox.show(
+					elem.href, {
+						title: "<%=l(:label_mirror_edit)%>",
+						width: 700
+					}
+				)
+				return false;
+			})
+		})
+		$$(".delete-mirror").each(function(elem) {
+			Event.observe(elem, 'click', function(event) {
+				Event.stop(event);
+				Modalbox.show(
+					elem.href, {
+						title: "<%=l(:label_mirror_delete)%>",
+						width: 700
+					}
+				)
+				return false;
+			})
+		})
+	})
+</script>
