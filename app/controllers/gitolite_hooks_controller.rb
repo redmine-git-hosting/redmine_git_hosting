@@ -53,7 +53,7 @@ class GitoliteHooksController < ApplicationController
 			output.write("Done\n")
 			output.flush
 
-			@project.repository_mirrors.each {|mirror|
+			@project.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 				GitHosting.logger.debug "Pushing changes to mirror #{mirror.url}"
 				output.write("Pushing changes to mirror #{mirror.url} ... ")
 				output.flush
