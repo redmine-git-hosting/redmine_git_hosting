@@ -52,54 +52,62 @@ clean_exit() {
 }
 
 log() {
+	echo "$1"  1>&2
+}
+log_d() {
 	if [ "$DEBUG" = "true" ]; then
-		echo $1  1>&2
+		echo "$1"  1>&2
 	fi
 }
 log_n() {
+	echo -n "$1"  1>&2
+}
+log_dn() {
 	if [ "$DEBUG" = "true" ]; then
-		echo -n $1  1>&2
+		echo -n "$1"  1>&2
 	fi
 }
 
-log "Running ${PROGNAME} for repository ${GL_REPO}"
-
 KEY=$(git config hooks.redmine_gitolite.key 2>/dev/null)
 if [ -z "$KEY" ]; then
-	clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.key\" set. Skipping..."
+	log_d "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.key\" set. Skipping..."
+	exit 0
 fi
 
 REDMINE_HOOK_URL=$(git config hooks.redmine_gitolite.url 2>/dev/null)
 if [ -z "$REDMINE_HOOK_URL" ]; then
-		clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.url\" set. Skipping..."
+	log_d "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.url\" set. Skipping..."
+	exit 0
 fi
 
 REDMINE_PROJECT_ID=$(git config hooks.redmine_gitolite.projectid 2>/dev/null)
 if [ -z "$REDMINE_PROJECT_ID" ]; then
-	clean_exit "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.server\" set. Skipping..."
+	log_d "Repository ${GL_REPO} does not have \"hooks.redmine_gitolite.server\" set. Skipping..."
+	exit 0
 fi
 
 CURL_IGNORE_SECURITY_CFG=$(git config --bool hooks.redmine_gitolite.curlignoresecurity 2>/dev/null)
 if [ -z "$CURL_IGNORE_SECURITY_CFG" ]; then
-		CURL_IGNORE_SECURITY_CFG=$DEFAULT_CURL_IGNORE_SECURITY_CFG
+	CURL_IGNORE_SECURITY_CFG=$DEFAULT_CURL_IGNORE_SECURITY_CFG
 fi
 
 case "$CURL_IGNORE_SECURITY_CFG" in
 		true)
-				CURL_IGNORE_SECURITY=" -k "
-				;;
+			CURL_IGNORE_SECURITY=" -k "
+			;;
 		false)
-				CURL_IGNORE_SECURITY=" "
-				;;
+			CURL_IGNORE_SECURITY=" "
+			;;
 esac
 
-log "Notifying ChiliProject/Redmine project ${REDMINE_PROJECT_ID} about changes to its repo ${GL_REPO}.git ..."
+log_d "Notifying ChiliProject/Redmine project ${REDMINE_PROJECT_ID} about changes to its repo ${GL_REPO}.git ..."
 
 refs=""
 while read old new refname; do
 	refs="$refs&refs[]=$old,$new,$refname"
 done
 
-r=$(curl $CURL_IGNORE_SECURITY -S -s -d "&project_id=${REDMINE_PROJECT_ID}&key=${KEY}${refs}" "${REDMINE_HOOK_URL}/post-receive")
-log "Response: ${r}"
+response=$(curl $CURL_IGNORE_SECURITY -N -S -s -d "&project_id=${REDMINE_PROJECT_ID}&key=${KEY}${refs}" "${REDMINE_HOOK_URL}/post-receive")
+log "$response"
+
 exit 0

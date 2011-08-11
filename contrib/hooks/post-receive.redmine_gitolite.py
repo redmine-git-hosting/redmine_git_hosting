@@ -7,9 +7,15 @@ import subprocess
 import urllib
 import urllib2
 
-def log(msg, newline=True):
-	sys.stderr.write("%s%s" % (msg, (newline and "\n" or "")))
-	sys.stderr.flush()
+debug = False
+
+def log(msg, newline=True, skip_debug=False):
+	if debug or skip_debug:
+		sys.stderr.write("%s%s" % (msg, (newline and "\n" or "")))
+		sys.stderr.flush()
+
+log('', skip_debug=True)
+
 
 gl_repo = os.environ.get('GL_REPO', None)
 if not gl_repo:
@@ -55,6 +61,27 @@ for line in fileinput.input():
 	params.append(("refs[]", ",".join([old, new, refname])))
 
 log("Notifying ChiliProject/Redmine project %s about changes to this repo %s.git ..." % (project_id, gl_repo))
-req = urllib2.urlopen("%s/post-receive" % hook_url, urllib.urlencode(params))
-log("Response: %s" % req.read().strip())
+try:
+	req = urllib2.urlopen("%s/post-receive" % hook_url, urllib.urlencode(params))
+	output = ""
+	chunk_size = 1024
+	try:
+		output += req.read(chunk_size)
+		while output:
+			if '\n' in output:
+				line, output = output.split('\n', 1)
+				log(line, skip_debug=True)
+			chunk = req.read(chunk_size)
+			if not chunk:
+				if output:
+					for line in output.split('\n'):
+						log(line, skip_debug=True)
+				break
+			output += chunk
+	except Exception, err:
+		log('An error occurred while reading server response: %s' % err, skip_debug=True)
+except urllib2.HTTPError, err:
+	log("Error while notifying server: %s" % err)
+
+# Since we just triggering the server, always tell git that everything went ok, even if not
 sys.exit(0)
