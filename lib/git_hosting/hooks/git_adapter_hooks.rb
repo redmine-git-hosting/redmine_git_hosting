@@ -72,6 +72,7 @@ module GitHosting
 					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				end
+				create_hooks_digests(true)
 			end
 
 			def self.setup_hooks_for_project(project)
@@ -141,7 +142,10 @@ module GitHosting
 			end
 
 			@@hook_digests = []
-			def self.create_hooks_digests
+			def self.create_hooks_digests(recreate=false)
+				if recreate == true
+					@@hook_digests = []
+				end
 				if @@hook_digests.empty?
 					logger.info "Creating MD5 digests for our hooks"
 					["post-receive.redmine_gitolite", "post-receive.redmine_gitolite.py"].each do |hook_name|
