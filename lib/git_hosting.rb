@@ -1,5 +1,6 @@
 require 'lockfile'
 require 'net/ssh'
+require 'tmpfile'
 require 'tmpdir'
 
 require 'gitolite_conf.rb'
@@ -136,8 +137,9 @@ module GitHosting
 	def self.get_mirror_identities_dir
 		@@mirror_identities_dir = File.join(@@git_hosting_tmp_dir, 'mirror_identities')
 		if !File.directory?(@@mirror_identities_dir)
-			%x[mkdir -p "#{@@mirror_identities_dir}"]
-			File.chmod(0700, @@mirror_identities_dir)
+			%x[#{git_user_runner} 'mkdir -p "#{@@mirror_identities_dir}"']
+			%x[#{git_user_runner} 'chown #{git_user}:#{web_user} #{identity_file_path}']
+			%x[#{git_user_runner} 'chmod 0750 "#{@@mirror_identities_dir}"']
 		end
 		return @@mirror_identities_dir
 	end
@@ -183,11 +185,15 @@ module GitHosting
 	def self.git_mirror_identity_file(mirror)
 		identity_file_path = File.join(get_mirror_identities_dir(), mirror.to_s)
 		if !File.exists?(identity_file_path)
-			File.open(identity_file_path, "w") do |f|
-				f.puts "#{mirror.private_key}"
+			file = Tempfile.new('')
+			begin
+				file.write(mirror.private_key)
+				file.close
+				%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
+				%x[#{git_user_runner} 'chmod 0600 #{identity_file_path}']
+			ensure
+				file.unlink
 			end
-			%x[#{git_user_runner} 'chown #{git_user}:#{git_user} #{identity_file_path}']
-			File.chmod(0600, identity_file_path)
 		end
 		return identity_file_path
 	end
