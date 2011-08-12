@@ -25,7 +25,7 @@ class RepositoryMirrorsController < ApplicationController
 			@mirror.project = @project
 
 			if @mirror.save
-				GitHosting.get_mirror_identities_dir(@mirror)
+				GitHosting.git_mirror_identity_file(@mirror)
 				respond_to do |format|
 					format.html {
 						redirect_to(
@@ -54,7 +54,7 @@ class RepositoryMirrorsController < ApplicationController
 	def update
 		respond_to do |format|
 			if @mirror.update_attributes(params[:repository_mirrors])
-				GitHosting.get_mirror_identities_dir(@mirror)
+				GitHosting.git_mirror_identity_file(@mirror)
 				format.html {
 					redirect_to(
 						url_for(
@@ -79,7 +79,7 @@ class RepositoryMirrorsController < ApplicationController
 			# display confirmation view
 		else
 			if params[:confirm]
-				identify_file = GitHosting.get_mirror_identities_dir(@mirror)
+				identify_file = GitHosting.git_mirror_identity_file(@mirror)
 				%x[#{git_user_runner} rm #{identify_file}]
 				redirect_url = url_for(
 					:controller => 'projects',
