@@ -130,6 +130,8 @@ module GitHosting
 		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
+			%x[chmod 775 "#{@@git_hosting_tmp_dir}"]
+			%x[chown #{web_user}:#{git_user} "#{@@git_hosting_tmp_dir}"]
 		end
 		return @@git_hosting_tmp_dir
 	end
@@ -294,7 +296,7 @@ module GitHosting
 		File.chmod(0777, git_user_runner_path())
 		File.chmod(0777, git_exec_mirror_path())
 
-		RepositoryMirrors.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
+		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(@mirror)
 		}
 
