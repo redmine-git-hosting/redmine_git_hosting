@@ -1,6 +1,6 @@
 require 'lockfile'
 require 'net/ssh'
-require 'tmpfile'
+require 'tmepfile'
 require 'tmpdir'
 
 require 'gitolite_conf.rb'
