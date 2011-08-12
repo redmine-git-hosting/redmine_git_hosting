@@ -288,6 +288,10 @@ module GitHosting
 		File.chmod(0777, git_user_runner_path())
 		File.chmod(0777, git_exec_mirror_path())
 
+		RepositoryMirrors.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
+			git_mirror_identity_file(@mirror)
+		end
+
 	end
 
 	def self.clone_or_pull_gitolite_admin

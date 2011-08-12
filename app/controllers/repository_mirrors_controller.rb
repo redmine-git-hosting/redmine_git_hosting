@@ -48,7 +48,6 @@ class RepositoryMirrorsController < ApplicationController
 	end
 
 	def edit
-		GitHosting.logger.debug "REQ METH: #{request.method}"
 	end
 
 	def update
