@@ -1,32 +1,68 @@
 # Redmine Git Hosting Plugin (v0.3.0)
 
-A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in redmine.  There is also an option to automatically create a git repository for a project, when the project is created.  This plugin also implements caching functionality to speed page-load times for viewing git repositories.
+A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. Allows straightforward management
+of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
+to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in
+redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
+This plugin also implements caching functionality to speed page-load times for viewing git repositories.
 
 
 
 ## Configuration Strategy
 
-One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed, and in particular setting permissions properly.  This plugin solves this problem by allowing the web server user to run git via sudo.  A previous version of this plugin (see ssh branch) requires the configuration of git to run through ssh, but using sudo to allow the web server user to run commands as the git user is much faster.  To configure your sudoers file to allow your web server user to run commands as git, and your git user to run commands as the web server user add these two lines to your sudoers file (run visudo to edit this file):
+One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed,
+and in particular setting permissions properly.
+This plugin solves this problem by allowing the web server user to run git via sudo.
+A previous version of this plugin (see ssh branch) requires the configuration of git to run through ssh,
+but using sudo to allow the web server user to run commands as the git user is much faster.
+To configure your sudoers file to allow your web server user to run commands as git, and your git user
+to run commands as the web server user add these two lines to your sudoers file (run visudo to edit this file):
 
     www-data        ALL=(git)       NOPASSWD:ALL
     git             ALL=(www-data)  NOPASSWD:ALL
 
 
-This assumes www-data is your web server user, and git is your git user (the user gitolite is installed under).  This will allow www-data to execute commands as git without prompting for a password and git to execute commands as www-data without prompting for a password.  No other access (e.g. no root access, permissions to run commands as other users) are granted by these lines.  These lines are only there to facilitate communication between the web server user and the git user, no other users, keeping the system secure.
+This assumes www-data is your web server user, and git is your git user (the user gitolite is installed under).
+This will allow www-data to execute commands as git without prompting for a password and git to execute commands
+as www-data without prompting for a password.  No other access (e.g. no root access, permissions to run commands
+as other users) are granted by these lines.  These lines are only there to facilitate communication between the
+web server user and the git user, no other users, keeping the system secure.
+
+## Repository Mirrors
+In order to be able to use the repository mirrors feature you need to keep some environment variable around
+when sudo'ing to the git user, namely, GIT_MIRROR_IDENTITY_FILE and GIT_SSH. To achieve this, you also need
+to add to your sudoers file:
+
+    Defaults:www-data    env_keep    +="GIT_MIRROR_IDENTITY_FILE GIT_SSH"
 
 
 ## Step-By-Step configuration instructions
 
-(1) Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume that gitolite has been installed for user "git", and you have an ssh key called "git_gitolite_admin_id_rsa" for which access to the gitolite-admin repository has been granted.
+(1) Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and
+there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume
+that gitolite has been installed for user "git", and you have an ssh key called "git_gitolite_admin_id_rsa"
+for which access to the gitolite-admin repository has been granted.
 
-(2) If you want to enable anonymous access to your repositories via the git:// protocol you will need to install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there are lots of available guies out there).  This step is optional -- if you don't want to enable anonymous access you can skip it.
+(2) If you want to enable anonymous access to your repositories via the git:// protocol you will need to
+install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
+are lots of available guides out there).  This step is optional -- if you don't want to enable anonymous
+access you can skip it.
 
-(3) Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file, listed above.  Assuming your web server is run as www-data and gitolite is installed as git, you need to add this to your sudoers file:
+(3) Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file,
+listed above.  Assuming your web server is run as www-data and gitolite is installed as git, you need to add
+this to your sudoers file:
 
     www-data        ALL=(git)       NOPASSWD:ALL
     git             ALL=(www-data)  NOPASSWD:ALL
 
-(4) In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin root, and not the public directory -- create a directory called .ssh, and copy the "gitolite_admin_id_rsa"  private key file from step one into this directory. Then change the owner of this file to www-data and the permissions to 600
+(4) If you wish to support the repository mirrors feature, also add to your sudoers file:
+
+    Defaults:www-data    env_keep    +="GIT_MIRROR_IDENTITY_FILE GIT_SSH"
+
+(5) In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin
+root, and not the public directory -- create a directory called .ssh, and copy the "gitolite_admin_id_rsa"
+private key file from step one into this directory. Then change the owner of this file to www-data and the
+permissions to 600
 
     cd [remine_rails_root]
     mkdir .ssh
@@ -35,40 +71,58 @@ This assumes www-data is your web server user, and git is your git user (the use
     chmod 600 .ssh/gitolite_admin_id_rsa
 
 
-(5) Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject root directory:
+(6) Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject
+root directory:
 
     cd vendor/plugins
     git clone https://github.com/ericpaulbishop/redmine_git_hosting.git
     rm -rf redmine_git_hosting/.git
     cd ../..
 
-(6) Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every rails environment you have configured (e.g. production, development, testing).  For the production environment run:
+(7) Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
+rails environment you have configured (e.g. production, development, testing).  For the production environment run:
 
     RAILS_ENV=production rake db:migrate_plugins
 
 ## Caching Options
 
-As of the latest version (0.3) this plugin includes code for caching output of the git command, which is called to display the details of the git repository.  Redmine/ChiliProject by default calls git directly every time this information is needed.  This can result in relatively long page load times.  
+As of the latest version (0.3) this plugin includes code for caching output of the git command, which is called
+to display the details of the git repository.  Redmine/ChiliProject by default calls git directly every time
+this information is needed.  This can result in relatively long page load times.
 
-This plugin caches the output of git commands to dramatically improve page load times, roughly a 10x speed increase.  On a 1GB VM running Ubuntu 11.04 median repository page load times dropped from 2300ms to 180ms.  Testing was done with ab utility in the apache2-utils package.
+This plugin caches the output of git commands to dramatically improve page load times, roughly a 10x speed increase.
+On a 1GB VM running Ubuntu 11.04 median repository page load times dropped from 2300ms to 180ms.  Testing was done
+with ab utility in the apache2-utils package.
 
-There are three configurable caching parameters in the plugins settings page: Max Cache Elements, Max Cache Element Size and Max Cache Time.  
+There are three configurable caching parameters in the plugins settings page: Max Cache Elements, Max Cache Element
+Size and Max Cache Time.
 
-*Max Cache Elements* is the maximum number of git commands for which to cache the output.  
+*Max Cache Elements* is the maximum number of git commands for which to cache the output.
 
-*Max Cache Element Size* is the maximum size of the git output to cache.   Anything above this size won't be cached, and git will be called directly every time this command is run.  
+*Max Cache Element Size* is the maximum size of the git output to cache.   Anything above this size won't be cached,
+and git will be called directly every time this command is run.
 
-*Max Cache Time* is the maximum amount of time the git command will be cached.  No matter what, the output of git commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is called.
+*Max Cache Time* is the maximum amount of time the git command will be cached.  No matter what, the output of git
+commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is
+called.
 
-This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible with ChiliProject 1.x the caching functionality is not.
+This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible
+with ChiliProject 1.x the caching functionality is not.
 
 ## Fast Deployment with YourChili Bash Library
 
-Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)  This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu 10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init\_nginx\_stack.sh script followed by the chili\_test.sh script, modifying the variables in those scripts as desired.  This library is still under development, so these instructions may need to be updated in the near future.
+Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting
+git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)
+This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu
+10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init\_nginx\_stack.sh script followed by the
+chili\_test.sh script, modifying the variables in those scripts as desired.  This library is still under development,
+so these instructions may need to be updated in the near future.
 
 ## Tested Configurations
 
-This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x, ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It is possible that some debugging will be necessary for other configurations.
+This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x,
+ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It is possible that some
+debugging will be necessary for other configurations.
 
 
 ## Required gems
@@ -84,7 +138,9 @@ net-ssh
 
 ## Copyright & License
 
-This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin
+This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io.  Several updates/fixes
+were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and
+expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
 
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
 

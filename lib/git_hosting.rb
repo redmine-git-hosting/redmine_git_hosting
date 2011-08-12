@@ -186,6 +186,7 @@ module GitHosting
 			File.open(identity_file_path, "w") do |f|
 				f.puts "#{mirror.private_key}"
 			end
+			%x[#{git_user_runner} 'chown #{git_user}:#{git_user} #{identity_file_path}']
 			File.chmod(0600, identity_file_path)
 		end
 		return identity_file_path
