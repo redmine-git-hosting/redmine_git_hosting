@@ -142,7 +142,6 @@ module GitHosting
 		@@mirror_identities_dir = File.join(@@git_hosting_tmp_dir, 'mirror_identities')
 		if !File.directory?(@@mirror_identities_dir)
 			%x[#{git_user_runner} 'mkdir -p "#{@@mirror_identities_dir}"']
-			%x[#{git_user_runner} 'chown #{git_user}:#{web_user} #{@@mirror_identities_dir}']
 			%x[#{git_user_runner} 'chmod 0750 "#{@@mirror_identities_dir}"']
 		end
 		return @@mirror_identities_dir
