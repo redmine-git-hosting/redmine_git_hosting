@@ -185,14 +185,20 @@ module GitHosting
 	def self.git_mirror_identity_file(mirror)
 		identity_file_path = File.join(get_mirror_identities_dir(), mirror.to_s)
 		if !File.exists?(identity_file_path)
-			file = Tempfile.new('')
-			begin
-				file.write(mirror.private_key)
-				file.close
-				%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
-				%x[#{git_user_runner} 'chmod 0600 #{identity_file_path}']
-			ensure
-				file.unlink
+			if git_user == web_user
+				File.open(identity_file_path, "w") do |f|
+					f.puts "#{mirror.private_key}"
+				end
+			else
+				file = Tempfile.new('')
+				begin
+					file.write(mirror.private_key)
+					file.close
+					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
+					%x[#{git_user_runner} 'chmod 0600 #{identity_file_path}']
+				ensure
+					file.unlink
+				end
 			end
 		end
 		return identity_file_path
@@ -290,7 +296,7 @@ module GitHosting
 
 		RepositoryMirrors.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(@mirror)
-		end
+		}
 
 	end
 
