@@ -81,8 +81,9 @@ module GitHosting
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 				logger.debug "Repository Path: #{repo_path}"
 
-				logger.debug "Hook KEY: #{GitHookKey.get}"
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{GitHookKey.get}"]
+				hook_key = project.repository.hook_key.encode
+				logger.debug "Hook KEY: #{hook_key}"
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{hook_key}"]
 
 				hook_url = Setting.plugin_redmine_git_hosting['gitHooksUrl']
 				logger.debug "Hook URL: #{hook_url}"

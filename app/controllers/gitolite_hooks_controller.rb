@@ -13,19 +13,8 @@ class GitoliteHooksController < ApplicationController
 
 	def post_receive
 
-		api_key = params[:key]
-
-		if not api_key
-			# If there's no key param, for sure it's not our hook
-			GitHosting.logger.warn "No API key was passed"
-			render(:status => 403, :text => 'Required API Key not present')
-			return
-		end
-
-		if api_key != GitHookKey.get
-			# If there's a key but it does not match, it's a misconfiguration issue
-			GitHosting.logger.warn "The passed API key is not valid"
-			render(:status => 403, :text => 'The used API Key is not valid!')
+		if @project.repository.hook_key.check(params[:key]) == false
+			render(:text => "The hook key provided is not valid. Please let your server admin know about it")
 			return
 		end
 
@@ -149,6 +138,6 @@ class GitoliteHooksController < ApplicationController
 		if @project.nil?
 			render(:text => l(:project_not_found, :identifier => params[:project_id])) if @project.nil?
 			return
-		end
 	end
+
 end

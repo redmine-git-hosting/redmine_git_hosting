@@ -132,7 +132,7 @@ module GitHosting
 		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
-			%x[chmod 775 "#{@@git_hosting_tmp_dir}"]
+			%x[chmod 770 "#{@@git_hosting_tmp_dir}"]
 			%x[chown #{web_user}:#{git_user} "#{@@git_hosting_tmp_dir}"]
 		end
 		return @@git_hosting_tmp_dir
