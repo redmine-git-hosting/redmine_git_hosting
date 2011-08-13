@@ -32,7 +32,6 @@ module GitHosting
 						sleep 1.5
 						GitHosting::Hooks::GitAdapterHooks.setup_hooks()
 					end
-					t.join
 				end
 			end
 
