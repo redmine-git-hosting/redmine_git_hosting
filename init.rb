@@ -2,6 +2,7 @@ require 'redmine'
 require_dependency 'principal'
 require_dependency 'user'
 
+require File.join(File.dirname(__FILE__), 'app', 'models', 'git_hook_key')
 require_dependency 'git_hosting'
 require_dependency 'git_hosting/hooks/git_adapter_hooks'
 require_dependency 'git_hosting/patches/projects_controller_patch'
@@ -49,6 +50,8 @@ end
 
 # initialize association from user -> public keys
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
+# initialize association from repository -> git hook keys
+Repository.send(:has_one, :hook_key, :class_name => 'GitHookKey', :dependent => :destroy)
 
 # initialize observer
 ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver

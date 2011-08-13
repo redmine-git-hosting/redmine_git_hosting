@@ -25,9 +25,7 @@ module GitHosting
 						end
 					end
 				end
-
 			end
-
 
 
 			module ClassMethods
@@ -38,7 +36,6 @@ module GitHosting
 					return GitHosting::git_exec()
 				end
 			end
-
 
 
 			def scm_cmd_with_sudo(*args, &block)

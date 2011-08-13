@@ -1,19 +1,49 @@
+require 'openssl'
+require 'digest/sha2'
+require 'active_support/base64'
+require 'active_support/secure_random'
+
 class GitHookKey < ActiveRecord::Base
-	attr_accessible :update_key
-	
-	@@the_key = nil
-	def self.get
-		if @@the_key == nil
-			key_list=GitHookKey.find(:all)
-			if key_list.length > 0
-				@@the_key = key_list.shift.update_key
-			else
-				@@the_key = (0...20+rand(20) ).map{65.+(rand(25)).chr}.join
-				k = GitHookKey.new(:update_key=>@@the_key)
-				k.save
-			end
+
+	belongs_to :repository
+
+	validates_presence_of :repository_id, :key, :ivector
+	validates_associated :repository
+
+	def after_initialize
+		generate if self.repository.nil?
+	end
+
+
+	def check(encoded_key)
+		begin
+			c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+			c.decrypt
+			c.key = read_attribute(:key)
+			c.iv = read_attribute(:ivector)
+			decoded = c.update(ActiveSupport::Base64.decode64(encoded_key))
+			decoded << c.final
+			return read_attribute(:key) == decoded
+		rescue Exception=>e
+			GitHosting.logger.error("Check key failed for #{self.repository.project.identifier}'s repository hook: #{e.to_s}")
+			return false
 		end
-		@@the_key
+	end
+
+	def encode
+		c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+		c.encrypt
+		c.key = read_attribute(:key)
+		c.iv = read_attribute(:ivector)
+		encrypted =  c.update(read_attribute(:key))
+		encrypted << c.final
+		return ActiveSupport::Base64.encode64s(encrypted)
+	end
+
+	def generate
+		write_attribute(:key, Digest::SHA1.hexdigest(ActiveSupport::SecureRandom.random_bytes(16)).unpack('a2'*32).map{|x| x.hex}.pack('c'*32))
+		write_attribute(:ivector, Digest::SHA1.hexdigest(ActiveSupport::SecureRandom.random_bytes(16)).unpack('a2'*32).map{|x| x.hex}.pack('c'*32))
+		self.save
 	end
 
 end
