@@ -125,7 +125,7 @@ module GitHosting
 		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
-            %x[chmod 770 "#{@@git_hosting_tmp_dir}"]
+			%x[chmod 770 "#{@@git_hosting_tmp_dir}"]
 		end
 		return @@git_hosting_tmp_dir
 	end
@@ -227,9 +227,9 @@ module GitHosting
 			f.puts '}'
 		end
 
-		File.chmod(0777, git_exec_path())
-		File.chmod(0777, gitolite_ssh_path())
-		File.chmod(0777, git_user_runner_path())
+		File.chmod(0550, git_exec_path())
+		File.chmod(0550, gitolite_ssh_path())
+		File.chmod(0550, git_user_runner_path())
 
 	end
 
@@ -369,8 +369,6 @@ module GitHosting
 							changed = true
 						end
 					end
-
-
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
