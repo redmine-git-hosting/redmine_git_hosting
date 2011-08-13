@@ -1,6 +1,6 @@
 <p>
 	<label for="git_daemon"><%= l(:label_git_daemon) %>:</label>
-	<select id="repository_git_daemon" name="repository[git_daemon]">
+	<select id="repository_extra_git_daemon" name="repository_extra[git_daemon]">
 		<option <%= GitHostingHelper.git_daemon_enabled(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
 		<%- if @repository.project.is_public? -%>
 		<option <%= GitHostingHelper.git_daemon_enabled(@repository, 1) %> value="1"><%= l(:label_enabled) %></option>
@@ -8,8 +8,8 @@
 	</select>
 </p>
 <p>
-	<label for="git_http"><%= l(:label_git_http) %>:</label>
-	<select id="repository_git_http" name="repository[git_http]">
+	<label for="repository_extra_git_http"><%= l(:label_git_http) %>:</label>
+	<select id="repository_extra_git_http" name="repository_extra[git_http]">
 		<option <%= GitHostingHelper.git_http_enabled(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
 		<option <%= GitHostingHelper.git_http_enabled(@repository, 1) %> value="1"><%= l(:label_https_only) %></option>
 		<option <%= GitHostingHelper.git_http_enabled(@repository, 2) %> value="2"><%= l(:label_https_and_http) %></option>

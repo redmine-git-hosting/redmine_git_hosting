@@ -14,7 +14,7 @@ class GitoliteHooksController < ApplicationController
 			return
 		end
 
-		if project.repository.hook_key.check(params[:key]) == false
+		if project.repository.extra.check_key(params[:key]) == false
 			render(:text => "The hook key provided is not valid. Please let your server admin know about it")
 			return
 		end
