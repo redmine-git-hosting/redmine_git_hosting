@@ -23,7 +23,7 @@ module GitHostingHelper
 	def self.git_notify_cia(repository, value)
 		nc = 0
 		if repository
-			nc = repository[:notify_cia] ? repository[:notify_cia] : nc
+			nc = repository.extra[:notify_cia] ? repository.extra[:notify_cia] : nc
 		end
 		return return_selected_string(nc, value)
 	end

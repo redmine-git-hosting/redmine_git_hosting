@@ -70,8 +70,8 @@ class GitoliteHooksController < ApplicationController
 			} if @project.repository_mirrors.any?
 
 			# Notify CIA
-			output.write("Notifying CIA\n") if not params[:refs].nil? and @project.repository.notify_cia==1
-			output.flush if not params[:refs].nil? and @project.repository.notify_cia==1
+			output.write("Notifying CIA\n") if not params[:refs].nil? and @project.repository.extra.notify_cia==1
+			output.flush if not params[:refs].nil? and @project.repository.extra.notify_cia==1
 			Thread.new(@project, params[:refs]) {|project, refs|
 				GitHosting.logger.debug "Notifying CIA"
 				output.write("Notifying CIA\n")
@@ -109,7 +109,7 @@ class GitoliteHooksController < ApplicationController
 						revision.save
 					}
 				}
-			} if not params[:refs].nil? and @project.repository.notify_cia==1
+			} if not params[:refs].nil? and @project.repository.extra.notify_cia==1
 		}, :layout => false
 
 	end
