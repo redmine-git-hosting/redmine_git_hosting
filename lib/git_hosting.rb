@@ -291,10 +291,10 @@ module GitHosting
 			f.puts 'fi'
 		end
 
-		File.chmod(0777, git_exec_path())
-		File.chmod(0777, gitolite_ssh_path())
-		File.chmod(0777, git_user_runner_path())
-		File.chmod(0777, git_exec_mirror_path())
+		File.chmod(0550, git_exec_path())
+		File.chmod(0550, gitolite_ssh_path())
+		File.chmod(0550, git_user_runner_path())
+		File.chmod(0550, git_exec_mirror_path())
 
 		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(mirror)
@@ -422,6 +422,11 @@ module GitHosting
 						add_route_for_project(project)
 						new_repos.push repo_name
 						new_projects.push project
+
+						# Make sure the repository has a git_hook key instance
+						if project.repository.hook_key.nil?
+							project.repository.hook_key = GitHookKey.new
+						end
 					end
 
 
@@ -438,8 +443,6 @@ module GitHosting
 							changed = true
 						end
 					end
-
-
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
