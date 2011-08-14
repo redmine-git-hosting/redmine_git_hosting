@@ -21,7 +21,7 @@ module GitHosting
 			@@logger = GitHostingLogger.new(
 				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
 					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
-			@@logger.level = GitHostingLogger::DEBUG
+			@@logger.level = Setting.plugin_redmine_git_hosting['loggingLevel'].to_i || GitHostingLogger::DEBUG
 			@@logger.progname = 'RedmineGitHosting'
 		end
 		return @@logger
@@ -291,15 +291,14 @@ module GitHosting
 			f.puts 'fi'
 		end
 
-		File.chmod(0777, git_exec_path())
-		File.chmod(0777, gitolite_ssh_path())
-		File.chmod(0777, git_user_runner_path())
-		File.chmod(0777, git_exec_mirror_path())
+		File.chmod(0550, git_exec_path())
+		File.chmod(0550, gitolite_ssh_path())
+		File.chmod(0550, git_user_runner_path())
+		File.chmod(0550, git_exec_mirror_path())
 
 		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(mirror)
 		}
-
 	end
 
 	def self.clone_or_pull_gitolite_admin
@@ -422,6 +421,11 @@ module GitHosting
 						add_route_for_project(project)
 						new_repos.push repo_name
 						new_projects.push project
+
+						# Make sure the repository has a git_hook key instance
+						if project.repository.hook_key.nil?
+							project.repository.hook_key = GitHookKey.new
+						end
 					end
 
 
@@ -438,8 +442,6 @@ module GitHosting
 							changed = true
 						end
 					end
-
-
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
@@ -497,15 +499,22 @@ module GitHosting
 	end
 
 
-	def self.run_post_receive_hook proj_identifier
-
-		#clear cache
-		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+	def self.clear_cache_for_project(project)
+		if project.is_a?(Project)
+			project = project.identifier
+		end
+		# Clear cache
+		old_cached=GitCache.find_all_by_proj_identifier(project)
 		if old_cached != nil
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
 		end
+	end
 
+
+	def self.run_post_receive_hook proj_identifier
+		# Clear the cache
+		clear_cache_for_project proj_identifier
 		#fetch updates into repo
 		Repository.fetch_changesets_for_project(proj_identifier)
 	end
