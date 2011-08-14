@@ -20,7 +20,7 @@ module GitHosting
 			@@logger = GitHostingLogger.new(
 				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
 					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
-			@@logger.level = GitHostingLogger::DEBUG
+			@@logger.level = Setting.plugin_redmine_git_hosting['loggingLevel'].to_i || GitHostingLogger::DEBUG
 			@@logger.progname = 'RedmineGitHosting'
 		end
 		return @@logger

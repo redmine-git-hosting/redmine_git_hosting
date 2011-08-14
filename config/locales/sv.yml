@@ -19,8 +19,10 @@
   label_sudo_web_to_git_user: Web user is able to sudo to Git user?
   label_sudo_git_to_web_user: Git user is able to sudo to Web user?
 
+  label_logging_configuration: Logging Configuration
   label_logging: Enable Logging
   label_logging_warning: This might have a performance penalty. Requires a server restart.
+  label_logging_level: Logging Level
 
   label_git_hook_header: Repository Hooks
   label_git_hook_debug: Run hooks in Debug mode
