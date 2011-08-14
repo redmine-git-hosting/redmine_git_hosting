@@ -26,6 +26,7 @@ module GitHosting
 
 				edit_without_scm_settings
 				GitHosting.logger.debug "On edit_with_scm_settings after edit_without_scm_settings"
+
 				GitHosting::update_repositories(@project, false) if !@project.repository.nil?
 				# Make sure the repository has updated hook settings
 				GitHosting::Hooks::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?

@@ -5,6 +5,9 @@ module GitHosting
 	module Hooks
 		module GitAdapterHooks
 
+			@@python_hook_digest = nil
+			@@installed_hook_digest = nil
+
 			@@check_hooks_installed_stamp = nil
 			@@check_hooks_installed_cached = nil
 			def self.check_hooks_installed
@@ -42,6 +45,7 @@ module GitHosting
 					end
 
 					logger.debug "Installed hook digest: #{digest}"
+					@@installed_hook_digest = digest
 					if @@hook_digests.include? digest
 						logger.info "Our hook is already installed"
 						@@check_hooks_installed_stamp = Time.new
@@ -77,6 +81,11 @@ module GitHosting
 			def self.setup_hooks_for_project(project)
 				logger.info "Setting up hooks for project #{project.identifier}"
 
+				if project.repository.nil?
+					logger.info "Repository for project #{project.identifier} is not yet created"
+					return
+				end
+
 				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
 				logger.debug "Repository Path: #{repo_path}"
 
@@ -110,6 +119,13 @@ module GitHosting
 				projects.each do |project|
 					setup_hooks_for_project(project)
 				end
+			end
+
+			def self.python_hook_installed?
+				if !@@installed_hook_digest.nil? && !@@python_hook_digest.nil?
+					return (@@installed_hook_digest == @@python_hook_digest)
+				end
+				return false
 			end
 
 			private
@@ -149,6 +165,9 @@ module GitHosting
 						digest = Digest::MD5.file(File.join(package_hooks_dir, hook_name))
 						logger.info "Digest for #{hook_name}: #{digest}"
 						@@hook_digests.push(digest)
+						if hook_name == "post-receive.redmine_gitolite.py"
+							@@python_hook_digest = digest
+						end
 					end
 				end
 			end

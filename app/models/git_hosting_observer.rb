@@ -22,8 +22,10 @@ class GitHostingObserver < ActiveRecord::Observer
 				GitHosting::update_repositories(object.project, true)
 				%x[#{GitHosting::git_user_runner} 'rm -rf #{object.url}' ]
 			end
+			GitHosting::clear_cache_for_project(object.project)
 		end
 	end
+
 
 	def after_create(object)
 		if not object.is_a?(Project)
@@ -38,6 +40,7 @@ class GitHostingObserver < ActiveRecord::Observer
 			object.extra = GitRepositoryExtra.new
 		end
 	end
+
 
 	def after_save(object)
 		update_repositories(object)
