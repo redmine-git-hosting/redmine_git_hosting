@@ -39,10 +39,16 @@
 		<%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
 		<br />
 	</p>
+
+	<h3><%= l(:label_logging_configuration)%></h3>
 	<p>
 		<label><%= l(:label_logging)%></label>
 		<%= select_tag("settings[loggingEnabled]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['loggingEnabled'])) %>
 		<em><%= l(:label_logging_warning)%></em>
+	</p>
+	<p>
+		<label><%= l(:label_logging_level)%></label>
+		<%= select_tag("settings[loggingLevel]", options_for_select([['DEBUG', "0"], ['INFO', "1"], ['WARN', "2"], ['ERROR', "3"], ['FATAL', "4"], ['UNKOWN', "5"]], @settings['loggingLevel'] || "0")) %>
 	</p>
 
 	<h3><%= l(:label_git_cache_parameters)%></h3>

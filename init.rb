@@ -29,6 +29,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'loggingEnabled' => 'false',
+		'loggingLevel' => '0',
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
 		'gitCacheMaxSize' => '16',
