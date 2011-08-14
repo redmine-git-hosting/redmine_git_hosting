@@ -234,7 +234,6 @@ module GitHosting
 		File.chmod(0550, git_exec_path())
 		File.chmod(0550, gitolite_ssh_path())
 		File.chmod(0550, git_user_runner_path())
-
 	end
 
 	def self.clone_or_pull_gitolite_admin
