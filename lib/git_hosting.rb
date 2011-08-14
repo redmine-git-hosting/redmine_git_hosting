@@ -299,7 +299,6 @@ module GitHosting
 		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(mirror)
 		}
-
 	end
 
 	def self.clone_or_pull_gitolite_admin
