@@ -8,9 +8,11 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 			# from repository extra columns
 			t.column :git_daemon, :integer, :default =>1
 			t.column :git_http, :integer, :default=>1
+			t.column :notify_cia, :integer, :default=>0
 			# from Hooks Keys table
 			t.column :key, :binary
 			t.column :ivector, :binary
+			
 		end
 
 		Project.find(:all).each {|project|
@@ -25,40 +27,20 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 			end
 		}
 
-		#drop_table :git_hook_keys
-		#remove_column :repositories, :git_daemon
-		#remove_column :repositories, :git_http
+		if self.table_exists?("git_hook_keys")
+			drop_table :git_hook_keys
+		end
+		if column_exists?(:repositories, :git_daemon)
+			remove_column :repositories, :git_daemon
+		end
+		if column_exists?(:repositories, :git_http)
+			remove_column :repositories, :git_http
+		end
 
 	end
 
 	def self.down
-		if not self.table_exists?("git_hook_keys")
-			create_table :git_hook_keys do |t|
-				t.column :repository_id, :integer
-				t.column :key, :binary
-				t.column :ivector, :binary
-			end
-		end
-
-		if not column_exists?(:repositories, :git_daemon)
-			add_column :repositories, :git_daemon, :integer, :default =>1
-		end
-		if not column_exists?(:repositories, :git_http)
-			add_column :repositories, :git_http, :integer, :default =>1
-		end
-
-		GitRepositoryExtra.find(:all).each { |extra|
-			extra.repository.git_http = extra.git_http
-			extra.repository.git_daemon = extra.git_daemon
-			extra.repository.save
-			k = GitHookKey.new()
-			k.key = extra.key
-			k.ivector = extra.ivector
-			k.repository = extra.repository
-			k.save
-		}
 		drop_table :git_repository_extras
-
 	end
 
 	def self.table_exists?(name)
