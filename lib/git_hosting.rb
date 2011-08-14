@@ -500,15 +500,22 @@ module GitHosting
 	end
 
 
-	def self.run_post_receive_hook proj_identifier
-
-		#clear cache
-		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+	def self.clear_cache_for_project(project)
+		if project.is_a?(Project)
+			project = project.identifier
+		end
+		# Clear cache
+		old_cached=GitCache.find_all_by_proj_identifier(project)
 		if old_cached != nil
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
 		end
+	end
 
+
+	def self.run_post_receive_hook proj_identifier
+		# Clear the cache
+		clear_cache_for_project proj_identifier
 		#fetch updates into repo
 		Repository.fetch_changesets_for_project(proj_identifier)
 	end
