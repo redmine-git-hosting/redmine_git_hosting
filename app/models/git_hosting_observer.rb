@@ -27,10 +27,17 @@ class GitHostingObserver < ActiveRecord::Observer
 	end
 
 
-
 	def after_create(object)
 		if not object.is_a?(Project)
 			update_repositories(object)
+		end
+	end
+
+
+	def before_save(object)
+		if object.is_a?(Repository::Git)
+			GitHosting.logger.debug "On GitHostingObserver.before_save for Repository::Git"
+			object.extra = GitRepositoryExtra.new
 		end
 	end
 

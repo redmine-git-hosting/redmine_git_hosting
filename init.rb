@@ -3,6 +3,7 @@ require_dependency 'principal'
 require_dependency 'user'
 
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_hook_key')
+require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
 require_dependency 'git_hosting'
 require_dependency 'git_hosting/hooks/git_adapter_hooks'
 require_dependency 'git_hosting/patches/projects_controller_patch'
@@ -59,6 +60,7 @@ end
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
 # initialize association from repository -> git hook keys
 Repository.send(:has_one, :hook_key, :class_name => 'GitHookKey', :dependent => :destroy)
+Repository.send(:has_one, :extra, :class_name => 'GitRepositoryExtra', :dependent => :destroy)
 # initialize association from project -> repository mirrors
 Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 

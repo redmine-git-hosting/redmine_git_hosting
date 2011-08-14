@@ -27,7 +27,7 @@
 		#git_url_list li:first-child a
 		{
 			border-left-width: 1px;
-	
+
 			/* Standard, Opera 10, IE 9 */
 			border-top-left-radius: 3px;
 			border-bottom-left-radius: 3px;
@@ -51,11 +51,11 @@
 			background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd));   /* Webkit (Chrome, Safari, ...) */
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 5.5 - 7 */
 			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 8 */
-	
+
 			border-color: #bbb;
 			border-style: solid;
 			border-width: 1px 1px 1px 0;
-		
+
 			color: #333;
 			display: block;
 			font-size: 11px;
@@ -78,13 +78,13 @@
 			background: -webkit-gradient(linear, left top, left bottom, from(#759fcf), to(#507AAA)); /* Webkit (Chrome, Safari, ...) */
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#759fcf', endColorstr='#507AAA'); /* IE 5.5 - IE 7 */
 			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#759fcf', endColorstr='#507AAA'); /* IE 8 */
-			
+
 			color: #fff;
 			text-shadow: -1px -1px 0 rgba(0,0,0,0.4);
 			border-top-color: #759fcf;
 			border-bottom-color: #507AAA;
 		}
-		
+
 		#git_url_list li a.selected
 		{
 			background-color: #bbb;
@@ -94,12 +94,12 @@
 			background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Webkit (Chrome, Safari, ...) */
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 5.5 - IE 7 */
 			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 8 */
-			
+
 			color: #000;
 			text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
 			border-color: #bbb;
 		}
-		
+
 		#git_url_text
 		{
 			border: 1px solid #bbb;
@@ -115,7 +115,7 @@
 			margin: 0;
 			float: left;
 		}
-		
+
 		#git_url_desc
 		{
 			color: #666;
@@ -124,12 +124,12 @@
 			float: left;
 			margin: 0 0 0 5px;
 		}
-		
+
 		#git_url_access
 		{
 			font-weight: bold;
 		}
-		
+
 	</style>
 	<script type="text/javascript">
 		var all_git_url_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
@@ -146,10 +146,10 @@
 			<% end %>
 			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
-			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>" 
+			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>"
 			var httpProto = "<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
 			httpBase = httpBase.replace(/\/$/, "")
-			
+
 			var urls=[]
 			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, user_is_committer]
 			urls["git_url_http"] = [httpProto + "://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
@@ -159,7 +159,7 @@
 			var selected_id = el.id
 			document.getElementById("git_url_text").value = urls[selected_id][0];
 			document.getElementById("git_url_access").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only"
-			
+
 			var i
 			for(i=0;i<all_git_url_ids.length; i++)
 			{
@@ -191,7 +191,7 @@
 	</script>
 <% end %>
 
-<% if (project.module_enabled?(:repository)) && ((!User.current.anonymous?) || project.repository[:git_http].to_s != "0" || (project.is_public && project.repository[:git_daemon].to_s != "0" )) %>
+<% if (project.module_enabled?(:repository)) && ((!User.current.anonymous?) || project.repository.extra[:git_http].to_s != "0" || (project.is_public && project.repository.extra[:git_daemon].to_s != "0" )) %>
 <div class="box">
 	<h3>Git Repository</h3>
 	<div id="git_url_box">
@@ -199,10 +199,10 @@
 		<% if !User.current.anonymous? %>
 			<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
 		<% end %>
-		<% if project.repository[:git_http].to_s != "0" %>
+		<% if project.repository.extra[:git_http].to_s != "0" %>
 			<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
 		<% end %>
-		<%  if project.is_public && project.repository[:git_daemon].to_s != "0" %>
+		<%  if project.is_public && project.repository.extra[:git_daemon].to_s != "0" %>
 			<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
 		<%  end %>
 		</ul>

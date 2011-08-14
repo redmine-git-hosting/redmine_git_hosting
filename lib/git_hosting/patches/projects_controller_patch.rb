@@ -26,8 +26,8 @@ module GitHosting
 			def disable_git_daemon_if_not_public
 				if @project.repository != nil
 					if @project.repository.is_a?(Repository::Git)
-						if @project.repository.git_daemon == 1 && (not @project.is_public )
-							@project.repository.git_daemon = 0;
+						if @project.repository.extra.git_daemon == 1 && (not @project.is_public )
+							@project.repository.extra.git_daemon = 0;
 							@project.repository.save
 						end
 					end

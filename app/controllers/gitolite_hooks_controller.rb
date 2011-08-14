@@ -13,7 +13,13 @@ class GitoliteHooksController < ApplicationController
 
 	def post_receive
 
-		if @project.repository.hook_key.check(params[:key]) == false
+		project = Project.find_by_identifier(params[:project_id])
+		if project.nil?
+			render(:text => "No project found with identifier '#{params[:project_id]}'")
+			return
+		end
+
+		if project.repository.extra.check_key(params[:key]) == false
 			render(:text => "The hook key provided is not valid. Please let your server admin know about it")
 			return
 		end
