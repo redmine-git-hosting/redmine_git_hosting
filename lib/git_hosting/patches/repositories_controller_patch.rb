@@ -22,7 +22,11 @@ module GitHosting
 				# This needs to be done here because after some tries of adding,
 				# at runtime, accepts_nested_attributes_for, they all failed, and
 				# seemed too hacky.
-				@project.repository.extra.update_attributes(params[:extra]) if !@project.repository.nil?
+				if !@project.repository.nil?
+					@project.repository.extra.update_attributes(params[:extra])
+					@project.repository.extra.save
+				end
+				
 
 				edit_without_scm_settings
 				GitHosting.logger.debug "On edit_with_scm_settings after edit_without_scm_settings"
@@ -30,6 +34,7 @@ module GitHosting
 				GitHosting::update_repositories(@project, false) if !@project.repository.nil?
 				# Make sure the repository has updated hook settings
 				GitHosting::Hooks::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?
+				
 			end
 
 			def self.included(base)
