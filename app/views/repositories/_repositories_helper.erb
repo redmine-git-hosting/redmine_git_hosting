@@ -1,14 +1,26 @@
+
+
+
+<%
+	extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
+	extra_vals.each_key do |e|
+		begin
+			val = repository.extra[e]
+			if !val.nil?
+				extra_vals[e] = val.to_s
+			end
+		rescue
+		end
+	end
+%>
+<% form.fields_for :extra do |extra_form| %>
+	<p> 
+		<%= extra_form.select :git_daemon, options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]) %>
+	</p>
+<% end %>
+
 <p>
-	<label for="git_daemon"><%= l(:label_git_daemon) %>:</label>
-	<select id="repository_extra_git_daemon" name="repository_extra[git_daemon]">
-		<option <%= GitHostingHelper.git_daemon_enabled(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
-		<%- if @repository.project.is_public? -%>
-		<option <%= GitHostingHelper.git_daemon_enabled(@repository, 1) %> value="1"><%= l(:label_enabled) %></option>
-		<%- end -%>
-	</select>
-</p>
-<p>
-	<label for="repository_extra_git_http"><%= l(:label_git_http) %>:</label>
+	<label for="repository_extra_git_http"><%= l(:field_git_http) %>:</label>
 	<select id="repository_extra_git_http" name="repository_extra[git_http]">
 		<option <%= GitHostingHelper.git_http_enabled(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
 		<option <%= GitHostingHelper.git_http_enabled(@repository, 1) %> value="1"><%= l(:label_https_only) %></option>
@@ -17,16 +29,23 @@
 </p>
 
 <p>
-	<label for="notify_cia"><%= l(:label_notify_cia) %>:</label>
+	<label for="notify_cia"><%= l(:field_notify_cia) %>:</label>
 	<select id="repository_extra_notify_cia" name="repository_extra[notify_cia]">
 		<option <%= GitHostingHelper.git_notify_cia(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
 		<option <%= GitHostingHelper.git_notify_cia(@repository, 1) %> value="1"><%= l(:label_enabled) %></option>
 	</select>
 	<% if GitHostingHelper.git_notify_cia(@repository, 1) != "" %>
-	<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @repository.project.identifier) %>"><%= l(:label_notify_cia_test) %></a>
+	<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
 	<em><b><span id="notify_cia_result"></span></b></em>
 	<% end %>
 </p>
+
+
+
+
+
+
+
 
 <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
 <br/>
@@ -36,6 +55,7 @@
 	<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror') %>
 </div>
 <% end %>
+
 <% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_view_mirrors(@repository.project) %>
 	<h2>Mirrors</h2>
 	<% if @repository.project.repository_mirrors.any? %>
