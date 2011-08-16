@@ -463,7 +463,7 @@ module GitHosting
 					end
 
 					#git daemon
-					if (project.repository.git_daemon == 1 || project.repository.git_daemon == nil )  && project.is_public
+					if (project.repository.extra.git_daemon == 1 || project.repository.extra.git_daemon == nil )  && project.is_public
 						read_user_keys.push "daemon"
 					end
 
