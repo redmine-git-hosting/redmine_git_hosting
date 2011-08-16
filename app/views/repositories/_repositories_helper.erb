@@ -18,7 +18,7 @@
 
 <p>
 	<label for="notify_cia"><%= l(:label_notify_cia) %>:</label>
-	<select id="repository_notify_cia" name="repository[notify_cia]">
+	<select id="repository_extra_notify_cia" name="repository_extra[notify_cia]">
 		<option <%= GitHostingHelper.git_notify_cia(@repository, 0) %> value="0"><%= l(:label_disabled) %></option>
 		<option <%= GitHostingHelper.git_notify_cia(@repository, 1) %> value="1"><%= l(:label_enabled) %></option>
 	</select>
