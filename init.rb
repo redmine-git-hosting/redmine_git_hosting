@@ -58,11 +58,13 @@ end
 
 # initialize association from user -> public keys
 User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
-# initialize association from repository -> git hook keys
-Repository.send(:has_one, :hook_key, :class_name => 'GitHookKey', :dependent => :destroy)
-Repository.send(:has_one, :extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy)
-Repository.send(:accepts_nested_attributes_for, :extra, :allow_destroy =>true)  
-Repository.send(:attr_accessor, :extra_attributes)  
+
+
+# initialize association from git repository -> extra
+Repository::Git.send(:accepts_nested_attributes_for, :extra, :allow_destroy =>true)  
+Repository::Git.send(:attr_accessor, :extra_attributes)  
+
+
 # initialize association from project -> repository mirrors
 Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 

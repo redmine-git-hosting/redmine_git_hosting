@@ -15,14 +15,26 @@ module GitHosting
 						end
 					end
 				end
-			end
 
+				def factory_with_git_extra_init(klass_name, *args)
+					new_repo = factory_without_git_extra_init(klass_name, *args)
+					if new_repo.is_a?(Repository::Git)
+						new_repo.build_extra
+					end
+					return new_repo
+				end
+			end
+			
 
 			def self.included(base)
+				base.extend(ClassMethods)
 				base.class_eval do
 					unloadable
+					class << self
+						alias_method_chain :factory, :git_extra_init
+					end
 				end
-				base.extend(ClassMethods)
+			
 			end
 		end
 	end
