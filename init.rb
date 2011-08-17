@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'redmine'
 require_dependency 'principal'
 require_dependency 'user'
