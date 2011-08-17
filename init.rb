@@ -61,8 +61,8 @@ User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
 
 
 # initialize association from git repository -> extra
+Repository::Git.send(:has_one, :extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy)
 Repository::Git.send(:accepts_nested_attributes_for, :extra, :allow_destroy =>true)  
-Repository::Git.send(:attr_accessor, :extra_attributes)  
 
 
 # initialize association from project -> repository mirrors
