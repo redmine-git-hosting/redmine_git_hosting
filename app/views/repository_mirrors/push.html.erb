@@ -1,7 +1,17 @@
 <% if not @is_xhr -%>
 <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 <h2><%=l(:button_push_title)%></h2>
+<% else %>
+<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
+<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 <%- end %>
-<p><%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed==true ? l(l(:mirror_push_fail)) : l(:mirror_push_sucess)) %></p>
-<span><b></b><%= l(:mirror_push_output_label) %></b></span>
-<pre class="mirror-push"><%= @shellout %></pre>
+<p><%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed==true ? l(:mirror_push_fail) : l(:mirror_push_sucess)) %></p>
+<span><b><%= l(:mirror_push_output_label) %></b></span>
+<pre class="mirror-push<%= @push_failed==true ? " error": "" %>"><%= @shellout %></pre>
+<% if @is_xhr && @push_failed==false  -%>
+<script type="text/javascript">
+	window.setTimeout(function() {
+		Modalbox.hide();
+	}, 3000)
+</script>
+<%- end %>

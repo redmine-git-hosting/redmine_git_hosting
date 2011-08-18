@@ -198,7 +198,7 @@ module GitHosting
 				begin
 					file.write(mirror.private_key)
 					file.close
-					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
+					%x[#{git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
 					%x[#{git_user_runner} 'chmod 0600 #{identity_file_path}']
 				ensure
 					file.unlink

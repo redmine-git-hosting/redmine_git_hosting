@@ -126,12 +126,7 @@
 				Event.stop(event);
 				Modalbox.show(
 					elem.href, {
-						title: "<%=l(:button_push_title)%>",
-						afterLoad: function() {
-							window.setTimeout(function() {
-								Modalbox.hide();
-							}, 2500)
-						}
+						title: "<%=l(:button_push_title)%>"
 					}
 				)
 				return false;
