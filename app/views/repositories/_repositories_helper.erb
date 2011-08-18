@@ -84,6 +84,11 @@
 <%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 
 <script type="text/javascript">
+	function getWidth() {
+		var width = 60*document.viewport.getWidth()/100;
+		if (width<750) { width=750 };
+		return width;
+	}
 	document.observe("dom:loaded", function() {
 		$$(".add-mirror").each(function(elem) {
 			Event.observe(elem, 'click', function(event) {
@@ -91,7 +96,7 @@
 				Modalbox.show(
 					elem.href, {
 						title: "<%=l(:label_mirror_create)%>",
-						width: 700
+						width: getWidth()
 					}
 				)
 				return false;
@@ -103,7 +108,7 @@
 				Modalbox.show(
 					elem.href, {
 						title: "<%=l(:label_mirror_edit)%>",
-						width: 700
+						width: getWidth()
 					}
 				)
 				return false;
@@ -115,7 +120,7 @@
 				Modalbox.show(
 					elem.href, {
 						title: "<%=l(:label_mirror_delete)%>",
-						width: 700
+						width: getWidth()
 					}
 				)
 				return false;
@@ -126,7 +131,8 @@
 				Event.stop(event);
 				Modalbox.show(
 					elem.href, {
-						title: "<%=l(:button_push_title)%>"
+						title: "<%=l(:button_push_title)%>",
+						width: getWidth()
 					}
 				)
 				return false;
