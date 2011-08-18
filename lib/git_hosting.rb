@@ -297,6 +297,11 @@ module GitHosting
 		File.chmod(0550, git_user_runner_path())
 		File.chmod(0550, git_exec_mirror_path())
 
+		# The git_exec_mirror_path() file must be executable by both the web user and the git user
+		if web_user != git_user
+			%x[#{git_user_runner} 'sudo -u #{web_user} chown #{web_user}:#{git_user} #{git_exec_mirror_path()}']
+		end
+
 		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
 			git_mirror_identity_file(mirror)
 		}
