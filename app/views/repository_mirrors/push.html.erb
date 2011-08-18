@@ -1,17 +1,26 @@
 <% if not @is_xhr -%>
 <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 <h2><%=l(:button_push_title)%></h2>
-<% else %>
-<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
-<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 <%- end %>
-<p><%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed==true ? l(:mirror_push_fail) : l(:mirror_push_sucess)) %></p>
+<p style="white-space:nowrap;">
+	<%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed==true ? l(:mirror_push_fail) : l(:mirror_push_sucess)) %>
+</p>
 <span><b><%= l(:mirror_push_output_label) %></b></span>
 <pre class="mirror-push<%= @push_failed==true ? " error": "" %>"><%= @shellout %></pre>
 <% if @is_xhr && @push_failed==false  -%>
 <script type="text/javascript">
-	window.setTimeout(function() {
-		Modalbox.hide();
-	}, 3000)
+	var waitingToClose = 5;
+	var title = $("MB_caption").innerHTML;
+	function waitingTimer() {
+		if (waitingToClose==0) {
+			$("MB_caption").update(title + "  (" + waitingToClose + ")");
+			Modalbox.hide();
+		} else {
+			$("MB_caption").update(title + "  (" + waitingToClose + ")");
+			waitingToClose--;
+			window.setTimeout(waitingTimer, 1000);
+		}
+	}
+	waitingTimer();
 </script>
 <%- end %>

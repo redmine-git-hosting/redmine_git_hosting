@@ -319,7 +319,7 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
-		# Make sure we have out hooks setup
+		# Make sure we have our hooks setup
 		Hooks::GitAdapterHooks.check_hooks_installed
 	end
 
