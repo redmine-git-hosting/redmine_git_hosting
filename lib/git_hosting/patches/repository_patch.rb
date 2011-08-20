@@ -19,7 +19,11 @@ module GitHosting
 				def factory_with_git_extra_init(klass_name, *args)
 					new_repo = factory_without_git_extra_init(klass_name, *args)
 					if new_repo.is_a?(Repository::Git)
-						new_repo.build_extra
+						if new_repo.extra.nil?
+							e = GitRepositoryExtra.new()
+							e.repository = new_repo
+							e.save
+						end
 					end
 					return new_repo
 				end
