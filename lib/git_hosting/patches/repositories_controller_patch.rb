@@ -23,10 +23,10 @@ module GitHosting
 				# at runtime, accepts_nested_attributes_for, they all failed, and
 				# seemed too hacky.
 				
-				#if !@project.repository.nil?
-				#	@project.repository.extra.update_attributes(params[:extra])
-				#	@project.repository.extra.save
-				#end
+				if !@project.repository.nil?
+					@project.repository.extra.update_attributes(params[:extra])
+					@project.repository.extra.save
+				end
 				
 
 				edit_without_scm_settings
