@@ -15,16 +15,16 @@
 %>
 
 <p> 
-	<%= label_tag "extra_git_daemon", l(:field_git_daemon) %>
+	<%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
 	<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]) %>
 </p>
 <p> 
-	<%= label_tag "extra_git_http", l(:field_git_http) %>
+	<%= label_tag  "extra[git_http]", l(:field_git_http) %>
 	<%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected=>extra_vals[:git_http]) %>
 </p>
 <p> 
-	<%= label_tag "extra_notify_cia", l(:field_notify_cia) %>
-	<%= select_tag "extra[notify_cia], options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:notify_cia]) %>
+	<%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
+	<%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:notify_cia]) %>
 	<% if extra_vals[:notify_cia] == "1" %>
 		<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
 		<em><b><span id="notify_cia_result"></span></b></em>
