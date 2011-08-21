@@ -139,7 +139,7 @@ module GitHosting
 	end
 
 	def self.get_mirror_identities_dir
-		@@mirror_identities_dir = File.join(@@git_hosting_tmp_dir, 'mirror_identities')
+		@@mirror_identities_dir = File.join(get_tmp_dir(), 'mirror_identities')
 		if !File.directory?(@@mirror_identities_dir)
 			%x[#{git_user_runner} 'mkdir -p "#{@@mirror_identities_dir}"']
 			%x[#{git_user_runner} 'chmod 0750 "#{@@mirror_identities_dir}"']

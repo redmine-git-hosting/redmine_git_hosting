@@ -1,6 +1,3 @@
-
-
-
 <%
 	extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
 	extra_vals.each_key do |e|
@@ -42,6 +39,8 @@
 </div>
 <% end %>
 
+<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
+
 <% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_view_mirrors(@repository.project) %>
 	<h2>Mirrors</h2>
 	<% if @repository.project.repository_mirrors.any? %>
@@ -64,6 +63,9 @@
 				<td align="center"><%= h(format_date(mirror.created_at)) %></td>
 				<td align="center"><%= h(format_date(mirror.updated_at)) %></td>
 				<td class="buttons"><% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
+					<% if mirror.active==1 -%>
+					<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
+					<%- end %>
 					<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
 					<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
 				<% end %></td>
@@ -114,6 +116,22 @@
 					elem.href, {
 						title: "<%=l(:label_mirror_delete)%>",
 						width: 700
+					}
+				)
+				return false;
+			})
+		})
+		$$(".push-mirror").each(function(elem) {
+			Event.observe(elem, 'click', function(event) {
+				Event.stop(event);
+				Modalbox.show(
+					elem.href, {
+						title: "<%=l(:button_push_title)%>",
+						afterLoad: function() {
+							window.setTimeout(function() {
+								Modalbox.hide();
+							}, 2500)
+						}
 					}
 				)
 				return false;

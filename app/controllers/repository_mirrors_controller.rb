@@ -92,10 +92,23 @@ class RepositoryMirrorsController < ApplicationController
 				end
 			end
 		end
-
 	end
 
 	def settings
+	end
+
+	def push
+		respond_to do |format|
+			format.html {
+				@shellout = %x{ export GIT_MIRROR_IDENTITY_FILE=#{GitHosting.git_mirror_identity_file(@mirror)}; export GIT_SSH='#{GitHosting.git_exec_mirror}'; #{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' push --mirror '#{@mirror.url}' 2>&1 }
+				@push_failed = ($?.to_i!=0) ? true : false
+				if @push_failed
+					ms = " #{mirror.url} push error "
+					nr = (70-ms.length)/2
+					GitHosting.logger.debug "Failed:\n%{nrs} #{ms} %{nrs}\n#{@shellout}%{nre} #{ms} %{nre}\n" % {:nrs => ">"*nr, :nre => "<"*nr}
+				end
+			}
+		end
 	end
 
 	protected

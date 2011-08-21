@@ -7,14 +7,16 @@
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
 
-  label_git_daemon: Git Daemon
-  label_git_http: Git Smart HTTP
+  field_git_daemon: Git Daemon
+  field_git_http: Git Smart HTTP
+  field_notify_cia: Notify CIA
+  
+
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
   label_disabled: Disabled
   label_https_only: HTTPS Only
   label_https_and_http: HTTPS and HTTP
-  label_notify_cia: Notify CIA
 
   label_permissions_header: Required Permissions
   label_sudo_web_to_git_user: Web user is able to sudo to Git user?
@@ -62,3 +64,10 @@
   mirror_notice_created: Mirror was successfully created
   mirror_notice_updated: Mirror was successfully updated
   mirror_notice_create_failed: Failed to create mirror
+
+  button_push: Push
+  button_push_title: "Push To Mirror"
+  mirror_push_info_html: "Pushing changes to mirror <b>%{mirror_url}</b> ... %{status}"
+  mirror_push_output_label: 'Output:'
+  mirror_push_sucess: Success.
+  mirror_push_fail: Failed!

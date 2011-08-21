@@ -11,6 +11,7 @@ if defined? map
 		project_mapper.with_options :controller => 'repository_mirrors' do |project_views|
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/new', :action => 'create', :conditions => {:method => [:get, :post]}
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/edit/:id', :action => 'edit'
+			project_views.connect 'projects/:project_id/settings/repository/mirrors/push/:id', :action => 'push'
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/update/:id', :action => 'update', :conditions => {:method => :post}
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/delete/:id', :action => 'destroy', :conditions => {:method => [:get, :delete]}
 		end
@@ -25,6 +26,7 @@ else
 			project_mapper.with_options :controller => 'repository_mirrors' do |project_views|
 				project_views.connect 'projects/:project_id/settings/repository/mirrors/new', :action => 'create', :conditions => {:method => [:get, :post]}
 				project_views.connect 'projects/:project_id/settings/repository/mirrors/edit/:id', :action => 'edit'
+				project_views.connect 'projects/:project_id/settings/repository/mirrors/push/:id', :action => 'push'
 				project_views.connect 'projects/:project_id/settings/repository/mirrors/update/:id', :action => 'update', :conditions => {:method => :post}
 				project_views.connect 'projects/:project_id/settings/repository/mirrors/delete/:id', :action => 'destroy', :conditions => {:method => [:get, :delete]}
 			end

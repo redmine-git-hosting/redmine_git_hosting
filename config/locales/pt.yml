@@ -62,3 +62,10 @@ pt:
   mirror_notice_created: O Espelho foi criado com sucesso
   mirror_notice_updated: O Espelho foi actualizado com sucesso
   mirror_notice_create_failed: Houve um erro na criação do espelho
+
+  button_push: Push
+  button_push_title: '"Push" Para o Espelho'
+  mirror_push_info_html: "A publicar modificações para o espelho <b>%{mirror_url}</b> ... %{status}"
+  mirror_push_output_label: 'Saída:'
+  mirror_push_sucess: Sucesso.
+  mirror_push_fail: Falhou!

@@ -64,3 +64,10 @@
   mirror_notice_created: Mirror was successfully created
   mirror_notice_updated: Mirror was successfully updated
   mirror_notice_create_failed: Failed to create mirror
+
+  button_push: Push
+  button_push_title: "Push To Mirror"
+  mirror_push_info_html: "Pushing changes to mirror <b>%{mirror_url}</b> ... %{status}"
+  mirror_push_output_label: 'Output:'
+  mirror_push_sucess: Success.
+  mirror_push_fail: Failed!
