@@ -27,7 +27,7 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 					e.git_daemon = 1
 					e.git_http = 1
 				end
-				e.repository_id = project.repository_id
+				e.repository_id = project.repository.id
 				e.save
 			end
 		}
