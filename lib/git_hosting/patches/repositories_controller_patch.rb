@@ -24,8 +24,7 @@ module GitHosting
 					if !@project.repository.nil?
 						@project.repository.extra.update_attributes(params[:extra])
 						@project.repository.extra.save
-					else
-
+					elsif !params[:extra].nil?
 						@project.repository = Repository.factory(params[:repository_scm])
       						if !@project.repository.nil?
 							@project.repository.extra.update_attributes(params[:extra])
