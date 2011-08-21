@@ -422,10 +422,6 @@ module GitHosting
 						new_repos.push repo_name
 						new_projects.push project
 
-						# Make sure the repository has a git_hook key instance
-						if project.repository.hook_key.nil?
-							project.repository.hook_key = GitHookKey.new
-						end
 					end
 
 

@@ -2,7 +2,6 @@ require 'redmine'
 require_dependency 'principal'
 require_dependency 'user'
 
-require File.join(File.dirname(__FILE__), 'app', 'models', 'git_hook_key')
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
 require_dependency 'git_hosting'
 require_dependency 'git_hosting/hooks/git_adapter_hooks'
