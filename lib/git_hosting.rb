@@ -192,6 +192,7 @@ module GitHosting
 				File.open(identity_file_path, "w") do |f|
 					f.puts "#{mirror.private_key}"
 				end
+				%x[chmod 0600 #{identity_file_path}]
 			else
 				file = Tempfile.new('')
 				begin
@@ -214,7 +215,7 @@ module GitHosting
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
-		end
+		end if !File.exists?(gitolite_ssh_path())
 
 		##############################################################################################################################
 		# So... older versions of sudo are completely different than newer versions of sudo
@@ -247,7 +248,7 @@ module GitHosting
 				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\""
 			end
 			f.puts 'fi'
-		end
+		end if !File.exists?(git_exec_path())
 
 		# use perl script for git_user_runner so we can
 		# escape output more easily
@@ -272,7 +273,7 @@ module GitHosting
 				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			end
 			f.puts '}'
-		end
+		end if !File.exists?(git_user_runner_path())
 
 		File.open(git_exec_mirror_path(), "w") do |f|
 			f.puts '#!/bin/sh'
@@ -289,7 +290,7 @@ module GitHosting
 				f.puts "  sudo -u #{git_user} -i eval \"ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd\""
 			end
 			f.puts 'fi'
-		end
+		end if !File.exists?(git_exec_mirror_path())
 
 		File.chmod(0550, git_exec_path())
 		File.chmod(0550, gitolite_ssh_path())

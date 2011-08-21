@@ -6,6 +6,7 @@ class GitoliteHooksController < ApplicationController
 	helper :git_hosting
 	include GitHostingHelper
 
+
 	def stub
 		# Stub method simply to generate correct urls, just return a 404 to any user requesting this
 		render(:code => 404)
@@ -13,29 +14,15 @@ class GitoliteHooksController < ApplicationController
 
 	def post_receive
 
-		project = Project.find_by_identifier(params[:project_id])
-		if project.nil?
-			render(:text => "No project found with identifier '#{params[:project_id]}'")
-			return
-		end
-
-		if project.repository.extra.check_key(params[:key]) == false
+		if @project.repository.extra.check_key(params[:key]) == false
 			render(:text => "The hook key provided is not valid. Please let your server admin know about it")
 			return
 		end
 
 		# Clear existing cache
-		old_cached=GitCache.find_all_by_proj_identifier(@project.identifier)
-		if old_cached != nil
-			GitHosting.logger.debug "Clearing git cache for project #{@project.name}"
-			old_ids = old_cached.collect(&:id)
-			GitCache.destroy(old_ids)
-		end
-
+		GitHosting::clear_cache_for_project(@project)
 
 		repo_path = GitHosting.repository_path(@project)
-
-
 
 		render :text => Proc.new { |response, output|
 			response.headers["Content-Type"] = "text/plain;"
@@ -70,12 +57,13 @@ class GitoliteHooksController < ApplicationController
 			} if @project.repository_mirrors.any?
 
 			# Notify CIA
-			output.write("Notifying CIA\n") if not params[:refs].nil? and @project.repository.extra.notify_cia==1
-			output.flush if not params[:refs].nil? and @project.repository.extra.notify_cia==1
+			#Thread.abort_on_exception = true
 			Thread.new(@project, params[:refs]) {|project, refs|
 				GitHosting.logger.debug "Notifying CIA"
 				output.write("Notifying CIA\n")
 				output.flush
+				#GitHosting.logger.debug "REFS #{refs}"
+
 				refs.each {|ref|
 					oldhead, newhead, refname = ref.split(',')
 
@@ -97,21 +85,19 @@ class GitoliteHooksController < ApplicationController
 					end
 
 					revisions = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' rev-list --reverse #{range}]
-					#GitHosting.logger.debug "Revisions: #{revisions.split().join(' ')}"
+					#GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
 
 					revisions.split().each{|rev|
 						revision = project.repository.find_changeset_by_name(rev.strip)
-						#GitHosting.logger.debug "Revision Found: #{revision}"
-						next if revision.notified_cia == 1   # Already notified about this commit
-						GitHosting.logger.info "Notifying CIA: Branch => #{branch} RANGE => #{revision.revision}"
+						#GitHosting.logger.debug "Revision Found: #{revision.revision}"
+						next if project.repository.cia_notifications.notified?(revision)  # Already notified about this commit
+						GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
 						CiaNotificationMailer.deliver_notification(revision, branch)
-						revision.notified_cia = 1
-						revision.save
+						project.repository.cia_notifications.notified(revision)
 					}
 				}
-			} if not params[:refs].nil? and @project.repository.extra.notify_cia==1
+			} if !params[:refs].nil? && @project.repository.extra.notify_cia==1
 		}, :layout => false
-
 	end
 
 	def test
@@ -144,6 +130,7 @@ class GitoliteHooksController < ApplicationController
 		if @project.nil?
 			render(:text => l(:project_not_found, :identifier => params[:project_id])) if @project.nil?
 			return
+		end
 	end
 
 end
