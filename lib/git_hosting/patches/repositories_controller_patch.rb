@@ -29,13 +29,11 @@ module GitHosting
 					if request.post? && @repository
 						@repository.attributes = params[:repository]
 						if !params[:extra].nil?
-							@project.repository.extra.update_attributes(params[:extra])
+							@repository.extra.update_attributes(params[:extra])
 						end
 						@repository.save
 					end
 					
-					GitHosting::update_repositories(@project, false) if !@project.repository.nil?
-					GitHosting::Hooks::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?
 
 					render(:update) do |page|
 						page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
@@ -44,6 +42,10 @@ module GitHosting
 							page.replace_html "main-menu", render_main_menu(@project)
 						end
 					end
+					
+					GitHosting::update_repositories(@project, false) if !@project.repository.nil?
+					GitHosting::Hooks::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?
+
 	
 				else
 					edit_without_scm_settings
