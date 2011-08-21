@@ -21,8 +21,7 @@ module GitHosting
 					if new_repo.is_a?(Repository::Git)
 						if new_repo.extra.nil?
 							e = GitRepositoryExtra.new()
-							e.repository_id = new_repo.id
-							e.save
+							new_repo.extra = e
 						end
 					end
 					return new_repo
