@@ -10,7 +10,7 @@ class SetMirrorRolePermissions < ActiveRecord::Migration
 		manager_role.save
 		
 		developer_role = Role.find_by_name("Developer")
-		developer_role.remove_permission! :view_repository_mirrors
+		developer_role.add_permission! :view_repository_mirrors
 		developer_role.save		
 		
 	end
