@@ -33,7 +33,7 @@
 <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
 <br/>
 
-<% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_create_mirrors(@repository.project) %>
+<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
 <div class="contextual">
 	<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror') %>
 </div>
@@ -41,7 +41,7 @@
 
 <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 
-<% if @repository.project.module_enabled?(:repository_mirrors) and GitHostingHelper.can_view_mirrors(@repository.project) %>
+<% if GitHostingHelper.can_view_mirrors(@repository.project) %>
 	<h2>Mirrors</h2>
 	<% if @repository.project.repository_mirrors.any? %>
 	<div class="autoscroll">
