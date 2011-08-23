@@ -4,11 +4,9 @@ class CreateRepositoryMirrors < ActiveRecord::Migration
 			t.column :project_id, :integer
 			t.column :active, :integer, :default => 1
 			t.column :url, :string
-			t.column :private_key, :string, :limit => 1700
 			t.references :project
 			t.timestamps
 		end
-		
 	end
 
 	def self.down
