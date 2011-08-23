@@ -4,17 +4,18 @@ pt-BR:
   label_git_server: Domínio do servidor Gitolite
   label_http_server: "Domínio do servidor HTTP (para os url's git http)"
   label_git_user: Nome de Utilizador Git
-  label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
+  label_gitolite_admin_public_key: Gitolite Admin SSH Public Key File
+  label_gitolite_admin_private_key: Ficheiro de identidade SSH Gitolite (Chave Privada)
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
 
-  label_git_daemon: Git Daemon
-  label_git_http: Git Smart HTTP
+  field_git_daemon: Git Daemon
+  field_git_http: Git Smart HTTP
   label_git_show_urls: "Exibir os URL's de checkout"
   label_enabled: Habilitado
   label_disabled: Desabilitado
   label_https_only: Apenas HTTPS
   label_https_and_http: HTTPS e HTTP
-  label_notify_cia: Notificar CIA
+  field_notify_cia: Notificar CIA
 
   label_permissions_header: Permissões Necessárias
   label_sudo_web_to_git_user: O uilizador Web é capaz de sudo para o utilizador Git?
@@ -48,7 +49,7 @@ pt-BR:
 
   project_not_found: 'Nenhum projeto foi encontrado com o identificador "%{identifier}"'
   cia_not_enough_permissions: Não tem as permissões necessárias para testar as notificaçẽos CIA.
-  label_notify_cia_test: Testar Notificação
+  field_notify_cia_test: Testar Notificação
   cia_notification_ok: Notificação CIA enviada.
 
   label_update_all_hooks: Actualizar as preferências em TODOS os repositórios
