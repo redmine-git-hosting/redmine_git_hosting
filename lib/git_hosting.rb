@@ -185,29 +185,6 @@ module GitHosting
 		return git_exec_mirror_path()
 	end
 
-	def self.git_mirror_identity_file(mirror)
-		identity_file_path = File.join(get_mirror_identities_dir(), mirror.to_s)
-		if !File.exists?(identity_file_path)
-			if git_user == web_user
-				File.open(identity_file_path, "w") do |f|
-					f.puts "#{mirror.private_key}"
-				end
-				%x[chmod 0600 #{identity_file_path}]
-			else
-				file = Tempfile.new('')
-				begin
-					file.write(mirror.private_key)
-					file.close
-					%x[#{git_user_runner} 'sudo -nu #{web_user} cat #{file.path} | cat - >  #{identity_file_path}']
-					%x[#{git_user_runner} 'chmod 0600 #{identity_file_path}']
-				ensure
-					file.unlink
-				end
-			end
-		end
-		return identity_file_path
-	end
-
 	def self.update_git_exec
 		logger.info "Setting up #{get_tmp_dir()}"
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteAdminPrivateKey']
@@ -302,9 +279,6 @@ module GitHosting
 			%x[#{git_user_runner} 'sudo -u #{web_user} chown #{web_user}:#{git_user} #{git_exec_mirror_path()}']
 		end
 
-		RepositoryMirror.find(:all, :order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
-			git_mirror_identity_file(mirror)
-		}
 	end
 
 	def self.clone_or_pull_gitolite_admin

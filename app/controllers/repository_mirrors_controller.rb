@@ -25,7 +25,6 @@ class RepositoryMirrorsController < ApplicationController
 			@mirror.project = @project
 
 			if @mirror.save
-				GitHosting.git_mirror_identity_file(@mirror)
 				respond_to do |format|
 					format.html {
 						redirect_to(
@@ -53,7 +52,6 @@ class RepositoryMirrorsController < ApplicationController
 	def update
 		respond_to do |format|
 			if @mirror.update_attributes(params[:repository_mirrors])
-				GitHosting.git_mirror_identity_file(@mirror)
 				format.html {
 					redirect_to(
 						url_for(
@@ -78,7 +76,6 @@ class RepositoryMirrorsController < ApplicationController
 			# display confirmation view
 		else
 			if params[:confirm]
-				identify_file = GitHosting.git_mirror_identity_file(@mirror)
 				%x[#{git_user_runner} rm #{identify_file}]
 				redirect_url = url_for(
 					:controller => 'projects',
@@ -100,13 +97,13 @@ class RepositoryMirrorsController < ApplicationController
 	def push
 		respond_to do |format|
 			format.html {
-				@shellout = %x{ export GIT_MIRROR_IDENTITY_FILE=#{GitHosting.git_mirror_identity_file(@mirror)}; export GIT_SSH='#{GitHosting.git_exec_mirror}'; #{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' push --mirror '#{@mirror.url}' 2>&1 }
-				@push_failed = ($?.to_i!=0) ? true : false
-				if @push_failed
-					ms = " #{@mirror.url} push error "
-					nr = (70-ms.length)/2
-					GitHosting.logger.debug "Failed:\n%{nrs} #{ms} %{nrs}\n#{@shellout}%{nre} #{ms} %{nre}\n" % {:nrs => ">"*nr, :nre => "<"*nr}
-				end
+				#@shellout = %x{ export GIT_MIRROR_IDENTITY_FILE=#{GitHosting.git_mirror_identity_file(@mirror)}; export GIT_SSH='#{GitHosting.git_exec_mirror}'; #{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' push --mirror '#{@mirror.url}' 2>&1 }
+				#@push_failed = ($?.to_i!=0) ? true : false
+				#if @push_failed
+				#	ms = " #{@mirror.url} push error "
+				#	nr = (70-ms.length)/2
+				#	GitHosting.logger.debug "Failed:\n%{nrs} #{ms} %{nrs}\n#{@shellout}%{nre} #{ms} %{nre}\n" % {:nrs => ">"*nr, :nre => "<"*nr}
+				#end
 			}
 		end
 	end
