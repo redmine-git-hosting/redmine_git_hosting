@@ -42,9 +42,13 @@ module GitHosting
 
 	def ensure_push_key_initialized
 		if Setting.plugin_redmine_git_hosting['gitMirrorPushPublicKey'] == ""
-			%x[#{git_user_runner} 'if [ ! -e ~.ssh/id_rsa.pub ] ; then printf "/root/.ssh/gitolite_admin_id_rsa\n\n\n\n\n" | ssh-keygen -t rsa -P "" ; fi' ]
-			publicKey=(%x[#{git_user_runner} 'cat ~.ssh/id_rsa.pub ' ]).chomp.strip
-			Setting.plugin_redmine_git_hosting['gitMirrorPushPublicKey'] = publicKey
+			%x[#{git_user_runner} 'if [ ! -e ~/.ssh/id_rsa.pub ] ; then printf ".ssh/id_rsa\n\n\n\n\n\n\n" | ssh-keygen -t rsa -P "" ; fi' ]
+			pk=((%x[#{git_user_runner} 'cat ~/.ssh/id_rsa.pub ' ]).chomp.split
+			publicKey = pk.split(/[\t ]+/)[0] + " " + pk.split(/[\t ]+/)[1]
+		
+			settings = Setting["plugin_redmine_git_hosting"]
+			settings["gitMirrorPushPublicKey"] = publicKey
+			Setting["plugin_redmine_git_hosting"] = settings
 		end
 	end
 
