@@ -70,3 +70,7 @@ Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 
 # initialize observer
 ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
+
+
+GitHosting.ensure_push_key_initialized
+

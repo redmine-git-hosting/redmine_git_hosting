@@ -110,11 +110,13 @@ class RepositoryMirrorsController < ApplicationController
 
 	protected
 
+
+
 	def set_user_variable
 		@user = User.current
 	end
 
-	def set_poject_variable
+	def set_project_variable
 		@project = Project.find(:first, :conditions => ["identifier = ?", params[:project_id]])
 	end
 
