@@ -152,14 +152,7 @@ module GitHosting
 		return @@git_hosting_tmp_dir
 	end
 
-	def self.get_mirror_identities_dir
-		@@mirror_identities_dir = File.join(get_tmp_dir(), 'mirror_identities')
-		if !File.directory?(@@mirror_identities_dir)
-			%x[#{git_user_runner} 'mkdir -p "#{@@mirror_identities_dir}"']
-			%x[#{git_user_runner} 'chmod 0750 "#{@@mirror_identities_dir}"']
-		end
-		return @@mirror_identities_dir
-	end
+
 
 	def self.git_exec_path
 		return File.join(get_tmp_dir(), "run_git_as_git_user")
@@ -170,9 +163,7 @@ module GitHosting
 	def self.git_user_runner_path
 		return File.join(get_tmp_dir(), "run_as_git_user")
 	end
-	def self.git_exec_mirror_path
-		return File.join(get_tmp_dir(), "run_git_under_another_identity")
-	end
+
 
 	def self.git_exec
 		if !File.exists?(git_exec_path())
@@ -192,12 +183,7 @@ module GitHosting
 		end
 		return git_user_runner_path()
 	end
-	def self.git_exec_mirror
-		if !File.exists?(git_exec_mirror_path())
-			update_git_exec
-		end
-		return git_exec_mirror_path()
-	end
+
 
 	def self.update_git_exec
 		logger.info "Setting up #{get_tmp_dir()}"
@@ -266,32 +252,13 @@ module GitHosting
 			f.puts '}'
 		end if !File.exists?(git_user_runner_path())
 
-		File.open(git_exec_mirror_path(), "w") do |f|
-			f.puts '#!/bin/sh'
-			f.puts "if [ \"\$(whoami)\" = \"#{git_user}\" ] ; then"
-			f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
-			f.puts '  cd ~'
-			f.puts '  eval "ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd"'
-			f.puts "else"
-			if sudo_version < sudo_version_switch
-				f.puts '  cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-				f.puts "  sudo -u #{git_user} -i eval \"ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd\""
-			else
-				f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
-				f.puts "  sudo -u #{git_user} -i eval \"ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ${GIT_MIRROR_IDENTITY_FILE} $cmd\""
-			end
-			f.puts 'fi'
-		end if !File.exists?(git_exec_mirror_path())
+
 
 		File.chmod(0550, git_exec_path())
 		File.chmod(0550, gitolite_ssh_path())
 		File.chmod(0550, git_user_runner_path())
-		File.chmod(0550, git_exec_mirror_path())
 
-		# The git_exec_mirror_path() file must be executable by both the web user and the git user
-		if web_user != git_user
-			%x[#{git_user_runner} 'sudo -u #{web_user} chown #{web_user}:#{git_user} #{git_exec_mirror_path()}']
-		end
+
 
 	end
 
