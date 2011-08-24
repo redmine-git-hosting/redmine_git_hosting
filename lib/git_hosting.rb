@@ -187,7 +187,7 @@ module GitHosting
 
 	def self.update_git_exec
 		logger.info "Setting up #{get_tmp_dir()}"
-		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteAdminPrivateKey']
+		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"

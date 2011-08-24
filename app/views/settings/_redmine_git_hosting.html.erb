@@ -23,16 +23,11 @@
 		<label><%= l(:label_git_user)%></label>
 		<%= text_field_tag("settings[gitUser]", @settings['gitUser'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
 		<br />
-		</p>
-	<p>
-		<label><%= l(:label_gitolite_admin_public_key)%></label>
-		<%= text_field_tag("settings[gitoliteAdminPublicKey]", @settings['gitoliteAdminPublicKey'], :size => 60) %>
-		<br />
 	</p>
 
 	<p>
-		<label><%= l(:label_gitolite_admin_private_key)%></label>
-		<%= text_field_tag("settings[gitoliteAdminPrivateKey]", @settings['gitoliteAdminPrivateKey'], :size => 60) %>
+		<label><%= l(:label_gitolite_identity_file)%></label>
+		<%= text_field_tag("settings[gitoliteIdentityFile]", @settings['gitoliteIdentityFile'], :size => 60) %>
 		<br />
 	</p>
 
