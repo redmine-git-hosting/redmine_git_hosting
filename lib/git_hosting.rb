@@ -46,9 +46,14 @@ module GitHosting
 			privk = ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' ]  ).chomp.strip
 			pubk =  ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
 			
-			%x[ #{GitHosting.git_user_runner} 'echo "#{privk}" > ~/.ssh/id_rsa ' ]
-			%x[ #{GitHosting.git_user_runner} 'echo "#{pubk}" > ~/.ssh/id_rsa.pub ' ]
-			
+			%x[ #{GitHosting.git_user_runner} 'echo "#{privk}" > ~/.ssh/gitolite_admin_id_rsa ' ]
+			%x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
+			%x[ #{GitHosting.git_user_runner} 'echo "#!/bin/sh" > ~/.ssh/run_gitolite_admin_ssh']
+			%x[ #{GitHosting.git_user_runner} 'echo exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i ~/.ssh/gitolite_admin_id_rsa \"$@\" >>/.ssh/run_gitolite_admin_ssh' ]
+			%x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
+			%x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa']
+			%x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
+
 			@@mirror_pubkey = pubk.split(/[\t ]+/)[0] + " " + pubk.split(/[\t ]+/)[1]
 
 			#settings = Setting["plugin_redmine_git_hosting"]
