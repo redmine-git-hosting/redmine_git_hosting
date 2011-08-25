@@ -39,21 +39,12 @@ class GitoliteHooksController < ApplicationController
 				GitHosting.logger.debug "Pushing changes to mirror #{mirror.url}"
 				output.write("Pushing changes to mirror #{mirror.url} ... ")
 				output.flush
-				shellout = %x{ export GIT_MIRROR_IDENTITY_FILE=#{GitHosting.git_mirror_identity_file(mirror)}; export GIT_SSH='#{GitHosting.git_exec_mirror}'; #{GitHosting.git_exec} --git-dir='#{repo_path}.git' push --mirror '#{mirror.url}' 2>&1 }
-				if $?.to_i != 0:
-					output.write("Failed!\n")
-					ms = " #{mirror.url} push error "
-					nr = (70-ms.length)/2
-					GitHosting.logger.debug "Failed:\n%{nrs} #{ms} %{nrs}\n#{shellout}%{nre} #{ms} %{nre}\n" % {:nrs => ">"*nr, :nre => "<"*nr}
-					output.write("%{nrs} #{ms} %{nrs}\n" % {:nrs => ">"*nr})
-					output.write("#{shellout}")
-					output.write("%{nre} #{ms} %{nre}\n" % {:nre => "<"*nr})
-					output.flush
-				else
-					output.write("Done\n")
-					output.flush
-				end
-
+				
+				mirror_err = mirror.push
+				
+				result = mirror_err.length > 0 ? "Failed!\n" + mirror_err : "Done\n"
+				output.write(result)
+				output.flush
 			} if @project.repository_mirrors.any?
 
 			# Notify CIA
@@ -84,7 +75,7 @@ class GitoliteHooksController < ApplicationController
 						range = "#{oldhead}..#{newhead}"
 					end
 
-					revisions = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}.git' rev-list --reverse #{range}]
+					revisions = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}' rev-list --reverse #{range}]
 					#GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
 
 					revisions.split().each{|rev|
@@ -116,7 +107,7 @@ class GitoliteHooksController < ApplicationController
 		# Get the last revision we have on the database for this project
 		revision = @project.repository.changesets.find(:first)
 		# Find out to which branch this commit belongs to
-		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
+		branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
 		GitHosting.logger.debug "Revision #{revision.scmid} found on branch #{branch}"
 
 		# Send the test notification

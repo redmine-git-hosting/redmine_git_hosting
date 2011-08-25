@@ -129,7 +129,7 @@ module GitHosting
 	end
 
 	def self.repository_path project
-		return File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], repository_name(project))
+		return File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], repository_name(project)) + ".git"
 	end
 
 	def self.add_route_for_project(p)
