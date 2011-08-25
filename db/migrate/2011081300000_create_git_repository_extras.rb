@@ -15,6 +15,7 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 			
 		end
 
+		
 		Project.find(:all).each {|project|
 			if project.repository.is_a?(Repository::Git)
 				e = GitRepositoryExtra.new()
@@ -31,6 +32,12 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 				e.save
 			end
 		}
+
+
+		GitHosting::Hooks::GitAdapterHooks.setup_hooks
+		%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
+
+
 
 		if self.table_exists?("git_hook_keys")
 			drop_table :git_hook_keys
