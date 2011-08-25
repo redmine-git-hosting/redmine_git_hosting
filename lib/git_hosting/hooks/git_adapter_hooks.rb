@@ -69,11 +69,11 @@ module GitHosting
 				web_user = GitHosting.web_user
 				if git_user == web_user
 					%x[#{GitHosting.git_user_runner} 'cp #{hook_source_path} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				else
 					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{hook_source_path} | cat - > #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chown #{git_user}:#{git_user} #{hook_dest_path}']
+					%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
 					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				end
 				create_hooks_digests(true)
