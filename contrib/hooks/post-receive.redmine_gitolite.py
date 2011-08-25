@@ -62,7 +62,7 @@ for line in fileinput.input():
 
 log("Notifying ChiliProject/Redmine project %s about changes to this repo %s.git ..." % (project_id, gl_repo))
 try:
-	req = urllib2.urlopen("%s/post-receive" % hook_url, urllib.urlencode(params))
+	req = urllib2.urlopen(hook_url, urllib.urlencode(params))
 	output = ""
 	chunk_size = 1024
 	try:

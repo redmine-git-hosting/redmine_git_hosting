@@ -94,7 +94,7 @@ module GitHosting
 				logger.debug "Hook KEY: #{hook_key}"
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{hook_key}"]
 
-				hook_url = Setting.plugin_redmine_git_hosting['gitHooksUrl']
+				hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
 				logger.debug "Hook URL: #{hook_url}"
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.url "#{hook_url}"]
 
