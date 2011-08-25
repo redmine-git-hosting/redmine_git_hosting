@@ -43,9 +43,14 @@ module GitHosting
 	@@mirror_pubkey = nil
 	def self.mirror_push_public_key
 		if @@mirror_pubkey.nil?
-			pk=( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
-			@@mirror_pubkey = pk.split(/[\t ]+/)[0] + " " + pk.split(/[\t ]+/)[1]
-		
+			privk = ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' ]  ).chomp.strip
+			pubk =  ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
+			
+			%x[ #{GitHosting.git_user_runner} 'echo "#{privk}" > ~/.ssh/id_rsa ' ]
+			%x[ #{GitHosting.git_user_runner} 'echo "#{pubk}" > ~/.ssh/id_rsa.pub ' ]
+			
+			@@mirror_pubkey = pubk.split(/[\t ]+/)[0] + " " + pubk.split(/[\t ]+/)[1]
+
 			#settings = Setting["plugin_redmine_git_hosting"]
 			#settings["gitMirrorPushPublicKey"] = publicKey
 			#Setting["plugin_redmine_git_hosting"] = settings
