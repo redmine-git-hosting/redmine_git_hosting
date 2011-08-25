@@ -27,7 +27,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'httpServer' => 'localhost',
 		'gitUser' => 'git',
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
-		'gitoliteIdentityPublicKeyFile' => => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
+		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'gitRepositoryBasePath' => 'repositories/',
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
