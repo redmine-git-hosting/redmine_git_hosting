@@ -4,7 +4,7 @@ pt:
   label_git_server: Domínio do servidor Gitolite
   label_http_server: "Domínio do servidor HTTP (para os url's git http)"
   label_git_user: Nome de Utilizador Git
-  label_git_mirror_push_public_key: Git Mirror Push Public Key
+  label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
 

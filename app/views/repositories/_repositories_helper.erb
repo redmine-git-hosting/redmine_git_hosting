@@ -1,5 +1,4 @@
 <%
-	GitHosting.ensure_push_key_initialized
 	extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
 	extra_vals.each_key do |e|
 		begin
