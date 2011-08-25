@@ -3,7 +3,7 @@ class RepositoryMirrorsController < ApplicationController
 
 	before_filter :require_login
 	before_filter :set_user_variable
-	before_filter :set_poject_variable
+	before_filter :set_project_variable
 	before_filter :check_required_permissions
 	before_filter :check_xhr_request
 	before_filter :find_repository_mirror, :except => [:index, :create]
