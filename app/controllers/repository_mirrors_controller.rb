@@ -76,7 +76,6 @@ class RepositoryMirrorsController < ApplicationController
 			# display confirmation view
 		else
 			if params[:confirm]
-				%x[#{git_user_runner} rm #{identify_file}]
 				redirect_url = url_for(
 					:controller => 'projects',
 					:action => 'settings',
