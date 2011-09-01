@@ -1,0 +1,183 @@
+<% remote_form_for :repository, @repository,
+                   :url => { :controller => 'repositories', :action => 'edit', :id => @project },
+                   :builder => TabularFormBuilder,
+                   :lang => current_language do |f| %>
+
+<%= error_messages_for 'repository' %>
+
+<div class="box tabular">
+<p><%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %></p>
+
+
+
+
+<% if @repository && @repository.is_a?(Repository::Git) %>
+	<%
+		mirror_pubkey = GitHosting.mirror_push_public_key
+		extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
+		extra_vals.each_key do |e|
+			begin
+				val = repository.extra[e]
+				if !val.nil?
+					extra_vals[e] = val.to_s
+				end
+			rescue
+			end
+		end
+	%>
+	<p> 
+		<%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
+		<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]) %>
+	</p>
+	<p> 
+		<%= label_tag  "extra[git_http]", l(:field_git_http) %>
+		<%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected=>extra_vals[:git_http]) %>
+	</p>
+	<p> 
+		<%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
+		<%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:notify_cia]) %>
+		<% if extra_vals[:notify_cia] == "1" %>
+			<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
+			<em><b><span id="notify_cia_result"></span></b></em>
+		<% end %>
+	</p>
+	<%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
+	<br/>
+<% else %>
+	<%= repository_field_tags(f, @repository) if @repository %>
+<% end %>
+
+
+</div>	
+<div class="contextual">
+<% if @repository && !@repository.new_record? %>
+<%= link_to(l(:label_user_plural), {:controller => 'repositories', :action => 'committers', :id => @project}, :class => 'icon icon-user') %>
+<%= link_to(l(:button_delete), {:controller => 'repositories', :action => 'destroy', :id => @project},
+            :confirm => l(:text_are_you_sure),
+            :method => :post,
+            :class => 'icon icon-del') %>
+<% end %>
+</div>
+
+<%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
+
+
+<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
+	<div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div>
+
+	
+	<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
+	<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+	<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
+	<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+
+	<div class="box tabular">
+		
+		<h3>Mirrors</h3>
+		<% if @repository.project.repository_mirrors.any? %>
+			<div class="autoscroll">
+				<table class="list" style="margin: 0 auto; width: 96%">
+					<thead>
+						<tr>
+							<th>URL</th>
+							<th>Active</th>
+							<th>Created At</th>
+							<th>Updated At</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @repository.project.repository_mirrors.each do |mirror| %>
+							<tr class="<%= cycle('odd', 'even') %>">
+								<td class="name"><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %></td>
+								<td class="center"><%= checked_image mirror.active? %></td>
+								<td align="center"><%= h(format_date(mirror.created_at)) %></td>
+								<td align="center"><%= h(format_date(mirror.updated_at)) %></td>
+								<td class="buttons">
+								<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
+									<% if mirror.active==1 -%>
+										<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
+									<% end %>
+									<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
+									<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
+								<% end %>
+								</td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		<% else %>
+			<p class="nodata" style="margin: 0 8px; width: 96%; padding: 8px;">No Mirrors Defined</p>
+		<% end %>
+
+
+		<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
+			<div style="left:0px;clear:left;margin: 4px 8px;width: 96%;">
+				<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror' ) %>
+			</div>
+		<% end %>
+		<div id="mirror_bottom_spacer" style="display:block;height:10px;clear:both;"></div>
+		
+	</div>
+	<script type="text/javascript">
+		function getWidth() {
+			var width = 60*document.viewport.getWidth()/100;
+			if (width<750) { width=750 };
+			return width;
+		}
+		document.observe("dom:loaded", function() {
+			$$(".add-mirror").each(function(elem) {
+				Event.observe(elem, 'click', function(event) {
+					Event.stop(event);
+					Modalbox.show(
+						elem.href, {
+							title: "<%=l(:label_mirror_create)%>",
+							width: getWidth()
+						}
+					)
+					return false;
+				})
+			})
+			$$(".edit-mirror").each(function(elem) {
+				Event.observe(elem, 'click', function(event) {
+					Event.stop(event);
+					Modalbox.show(
+						elem.href, {
+							title: "<%=l(:label_mirror_edit)%>",
+							width: getWidth()
+						}
+					)
+					return false;
+				})
+			})
+			$$(".delete-mirror").each(function(elem) {
+				Event.observe(elem, 'click', function(event) {
+					Event.stop(event);
+					Modalbox.show(
+						elem.href, {
+							title: "<%=l(:label_mirror_delete)%>",
+							width: getWidth()
+						}
+					)
+					return false;
+				})
+			})
+			$$(".push-mirror").each(function(elem) {
+				Event.observe(elem, 'click', function(event) {
+					Event.stop(event);
+					Modalbox.show(
+						elem.href, {
+							title: "<%=l(:button_push_title)%>",
+							width: getWidth()
+						}
+					)
+					return false;
+				})
+			})
+		})
+	</script>
+<% end %>
+
+<% end %>
+
