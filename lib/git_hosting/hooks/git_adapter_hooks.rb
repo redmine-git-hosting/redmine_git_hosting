@@ -108,17 +108,15 @@ module GitHosting
 				return GitHosting::logger
 			end
 
-			@@package_hooks_dir = nil
 
 			def self.gitolite_hooks_dir
 				return '~/.gitolite/hooks/common'
 			end
 
+			@@cached_hooks_dir = nil
 			def self.package_hooks_dir
-				if @@package_hooks_dir.nil?
-					@@package_hooks_dir = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), 'contrib', 'hooks')
-				end
-				return @@package_hooks_dir
+				ret = @@cached_hooks_dir.nil? File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), 'contrib', 'hooks') : @@cached_hooks_dir
+				ret
 			end
 
 			@@cached_hook_digest = nil

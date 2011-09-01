@@ -117,9 +117,9 @@ class GitoliteHooksController < ApplicationController
 	end
 
 	def find_project
-		@project = Project.find_by_identifier(params[:project_id])
+		@project = Project.find_by_identifier(params[:projectid])
 		if @project.nil?
-			render(:text => l(:project_not_found, :identifier => params[:project_id])) if @project.nil?
+			render(:text => l(:project_not_found, :identifier => params[:projectid])) if @project.nil?
 			return
 		end
 	end

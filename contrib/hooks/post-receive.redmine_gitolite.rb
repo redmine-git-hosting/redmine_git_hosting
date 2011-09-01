@@ -68,7 +68,6 @@ rgh_var_names.each do |var_name|
 		exit
 	else
 		var_name = var_name.gsub(/^.*\./, "")
-		var_name = var_name.gsub(/projectid/, "project_id")
 		rgh_vars[ var_name ] = var_val
 	end
 end
