@@ -25,9 +25,6 @@ def run_query(url_str, params, with_https)
 	success = false
 	begin
 		url  = URI.parse(url_str)
-		puts url_str
-		puts url.path
-		puts url.port.to_s
 		http = Net::HTTP.new( url.host, url.port )
 		http.open_timeout = 20
 		http.read_timeout = 180
@@ -53,7 +50,7 @@ def run_query(url_str, params, with_https)
 end
 
 
-log('', false, true)
+log("\n\n", false, true)
 
 gl_repo = ENV['GL_REPO']
 if gl_repo == nil || gl_repo.to_s == ""
@@ -72,7 +69,7 @@ rgh_var_names.each do |var_name|
 	else
 		var_name = var_name.gsub(/^.*\./, "")
 		var_name = var_name.gsub(/projectid/, "project_id")
-		rgh_vars[ var_name ] = var_name
+		rgh_vars[ var_name ] = var_val
 	end
 end
 
@@ -96,5 +93,6 @@ else
 	log("Success", true, true)
 	log("", true, true)
 end
+log("\n\n", false, true)
 
 exit
