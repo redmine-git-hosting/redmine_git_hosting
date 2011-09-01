@@ -13,8 +13,6 @@ module GitHosting
 					return @@check_hooks_installed_cached
 				end
 
-				create_hooks_digest
-
 				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
 				post_receive_exists = (%x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']).match(/yes/)
 				post_receive_length_is_zero = false
@@ -37,7 +35,7 @@ module GitHosting
 					digest = Digest::MD5.hexdigest(contents)
 
 					logger.debug "Installed hook digest: #{digest}"
-					if @@rgh_hook_digest == digest
+					if rgh_hook_digest == digest
 						logger.info "Our hook is already installed"
 						@@check_hooks_installed_stamp = Time.new
 						@@check_hooks_installed_cached = true
@@ -123,15 +121,16 @@ module GitHosting
 				return @@package_hooks_dir
 			end
 
-			@@rgh_hook_digest = nil
-			def self.create_hook_digest(recreate=false)
-				if @@rgh_hook_digest == nil || recreate
-					logger.info "Creating MD5 digests for our hooks"
+			@@cached_hook_digest = nil
+			def self.rgh_hook_digest(recreate=false)
+				if @@cached_hook_digest == nil || recreate
+					logger.info "Creating MD5 digests for Redmine Git Hosting hook"
 					hook_file = "post-receive.redmine_gitolite.rb"
 					digest = Digest::MD5.file(File.join(package_hooks_dir, hook_file))
 					logger.info "Digest for #{hook_file}: #{digest}"
-					@@rgh_hook_digest = digest
+					@@cached_hook_digest = digest
 				end
+				@@cached_hook_digest
 			end
 
 		end
