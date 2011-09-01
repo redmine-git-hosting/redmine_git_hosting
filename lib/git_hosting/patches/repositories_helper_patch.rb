@@ -8,7 +8,7 @@ module GitHosting
 			def git_field_tags_with_hosting_configuration(form, repository)
 				@controller.send(
 					:render_to_string,
-					:partial => 'repositories/repositories_helper.erb',
+					:partial => 'repositories/git_repository_settings.erb',
 					:locals => { :form => form, :repository => repository }
 				)
 			end
