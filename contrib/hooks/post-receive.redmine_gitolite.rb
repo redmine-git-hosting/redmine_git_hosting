@@ -1,0 +1,100 @@
+#!/usr/bin/env ruby
+
+require 'net/http'
+require 'net/https'
+require 'uri'
+
+STDOUT.sync=true
+@debug=false
+
+
+def log(msg, debug_only=false, with_newline=true)
+	if @debug || (!debug_only)
+		print msg + (with_newline ? "\n" : "") 
+	end
+end
+def get_git_repository_config(varname, boolean)
+	bstr= boolean ? " --bool " : ""
+	result = (%x[git config #{bstr} #{varname} ]).chomp.strip
+	return boolean ? result == "true" : result
+end
+
+
+def run_query(url_str, params, with_https)	
+	url_str = (with_https ?  "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
+	success = false
+	begin
+		url  = URI.parse(url_str)
+		puts url_str
+		puts url.path
+		puts url.port.to_s
+		http = Net::HTTP.new( url.host, url.port )
+		http.open_timeout = 20
+		http.read_timeout = 180
+		if with_https
+			http.use_ssl = true
+			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		end
+		req  = Net::HTTP::Post.new(url.request_uri)
+		req.set_form_data(params)
+		response = http.request(req) do |response|
+			response.read_body do |body_frag|
+				success = true
+				log(body_frag, false, false)
+			end
+		end
+		#response = http.request(req)
+		#puts response.header
+	rescue Exception =>e
+		#log("HTTP_ERROR:" + e.to_s, true, true)
+		success = false
+	end
+	success
+end
+
+
+log('', false, true)
+
+gl_repo = ENV['GL_REPO']
+if gl_repo == nil || gl_repo.to_s == ""
+	log("GL_REPO is not defined, skipping hook.", false, true)
+	exit
+end
+
+
+rgh_vars = {}
+rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid" ]
+rgh_var_names.each do |var_name|
+	var_val = get_git_repository_config(var_name, false)
+	if var_val.to_s == ""
+		log("Repository #{gl_repo} does not have \"#{var_name}\" set. Skipping hook.", false, true)
+		exit
+	else
+		var_name = var_name.gsub(/^.*\./, "")
+		var_name = var_name.gsub(/projectid/, "project_id")
+		rgh_vars[ var_name ] = var_name
+	end
+end
+
+# Let's read the refs passed to us
+refs = []
+$<.each  do |line|
+	r = line.chomp.strip.split
+	refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
+end
+rgh_vars["refs[]"] = refs
+
+
+log("Notifying ChiliProject/Redmine project #{gl_repo} about changes to this repo...", true, true)
+success = run_query(rgh_vars["url"], rgh_vars, true)
+if !success
+	success = run_query(rgh_vars["url"], rgh_vars, false)
+end
+if(!success)
+	log("Error contacting ChiliProject/Redmine about changes to this repo.", false, true)
+else
+	log("Success", true, true)
+	log("", true, true)
+end
+
+exit
