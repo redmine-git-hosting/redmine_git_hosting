@@ -123,7 +123,7 @@ module GitHosting
 
 			@@cached_hook_digest = nil
 			def self.rgh_hook_digest(recreate=false)
-				if @@cached_hook_digest == nil || recreate
+				if @@cached_hook_digest.nil? || recreate
 					logger.info "Creating MD5 digests for Redmine Git Hosting hook"
 					hook_file = "post-receive.redmine_gitolite.rb"
 					digest = Digest::MD5.file(File.join(package_hooks_dir, hook_file))
