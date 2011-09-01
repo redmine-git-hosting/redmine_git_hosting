@@ -8,25 +8,15 @@ module GitHosting
 				log_level = Setting.plugin_redmine_git_hosting['loggingLevel']
 				update_hooks = false
 				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
-				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitHooksCurlIgnore']
+				http_server = Setting.plugin_redmine_git_hosting['httpServer']
+
 
 				plugin_without_hook_settings_update
 
 				if params[:id] == 'redmine_git_hosting' and not params[:settings].nil?
-					if params[:settings][:updateAllHooks]=="yes"
-						GitHosting.logger.info("Updating hook settings on ALL repositories")
+					if params[:settings][:updateAllHooks]=="yes" || debug_hook != Setting.plugin_redmine_git_hosting['gitHooksDebug'] || http_server != Setting.plugin_redmine_git_hosting['httpServer'] 
 						update_hooks = true
-						GitHosting::Hooks::GitAdapterHooks.setup_hooks()
-					else
-						if debug_hook != Setting.plugin_redmine_git_hosting['gitHooksDebug']
-							update_hooks = true
-						end
-						if curl_ignore_security != Setting.plugin_redmine_git_hosting['gitHooksCurlIgnore']
-							update_hooks = true
-						end
-						if update_hooks
-							GitHosting.logger.info("Settings changed. Updating hook settings on ALL repositories")
-						end
+						GitHosting.logger.info("Settings changed. Updating hook settings on ALL repositories")
 					end
 					new_logging_level = params[:settings][:loggingLevel]
 					if log_level != new_logging_level

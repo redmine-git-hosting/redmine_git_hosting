@@ -99,13 +99,9 @@ module GitHosting
 				logger.debug "Debug Hook: #{debug_hook}"
 				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
 
-				curl_ignore_security = Setting.plugin_redmine_git_hosting['gitHooksCurlIgnore']
-				logger.debug "Hook Ignore Curl Security: #{curl_ignore_security}"
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.curlignoresecurity "#{curl_ignore_security}"]
 			end
 
 			def self.setup_hooks(projects=nil)
-				# TODO: Need to find out how to call this when this plugin's settings are saved
 				check_hooks_installed()
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}

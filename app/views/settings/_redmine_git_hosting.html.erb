@@ -97,13 +97,6 @@
 		<%= select_tag("settings[gitHooksDebug]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksDebug'])) %>
 		<br />
 	</p>
-	<% if !GitHosting::Hooks::GitAdapterHooks.python_hook_installed? -%>
-	<p>
-		<label><%= l(:label_git_hook_curl_security_ignore)%></label>
-		<%= select_tag("settings[gitHooksCurlIgnore]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksCurlIgnore'])) %>
-		<br />
-	</p>
-	<%- end %>
 	<p>
 		<label><%= l(:label_hook_installed)%></label>
 		<%= image_tag((GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
