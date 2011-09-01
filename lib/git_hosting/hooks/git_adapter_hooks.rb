@@ -21,12 +21,7 @@ module GitHosting
 				post_receive_exists = %x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
 				if post_receive_exists.match(/no/)
 					logger.info "\"post-receive\" not handled by gitolite, installing it..."
-					if python_available == true
-						logger.info "python is available, installing faster version of hook"
-						install_hook("post-receive.redmine_gitolite.py")
-					else
-						install_hook("post-receive.redmine_gitolite")
-					end
+					install_hook("post-receive.redmine_gitolite.rb")
 					logger.info "\"post-receive.redmine_gitolite\ installed"
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
@@ -146,16 +141,6 @@ module GitHosting
 					@@package_hooks_dir = File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), 'contrib', 'hooks')
 				end
 				return @@package_hooks_dir
-			end
-
-			@python_available = nil
-			def self.python_available
-				if @python_available.nil?
-					python_test = %x[#{GitHosting.git_user_runner} "which python 2>/dev/null && echo 'yes_we_have_python' || echo 'no'"].chomp.strip
-					logger.info "Python test result #{python_test}"
-					@python_available = python_test.match(/yes_we_have_python/)? true : false
-				end
-				@python_available
 			end
 
 			@@hook_digests = []
