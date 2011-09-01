@@ -16,7 +16,7 @@ module GitHosting
 				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
 				post_receive_exists = (%x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']).match(/yes/)
 				post_receive_length_is_zero = false
-				if post_receive_exists.match
+				if post_receive_exists
 					post_receive_length_is_zero= "0" == (%x[echo 'wc -c  #{post_receive_hook_path}' | #{GitHosting.git_user_runner} "bash" ]).chomp.strip.split(/[\t ]+/)[0]
 				end
 
@@ -58,7 +58,7 @@ module GitHosting
 				%x[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
 				%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
 				%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-				create_hooks_digests(true)
+	
 			end
 
 			def self.setup_hooks_for_project(project)
