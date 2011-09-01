@@ -5,21 +5,24 @@ module GitHosting
 	module Hooks
 		module GitAdapterHooks
 
-			@@python_hook_digest = nil
-			@@installed_hook_digest = nil
-
 			@@check_hooks_installed_stamp = nil
 			@@check_hooks_installed_cached = nil
+
 			def self.check_hooks_installed
 				if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5):
 					return @@check_hooks_installed_cached
 				end
 
-				create_hooks_digests
+				create_hooks_digest
 
 				post_receive_hook_path = File.join(gitolite_hooks_dir, 'post-receive')
-				post_receive_exists = %x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']
-				if post_receive_exists.match(/no/)
+				post_receive_exists = (%x[#{GitHosting.git_user_runner} test -r '#{post_receive_hook_path}' && echo 'yes' || echo 'no']).match(/yes/)
+				post_receive_length_is_zero = false
+				if post_receive_exists.match
+					post_receive_length_is_zero= "0" == (%x[echo 'wc -c  #{post_receive_hook_path}' | #{GitHosting.git_user_runner} "bash" ]).chomp.strip.split(/[\t ]+/)[0]
+				end
+
+				if (!post_receive_exists) || post_receive_length_is_zero
 					logger.info "\"post-receive\" not handled by gitolite, installing it..."
 					install_hook("post-receive.redmine_gitolite.rb")
 					logger.info "\"post-receive.redmine_gitolite\ installed"
@@ -30,18 +33,11 @@ module GitHosting
 					@@check_hooks_installed_cached = true
 					return @@check_hooks_installed_cached
 				else
-					git_user = Setting.plugin_redmine_git_hosting['gitUser']
-					web_user = GitHosting.web_user
-					if git_user == web_user
-						digest = Digest::MD5.file(File.expand_path(post_receive_hook_path))
-					else
-						contents = %x[#{GitHosting.git_user_runner} 'cat #{post_receive_hook_path}']
-						digest = Digest::MD5.hexdigest(contents)
-					end
+					contents = %x[#{GitHosting.git_user_runner} 'cat #{post_receive_hook_path}']
+					digest = Digest::MD5.hexdigest(contents)
 
 					logger.debug "Installed hook digest: #{digest}"
-					@@installed_hook_digest = digest
-					if @@hook_digests.include? digest
+					if @@rgh_hook_digest == digest
 						logger.info "Our hook is already installed"
 						@@check_hooks_installed_stamp = Time.new
 						@@check_hooks_installed_cached = true
@@ -61,16 +57,9 @@ module GitHosting
 				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
 				logger.info "Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
 				git_user = Setting.plugin_redmine_git_hosting['gitUser']
-				web_user = GitHosting.web_user
-				if git_user == web_user
-					%x[#{GitHosting.git_user_runner} 'cp #{hook_source_path} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-				else
-					%x[#{GitHosting.git_user_runner} 'sudo -nu #{web_user} cat #{hook_source_path} | cat - > #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
-					%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-				end
+				%x[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
+				%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
+				%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
 				create_hooks_digests(true)
 			end
 
@@ -113,12 +102,7 @@ module GitHosting
 				end
 			end
 
-			def self.python_hook_installed?
-				if !@@installed_hook_digest.nil? && !@@python_hook_digest.nil?
-					return (@@installed_hook_digest == @@python_hook_digest)
-				end
-				return false
-			end
+
 
 			private
 
@@ -139,21 +123,14 @@ module GitHosting
 				return @@package_hooks_dir
 			end
 
-			@@hook_digests = []
-			def self.create_hooks_digests(recreate=false)
-				if recreate == true
-					@@hook_digests = []
-				end
-				if @@hook_digests.empty?
+			@@rgh_hook_digest = nil
+			def self.create_hook_digest(recreate=false)
+				if @@rgh_hook_digest == nil || recreate
 					logger.info "Creating MD5 digests for our hooks"
-					["post-receive.redmine_gitolite", "post-receive.redmine_gitolite.py"].each do |hook_name|
-						digest = Digest::MD5.file(File.join(package_hooks_dir, hook_name))
-						logger.info "Digest for #{hook_name}: #{digest}"
-						@@hook_digests.push(digest)
-						if hook_name == "post-receive.redmine_gitolite.py"
-							@@python_hook_digest = digest
-						end
-					end
+					hook_file = "post-receive.redmine_gitolite.rb"
+					digest = Digest::MD5.file(File.join(package_hooks_dir, hook_file))
+					logger.info "Digest for #{hook_file}: #{digest}"
+					@@rgh_hook_digest = digest
 				end
 			end
 
