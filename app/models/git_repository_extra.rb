@@ -1,48 +1,38 @@
-require 'openssl'
-require 'digest/sha2'
-require 'active_support/base64'
-require 'active_support/secure_random'
+require 'digest/sha1'
 
 class GitRepositoryExtra < ActiveRecord::Base
 
 	belongs_to :repository, :class_name => 'Repository', :foreign_key => 'repository_id'
 	validates_associated :repository
-	attr_accessible :id, :repository_id, :key, :ivector, :git_http, :git_daemon, :notify_cia
+	attr_accessible :id, :repository_id, :key, :git_http, :git_daemon, :notify_cia
 
 	def after_initialize
 		generate if self.repository.nil?
 	end
 
 
-	def check_key(encoded_key)
+	def validate_encoded_time(clear_time, encoded_time)
+		valid = false
 		begin
-			c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
-			c.decrypt
-			c.key = read_attribute(:key)
-			c.iv = read_attribute(:ivector)
-			decoded = c.update(ActiveSupport::Base64.decode64(encoded_key))
-			decoded << c.final
-			return read_attribute(:key) == decoded
+			cur_time_seconds = Time.new.utc.to_i
+			test_time_seconds = clear_time.to_i
+			if cur_time_seconds - test_time_seconds < 5*60
+				key = read_attribute(:key)
+				test_encoded = Digest::SHA1.hexdigest(clear_time.to_s + key.to_s)
+				if test_encoded.to_s == encoded_time.to_s
+					valid = true
+				end
+			end
 		rescue Exception=>e
-			GitHosting.logger.error("Check key failed for #{self.repository.project.identifier}'s repository hook: #{e.to_s}")
-			return false
 		end
-	end
-
-	def encode_key
-		c = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
-		c.encrypt
-		c.key = read_attribute(:key)
-		c.iv = read_attribute(:ivector)
-		encrypted =  c.update(read_attribute(:key))
-		encrypted << c.final
-		return ActiveSupport::Base64.encode64s(encrypted)
+		valid
 	end
 
 	def generate
-		write_attribute(:key, Digest::SHA1.hexdigest(ActiveSupport::SecureRandom.random_bytes(16)).unpack('a2'*32).map{|x| x.hex}.pack('c'*32))
-		write_attribute(:ivector, Digest::SHA1.hexdigest(ActiveSupport::SecureRandom.random_bytes(16)).unpack('a2'*32).map{|x| x.hex}.pack('c'*32))
-		self.save
+		if self.key.nil?
+			write_attribute(:key, (0...64+rand(64) ).map{65.+(rand(25)).chr}.join )
+			self.save
+		end
 	end
 
 end
