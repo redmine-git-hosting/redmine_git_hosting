@@ -69,11 +69,11 @@ module GitHosting
 			def self.update_hook_url_and_debug
 				hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
 				logger.debug "Hook URL: #{hook_url}"
-				%x[#{GitHosting.git_exec} --global config hooks.redmine_gitolite.url "#{hook_url}"]
+				%x[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{hook_url}"]
 
 				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
 				logger.debug "Debug Hook: #{debug_hook}"
-				%x[#{GitHosting.git_exec} --global config --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
+				%x[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
 
 			end
 
