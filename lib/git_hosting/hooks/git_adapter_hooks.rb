@@ -26,6 +26,7 @@ module GitHosting
 					logger.info "\"post-receive.redmine_gitolite\ installed"
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
+					update_hook_url_and_debug
 					logger.info "Finished installing hooks in the gitolite install..."
 					@@check_hooks_installed_stamp = Time.new
 					@@check_hooks_installed_cached = true
@@ -53,7 +54,7 @@ module GitHosting
 
 			def self.setup_hooks(projects=nil)
 				check_hooks_installed
-				update_hook_url
+				update_hook_url_and_debug
 
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
