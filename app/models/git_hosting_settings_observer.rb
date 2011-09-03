@@ -1,5 +1,5 @@
 class GitHostingSettingsObserver < ActiveRecord::Observer
-	observe :settings
+	observe :setting
 
 	@@old_hook_debug = nil
 	@@old_http_server = nil
