@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'digest/sha1'
 require 'net/http'
 require 'net/https'
 require 'uri'
@@ -18,7 +19,16 @@ def get_git_repository_config(varname, boolean)
 	result = (%x[git config #{bstr} #{varname} ]).chomp.strip
 	return boolean ? result == "true" : result
 end
-
+def get_http_params(rgh_vars)
+	clear_time   = Time.new.utc.to_i.to_s
+	params = { "clear_time" => clear_time, "encoded_time" => Digest::SHA1.hexdigest(clear_time.to_s + rgh_vars["key"]) }
+	rgh_vars.each_key do |v|
+		if v != "key"
+			params[v] = rgh_vars[v]
+		end
+	end
+	params
+end
 
 def run_query(url_str, params, with_https)	
 	url_str = (with_https ?  "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
@@ -82,9 +92,9 @@ rgh_vars["refs[]"] = refs
 
 
 log("Notifying ChiliProject/Redmine project #{gl_repo} about changes to this repo...", true, true)
-success = run_query(rgh_vars["url"], rgh_vars, true)
+success = run_query(rgh_vars["url"], get_http_params(rgh_vars), true)
 if !success
-	success = run_query(rgh_vars["url"], rgh_vars, false)
+	success = run_query(rgh_vars["url"], get_http_params(rgh_vars), false)
 end
 if(!success)
 	log("Error contacting ChiliProject/Redmine about changes to this repo.", false, true)

@@ -26,6 +26,7 @@ module GitHosting
 					logger.info "\"post-receive.redmine_gitolite\ installed"
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
+					update_hook_url_and_debug
 					logger.info "Finished installing hooks in the gitolite install..."
 					@@check_hooks_installed_stamp = Time.new
 					@@check_hooks_installed_cached = true
@@ -50,46 +51,11 @@ module GitHosting
 				end
 			end
 
-			def self.install_hook(hook_name)
-				hook_source_path = File.join(package_hooks_dir, hook_name)
-				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
-				logger.info "Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
-				git_user = Setting.plugin_redmine_git_hosting['gitUser']
-				%x[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
-				%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
-				%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-	
-			end
-
-			def self.setup_hooks_for_project(project)
-				logger.info "Setting up hooks for project #{project.identifier}"
-
-				if project.repository.nil?
-					logger.info "Repository for project #{project.identifier} is not yet created"
-					return
-				end
-
-				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
-				logger.debug "Repository Path: #{repo_path}"
-
-				hook_key = project.repository.extra.encode_key
-				logger.debug "Hook KEY: #{hook_key}"
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{hook_key}"]
-
-				hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
-				logger.debug "Hook URL: #{hook_url}"
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.url "#{hook_url}"]
-
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
-
-				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
-				logger.debug "Debug Hook: #{debug_hook}"
-				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
-
-			end
 
 			def self.setup_hooks(projects=nil)
-				check_hooks_installed()
+				check_hooks_installed
+				update_hook_url_and_debug
+
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
 				elsif projects.instance_of? Project
@@ -100,6 +66,16 @@ module GitHosting
 				end
 			end
 
+			def self.update_hook_url_and_debug
+				hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
+				logger.debug "Hook URL: #{hook_url}"
+				%x[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{hook_url}"]
+
+				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
+				logger.debug "Debug Hook: #{debug_hook}"
+				%x[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
+
+			end
 
 
 			private
@@ -129,6 +105,30 @@ module GitHosting
 					@@cached_hook_digest = digest
 				end
 				@@cached_hook_digest
+			end
+			def self.install_hook(hook_name)
+				hook_source_path = File.join(package_hooks_dir, hook_name)
+				hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
+				logger.info "Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
+				git_user = Setting.plugin_redmine_git_hosting['gitUser']
+				%x[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
+				%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
+				%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
+	
+			end
+
+
+			def self.setup_hooks_for_project(project)
+				logger.info "Setting up hooks for project #{project.identifier}"
+				if project.repository.nil?
+					logger.info "Repository for project #{project.identifier} is not yet created"
+					return
+				end
+
+				repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
+				hook_key = project.repository.extra.key
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{hook_key}"]
+				%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
 			end
 
 		end

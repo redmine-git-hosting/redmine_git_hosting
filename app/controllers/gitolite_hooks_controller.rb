@@ -14,7 +14,7 @@ class GitoliteHooksController < ApplicationController
 
 	def post_receive
 
-		if @project.repository.extra.check_key(params[:key]) == false
+		if not @project.repository.extra.validate_encoded_time(params[:clear_time], params[:encoded_time])
 			render(:text => "The hook key provided is not valid. Please let your server admin know about it")
 			return
 		end
