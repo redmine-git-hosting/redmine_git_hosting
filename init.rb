@@ -67,6 +67,12 @@ Repository.send(:has_many, :cia_notifications, :foreign_key =>'repository_id', :
 Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 
 # initialize observer
-ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
-
+config.after_initialize do
+	if config.action_controller.perform_caching
+		ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
+		ActionController::Dispatcher.to_prepare(:git_hosting_observer_reload) do
+			GitHostingObserver.instance.reload_this_observer
+		end	
+	end
+end
 

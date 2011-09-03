@@ -4,6 +4,13 @@ class GitHostingObserver < ActiveRecord::Observer
 	@@updating_active = true
 	@@cached_project_updates = []
 
+	def reload_this_observer
+		observed_classes.each do |klass|
+			klass.name.constantize.add_observer(self)
+		end
+	end
+
+
 	def self.set_update_active(is_active)
 		@@updating_active = is_active
 		if is_active
