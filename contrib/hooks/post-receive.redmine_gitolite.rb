@@ -15,8 +15,7 @@ def log(msg, debug_only=false, with_newline=true)
 	end
 end
 def get_git_repository_config(varname)
-	result = (%x[git config #{bstr} #{varname} ]).chomp.strip
-	return boolean ? result == "true" : result
+	(%x[git config #{varname} ]).chomp.strip
 end
 def get_http_params(rgh_vars)
 	clear_time   = Time.new.utc.to_i.to_s
@@ -64,7 +63,7 @@ end
 rgh_vars = {}
 rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
 rgh_var_names.each do |var_name|
-	var_val = get_git_repository_config(var_name, false)
+	var_val = get_git_repository_config(var_name)
 	if var_val.to_s == ""
 		log("\n\nRepository does not have \"#{var_name}\" set. Skipping hook.\n\n", false, true)
 		exit
@@ -86,11 +85,17 @@ end
 rgh_vars["refs[]"] = refs
 
 if rgh_vars["asynch"] == "true"
-	pid = Process.fork
-	if !pid.nil?
-		Process.detach(pid)
-		exit
-	end
+	pid = fork
+	exit unless pid.nil?
+	pid = fork
+	exit unless pid.nil?
+
+	File.umask 0000
+
+	STDIN.reopen '/dev/null'
+	STDOUT.reopen '/dev/null', 'a'
+	STDERR.reopen STDOUT
+
 end
 
 log("\n\n", false, true)
