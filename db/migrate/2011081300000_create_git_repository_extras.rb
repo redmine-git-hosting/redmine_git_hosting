@@ -30,10 +30,11 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 			end
 		}
 
-
-		GitHosting::Hooks::GitAdapterHooks.setup_hooks
-		%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
-
+		begin
+			GitHosting::Hooks::GitAdapterHooks.setup_hooks
+			%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
+		rescue
+		end
 
 
 		if self.table_exists?("git_hook_keys")
