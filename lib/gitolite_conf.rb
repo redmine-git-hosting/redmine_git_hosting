@@ -80,10 +80,26 @@ module GitHosting
 
 		def content
 			content = []
+			
+			# To facilitate creation of repos, even when no users are defined
+			# always define at least one user -- specifically the admin
+			# user which has rights to modify gitolite-admin and control
+			# all repos.  Since the gitolite-admin user can grant anyone
+			# any permission anyway, this isn't really a security risk.
+			# If no users are defined, this ensures the repo actually
+			# gets created, hence it's necessary.
+			admin_user = @repositories["gitolite-admin"].rights["RW+".to_sym][0]
 			@repositories.each do |repo, rights|
 				content << "repo\t#{repo}"
+				has_users=false
 				rights.each do |perm, users|
-					content << "\t#{perm}\t=\t#{users.join(' ')}" if users.length > 0
+					if users.length > 0
+						has_users=true
+						content << "\t#{perm}\t=\t#{users.join(' ')}"
+					end
+				end
+				if !has_users
+					content << "\tR\t=\t#{admin_user}"
 				end
 				content << ""
 			end
@@ -95,6 +111,10 @@ module GitHosting
 	class GitoliteAccessRights
 		def initialize
 			@rights = ActiveSupport::OrderedHash.new
+		end
+		
+		def rights
+			@rights
 		end
 
 		def add perm, users
