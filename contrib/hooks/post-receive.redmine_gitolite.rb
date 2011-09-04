@@ -6,16 +6,15 @@ require 'net/https'
 require 'uri'
 
 STDOUT.sync=true
-@debug=false
+$debug=false
 
 
 def log(msg, debug_only=false, with_newline=true)
-	if @debug || (!debug_only)
+	if $debug || (!debug_only)
 		print msg + (with_newline ? "\n" : "") 
 	end
 end
-def get_git_repository_config(varname, boolean)
-	bstr= boolean ? " --bool " : ""
+def get_git_repository_config(varname)
 	result = (%x[git config #{bstr} #{varname} ]).chomp.strip
 	return boolean ? result == "true" : result
 end
@@ -60,21 +59,23 @@ def run_query(url_str, params, with_https)
 end
 
 
-log("\n\n", false, true)
 
 
 rgh_vars = {}
-rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid" ]
+rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
 rgh_var_names.each do |var_name|
 	var_val = get_git_repository_config(var_name, false)
 	if var_val.to_s == ""
-		log("Repository does not have \"#{var_name}\" set. Skipping hook.", false, true)
+		log("\n\nRepository does not have \"#{var_name}\" set. Skipping hook.\n\n", false, true)
 		exit
 	else
 		var_name = var_name.gsub(/^.*\./, "")
 		rgh_vars[ var_name ] = var_val
 	end
 end
+
+$debug = rgh_vars["debug"] == "true"
+
 
 # Let's read the refs passed to us
 refs = []
@@ -84,7 +85,15 @@ $<.each  do |line|
 end
 rgh_vars["refs[]"] = refs
 
+if rgh_vars["asynch"] == "true"
+	pid = Process.fork
+	if !pid.nil?
+		Process.detach(pid)
+		exit
+	end
+end
 
+log("\n\n", false, true)
 log("Notifying ChiliProject/Redmine project #{rgh_vars['projectid']} about changes to this repo...", true, true)
 success = run_query(rgh_vars["url"], get_http_params(rgh_vars), true)
 if !success
