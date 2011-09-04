@@ -62,19 +62,13 @@ end
 
 log("\n\n", false, true)
 
-gl_repo = ENV['GL_REPO']
-if gl_repo == nil || gl_repo.to_s == ""
-	log("GL_REPO is not defined, skipping hook.", false, true)
-	exit
-end
-
 
 rgh_vars = {}
 rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid" ]
 rgh_var_names.each do |var_name|
 	var_val = get_git_repository_config(var_name, false)
 	if var_val.to_s == ""
-		log("Repository #{gl_repo} does not have \"#{var_name}\" set. Skipping hook.", false, true)
+		log("Repository does not have \"#{var_name}\" set. Skipping hook.", false, true)
 		exit
 	else
 		var_name = var_name.gsub(/^.*\./, "")
@@ -91,7 +85,7 @@ end
 rgh_vars["refs[]"] = refs
 
 
-log("Notifying ChiliProject/Redmine project #{gl_repo} about changes to this repo...", true, true)
+log("Notifying ChiliProject/Redmine project #{rgh_vars['projectid']} about changes to this repo...", true, true)
 success = run_query(rgh_vars["url"], get_http_params(rgh_vars), true)
 if !success
 	success = run_query(rgh_vars["url"], get_http_params(rgh_vars), false)
