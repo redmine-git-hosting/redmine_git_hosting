@@ -1,9 +1,9 @@
 class GitHostingSettingsObserver < ActiveRecord::Observer
 	observe :setting
 
-	@@old_hook_debug = nil
-	@@old_http_server = nil
-	@@old_git_user = nil
+	@@old_hook_debug = Setting.plugin_redmine_git_hosting['gitHooksDebug']
+	@@old_http_server = Setting.plugin_redmine_git_hosting['httpServer']
+	@@old_git_user = Setting.plugin_redmine_git_hosting['gitUser']
 
 	def reload_this_observer
 		observed_classes.each do |klass|
@@ -13,13 +13,9 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 
 
-	def before_save(object)
-		if object.name == "plugin_redmine_git_hosting"
-			update_cached_vars
-		end
-	end
-
 	def after_save(object)
+		`echo after saving old is #{@@old_http_server} >>/tmp/sname.txt`
+		`echo after saving new is #{object.value['httpServer']} >>/tmp/sname.txt`
 		if object.name == "plugin_redmine_git_hosting"
 			if @@old_git_user != Setting.plugin_redmine_git_hosting['gitUser'] 
 				
@@ -27,20 +23,15 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 				GitHosting::Hooks::GitAdapterHooks.setup_hooks
 				GitHosting.update_repositories( Project.find(:all), false)
 
-			elsif @@old_http_server !=  Setting.plugin_redmine_git_hosting['httpServer'] || @@old_http_server =  Setting.plugin_redmine_git_hosting['httpServer']
+			elsif @@old_http_server !=  Setting.plugin_redmine_git_hosting['httpServer'] || @@old_hook_debug !=  Setting.plugin_redmine_git_hosting['gitHooksDebug']
 
 				GitHosting::Hooks::GitAdapterHooks.update_hook_url_and_debug
 			
 			end
-			update_cached_vars
+			@@old_hook_debug  = object.value['gitHooksDebug']
+			@@old_http_server = object.value['httpServer']
+			@@old_git_user    = object.value['gitUser']
 		end
 	end
 
-	private
-
-	def update_cached_vars
-		@@old_hook_debug = Setting.plugin_redmine_git_hosting['gitHooksDebug']
-		@@old_http_server =  Setting.plugin_redmine_git_hosting['httpServer']
-		@@old_git_user =  Setting.plugin_redmine_git_hosting['gitUser']
-	end
 end
