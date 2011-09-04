@@ -30,12 +30,11 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitRepositoryBasePath' => 'repositories/',
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
-		'loggingEnabled' => 'false',
-		'loggingLevel' => '0',
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
 		'gitCacheMaxSize' => '16',
-		'gitHooksDebug' => 'false'
+		'gitHooksDebug' => 'false',
+		'gitHooksAreAsynchronous' => 'true'
 		},
 		:partial => 'redmine_git_hosting'
 		project_module :repository do

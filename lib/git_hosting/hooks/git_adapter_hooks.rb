@@ -26,7 +26,7 @@ module GitHosting
 					logger.info "\"post-receive.redmine_gitolite\ installed"
 					logger.info "Running \"gl-setup\" on the gitolite install..."
 					%x[#{GitHosting.git_user_runner} gl-setup]
-					update_hook_url_and_debug
+					update_global_hook_params
 					logger.info "Finished installing hooks in the gitolite install..."
 					@@check_hooks_installed_stamp = Time.new
 					@@check_hooks_installed_cached = true
@@ -54,7 +54,7 @@ module GitHosting
 
 			def self.setup_hooks(projects=nil)
 				check_hooks_installed
-				update_hook_url_and_debug
+				update_global_hook_params
 
 				if projects.nil?
 					projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
@@ -66,7 +66,7 @@ module GitHosting
 				end
 			end
 
-			def self.update_hook_url_and_debug
+			def self.update_global_hook_params
 				hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
 				logger.debug "Hook URL: #{hook_url}"
 				%x[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{hook_url}"]
@@ -74,6 +74,11 @@ module GitHosting
 				debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
 				logger.debug "Debug Hook: #{debug_hook}"
 				%x[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
+
+				asynch_hook = Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous']
+				logger.debug "Hooks Are Asynchronous: #{asynch_hook}"
+				%x[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
+
 
 			end
 

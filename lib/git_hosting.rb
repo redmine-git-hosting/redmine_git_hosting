@@ -7,24 +7,10 @@ require 'gitolite_conf.rb'
 
 module GitHosting
 
-	class GitHostingLogger < Logger
-		# This is not the buffered logger used in rails on purpose, the idea is to log as soon as we get
-		# the messages, yet, this has a performance penalty, only enable it if your having troubles.
-		def format_message(severity, timestamp, progname, msg)
-			"[%s] %-5s [%s] %s\n" % [timestamp.to_formatted_s(:db), severity, progname, msg]
-		end
-	end
-
-	@@logger = nil
 	def self.logger
-		if @@logger.nil?
-			@@logger = GitHostingLogger.new(
-				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
-					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
-			@@logger.level = Setting.plugin_redmine_git_hosting['loggingLevel'].to_i || GitHostingLogger::DEBUG
-			@@logger.progname = 'RedmineGitHosting'
-		end
-		return @@logger
+		# it may be useful to redefine this for some debugging purposes
+		# but by default, we're just going to use the default Rails logger
+		return Rails.logger
 	end
 
 	@@web_user = nil
