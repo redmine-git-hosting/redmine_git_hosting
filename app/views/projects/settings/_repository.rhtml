@@ -35,7 +35,7 @@
 					<%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
 					<%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:notify_cia]) %>
 					<% if extra_vals[:notify_cia] == "1" %>
-						<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :project_id => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
+						<a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :projectid => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
 						<em><b><span id="notify_cia_result"></span></b></em>
 					<% end %>
 				</p>
