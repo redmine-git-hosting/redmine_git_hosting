@@ -12,7 +12,6 @@ require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/groups_controller_patch'
 require_dependency 'git_hosting/patches/repository_patch'
 require_dependency 'git_hosting/patches/git_adapter_patch'
-require_dependency 'git_hosting/patches/git_hosting_settings_patch'
 require_dependency 'git_hosting/patches/repository_cia_filters'
 
 Redmine::Plugin.register :redmine_git_hosting do
