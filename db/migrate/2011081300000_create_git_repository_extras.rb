@@ -47,7 +47,7 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 		# if settings aren't correct to begin with
 		begin
 			%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
-			GitHosting::GitAdapterHooks.setup_hooks
+			GitHosting.setup_hooks
 			GitHostingObserver.set_update_active(false)	
 		rescue
 		end

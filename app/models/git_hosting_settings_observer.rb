@@ -38,12 +38,12 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 			if @@old_git_user != object.value['gitUser'] 
 
-				GitHosting::GitAdapterHooks.setup_hooks
+				GitHosting.setup_hooks
 				GitHosting.update_repositories( Project.find(:all), false)
 		
 			elsif @@old_http_server !=  object.value['httpServer'] || @@old_hook_debug != object.value['gitHooksDebug'] || @@old_repo_base != object.value['gitRepositoryBasePath']
 
-				GitHosting::GitAdapterHooks.update_global_hook_params
+				GitHosting.update_global_hook_params
 			end
 			@@old_hook_debug   = object.value['gitHooksDebug']
 			@@old_hook_asynch  = object.value['gitHooksAreAsynchronous']
