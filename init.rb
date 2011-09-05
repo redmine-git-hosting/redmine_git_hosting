@@ -10,6 +10,7 @@ require_dependency 'git_hosting/patches/projects_controller_patch'
 require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/groups_controller_patch'
 require_dependency 'git_hosting/patches/repository_patch'
+require_dependency 'git_hosting/patches/git_repository_patch'
 require_dependency 'git_hosting/patches/git_adapter_patch'
 require_dependency 'git_hosting/patches/repository_cia_filters'
 
