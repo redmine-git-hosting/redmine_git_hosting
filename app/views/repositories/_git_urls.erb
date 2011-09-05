@@ -13,7 +13,7 @@
 			guGitUser="<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
 			guGitServer="<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
 			guHttpBase="<%= Setting.plugin_redmine_git_hosting['httpServer'] %>".replace(/\/$/, "")
-			guHttpProto="<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
+			guHttpProto="<%=  project.repository.extra[:git_http].to_s == "2" ? "http" : "https" %>"
 		
 			window.onload = setGitUrlOnload
 
