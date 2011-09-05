@@ -95,7 +95,7 @@ module GitHosting
 
 		@@cached_hooks_dir = nil
 		def self.package_hooks_dir
-			ret = @@cached_hooks_dir.nil? ? File.join(File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))), 'contrib', 'hooks') : @@cached_hooks_dir
+			ret = @@cached_hooks_dir.nil? ? File.join(File.dirname(File.dirname(__FILE__)), 'contrib', 'hooks') : @@cached_hooks_dir
 			ret
 		end
 

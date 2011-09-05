@@ -4,6 +4,8 @@ require 'tempfile'
 require 'tmpdir'
 
 require 'gitolite_conf.rb'
+require 'git_adapter_hooks.rb'
+
 
 module GitHosting
 
