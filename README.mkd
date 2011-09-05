@@ -123,6 +123,9 @@ unencrypted HTTP go to the repository settings tab and select "HTTPS and HTTP" u
 Once Smart HTTP is enabled no further configuration is necessary.  You will be able to clone from/to the HTTP[S] URL specified in 
 the URL bar in the Project/Repository tab.
 
+Also note that you will need to ensure that Basic Auth headers are being passed properly to Rails for this to work properly.  In Apache with mod_fcgid this may
+mean you need to add "Passheader Authorization" into the virtual host configuration file.
+
 
 ## Caching Options
 
