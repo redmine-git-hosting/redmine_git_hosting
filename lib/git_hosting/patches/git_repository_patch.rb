@@ -14,12 +14,11 @@ module GitHosting
 
 
 			def self.included(base)
-				base.extend(ClassMethods)
 				base.class_eval do
 					unloadable
 				end
 				begin
-					base.send(:alias_method_chain, :report_last_commit, :always_true:)
+					base.send(:alias_method_chain, :report_last_commit, :always_true)
 					base.send(:alias_method_chain, :extra_report_last_commit, :always_true)
 				rescue
 				end
