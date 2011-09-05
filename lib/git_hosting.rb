@@ -43,7 +43,7 @@ module GitHosting
 			%x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa']
 			%x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
 
-			@@mirror_pubkey = pubk.split(/[\t ]+/)[0] + " " + pubk.split(/[\t ]+/)[1]
+			@@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
 
 			#settings = Setting["plugin_redmine_git_hosting"]
 			#settings["gitMirrorPushPublicKey"] = publicKey
