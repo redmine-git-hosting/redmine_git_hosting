@@ -20,13 +20,13 @@ Redmine::Plugin.register :redmine_git_hosting do
 	version '0.4.0'
 	url 'https://github.com/ericpaulbishop/redmine_git_hosting'
 	settings :default => {
-		'allProjectsUseGit' => 'false',
-		'gitServer' => 'localhost',
 		'httpServer' => 'localhost',
+		'gitServer' => 'localhost',
 		'gitUser' => 'git',
+		'gitRepositoryBasePath' => 'repositories/',
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
-		'gitRepositoryBasePath' => 'repositories/',
+		'allProjectsUseGit' => 'false',
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitCacheMaxTime' => '-1',
