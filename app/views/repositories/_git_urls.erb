@@ -1,213 +1,41 @@
 <% if @project.repository && @project.repository.is_a?(Repository::Git) && Setting.plugin_redmine_git_hosting['gitRepositoriesShowUrl'].to_s != "false" %>
+	<% content_for :header_tags do %>
+		
+		<%= stylesheet_link_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+		<%= javascript_include_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+		
+		<script type="text/javascript">
+		
+			guProjectName= "<%= (@project.parent ? GitHosting::get_full_parent_path(@project, false) + "/" : "" ) %>" + "<%= @project.repository.url %>".replace(/^.*\//, "")
+			guProjectIsPublic= <%= project.is_public.to_s %> ;
+			guUser= "<%= User.current.login %>"
+			guUserIsCommitter= <%= User.current.allowed_to?(:commit_access, project) ? "true" : "false" %> ;
+			guGitUser="<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
+			guGitServer="<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
+			guHttpBase="<%= Setting.plugin_redmine_git_hosting['httpServer'] %>".replace(/\/$/, "")
+			guHttpProto="<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
+		
+			window.onload = setGitUrlOnload
 
-<% content_for :header_tags do %>
-	<style>
-		#git_url_box
-		{
-			border-top: 1px solid #ccc;
-			height: 23px;
-			padding: 10px 0 0;
-		}
+		</script>
+	<% end %>
 
-		#git_url_list
-		{
-			height: 23px;
-			float: left;
-			margin: 0;
-			padding: 0;
-		}
-
-		#git_url_list li
-		{
-			float: left;
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		#git_url_list li:first-child a
-		{
-			border-left-width: 1px;
-
-			/* Standard, Opera 10, IE 9 */
-			border-top-left-radius: 3px;
-			border-bottom-left-radius: 3px;
-			/* Konquerer */
-			-khtml-border-top-left-radius: 3px;
-			-khtml-border-bottom-left-radius: 3px;
-			/* Gecko (Firefox, ...) */
-			-moz-border-radius: 3px 0 0 3px;
-			/* Webkit (Chrome, Safari, ...) */
-			-webkit-border-top-left-radius: 3px;
-			-webkit-border-bottom-left-radius: 3px;
-			/* IE <= 9 not supported */
-		}
-
-		#git_url_list li a
-		{
-			background-color: #eee;
-			background:  url(../images/button.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
-			background: -khtml-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd)); /* Konquerer */
-			background: -moz-linear-gradient(top,  #f8f8f8,  #ddd); /* Gecko (Firefox, ...) */
-			background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd));   /* Webkit (Chrome, Safari, ...) */
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 5.5 - 7 */
-			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 8 */
-
-			border-color: #bbb;
-			border-style: solid;
-			border-width: 1px 1px 1px 0;
-
-			color: #333;
-			display: block;
-			font-size: 11px;
-			font-weight: bold;
-			line-height: 21px;
-			margin: 0;
-			padding: 0 10px 0 11px;
-			text-decoration: none;
-			text-shadow: 1px 1px 0 #fff;
-			outline: none;
-		}
-
-		#git_url_list li a:hover,
-		#git_url_list li a:focus
-		{
-			background-color: #507AAA;
-			background:  url(../images/button_focus.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
-			background: -khtml-gradient(linear, left top, left bottom, from(#759fcf), to(#507AAA)); /* Konquerer */
-			background: -moz-linear-gradient(top,  #759fcf,  #507AAA); /* Gecko (Firefox, ...) */
-			background: -webkit-gradient(linear, left top, left bottom, from(#759fcf), to(#507AAA)); /* Webkit (Chrome, Safari, ...) */
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#759fcf', endColorstr='#507AAA'); /* IE 5.5 - IE 7 */
-			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#759fcf', endColorstr='#507AAA'); /* IE 8 */
-
-			color: #fff;
-			text-shadow: -1px -1px 0 rgba(0,0,0,0.4);
-			border-top-color: #759fcf;
-			border-bottom-color: #507AAA;
-		}
-
-		#git_url_list li a.selected
-		{
-			background-color: #bbb;
-			background:  url(../images/button_selected.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
-			background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Konquerer */
-			background: -moz-linear-gradient(top,  #ccc,  #aaa); /* Gecko (Firefox, ...) */
-			background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Webkit (Chrome, Safari, ...) */
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 5.5 - IE 7 */
-			-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 8 */
-
-			color: #000;
-			text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
-			border-color: #bbb;
-		}
-
-		#git_url_text
-		{
-			border: 1px solid #bbb;
-			border-width: 1px 1px 1px 0;
-			background-color: #fff;
-			color: #000;
-			font-size: 11px;
-			height: 16px;
-			padding: 3px 5px 2px;
-			width: 400px;
-			font-family: Monaco,"DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
-			margin: 0;
-			float: left;
-		}
-
-		#git_url_desc
-		{
-			color: #666;
-			line-height: 23px;
-			font-size: 11px;
-			float: left;
-			margin: 0 0 0 5px;
-		}
-
-		#git_url_access
-		{
-			font-weight: bold;
-		}
-
-	</style>
-	<script type="text/javascript">
-		var all_git_url_ids = ["git_url_ssh", "git_url_http", "git_url_git"]
-		function update_git_url(el)
-		{
-			var project_is_public = <%= project.is_public.to_s %>
-			var user_is_committer =  <%=  User.current.allowed_to?(:commit_access, project) ? "true" : false %>
-
-			var user = "<%= User.current.login %>"
-			<% if @project.parent %>
-			var projectName = "<%= GitHosting::get_full_parent_path(@project, true)  %>" + "/" + ("<%= @project.repository.url %>").replace(/^.*\//, "")
-			<% else %>
-			var projectName = ("<%= @project.repository.url %>").replace(/^.*\//, "")
-			<% end %>
-			var gitUser   = "<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
-			var gitServer = "<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
-			var httpBase  = "<%= Setting.plugin_redmine_git_hosting['httpServer'] %>"
-			var httpProto = "<%=  project.repository[:git_http].to_s == "2" ? "http" : "https" %>"
-			httpBase = httpBase.replace(/\/$/, "")
-
-			var urls=[]
-			urls["git_url_ssh"]  = [gitUser + "@" + gitServer + ":" + projectName, user_is_committer]
-			urls["git_url_http"] = [ httpProto + "://" + ( (!project_is_public) || user_is_committer ? user + "@" : "") + httpBase + "/" + projectName, user_is_committer]
-			urls["git_url_git"]  = ["git://" + gitServer + "/" + projectName, false]
-
-			var selected_id = el.id
-			document.getElementById("git_url_text").value = urls[selected_id][0];
-			document.getElementById("git_url_access").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only"
-
-			var i
-			for(i=0;i<all_git_url_ids.length; i++)
-			{
-				var test_id = all_git_url_ids[i];
-				var test_el = document.getElementById(test_id)
-				if (test_el != null)
-				{
-					test_el.className = test_id == selected_id ? "selected" : ""
-				}
-			}
-		}
-
-		window.onload = function()
-		{
-			var i
-			var firstEl = null
-			for(i=0;i<all_git_url_ids.length; i++)
-			{
-				var el = document.getElementById(all_git_url_ids[i]);
-				if(el != null)
-				{
-					firstEl = firstEl == null ? el : firstEl
-					el.setAttribute("onclick", "update_git_url(this)")
-				}
-			}
-			update_git_url(firstEl)
-		}
-
-	</script>
-<% end %>
-
-<% if (!User.current.anonymous?) || project.repository.extra[:git_http].to_s != "0" || (project.is_public && project.repository.extra[:git_daemon].to_s != "0" ) %>
-<div id="git_url_box">
-	<ul id="git_url_list" >
-		<% if !User.current.anonymous? %>
-			<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
-		<% end %>
-		<% if project.repository.extra[:git_http].to_s != "0" %>
-			<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
-		<% end %>
-		<%  if project.is_public && project.repository.extra[:git_daemon].to_s != "0" %>
-			<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
-		<%  end %>
-
-	</ul>
-	<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
-	<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
-</div>
-<br/>
-<% end %>
-
+	<% if (!User.current.anonymous?) || project.repository.extra[:git_http].to_s != "0" || (project.is_public && project.repository.extra[:git_daemon].to_s != "0" ) %>
+		<div id="git_url_box">
+			<ul id="git_url_list" >
+				<% if !User.current.anonymous? %>
+					<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
+				<% end %>
+				<% if project.repository.extra[:git_http].to_s != "0" %>
+					<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
+				<% end %>
+				<%  if project.is_public && project.repository.extra[:git_daemon].to_s != "0" %>
+					<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
+				<%  end %>
+			</ul>
+			<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
+			<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
+		</div>
+		<br/>
+	<% end %>
 <% end %>

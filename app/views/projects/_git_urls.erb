@@ -25,15 +25,15 @@
 			<h3>Git Repository</h3>
 			<div id="git_url_box">
 				<ul id="git_url_list" >
-				<% if !User.current.anonymous? %>
-					<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
-				<% end %>
-				<% if project.repository.extra[:git_http].to_s != "0" %>
-					<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
-				<% end %>
-				<%  if project.is_public && project.repository.extra[:git_daemon].to_s != "0" %>
-					<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
-				<%  end %>
+					<% if !User.current.anonymous? %>
+						<li><a id="git_url_ssh"  href="javascript:void(0)">SSH</a></li>
+					<% end %>
+					<% if project.repository.extra[:git_http].to_s != "0" %>
+						<li><a id="git_url_http" href="javascript:void(0)">HTTP</a></li>
+					<% end %>
+					<%  if project.is_public && project.repository.extra[:git_daemon].to_s != "0" %>
+						<li><a id="git_url_git"  href="javascript:void(0)">Git</a></li>
+					<%  end %>
 				</ul>
 				<input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
 				<span  id="git_url_desc">This URL has <span id="git_url_access">Read-Only</span> access.</span>
