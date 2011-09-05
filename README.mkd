@@ -35,17 +35,17 @@ these instructions using that user, not the one for the main web server.
 
 ## Step-By-Step configuration instructions
 
-(1) Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and
+**(1)** Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and
 there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume
 that gitolite has been installed for user "git", and you have an ssh key called "git_gitolite_admin_id_rsa"
 (and corresponding public key) for which access to the gitolite-admin repository has been granted.
 
-(2) If you want to enable anonymous access to your repositories via the git:// protocol you will need to
+**(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to
 install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
 are lots of available guides out there).  This step is optional -- if you don't want to enable anonymous
 access you can skip it.
 
-(3) Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file,
+**(3)** Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file,
 listed above.  Assuming your web server is run as www-data and gitolite is installed as git, you need to add
 this to your sudoers file:
 
@@ -53,7 +53,7 @@ this to your sudoers file:
     git             ALL=(www-data)  NOPASSWD:ALL
 
 
-(4) In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin
+**(4)** In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin
 root, and not the public directory -- create a directory called .ssh, and copy the "gitolite_admin_id_rsa"
 private key and the "gitolite_admin_id_rsa.pub" files from step one into this directory. Then change the
 owner of these files to www-data and the permissions to 600 for the private key and 644 for the public key:
@@ -68,7 +68,7 @@ owner of these files to www-data and the permissions to 600 for the private key 
     chmod 644 .ssh/gitolite_admin_id_rsa.pub
 
 
-(5) Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject
+**(5)** Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject
 root directory:
 
     cd vendor/plugins
@@ -77,26 +77,26 @@ root directory:
     cd ../..
 
 
-(6) It is best to set several plugin variables BEFORE you run the db:migrate\_plugins task in step 7.  In particular it is important 
-that the **httpServer**,  **gitServer**, **gitUser**, **gitRepositoryBasePath**, **gitoliteIdentityFile** and **gitoliteIdentityPublicKeyFile**
+**(6)** It is best to set several plugin variables BEFORE you run the db:migrate\_plugins task in step 7.  In particular it is important 
+that the *httpServer*,  *gitServer*, *gitUser*, *gitRepositoryBasePath*, *gitoliteIdentityFile* and *gitoliteIdentityPublicKeyFile*
 variables are set correctly.  To adjust these variables, open an editor and edit [redmine_rails_root]/vendor/plugins/redmine_git_hosting/init.rb file. 
 Starting on line 22 you will see the settings definitions you should edit.
 
 
-The **httpServer** variable should be set to the url used to access your redmine site, e.g. www.my-own-personal-git-host-server.com
+The *httpServer* variable should be set to the url used to access your redmine site, e.g. www.my-own-personal-git-host-server.com
 
 
-The **gitServer** will almost always be the same as the the httpServer variable -- this is the server name to use to access the gitolite repositories via ssh 
+The *gitServer* will almost always be the same as the the httpServer variable -- this is the server name to use to access the gitolite repositories via ssh 
 
 
-The **gitUser** is the user under which gitolite is installed
+The *gitUser* is the user under which gitolite is installed
 
 
-The **gitRepositoryBasePath** is the path *relative to the git user root* where the repositories are located.  This should always end in a file separator, e.g. '/'.
+The *gitRepositoryBasePath* is the path *relative to the git user root* where the repositories are located.  This should always end in a file separator, e.g. '/'.
 Since gitolite always uses repositories/ as the default place for repositories you probably shouldn't have to change this.
 
 
-If you followed the above directions you will not need to modify the **gitoliteIdentityFile** or **gitoliteIdentityPublicKeyFile** variables -- these specify
+If you followed the above directions you will not need to modify the *gitoliteIdentityFile* or *gitoliteIdentityPublicKeyFile* variables -- these specify
 the path to the private/public key files for accessing the gitolite admin repository.
 
 
@@ -104,7 +104,7 @@ These variables can be modified at a later time in the Administration => Plugins
 that the database migration from your existing repositories goes smoothly it is best to modify these variables now.
 
 
-(7) Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
+**(7)** Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
 rails environment you have configured (e.g. production, development, testing).  For the production environment run:
 
     RAILS_ENV=production rake db:migrate_plugins
@@ -137,12 +137,12 @@ with ab utility in the apache2-utils package.
 There are three configurable caching parameters in the plugins settings page: Max Cache Elements, Max Cache Element
 Size and Max Cache Time.
 
-**Max Cache Elements** is the maximum number of git commands for which to cache the output.
+*Max Cache Elements* is the maximum number of git commands for which to cache the output.
 
-**Max Cache Element Size** is the maximum size of the git output to cache.   Anything above this size won't be cached,
+*Max Cache Element Size* is the maximum size of the git output to cache.   Anything above this size won't be cached,
 and git will be called directly every time this command is run.
 
-**Max Cache Time** is the maximum amount of time the git command will be cached.  No matter what, the output of git
+*Max Cache Time* is the maximum amount of time the git command will be cached.  No matter what, the output of git
 commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is
 called.
 
