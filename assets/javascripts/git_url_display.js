@@ -1,0 +1,45 @@
+var allGitUrlIds = ["git_url_ssh", "git_url_http", "git_url_git"]
+function updateGitUrl(el)
+{
+	guHttpBase = guHttpBase.replace(/\/$/, "")
+
+	var urls=[]
+	urls["git_url_ssh"]  = [guGitUser + "@" + guGitServer + ":" + guProjectName, guUserIsCommitter]
+	urls["git_url_http"] = [guHttpProto + "://" + ( (!guProjectIsPublic) || guUserIsCommitter ? guUser + "@" : "") + guHttpBase + "/" + guProjectName, guUserIsCommitter]
+	urls["git_url_git"]  = ["git://" + guGitServer + "/" + guProjectName, false]
+	var allGitUrlIds = ["git_url_ssh", "git_url_http", "git_url_git"]
+
+	var selected_id = el.id
+	document.getElementById("git_url_text").value = urls[selected_id][0];
+	document.getElementById("git_url_access").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only"
+
+	var i
+	for(i=0;i<allGitUrlIds.length; i++)
+	{
+		var test_id = allGitUrlIds[i];
+		var test_el = document.getElementById(test_id)
+		if (test_el != null)
+		{
+			test_el.className = test_id == selected_id ? "selected" : ""
+		}
+	}
+}
+
+function setGitUrlOnload()
+{
+	var i
+	var firstEl = null
+	for(i=0;i<allGitUrlIds.length; i++)
+	{
+		var el = document.getElementById(allGitUrlIds[i]);
+		if(el != null)
+		{
+			firstEl = firstEl == null ? el : firstEl
+			el.setAttribute("onclick", "updateGitUrl(this)")
+		}
+	}
+	updateGitUrl(firstEl)
+
+}
+
+

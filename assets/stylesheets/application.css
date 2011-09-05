@@ -1,5 +1,6 @@
-.icon-push {
-		background-image: url("../images/icon-divide.png");
+.icon-push
+{
+	background-image: url("../images/icon-divide.png");
 }
 
 pre.mirror-push {
@@ -15,3 +16,5 @@ pre.mirror-push {
 pre.mirror-push.error {
 	border: 1px solid #D71E1E;
 }
+
+
