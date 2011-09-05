@@ -1,0 +1,5 @@
+<% if not @is_xhr %><h2><%=l(:label_mirror_create)%></h2><% end %>
+<% labelled_tabular_form_for :repository_mirrors, @mirror, :url => { :controller => 'repository_mirrors', :action => 'create', :project_id => @project, :id => @mirror.id }, :html => {:method => :post} do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>

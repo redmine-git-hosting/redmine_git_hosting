@@ -1,0 +1,8 @@
+<%= error_messages_for 'repository_mirrors' %>
+
+<div class="box">
+<!--[form:repository_mirrors]-->
+	<p><%= f.text_field :url, :required => true, :size => 65 %></p>
+	<p><%= f.check_box :active %></p>
+</div>
+<!--[eoform:repository_mirrors]-->

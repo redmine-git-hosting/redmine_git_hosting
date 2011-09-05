@@ -55,7 +55,7 @@ class GitHttpController < ApplicationController
 		project = Project.find(params[:id])
 		repository = project != nil ? project.repository : nil
 		if(project != nil && repository !=nil) 
-			if repository[:git_http] == 2 || (repository[:git_http] == 1 && is_ssl?)
+			if repository.extra[:git_http] == 2 || (repository.extra[:git_http] == 1 && is_ssl?)
 				query_valid = true
 				allow_anonymous_read = project.is_public	
 				if is_push || (!allow_anonymous_read)

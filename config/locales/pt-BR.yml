@@ -4,23 +4,32 @@ pt-BR:
   label_git_server: Domínio do servidor Gitolite
   label_http_server: "Domínio do servidor HTTP (para os url's git http)"
   label_git_user: Nome de Utilizador Git
+  label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
 
-  label_git_daemon: Git Daemon
-  label_git_http: Git Smart HTTP
+  field_git_daemon: Git Daemon
+  field_git_http: Git Smart HTTP
   label_git_show_urls: "Exibir os URL's de checkout"
   label_enabled: Habilitado
   label_disabled: Desabilitado
   label_https_only: Apenas HTTPS
   label_https_and_http: HTTPS e HTTP
+  field_notify_cia: Notificar CIA.vc
 
   label_permissions_header: Permissões Necessárias
   label_sudo_web_to_git_user: O uilizador Web é capaz de sudo para o utilizador Git?
   label_sudo_git_to_web_user: O uilizador Git é capaz de sudo para o utilizador Web?
 
-  label_logging: 'Habilitar "logging"'
-  label_logging_warning: Poderá causar um impacto na performance. Necessita de re-iniciar o servidor.
+
+
+
+
+
+  label_git_hook_header: Hooks dos Repositórios
+  label_git_hook_debug: Correr os hooks em mode Debug
+  label_git_hooks_are_asynchronous: Run hooks asynchronously
+  label_hook_installed: '"Hook" instalado'
 
   label_public_keys: Chaves públicas
   label_public_key_new: Nova chave pública
@@ -37,3 +46,28 @@ pt-BR:
   label_git_cache_max_elements: Max Cache Elements
   label_git_cache_max_size: Max Cache Element Size
   label_git_cache_parameters: Git Cache Parameters
+
+  project_not_found: 'Nenhum projeto foi encontrado com o identificador "%{identifier}"'
+  cia_not_enough_permissions: Não tem as permissões necessárias para testar as notificaçẽos CIA.vc.
+  field_notify_cia_test: Testar Notificação
+  cia_notification_ok: Notificação CIA.vc enviada.
+
+  label_update_all_hooks: Actualizar as preferências em TODOS os repositórios
+
+  field_private_key: Chave Privada
+  field_private_key_warning: "Não utilize a sua própia Chave Privada!<br/>Crie uma nova e adicione-a no servidor do espelho."
+  label_mirror_create: Criar Espelho do Repositório
+  label_mirror_delete: Apagar Espelho do Repositório
+  label_mirror_edit: Editar Espelho do Repositório
+  mirror_notice_deleted: O Espelho foi apagado com sucesso
+  mirror_notice_created: O Espelho foi criado com sucesso
+  mirror_notice_updated: O Espelho foi actualizado com sucesso
+  mirror_notice_create_failed: Houve um erro na criação do espelho
+
+  button_push: Push
+  button_push_title: '"Push" Para o Espelho'
+  mirror_push_info_html: "A publicar modificações para o espelho <b>%{mirror_url}</b> ... %{status}"
+  mirror_push_output_label: 'Saída:'
+  mirror_push_sucess: Sucesso.
+  mirror_push_fail: Falhou!
+

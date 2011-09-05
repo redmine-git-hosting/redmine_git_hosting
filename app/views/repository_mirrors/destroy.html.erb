@@ -1,0 +1,13 @@
+<% if not @is_xhr %><h2><%=l(:label_mirror_delete)%></h2><% end %>
+<div class="warning">
+	<p>
+		<strong><%= @mirror.url %></strong><br/>
+		Are you sure you want to delete the repository mirror?
+	</p>
+	<% form_tag url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => @project, :id => @mirror.id ), :method => :delete do %>
+	<p>
+		<label><%= check_box_tag 'confirm', 1 %> <%= l(:general_text_Yes) %></label>
+		<%= submit_tag l(:button_delete) %>
+	</p>
+	<% end %>
+<div>

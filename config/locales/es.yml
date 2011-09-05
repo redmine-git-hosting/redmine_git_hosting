@@ -4,11 +4,15 @@
   label_git_server: Gitolite Server Domain
   label_http_server: HTTP Server Domain (for git http urls)
   label_git_user: Git Username 
+  label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
 
-  label_git_daemon: Git Daemon
-  label_git_http: Git Smart HTTP
+  field_git_daemon: Git Daemon
+  field_git_http: Git Smart HTTP
+  field_notify_cia: Notify CIA.vc
+  
+
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
   label_disabled: Disabled
@@ -19,8 +23,15 @@
   label_sudo_web_to_git_user: Web user is able to sudo to Git user?
   label_sudo_git_to_web_user: Git user is able to sudo to Web user?
 
-  label_logging: Enable Logging
-  label_logging_warning: This might have a performance penalty. Requires a server restart.
+
+
+
+
+
+  label_git_hook_header: Repository Hooks
+  label_git_hook_debug: Run hooks in Debug mode
+  label_git_hooks_are_asynchronous: Run hooks asynchronously
+  label_hook_installed: Hook installed
 
   label_public_keys: Public keys
   label_public_key_new: New public key
@@ -37,3 +48,27 @@
   label_git_cache_max_elements: Max Cache Elements
   label_git_cache_max_size: Max Cache Element Size
   label_git_cache_parameters: Git Cache Parameters
+
+  project_not_found: 'No project was found with the identifier "%{identifier}"'
+  cia_not_enough_permissions: You don't have the required permissions to test CIA.vc notifications.
+  field_notify_cia_test: Test Notification
+  cia_notification_ok: Notification to CIA.vc sent.
+
+  label_update_all_hooks: Update ALL repositories hook settings
+
+  field_private_key: Private Key
+  field_private_key_warning: "Do not use your own Private Key!<br/>Please generate a new one and upload it to the mirror server."
+  label_mirror_create: Create Repository Mirror
+  label_mirror_delete: Delete Repository Mirror
+  label_mirror_edit: Edit Repository Mirror
+  mirror_notice_deleted: Mirror was successfully deleted
+  mirror_notice_created: Mirror was successfully created
+  mirror_notice_updated: Mirror was successfully updated
+  mirror_notice_create_failed: Failed to create mirror
+
+  button_push: Push
+  button_push_title: "Push To Mirror"
+  mirror_push_info_html: "Pushing changes to mirror <b>%{mirror_url}</b> ... %{status}"
+  mirror_push_output_label: 'Output:'
+  mirror_push_sucess: Success.
+  mirror_push_fail: Failed!

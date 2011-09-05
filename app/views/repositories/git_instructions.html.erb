@@ -1,5 +1,5 @@
 <%# This is used to display basic git setup instructions, like on github... %>
-<% flash.now[:error] = "Repository does not exist. Create one using the instructions below." %>
+<% flash.now[:warning] = "Repository is empty. Get started by following the instructions below." %>
 <% git_ssh_url = Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer'] + ":" + GitHosting.repository_name(@project) + '.git'  %>
 
 <div class="box">

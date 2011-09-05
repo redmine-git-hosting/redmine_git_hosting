@@ -1,29 +1,18 @@
 require 'lockfile'
 require 'net/ssh'
+require 'tempfile'
 require 'tmpdir'
 
 require 'gitolite_conf.rb'
+require 'git_adapter_hooks.rb'
+
 
 module GitHosting
 
-	class GitHostingLogger < Logger
-		# This is not the buffered logger used in rails on purpose, the idea is to log as soon as we get
-		# the messages, yet, this has a performance penalty, only enable it if your having troubles.
-		def format_message(severity, timestamp, progname, msg)
-			"[%s] %-5s [%s] %s\n" % [timestamp.to_formatted_s(:db), severity, progname, msg]
-		end
-	end
-
-	@@logger = nil
 	def self.logger
-		if @@logger.nil?
-			@@logger = GitHostingLogger.new(
-				(Setting.plugin_redmine_git_hosting['loggingEnabled'] == 'true')?
-					((Rails.configuration.environment == "production")? STDERR : STDOUT) : '/dev/null')
-			@@logger.level = GitHostingLogger::DEBUG
-			@@logger.progname = 'RedmineGitHosting'
-		end
-		return @@logger
+		# it may be useful to redefine this for some debugging purposes
+		# but by default, we're just going to use the default Rails logger
+		return Rails.logger
 	end
 
 	@@web_user = nil
@@ -34,30 +23,82 @@ module GitHosting
 		return @@web_user
 	end
 
+	def self.git_user
+		Setting.plugin_redmine_git_hosting['gitUser']
+	end
+
+
+	@@mirror_pubkey = nil
+	def self.mirror_push_public_key
+		if @@mirror_pubkey.nil?
+			privk = ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' ]  ).chomp.strip
+			pubk =  ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
+			git_user_dir = ( %x[ #{GitHosting.git_user_runner} "cd ~ ; pwd" ] ).chomp.strip
+			
+			%x[ #{GitHosting.git_user_runner} 'echo "#{privk}" > ~/.ssh/gitolite_admin_id_rsa ' ]
+			%x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
+			%x[ #{GitHosting.git_user_runner} 'echo "#!/bin/sh" > ~/.ssh/run_gitolite_admin_ssh']
+			%x[ echo 'exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa    "$@"' | #{GitHosting.git_user_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh"  ]
+			%x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
+			%x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa']
+			%x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
+
+			@@mirror_pubkey = pubk.split(/[\t ]+/)[0] + " " + pubk.split(/[\t ]+/)[1]
+
+			#settings = Setting["plugin_redmine_git_hosting"]
+			#settings["gitMirrorPushPublicKey"] = publicKey
+			#Setting["plugin_redmine_git_hosting"] = settings
+		end
+		@@mirror_pubkey
+	end
+
+
+	@@sudo_git_to_web_user_stamp = nil
+	@@sudo_git_to_web_user_cached = nil
 	def self.sudo_git_to_web_user
-		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 0.5):
+			return @@sudo_git_to_web_user_cached
+		end
+		logger.info "Testing if git user(\"#{git_user}\") can sudo to web user(\"#{web_user}\")"
 		if git_user == web_user
-			return true
+			@@sudo_git_to_web_user_cached = true
+			@@sudo_git_to_web_user_stamp = Time.new
+			return @@sudo_git_to_web_user_cached
 		end
 		test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
 		if test.match(/yes/)
-			return true
+			@@sudo_git_to_web_user_cached = true
+			@@sudo_git_to_web_user_stamp = Time.new
+			return @@sudo_git_to_web_user_cached
 		end
 		logger.warn "Error while testing sudo_git_to_web_user: #{test}"
-		return test
+		@@sudo_git_to_web_user_cached = test
+		@@sudo_git_to_web_user_stamp = Time.new
+		return @@sudo_git_to_web_user_cached
 	end
 
+	@@sudo_web_to_git_user_stamp = nil
+	@@sudo_web_to_git_user_cached = nil
 	def self.sudo_web_to_git_user
-		git_user = Setting.plugin_redmine_git_hosting['gitUser']
+		if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 0.5):
+			return @@sudo_web_to_git_user_cached
+		end
+		logger.info "Testing if web user(\"#{web_user}\") can sudo to git user(\"#{git_user}\")"
 		if git_user == web_user
-			return true
+			@@sudo_web_to_git_user_cached = true
+			@@sudo_web_to_git_user_stamp = Time.new
+			return @@sudo_web_to_git_user_cached
 		end
 		test = %x[sudo -nu #{git_user} echo "yes"]
 		if test.match(/yes/)
-			return true
+			@@sudo_web_to_git_user_cached = true
+			@@sudo_web_to_git_user_stamp = Time.new
+			return @@sudo_web_to_git_user_cached
 		end
 		logger.warn "Error while testing sudo_web_to_git_user: #{test}"
-		return test
+		@@sudo_web_to_git_user_cached = test
+		@@sudo_web_to_git_user_stamp = Time.new
+		return @@sudo_web_to_git_user_cached
 	end
 
 	def self.get_full_parent_path(project, is_file_path)
@@ -75,6 +116,10 @@ module GitHosting
 		return "#{get_full_parent_path(project, false)}/#{project.identifier}".sub(/^\//, "")
 	end
 
+	def self.repository_path project
+		return File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], repository_name(project)) + ".git"
+	end
+
 	def self.add_route_for_project(p)
 
 		if defined? map
@@ -88,7 +133,8 @@ module GitHosting
 	def self.add_route_for_project_with_map(p,m)
 		repo = p.repository
 		if repo.is_a?(Repository::Git)
-			repo_path=repo.url.split(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'])[1]
+			repo_name= p.parent ? File.join(GitHosting::get_full_parent_path(p, true),p.identifier) : p.identifier
+			repo_path = repo_name + ".git"
 			m.connect repo_path,                  :controller => 'git_http', :p1 => '', :p2 =>'', :p3 =>'', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
 			m.connect repo_path,                  :controller => 'git_http', :p1 => '', :p2 =>'', :p3 =>'', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
 			m.connect repo_path + "/:p1",         :controller => 'git_http', :p2 => '', :p3 =>'', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
@@ -96,14 +142,17 @@ module GitHosting
 			m.connect repo_path + "/:p1/:p2/:p3", :controller => 'git_http', :id=>"#{p[:identifier]}", :path=>"#{repo_path}"
 		end
 	end
-
 	def self.get_tmp_dir
 		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
+			%x[chmod 700 "#{@@git_hosting_tmp_dir}"]
+			%x[chown #{web_user} "#{@@git_hosting_tmp_dir}"]
 		end
 		return @@git_hosting_tmp_dir
 	end
+
+
 
 	def self.git_exec_path
 		return File.join(get_tmp_dir(), "run_git_as_git_user")
@@ -114,6 +163,7 @@ module GitHosting
 	def self.git_user_runner_path
 		return File.join(get_tmp_dir(), "run_as_git_user")
 	end
+
 
 	def self.git_exec
 		if !File.exists?(git_exec_path())
@@ -134,15 +184,15 @@ module GitHosting
 		return git_user_runner_path()
 	end
 
+
 	def self.update_git_exec
 		logger.info "Setting up #{get_tmp_dir()}"
-		git_user=Setting.plugin_redmine_git_hosting['gitUser']
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 
 		File.open(gitolite_ssh_path(), "w") do |f|
 			f.puts "#!/bin/sh"
 			f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
-		end
+		end if !File.exists?(gitolite_ssh_path())
 
 		##############################################################################################################################
 		# So... older versions of sudo are completely different than newer versions of sudo
@@ -175,7 +225,7 @@ module GitHosting
 				f.puts "	sudo -u #{git_user} -i eval \"git $cmd\""
 			end
 			f.puts 'fi'
-		end
+		end if !File.exists?(git_exec_path())
 
 		# use perl script for git_user_runner so we can
 		# escape output more easily
@@ -200,11 +250,15 @@ module GitHosting
 				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			end
 			f.puts '}'
-		end
+		end if !File.exists?(git_user_runner_path())
 
-		File.chmod(0777, git_exec_path())
-		File.chmod(0777, gitolite_ssh_path())
-		File.chmod(0777, git_user_runner_path())
+
+
+		File.chmod(0550, git_exec_path())
+		File.chmod(0550, gitolite_ssh_path())
+		File.chmod(0550, git_user_runner_path())
+
+
 
 	end
 
@@ -217,9 +271,11 @@ module GitHosting
 			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
 		else
 			logger.info "Cloning gitolite-admin repository"
-			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
+			%x[env GIT_SSH=#{gitolite_ssh()} git clone #{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{local_dir}/gitolite-admin]
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
+		# Make sure we have our hooks setup
+		check_hooks_installed
 	end
 
 	def self.move_repository(old_name, new_name)
@@ -263,16 +319,12 @@ module GitHosting
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
 
-
-
-
 		# unlock
 		lockfile.flock(File::LOCK_UN)
 
 	end
 
 	def self.update_repositories(projects, is_repo_delete)
-
 
 		logger.debug "Updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
@@ -303,7 +355,6 @@ module GitHosting
 				end
 			end
 
-
 			# Make sure we have gitoite-admin cloned
 			clone_or_pull_gitolite_admin
 
@@ -311,6 +362,7 @@ module GitHosting
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
+			new_projects = []
 			changed = false
 
 			projects.select{|p| p.repository.is_a?(Repository::Git)}.each do |project|
@@ -329,6 +381,8 @@ module GitHosting
 						changed = true
 						add_route_for_project(project)
 						new_repos.push repo_name
+						new_projects.push project
+
 					end
 
 
@@ -345,8 +399,6 @@ module GitHosting
 							changed = true
 						end
 					end
-
-
 
 					# delete inactives
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
@@ -368,7 +420,7 @@ module GitHosting
 					end
 
 					#git daemon
-					if (project.repository.git_daemon == 1 || project.repository.git_daemon == nil )  && project.is_public
+					if (project.repository.extra.git_daemon == 1 || project.repository.extra.git_daemon == nil )  && project.is_public
 						read_user_keys.push "daemon"
 					end
 
@@ -389,27 +441,12 @@ module GitHosting
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' config user.name 'Redmine']
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' commit -a -m 'updated by Redmine' ]
 				%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
-
 			end
 
-			#set post recieve hooks
-			#need to do this AFTER push, otherwise necessary repos may not be created yet
-			if new_repos.length > 0
-				logger.info "New repository(ies) found, setting up \"post-receive\" hook..."
-				server_test = %x[#{git_user_runner} 'sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production "print \\\"good\\\""']
-
-				if server_test.match(/good/)
-					new_repos.each do |repo_name|
-						proj_name=repo_name.gsub(/^.*\//, '')
-						hook_file=Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] + repo_name + ".git/hooks/post-receive"
-						%x[#{git_user_runner} 'echo "#!/bin/sh" > #{hook_file}' ]
-						%x[#{git_user_runner} 'echo "sudo -u #{web_user} ruby #{RAILS_ROOT}/script/runner -e production \\\"GitHosting::run_post_receive_hook(\\\\\\\"#{proj_name}\\\\\\\")\\\" >/dev/null 2>&1" >>#{hook_file}']
-						%x[#{git_user_runner} 'chmod 700 #{hook_file} ']
-					end
-					logger.error "Hook setup completed"
-				else
-					logger.error "An error ocurred, see above"
-				end
+			# Set post recieve hooks for new projects
+			# We need to do this AFTER push, otherwise necessary repos may not be created yet
+			if new_projects.length > 0
+				setup_hooks(new_projects)
 			end
 
 			lockfile.flock(File::LOCK_UN)
@@ -419,18 +456,27 @@ module GitHosting
 	end
 
 
-	def self.run_post_receive_hook proj_identifier
-
-		#clear cache
-		old_cached=GitCache.find_all_by_proj_identifier(proj_identifier)
+	def self.clear_cache_for_project(project)
+		if project.is_a?(Project)
+			project = project.identifier
+		end
+		# Clear cache
+		old_cached=GitCache.find_all_by_proj_identifier(project)
 		if old_cached != nil
 			old_ids = old_cached.collect(&:id)
 			GitCache.destroy(old_ids)
 		end
-
-		#fetch updates into repo
-		Repository.fetch_changesets_for_project(proj_identifier)
 	end
 
+
+	def self.check_hooks_installed
+		GitAdapterHooks.check_hooks_installed
+	end
+	def self.setup_hooks(projects=nil)
+		GitAdapterHooks.setup_hooks(projects)
+	end
+	def self.update_global_hook_params
+		GitAdapterHooks.update_global_hook_params
+	end
 end
 

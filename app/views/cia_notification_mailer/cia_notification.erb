@@ -1,0 +1,27 @@
+<message>
+  <generator>
+    <name><%= @plugin.name %></name>
+    <version><%= @plugin.version %></version>
+    <url><%= @plugin.url %></url>
+  </generator>
+  <source>
+    <project><%= @revision.project.name %></project>
+    <branch><%= @branch %></branch>
+  </source>
+  <timestamp><%= @revision.committed_on.to_i %></timestamp>
+  <body>
+    <commit>
+      <revision><%= @revision.revision[0..10] %></revision>
+      <author><%= @revision.author %></author>
+      <log><%= @revision.comments %></log>
+      <url><%= url_for_revision(@revision) %></url>
+      <%- if not @revision.changes.empty? -%>
+      <files>
+      	<%- @revision.changes.each do |change| -%>
+        <file action="<%= map_file_action(change.action) %>" uri="<%= url_for_revision_path(@revision, change.path) %>"><%= change.path %></file>
+      	<%- end -%>
+      </files>
+      <%- end -%>
+    </commit>
+  </body>
+</message>
