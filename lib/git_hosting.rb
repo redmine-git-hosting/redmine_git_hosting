@@ -273,7 +273,7 @@ module GitHosting
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
 		# Make sure we have our hooks setup
-		Hooks::GitAdapterHooks.check_hooks_installed
+		GitHosting::GitAdapterHooks.check_hooks_installed
 	end
 
 	def self.move_repository(old_name, new_name)
@@ -444,7 +444,7 @@ module GitHosting
 			# Set post recieve hooks for new projects
 			# We need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_projects.length > 0
-				GitHosting::Hooks::GitAdapterHooks.setup_hooks(new_projects)
+				GitHosting::GitAdapterHooks.setup_hooks(new_projects)
 			end
 
 			lockfile.flock(File::LOCK_UN)

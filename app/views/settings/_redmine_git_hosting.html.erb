@@ -96,8 +96,8 @@
 
 	<p>
 		<label><%= l(:label_hook_installed)%></label>
-		<%= image_tag((GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-		<em><%= (GitHosting::Hooks::GitAdapterHooks.check_hooks_installed==true ? '' : GitHosting::Hooks::GitAdapterHooks.check_hooks_installed) %></em>
+		<%= image_tag((GitHosting::GitAdapterHooks.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<em><%= (GitHosting::GitAdapterHooks.check_hooks_installed==true ? '' : GitHosting::GitAdapterHooks.check_hooks_installed) %></em>
 		<br />
 	</p>
 </div>

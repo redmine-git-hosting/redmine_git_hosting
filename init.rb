@@ -6,7 +6,6 @@ require_dependency 'user'
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_cia_notification')
 require_dependency 'git_hosting'
-require_dependency 'git_hosting/hooks/git_adapter_hooks'
 require_dependency 'git_hosting/patches/projects_controller_patch'
 require_dependency 'git_hosting/patches/repositories_controller_patch'
 require_dependency 'git_hosting/patches/groups_controller_patch'

@@ -44,7 +44,7 @@ module GitHosting
 					end
 					
 					GitHosting::update_repositories(@project, false) if !@project.repository.nil?
-					GitHosting::Hooks::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?
+					GitHosting::GitAdapterHooks.setup_hooks(@project) if !@project.repository.nil?
 	
 				else
 					edit_without_scm_settings
