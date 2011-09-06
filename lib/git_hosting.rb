@@ -324,17 +324,20 @@ module GitHosting
 
 	end
 
+	@@recursionCheck = false
 	def self.update_repositories(projects, is_repo_delete)
+
+
+		if(defined?(@@recursionCheck))
+			if(@@recursionCheck)
+				return
+			end
+		end
+		@@recursionCheck = true
 
 		logger.debug "Updating repositories..."
 		projects = (projects.is_a?(Array) ? projects : [projects])
 
-		if(defined?(@recursionCheck))
-			if(@recursionCheck)
-				return
-			end
-		end
-		@recursionCheck = true
 
 		# Don't bother doing anything if none of the projects we've been handed have a Git repository
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
@@ -351,6 +354,7 @@ module GitHosting
 				retries-=1
 				sleep 2
 				if retries<=0
+					@@recursionCheck = false
 					return
 				end
 			end
@@ -404,8 +408,9 @@ module GitHosting
 					users.map{|u| u.gitolite_public_keys.inactive}.flatten.compact.uniq.each do |key|
 						filename = File.join(local_dir, 'gitolite-admin/keydir',"#{key.identifier}.pub")
 						if File.exists? filename
-							File.unlink(filename) rescue nil
+							%x[git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' rm keydir/#{key.identifier}.pub]
 							changed = true
+							GitolitePublicKey.destroy(key.id)
 						end
 					end
 
@@ -451,7 +456,7 @@ module GitHosting
 
 			lockfile.flock(File::LOCK_UN)
 		end
-		@recursionCheck = false
+		@@recursionCheck = false
 
 	end
 
