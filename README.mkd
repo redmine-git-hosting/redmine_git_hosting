@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin (v0.4.0)
+# Redmine Git Hosting Plugin (v0.4.1)
 
 A ChiliProject/Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
@@ -64,6 +64,7 @@ owner of these files to www-data and the permissions to 600 for the private key 
     cp [somewhere-or-other]/gitolite_admin_id_rsa.pub .ssh/gitolite_admin_id_rsa.pub
 
     chown www-data -R .ssh
+    chmod 700 .ssh
     chmod 600 .ssh/gitolite_admin_id_rsa
     chmod 644 .ssh/gitolite_admin_id_rsa.pub
 
@@ -109,6 +110,9 @@ rails environment you have configured (e.g. production, development, testing).  
 
     RAILS_ENV=production rake db:migrate_plugins
 
+**(8)** Unless you want to access your repositories exclusively via Smart HTTP users will need to set a 
+public key to connect via SSH.  To do this, open a browser, login to ChiliProject/Redmine and follow the "My Account" Link
+in the upper right-hand corner of the page.  The right-hand column contains controls for adding your public key(s).
 
 ## "Smart" HTTP Functionality
 
@@ -119,6 +123,8 @@ This plugin allows you to automatically enable Smart HTTP access to your reposit
 enable Smart HTTP access only via HTTPS -- without encryption this is very insecure.  However, you will require a valid SSL
 certificate for this to work properly, otherwise you will get permission errors.  If you want to enable (insecure) access via 
 unencrypted HTTP go to the repository settings tab and select "HTTPS and HTTP" under the "Git Smart HTTP" tab.
+
+Where a password is required, this is your Redmine user password.
 
 Once Smart HTTP is enabled no further configuration is necessary.  You will be able to clone from/to the HTTP[S] URL specified in 
 the URL bar in the Project/Repository tab.
@@ -155,13 +161,13 @@ with ChiliProject 1.x the caching functionality is not.
 
 ## Notification to CIA.vc
 
-The latest version of this plugin (0.4.0) can notify CIA.vc when changes are pushed to the repository.  The project identifier on CIA.vc must match the 
+As of version 0.4.0, this plugin can notify CIA.vc when changes are pushed to the repository.  The project identifier on CIA.vc must match the 
 project identifier specified in ChiliProject/Redmine exactly
 
 
 ## Automatic Mirror Updates
 
-The latest version of this plugin (0.4.0) can automatically push updates to repository mirrors when new changes are pushed to the repository.  Mirrors
+As of version 0.4.0, this plugin can automatically push updates to repository mirrors when new changes are pushed to the repository.  Mirrors
 must grant access to the public key defined in the gitolite_admin_id_rsa.pub public key file, which is displayed for convenience in the 
 repository settings tab.
 
