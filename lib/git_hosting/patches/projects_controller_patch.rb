@@ -15,10 +15,13 @@ module GitHosting
 					membership.save
 				end
 				if @project.module_enabled?('repository') && Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
+					GitHostingObserver.set_update_active(false)
 					repo = Repository.factory("Git")
 					repo_name= @project.parent ? File.join(GitHosting::get_full_parent_path(@project, true),@project.identifier) : @project.identifier
 					repo.url = repo.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
 					@project.repository = repo
+					repo.save
+					GitHostingObserver.set_update_active(true)
 				end
 
 			end
