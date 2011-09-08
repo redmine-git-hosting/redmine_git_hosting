@@ -31,11 +31,12 @@ module GitHosting
 	@@mirror_pubkey = nil
 	def self.mirror_push_public_key
 		if @@mirror_pubkey.nil?
-			privk = ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' ]  ).chomp.strip
+			
+			%x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa ' ]
+			%x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
+
 			pubk =  ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
 			git_user_dir = ( %x[ #{GitHosting.git_user_runner} "cd ~ ; pwd" ] ).chomp.strip
-			
-			%x[ #{GitHosting.git_user_runner} 'echo "#{privk}" > ~/.ssh/gitolite_admin_id_rsa ' ]
 			%x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
 			%x[ #{GitHosting.git_user_runner} 'echo "#!/bin/sh" > ~/.ssh/run_gitolite_admin_ssh']
 			%x[ echo 'exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa    "$@"' | #{GitHosting.git_user_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh"  ]
