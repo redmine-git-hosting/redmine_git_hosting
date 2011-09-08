@@ -244,11 +244,7 @@ module GitHosting
 			f.puts '{'
 			f.puts '	$command =~ s/\\\\/\\\\\\\\/g;'
 			f.puts '	$command =~ s/"/\\\\"/g;'
-			if sudo_version < sudo_version_switch
-				f.puts '	exec("sudo -u ' + git_user + ' -i \"$command\"");'
-			else
-				f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
-			end
+			f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			f.puts '}'
 		end if !File.exists?(git_user_runner_path())
 
