@@ -3,22 +3,48 @@
 {
 	height: 75px;
 	padding: 10px 0 0;
+	margin:0px;
 }
 
-#git_url_list
+#git_url_box ul li,
+.box #git_url_box ul li
+{
+	list-style-image:none;
+	padding:0px;
+	margin:0px;
+}
+
+#git_url_box ul li:hover,
+.box #git_url_box ul li:hover
+{
+	list-style-image:none;
+	margin:0px;
+	padding:0px;
+	margin:0px;
+}
+
+
+#git_url_list 
 {
 	height: 23px;
 	float: left;
-	margin: 0;
-	padding: 0;
+	margin: 0px;
+	padding: 0px;
+	list-style-image:none;
 }
 
 #git_url_list li
 {
 	float: left;
 	list-style-type: none;
-	margin: 0;
-	padding: 0;
+	margin: 0px;
+	padding: 0px;
+	list-style-image:none;
+}
+
+#git_url_list li:hover
+{
+	list-style-image:none;
 }
 
 #git_url_list li:first-child a
