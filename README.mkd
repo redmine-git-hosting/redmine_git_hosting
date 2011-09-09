@@ -130,6 +130,9 @@ the accidental loss of data. If this feature is enabled, the safety is turned of
 
 *Show Checkout URLs* can be disabled to hide the git URL bar in the repository tab.  It is enabled by default.
 
+See below in the "Caching" section of this readme for more information on caching and how the caching variables should be configured.
+
+
 ## "Smart" HTTP Functionality
 
 Smart HTTP is an efficient way of communicating with the git server over http/https availalbe in git client version 1.6.6 and newer.
