@@ -3,7 +3,7 @@
   label_delete_git_repositories: Delete Git Repository When Project is Deleted
   label_git_server: Gitolite Server Domain
   label_http_server: HTTP Server Domain (for git http urls)
-  label_git_user: Git Username 
+  label_git_user: Git Username
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
@@ -11,7 +11,7 @@
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP
   field_notify_cia: Notify CIA.vc
-  
+
 
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
@@ -24,6 +24,7 @@
   label_sudo_git_to_web_user: Git user is able to sudo to Web user?
 
 
+  label_copy_to_clipboard: "Copy to clipboard"
 
 
 
@@ -35,7 +36,7 @@
 
   label_public_keys: Public keys
   label_public_key_new: New public key
-  field_public_key: Key 
+  field_public_key: Key
   notice_public_key_updated: Public key was successfully updated.
   notice_public_key_added: Public key was successfully added.
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can deactivate it and create a new one.'

@@ -27,6 +27,12 @@ function updateGitUrl(el)
 
 function setGitUrlOnload()
 {
+	// highlight input text on click
+	var git_input = document.getElementById("git_url_text");
+	if (git_input) {
+		git_input.setAttribute("onclick", "this.select()");
+	}
+
 	var i
 	var firstEl = null
 	for(i=0;i<allGitUrlIds.length; i++)
@@ -42,4 +48,18 @@ function setGitUrlOnload()
 
 }
 
+document.observe("dom:loaded", function() {
+	var clip_container = $('clipboard_container');
+	if (clip_container) {
+		clip_container.show();
 
+		clipboard = new ZeroClipboard.Client();
+
+		clipboard.setHandCursor(true);
+		clipboard.glue('clipboard_button', 'clipboard_container');
+
+		clipboard.addEventListener('mouseOver', function (client) {
+			clipboard.setText($('git_url_text').value);
+		});
+	}
+});
