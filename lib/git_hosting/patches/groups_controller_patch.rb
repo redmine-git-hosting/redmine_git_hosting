@@ -2,15 +2,15 @@ require_dependency 'groups_controller'
 module GitHosting
 	module Patches
 		module GroupsControllerPatch
-			
+
 			@@original_projects = []
 
 			def disable_git_observer_updates
 				GitHostingObserver.set_update_active(false)
 			end
-			
+
 			def do_single_update
-				GitHostingObserver.set_update_active(true) 
+				GitHostingObserver.set_update_active(true)
 			end
 
 

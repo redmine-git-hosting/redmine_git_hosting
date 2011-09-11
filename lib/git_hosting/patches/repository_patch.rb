@@ -27,7 +27,7 @@ module GitHosting
 					return new_repo
 				end
 			end
-			
+
 
 			def self.included(base)
 				base.extend(ClassMethods)
@@ -37,7 +37,7 @@ module GitHosting
 						alias_method_chain :factory, :git_extra_init
 					end
 				end
-			
+
 			end
 		end
 	end

@@ -17,10 +17,10 @@ module GitHosting
 					repo_name= @project.parent ? File.join(GitHosting::get_full_parent_path(@project, true),@project.identifier) : @project.identifier
 					params[:repository][:url] = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
 				end
-				
+
 				if params[:repository_scm] == "Git" || @project.repository.is_a?(Repository::Git)
 					#Evidently the ONLY way to update the repository.extra table is to basically copy/paste the existing controller code
-					#the update line needs to go in the dead center of it.				
+					#the update line needs to go in the dead center of it.
 					@repository = @project.repository
 					if !@repository
 						@repository = Repository.factory(params[:repository_scm])
@@ -33,7 +33,7 @@ module GitHosting
 						end
 						@repository.save
 					end
-					
+
 
 					render(:update) do |page|
 						page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
@@ -42,15 +42,15 @@ module GitHosting
 							page.replace_html "main-menu", render_main_menu(@project)
 						end
 					end
-					
+
 					GitHosting.update_repositories(@project, false) if !@project.repository.nil?
 					GitHosting.setup_hooks(@project) if !@project.repository.nil?
-	
+
 				else
 					edit_without_scm_settings
 				end
-				
-				
+
+
 			end
 
 			def self.included(base)

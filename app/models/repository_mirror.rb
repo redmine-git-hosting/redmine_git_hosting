@@ -20,7 +20,7 @@ class RepositoryMirror < ActiveRecord::Base
 		repo_path = GitHosting.repository_path(project)
 		shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push --mirror "#{url}" 2>&1' | #{GitHosting.git_user_runner} "bash" ]
 		push_failed = ($?.to_i!=0) ? true : false
-		
+
 		err_output = push_failed ? "" : ""
 		if push_failed
 			ms = " #{mirror.url} push error "

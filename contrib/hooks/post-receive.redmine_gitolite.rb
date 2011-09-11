@@ -11,7 +11,7 @@ $debug=false
 
 def log(msg, debug_only=false, with_newline=true)
 	if $debug || (!debug_only)
-		print msg + (with_newline ? "\n" : "") 
+		print msg + (with_newline ? "\n" : "")
 	end
 end
 def get_git_repository_config(varname)
@@ -28,7 +28,7 @@ def get_http_params(rgh_vars)
 	params
 end
 
-def run_query(url_str, params, with_https)	
+def run_query(url_str, params, with_https)
 	url_str = (with_https ?  "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
 	success = false
 	begin

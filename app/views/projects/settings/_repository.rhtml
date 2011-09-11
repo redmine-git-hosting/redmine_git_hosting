@@ -2,13 +2,13 @@
 
 	<%= error_messages_for 'repository' %>
 	<div class="splitcontentleft">
-		<div class="box tabular">	
+		<div class="box tabular">
 			<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
 				<h3>Repository Options</h3>
 			<% end %>
-	
+
 			<p><%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %></p>
-	
+
 			<% if @repository && @repository.is_a?(Repository::Git) %>
 				<%
 					mirror_pubkey = GitHosting.mirror_push_public_key
@@ -23,15 +23,15 @@
 						end
 					end
 				%>
-				<p> 
+				<p>
 					<%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
 					<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]) %>
 				</p>
-				<p> 
+				<p>
 					<%= label_tag  "extra[git_http]", l(:field_git_http) %>
 					<%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected=>extra_vals[:git_http]) %>
 				</p>
-				<p> 
+				<p>
 					<%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
 					<%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:notify_cia]) %>
 					<% if extra_vals[:notify_cia] == "1" %>
@@ -52,24 +52,24 @@
 			<% end %>
 		</div>
 		<%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
-	</div>	
+	</div>
 
 
 
 	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
-	
-		
+
+
 		<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 		<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 		<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
 		<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-	
+
 		<div class="splitcontentright">
 		<div class="box tabular">
-			
+
 			<h3>Repository Mirrors</h3>
-			
+
 			<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
 				<div style="left:0px;clear:left;margin: 4px 5px;width: 96%;">
 					<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror' ) %>
@@ -112,10 +112,10 @@
 				<span>Mirrors Must Grant Write Access To The Following Public Key:</span>
 				<br/>
 				<textarea cols="40" id="mirror_pubkey" readonly="readonly" rows="20" style="height:140px;width:96%"><%= mirror_pubkey  %></textarea>
-			</div>	
-	
+			</div>
+
 			<div id="mirror_bottom_spacer" style="display:block;height:10px;clear:both;"></div>
-			
+
 		</div>
 		</div>
 		<script type="text/javascript">

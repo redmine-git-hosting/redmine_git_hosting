@@ -39,9 +39,9 @@ class GitoliteHooksController < ApplicationController
 				GitHosting.logger.debug "Pushing changes to mirror #{mirror.url}"
 				output.write("Pushing changes to mirror #{mirror.url} ... ")
 				output.flush
-				
+
 				mirror_err = mirror.push
-				
+
 				result = mirror_err.length > 0 ? "Failed!\n" + mirror_err : "Done\n"
 				output.write(result)
 				output.flush

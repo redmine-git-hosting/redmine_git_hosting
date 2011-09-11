@@ -42,7 +42,7 @@ module GitHosting
 		def changed?
 			@original_content != content
 		end
-		
+
 		def all_repos
 			repos={}
 			@repositories.each do |repo, rights|
@@ -80,7 +80,7 @@ module GitHosting
 
 		def content
 			content = []
-			
+
 			# To facilitate creation of repos, even when no users are defined
 			# always define at least one user -- specifically the admin
 			# user which has rights to modify gitolite-admin and control
@@ -112,7 +112,7 @@ module GitHosting
 		def initialize
 			@rights = ActiveSupport::OrderedHash.new
 		end
-		
+
 		def rights
 			@rights
 		end
@@ -129,7 +129,7 @@ module GitHosting
 			add perm, users
 		end
 
-		def each 
+		def each
 			@rights.each {|k,v| yield k, v}
 		end
 	end

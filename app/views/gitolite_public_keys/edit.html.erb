@@ -3,7 +3,7 @@
 <%= error_messages_for :gitolite_public_key %>
 
 <% form_for :public_key, @gitolite_public_key, :url => { :action => "update" }, :html => { :method => :put},
-                          :builder => TabularFormBuilder, 
+                          :builder => TabularFormBuilder,
                           :lang => current_language do |f| %>
 
 	<%= render :partial => 'form', :locals => { :f => f } %>

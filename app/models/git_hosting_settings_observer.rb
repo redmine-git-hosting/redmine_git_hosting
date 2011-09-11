@@ -18,9 +18,9 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 	def after_save(object)
 		if object.name == "plugin_redmine_git_hosting"
-			
+
 			%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
-			
+
 			if @@old_repo_base != object.value['gitRepositoryBasePath']
 				GitHostingObserver.set_update_active(false)
 				all_projects = Project.find(:all)
@@ -36,11 +36,11 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 				GitHostingObserver.set_update_active(true)
 			end
 
-			if @@old_git_user != object.value['gitUser'] 
+			if @@old_git_user != object.value['gitUser']
 
 				GitHosting.setup_hooks
 				GitHosting.update_repositories( Project.find(:all), false)
-		
+
 			elsif @@old_http_server !=  object.value['httpServer'] || @@old_hook_debug != object.value['gitHooksDebug'] || @@old_repo_base != object.value['gitRepositoryBasePath']
 
 				GitHosting.update_global_hook_params

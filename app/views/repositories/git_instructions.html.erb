@@ -3,7 +3,7 @@
 <% git_ssh_url = Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer'] + ":" + GitHosting.repository_name(@project) + '.git'  %>
 
 <div class="box">
-	
+
 <h2>Git Setup:</h2>
 <pre>	<a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
 	git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
@@ -23,5 +23,5 @@
 <pre>	cd existing_git_repo
 	git remote add origin <%= git_ssh_url %>
 	git push -u origin master
-</pre>    
+</pre>
 </div>

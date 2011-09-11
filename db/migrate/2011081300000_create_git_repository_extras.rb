@@ -13,11 +13,11 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 			t.column :key, :string
 		end
 
-	
-		GitHostingObserver.set_update_active(false)	
+
+		GitHostingObserver.set_update_active(false)
 		Project.find(:all).each do |project|
 			if project.repository.is_a?(Repository::Git)
-				
+
 				#create extra object
 				e = GitRepositoryExtra.new()
 				begin
@@ -41,18 +41,18 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 
 			end
 		end
-		
+
 		# this next part requires running commands as git user
 		# use a begin/rescue block because this could easily bomb out
 		# if settings aren't correct to begin with
 		begin
 			%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
 			GitHosting.setup_hooks
-			GitHostingObserver.set_update_active(false)	
+			GitHostingObserver.set_update_active(false)
 		rescue
 		end
 
-		# even if git commands above didn't work properly, attempt to 
+		# even if git commands above didn't work properly, attempt to
 		# eliminate tmp dir in case they partially worked, and we have
 		# residual crap belonging to wrong user
 		begin

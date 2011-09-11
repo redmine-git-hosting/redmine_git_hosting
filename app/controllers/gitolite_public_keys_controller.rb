@@ -1,11 +1,11 @@
 class GitolitePublicKeysController < ApplicationController
 	unloadable
-	
+
 	before_filter :require_login
 	before_filter :set_user_variable
 	before_filter :find_gitolite_public_key, :except => [:index, :new, :create]
 
-		
+
 	def edit
 	end
 
@@ -23,7 +23,7 @@ class GitolitePublicKeysController < ApplicationController
 			render :action => 'edit'
 		end
 	end
-	
+
 	def create
 		@gitolite_public_key = GitolitePublicKey.new(params[:public_key].merge(:user => @user))
 		if @gitolite_public_key.save
@@ -33,13 +33,13 @@ class GitolitePublicKeysController < ApplicationController
 		end
 		redirect_to url_for(:controller => 'my', :action => 'account')
 	end
-	
+
 	protected
-	
+
 	def set_user_variable
 		@user = User.current
 	end
-	
+
 	def find_gitolite_public_key
 		key = GitolitePublicKey.find_by_id(params[:id])
 		if key and key.user == @user
