@@ -59,23 +59,7 @@
 	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
 
-		<% content_for :header_tags do %>
 
-
-			<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
-			<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-		
-		
-			<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
-			<script type="text/javascript">
-				ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
-				setZeroClipboardInputSource("mirror_pubkey");
-			</script>
-		<% end %>
 
 		<div class="splitcontentright">
 		<div class="box tabular">
@@ -133,62 +117,82 @@
 
 		</div>
 		</div>
-		<script type="text/javascript">
-			function getWidth() {
-				var width = 60*document.viewport.getWidth()/100;
-				if (width<750) { width=750 };
-				return width;
-			}
-			document.observe("dom:loaded", function() {
-				$$(".add-mirror").each(function(elem) {
-					Event.observe(elem, 'click', function(event) {
-						Event.stop(event);
-						Modalbox.show(
-							elem.href, {
-								title: "<%=l(:label_mirror_create)%>",
-								width: getWidth()
-							}
-						)
-						return false;
+		<% content_for :header_tags do %>
+			<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
+			<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+		
+		
+			<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+			<script type="text/javascript">
+				
+				function getWidth() {
+					var width = 60*document.viewport.getWidth()/100;
+					if (width<750) { width=750 };
+					return width;
+				}
+				document.observe("dom:loaded", function() {
+					
+					ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+					setZeroClipboardInputSource("mirror_pubkey");
+
+					// tab visiblity javascript screws up zeroclipboard, need to reset when we change
+					// to repo tab where the clipboard is visible 
+					document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
+
+					$$(".add-mirror").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_mirror_create)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".edit-mirror").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_mirror_edit)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".delete-mirror").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_mirror_delete)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".push-mirror").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:button_push_title)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
 					})
 				})
-				$$(".edit-mirror").each(function(elem) {
-					Event.observe(elem, 'click', function(event) {
-						Event.stop(event);
-						Modalbox.show(
-							elem.href, {
-								title: "<%=l(:label_mirror_edit)%>",
-								width: getWidth()
-							}
-						)
-						return false;
-					})
-				})
-				$$(".delete-mirror").each(function(elem) {
-					Event.observe(elem, 'click', function(event) {
-						Event.stop(event);
-						Modalbox.show(
-							elem.href, {
-								title: "<%=l(:label_mirror_delete)%>",
-								width: getWidth()
-							}
-						)
-						return false;
-					})
-				})
-				$$(".push-mirror").each(function(elem) {
-					Event.observe(elem, 'click', function(event) {
-						Event.stop(event);
-						Modalbox.show(
-							elem.href, {
-								title: "<%=l(:button_push_title)%>",
-								width: getWidth()
-							}
-						)
-						return false;
-					})
-				})
-			})
-		</script>
+			</script>
+		<% end %>
 	<% end %>
 <% end %>
