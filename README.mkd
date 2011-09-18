@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin (v0.4.1)
+# Redmine Git Hosting Plugin (v0.4.2)
 
 A ChiliProject / Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
@@ -131,6 +131,29 @@ the accidental loss of data. If this feature is enabled, the safety is turned of
 *Show Checkout URLs* can be disabled to hide the git URL bar in the repository tab.  It is enabled by default.
 
 See below in the "Caching" section of this readme for more information on caching and how the caching variables should be configured.
+
+## A Note About PATH variables
+
+One major source of issues with this plugin is that Rails needs to be able to run both *sudo* and *git*.  Specifically, these programs need to be in one of the directories specified by
+the PATH variable, in your Rails environment.  This requirement has been known to cause problems, particularly when installing on FreeBSD.
+
+To address this problem in the Apache + Passenger configuration, one possible solution is to do the following:
+
+**(1)** Create a new file: /usr/local/bin/ruby18env, with the following code, modifying the PATH shown below to include all relevant directories:
+    #!/bin/sh
+    export PATH="/usr/local/lib/ruby/gems/1.8/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
+    [path_to_your_ruby_executable, e.g. /usr/local/bin/ruby18] $*
+
+**(2)** Make this file executable:
+    chmod 755 /usr/local/bin/ruby18env
+
+**(3)** In your httpd.conf file, replace (or add) your PassengerRuby directive with:
+    PassengerRuby /usr/local/bin/ruby18env
+
+
+Note that this may be an issue for configurations other than Apache + Passenger, but as this is one of the most common configurations, instructions for that are provided above.
+
+Thanks to user Tronix117 for helping to track down this issue and provide a solution for Apache + Passenger.
 
 
 ## "Smart" HTTP Functionality
