@@ -6,6 +6,7 @@ function reset_zero_clipboard()
 	var clip_container = $('clipboard_container');
 	if (clip_container) {
 		clip_container.show();
+		clip_container.style.fontFamily="serif"
 
 		var cur_children = clip_container.childNodes;
 		var ci;
