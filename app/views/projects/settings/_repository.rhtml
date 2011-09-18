@@ -1,3 +1,28 @@
+
+<% content_for :header_tags do %>
+	<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
+	<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
+	<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+	
+	<script type="text/javascript" >
+	
+		document.observe("dom:loaded", function() {
+                                        
+			ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+			setZeroClipboardInputSource("mirror_pubkey");
+
+
+			// tab visiblity javascript screws up zeroclipboard, need to reset when we change
+			// to repo tab where the clipboard is visible 
+			// and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
+			document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
+			setInterval("reset_zero_clipboard();", 250);
+			
+		});
+	</script>
+
+<% end %>
+
 <% remote_form_for :repository, @repository, :url => { :controller => 'repositories', :action => 'edit', :id => @project }, :builder => TabularFormBuilder,:lang => current_language do |f| %>
 
 	<%= error_messages_for 'repository' %>
@@ -124,9 +149,6 @@
 			<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 		
 		
-			<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
-			<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
 			<script type="text/javascript">
 				
 				function getWidth() {
@@ -136,13 +158,6 @@
 				}
 				document.observe("dom:loaded", function() {
 					
-					ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
-					setZeroClipboardInputSource("mirror_pubkey");
-
-					// tab visiblity javascript screws up zeroclipboard, need to reset when we change
-					// to repo tab where the clipboard is visible 
-					document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
-
 					$$(".add-mirror").each(function(elem) {
 						Event.observe(elem, 'click', function(event) {
 							Event.stop(event);
