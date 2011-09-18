@@ -27,7 +27,7 @@
 		</script>
 	<% end %>
 
-	<% if (project.module_enabled?(:repository)) && ((!User.current.anonymous?) || project.repository.extra[:git_http].to_s != "0" || (project.is_public && project.repository.extra[:git_daemon].to_s != "0" )) %>
+	<% if (project.module_enabled?(:repository) && Setting.plugin_redmine_git_hosting['gitRepositoriesShowUrl'].to_s != "false" ) && ((!User.current.anonymous?) || project.repository.extra[:git_http].to_s != "0" || (project.is_public && project.repository.extra[:git_daemon].to_s != "0" )) %>
 		<div class="box">
 			<h3>Git Repository</h3>
 			<div id="git_url_box">
