@@ -3,7 +3,7 @@ require_dependency 'repository/git'
 
 module GitHosting
 	module Patches
-		module RepositoryPatch
+		module GitRepositoryPatch
 
 			def report_last_commit_with_always_true
 				true
@@ -27,4 +27,4 @@ module GitHosting
 		end
 	end
 end
-Repository::Git.send(:include, GitHosting::Patches::GitRepositoryPatch) unless Repository::Git.include?(GitHosting::Patches::RepositoryPatch)
+Repository::Git.send(:include, GitHosting::Patches::GitRepositoryPatch) unless Repository::Git.include?(GitHosting::Patches::GitRepositoryPatch)
