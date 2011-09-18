@@ -59,19 +59,23 @@
 	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
 
+		<% content_for :header_tags do %>
 
-		<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
-		<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
-		<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
-		<script type="text/javascript">
-			ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
-			setZeroClipboardInputSource("mirror_pubkey");
-		</script>
 
-		<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
-		<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-		<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
-		<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+			<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
+			<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+		
+		
+			<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
+			<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+			<script type="text/javascript">
+				ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+				setZeroClipboardInputSource("mirror_pubkey");
+			</script>
+		<% end %>
 
 		<div class="splitcontentright">
 		<div class="box tabular">
