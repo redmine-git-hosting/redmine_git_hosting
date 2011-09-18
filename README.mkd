@@ -140,14 +140,17 @@ the PATH variable, in your Rails environment.  This requirement has been known t
 To address this problem in the Apache + Passenger configuration, one possible solution is to do the following:
 
 **(1)** Create a new file: /usr/local/bin/ruby18env, with the following code, modifying the PATH shown below to include all relevant directories:
+
     #!/bin/sh
     export PATH="/usr/local/lib/ruby/gems/1.8/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
     [path_to_your_ruby_executable, e.g. /usr/local/bin/ruby18] $*
 
 **(2)** Make this file executable:
+
     chmod 755 /usr/local/bin/ruby18env
 
 **(3)** In your httpd.conf file, replace (or add) your PassengerRuby directive with:
+
     PassengerRuby /usr/local/bin/ruby18env
 
 
