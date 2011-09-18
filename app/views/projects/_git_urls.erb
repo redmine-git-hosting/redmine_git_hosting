@@ -2,9 +2,12 @@
 	<% content_for :header_tags do %>
 
 		<%= stylesheet_link_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+		<%= javascript_include_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+		
 		<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
 		<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
-		<%= javascript_include_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+		<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+
 
 		<script type="text/javascript">
 
@@ -20,6 +23,7 @@
 			window.onload = setGitUrlOnload
 
 			ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+			setZeroClipboardInputSource("git_url_text");
 		</script>
 	<% end %>
 

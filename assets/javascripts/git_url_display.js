@@ -48,18 +48,3 @@ function setGitUrlOnload()
 
 }
 
-document.observe("dom:loaded", function() {
-	var clip_container = $('clipboard_container');
-	if (clip_container) {
-		clip_container.show();
-
-		clipboard = new ZeroClipboard.Client();
-
-		clipboard.setHandCursor(true);
-		clipboard.glue('clipboard_button', 'clipboard_container');
-
-		clipboard.addEventListener('mouseOver', function (client) {
-			clipboard.setText($('git_url_text').value);
-		});
-	}
-});

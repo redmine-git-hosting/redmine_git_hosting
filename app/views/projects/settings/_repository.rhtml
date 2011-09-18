@@ -60,6 +60,14 @@
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
 
 
+		<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
+		<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
+		<%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+		<script type="text/javascript">
+			ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+			setZeroClipboardInputSource("mirror_pubkey");
+		</script>
+
 		<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 		<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 		<%= javascript_include_tag('modalbox/lib/builder', :plugin => 'redmine_git_hosting') %>
@@ -109,6 +117,9 @@
 				<p class="nodata" style="margin: 4px 5px; width: 96%; padding: 8px;">No Mirrors Defined</p>
 			<% end %>
 			<div style="margin: 15px 5px; width: 96%;">
+				<div id="clipboard_container" title="<%= l(:label_copy_to_clipboard) %>" style="display: none;">
+					<div id="clipboard_button"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
+				</div>
 				<span>Mirrors Must Grant Write Access To The Following Public Key:</span>
 				<br/>
 				<textarea cols="40" id="mirror_pubkey" readonly="readonly" rows="20" style="height:140px;width:96%"><%= mirror_pubkey  %></textarea>
