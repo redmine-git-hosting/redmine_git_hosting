@@ -11,7 +11,7 @@ document.observe("dom:loaded", function() {
 		clipboard.glue('clipboard_button', 'clipboard_container');
 
 		clipboard.addEventListener('mouseOver', function (client) {
-			clipboard.setText($(source_input_control_id).value);
+			clipboard.setText($(zero_clipboard_source_input_control_id).value);
 		});
 	}
 });
