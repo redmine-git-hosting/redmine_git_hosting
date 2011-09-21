@@ -84,10 +84,13 @@ variables are set correctly.  To adjust these variables, open an editor and edit
 Starting on line 22 you will see the settings definitions you should edit.
 
 
-The *httpServer* variable should be set to the url used to access your redmine site, e.g. www.my-own-personal-git-host-server.com
+The *httpServer* variable should be set to the url used to access your redmine site, e.g. www.my-own-personal-git-host-server.com.  Note that if Redmine is not
+installed in the site root this should include the path to your redmine root, e.g. www.my-own-personal-git-host-server.com/path/to/redmine
 
 
-The *gitServer* will almost always be the same as the the httpServer variable -- this is the server name to use to access the gitolite repositories via ssh 
+The *gitServer* will usually be the same as the the httpServer variable -- this is the server name to use to access the gitolite repositories via ssh.  This should be
+the hostname only, so this will be different from *httpServer* if Redmine is not installed in the site root.  In other words, even if redmine is installed in 
+www.my-own-personal-git-host-server.com/path/to/redmine, *gitServer* should be set to www.my-own-personal-git-host-server.com
 
 
 The *gitUser* is the user under which gitolite is installed
