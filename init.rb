@@ -5,14 +5,6 @@ require_dependency 'user'
 
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_cia_notification')
-require_dependency 'git_hosting'
-require_dependency 'git_hosting/patches/projects_controller_patch'
-require_dependency 'git_hosting/patches/repositories_controller_patch'
-require_dependency 'git_hosting/patches/groups_controller_patch'
-require_dependency 'git_hosting/patches/repository_patch'
-require_dependency 'git_hosting/patches/git_repository_patch'
-require_dependency 'git_hosting/patches/git_adapter_patch'
-require_dependency 'git_hosting/patches/repository_cia_filters'
 
 Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
@@ -28,7 +20,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'allProjectsUseGit' => 'false',
-		'deleteGitRepositories' => 'false',
+		'deleteGitRepositories' => 'true',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
@@ -42,6 +34,39 @@ Redmine::Plugin.register :redmine_git_hosting do
 			permission :view_repository_mirrors, :repository_mirrors => :index
 			permission :edit_repository_mirrors, :repository_mirrors => :edit
 		end
+end
+require "dispatcher"
+Dispatcher.to_prepare :redmine_git_patches do
+
+  require_dependency 'git_hosting'
+
+  require_dependency 'projects_controller'
+  require 'git_hosting/patches/projects_controller_patch'
+  ProjectsController.send(:include, GitHosting::Patches::ProjectsControllerPatch)
+
+  require_dependency 'repositories_controller'
+  require 'git_hosting/patches/repositories_controller_patch'
+  RepositoriesController.send(:include, GitHosting::Patches::RepositoriesControllerPatch)
+
+  require_dependency 'repository'
+  require 'git_hosting/patches/repository_patch'
+  Repository.send(:include, GitHosting::Patches::RepositoryPatch)
+
+  require 'stringio'
+  require_dependency 'redmine/scm/adapters/git_adapter'
+  require 'git_hosting/patches/git_adapter_patch'
+  Redmine::Scm::Adapters::GitAdapter.send(:include, GitHosting::Patches::GitAdapterPatch)
+
+  require_dependency 'groups_controller'
+  require 'git_hosting/patches/groups_controller_patch'
+  GroupsController.send(:include, GitHosting::Patches::GroupsControllerPatch)
+
+  require_dependency 'repository'
+  require_dependency 'repository/git'
+  require 'git_hosting/patches/git_repository_patch'
+  Repository::Git.send(:include, GitHosting::Patches::GitRepositoryPatch)
+
+  require_dependency 'git_hosting/patches/repository_cia_filters'
 end
 
 # initialize hooks

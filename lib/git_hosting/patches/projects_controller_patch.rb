@@ -1,4 +1,3 @@
-require_dependency 'projects_controller'
 module GitHosting
 	module Patches
 		module ProjectsControllerPatch
@@ -73,4 +72,3 @@ module GitHosting
 		end
 	end
 end
-ProjectsController.send(:include, GitHosting::Patches::ProjectsControllerPatch) unless ProjectsController.include?(GitHosting::Patches::ProjectsControllerPatch)

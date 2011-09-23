@@ -1,4 +1,3 @@
-require_dependency 'groups_controller'
 module GitHosting
 	module Patches
 		module GroupsControllerPatch
@@ -24,4 +23,3 @@ module GitHosting
 		end
 	end
 end
-GroupsController.send(:include, GitHosting::Patches::GroupsControllerPatch) unless GroupsController.include?(GitHosting::Patches::GroupsControllerPatch)

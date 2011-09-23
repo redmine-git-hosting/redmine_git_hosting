@@ -1,6 +1,3 @@
-require_dependency 'repository'
-require_dependency 'repository/git'
-
 module GitHosting
 	module Patches
 		module GitRepositoryPatch
@@ -27,4 +24,3 @@ module GitHosting
 		end
 	end
 end
-Repository::Git.send(:include, GitHosting::Patches::GitRepositoryPatch) unless Repository::Git.include?(GitHosting::Patches::GitRepositoryPatch)

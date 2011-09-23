@@ -1,6 +1,3 @@
-require_dependency 'redmine/scm/adapters/git_adapter'
-require 'stringio'
-
 module GitHosting
 	module Patches
 		module GitAdapterPatch
@@ -104,4 +101,3 @@ module GitHosting
 		end
 	end
 end
-Redmine::Scm::Adapters::GitAdapter.send(:include, GitHosting::Patches::GitAdapterPatch) unless Redmine::Scm::Adapters::GitAdapter.include?(GitHosting::Patches::GitAdapterPatch)
