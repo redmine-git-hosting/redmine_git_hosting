@@ -47,7 +47,7 @@
 			<% if @gitolite_public_keys.any? %>
 				<th style="text-align:left;" ><h4><%=l(:label_public_keys)%></h4></th>
 			<% else %>
-				<th style="text-align:left;" ><h4>No Pubic Keys Defined</h4></th>
+				<th style="text-align:left;" ><h4><%=l(:label_no_public_keys)%></h4></th>
 			<% end %>
 			<th style="width:10%;"></th>
 		</tr>
