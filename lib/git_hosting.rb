@@ -266,12 +266,12 @@ module GitHosting
 	def self.lock(retries)
 		is_locked = false
 		local_dir = get_tmp_dir()
-		if @@lockfile.nil?
+		if @@lock_file.nil?
 			@@lock_file=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
 		end
 
 		while retries > 0
-			is_locked = @@lockfile.flock(File::LOCK_EX|File::LOCK_NB) 
+			is_locked = @@lock_file.flock(File::LOCK_EX|File::LOCK_NB) 
 			retries-=1
 			if (!is_locked) && retries > 0
 				sleep 1
@@ -281,8 +281,8 @@ module GitHosting
 	end
 
 	def self.unlock
-		if !@@lockfile.nil?
-			@@lockfile.flock(File::LOCK_UN)
+		if !@@lock_file.nil?
+			@@lock_file.flock(File::LOCK_UN)
 		end
 	end
 
