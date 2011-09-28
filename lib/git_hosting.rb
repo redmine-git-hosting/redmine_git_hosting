@@ -261,6 +261,32 @@ module GitHosting
 
 	end
 
+	
+	@@lock_file = nil
+	def self.lock(retries)
+		is_locked = false
+		local_dir = get_tmp_dir()
+		if @@lockfile.nil?
+			@@lock_file=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
+		end
+
+		while retries > 0
+			is_locked = @@lockfile.flock(File::LOCK_EX|File::LOCK_NB) 
+			retries-=1
+			if (!is_locked) && retries > 0
+				sleep 1
+			end
+		end
+		return is_locked
+	end
+
+	def self.unlock
+		if !@@lockfile.nil?
+			@@lockfile.flock(File::LOCK_UN)
+		end
+	end
+
+
 	def self.clone_or_pull_gitolite_admin
 		# clone/pull from admin repo
 		local_dir = get_tmp_dir()
@@ -274,7 +300,7 @@ module GitHosting
 		end
 		%x[chmod 700 "#{local_dir}/gitolite-admin" ]
 		# Make sure we have our hooks setup
-		check_hooks_installed
+		GitAdapterHooks.check_hooks_installed
 	end
 
 	def self.move_repository(old_name, new_name)
@@ -285,16 +311,10 @@ module GitHosting
 		local_dir = get_tmp_dir()
 
 		#lock
-		lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
-		retries=5
-		loop do
-			break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
-			retries-=1
-			sleep 2
-			if retries<=0
-				return
-			end
+		if !lock(5)
+			return
 		end
+		
 
 		# Make sure we have gitoite-admin cloned
 		clone_or_pull_gitolite_admin
@@ -319,7 +339,7 @@ module GitHosting
 		%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' push ]
 
 		# unlock
-		lockfile.flock(File::LOCK_UN)
+		unlock()
 
 	end
 
@@ -342,26 +362,20 @@ module GitHosting
 		unless projects.detect{|p|  p.repository.is_a?(Repository::Git) }.nil?
 
 
-			# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-			local_dir = get_tmp_dir()
 
 			#lock
-			lockfile=File.new(File.join(local_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
-			retries=5
-			loop do
-				break if lockfile.flock(File::LOCK_EX|File::LOCK_NB)
-				retries-=1
-				sleep 2
-				if retries<=0
-					@@recursionCheck = false
-					return
-				end
+			if !lock(5)
+				@@recursionCheck = false
+				return
 			end
+			
+
 
 			# Make sure we have gitoite-admin cloned
 			clone_or_pull_gitolite_admin
 
 
+			local_dir = get_tmp_dir()
 			conf = GitoliteConfig.new(File.join(local_dir, 'gitolite-admin', 'conf', 'gitolite.conf'))
 			orig_repos = conf.all_repos
 			new_repos = []
@@ -450,10 +464,10 @@ module GitHosting
 			# Set post recieve hooks for new projects
 			# We need to do this AFTER push, otherwise necessary repos may not be created yet
 			if new_projects.length > 0
-				setup_hooks(new_projects)
+				GitAdapterHooks.setup_hooks(new_projects)
 			end
 
-			lockfile.flock(File::LOCK_UN)
+			unlock()
 		end
 		@@recursionCheck = false
 
@@ -474,13 +488,19 @@ module GitHosting
 
 
 	def self.check_hooks_installed
+		lock(5)
 		GitAdapterHooks.check_hooks_installed
+		unlock()
 	end
 	def self.setup_hooks(projects=nil)
+		lock(5)
 		GitAdapterHooks.setup_hooks(projects)
+		unlock()
 	end
 	def self.update_global_hook_params
+		lock(5)
 		GitAdapterHooks.update_global_hook_params
+		unlock()
 	end
 end
 
