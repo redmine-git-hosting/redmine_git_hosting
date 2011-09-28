@@ -21,12 +21,21 @@ to run commands as the web server user add these two lines to your sudoers file 
     www-data        ALL=(git)       NOPASSWD:ALL
     git             ALL=(www-data)  NOPASSWD:ALL
 
-
-This assumes www-data is your web server user, and git is your git user (the user gitolite is installed under).
+This assumes *www-data* is your web server/rails user, and *git* is your git user (the user gitolite is installed under).
 This will allow www-data to execute commands as git without prompting for a password and git to execute commands
 as www-data without prompting for a password.  No other access (e.g. no root access, permissions to run commands
 as other users) are granted by these lines.  These lines are only there to facilitate communication between the
 web server user and the git user, no other users, keeping the system secure.
+
+Also, the *requiretty* sudo setting can prevent the plugin from working correctly.  Several users have reported this
+problem on CentOS.  Check the *Defaults* directive in the sudoers file to see if this setting has been set.  
+You address the problem by either removing *requiretty* from the *Defaults* directive, or by adding the following 
+lines below the original *Defaults* directive to remove this requirement for only the two necessary users:
+
+    Defaults:git      !requiretty
+    Defaults:www-data !requiretty
+
+Again, this assumes  *www-data* is your web server/rails user, and *git* is the user gitolite is installed under.
 
 Note that this guide refers to the "web server user" as the user under which Rails is being, which is usually (but 
 not always) the same as the user that runs the main web server.  If you are running Rails under a different user, follow
@@ -38,7 +47,8 @@ these instructions using that user, not the one for the main web server.
 **(1)** Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and
 there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume
 that gitolite has been installed for user "git", and you have an ssh key called "git_gitolite_admin_id_rsa"
-(and corresponding public key) for which access to the gitolite-admin repository has been granted.
+(and corresponding public key) for which access to the gitolite-admin repository has been granted.  The ssh
+key should not have a password set.
 
 **(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to
 install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
@@ -51,6 +61,13 @@ this to your sudoers file:
 
     www-data        ALL=(git)       NOPASSWD:ALL
     git             ALL=(www-data)  NOPASSWD:ALL
+
+If you have the *requiretty* set in the *Defaults* directive of your sudoers file (it is there by default in CentOS) either remove it or add the following 
+lines below the original directive:
+
+    Defaults:git      !requiretty
+    Defaults:www-data !requiretty
+
 
 
 **(4)** In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin
