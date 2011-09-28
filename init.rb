@@ -20,7 +20,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'allProjectsUseGit' => 'false',
-		'deleteGitRepositories' => 'true',
+		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
