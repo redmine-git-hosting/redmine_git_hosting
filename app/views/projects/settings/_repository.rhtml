@@ -28,10 +28,10 @@
 			// to repo tab where the clipboard is visible 
 			// and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
 			document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
-			setInterval(test_zc_vis, 250);
+			setInterval(test_zc_vis, 500);
+			test_zc_vis();
 			
 		});
-		test_zc_vis();
 	</script>
 
 <% end %>
@@ -53,7 +53,7 @@
 					extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
 					extra_vals.each_key do |e|
 						begin
-							val = repository.extra[e]
+							val = @repository.extra[e]
 							if !val.nil?
 								extra_vals[e] = val.to_s
 							end
@@ -106,7 +106,7 @@
 
 			<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
 				<div style="left:0px;clear:left;margin: 4px 5px;width: 96%;">
-					<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => repository.project.identifier), :class => 'icon icon-add add-mirror' ) %>
+					<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => @repository.project.identifier), :class => 'icon icon-add add-mirror' ) %>
 				</div>
 			<% end %>
 
@@ -123,15 +123,15 @@
 						<tbody>
 							<% @repository.project.repository_mirrors.each do |mirror| %>
 								<tr class="<%= cycle('odd', 'even') %>">
-									<td class="name"><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %></td>
+									<td class="name"><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %></td>
 									<td class="center"><%= checked_image mirror.active? %></td>
 									<td class="buttons">
 									<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
 										<% if mirror.active==1 -%>
-											<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
+											<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => @repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
 										<% end %>
-										<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
-										<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
+										<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
+										<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
 									<% end %>
 									</td>
 								</tr>
