@@ -488,19 +488,24 @@ module GitHosting
 
 
 	def self.check_hooks_installed
-		lock(5)
-		GitAdapterHooks.check_hooks_installed
-		unlock()
+		installed = false
+		if lock(5)
+			installed = GitAdapterHooks.check_hooks_installed
+			unlock()
+		end
+		installed
 	end
 	def self.setup_hooks(projects=nil)
-		lock(5)
-		GitAdapterHooks.setup_hooks(projects)
-		unlock()
+		if lock(5)
+			GitAdapterHooks.setup_hooks(projects)
+			unlock()
+		end
 	end
 	def self.update_global_hook_params
-		lock(5)
-		GitAdapterHooks.update_global_hook_params
-		unlock()
+		if lock(5)
+			GitAdapterHooks.update_global_hook_params
+			unlock()
+		end
 	end
 end
 
