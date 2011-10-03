@@ -66,20 +66,6 @@
 		<br />
 	</p>
 
-	<h3><%= l(:label_permissions_header)%></h3>
-	<p>
-		<label><%= l(:label_sudo_git_to_web_user)%></label>
-		<%= image_tag((GitHosting.sudo_git_to_web_user==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-		<em><%= (GitHosting.sudo_git_to_web_user==true ? '' : GitHosting.sudo_git_to_web_user) %></em>
-		<br />
-	</p>
-	<p>
-		<label><%= l(:label_sudo_web_to_git_user)%></label>
-		<%= image_tag((GitHosting.sudo_web_to_git_user==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-		<em><%= (GitHosting.sudo_web_to_git_user==true ? '' : GitHosting.sudo_web_to_git_user) %></em>
-		<br />
-	</p>
-	<br/>
 
 	<h3><%= l(:label_git_hook_header)%></h3>
 
@@ -101,4 +87,27 @@
 		<em><%= (GitHosting.check_hooks_installed==true ? '' : GitHosting.check_hooks_installed) %></em>
 		<br />
 	</p>
+
+	<br/>
+
+	<h3><%= l(:label_permissions_header)%></h3>
+	<p>
+		<label><%= l(:label_sudo_git_to_web_user)%></label>
+		<%= image_tag((GitHosting.sudo_git_to_web_user==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<em><%= (GitHosting.sudo_git_to_web_user==true ? '' : GitHosting.sudo_git_to_web_user) %></em>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_sudo_web_to_git_user)%></label>
+		<%= image_tag((GitHosting.sudo_web_to_git_user==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+		<em><%= (GitHosting.sudo_web_to_git_user==true ? '' : GitHosting.sudo_web_to_git_user) %></em>
+		<br />
+	</p>
+	<p>
+		<label>PATH Directories</label>
+		<%= (ENV['PATH']).gsub(/:/, "<br/>") %>
+		<br/>
+	</p>
+
+
 </div>
