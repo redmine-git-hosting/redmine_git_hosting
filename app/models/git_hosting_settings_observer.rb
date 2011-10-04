@@ -24,7 +24,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 			if @@old_repo_base != object.value['gitRepositoryBasePath']
 				GitHostingObserver.set_update_active(false)
 				all_projects = Project.find(:all)
-				project.each do |p|
+				all_projects.each do |p|
 					if p.repository.is_a?(Repository::Git)
 						r = p.repository
 						repo_name= p.parent ? File.join(GitHosting::get_full_parent_path(p, true),p.identifier) : p.identifier
