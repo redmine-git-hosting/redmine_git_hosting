@@ -7,6 +7,7 @@
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
+  label_cannot_change_selinux: Cannot be changed under selinux
 
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP

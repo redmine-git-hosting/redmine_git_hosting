@@ -26,19 +26,19 @@
 		<br />
 	</p>
 	<p>
-		<label><%= l(:label_git_user)%></label>
+		<label><%= l(:label_git_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
 		<%= text_field_tag("settings[gitUser]", @settings['gitUser'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
 		<br />
 	</p>
 
 	<p>
-		<label><%= l(:label_gitolite_identity_file)%></label>
+		<label><%= l(:label_gitolite_identity_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
 		<%= text_field_tag("settings[gitoliteIdentityFile]", @settings['gitoliteIdentityFile'], :size => 60) %>
 		<br />
 	</p>
 
 	<p>
-		<label><%= l(:label_gitolite_identity_public_key_file)%></label>
+		<label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
 		<%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", @settings['gitoliteIdentityPublicKeyFile'], :size => 60) %>
 		<br />
 	</p>
@@ -47,7 +47,6 @@
 		<%= text_field_tag("settings[gitRepositoryBasePath]", @settings['gitRepositoryBasePath'], :size => 60) %>
 		<br />
 	</p>
-
 
 	<h3><%= l(:label_git_cache_parameters)%></h3>
 	<p>

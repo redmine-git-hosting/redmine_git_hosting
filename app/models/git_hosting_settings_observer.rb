@@ -5,6 +5,8 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 	@@old_hook_asynch  = Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous']
 	@@old_http_server  = Setting.plugin_redmine_git_hosting['httpServer']
 	@@old_git_user     = Setting.plugin_redmine_git_hosting['gitUser']
+        @@old_gitolite_identity = Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+	@@old_gitolite_publickey = Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']
 	@@old_repo_base    = Setting.plugin_redmine_git_hosting['gitRepositoryBasePath']
 
 
@@ -14,12 +16,25 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 		end
 	end
 
-
-
+        def before_save(object)
+        	if object.name == "plugin_redmine_git_hosting" && !GitHosting.bin_dir_writeable?
+                	# If bin directory not alterable, don't alow changes to
+          		# Git Username, or Gitolite public or private keys
+                	valuehash = object.value
+	                valuehash['gitUser'] = @@old_git_user
+                  	valuehash['gitoliteIdentityFile'] = @@old_gitolite_identity
+                  	valuehash['gitoliteIdentityPublicKeyFile'] = @@old_gitolite_publickey
+			object.value = valuehash
+                end
+        end
+                	
 	def after_save(object)
 		if object.name == "plugin_redmine_git_hosting"
 
-			%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
+                	if GitHosting.bin_dir_writeable?
+				%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
+				%x[ rm -rf '#{ GitHosting.get_bin_dir }' ] 
+                        end
 
 			if @@old_repo_base != object.value['gitRepositoryBasePath']
 				GitHostingObserver.set_update_active(false)
@@ -49,6 +64,8 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 			@@old_hook_asynch  = object.value['gitHooksAreAsynchronous']
 			@@old_http_server  = object.value['httpServer']
 			@@old_git_user     = object.value['gitUser']
+                        @@old_gitolite_identity = object.value['gitoliteIdentityFile']
+                        @@old_gitolite_publickey = object.value['gitoliteIdentityPublicKeyFile']
 			@@old_repo_base    = object.value['gitRepositoryBasePath']
 
 		end

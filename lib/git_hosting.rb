@@ -23,6 +23,10 @@ module GitHosting
 		return @@web_user
 	end
 
+        def self.web_user=(setuser)
+        	@@web_user = setuser
+        end
+
 	def self.git_user
 		Setting.plugin_redmine_git_hosting['gitUser']
 	end
@@ -92,7 +96,7 @@ module GitHosting
 			@@sudo_web_to_git_user_stamp = Time.new
 			return @@sudo_web_to_git_user_cached
 		end
-		test = %x[sudo -nu #{git_user} echo "yes"]
+ 		test = %x[#{GitHosting.git_user_runner} echo "yes"]
 		if test.match(/yes/)
 			@@sudo_web_to_git_user_cached = true
 			@@sudo_web_to_git_user_stamp = Time.new
@@ -146,7 +150,7 @@ module GitHosting
 		end
 	end
 	def self.get_tmp_dir
-		@@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting")
+                @@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting", "#{git_user}")
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
 			%x[chmod 700 "#{@@git_hosting_tmp_dir}"]
@@ -154,17 +158,51 @@ module GitHosting
 		end
 		return @@git_hosting_tmp_dir
 	end
+	def self.get_bin_dir
+        	@@git_hosting_bin_dir ||= 
+                	Rails.root.join("vendor/plugins/redmine_git_hosting/bin")
+		if !File.directory?(@@git_hosting_bin_dir)
+                  	logger.error "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
+			%x[mkdir -p "#{@@git_hosting_bin_dir}"]
+			%x[chmod 750 "#{@@git_hosting_bin_dir}"]
+			%x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
+		end
+                if !File.directory?(@@git_hosting_bin_dir)
+                	logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+                end
+		return @@git_hosting_bin_dir
+	end
 
-
+	@@git_bin_dir_writeable = nil
+        def self.bin_dir_writeable?(*option)
+        	@@git_bin_dir_writeable = nil if option.length > 0 && option[0] == :reset
+		if @@git_bin_dir_writeable == nil
+                	mybindir = get_bin_dir
+	                mytestfile = "#{mybindir}/writecheck"
+        		if (!File.directory?(mybindir))
+	                	@@git_bin_dir_writeable = false
+        	        else
+	        	        %x[touch "#{mytestfile}"]
+                		if (!File.exists?("#{mytestfile}"))
+                                	@@git_bin_dir_writeable = false
+                        	else
+                                	%x[rm "#{mytestfile}"]
+                        		@@git_bin_dir_writeable = true
+                        	end
+			end
+        	end
+		@@git_bin_dir_writeable
+        end
 
 	def self.git_exec_path
-		return File.join(get_tmp_dir(), "run_git_as_git_user")
+		return File.join(get_bin_dir(), "run_git_as_git_user")
 	end
+
 	def self.gitolite_ssh_path
-		return File.join(get_tmp_dir(), "gitolite_admin_ssh")
+		return File.join(get_bin_dir(), "gitolite_admin_ssh")
 	end
 	def self.git_user_runner_path
-		return File.join(get_tmp_dir(), "run_as_git_user")
+		return File.join(get_bin_dir(), "run_as_git_user")
 	end
 
 
@@ -189,7 +227,7 @@ module GitHosting
 
 
 	def self.update_git_exec
-		logger.info "Setting up #{get_tmp_dir()}"
+		logger.info "Setting up #{get_bin_dir()}"
 		gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 
 		File.open(gitolite_ssh_path(), "w") do |f|
@@ -210,8 +248,6 @@ module GitHosting
 		split_version = sudo_version_str.split(/\./)
 		sudo_version = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
 		sudo_version_switch = (100*100*1) + (100 * 7) + 3
-
-
 
 		File.open(git_exec_path(), "w") do |f|
 			f.puts '#!/bin/sh'
@@ -251,14 +287,10 @@ module GitHosting
 			f.puts '}'
 		end if !File.exists?(git_user_runner_path())
 
-
-
 		File.chmod(0550, git_exec_path())
 		File.chmod(0550, gitolite_ssh_path())
 		File.chmod(0550, git_user_runner_path())
-
-
-
+		%x[chown #{web_user} -R "#{@@git_hosting_bin_dir}"]
 	end
 
 	
@@ -291,7 +323,7 @@ module GitHosting
 		# clone/pull from admin repo
 		local_dir = get_tmp_dir()
 		if File.exists? "#{local_dir}/gitolite-admin"
-			logger.info "Fethcing changes for #{local_dir}/gitolite-admin"
+			logger.info "Fetching changes for #{local_dir}/gitolite-admin"
 			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' fetch]
 			%x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{local_dir}/gitolite-admin/.git' --work-tree='#{local_dir}/gitolite-admin' merge FETCH_HEAD]
 		else

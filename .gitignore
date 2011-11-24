@@ -1,1 +1,3 @@
 .*.swp
+bin/
+selinux/tmp/

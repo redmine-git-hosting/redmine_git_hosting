@@ -246,6 +246,44 @@ This library allows you to quickly deploy ChiliProject, with this plugin to an u
 chili\_test.sh script, modifying the variables in those scripts as desired.  This library is still under development,
 so these instructions may need to be updated in the near future.
 
+## Selinux Configuration for redmine
+
+This plugin can be configured to run with selinux.  We have included a rakefile in tasks/selinux.rake to assist
+with installing with selinux.  You should start by editing init.rb and migrating as described above.  Then, you 
+can execute one of the selinux rake tasks (from the redmine root).  For instance, the simplest option installs 
+a selinux configuration for both redmine and the redmine_git_hosting plugin:   
+
+    rake selinux:install RAILS_ENV=production 
+
+This will generate the redmine_git_hosting binaries in ./bin, install a selinux policy for these binaries (called
+redmine_git.pp), then install a complete context for redmine as follows:
+
+**(1)** Most of redmine will be marked with "public_content_rw_t". 
+
+**(2)** The dispatch files in Rails.root/public/dispatch.* will be marked with "httpd_sys_script_exec_t"
+
+**(3)** The redmine_git_hosting binaries in Rails.root/vendor/plugins/redmine_git_hosting/bin will be labeled
+with "httpd_redmine_git_script_exec_t", which has been crafted to allow the sudo behavior required by these
+binaries.
+
+Note that this rake file has additional options.  For instance, you can specify redmine roots with regular 
+expressions (not globbed expessions!) as follows (notice the use of double quotes):
+
+    rake selinux:install RAILS_ENV=production ROOT_PATTERN="/source/.*/redmine"
+
+These additional options are documented in the selinux.rake file.
+
+Once this plugin is placed under selinux control, three of the redmine_git_hosting settings can 
+no longer be modified from the settings page.  They are: 'gitUser', 'gitoliteIdentityFile', and 
+'gitoliteIdentityPublicKeyFile'.  The plugin settings page will make this clear.  The simplest way to 
+modify these options is to temporarily place your system into permissive mode, refresh the setting page, 
+change options, then place your system back into enforcing mode.  Alternatively, you can alter the init.rb 
+file and reinstall the plugin.  Under normal operation, you will get one selinux complaint about /bin/touch 
+in your log each time that you visit the plugin settings page.
+
+This rakefile and selinux configuration has been primarily tested on Redhat Enterprise Linux version 6.x 
+with apache and fcgi. Other configurations may require slight tweaking.
+
 ## Tested Configurations
 
 This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x,
