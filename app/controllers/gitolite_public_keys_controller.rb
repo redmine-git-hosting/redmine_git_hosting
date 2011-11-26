@@ -10,9 +10,11 @@ class GitolitePublicKeysController < ApplicationController
 	end
 
 	def delete
+        	GitHostingObserver.set_update_active(false)
 		@gitolite_public_key[:active] = 0
 		@gitolite_public_key.save
 		redirect_to url_for(:controller => 'my', :action => 'account')
+        	GitHostingObserver.set_update_active(true)
 	end
 
 	def update
@@ -25,6 +27,7 @@ class GitolitePublicKeysController < ApplicationController
 	end
 
 	def create
+        	GitHostingObserver.set_update_active(false)
 		@gitolite_public_key = GitolitePublicKey.new(params[:public_key].merge(:user => @user))
 		if @gitolite_public_key.save
 			flash[:notice] = l(:notice_public_key_added)
@@ -32,6 +35,7 @@ class GitolitePublicKeysController < ApplicationController
 			@gitolite_public_key = GitolitePublicKey.new(:user => @user)
 		end
 		redirect_to url_for(:controller => 'my', :action => 'account')
+        	GitHostingObserver.set_update_active(true)
 	end
 
 	protected
