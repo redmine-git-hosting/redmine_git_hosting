@@ -18,12 +18,14 @@ class GitolitePublicKeysController < ApplicationController
 	end
 
 	def update
+        	GitHostingObserver.set_update_active(false)
 		if @gitolite_public_key.update_attributes(params[:public_key])
 			flash[:notice] = l(:notice_public_key_updated)
 			redirect_to url_for(:controller => 'my', :action => 'account')
 		else
 			render :action => 'edit'
 		end
+        	GitHostingObserver.set_update_active(true)
 	end
 
 	def create
