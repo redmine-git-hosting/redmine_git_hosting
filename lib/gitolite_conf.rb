@@ -1,8 +1,14 @@
 module GitHosting
 	class GitoliteConfig
+        	DUMMY_REDMINE_KEY="redmine_dummy_key"
+
 		def initialize file_path
 			@path = file_path
 			load
+		end
+
+        	def logger
+			return GitHosting.logger
 		end
 
 		def save
@@ -39,6 +45,29 @@ module GitHosting
 			end
 		end
 
+                # A repository is a "redmine" repository if it has redmine keys or no keys 
+                # (latter case is checked, since we end up adding the DUMMY_REDMINE_KEY to
+                # a repository with no keys anyway....
+                def is_redmine_repo? repo_name
+                	repository(repo_name).rights.detect {|perm, users| users.detect {|key| is_redmine_key? key}} || (repo_has_no_keys? repo_name)
+                end
+
+                def delete_redmine_keys repo_name
+			return if !@repositories[repo_name]
+                
+                	repository(repo_name).rights.each do |perm, users|
+                		users.delete_if {|key| is_redmine_key? key}
+                        end
+                end
+		
+		def repo_has_no_keys? repo_name
+                	!repository(repo_name).rights.detect {|perm, users| users.length > 0}
+                end
+
+                def is_redmine_key? keyname
+                	(GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY) ? true : false
+                end
+
 		def changed?
 			@original_content != content
 		end
@@ -50,7 +79,6 @@ module GitHosting
 			end
 			return repos
 		end
-
 
 		private
 		def load
@@ -81,14 +109,15 @@ module GitHosting
 		def content
 			content = []
 
-			# To facilitate creation of repos, even when no users are defined
-			# always define at least one user -- specifically the admin
-			# user which has rights to modify gitolite-admin and control
-			# all repos.  Since the gitolite-admin user can grant anyone
-			# any permission anyway, this isn't really a security risk.
-			# If no users are defined, this ensures the repo actually
-			# gets created, hence it's necessary.
-			admin_user = @repositories["gitolite-admin"].rights["RW+".to_sym][0]
+                  	# If no gitolite-admin user, something seriously wrong.  Add it in with id_rsa.
+			#
+                  	# If this doesn't work for some reason, will be corrected at later time by
+                  	# gl-setup run.
+                  	if @repositories["gitolite-admin"].nil?
+                        	content << "repo\tgitolite-admin"
+                          	content << "tRW+\t=\tid_rsa"
+				content << ""
+                        end
 			@repositories.each do |repo, rights|
 				content << "repo\t#{repo}"
 				has_users=false
@@ -99,7 +128,8 @@ module GitHosting
 					end
 				end
 				if !has_users
-					content << "\tR\t=\t#{admin_user}"
+					# If no users, use dummy key to make sure repo created
+                                	content << "\tR\t=\t#{DUMMY_REDMINE_KEY}"
 				end
 				content << ""
 			end

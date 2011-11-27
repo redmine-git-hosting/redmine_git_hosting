@@ -42,7 +42,7 @@ module GitHosting
 						end
 					end
 
-					GitHosting.update_repositories(@project, false) if !@project.repository.nil?
+					GitHosting.update_repositories(@project) if !@project.repository.nil?
 					GitHosting.setup_hooks(@project) if !@project.repository.nil?
 
 				else

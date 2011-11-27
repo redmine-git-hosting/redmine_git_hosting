@@ -3,6 +3,7 @@ class GitHostingObserver < ActiveRecord::Observer
 
 	@@updating_active = true
 	@@updating_active_stack = 0
+	@@updating_active_flags = {}
 	@@cached_project_updates = []
 
 	def reload_this_observer
@@ -13,6 +14,12 @@ class GitHostingObserver < ActiveRecord::Observer
 
 
 	def self.set_update_active(is_active)
+		case is_active
+                	when Symbol then @@updating_active_flags[is_active] = true
+                	when Hash then @updating_active_flags.merge(is_active)
+                	when Project then @@cached_project_updates << is_active
+                end
+
 		if !is_active
                 	@@updating_active_stack += 1
                 else
@@ -23,10 +30,11 @@ class GitHostingObserver < ActiveRecord::Observer
                 end
 
 		if is_active && @@updating_active_stack == 0
-			if @@cached_project_updates.length > 0
+			if @@cached_project_updates.length > 0 || !@@updating_active_flags.empty?
 				@@cached_project_updates = @@cached_project_updates.flatten.uniq.compact
-				GitHosting::update_repositories(@@cached_project_updates, false)
+				GitHosting::update_repositories(@@cached_project_updates, @@updating_active_flags)
                         	@@cached_project_updates = []
+                        	@@updating_active_flags = {}
 			end
                 	@@updating_active = true
                 else
@@ -34,11 +42,10 @@ class GitHostingObserver < ActiveRecord::Observer
 		end
 	end
 
-
 	def before_destroy(object)
 		if object.is_a?(Repository::Git)
 			if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true"
-				GitHosting::update_repositories(object.project, true)
+				GitHosting::delete_repository(object.project)
 				%x[#{GitHosting::git_user_runner} 'rm -rf #{object.url}' ]
 			end
 			GitHosting::clear_cache_for_project(object.project)
@@ -63,7 +70,7 @@ class GitHostingObserver < ActiveRecord::Observer
 	def after_save(object)
 		update_repositories(object)
 	end
-
+ 
 
 	def after_destroy(object)
 		if !object.is_a?(Repository::Git)
@@ -74,9 +81,7 @@ class GitHostingObserver < ActiveRecord::Observer
 
 	protected
 
-
 	def update_repositories(object)
-
 		projects = []
 		case object
 			when Repository::Git then projects.push(object.project)
@@ -87,7 +92,7 @@ class GitHostingObserver < ActiveRecord::Observer
 		end
 		if(projects.length > 0)
 			if (@@updating_active)
-				GitHosting::update_repositories(projects, false)
+				GitHosting::update_repositories(projects)
 			else
 				@@cached_project_updates.concat(projects)
 			end

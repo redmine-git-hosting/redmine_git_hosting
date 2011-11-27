@@ -6,7 +6,10 @@
   label_git_user: Git Username
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
-  label_git_repository_base_path: Git Repository Base Path (Relative to git user home)
+  label_git_repository_base_path: Git Repository Base Path<br/>(Relative to git user home)
+  label_git_recycle_base_path: Git Recycle Bin Base Path <br/>(Relative to git user home)
+  label_git_recycle_expire_time: Expire Time for Repositories in Recycle Bin <br/>(in hours)
+  label_git_lock_wait_time: Synchronization Lock Wait Time <br/>(in seconds)
   label_cannot_change_selinux: Cannot be changed under selinux
 
   field_git_daemon: Git Daemon

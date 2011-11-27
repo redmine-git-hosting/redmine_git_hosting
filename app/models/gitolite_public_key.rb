@@ -32,4 +32,14 @@ class GitolitePublicKey < ActiveRecord::Base
 	end
 
 	def to_s ; title ; end
+
+        @@myregular = /^redmine_(.*)_\d*_\d*(.pub)?$/
+        def self.ident_to_user_token(identifier)
+        	result = @@myregular.match(identifier)
+                (result!=nil) ? result[1] : nil
+        end
+
+        def self.user_to_user_token(user)
+        	user.login.underscore.gsub(/[^0-9a-zA-Z\-]/,'_')
+        end
 end

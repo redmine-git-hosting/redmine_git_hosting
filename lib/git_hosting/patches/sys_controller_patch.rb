@@ -8,8 +8,8 @@ module GitHosting
                        		# Do actual update
                        		fetch_changesets_without_disable_update
 
-                       		# Reenable updates to perform a single update
-				GitHostingObserver.set_update_active(true);
+                            	# Perform the updating process on all projects
+				GitHostingObserver.set_update_active(:resync_all);
                        	end
 
 			def self.included(base)

@@ -12,11 +12,15 @@ Redmine::Plugin.register :redmine_git_hosting do
 	description 'Enables Redmine / ChiliProject to control hosting of git repositories'
 	version '0.4.2'
 	url 'https://github.com/ericpaulbishop/redmine_git_hosting'
+
 	settings :default => {
-		'httpServer' => 'localhost',
-		'gitServer' => 'localhost',
-		'gitUser' => 'git',
+		'httpServer' => "tessellation.cs.berkeley.edu/redmine",
+		'gitServer' => 'tessellation.cs.berkeley.edu',
+		'gitUser' => 'git-tess',
 		'gitRepositoryBasePath' => 'repositories/',
+    		'gitRecycleBasePath' => 'recycle_bin/',
+    		'gitRecycleExpireTime' => '24.0',
+    		'gitLockWaitTime' => '10',
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'allProjectsUseGit' => 'false',

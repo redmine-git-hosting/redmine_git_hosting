@@ -48,6 +48,25 @@
 		<br />
 	</p>
 
+	<p>
+		<label><%= l(:label_git_recycle_base_path)%></label>
+		<%= text_field_tag("settings[gitRecycleBasePath]", @settings['gitRecycleBasePath'], :size => 60) %>
+		<br />
+	</p>
+
+	<p>
+		<label><%= l(:label_git_recycle_expire_time)%></label>
+		<%= text_field_tag("settings[gitRecycleExpireTime]", @settings['gitRecycleExpireTime'], :size => 10) %>
+		<br />
+	</p>
+
+	<p>
+		<label><%= l(:label_git_lock_wait_time)%></label>
+		<%= text_field_tag("settings[gitLockWaitTime]", @settings['gitLockWaitTime'], :size => 10) %>
+		<br />
+	</p>
+
+
 	<h3><%= l(:label_git_cache_parameters)%></h3>
 	<p>
 		<label><%= l(:label_git_cache_max_elements)%></label>

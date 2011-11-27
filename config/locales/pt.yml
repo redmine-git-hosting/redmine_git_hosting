@@ -7,6 +7,9 @@ pt:
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
+  label_git_recycle_base_path: 'Directório Recycle Bin base (Relativo à "home" do utilizador git)'
+  label_git_recycle_expire_time: 'expirar o tempo para Recycle Bin (em horas)'
+  label_git_lock_wait_time: 'Sincronização de bloqueio o tempo de espera (em segundos)'
   label_cannot_change_selinux: 'não pode ser mudada (selinux)'
 
   field_git_daemon: Git Daemon

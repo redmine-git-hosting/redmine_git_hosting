@@ -1,9 +1,9 @@
-# Redmine Git Hosting Plugin (v0.4.2)
+# Redmine Git Hosting Plugin (v0.4.2x)
 
 A ChiliProject / Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
 to provide Git Smart HTTP access.  Git repositories are automatically created when the repository is created in
-redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
+Redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
 Caching functionality is also implemented to speed page-load times for viewing git repositories.
 
 
@@ -41,6 +41,9 @@ Note that this guide refers to the "web server user" as the user under which Rai
 not always) the same as the user that runs the main web server.  If you are running Rails under a different user, follow
 these instructions using that user, not the one for the main web server.
 
+As of the most recent set of patches, this plugin is compatible with running multiple Redmine installations on the same server, each
+with the same *or* different gitolite users/repositories.  The later configuration (multiple Redmine installations, each with a different
+gitolite installation) is particularly useful for a web-hosting scenario with independent developers.
 
 ## Step-By-Step configuration instructions
 
@@ -101,12 +104,12 @@ variables are set correctly.  To adjust these variables, open an editor and edit
 Starting on line 22 you will see the settings definitions you should edit.
 
 
-The *httpServer* variable should be set to the url used to access your redmine site, e.g. www.my-own-personal-git-host-server.com.  Note that if Redmine is not
-installed in the site root this should include the path to your redmine root, e.g. www.my-own-personal-git-host-server.com/path/to/redmine
+The *httpServer* variable should be set to the url used to access your Redmine site, e.g. www.my-own-personal-git-host-server.com.  Note that if Redmine is not
+installed in the site root this should include the path to your Redmine root, e.g. www.my-own-personal-git-host-server.com/path/to/redmine
 
 
 The *gitServer* will usually be the same as the the httpServer variable -- this is the server name to use to access the gitolite repositories via ssh.  This should be
-the hostname only, so this will be different from *httpServer* if Redmine is not installed in the site root.  In other words, even if redmine is installed in 
+the hostname only, so this will be different from *httpServer* if Redmine is not installed in the site root.  In other words, even if Redmine is installed in 
 www.my-own-personal-git-host-server.com/path/to/redmine, *gitServer* should be set to www.my-own-personal-git-host-server.com
 
 
@@ -146,11 +149,50 @@ you have both git and svn (or hg, or cvs etc.) repositories, this may cause prob
 
 *Delete Git Repository When Project Is Deleted* can be enabled to let this plugin control repository deletion as well as repository creation.  By default, 
 this feature is disabled and when a repository is deleted in ChiliProject / Redmine, it is not deleted in gitolite.  This is a safety feature to prevent 
-the accidental loss of data. If this feature is enabled, the safety is turned off and the repository files will be permanently deleted when the Project/Repository is deleted in ChiliProject/Redmine.
+the accidental loss of data. If this feature is enabled, the safety is turned off and the repository files will be deleted when the Project/Repository is 
+deleted in ChiliProject/Redmine.  Note, however, that even when this feature is enabled, deleted repositories are placed into a "recycle_bin" for a configurable
+amount of time (defaulting to 24 hours) and can be recovered by recreating the project in Redmine with the same Identifier. Details are placed in the log.
+
+The *gitRecycleBasePath* is the path *relative to the git user root* where deleted repositories are placed.  This path should end in a path separator, e.g. '/'.  
+Deleted repositories are kept here for up to *gitRecycleExpireTime* hours (configurable, defaults to 24.0 hours).
+
+The *gitLockWaitTime* represents the amount of time that the plugin will wait in attempting to acquire its internal synchronization lock before giving up.  
+You probably will not need to change this value. 
 
 *Show Checkout URLs* can be disabled to hide the git URL bar in the repository tab.  It is enabled by default.
 
 See below in the "Caching" section of this readme for more information on caching and how the caching variables should be configured.
+
+## Resychronization of gitolite configuration 
+
+Whenever a Redmine `fetch_changesets()` operation is executed (i.e. `http://REDMINE_ROOT/sys/fetch_changesets?key=xxx`), this plugin will check the
+gitolite keydir and configuration file for consistency.  It will correct any errors that it finds.  Further, regular execution of a fetch_changesets operation
+will make sure that repositories placed in the recycle_bin (during delete operations) will be expired and removed.  Since there still seem to be some 
+phantom synchronization problems, it is recommended that you execute `fetch_changesets()` regularly (every 15 to 30 minutes).
+
+Two rake tasks can additionally be used for resynchronization (although these are redundant with executing `fetch_changesets()` through other means).  
+
+**(1)** To fixup the gitolite configuration file, fix errors, and delete expired files in the recycle_bin, execute:
+
+    RAILS_ENV=production rake gitolite:update_repositories
+
+**(2)** To perform all the above operations while at the same time fetching changesets for all repositories, execute:
+
+    RAILS_ENV=production rake gitolite:fetch_changes
+
+**Note that it is very important that these commands be run as *www-user* (or whatever your web server user happens to be), lest you get permission problems later.** 
+(The same is true of any `fetch_changesets()` operation initiated without using the web server, i.e. through the command line or from the cron daemon).
+
+## Interaction with non-Redmine gitolite users
+
+This plugin respects gitolite repositories that are managed outside of Redmine or managed by both Redmine and non-Redmine users:
+
+* When performing a *fetch_changesets()* operation, this plugin will delete and reestablish all keys that are of the form "redmine_", 
+  since it considers these to be under its exclusive control.  A special token, called "redmine_dummy_key", is used as a placeholder when no access 
+  is granted for a given repository.
+* Keys other than "redmine_" are left untouched and can be in projects by themselves or mixed in with projects managed by redmine.
+* When a Redmine-managed project is deleted (with the *Delete Git Repository When Project Is Deleted* option enabled), its corresponding git repository 
+  *will not be deleted/recycled* if there are non-Redmine keys in the gitolite.conf file.
 
 ## A Note About PATH variables
 
@@ -246,19 +288,19 @@ This library allows you to quickly deploy ChiliProject, with this plugin to an u
 chili\_test.sh script, modifying the variables in those scripts as desired.  This library is still under development,
 so these instructions may need to be updated in the near future.
 
-## Selinux Configuration for redmine
+## Selinux Configuration for Redmine
 
 This plugin can be configured to run with selinux.  We have included a rakefile in tasks/selinux.rake to assist
 with installing with selinux.  You should start by editing init.rb and migrating as described above.  Then, you 
-can execute one of the selinux rake tasks (from the redmine root).  For instance, the simplest option installs 
-a selinux configuration for both redmine and the redmine_git_hosting plugin:   
+can execute one of the selinux rake tasks (from the Redmine root).  For instance, the simplest option installs 
+a selinux configuration for both Redmine and the redmine_git_hosting plugin:   
 
     rake selinux:install RAILS_ENV=production 
 
 This will generate the redmine_git_hosting binaries in ./bin, install a selinux policy for these binaries (called
-redmine_git.pp), then install a complete context for redmine as follows:
+redmine_git.pp), then install a complete context for Redmine as follows:
 
-**(1)** Most of redmine will be marked with "public_content_rw_t". 
+**(1)** Most of Redmine will be marked with "public_content_rw_t". 
 
 **(2)** The dispatch files in Rails.root/public/dispatch.* will be marked with "httpd_sys_script_exec_t"
 
@@ -266,7 +308,7 @@ redmine_git.pp), then install a complete context for redmine as follows:
 with "httpd_redmine_git_script_exec_t", which has been crafted to allow the sudo behavior required by these
 binaries.
 
-Note that this rake file has additional options.  For instance, you can specify redmine roots with regular 
+Note that this rake file has additional options.  For instance, you can specify Redmine roots with regular 
 expressions (not globbed expessions!) as follows (notice the use of double quotes):
 
     rake selinux:install RAILS_ENV=production ROOT_PATTERN="/source/.*/redmine"
@@ -288,7 +330,8 @@ with apache and fcgi. Other configurations may require slight tweaking.
 
 This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x,
 ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It is possible that some
-debugging will be necessary for other configurations.
+debugging will be necessary for other configurations.  Selinux configurations were tested under Redhat Enterprise Linux 
+version 6.x with apache and fcgi.
 
 
 ## Required gems
@@ -308,7 +351,8 @@ This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http:
 were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and
 expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
 
+Copyright (c) 2011 John Kubiatowicz (kubitron@cs.berkeley.edu) MIT License.
+
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
 
 Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.
-

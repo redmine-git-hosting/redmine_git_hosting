@@ -1,14 +1,7 @@
 class GitHostingSettingsObserver < ActiveRecord::Observer
 	observe :setting
 
-	@@old_hook_debug   = Setting.plugin_redmine_git_hosting['gitHooksDebug']
-	@@old_hook_asynch  = Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous']
-	@@old_http_server  = Setting.plugin_redmine_git_hosting['httpServer']
-	@@old_git_user     = Setting.plugin_redmine_git_hosting['gitUser']
-        @@old_gitolite_identity = Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
-	@@old_gitolite_publickey = Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']
-	@@old_repo_base    = Setting.plugin_redmine_git_hosting['gitRepositoryBasePath']
-
+	@@old_valuehash = (Setting.plugin_redmine_git_hosting).clone
 
 	def reload_this_observer
 		observed_classes.each do |klass|
@@ -16,34 +9,83 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 		end
 	end
 
+        # There is a long-running bug in ActiveRecord::Observer that prevents us from
+        # returning from before_save() with false to signal verification failure.
+        #
+        # Thus, we can only silently refuse to perform bad changes and/or perform
+        # slight corrections to badly formatted values.
         def before_save(object)
-        	if object.name == "plugin_redmine_git_hosting" && !GitHosting.bin_dir_writeable?
-                	# If bin directory not alterable, don't alow changes to
-          		# Git Username, or Gitolite public or private keys
+          	# Only validate settings for our plugin
+        	if object.name == "plugin_redmine_git_hosting" 
                 	valuehash = object.value
-	                valuehash['gitUser'] = @@old_git_user
-                  	valuehash['gitoliteIdentityFile'] = @@old_gitolite_identity
-                  	valuehash['gitoliteIdentityPublicKeyFile'] = @@old_gitolite_publickey
-			object.value = valuehash
+                	if !GitHosting.bin_dir_writeable?
+                        	# If bin directory not alterable, don't allow changes to
+          			# Git Username, or Gitolite public or private keys
+	                	valuehash['gitUser'] = @@old_valuehash['gitUser']
+                  		valuehash['gitoliteIdentityFile'] = @@old_valuehash['gitoliteIdentityFile']
+                  		valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
+                	end
+
+                  	# Normalize Repository path, should be relative and end in '/'
+                  	if valuehash['gitRepositoryBasePath']
+                        	normalizedFile  = File.expand_path(valuehash['gitRepositoryBasePath'].lstrip.rstrip,"/")
+                        	if (normalizedFile != "/")
+                        		valuehash['gitRepositoryBasePath'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
+                        	else
+                        		valuehash['gitRepositoryBasePath'] = @@old_valuehash['gitRepositoryBasePath']
+                                end
+                        end
+
+                  	# Normalize Recycle bin path, should be relative and end in '/'
+                  	if valuehash['gitRecycleBasePath']
+                        	normalizedFile  = File.expand_path(valuehash['gitRecycleBasePath'].lstrip.rstrip,"/")
+                        	if (normalizedFile != "/")
+                        		valuehash['gitRecycleBasePath'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
+                        	else
+                        		valuehash['gitRecycleBasePath'] = @@old_valuehash['gitRecycleBasePath']
+                        	end
+                        end
+                  
+                  	# Exclude bad expire times (and exclude non-numbers)
+			if valuehash['gitRecycleExpireTime']
+                        	if valuehash['gitRecycleExpireTime'].to_f > 0
+                                	valuehash['gitRecycleExpireTime'] = "#{(valuehash['gitRecycleExpireTime'].to_f * 10).to_i / 10.0}"
+	                        else
+                                	valuehash['gitRecycleExpireTime'] = @@old_valuehash['gitRecycleExpireTime']
+                                end
+                        end
+
+                  	# Validate wait time > 0 (and exclude non-numbers)
+                        if valuehash['gitLockWaitTime']
+                        	if valuehash['gitLockWaitTime'].to_i > 0
+                                	valuehash['gitLockWaitTime'] = "#{valuehash['gitLockWaitTime'].to_i}"
+                        	else
+                        		valuehash['gitLockWaitTime'] = @@old_valuehash['gitLockWaitTime']
+                                end
+                        end
+                	# Save back results
+                	object.value = valuehash
                 end
         end
                 	
 	def after_save(object)
+        	# Only perform after-actions on settings for our plugin
 		if object.name == "plugin_redmine_git_hosting"
+                	valuehash = object.value
 
                 	if GitHosting.bin_dir_writeable?
 				%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
 				%x[ rm -rf '#{ GitHosting.get_bin_dir }' ] 
                         end
 
-			if @@old_repo_base != object.value['gitRepositoryBasePath']
+			if @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath']
 				GitHostingObserver.set_update_active(false)
 				all_projects = Project.find(:all)
 				all_projects.each do |p|
 					if p.repository.is_a?(Repository::Git)
 						r = p.repository
 						repo_name= p.parent ? File.join(GitHosting::get_full_parent_path(p, true),p.identifier) : p.identifier
-						r.url = File.join(object.value['gitRepositoryBasePath'], "#{repo_name}.git")
+						r.url = File.join(valuehash['gitRepositoryBasePath'], "#{repo_name}.git")
 						r.root_url = r.url
 						r.save
 					end
@@ -51,24 +93,20 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 				GitHostingObserver.set_update_active(true)
 			end
 
-			if @@old_git_user != object.value['gitUser']
+			if @@old_valuehash['gitUser'] != valuehash['gitUser']
 
 				GitHosting.setup_hooks
-				GitHosting.update_repositories( Project.find(:all), false)
+				GitHosting.update_repositories(:resync_all=>true)
 
-			elsif @@old_http_server !=  object.value['httpServer'] || @@old_hook_debug != object.value['gitHooksDebug'] || @@old_repo_base != object.value['gitRepositoryBasePath'] || @@old_hook_asynch != object.value['gitHooksAreAsynchronous']
+			elsif @@old_valuehash['httpServer'] !=  valuehash['httpServer'] || 
+                              @@old_valuehash['gitHooksDebug'] != valuehash['gitHooksDebug'] || 
+                              @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath'] || 
+                              @@old_valuehash['gitHooksAreAsynchronous'] != valuehash['gitHooksAreAsynchronous']
 
 				GitHosting.update_global_hook_params
 			end
-			@@old_hook_debug   = object.value['gitHooksDebug']
-			@@old_hook_asynch  = object.value['gitHooksAreAsynchronous']
-			@@old_http_server  = object.value['httpServer']
-			@@old_git_user     = object.value['gitUser']
-                        @@old_gitolite_identity = object.value['gitoliteIdentityFile']
-                        @@old_gitolite_publickey = object.value['gitoliteIdentityPublicKeyFile']
-			@@old_repo_base    = object.value['gitRepositoryBasePath']
 
+                  	@@old_valuehash = (Setting.plugin_redmine_git_hosting).clone
 		end
 	end
-
 end
