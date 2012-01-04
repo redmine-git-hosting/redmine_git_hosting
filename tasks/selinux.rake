@@ -153,8 +153,14 @@ namespace :selinux do
  	desc "Install selinux tags and policy for redmine_git_hosting."
 	task :install_policy => [:environment] do
 	    puts "[Installing selinux tags and policy for redmine_git_hosting:"
-            plugin_roots = redmine_roots("vendor/plugins/redmine_git_hosting")
-            sh "#{plugin_roots[0]}/selinux/redmine_git.sh"
+	    sh "semodule -i #{Rails.root}/vendor/plugins/redmine_git_hosting/selinux/redmine_git.pp"
+            puts "DONE.]"
+	end
+
+ 	desc "Build and install selinux tags and policy for redmine_git_hosting."
+	task :build_policy => [:environment] do
+	    puts "[Building and installing selinux policy for redmine_git_hosting:"
+	    sh "#{Rails.root}/vendor/plugins/redmine_git_hosting/selinux/redmine_git.sh"
             puts "DONE.]"
 	end
 

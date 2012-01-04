@@ -8,10 +8,13 @@ require {
        type httpd_t, httpd_sys_script_t, httpd_sys_script_exec_t;
        type sudo_db_t;
        type httpd_redmine_git_script_t;
+       type httpd_redmine_git_script_exec_t;
+       type gitosis_var_lib_t;
        class process { setrlimit setfscreate };
        class netlink_route_socket { write getattr read bind create nlmsg_read };
        class capability { setuid sys_resource setgid };
-       class dir { getattr search write};
+       class dir { getattr search write write rename create reparent rmdir };
+       class lnk_file unlink;
 }
 
 apache_content_template(redmine_git)
@@ -51,10 +54,13 @@ allow httpd_redmine_git_script_t self:netlink_route_socket { write getattr read 
 allow httpd_redmine_git_script_t self:process setrlimit;
 allow httpd_redmine_git_script_t sudo_db_t:dir { getattr search };
 
+# Capabilities required to manage gitolite repositories
+allow httpd_redmine_git_script_t gitosis_var_lib_t:dir { rename create reparent rmdir };
+allow httpd_redmine_git_script_t gitosis_var_lib_t:lnk_file unlink;
 gitosis_read_lib_files(httpd_redmine_git_script_t)
 gitosis_manage_lib_files(httpd_redmine_git_script_t)
 
-httpd_rw_stream_sockets(httpd_redmine_git_script_t)
+apache_rw_stream_sockets(httpd_redmine_git_script_t)
 kernel_read_kernel_sysctls(httpd_redmine_git_script_t)
 logging_send_syslog_msg(httpd_redmine_git_script_t)
 

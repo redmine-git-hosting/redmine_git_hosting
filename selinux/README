@@ -52,15 +52,23 @@ Somewhat less far-reaching options include:
     # install new selinux policy, and install selinux context for 
     # the redmine_git_hosting plugin
    
-    rake selinux:redmine_git_hosting:install
+    rake selinux:redmine_git_hosting:install RAILS_ENV=production
 
-Finally, for those who are hand-crafting their own file context:
+For those who are hand-crafting their own file context:
 
     # Build bin directory with customized scripts for redmine_git_hosting
     # and install new selinux policy.  No file contexts will be
     # installed (so that you must do customization afterwards).
 
-    rake selinux:redmine_git_hosting:install_scripts_and_policy
+    rake selinux:redmine_git_hosting:install_scripts_and_policy RAILS_ENV=production
+
+Finally, to rebuild the policy file (redmine_git.pp) from source (redmine_git.te),
+you can type:
+
+    # Rebuild redmine_git_hosting selinux policy from source
+
+    rake selinux:redmine_git_hosting:build_policy RAILS_ENV=production
+
 
 
 
