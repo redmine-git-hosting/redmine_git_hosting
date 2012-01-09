@@ -50,14 +50,17 @@ pt:
 
   label_public_keys: Chaves públicas
   label_public_key_new: Nova chave pública
+  label_public_key_edit: 'Editar a chave pública existentes'
   field_public_key: Chave
-  notice_public_key_updated: A chave pública foi actualizada com sucesso.
-  notice_public_key_added: A chave pública foi adicionada com sucesso.
-  label_key_cannot_be_changed_please_create_new_key: 'A chave já não pode ser alterada. No entanto, poderá desactivá-la e criar uma nova.'
+  notice_public_key_updated: 'A chave pública "%{title}" foi actualizada com sucesso.'
+  notice_public_key_added: 'A chave pública "%{title}" foi adicionada com sucesso.'
+  notice_public_key_deleted: 'A chave pública "%{title}" foi excluído com sucesso.'
+  label_key_cannot_be_changed_please_create_new_key: 'A chave já não pode ser alterada. No entanto, pode excluí-lo e criar uma nova.'
   activerecord:
     errors:
       messages:
         'não pode ser mudada': 'não pode ser mudada'
+  text_gitolite_key_destroy_confirmation: 'Tem certeza de que quer destruir "%{title}"?'
 
   label_git_cache_max_time: Max Cache Time
   label_git_cache_max_elements: Max Cache Elements

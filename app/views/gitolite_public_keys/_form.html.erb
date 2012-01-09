@@ -1,9 +1,0 @@
-<div class="box tabular">
-	<p><%= f.text_field :title, :required => true %></p>
-	<p><%= f.text_area :key, :required => true, :disabled => !@gitolite_public_key.new_record?, :style => 'width:99%;height:140px;', :label => :field_public_key %>
-		<% if !@gitolite_public_key.new_record?%>
-		<br/><em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em>
-		<% end %>
-	</p>
-	<p><%= f.check_box :active %></p>
-</div>

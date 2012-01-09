@@ -52,14 +52,17 @@
 
   label_public_keys: Public keys
   label_public_key_new: New public key
+  label_public_key_edit: Edit existing public key
   field_public_key: Key
-  notice_public_key_updated: Public key was successfully updated.
-  notice_public_key_added: Public key was successfully added.
-  label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can deactivate it and create a new one.'
+  notice_public_key_updated: Public key '%{title}' was successfully updated.
+  notice_public_key_added: Public key '%{title}' was successfully added.
+  notice_public_key_deleted: Public key '%{title}' was successfully deleted.
+  label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
   activerecord:
     errors:
       messages:
         'may not be changed': 'may not be changed'
+  text_gitolite_key_destroy_confirmation: Are you sure you want to destroy '%{title}'?
 
   label_git_cache_max_time: Max Cache Time
   label_git_cache_max_elements: Max Cache Elements

@@ -4,8 +4,11 @@ def install_redmine_git_hosting_routes(map)
 	map.connect ":project_path/*path", 
   		:prefix => Setting.plugin_redmine_git_hosting['httpServerSubdir'], :project_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
 
-
+	# Handle the public keys plugin to my/account.
 	map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
+	map.connect 'my/account/edit_public_key/:public_key_id', :controller => 'my', :action => 'account', :conditions => {:method => [:get]}
+
+  	# Handle hooks and mirrors
 	map.connect 'githooks', :controller => 'gitolite_hooks', :action => 'stub'
 	map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
 	map.connect 'githooks/test', :controller => 'gitolite_hooks', :action => 'test'
