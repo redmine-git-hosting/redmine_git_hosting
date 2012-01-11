@@ -1,6 +1,6 @@
 'en':
-  label_all_git: Automatically Initialize Git Repositories For New Projects
-  label_delete_git_repositories: Delete Git Repository When Project is Deleted
+  label_all_git: Automatically Initialize Git Repositories For New Projects 
+  label_delete_git_repositories: Delete Git Repository When Project Deleted<br/>(will be place in Recycle Bin)
   label_git_server: Gitolite Server Domain
   label_http_server: HTTP Server Domain (for git http urls)
   label_git_user: Git Username
@@ -11,6 +11,16 @@
   label_git_recycle_expire_time: Expire Time for Repositories in Recycle Bin <br/>(in hours)
   label_git_lock_wait_time: Synchronization Lock Wait Time <br/>(in seconds)
   label_cannot_change_selinux: Cannot be changed under selinux
+  label_http_server_subdir: Subdirectory for HTTP access<br/>(Relative to Redmine Root)
+  label_git_redmine_subdir: Subdirectory for Redmine-managed Repos<br/>(Relative to Git Repository Base Path)
+  label_git_repository_hierarchy: Directory and URL Structure for<br/>Redmine-managed Repositories
+  label_basic_settings: Basic Settings
+  label_gitolite_access_URLs: Gitolite Access URL Settings
+  label_gitolite_repository_settings: Gitolite Repository Settings
+  label_current_access_patterns: Current Repository Access Patterns
+  label_storage: Repo Storage
+  label_ssh_access: SSH Access
+  label_http_access: HTTP Access
 
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP
@@ -20,6 +30,8 @@
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
   label_disabled: Disabled
+  label_flat: Flat
+  label_hierarchical: Hierarchical
   label_https_only: HTTPS Only
   label_https_and_http: HTTPS and HTTP
 
@@ -81,3 +93,8 @@
   mirror_push_output_label: 'Output:'
   mirror_push_sucess: Success.
   mirror_push_fail: Failed!
+
+  display_access_setup: Assuming that project1 is a parent of project2, and project2 is a parent of project3. Given the current configuration, project3's repository has the following properties
+  display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements. 
+  display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
+  display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.

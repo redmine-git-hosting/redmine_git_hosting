@@ -10,17 +10,22 @@
 
 
 		<script type="text/javascript">
-
-			guProjectName= "<%= (@project.parent ? GitHosting::get_full_parent_path(@project, false) + "/" : "" ) %>" + "<%= @project.repository.url %>".replace(/^.*\//, "")
+			guProjectName= "<%= GitHosting.git_access_url(project)+'.git' %>";
+			guSshURL = "<%= GitHosting.git_access_url(project)+'.git' %>";
+			guHttpURL = "<%= GitHosting.http_access_url(project)+'.git' %>";
 			guProjectIsPublic= <%= project.is_public.to_s %> ;
-			guUser= "<%= User.current.login %>"
+			guUser= "<%= User.current.login %>";
 			guUserIsCommitter= <%= User.current.allowed_to?(:commit_access, project) ? "true" : "false" %> ;
-			guGitUser="<%= Setting.plugin_redmine_git_hosting['gitUser'] %>"
-			guGitServer="<%= Setting.plugin_redmine_git_hosting['gitServer'] %>"
-			guHttpBase="<%= Setting.plugin_redmine_git_hosting['httpServer'] %>".replace(/\/$/, "")
-			guHttpProto="<%=  project.repository.extra[:git_http].to_s == "2" ? "http" : "https" %>"
+			guGitUser="<%= Setting.plugin_redmine_git_hosting['gitUser'] %>";
+			guGitServer="<%= Setting.plugin_redmine_git_hosting['gitServer'] %>";
+			guHttpBase="<%= GitHosting.my_root_url %>";
+			guHttpProto="<%= @project.repository.extra[:git_http].to_s == "2" ? "http" : "https" %>";
 
-			window.onload = setGitUrlOnload
+			if (!(window.Event === undefined) && !(Event.observe === undefined)) {
+				Event.observe(window,"load", setGitUrlOnload);
+			} else {
+			       window.onload = setGitUrlOnload;
+			}
 
 			ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
 			setZeroClipboardInputSource("git_url_text");

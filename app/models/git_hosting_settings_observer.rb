@@ -25,7 +25,37 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                   		valuehash['gitoliteIdentityFile'] = @@old_valuehash['gitoliteIdentityFile']
                   		valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
                 	end
+                  
+                  	# Server should not include any path components
+                  	if valuehash['gitServer']
+                        	normalizedServer = valuehash['gitServer'].lstrip.rstrip.split('/').first
+                        	if (normalizedServer == '')
+                                	valuehash['gitServer'] = @@old_valuehash['gitServer']
+                                else
+                                	valuehash['gitServer'] = normalizedServer
+                                end
+                        end
 
+                  	# Server should not include any path components
+                  	if valuehash['httpServer']
+                        	normalizedServer = valuehash['httpServer'].lstrip.rstrip.split('/').first
+                        	if (normalizedServer == '')
+                                	valuehash['httpServer'] = @@old_valuehash['httpServer']
+                                else
+                                	valuehash['httpServer'] = normalizedServer
+                                end
+                        end
+
+                  	# Normalize http repository subdirectory path, should be either empty or relative and end in '/'
+                  	if valuehash['httpServerSubdir']
+                        	normalizedFile  = File.expand_path(valuehash['httpServerSubdir'].lstrip.rstrip,"/")
+                        	if (normalizedFile != "/")
+                        		valuehash['httpServerSubdir'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
+                        	else
+                        		valuehash['httpServerSubdir'] = ''
+                        	end
+                        end
+                	
                   	# Normalize Repository path, should be relative and end in '/'
                   	if valuehash['gitRepositoryBasePath']
                         	normalizedFile  = File.expand_path(valuehash['gitRepositoryBasePath'].lstrip.rstrip,"/")
@@ -33,6 +63,16 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                         		valuehash['gitRepositoryBasePath'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
                         	else
                         		valuehash['gitRepositoryBasePath'] = @@old_valuehash['gitRepositoryBasePath']
+                                end
+                        end
+
+                  	# Normalize Redmine Subdirectory path, should be either empty or relative and end in '/'
+                  	if valuehash['gitRedmineSubdir']
+                        	normalizedFile  = File.expand_path(valuehash['gitRedmineSubdir'].lstrip.rstrip,"/")
+                        	if (normalizedFile != "/")
+                        		valuehash['gitRedmineSubdir'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
+                        	else
+                        		valuehash['gitRedmineSubdir'] = ''
                                 end
                         end
 
@@ -72,41 +112,43 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         	# Only perform after-actions on settings for our plugin
 		if object.name == "plugin_redmine_git_hosting"
                 	valuehash = object.value
+                	
+			# Settings cache doesn't seem to invalidate symbolic versions of Settings immediately,
+                  	# so, any use of Setting.plugin_redmine_git_hosting[] by things called during this
+                  	# callback will be outdated.... True for at least some versions of redmine plugin...
+                  	#
+                  	# John Kubiatowicz 12/21/2011
+			if Setting.respond_to?(:check_cache)
+                        	# Clear out all cached settings.
+                        	Setting.check_cache
+                        end
 
                 	if GitHosting.bin_dir_writeable?
 				%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
 				%x[ rm -rf '#{ GitHosting.get_bin_dir }' ] 
                         end
 
-			if @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath']
-				GitHostingObserver.set_update_active(false)
-				all_projects = Project.find(:all)
-				all_projects.each do |p|
-					if p.repository.is_a?(Repository::Git)
-						r = p.repository
-						repo_name= p.parent ? File.join(GitHosting::get_full_parent_path(p, true),p.identifier) : p.identifier
-						r.url = File.join(valuehash['gitRepositoryBasePath'], "#{repo_name}.git")
-						r.root_url = r.url
-						r.save
-					end
-				end
-				GitHostingObserver.set_update_active(true)
+			if @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath'] ||
+                           @@old_valuehash['gitRedmineSubdir'] != valuehash['gitRedmineSubdir'] ||
+                           @@old_valuehash['gitRepositoryHierarchy'] != valuehash['gitRepositoryHierarchy'] ||
+                           @@old_valuehash['gitUser'] != valuehash['gitUser']
+                        	# Need to update everyone!
+				GitHostingObserver.bracketed_update_repositories(:resync_all)
 			end
 
 			if @@old_valuehash['gitUser'] != valuehash['gitUser']
 
 				GitHosting.setup_hooks
-				GitHosting.update_repositories(:resync_all=>true)
 
 			elsif @@old_valuehash['httpServer'] !=  valuehash['httpServer'] || 
                               @@old_valuehash['gitHooksDebug'] != valuehash['gitHooksDebug'] || 
-                              @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath'] || 
+                              @@old_valuehash['gitRedmineSubdir'] != valuehash['gitRedmineSubdir'] ||
+                              @@old_valuehash['gitRepositoryHierarchy'] != valuehash['gitRepositoryHierarchy'] ||
                               @@old_valuehash['gitHooksAreAsynchronous'] != valuehash['gitHooksAreAsynchronous']
 
 				GitHosting.update_global_hook_params
 			end
-
-                  	@@old_valuehash = (Setting.plugin_redmine_git_hosting).clone
+                  	@@old_valuehash = valuehash.clone
 		end
 	end
 end

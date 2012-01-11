@@ -80,6 +80,31 @@ module GitHosting
 			return repos
 		end
 
+                # For redmine repos, return map of basename (unique for redmine repos) => repo path
+                def redmine_repo_map
+                	redmine_repos=Hash.new{|hash, key| hash[key] = []}  # default -- empty list
+                	@repositories.each do |repo, rights|
+                    		if is_redmine_repo? repo
+                                	# Represents bug in conf file, but must allow more than one
+                                	mybase = File.basename(repo)
+               				redmine_repos[mybase] << repo
+                                end
+                    	end
+                  	return redmine_repos
+                end
+
+                def self.gitolite_repository_map
+                	gitolite_repos=Hash.new{|hash, key| hash[key] = []}  # default -- empty list
+                	myfiles = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print'].chomp.split("\n")
+                	filesplit = /(\.\/)*#{GitHosting.repository_base}(.*?)([^\/]+)\.git/
+                	myfiles.each do |nextfile|
+                		if filesplit =~ nextfile
+                                	gitolite_repos[$3] << "#{$2}#{$3}"
+                		end
+               		end
+                	gitolite_repos
+                end
+
 		private
 		def load
 			@original_content = []

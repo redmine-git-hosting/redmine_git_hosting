@@ -1,4 +1,4 @@
-pt-BR:
+pt:
   label_all_git: Inicializar automáticamente o repositórios Git para projectos novos
   label_delete_git_repositories: Apagar o repositório Git quando o projecto fôr apagado
   label_git_server: Domínio do servidor Gitolite
@@ -11,16 +11,29 @@ pt-BR:
   label_git_recycle_expire_time: 'expirar o tempo para Recycle Bin (em horas)'
   label_git_lock_wait_time: 'Sincronização de bloqueio o tempo de espera (em segundos)'
   label_cannot_change_selinux: 'não pode ser mudada (selinux)'
+  label_git_redmine_subdir: 'Subdiretório para Redmine de gestão Repos<br/>(Relativo à Git base)'
+  label_http_server_subdir: 'Subdiretório para o acesso via HTTP<br/>(Relativo à Redmine diretório raiz)'
+  label_git_repository_hierarchy: 'Estrutura de diretórios e URL para o<br/>Redmine de gestão repositórios'
+  label_basic_settings: 'Configurações básicas'
+  label_gitolite_access_URLs: 'URL Gitolite Definições de Acesso'
+  label_gitolite_repository_settings: 'Repositório Configurações Gitolite'
+  label_current_access_patterns: 'Padrões de Acesso ao Repositório atual'
+  label_storage: 'armazenamento'
+  label_ssh_access: 'SSH Acesso'
+  label_http_access: 'HTTP Acesso'
 
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP
+  field_notify_cia: Notificar CIA.vc
+
+
   label_git_show_urls: "Exibir os URL's de checkout"
   label_enabled: Habilitado
   label_disabled: Desabilitado
+  label_flat: Plano
+  label_hierarchical: 'Hierárquico'
   label_https_only: Apenas HTTPS
   label_https_and_http: HTTPS e HTTP
-  field_notify_cia: Notificar CIA.vc
-
   label_permissions_header: Permissões Necessárias
   label_sudo_web_to_git_user: O uilizador Web é capaz de sudo para o utilizador Git?
   label_sudo_git_to_web_user: O uilizador Git é capaz de sudo para o utilizador Web?
@@ -79,3 +92,7 @@ pt-BR:
   mirror_push_sucess: Sucesso.
   mirror_push_fail: Falhou!
 
+  display_access_setup: Assuming that project1 is a parent of project2, and project2 is a parent of project3. Given the current configuration, project3's repository has the following properties
+  display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements. 
+  display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
+  display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.

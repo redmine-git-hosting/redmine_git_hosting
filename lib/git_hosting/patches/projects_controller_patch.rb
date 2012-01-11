@@ -3,7 +3,6 @@ module GitHosting
 		module ProjectsControllerPatch
 
 			def git_repo_init
-
 				users = @project.member_principals.map(&:user).compact.uniq
 				if users.length == 0
 					membership = Member.new(
@@ -14,15 +13,13 @@ module GitHosting
 					membership.save
 				end
 				if @project.module_enabled?('repository') && Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
-					GitHostingObserver.set_update_active(false)
+                                	# Create new repository
 					repo = Repository.factory("Git")
-					repo_name= @project.parent ? File.join(GitHosting::get_full_parent_path(@project, true),@project.identifier) : @project.identifier
-					repo.url = repo.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
+                                	# Set urls
+                                	repo.url = repo.root_url = GitHosting.repository_path(@project)
 					@project.repository = repo
 					repo.save
-					GitHostingObserver.set_update_active(true)
 				end
-
 			end
 
 			def disable_git_daemon_if_not_public
@@ -36,38 +33,58 @@ module GitHosting
 				end
 			end
 
-			def update_git_repo_for_new_parent
-				if @project.repository != nil
-					if @project.repository.is_a?(Repository::Git)
-						old_parent_id = @project.parent ? @project.parent.id : nil
-						new_parent_id = params[:project].has_key?('parent_id') ? params[:project]['parent_id'] : nil
-						old_parent_id = old_parent_id.to_s.strip.chomp == "" ? nil : old_parent_id
-						new_parent_id = new_parent_id.to_s.strip.chomp == "" ? nil : new_parent_id
-						if old_parent_id.to_s != new_parent_id.to_s
-							old_parent = old_parent_id != nil ? Project.find_by_id(old_parent_id) : nil
-							new_parent = new_parent_id != nil ? Project.find_by_id(new_parent_id) : nil
+                        def create_with_disable_update
+                             	# Turn of updates during repository update
+                       		GitHostingObserver.set_update_active(false);
 
-							old_name = old_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(old_parent, true), old_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
-							new_name = new_parent.is_a?(Project) ? File.join(GitHosting::get_full_parent_path(new_parent, true), new_parent.identifier,@project.identifier).gsub(/^\//, "") :  @project.identifier
+                       		# Do actual update
+                       		create_without_disable_update
 
-							@project.repository.url = @project.repository.root_url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{new_name}.git")
-							@project.repository.save
-							GitHosting::move_repository( old_name, new_name )
-						end
-					end
-				end
-			end
+                        	# Fix up repository
+                        	git_repo_init
 
+                       		# Reenable updates to perform a single update
+				GitHostingObserver.set_update_active(true);
+                       	end
 
+                        def update_with_disable_update
+                             	# Turn of updates during repository update
+                       		GitHostingObserver.set_update_active(false);
+
+                       		# Do actual update
+                       		update_without_disable_update
+
+                        	# Adjust daemon status
+                        	disable_git_daemon_if_not_public
+
+                          	myrepo = @project.repository
+                        	if myrepo.is_a?(Repository::Git) && (myrepo.url != GitHosting::repository_path(@project) || myrepo.url != myrepo.root_url)
+                                	# Hm... something about parent hierarchy changed.  Update us and our children
+                                	GitHostingObserver.set_update_active(@project, :descendants)
+                                else
+                                	# Reenable updates to perform a single update
+					GitHostingObserver.set_update_active(true);
+                                end
+                       	end
+
+                        def destroy_with_disable_update
+                             	# Turn of updates during repository update
+                       		GitHostingObserver.set_update_active(false);
+
+                       		# Do actual update
+                       		destroy_without_disable_update
+
+                       		# Reenable updates to perform a single update
+				GitHostingObserver.set_update_active(true);
+                       	end
 
 			def self.included(base)
 				base.class_eval do
 					unloadable
 				end
-				base.send(:after_filter, :git_repo_init, :only=>:create)
-
-				base.send(:before_filter, :update_git_repo_for_new_parent, :only=>:update)
-				base.send(:after_filter, :disable_git_daemon_if_not_public, :only=>:update)
+                        	base.send(:alias_method_chain, :create, :disable_update)
+                          	base.send(:alias_method_chain, :update, :disable_update)
+                         	base.send(:alias_method_chain, :destroy, :disable_update)
 			end
 		end
 	end

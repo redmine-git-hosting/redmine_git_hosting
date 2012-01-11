@@ -1,0 +1,19 @@
+<div class="git_hosting_access_box">
+        <h3><%= l(:label_current_access_patterns) %></h3>
+	<%= l(:display_access_setup) %>:
+	<p>
+		<label>Repo Storage:</label>
+		<%= "~#{@settings['gitUser']}/#{@settings['gitRepositoryBasePath']}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+		%>
+		<br/>
+		<label><%= l(:label_ssh_access)%>:</label>
+		<%= "ssh://#{@settings['gitUser']}@#{@settings['gitServer']}:#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+		%>
+		<br/>
+		<label><%= l(:label_http_access)%>:</label>
+		<%= "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHosting.http_server_subdir}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+		%>
+	</p>
+	<%= l(:display_access_emphasis) %>
+	<%= @settings['gitRepositoryHierarchy']=='true' ? l(:display_access_hierarchical) : l(:display_access_flat) %>
+</div>

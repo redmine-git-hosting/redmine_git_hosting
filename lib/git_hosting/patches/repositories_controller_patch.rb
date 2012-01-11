@@ -13,8 +13,7 @@ module GitHosting
 				GitHosting.logger.debug "On edit_with_scm_settings"
 				params[:repository] ||= {}
 				if params[:repository_scm] == "Git"
-					repo_name= @project.parent ? File.join(GitHosting::get_full_parent_path(@project, true),@project.identifier) : @project.identifier
-					params[:repository][:url] = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
+					params[:repository][:url] = GitHosting.repository_path(@project)
 				end
 
 				if params[:repository_scm] == "Git" || @project.repository.is_a?(Repository::Git)
@@ -41,10 +40,10 @@ module GitHosting
 							page.replace_html "main-menu", render_main_menu(@project)
 						end
 					end
-
-					GitHosting.update_repositories(@project) if !@project.repository.nil?
-					GitHosting.setup_hooks(@project) if !@project.repository.nil?
-
+                                  	
+                                  	if !@project.repository.nil?
+						GitHostingObserver.bracketed_update_repositories(@project) 
+                                        end
 				else
 					edit_without_scm_settings
 				end

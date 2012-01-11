@@ -66,7 +66,7 @@ module GitHosting
 		end
 
 		def self.update_global_hook_params
-			hook_url = "http://" + Setting.plugin_redmine_git_hosting['httpServer'] + "/githooks/post-receive"
+                	hook_url = "http://" + File.join(GitHosting.my_root_url,"/githooks/post-receive")
 			logger.debug "Hook URL: #{hook_url}"
 			%x[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{hook_url}"]
 
@@ -77,8 +77,6 @@ module GitHosting
 			asynch_hook = Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous']
 			logger.debug "Hooks Are Asynchronous: #{asynch_hook}"
 			%x[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
-
-
 		end
 
 
@@ -118,21 +116,20 @@ module GitHosting
 			%x[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
 			%x[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
 			%x[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-
 		end
 
 
 		def self.setup_hooks_for_project(project)
-			logger.info "Setting up hooks for project #{project.identifier}"
+                	logger.info "Setting up hooks for project '#{project.identifier}' (in gitolite repository at '#{GitHosting.repository_path(project)}')"
 			if project.repository.nil?
 				logger.info "Repository for project #{project.identifier} is not yet created"
 				return
 			end
 
-			repo_path = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], GitHosting.repository_name(project))
+			repo_path = GitHosting.repository_path(project)
 			hook_key = project.repository.extra.key
-			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.key "#{hook_key}"]
-			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}.git' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
+			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.key "#{hook_key}"]
+			%x[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
 		end
 
 	end

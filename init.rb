@@ -8,16 +8,19 @@ require File.join(File.dirname(__FILE__), 'app', 'models', 'git_cia_notification
 
 Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
-	author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen and others'
+	author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz and others'
 	description 'Enables Redmine / ChiliProject to control hosting of git repositories'
-	version '0.4.2'
+	version '0.4.3x'
 	url 'https://github.com/ericpaulbishop/redmine_git_hosting'
 
 	settings :default => {
-		'httpServer' => "tessellation.cs.berkeley.edu/redmine",
-		'gitServer' => 'tessellation.cs.berkeley.edu',
-		'gitUser' => 'git-tess',
+		'httpServer' => 'localhost',
+    		'httpServerSubdir' => '',
+		'gitServer' => 'localhost',
+		'gitUser' => 'git',
 		'gitRepositoryBasePath' => 'repositories/',
+    		'gitRedmineSubdir' => '',
+    		'gitRepositoryHierarchy' => 'true',
     		'gitRecycleBasePath' => 'recycle_bin/',
     		'gitRecycleExpireTime' => '24.0',
     		'gitLockWaitTime' => '10',

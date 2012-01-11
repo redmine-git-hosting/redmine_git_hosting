@@ -13,45 +13,40 @@ class GitHostingObserver < ActiveRecord::Observer
 	end
 
 
-	def self.set_update_active(is_active)
-		case is_active
-                	when Symbol then @@updating_active_flags[is_active] = true
-                	when Hash then @updating_active_flags.merge(is_active)
-                	when Project then @@cached_project_updates << is_active
-                end
-
-		if !is_active
+	def self.set_update_active(*is_active)
+		if !is_active || !is_active.first
                 	@@updating_active_stack += 1
                 else
-                	@@updating_active_stack -= 1
-                        if @@updating_active_stack < 0
-                        	@@updating_active_stack = 0
-                        end
-                end
+                	is_active.each do |item|
+                		case item
+                			when Symbol then @@updating_active_flags[item] = true
+                			when Hash then @@updating_active_flags.merge!(item)
+                			when Project then @@cached_project_updates |= [item]
+                                end
+              		end
 
-		if is_active && @@updating_active_stack == 0
-			if @@cached_project_updates.length > 0 || !@@updating_active_flags.empty?
+                	# If about to transition to zero and have something to run, do it
+			if @@updating_active_stack == 1 && (@@cached_project_updates.length > 0 || !@@updating_active_flags.empty?)
 				@@cached_project_updates = @@cached_project_updates.flatten.uniq.compact
 				GitHosting::update_repositories(@@cached_project_updates, @@updating_active_flags)
-                        	@@cached_project_updates = []
-                        	@@updating_active_flags = {}
-			end
-                	@@updating_active = true
-                else
-                	@@updating_active = false
-		end
-	end
+	                  	@@cached_project_updates = []
+        	          	@@updating_active_flags = {}
+                        end
 
-	def before_destroy(object)
-		if object.is_a?(Repository::Git)
-			if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true"
-				GitHosting::delete_repository(object.project)
-				%x[#{GitHosting::git_user_runner} 'rm -rf #{object.url}' ]
-			end
-			GitHosting::clear_cache_for_project(object.project)
+                  	# Wait until after running update_repositories before releasing
+			@@updating_active_stack -= 1
+                  	if @@updating_active_stack < 0
+                        	@@updating_active_stack = 0
+                        end
 		end
+        	@@updating_active = (@@updating_active_stack == 0)
 	end
-
+        
+        # Register args for updating and then do it without allowing recursive calls
+        def self.bracketed_update_repositories(*args)
+        	set_update_active(false)
+        	set_update_active(*args)
+        end
 
 	def after_create(object)
 		if not object.is_a?(Project)
@@ -73,15 +68,18 @@ class GitHostingObserver < ActiveRecord::Observer
  
 
 	def after_destroy(object)
-		if !object.is_a?(Repository::Git)
-			update_repositories(object)
+		if object.is_a?(Repository::Git)
+                	update_repositories(object,:delete=>true)
+			GitHosting::clear_cache_for_project(object.project)
+                else
+                	update_repositories(object)
 		end
 	end
 
 
 	protected
 
-	def update_repositories(object)
+	def update_repositories(object,*flags)
 		projects = []
 		case object
 			when Repository::Git then projects.push(object.project)
@@ -90,11 +88,12 @@ class GitHostingObserver < ActiveRecord::Observer
 			when Member then projects.push(object.project)
 			when Role then projects = object.members.map(&:project).flatten.uniq.compact
 		end
-		if(projects.length > 0)
+		if (projects.length > 0)
 			if (@@updating_active)
-				GitHosting::update_repositories(projects)
+				GitHosting::update_repositories(projects,*flags)
 			else
 				@@cached_project_updates.concat(projects)
+                        	@@updating_active_flags.merge!(*flags) unless flags.empty?
 			end
 		end
 	end

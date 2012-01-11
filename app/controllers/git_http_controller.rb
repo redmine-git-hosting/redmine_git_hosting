@@ -10,71 +10,83 @@ class GitHttpController < ApplicationController
 
 	before_filter :authenticate
 
-
 	def index
-		p1 = params[:p1]
-		p2 = params[:p2]
-		p3 = params[:p3]
-		proj_id = params[:id]
+        	if proj_path_split = (params[:project_path].match(/^(.*?([^\/]+))\.git$/))
+                	proj_id = proj_path_split[2]
+			project = Project.find_by_identifier(proj_id)
+        		@git_http_repo_path = project_path = proj_path_split[1]
 
+                  	if GitHosting.http_access_url(project) == project_path
+                        	p1 = params[:path][0] || ""
+                        	p2 = params[:path][1] || ""
+                        	p3 = params[:path][2] || ""
 
-		@git_http_repo_path = (params[:path]).gsub(/\.git$/, "")
+                          	# Full requested path from .git repo
+                        	reqfile = params[:path].join('/')
 
-		reqfile = p2 == "" ? p1 : ( p3 == "" ? p1 + "/" + p2 : p1 + "/" + p2 + "/" + p3);
-
-		if p1 == "git-upload-pack"
-			service_rpc("upload-pack")
-		elsif p1 == "git-receive-pack"
-			service_rpc("receive-pack")
-		elsif p1 == "info" && p2 == "refs"
-			get_info_refs(reqfile)
-		elsif p1 == "HEAD"
-			get_text_file(reqfile)
-		elsif p1 == "objects" && p2 == "info"
-			if p3 != packs
-				get_text_file(reqfile)
-			else
-				get_info_packs(reqfile)
-			end
-		elsif p1 == "objects" && p2 != "pack"
-			get_loose_object(reqfile)
-		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.pack$/)
-			get_pack_file(reqfile)
-		elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
-			get_idx_file(reqfile)
-		else
-			render_not_found
-		end
-
+                        	# git http protocol
+                        	if p1 == "git-upload-pack"
+                                	service_rpc("upload-pack")
+                                elsif p1 == "git-receive-pack"
+                                	service_rpc("receive-pack")
+                                elsif p1 == "info" && p2 == "refs"
+                                	get_info_refs(reqfile)
+                                elsif p1 == "HEAD"
+                                	get_text_file(reqfile)
+                                elsif p1 == "objects" && p2 == "info"
+                                	if p3 != "packs"
+                                		get_text_file(reqfile)
+                                        else
+                                        	get_info_packs(reqfile)
+                                        end
+                                elsif p1 == "objects" && p2 != "pack"
+                                	get_loose_object(reqfile)
+                                elsif p1 == "objects" && p2 == "pack" && p3.match(/\.pack$/)
+                                	get_pack_file(reqfile)
+                                elsif p1 == "objects" && p2 == "pack" && p3.match(/\.idx$/)
+                                	get_idx_file(reqfile)
+                                else
+                                	render_not_found
+                                end
+                        else
+                        	# repository URL doesn't match
+                        	render_not_found
+                        end
+            		return
+                end
+          	# Wrong prefix or :base doesn't end in .git or doesn't at least have one char in base name
+          	render_not_found
 	end
 
 	private
 
 	def authenticate
-		is_push = params[:p1] == "git-receive-pack"
+		is_push = (params[:path][0] == "git-receive-pack")
 		query_valid = false
 		authentication_valid = true
 
-		project = Project.find(params[:id])
-		repository = project != nil ? project.repository : nil
-		if(project != nil && repository !=nil)
-			if repository.extra[:git_http] == 2 || (repository.extra[:git_http] == 1 && is_ssl?)
-				query_valid = true
-				allow_anonymous_read = project.is_public
-				if is_push || (!allow_anonymous_read)
-					authentication_valid = false
-					authenticate_or_request_with_http_basic do |login, password|
-						user = User.find_by_login(login);
-						if user.is_a?(User)
-							if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
-								authentication_valid = user.check_password?(password)
+        	if proj_path_split = (params[:project_path].match(/^(.*?([^\/]+))\.git$/))
+        		project = Project.find_by_identifier(proj_path_split[2])
+            		repository = project != nil ? project.repository : nil
+			if(project != nil && repository !=nil)
+                        	if repository.extra[:git_http] == 2 || (repository.extra[:git_http] == 1 && is_ssl?)
+					query_valid = true
+					allow_anonymous_read = project.is_public
+					if is_push || (!allow_anonymous_read)
+						authentication_valid = false
+						authenticate_or_request_with_http_basic do |login, password|
+                    					user = User.find_by_login(login);
+							if user.is_a?(User)
+								if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
+									authentication_valid = user.check_password?(password)
+								end
 							end
+							authentication_valid
 						end
-						authentication_valid
 					end
 				end
 			end
-		end
+            	end
 
 		#if authentication failed, error already rendered
 		#so, just render case where user queried a project
