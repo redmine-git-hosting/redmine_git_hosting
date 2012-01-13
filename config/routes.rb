@@ -6,7 +6,8 @@ def install_redmine_git_hosting_routes(map)
 
 	# Handle the public keys plugin to my/account.
 	map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
-	map.connect 'my/account/edit_public_key/:public_key_id', :controller => 'my', :action => 'account', :conditions => {:method => [:get]}
+	map.connect 'my/account/public_key/:public_key_id', :controller => 'my', :action => 'account', :conditions => {:method => [:get]}
+	map.connect 'users/:id/edit/public_key/:public_key_id', :controller => 'users', :action => 'edit', :conditions => {:method => [:get]}
 
   	# Handle hooks and mirrors
 	map.connect 'githooks', :controller => 'gitolite_hooks', :action => 'stub'

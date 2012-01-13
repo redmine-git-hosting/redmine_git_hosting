@@ -51,8 +51,11 @@
   label_hook_installed: Hook installed
 
   label_public_keys: Public keys
-  label_public_key_new: New public key
-  label_public_key_edit: Edit existing public key
+  label_current_public_keys: Current Public keys
+  label_identifier_can_be_arbitrary: Identifier (can be any meaningful string)
+  label_cut_and_paste: Key (cut and paste entire .pub file)
+  label_public_key_new: Enter new Public key
+  label_public_key_edit: Edit existing Public key
   field_public_key: Key
   notice_public_key_updated: Public key '%{title}' was successfully updated.
   notice_public_key_added: Public key '%{title}' was successfully added.

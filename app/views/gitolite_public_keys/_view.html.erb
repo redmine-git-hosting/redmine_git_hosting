@@ -1,0 +1,44 @@
+<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting')%>
+<fieldset class="box">
+<legend><%=l(:label_public_keys)%></legend>
+
+<fieldset class="public_key_view"><legend><%= l(:label_current_public_keys)%></legend>
+<table class="list">
+	<% if @gitolite_public_keys.empty? %>
+		<tr><td><label><%=l(:label_no_public_keys)%></label></td></tr>
+	<%end %>
+  	<% @gitolite_public_keys.each do |key| %>
+       	<tr class="<%= curcycle=cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
+		<td style="text-align:left;"><%= h(key) %></td>
+		<% if params[:id] %>
+		   <td style="text-align:center"><%= "keydir/#{key.identifier}.pub" %></td>
+		<% end %>
+		<td style="width:10%;" class="buttons">
+			<%= link_to(l(:button_edit), { :public_key_id => key.id, :tab => params[:id]&&'keys'}, :class => 'icon icon-edit') %>
+			<%= link_to(l(:button_delete), public_key_path(key, :user_id=>params[:id]), :method => 'delete', :class => 'icon icon-del', :confirm=>l(:text_gitolite_key_destroy_confirmation, :title=>key[:title])) %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+</fieldset><br/>
+
+<% @new_key = @gitolite_public_key.new_record? %>
+<fieldset class="public_key_view"><legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
+<% labelled_form_for :public_key, @gitolite_public_key, 
+    :url=>{:controller=>'gitolite_public_keys', :action=>@new_key ? 'create' : 'update', :id=>@gitolite_public_key.id, :user_id=>params[:id], :tab => params[:id]&&'keys'},
+    :html => {:method=>(@new_key ? :post : :put)} do |f| %>
+   	<p><%= f.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width:99%;' %></p>
+	<p><%= f.text_area :key, :label => (@new_key? :label_cut_and_paste : :field_public_key), :required => true, :disabled => !@new_key, 
+        	           :style => "width:99%;height:#{params[:id]?150:250}px;overflow:auto;",
+			   :cols => nil, :rows => nil %>
+	<% if !@new_key%>
+		<em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em></p>
+		<%= submit_tag l(:button_save), :name=>'save_button' %>
+		<%= submit_tag l(:button_delete), :name=>'delete_button', :confirm => l(:text_gitolite_key_destroy_confirmation,:title=>@gitolite_public_key[:title]) %>
+		<%= submit_tag l(:button_cancel), :name=>'cancel_button' %> 
+	<% else %>
+		</p><%= submit_tag l(:button_create) %>
+	<% end %>
+<% end %>
+</fieldset>
+</fieldset>

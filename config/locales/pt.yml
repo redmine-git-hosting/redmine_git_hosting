@@ -48,8 +48,11 @@ pt:
   label_git_hooks_are_asynchronous: Run hooks asynchronously
   label_hook_installed: '"Hook" instalado'
 
-  label_public_keys: Chaves públicas
-  label_public_key_new: Nova chave pública
+  label_public_keys: 'Chaves públicas'
+  label_current_public_keys: 'As chaves públicas atuais'
+  label_identifier_can_be_arbitrary: 'Identificador (Qualquer texto significativa)'
+  label_cut_and_paste: 'Chave (cortar e colar arquivo .pub ficheiro)'
+  label_public_key_new: 'Nova chave pública'
   label_public_key_edit: 'Editar a chave pública existentes'
   field_public_key: Chave
   notice_public_key_updated: 'A chave pública "%{title}" foi actualizada com sucesso.'

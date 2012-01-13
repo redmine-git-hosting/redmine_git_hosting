@@ -15,7 +15,7 @@ class GitolitePublicKeysController < ApplicationController
         	if !request.get?
                 	destroy_key
                 end
-        	redirect_to url_for(:controller => 'my', :action => 'account')
+        	redirect_to @redirect_url
         	GitHostingObserver.set_update_active(true)
 	end
 
@@ -29,7 +29,7 @@ class GitolitePublicKeysController < ApplicationController
                         	destroy_key
                 	end
                 end
-        	redirect_to url_for(:controller => 'my', :action => 'account')
+        	redirect_to @redirect_url
         	GitHostingObserver.set_update_active(true)
 	end
 
@@ -41,19 +41,29 @@ class GitolitePublicKeysController < ApplicationController
 		else
 			@gitolite_public_key = GitolitePublicKey.new(:user => @user)
 		end
-		redirect_to url_for(:controller => 'my', :action => 'account')
+        	redirect_to @redirect_url
         	GitHostingObserver.set_update_active(true)
 	end
 
 	protected
 
 	def set_user_variable
-		@user = User.current
+        	if params[:user_id]
+                	@user = (params[:user_id]=='current') ? User.current : User.find_by_id(params[:user_id])
+                	if @user
+                		@redirect_url = url_for(:controller => 'users', :action => 'edit', :id => params[:user_id], :tab => 'keys')
+                        else
+                        	render_404
+                        end
+                else
+                	@user = User.current
+                	@redirect_url = url_for(:controller => 'my', :action => 'account')
+                end
 	end
 
 	def find_gitolite_public_key
 		key = GitolitePublicKey.find_by_id(params[:id])
-		if key and key.user == @user
+		if key and (@user == key.user || @user.admin?)
 			@gitolite_public_key = key
 		elsif key
 			render_403

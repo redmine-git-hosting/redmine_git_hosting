@@ -37,3 +37,34 @@ pre.mirror-push.error {
 	font-size: 110%; 
 	color: #467AA7;
 }
+
+.public_key_view {
+background-color: #fff;
+padding:5px;
+}
+
+.public_key_view label {
+font-weight: bold;
+text-align: left;
+}
+
+.public_key_view .myhead {
+font-style: italic;
+color: #000;
+size: 140%;
+padding: 10px 10px 0px 0px;
+margin-bottom: 5px; 
+border-bottom: 1px solid #bbbbbb;
+}
+
+.public_key_view p {
+margin-top: 0px;
+margin-bottom: 5px;
+padding-top: 0px;
+}
+
+.public_key_view legend {
+font-style: italic;
+color: #000;
+size: 130%;
+}

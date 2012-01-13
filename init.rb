@@ -89,6 +89,10 @@ Dispatcher.to_prepare :redmine_git_patches do
   require 'git_hosting/patches/roles_controller_patch'
   RolesController.send(:include, GitHosting::Patches::RolesControllerPatch)
 
+  require_dependency 'my_controller'
+  require 'git_hosting/patches/my_controller_patch'
+  MyController.send(:include, GitHosting::Patches::MyControllerPatch)
+
   require_dependency 'git_hosting/patches/repository_cia_filters'
 end
 
