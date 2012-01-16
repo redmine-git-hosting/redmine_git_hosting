@@ -758,9 +758,9 @@ module GitHosting
 				commit_gitolite_admin flags[:resync_all]
 			end
 	
-			# Set post receive hooks for current projects
-			# We need to do this AFTER push, otherwise necessary repos may not be created yet
-                	GitAdapterHooks.setup_hooks(new_projects) unless new_projects.empty?
+			# Set post receive hooks for new projects (or check all repositories on :resync_all).
+			# We need to do this AFTER push, otherwise necessary repos may not be created yet.
+                 	GitAdapterHooks.setup_hooks_params(flags[:resync_all] ? git_projects : new_projects)
 
                 rescue GitHostingException
                 	logger.error "git_hosting: update_repositories() failed" 
