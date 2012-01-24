@@ -147,7 +147,7 @@ module GitHosting
                 def self.get_local_config_map
                 	local_config_map=Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
                 	
-                	lines = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print -execdir git config -f {}/config --get-regexp hooks.redmine_gitolite ";"'].chomp.split("\n")
+                	lines = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print -exec git config -f {}/config --get-regexp hooks.redmine_gitolite \\;'].chomp.split("\n")
                 	filesplit = /(\.\/)*(#{GitHosting.repository_base}.*?[^\/]+\.git)/
                 	cur_repo_path = nil
                 	lines.each do |nextline|

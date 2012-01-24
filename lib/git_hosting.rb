@@ -316,6 +316,11 @@ module GitHosting
 			f.puts 'else'
 			f.puts '{'
 			f.puts '	$command =~ s/\\\\/\\\\\\\\/g;'
+			# Previous line turns \; => \\;
+            		# If old sudo, turn \\; => "\\;" to protect ';' from loss as command separator during eval
+            		if sudo_version < sudo_version_switch
+                        	f.puts '	$command =~ s/(\\\\\\\\;)/"$1"/g;'
+                        end
 			f.puts '	$command =~ s/"/\\\\"/g;'
 			f.puts '	exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
 			f.puts '}'
