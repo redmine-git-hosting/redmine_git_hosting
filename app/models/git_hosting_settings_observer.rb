@@ -26,20 +26,20 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                   		valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
                 	end
                   
-                  	# Server should not include any path components
+                  	# Server should not include any path components.  Also, ports should be numeric.
                   	if valuehash['gitServer']
                         	normalizedServer = valuehash['gitServer'].lstrip.rstrip.split('/').first
-                        	if (normalizedServer == '')
+                        	if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
                                 	valuehash['gitServer'] = @@old_valuehash['gitServer']
                                 else
                                 	valuehash['gitServer'] = normalizedServer
                                 end
                         end
 
-                  	# Server should not include any path components
+                  	# Server should not include any path components.  Also, ports should be numeric.
                   	if valuehash['httpServer']
                         	normalizedServer = valuehash['httpServer'].lstrip.rstrip.split('/').first
-                        	if (normalizedServer == '')
+                        	if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
                                 	valuehash['httpServer'] = @@old_valuehash['httpServer']
                                 else
                                 	valuehash['httpServer'] = normalizedServer

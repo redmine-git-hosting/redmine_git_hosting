@@ -1,7 +1,10 @@
+
 <%# This is used to display basic git setup instructions, like on github... %>
 <% flash.now[:warning] = "Repository is empty. Get started by following the instructions below." %>
-<% git_ssh_url = Setting.plugin_redmine_git_hosting['gitUser'] + "@" + Setting.plugin_redmine_git_hosting['gitServer'] + ":" + GitHosting.repository_name(@project) + '.git'  %>
-
+<% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
+<% git_ssh_url =
+   "#{gitSHP ? 'ssh://' : ''}#{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@project)}.git" %>
+ 
 <div class="box">
 
 <h2>Git Setup:</h2>

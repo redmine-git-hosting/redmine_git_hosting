@@ -4,7 +4,8 @@ function updateGitUrl(el)
 	guHttpBase = guHttpBase.replace(/\/$/, "")
 
 	var urls=[]
-	urls["git_url_ssh"]  = [guGitUser + "@" + guGitServer + ":" + guSshURL, guUserIsCommitter]
+	var gitSHP = /:\d+$/.test(guGitServer)
+	urls["git_url_ssh"]  = [(gitSHP ? "ssh://" : "") + guGitUser + "@" + guGitServer + (gitSHP ? "/" : ":") + guSshURL, guUserIsCommitter]
 	urls["git_url_http"] = [guHttpProto + "://" + ( (!guProjectIsPublic) || guUserIsCommitter ? guUser + "@" : "") + guHttpBase + "/" + guHttpURL, guUserIsCommitter]
 	urls["git_url_git"]  = ["git://" + guGitServer + "/" + guSshURL, false]
 	var allGitUrlIds = ["git_url_ssh", "git_url_http", "git_url_git"]

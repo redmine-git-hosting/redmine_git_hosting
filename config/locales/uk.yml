@@ -100,7 +100,7 @@
   mirror_push_sucess: Success.
   mirror_push_fail: Failed!
 
-  display_access_setup: Assuming that project1 is a parent of project2, and project2 is a parent of project3. Given the current configuration, project3's repository has the following properties
+  display_access_setup: Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s repository has the following properties
   display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements. 
   display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
   display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.

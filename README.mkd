@@ -110,8 +110,8 @@ The *httpServer* variable should be set to the hostname which will be used to ac
 may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:8000.  Unlike earlier versions of this plugin, this variable should
 *not* include the path to your Redmine root.
 
-The *gitServer* variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  In most configurations, this 
-variable will be identical to the *httpServer*, except for the fact that *gitServer* will never include an optional port number.
+The *gitServer* variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  Like *httpServer*, this variable may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:444.  In most configurations, the *gitServer* 
+variable will be identical to the *httpServer*, except when ports are involved.
 
 The *gitUser* is the user under which gitolite is installed.
 

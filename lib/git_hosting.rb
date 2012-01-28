@@ -396,7 +396,7 @@ module GitHosting
                         else
                         	logger.info "Cloning gitolite-admin repository to #{repo_dir}"
                         	shell %[rm -rf "#{repo_dir}"]
-                        	shell %[env GIT_SSH=#{gitolite_ssh()} git clone #{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{repo_dir}]
+                        	shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
                           	return_val = true # on master, since fresh clone
                         end
                   	shell %[chmod 700 "#{repo_dir}" ]
@@ -415,7 +415,7 @@ module GitHosting
 
                         	logger.info "  Deleting and recloning gitolite-admin to #{repo_dir}"
                           	shell %[rm -r #{repo_dir}] unless !File.exists?(repo_dir)
-                        	shell %[env GIT_SSH=#{gitolite_ssh()} git clone #{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}:gitolite-admin.git #{repo_dir}]
+                        	shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
                         	shell %[chmod 700 "#{repo_dir}" ]
                 		# Make sure we have our hooks setup
 				GitAdapterHooks.check_hooks_installed

@@ -7,7 +7,8 @@
 		%>
 		<br/>
 		<label><%= l(:label_ssh_access)%>:</label>
-		<%= "ssh://#{@settings['gitUser']}@#{@settings['gitServer']}:#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+		<% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
+		<%= "#{gitSHP ? 'ssh://' : ''}#{@settings['gitUser']}@#{@settings['gitServer']}#{gitSHP	? '/' : ':'}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
 		%>
 		<br/>
 		<label><%= l(:label_http_access)%>:</label>
