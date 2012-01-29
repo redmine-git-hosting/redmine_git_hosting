@@ -96,7 +96,7 @@ class RepositoryMirrorsController < ApplicationController
 	def push
 		respond_to do |format|
 			format.html {
-				@mirror.push
+				(@push_failed,@shellout) = @mirror.push
 			}
 		end
 	end
