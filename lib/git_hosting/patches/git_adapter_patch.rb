@@ -15,11 +15,17 @@ module GitHosting
 				base.extend(ClassMethods)
 				base.class_eval do
 					class << self
-						alias_method_chain :sq_bin, :sudo
-						begin
-							alias_method_chain :client_command, :sudo
-						rescue Exception =>e
-						end
+                                        	begin
+                                                	alias_method_chain :sq_bin, :sudo
+                                                	begin
+								alias_method_chain :client_command, :sudo
+							rescue Exception =>e
+							end
+                                                rescue Exception => e
+                                                	# Hm.... Might be Redmine version < 1.2 (i.e. 1.1).  Try redefining GIT_BIN.
+                                                	GitHosting.logger.warn "Seems to be early version of Redmine(1.1?), try redefining GIT_BIN."
+			                        	Redmine::Scm::Adapters::GitAdapter::GIT_BIN = GitHosting::git_exec()
+                                                end
 					end
 				end
 			end

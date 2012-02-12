@@ -65,12 +65,14 @@ module GitHosting
 				base.class_eval do
 					unloadable
 				end
+                        	# Edit adds new functionality, so don't silently fail!
+                        	base.send(:alias_method_chain, :edit, :public_keys)
                         	begin
                                 	base.send(:alias_method_chain, :create, :disable_update)
                                 	base.send(:alias_method_chain, :update, :disable_update)
-                                	base.send(:alias_method_chain, :destroy, :disable_update)
                                 	base.send(:alias_method_chain, :edit_membership, :disable_update)
-                                	base.send(:alias_method_chain, :edit, :public_keys)
+                                  	# Put this last, since Redmine 1.1 doesn't have it....
+                                	base.send(:alias_method_chain, :destroy, :disable_update)
                                 rescue
                                 end
 			end

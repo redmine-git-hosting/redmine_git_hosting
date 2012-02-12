@@ -6,7 +6,16 @@ to provide Git Smart HTTP access.  Git repositories are automatically created wh
 Redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
 Caching functionality is also implemented to speed page-load times for viewing git repositories.
 
+## Compatibility
 
+The current version of this plugin is not compatible with all versions of Redmine and ChiliProject.  As of this writing, it
+should be compatible with the following versions:
+
+* **Redmine:** This plugin should work with Redmine branches 1.1-Stable through 1.3-Stable (including sub-versions).  It *does not* currently work with
+the Redmine trunk, since the Redmine developers are implementing multiple repos/project, which will require some significant rewriting of the plugin.
+
+* **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 2.5.x.  Some problems have been reported with newer versions of ChiliProject.
+These incompatibilities will get fixed when possible. 
 
 ## Configuration Strategy
 
@@ -349,10 +358,10 @@ with apache and fcgi. Other configurations may require slight tweaking.
 ## Tested Configurations
 
 This plugin has been primarily tested on Ubuntu Server 10.10 and 11.04 (32 and 64 bit) with ChiliProject v1.x,
-ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It is possible that some
-debugging will be necessary for other configurations.  Selinux configurations were tested under Redhat Enterprise Linux 
-version 6.x with apache and fcgi.
-
+ChiliProject 2.0.0 and Redmine 1.2.1 with PostgreSQL as the database (July, 2011).  It has also been tested
+with Redmine 1.2.1, 1.2.2, 1.3.0, and 1.3.1 with mySql on Redhat Enterprise Linux 6.x with Apache and FCGI.  Limited testing
+has occurred with Redmine 1.1.3. It is possible that some debugging will be necessary for other 
+configurations.  Selinux configurations were tested under Redhat Enterprise Linux version 6.x with Apache and FCGI.
 
 ## Required gems
 
