@@ -115,7 +115,7 @@ module GitHosting
 	@@sudo_git_to_web_user_stamp = nil
 	@@sudo_git_to_web_user_cached = nil
 	def self.sudo_git_to_web_user
-		if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 0.5):
+		if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 0.5)
 			return @@sudo_git_to_web_user_cached
 		end
 		logger.info "Testing if git user(\"#{git_user}\") can sudo to web user(\"#{web_user}\")"
@@ -139,7 +139,7 @@ module GitHosting
 	@@sudo_web_to_git_user_stamp = nil
 	@@sudo_web_to_git_user_cached = nil
 	def self.sudo_web_to_git_user
-		if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 0.5):
+		if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 0.5)
 			return @@sudo_web_to_git_user_cached
 		end
 		logger.info "Testing if web user(\"#{web_user}\") can sudo to git user(\"#{git_user}\")"
