@@ -8,7 +8,7 @@ module GitHosting
 		@@check_hooks_installed_cached = nil
           	@@post_receive_hook_path = nil
 		def self.check_hooks_installed
-			if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5):
+			if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5)
 				return @@check_hooks_installed_cached
 			end
 
