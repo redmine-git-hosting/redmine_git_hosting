@@ -47,20 +47,21 @@
 #                                                                              #
 ################################################################################
 
+@@across_roots_values = []
 namespace :selinux do
     desc "Configure selinux for Redmine and Redmine_Git_Hosting plugin"
-    task :install => [:environment,:install_contexts,"selinux:redmine_git_hosting:install"] do
+    task :install => [:install_contexts,"selinux:redmine_git_hosting:install"] do
     end
 
     desc "Unconfigure selinux for Redmine and Redmine_Git_Hosting plugin"
-    task :remove => [:environment,"selinux:redmine_git_hosting:remove",:remove_contexts] do
+    task :remove => ["selinux:redmine_git_hosting:remove",:remove_contexts] do
     end
 
     desc "Install selinux file contexts for redmine (without plugins)"
-    task :install_contexts => [:environment] do
+    task :install_contexts do
+        puts "[Installing file contexts for redmine:"
         roots = redmine_roots
         root_pattern = redmine_root_pattern
-        puts "[Installing file contexts for redmine:"
 
         sh "semanage fcontext -a -t public_content_rw_t \"#{root_pattern}(/.*)?\""
         sh "semanage fcontext -a -t httpd_sys_script_exec_t \"#{root_pattern}/public/dispatch.*\""
@@ -73,10 +74,10 @@ namespace :selinux do
     end
 
     desc "Remove selinux file contexts for redmine (without plugins)"
-    task :remove_contexts => [:environment] do
+    task :remove_contexts do
+        puts "[Removing file contexts for redmine (ignoring errors):"
         roots = redmine_roots
         root_pattern = redmine_root_pattern
-        puts "[Removing file contexts for redmine (ignoring errors):"
 
         sh "semanage fcontext -d \"#{root_pattern}(/.*)?\""
         sh "semanage fcontext -d \"#{root_pattern}/public/dispatch.*\""
@@ -90,36 +91,45 @@ namespace :selinux do
 
     namespace :redmine_git_hosting do
 	desc "Install scripts, policy, and file context for redmine_git_hosting plugin."
-	task :install => [:environment,:install_scripts,:install_policy,:install_contexts] do
+	task :install => [:install_scripts,:install_policy,:install_contexts] do
 	end
 	    
 	desc "Remove scripts, policy, and file context for redmine_git_hosting plugin."
-        task :remove => [:environment,:remove_contexts,:remove_policy,:remove_scripts] do
+        task :remove => [:remove_contexts,:remove_policy,:remove_scripts] do
 	end
 	 
 	desc "Install scripts and policy for redmine_git_hosting plugin."
-	task :install_scripts_and_policy => [:environment,:install_scripts,:install_policy] do
+	task :install_scripts_and_policy => [:install_scripts,:install_policy] do
 	end
 	    
 	desc "Remove scripts and policy for redmine_git_hosting plugin."
-        task :remove_scripts_and_policy => [:environment,:remove_policy,:remove_scripts] do
+        task :remove_scripts_and_policy => [:remove_policy,:remove_scripts] do
 	end
 	 
-        desc "Generate and install redmine_git_hosting shell scripts."
-        task :install_scripts => [:environment] do
-            puts "[Generating and installing redmine_git_hosting shell scripts:"
-
-            plugin_roots = redmine_roots("vendor/plugins/redmine_git_hosting")
-            plugin_roots.each do |path|
-		if path != "#{Rails.root}/vendor/plugins/redmine_git_hosting"
-		    # Have to call another rails environment.  Keep default root in that environment
-		    chdir File.expand_path("#{path}/../../..") do
-		        print %x[rake selinux:redmine_git_hosting:install_scripts_helper]
+	desc "Call task in all redmine instances (argument is desired helper task)"
+	task :across_roots, [:funname, :pattern] do |t,args|
+	    @@across_roots_values = []
+	    redmine_roots.each do |path|
+	        if getwd == path
+		    result = %x[rake selinux:redmine_git_hosting:#{args[:funname].to_s}]
+		    puts result	
+		else		
+		    chdir path do
+		        result = %x[rake selinux:redmine_git_hosting:#{args[:funname].to_s}]
+			puts result	
 		    end
-		else
-		    Rake::Task["selinux:redmine_git_hosting:install_scripts_helper"].invoke
+		end
+		if args[:pattern] && retval = /#{args[:pattern]}/.match(result)
+		    @@across_roots_values << retval[1]
 		end
             end
+        end
+
+        desc "Generate and install redmine_git_hosting shell scripts."
+        task :install_scripts do
+            puts "[Generating and installing redmine_git_hosting shell scripts:"
+            Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
+            Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:install_scripts_helper,"Populating script dir: (.*)\n")
             puts "DONE.]"
 	end
 
@@ -130,25 +140,42 @@ namespace :selinux do
             GitHosting.web_user = web_user
 
 	    # Helper only executed in local environment	
-	    path = "#{Rails.root}/vendor/plugins/redmine_git_hosting"
-	    print "Clearing out #{path}/bin directory..."
-	    %x[rm -rf "#{path}/bin"]
+	    bin_path = GitHosting.get_bin_dir
+	    puts "Populating script dir: #{bin_path}"
+	    print "Clearing out script directory..."
+	    %x[rm -rf "#{bin_path}"]
 	    puts "Success!"
-	    print "Writing customized scripts to #{path}/bin directory..."
+	    print "Writing customized scripts to script directory..."
 	    GitHosting.update_git_exec
 	    puts "Success!"
+	    bin_path
         end
 
 	desc "Remove redmine_git_hosting shell scripts."
-	task :remove_scripts => [:environment] do
+	task :remove_scripts do
             puts "[Deleting redmine_git_hosting shell scripts:"
-            plugin_roots = redmine_roots("vendor/plugins/redmine_git_hosting")
-            plugin_roots.each do |path|
-        	sh "rm -rf #{path}/bin"
-        	puts "Success!"
-            end
+	    if @@across_roots_values.empty?
+	        puts "  [Finding script directories:"
+		Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
+	        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
+		puts "  DONE.]"
+	    end
+	    @@across_roots_values.each do |bin_path|
+	        print "Clearing out #{bin_path} directory..."
+	        %x[rm -rf "#{bin_path}"]
+	        puts "Success!"
+	    end
             puts "DONE.]"
 	end
+
+        desc "Helper function for removing redmine_git_hosting shell scripts."
+        task :remove_scripts_helper => [:environment] do 
+	    # Helper only executed in local environment	
+	    bin_path = GitHosting.get_bin_dir
+	    print "Clearing out #{bin_path} directory..."
+	    %x[rm -rf "#{bin_path}"]
+	    puts "Success!"
+        end
 
  	desc "Install selinux tags and policy for redmine_git_hosting."
 	task :install_policy => [:environment] do
@@ -172,31 +199,52 @@ namespace :selinux do
 	end
 
 	desc "Install file contexts for redmine_git_hosting plugin."
-	task :install_contexts => [:environment] do
-            plugin_roots = redmine_roots("vendor/plugins/redmine_git_hosting")
-            plugin_root_pattern = redmine_root_pattern("vendor/plugins/redmine_git_hosting")
+	task :install_contexts do
 	    puts "[Installing file context for redmine_git_hosting plugin:"
-            sh "semanage fcontext -a -t httpd_redmine_git_script_exec_t \"#{plugin_root_pattern}/bin(/.*)?\" | true"
+	    if @@across_roots_values.empty?
+	        puts "  [Finding script directories:"
+		Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
+	        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
+		puts "  DONE.]"
+	    end
 
-            plugin_roots.each do |path|
-                puts "Setting new context for plugin instance at #{path}."
-                sh "restorecon -R -p #{path}"
-            end
+            bin_list = @@across_roots_values.map {|x| x[-1,1]=="/"?x[0..-2]:x}  # Kill off last "/"
+      	    pattern = get_bin_pattern(bin_list)
+
+            sh "semanage fcontext -a -t httpd_redmine_git_script_exec_t \"#{pattern}(/.*)?\" | true" if pattern.class == String
+      	    bin_list.each do |next_dir|
+                sh "semanage fcontext -a -t httpd_redmine_git_script_exec_t \"#{next_dir}(/.*)?\" | true" if pattern.class != String
+        	sh "restorecon -R -p \"#{next_dir}\""
+      	    end
             puts "DONE.]"
 	end
 
 	desc "Remove file contexts for redmine_git_hosting plugin."
-	task :remove_contexts => [:environment] do
-            plugin_roots = redmine_roots("vendor/plugins/redmine_git_hosting")
-            plugin_root_pattern = redmine_root_pattern("vendor/plugins/redmine_git_hosting")
-	    puts "[Deleting file context for redmine_git_hosting plugin (ignoring errors)."
-	    sh "semanage fcontext -d \"#{plugin_root_pattern}/bin(/.*)?\" | true"
-            plugin_roots.each do |path|
-                puts "Setting new context for plugin instance at #{path}."
-                sh "restorecon -R -p #{path}"
-            end
+	task :remove_contexts do
+	    puts "[Removing file context for redmine_git_hosting plugin:"
+	    if @@across_roots_values.empty?
+	        puts "  [Finding script directories:"
+		Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
+	        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
+		puts "  DONE.]"
+	    end
+
+            bin_list = @@across_roots_values.map {|x| x[-1,1]=="/"?x[0..-2]:x}  # Kill off last "/"
+      	    pattern = get_bin_pattern(bin_list)
+
+            sh "semanage fcontext -d \"#{pattern}(/.*)?\" | true" if pattern.class == String
+            bin_list.each do |next_dir|
+                sh "semanage fcontext -d \"#{next_dir}(/.*)?\" | true" if pattern.class != String
+        	sh "restorecon -R -p \"#{next_dir}\""
+      	    end
             puts "DONE.]"
-	end	    
+	end
+
+        desc "Helper function to retrieve binary directory for redmine_git_hosting plugin"
+    	task :get_script_directory => [:environment] do
+            puts "    Script directory: #{GitHosting.get_bin_dir}"
+        end
+
     end
 end
 
@@ -275,5 +323,25 @@ def redmine_roots(*optionpath)
         @@redmine_roots[pathend]
     else
         @@redmine_roots["/"]
+    end
+end
+
+# Take input list of directories and see if all of them match the root pattern.
+# If they do, then return a single pattern, otherwise, return the list...  
+#
+def get_bin_pattern(bin_list)
+    # Check to see if root pattern matches... Must match them all -- so 
+    # Use first pattern as prototype.
+    return [] if bin_list.nil?
+    if pattern = (/#{@@redmine_root_pattern}\/(.*)/.match(bin_list.first))
+    	trailer = pattern[1]
+    	bin_list.drop(1).each do |next_pattern|
+            if !(/#{@@redmine_root_pattern}\/#{trailer}/.match(next_pattern))
+                return bin_list
+            end
+        end
+        return "#{@@redmine_root_pattern}\/#{trailer}"
+    else
+        return bin_list
     end
 end

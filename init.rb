@@ -27,13 +27,18 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'allProjectsUseGit' => 'false',
+    		'gitDaemonDefault' => '1',   # Default is Daemon enabled
+		'gitHttpDefault' => '1',     # Default is HTTP_ONLY
+   		'gitNotifyCIADefault' => '0', # Default is CIA Notification disabled
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitCacheMaxTime' => '-1',
 		'gitCacheMaxElements' => '100',
 		'gitCacheMaxSize' => '16',
 		'gitHooksDebug' => 'false',
-		'gitHooksAreAsynchronous' => 'true'
+		'gitHooksAreAsynchronous' => 'true',
+    		'gitTempDataDir' => '/tmp/redmine_git_hosting/',
+		'gitScriptDir' => ''
 		},
 		:partial => 'redmine_git_hosting'
 		project_module :repository do

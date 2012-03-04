@@ -15,6 +15,9 @@ module GitHosting
 	REDMINE_SUBDIR = ""		       # In case settings not migrated (normally from settings)
 	REDMINE_HIERARCHICAL = "true"	       # In case settings not migrated (normally from settings)
   	HTTP_SERVER_SUBDIR = ""		       # In case settings not migrated (normally from settings)
+	TEMP_DATA_DIR = "/tmp/redmine_git_hosting"  # In case settings not migrated (normally from settings)
+	SCRIPT_DIR = ""		       	       # In case settings not migrated (normally from settings)
+	SCRIPT_PARENT = "bin"
 	
 	# Used to register errors when pulling and pushing the conf file
   	class GitHostingException < StandardError
@@ -183,8 +186,14 @@ module GitHosting
 		return File.join(repository_base, repo_name) + ".git"
 	end
 
+        @@git_hosting_tmp_dir = nil
+        @@previous_git_tmp_dir = nil
 	def self.get_tmp_dir
-                @@git_hosting_tmp_dir ||= File.join(Dir.tmpdir, "redmine_git_hosting", "#{git_user}")
+        	tmp_dir = (Setting.plugin_redmine_git_hosting['gitTempDataDir'] || TEMP_DATA_DIR)
+        	if (@@previous_git_tmp_dir != tmp_dir)
+			@@previous_git_tmp_dir = tmp_dir
+                	@@git_hosting_tmp_dir = File.join(tmp_dir,git_user) + "/"
+		end
 		if !File.directory?(@@git_hosting_tmp_dir)
 			%x[mkdir -p "#{@@git_hosting_tmp_dir}"]
 			%x[chmod 700 "#{@@git_hosting_tmp_dir}"]
@@ -192,21 +201,36 @@ module GitHosting
 		end
 		return @@git_hosting_tmp_dir
 	end
+
+        @@git_hosting_bin_dir = nil
+        @@previous_git_script_dir = nil
 	def self.get_bin_dir
-        	@@git_hosting_bin_dir ||= 
-                	Rails.root.join("vendor/plugins/redmine_git_hosting/bin")
-		if !File.directory?(@@git_hosting_bin_dir)
-                  	logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
-			%x[mkdir -p "#{@@git_hosting_bin_dir}"]
-			%x[chmod 750 "#{@@git_hosting_bin_dir}"]
-			%x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
-		end
-                if !File.directory?(@@git_hosting_bin_dir)
-                	logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+        	script_dir = Setting.plugin_redmine_git_hosting['gitScriptDir'] || SCRIPT_DIR
+        	if @@previous_git_script_dir != script_dir
+                	@@previous_git_script_dir = script_dir
+                	@@git_bin_dir_writeable = nil
+
+                	# Directory for binaries includes 'SCRIPT_PARENT' at the end.  
+        		# Further, absolute path adds additional 'git_user' component for multi-gitolite installations.
+                	if script_dir[0,1] == "/"
+        			@@git_hosting_bin_dir = File.join(script_dir,git_user,SCRIPT_PARENT) + "/"
+                        else
+                        	@@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting",script_dir,SCRIPT_PARENT).to_s+"/"
+                        end
+                end
+        	if !File.directory?(@@git_hosting_bin_dir)
+                	logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
+                  	%x[mkdir -p "#{@@git_hosting_bin_dir}"]
+                  	%x[chmod 750 "#{@@git_hosting_bin_dir}"]
+                  	%x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
+
+                	if !File.directory?(@@git_hosting_bin_dir)
+                        	logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+                        end
                 end
 		return @@git_hosting_bin_dir
 	end
-
+        	
 	@@git_bin_dir_writeable = nil
         def self.bin_dir_writeable?(*option)
         	@@git_bin_dir_writeable = nil if option.length > 0 && option[0] == :reset
@@ -227,7 +251,7 @@ module GitHosting
         	end
 		@@git_bin_dir_writeable
         end
-
+        
 	def self.git_exec_path
 		return File.join(get_bin_dir, "run_git_as_git_user")
 	end

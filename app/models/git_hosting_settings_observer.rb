@@ -20,12 +20,37 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                 	valuehash = object.value
                 	if !GitHosting.bin_dir_writeable?
                         	# If bin directory not alterable, don't allow changes to
-          			# Git Username, or Gitolite public or private keys
+          			# Script directory, Git Username, or Gitolite public or private keys
+                        	valuehash['gitScriptDir'] = @@old_valuehash['gitScriptDir']
 	                	valuehash['gitUser'] = @@old_valuehash['gitUser']
                   		valuehash['gitoliteIdentityFile'] = @@old_valuehash['gitoliteIdentityFile']
                   		valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
+                        elsif valuehash['gitScriptDir']
+                        	# Script directory either absolute or relative to redmine root
+                        	stripped = valuehash['gitScriptDir'].lstrip.rstrip
+                        	normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
+                        	if (normalizedFile == "/")
+                                	# Assume that we are relative bin directory ("/" and "" => "")
+                                	valuehash['gitScriptDir'] = ""
+                                elsif (stripped[0,1] != "/")
+                                	valuehash['gitScriptDir'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
+                                else
+                                	valuehash['gitScriptDir'] = normalizedFile + "/"         # Add trailing '/'
+                                end
                 	end
-                  
+                  	
+                  	# Temp directory must be absolute and not-empty
+                  	if valuehash['gitTempDataDir']
+                        	stripped = valuehash['gitTempDataDir'].lstrip.rstrip
+                        	normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
+                        	if (normalizedFile == "/" || stripped[0,1] != "/")
+                                	# Don't allow either root-level (absolute) or relative
+                                	valuehash['gitTempDataDir'] = "/tmp/redmine_git_hosting/"
+                                else
+                                	valuehash['gitTempDataDir'] = normalizedFile + "/"         # Add trailing '/'
+                                end
+                        end
+
                   	# Server should not include any path components.  Also, ports should be numeric.
                   	if valuehash['gitServer']
                         	normalizedServer = valuehash['gitServer'].lstrip.rstrip.split('/').first

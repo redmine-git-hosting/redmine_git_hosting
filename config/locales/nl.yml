@@ -21,6 +21,11 @@
   label_storage: Repo Storage
   label_ssh_access: SSH Access
   label_http_access: HTTP Access
+  label_tmp_data_dir: Temporary Dir for Locks and Data (Absolute)
+  label_script_dir: Scripts (Absolute/Relative to Redmine Root)
+  label_default_git_daemon: Default Git Daemon Mode for New Repos
+  label_default_smart_http: Default Smart HTTP Mode for New Repos
+  label_default_notify_cia: Default Notify CIA Mode for New Repos
 
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP

@@ -18,8 +18,6 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration
                 	Setting.plugin_redmine_git_hosting = valuehash
                 end
         rescue => e
-          say "Failure: #{e.message}"
-          say 'Trace: #{e.backtrace.join("\n")}'
         	# ignore problems if plugin settings don't exist yet
         end
   end
@@ -44,8 +42,6 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration
                 end
         rescue => e
         	# ignore problems if table doesn't exist yet....
-          	say "Failure: #{e.message}"
-          	say 'Trace: #{e.backtrace.join("\n")}'
         end
   end
 end

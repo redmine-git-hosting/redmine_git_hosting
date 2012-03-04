@@ -14,8 +14,8 @@ should be compatible with the following versions:
 * **Redmine:** This plugin should work with Redmine branches 1.1-Stable through 1.3-Stable (including sub-versions).  It *does not* currently work with
 the Redmine trunk, since the Redmine developers are implementing multiple repos/project, which will require some significant rewriting of the plugin.
 
-* **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 2.5.x.  Some problems have been reported with newer versions of ChiliProject.
-These incompatibilities will get fixed when possible. 
+* **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.0.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x 
+releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible. 
 
 ## Configuration Strategy
 
@@ -108,18 +108,28 @@ root directory:
 
 
 **(6)** It is best to set several plugin variables BEFORE you run the db:migrate\_plugins task in step 7.  In particular it is important 
-that the *httpServer*,  *gitServer*, *gitUser*, *gitoliteIdentityFile* and *gitoliteIdentityPublicKeyFile*
+that the *gitScriptDir*, *httpServer*,  *gitServer*, *gitUser*, *gitoliteIdentityFile* and *gitoliteIdentityPublicKeyFile*
 variables are set correctly.  Others that should be set include *gitRepositoryBasePath*, *gitRedmineSubdir*, and *gitRepositoryHierarchy*; however, 
 the default values for these variables should be sufficient for most installations.
 
 To adjust these variables, open an editor and edit [redmine_rails_root]/vendor/plugins/redmine_git_hosting/init.rb file. 
-Starting on line 22, you will see the settings definitions you should edit.
+Starting on line 17, you will see the settings definitions you should edit.
+
+The *gitSciptDir* variable indicates which directory will hold customized scripts.  When relative (or blank -- the default), 
+this variable indicates a directory relative to the root of the plugin.  The default value of ' ' (empty), means that scripts will be written to 
+RAILS_ROOT/vendor/plugins/redmine_git_hosting/bin.  An absolute path can be utilized to place scripts elsewhere.  The default 
+placement of the scripts directory is particularly good for a selinux configuration (see later), since files can be prebuilt, tagged in the 
+plugin source directory, and left alone. The behavior of prior versions of the plugin can be recovered by setting *gitScriptDir* to the same 
+directory as *gitTemporaryDir* (i.e. '/tmp/redmine_git_hosting' by default).  Note that the script directory must be either writable by the web user
+or you must build scripts manually as described in step (8) below. Further, the script directory must be executable (thereby preventing scripts from being 
+placed in the /tmp directory in some configurations).
 
 The *httpServer* variable should be set to the hostname which will be used to access your Redmine site, e.g. www.my-own-personal-git-host-server.com.  This variable 
-may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:8000.  Unlike earlier versions of this plugin, this variable should
-*not* include the path to your Redmine root.
+may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:8000.  Unlike earlier versions of this plugin, this 
+variable should *not* include the path to your Redmine root.
 
-The *gitServer* variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  Like *httpServer*, this variable may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:444.  In most configurations, the *gitServer* 
+The *gitServer* variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  Like *httpServer*, this variable may 
+optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:444.  In most configurations, the *gitServer* 
 variable will be identical to the *httpServer*, except when ports are involved.
 
 The *gitUser* is the user under which gitolite is installed.
@@ -142,7 +152,7 @@ These variables can be modified at a later time in the Administration => Plugins
 that the database migration from your existing repositories goes smoothly it is best to modify these variables now.
 
 As an example of the significance of the previous three variables, suppose that project-3 is a child of project-2 which is a child of project-1.
-Assume *gitRepositoryBasePath* == "repository/" and *gitRedmineSubdir* == "projects".  When *gitRepositoryHierachy* is 'true', project-3.git will be stored in 
+Assume *gitRepositoryBasePath* == "repository/" and *gitRedmineSubdir* == "projects".  When *gitRepositoryHierarchy* is 'true', project-3.git will be stored in 
 repository/projects/project-1/project-2/project-3.git, which will further be reflected in the ssh access URL of repository/projects/project-1/project-2/project-3.git.
 In contrast, when *gitRepositoryHierarchy* is 'false', project-3.git will be stored directly under repository/projects -- regardless of the number and identity of
 any parents that it might have.  Note that the top of the settings page (Administration => Plugins => Redmine Git Hosting Plugin configuration page) provides 
@@ -155,22 +165,35 @@ rails environment you have configured (e.g. production, development, testing).  
 
 At this point, if you wish to utilize selinux to protect your installation, you should follow the instructions given in the "Selinux" section, below.
 
-**(8)** Unless you want to access your repositories exclusively via Smart HTTP users will need to set a 
+**(8)** If you wish to pre-build the scripts, you can execute:
+
+    RAILS_ENV=production rake redmine_git_hosting:install_scripts
+
+You might consider doing this if you wish to keep scripts in the default directory location (i.e. *gitScriptDir* = ' ' => ./bin directory in the plugin), but do not want to 
+make this directory write-able to the web server.
+
+**(9)** Unless you want to access your repositories exclusively via Smart HTTP users will need to set a 
 public key to connect via SSH.  To do this, open a browser, login to ChiliProject/Redmine and follow the "My Account" Link
 in the upper right-hand corner of the page.  The right-hand column contains controls for adding your public key(s).  
 
 Keys should be unique, that is, the keys you set in ChiliProject / Redmine should not already exist in the gitolite repo.  In particular,
 do not re-use the key you set as the gitolite admin key.
 
-**(9)** The plugin is now configured, but you may now want to set some additional settings on the 
+**(10)** The plugin is now configured, but you may now want to set some additional settings on the 
 Administration => Plugins => Redmine Git Hosting Plugin page.  
 
-The *gitLockWaitTime* represents the amount of time that the plugin will wait in attempting to acquire its internal synchronization lock before giving up.  
+The *Lock Wait Time* represents the amount of time that the plugin will wait in attempting to acquire its internal synchronization lock before giving up.  
 You probably will not need to change this value. 
+
+The *Temporary Directory* parameter points at a temporary directory for locks and gitolite administrative configurations. For a system
+in which multiple redmine sites point at the same gitolite repository (i.e. share a single git user), it is very important that all of said 
+sites share the same temporary directory (so that locking works properly). You should probably just leave this parameter with its default value.
 
 *Automatically Initialize Git Repositories For New Projects* can be enabled to automatically create a new git repository every time
 you create a new project.  You won't have to create the project, and then create the repository -- this will be done all it one step.  However, if
 you have both git and svn (or hg, or cvs etc.) repositories, this may cause problems so it is disabled by default.
+
+The *Default Git Daemon Mode*, *Default Smart HTTP Mode*, and *Default Notify CIA Mode* settings denote the default settings for these parameters on new repositories.
 
 *Delete Git Repository When Project Is Deleted* can be enabled to let this plugin control repository deletion as well as repository creation.  By default, 
 this feature is disabled and when a repository is deleted in ChiliProject / Redmine, it is not deleted in gitolite.  This is a safety feature to prevent 
@@ -183,9 +206,9 @@ e.g. '/'.  Deleted repositories are kept here for up to *gitRecycleExpireTime* h
 
 *Show Checkout URLs* can be disabled to hide the git URL bar in the repository tab.  It is enabled by default.
 
-See below in the "Caching" section of this readme for more information on caching and how the caching variables should be configured.
+See below in the "Caching" section of this README for more information on caching and how the caching variables should be configured.
 
-## Resychronization of gitolite configuration 
+## Resynchronization of gitolite configuration 
 
 Whenever a Redmine `fetch_changesets()` operation is executed (i.e. `http://REDMINE_ROOT/sys/fetch_changesets?key=xxx`), this plugin will check the
 gitolite keydir and configuration file for consistency.  It will correct any errors that it finds.  Further, regular execution of a fetch_changesets operation
@@ -196,11 +219,11 @@ Two rake tasks can additionally be used for resynchronization (although these ar
 
 **(1)** To fixup the gitolite configuration file, fix errors, and delete expired files in the recycle_bin, execute:
 
-    RAILS_ENV=production rake gitolite:update_repositories
+    RAILS_ENV=production rake redmine_git_hosting:update_repositories
 
 **(2)** To perform all the above operations while at the same time fetching changesets for all repositories, execute:
 
-    RAILS_ENV=production rake gitolite:fetch_changes
+    RAILS_ENV=production rake redmine_git_hosting:fetch_changesets
 
 **Note that it is very important that these commands be run as *www-user* (or whatever your web server user happens to be), lest you get permission problems later.** 
 (The same is true of any `fetch_changesets()` operation initiated without using the web server, i.e. through the command line or from the cron daemon).
@@ -243,9 +266,47 @@ Note that this may be an issue for configurations other than Apache + Passenger,
 Thanks to user Tronix117 for helping to track down this issue and provide a solution for Apache + Passenger.
 
 
+## Placement of Executable Scripts
+
+This plugin constructs custom shell scripts in the *gitScriptDir*/bin directory.  The simplest configuration of the plugin
+lets the scripts be constructed on the fly, during normal operation.  However, there are at least two cases
+in which this default behavior is insufficient:
+
+**(1)** If you want the scripts to be placed in the default location:
+
+    RAILS_ROOT/vendor/plugins/redmine_git_hosting/bin
+
+(which is accomplished by setting *gitScriptDir* == ' '), but do not want to allow the web user to write this location. 
+
+**(2)** If you are using selinux, then the script directory will be labeled in such a way that the web user will not be
+able to write the script directory.
+
+In either of these situations, you will need to build the scripts (probably as root or the web user) before starting the web server.  You can build the scripts 
+using:
+
+    rake redmine_git_hosting:install_scripts RAILS_ENV=xxx
+
+Alternatively, you can follow the instructions, below, for a Selinux Configuration (which installs scripts as part of a more complex process).
+
+Note that when the script directory is not write-able by the web user, you also cannot alter four of the settings on the settings
+page (since their alteration would require the regeneration of scripts).  These values are: *gitScriptDir*, *gitUser*, *gitoliteIdentifyFile*,
+and *gitoliteIdentityPublicKeyFile*. The simplest way to change these values is to remove the old scripts, alter the parameters, then reinstall scripts.  
+Scripts can be removed with:
+
+    rake redmine_git_hosting:remove_scripts RAILS_ENV=xxx
+
+An alternate option is to alter these four settings in the init.rb file, then execute:
+
+    rake redmine_git_hosting:restore_defaults RAILS_ENV=xxx
+
+This command will install the new values in the database.  You should follow up by reinstalling the scripts (since their values depend on the altered
+parameter(s)).  If you are moving the location of the *gitScriptDir*, you might want to remove the old scripts before executing 'restore_defaults'
+as described above.
+
+
 ## "Smart" HTTP Functionality
 
-Smart HTTP is an efficient way of communicating with the git server over http/https availalbe in git client version 1.6.6 and newer.
+Smart HTTP is an efficient way of communicating with the git server over http/https available in git client version 1.6.6 and newer.
 A more detailed description of what Smart HTTP is all about can be found at: http://progit.org/2010/03/04/smart-http.html
 
 This plugin allows you to automatically enable Smart HTTP access to your repositories.  It is highly recommended that you
@@ -259,7 +320,11 @@ Once Smart HTTP is enabled no further configuration is necessary.  You will be a
 the URL bar in the Project/Repository tab.
 
 Also note that you will need to ensure that Basic Auth headers are being passed properly to Rails for this to work properly.  In Apache with mod_fcgid this may
-mean you need to add "Passheader Authorization" into the virtual host configuration file.
+mean you need to add "Passheader Authorization" into the virtual host configuration file.  
+
+Further, if you are proxying requests through a third-party (such as 'ngnix'), you need to make sure that you pass the protocol information onto Redmine so that it can 
+distinguish between HTTP and HTTPS.  One way to do this is to use the X-Forwarded-Proto header (which should be set to 'https' when https is in use from the client 
+to the proxy).  On ngnix, you can do this with an "include proxy.include" statement in your configuration.
 
 
 ## Caching Options
@@ -305,7 +370,7 @@ repository settings tab.
 
 Instead of installing/configuring by hand, one option for quickly deploying a fully-functional system for hosting
 git repositories on an Ubuntu VPS is the YourChili bash library. (http://github.com/ericpaulbishop/yourchili)
-This library allows you to quickly deploy ChiliProject, with this plugin to an un-initialized VPS node with Ubuntu
+This library allows you to quickly deploy ChiliProject, with this plugin to an uninitialized VPS node with Ubuntu
 10.10 (from e.g. Linode) using nginx and Passenger.  Just run the init\_nginx\_stack.sh script followed by the
 chili\_test.sh script, modifying the variables in those scripts as desired.  This library is still under development,
 so these instructions may need to be updated in the near future.
@@ -330,20 +395,29 @@ redmine_git.pp), then install a complete context for Redmine as follows:
 with "httpd_redmine_git_script_exec_t", which has been crafted to allow the sudo behavior required by these
 binaries.
 
-Note that this rake file has additional options.  For instance, you can specify Redmine roots with regular 
-expressions (not globbed expessions!) as follows (notice the use of double quotes):
+Note that this rake file has additional options.  For instance, you can specify multiple Redmine roots with regular 
+expressions (not globbed expressions!) as follows (notice the use of double quotes):
 
     rake selinux:install RAILS_ENV=production ROOT_PATTERN="/source/.*/redmine"
 
-These additional options are documented in the selinux.rake file.
+These additional options are documented in the selinux.rake file.  Under normal operation, you will get one selinux complaint about /bin/touch in 
+your log each time that you visit the plugin settings page.
 
-Once this plugin is placed under selinux control, three of the redmine_git_hosting settings can 
-no longer be modified from the settings page.  They are: 'gitUser', 'gitoliteIdentityFile', and 
-'gitoliteIdentityPublicKeyFile'.  The plugin settings page will make this clear.  The simplest way to 
-modify these options is to temporarily place your system into permissive mode, refresh the setting page, 
-change options, then place your system back into enforcing mode.  Alternatively, you can alter the init.rb 
-file and reinstall the plugin.  Under normal operation, you will get one selinux complaint about /bin/touch 
-in your log each time that you visit the plugin settings page.
+Once this plugin is placed under selinux control, four of the redmine_git_hosting settings can 
+not be modified from the settings page.  They are: 'gitScriptDir', 'gitUser', 'gitoliteIdentityFile', and 
+'gitoliteIdentityPublicKeyFile'.  The plugin settings page will make this clear.  One way to 
+modify these options is to remove the old scripts, refresh the setting page, change options, then reinstall scripts.  Specifically, you can
+remove scripts with:
+
+    rake selinux:redmine_git_hosting:remove_scripts RAILS_ENV=production
+
+Scripts and selinux policy/tags can be reinstalled with:
+
+    rake selinux:redmine_git_hosting:install RAILS_ENV=production
+
+Alternately, you can change the frozen parameters by altering them in the init.rb file and resetting the options to the defaults via:
+
+    rake redmine_git_hosting:restore_defaults RAILS_ENV=xxx
 
 One final comment: The selinux policy exists in binary form as selinux/redmine_git.pp. Should this policy
 need to be rebuilt, an additional rake task exists which will build the policy from selinux/redmine_git.te:

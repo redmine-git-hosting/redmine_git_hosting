@@ -20,6 +20,10 @@ module GitHosting
 					if new_repo.is_a?(Repository::Git)
 						if new_repo.extra.nil?
 							e = GitRepositoryExtra.new()
+                                                	e.git_daemon = Setting.plugin_redmine_git_hosting['gitDaemonDefault']
+                                                	e.git_http = Setting.plugin_redmine_git_hosting['gitHttpDefault']
+                                                	e.notify_cia = Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']
+                                                	e.save
 							new_repo.extra = e
 						end
 					end

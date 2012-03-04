@@ -10,6 +10,16 @@
 		<br />
 	</p>
 	<p>
+		<label><%= l(:label_tmp_data_dir) %></label>
+		<%= text_field_tag("settings[gitTempDataDir]", @settings['gitTempDataDir'], :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
+		<%= text_field_tag("settings[gitScriptDir]", reldir_add_dotslash(@settings['gitScriptDir']), :size => 60) %>
+		<br />
+	</p>
+	<p>
 		<label><%= l(:label_git_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
 		<%= text_field_tag("settings[gitUser]", @settings['gitUser'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
 		<br />
@@ -20,12 +30,12 @@
 		<%= text_field_tag("settings[gitoliteIdentityFile]", @settings['gitoliteIdentityFile'], :size => 60) %>
 		<br />
 	</p>
-
 	<p>
 		<label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
 		<%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", @settings['gitoliteIdentityPublicKeyFile'], :size => 60) %>
 		<br />
 	</p>
+
 	<h3><%= l(:label_gitolite_repository_settings)%></h3>
 	<p>
 		<label><%= l(:label_git_repository_base_path)%></label>
@@ -45,6 +55,21 @@
 	<p>
 		<label><%= l(:label_all_git)%></label>
 		<%= select_tag("settings[allProjectsUseGit]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['allProjectsUseGit'])) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_default_git_daemon) %></label>
+		<%= select_tag("settings[gitDaemonDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], @settings['gitDaemonDefault']))%>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_default_smart_http)%></label>
+		<%= select_tag("settings[gitHttpDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], @settings['gitHttpDefault'])) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_default_notify_cia) %></label>
+		<%= select_tag("settings[gitNotifyCIADefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], @settings['gitNotifyCIADefault']))%>
 		<br />
 	</p>
 	<p>
