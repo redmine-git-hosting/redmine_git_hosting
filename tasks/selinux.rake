@@ -148,7 +148,16 @@ namespace :selinux do
 	    print "Writing customized scripts to script directory..."
 	    GitHosting.update_git_exec
 	    puts "Success!"
-	    bin_path
+	    if (ENV['READ_ONLY']||"true").downcase != "false"
+	        print "Making scripts READ_ONLY..."
+	        %x[chmod 550 -R "#{bin_path}"]
+	        puts "Success!"
+	    else
+	    	print "Making scripts Re-WRITEABLE..."
+	        %x[chmod 750 "#{bin_path}"]
+	        %x[chmod 550 "#{bin_path}*"]
+	        puts "Success!"
+	    end
         end
 
 	desc "Remove redmine_git_hosting shell scripts."

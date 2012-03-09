@@ -10,7 +10,7 @@
   label_git_recycle_base_path: Git Recycle Bin Base Path <br/>(Relative to git user home)
   label_git_recycle_expire_time: Expire Time for Repositories in Recycle Bin <br/>(in hours)
   label_git_lock_wait_time: Synchronization Lock Wait Time <br/>(in seconds)
-  label_cannot_change_selinux: Cannot be changed under selinux
+  label_cannot_change_selinux: Cannot Change in Current Configuration
   label_http_server_subdir: Subdirectory for HTTP access<br/>(Relative to Redmine Root)
   label_git_redmine_subdir: Subdirectory for Redmine-managed Repos<br/>(Relative to Git Repository Base Path)
   label_git_repository_hierarchy: Directory and URL Structure for<br/>Redmine-managed Repositories

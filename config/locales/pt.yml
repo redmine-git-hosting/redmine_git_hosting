@@ -10,7 +10,7 @@ pt:
   label_git_recycle_base_path: 'Directório Recycle Bin base (Relativo à "home" do utilizador git)'
   label_git_recycle_expire_time: 'expirar o tempo para Recycle Bin (em horas)'
   label_git_lock_wait_time: 'Sincronização de bloqueio o tempo de espera (em segundos)'
-  label_cannot_change_selinux: 'não pode ser mudada (selinux)'
+  label_cannot_change_selinux: 'Não pode realmente mudar'
   label_git_redmine_subdir: 'Subdiretório para Redmine de gestão Repos<br/>(Relativo à Git base)'
   label_http_server_subdir: 'Subdiretório para o acesso via HTTP<br/>(Relativo à Redmine diretório raiz)'
   label_git_repository_hierarchy: 'Estrutura de diretórios e URL para o<br/>Redmine de gestão repositórios'

@@ -16,9 +16,14 @@
 #
 # rake redmine_git_hosting:fetch_changsets RAILS_ENV=xxx
 #
-# 4) Install custom scripts to the script directory
+# 4) Install custom scripts to the script directory.  The optional argument 
+#    'READ_ONLY=true' requests that the resulting scripts and script directory
+#    be made read-only to the web server.  The optional argument WEB_USER=xxx
+#    states that scripts should be owned by user "xxx".  If omitted, the
+#    script attempts to figure out the web user by using "ps" and looking 
+#    for httpd.
 #
-# rake redmine_git_hosting:install_scripts RAILS_ENV=xxx
+# rake redmine_git_hosting:install_scripts [READ_ONLY=true] [WEB_USER=xxx] RAILS_ENV=yyy
 #
 # 5) Remove the custom scripts directory (and the enclosed scripts)
 #
@@ -67,7 +72,10 @@ namespace :redmine_git_hosting do
     end
 
     desc "Install redmine_git_hosting scripts"
-    task :install_scripts do
+    task :install_scripts, [:read_only] => [:environment] do |t,args|
+        if !ENV["READ_ONLY"]
+	    ENV["READ_ONLY"] = "false"
+	end
     	Rake::Task["selinux:redmine_git_hosting:install_scripts"].invoke
     end	
 

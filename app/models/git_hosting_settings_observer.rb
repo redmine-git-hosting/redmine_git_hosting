@@ -25,7 +25,10 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 	                	valuehash['gitUser'] = @@old_valuehash['gitUser']
                   		valuehash['gitoliteIdentityFile'] = @@old_valuehash['gitoliteIdentityFile']
                   		valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
-                        elsif valuehash['gitScriptDir']
+                        elsif valuehash['gitScriptDir'] && (valuehash['gitScriptDir'] != @@old_valuehash['gitScriptDir'])
+				# Remove old bin directory and scripts, since about to change directory
+                        	%x[ rm -rf '#{ GitHosting.get_bin_dir }' ] 
+
                         	# Script directory either absolute or relative to redmine root
                         	stripped = valuehash['gitScriptDir'].lstrip.rstrip
                         	normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
@@ -37,10 +40,18 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                                 else
                                 	valuehash['gitScriptDir'] = normalizedFile + "/"         # Add trailing '/'
                                 end
-                	end
-                  	
+	                elsif valuehash['gitUser'] != @@old_valuehash['gitUser'] ||
+                              valuehash['gitoliteIdentityFile'] != @@old_valuehash['gitoliteIdentityFile'] ||
+                              valuehash['gitoliteIdentityPublicKeyFile'] != @@old_valuehash['gitoliteIdentityPublicKeyFile']
+				# Remove old scripts, since about to change content (leave directory alone)
+                        	%x[ rm -f '#{ GitHosting.get_bin_dir }*' ] 
+                        end
+
                   	# Temp directory must be absolute and not-empty
-                  	if valuehash['gitTempDataDir']
+                  	if valuehash['gitTempDataDir'] && (valuehash['gitTempDataDir'] != @@old_valuehash['gitTempDataDir'])
+                          	# Remove old tmp directory, since about to change
+                        	%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
+
                         	stripped = valuehash['gitTempDataDir'].lstrip.rstrip
                         	normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
                         	if (normalizedFile == "/" || stripped[0,1] != "/")
@@ -148,9 +159,12 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
                         	Setting.check_cache
                         end
 
-                	if GitHosting.bin_dir_writeable?
-				%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
-				%x[ rm -rf '#{ GitHosting.get_bin_dir }' ] 
+			if @@old_valuehash['gitScriptDir'] != valuehash['gitScriptDir'] ||
+                           @@old_valuehash['gitUser'] != valuehash['gitUser'] ||
+                           @@old_valuehash['gitoliteIdentityFile'] != valuehash['gitoliteIdentityFile'] ||
+                           @@old_valuehash['gitoliteIdentityPublicKeyFile'] != valuehash['gitoliteIdentityPublicKeyFile']
+                        	# Need to update scripts
+                        	GitHosting.update_git_exec
                         end
 
 			if @@old_valuehash['gitRepositoryBasePath'] != valuehash['gitRepositoryBasePath'] ||
