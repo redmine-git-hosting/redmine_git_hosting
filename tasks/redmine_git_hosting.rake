@@ -32,6 +32,10 @@
 namespace :redmine_git_hosting do
     desc "Reload defaults from init.rb into the redmine_git_hosting settings."
     task :restore_defaults => [:environment] do
+        if defined?(Rails) && Rails.logger
+	    Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
+            Rails.logger.warn "\n\nReinitializing settings from init.rb (via rake at #{my_date})"
+	end
 	puts "[Reloading defaults from init.rb:"
 	default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
 	if default_hash.nil? || default_hash.empty?
@@ -63,16 +67,28 @@ namespace :redmine_git_hosting do
 
     desc "Update/repair gitolite configuration"
     task :update_repositories => [:environment] do
+	puts "[Performing manual update_repositories operation..."
+        if defined?(Rails) && Rails.logger
+	    Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
+            Rails.logger.warn "\n\nPerforming manual UpdateRepositories from command line (via rake at #{my_date})"
+	end
 	GitHosting.update_repositories(:resync_all => true)
+	puts "DONE.]"
     end
 
     desc "Fetch commits from gitolite repositories/update gitolite configuration"
     task :fetch_changesets => [:environment] do
+	puts "[Performing manual fetch_changesets operation..."
+        if defined?(Rails) && Rails.logger
+	    Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
+	    Rails.logger.warn "\n\nPerforming manual FetchChangesets from command line (via rake at #{my_date})"
+	end
     	Repository.fetch_changesets
+	puts "DONE.]"
     end
 
     desc "Install redmine_git_hosting scripts"
-    task :install_scripts, [:read_only] => [:environment] do |t,args|
+    task :install_scripts do |t,args|
         if !ENV["READ_ONLY"]
 	    ENV["READ_ONLY"] = "false"
 	end
@@ -83,4 +99,9 @@ namespace :redmine_git_hosting do
     task :remove_scripts do
     	Rake::Task["selinux:redmine_git_hosting:remove_scripts"].invoke
     end	
+end
+
+# Produce date string of form used by redmine logs
+def my_date
+    Time.now.strftime("%Y-%m-%d %H:%M:%S")
 end

@@ -135,6 +135,10 @@ namespace :selinux do
 
         desc "Helper function for generating and installing redmine_git_hosting shell scripts."
         task :install_scripts_helper => [:environment] do 
+            if defined?(Rails) && Rails.logger
+	        Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
+                Rails.logger.warn "\n\nInstalling scripts from command line (via rake at #{my_date})"
+	    end
             web_program = ENV['HTTPD'] || 'httpd'
             web_user = ENV['WEB_USER'] || %x[ps aux | grep #{web_program} | sed "s/ .*$//" | sort -u | grep -v `whoami`].split("\n")[0]
             GitHosting.web_user = web_user
@@ -154,8 +158,7 @@ namespace :selinux do
 	        puts "Success!"
 	    else
 	    	print "Making scripts Re-WRITEABLE..."
-	        %x[chmod 750 "#{bin_path}"]
-	        %x[chmod 550 "#{bin_path}*"]
+	        %x[chmod 750 -R "#{bin_path}"]
 	        puts "Success!"
 	    end
         end
@@ -353,4 +356,9 @@ def get_bin_pattern(bin_list)
     else
         return bin_list
     end
+end
+
+# Produce date string of form used by redmine logs
+def my_date
+    Time.now.strftime("%Y-%m-%d %H:%M:%S")
 end
