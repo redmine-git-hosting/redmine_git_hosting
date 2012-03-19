@@ -789,7 +789,7 @@ module GitHosting
 	
 			# Set post receive hooks for new projects (or check all repositories on :resync_all).
 			# We need to do this AFTER push, otherwise necessary repos may not be created yet.
-                 	GitAdapterHooks.setup_hooks_params(flags[:resync_all] ? git_projects : new_projects)
+                 	GitAdapterHooks.setup_hooks_params((flags[:resync_all]||flags[:resync_hooks]) ? git_projects : new_projects)
 
                 rescue GitHostingException
                 	logger.error "git_hosting: update_repositories() failed" 

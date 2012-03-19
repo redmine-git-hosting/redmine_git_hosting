@@ -52,6 +52,9 @@ Dispatcher.to_prepare :redmine_git_patches do
 
   require_dependency 'git_hosting'
 
+  # initialize association from project -> repository mirrors
+  Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
+
   require_dependency 'projects_controller'
   require 'git_hosting/patches/projects_controller_patch'
   ProjectsController.send(:include, GitHosting::Patches::ProjectsControllerPatch)
@@ -86,6 +89,9 @@ Dispatcher.to_prepare :redmine_git_patches do
   require 'git_hosting/patches/members_controller_patch'
   MembersController.send(:include, GitHosting::Patches::MembersControllerPatch)
 
+  # initialize association from user -> public keys
+  User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
+
   require_dependency 'users_controller'
   require 'git_hosting/patches/users_controller_patch'
   UsersController.send(:include, GitHosting::Patches::UsersControllerPatch)
@@ -110,16 +116,6 @@ class GitRepoUrlHook < Redmine::Hook::ViewListener
 	render_on :view_repositories_show_contextual, :partial => 'git_urls'
 end
 
-
-# initialize association from user -> public keys
-User.send(:has_many, :gitolite_public_keys, :dependent => :destroy)
-
-# initialize association from git repository -> extra
-Repository.send(:has_one, :extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy)
-Repository.send(:has_many, :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => GitHosting::Patches::RepositoryCiaFilters::FilterMethods)
-
-# initialize association from project -> repository mirrors
-Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
 
 # initialize observer
 config.after_initialize do
