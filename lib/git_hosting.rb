@@ -727,13 +727,15 @@ module GitHosting
 					write_user_keys.push key.identifier
 				end
 	
-				#git daemon
+				#git daemon support
 				if (proj.repository.extra.git_daemon == 1 || proj.repository.extra.git_daemon == nil )  && proj.is_public
-					read_user_keys.push "daemon"
+					read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
 				end
 	
 				# Remove previous redmine keys, then add new keys
               			# By doing things this way, we leave non-redmine keys alone
+                		# Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys 
+                		# (to be put back as above, when appropriate).
               			conf.delete_redmine_keys repo_name
 				conf.add_read_user repo_name, read_user_keys
 				conf.add_write_user repo_name, write_user_keys

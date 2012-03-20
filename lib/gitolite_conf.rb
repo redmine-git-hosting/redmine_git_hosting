@@ -1,6 +1,7 @@
 module GitHosting
 	class GitoliteConfig
         	DUMMY_REDMINE_KEY="redmine_dummy_key"
+        	GIT_DAEMON_KEY="daemon"
 
 		def initialize file_path
 			@path = file_path
@@ -52,11 +53,14 @@ module GitHosting
                 	repository(repo_name).rights.detect {|perm, users| users.detect {|key| is_redmine_key? key}} || (repo_has_no_keys? repo_name)
                 end
 
+                # Delete all of the redmine keys from a repository
+                # In addition, if there are any redmine keys, delete the GIT_DAEMON_KEY as well, 
+                # since we assume this under control of redmine server.
                 def delete_redmine_keys repo_name
-			return if !@repositories[repo_name]
+			return unless @repositories[repo_name] && is_redmine_repo?(repo_name)
                 
                 	repository(repo_name).rights.each do |perm, users|
-                		users.delete_if {|key| is_redmine_key? key}
+                		users.delete_if {|key| ((is_redmine_key? key) || (is_daemon_key? key))}
                         end
                 end
 		
@@ -66,6 +70,10 @@ module GitHosting
 
                 def is_redmine_key? keyname
                 	(GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY) ? true : false
+                end
+
+                def is_daemon_key? keyname
+                	(keyname == GIT_DAEMON_KEY) 
                 end
 
 		def changed?

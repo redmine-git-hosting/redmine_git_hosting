@@ -27,7 +27,8 @@ module GitHosting
 					if @project.repository.is_a?(Repository::Git)
 						if @project.repository.extra.git_daemon == 1 && (not @project.is_public )
 							@project.repository.extra.git_daemon = 0;
-							@project.repository.save
+							@project.repository.extra.save
+                                                	@project.repository.save # Trigger update_repositories
 						end
 					end
 				end
@@ -42,6 +43,9 @@ module GitHosting
 
                         	# Fix up repository
                         	git_repo_init
+
+                        	# Adjust daemon status
+                        	disable_git_daemon_if_not_public
 
                        		# Reenable updates to perform a single update
 				GitHostingObserver.set_update_active(true);

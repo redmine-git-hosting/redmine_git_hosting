@@ -49,20 +49,13 @@
 			<% if @repository && @repository.is_a?(Repository::Git) %>
 				<%
 					mirror_pubkey = GitHosting.mirror_push_public_key
-					extra_vals = { :git_daemon=>"1", :git_http=>"1", :notify_cia=>"0" }
-					extra_vals.each_key do |e|
-						begin
-							val = @repository.extra[e]
-							if !val.nil?
-								extra_vals[e] = val.to_s
-							end
-						rescue
-						end
-					end
+				   	extra_vals = {}
+					[:git_daemon,:git_http,:notify_cia].each {|x| extra_vals[x] = (@repository.extra[x] || 0).to_s }
+				        extra_vals[:git_daemon] = "0" unless @project.is_public
 				%>
 				<p>
 					<%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
-					<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]) %>
+					<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>extra_vals[:git_daemon]), :disabled => !@project.is_public %>
 				</p>
 				<p>
 					<%= label_tag  "extra[git_http]", l(:field_git_http) %>

@@ -161,7 +161,7 @@ any parents that it might have.  Note that the top of the settings page (Adminis
 information about how your chosen configuration affects the storage locations and URLs for accessing projects.
 
 **(7)** Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
-rails environment you have configured (e.g. production, development, testing).  For the production environment run:
+rails environment you have configured (e.g. production, development, testing).  For the production environment, run the following:
 
     rake db:migrate_plugins RAILS_ENV=production
 
@@ -172,10 +172,11 @@ the plugin from modifying the scripts directory, you will be unable to modify ce
 the "Executable Scripts" section, below). You have three options:
 
 * **Script Directory Writeable:** The simplest configuration is to allow the scripts directory to be written by the plugin.  Consider this the default 
-configuration.  In this case, scripts will be regenerated "on-the-fly" by the plugin when certain settings change.  For this option, execute the following task:
+configuration.  In this case, scripts will be regenerated "on-the-fly" by the plugin when certain settings change.  For this option, execute the following task 
+(assuming that Redmine is executing as *www-data*):
 
 <pre>
-rake redmine_git_hosting:install_scripts RAILS_ENV=production
+rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=www-data
 </pre>
 
 * **Script Directory Read-Only:** Alternatively, you can choose to make the scripts directory read-only.  You might choose this option if you wish to keep 
@@ -184,7 +185,7 @@ server.  Be forewarned that you will not be able to change some of the settings 
 server. 
 
 <pre>
-rake redmine_git_hosting:install_scripts RAILS_ENV=production READ_ONLY=true
+rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=www-data READ_ONLY=true 
 </pre>
 
 * **Selinux Configuration:** A final option is appropriate if you wish to utilize selinux to protect your installation.  Although more details are given in the "Selinux"
@@ -192,12 +193,12 @@ section, below, the simplest selinux configuration involves executing the follow
 settings unchangeable):
 
 <pre>
-rake selinux:install RAILS_ENV=production
+rake selinux:install RAILS_ENV=production WEB_USER=www-data
 </pre>
 
-Note that your selected rake task must assign the web user (e.g. "www-data") as an owner of the new scripts directory.  It attempts to discover 
-this user by running "ps aux" and searching for "httpd".  If this technique does not work correctly, you can explicitly specify the web user by including
-a "WEB\_USER=xxx" argument to your selected rake task (where xxx is the web user).
+Note that your selected rake task must assign the web user (e.g. "www-data") as an owner of the new scripts directory.  If you omit the **WEB\_USER** argument, 
+the script attempts to discover the web user by running "ps aux" and searching for "httpd".  On systems using apache without the passenger plugin, this
+discovery process *should* work properly.  Not all systems will "do the right thing", however.
 
 *Note that you should reinstall scripts whenever you update the plugin.*
 
@@ -347,6 +348,17 @@ Further, if you are proxying requests through a third-party (such as 'ngnix'), y
 distinguish between HTTP and HTTPS.  One way to do this is to use the X-Forwarded-Proto header (which should be set to 'https' when https is in use from the client 
 to the proxy).  On ngnix, you can do this with an "include proxy.include" statement in your configuration.
 
+## Using the Git Daemon
+
+In order to export repositories via the git daemon (i.e. with URLs of the form 'git://'), you must first install this daemon and give it access to the gitolite 
+repositories (outside the scope of this README).  Once you do so, then control of *which* repositories are exported depends on two things: (1) the setting of 
+the *public* flag for the project and (2) the setting of the *GitDaemon* parameter in the project's repository settings.  A repository will be exported via the git daemon 
+only if its corresponding project is public *and* its **GitDaemon** flag is enabled.  The redmine_git_hosting plugin handles such repositories by including a 
+special "daemon" key in the gitolite.conf file.  Presence of this key, in turn, causes gitolite to insert a "git-daemon-export-ok" flag at the top-level of 
+the corresponding repository; this flag is interpreted by the git-daemon as a sign to export the repository.
+
+Note that the act of changing a project from public to private will set the **GitDaemon** flag to false automatically (to prevent accidental export of the project
+via the git-daemon later).
 
 ## Caching Options
 
@@ -373,6 +385,20 @@ called.
 This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible
 with ChiliProject 1.x the caching functionality is not.
 
+Important note: If using *mysql* for your database, you must make sure that the **max_allowed_packet** size is set (in, e.g., /etc/my.cnf) to be at least as 
+large as the value you specify for **Max Cache Element Size** above.  If you do not do this, you are likely to get very strange failures of the web 
+server.  Such a setting must be placed in the `[mysqld]` parameter section of this file, for instance:
+
+<pre>
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+symbolic-links=0
+max_allowed_packet=32M
+</pre>    
+
+The above example should allow **Max Cache Element Size** == 32M.
 
 ## Notification to CIA.vc
 

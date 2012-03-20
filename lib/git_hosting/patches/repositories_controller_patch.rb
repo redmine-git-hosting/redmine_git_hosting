@@ -11,7 +11,11 @@ module GitHosting
 
 			def edit_with_scm_settings
 				GitHosting.logger.debug "On edit_with_scm_settings"
+
+                             	# Turn off updates during repository update
+                       		GitHostingObserver.set_update_active(false);
 				params[:repository] ||= {}
+
 				if params[:repository_scm] == "Git"
 					params[:repository][:url] = GitHosting.repository_path(@project)
 				end
@@ -48,7 +52,7 @@ module GitHosting
 					edit_without_scm_settings
 				end
 
-
+                        	GitHostingObserver.set_update_active(true);
 			end
 
 			def self.included(base)
