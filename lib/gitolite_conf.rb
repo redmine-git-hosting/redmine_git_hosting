@@ -2,6 +2,8 @@ module GitHosting
 	class GitoliteConfig
         	DUMMY_REDMINE_KEY="redmine_dummy_key"
         	GIT_DAEMON_KEY="daemon"
+          	ADMIN_REPO = "gitolite-admin"
+          	DEFAULT_ADMIN_KEY_NAME = "id_rsa"
 
 		def initialize file_path
 			@path = file_path
@@ -34,6 +36,15 @@ module GitHosting
 		def set_read_user repo_name, users
 			repository(repo_name).set "R", users
 		end
+
+                # Grab admin key (assuming it exists)
+                def get_admin_key 
+                	return (repository(ADMIN_REPO).get "RW+").first
+                end
+
+                def set_admin_key new_name
+                	repository(ADMIN_REPO).set "RW+", new_name
+                end
 
 		def delete_repo repo_name
 			@repositories.delete(repo_name)
@@ -138,37 +149,40 @@ module GitHosting
 			@repositories[repo_name] ||= GitoliteAccessRights.new
 		end
 
-
 		def content
 			content = []
 
-                  	# If no gitolite-admin user, something seriously wrong.  Add it in with id_rsa.
-			#
-                  	# If this doesn't work for some reason, will be corrected at later time by
-                  	# gl-setup run.
-                  	if @repositories["gitolite-admin"].nil?
-                        	content << "repo\tgitolite-admin"
-                          	content << "tRW+\t=\tid_rsa"
-				content << ""
+                	# Make sure that admin repo is first
+                	content << "repo\t#{ADMIN_REPO}"
+                	admin_key = (@repositories[ADMIN_REPO].get "RW+").first
+                	unless admin_key.nil?
+                        	# Put in a single admi nkey
+                        	content << "\tRW+\t=\t#{admin_key}"
+                        else
+                        	# If no repo, put in a default -- will try to fix later if problem.
+                          content << "\tRW+\t=\t#{DEFAULT_ADMIN_KEY_NAME}"
                         end
+                	content << ""
+
 			@repositories.each do |repo, rights|
-				content << "repo\t#{repo}"
-				has_users=false
-				rights.each do |perm, users|
-					if users.length > 0
-						has_users=true
-						content << "\t#{perm}\t=\t#{users.join(' ')}"
+                  		unless repo == ADMIN_REPO 
+                                	content << "repo\t#{repo}"
+					has_users=false
+					rights.each do |perm, users|
+						if users.length > 0
+							has_users=true
+							content << "\t#{perm}\t=\t#{users.join(' ')}"
+						end
 					end
-				end
-				if !has_users
-					# If no users, use dummy key to make sure repo created
-                                	content << "\tR\t=\t#{DUMMY_REDMINE_KEY}"
-				end
-				content << ""
+					if !has_users
+						# If no users, use dummy key to make sure repo created
+                                		content << "\tR\t=\t#{DUMMY_REDMINE_KEY}"
+					end
+					content << ""
+                                end
 			end
 			return content.join("\n")
 		end
-
 	end
 
 	class GitoliteAccessRights
@@ -191,6 +205,10 @@ module GitHosting
 			@rights[perm.to_sym] = []
 			add perm, users
 		end
+
+                def get perm
+                	@rights[perm.to_sym] || []
+                end
 
 		def each
 			@rights.each {|k,v| yield k, v}

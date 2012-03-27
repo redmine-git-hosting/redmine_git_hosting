@@ -17,6 +17,9 @@ the Redmine trunk, since the Redmine developers are implementing multiple repos/
 * **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.0.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x 
 releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible. 
 
+This plugin is compatible with most versions of gitolite.  However, gitolite versions >= 2.0.3 provide slightly better resilience to recover from configuration
+problems that prevent administrative access (the plugin will exploit **gl-admin-push** to fix the access key).
+
 ## Configuration Strategy
 
 One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed,
@@ -60,7 +63,13 @@ gitolite installation) is particularly useful for a web-hosting scenario with in
 there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume
 that gitolite has been installed for user "git", and you have an ssh key called "git\_gitolite\_admin\_id\_rsa"
 (and corresponding public key) for which access to the gitolite-admin repository has been granted.  The ssh
-key should not have a password set.
+key should not have a password set. *It is very important that this ssh key be unique and not used for anything 
+other than administrative access, i.e. should not be used by any user as their access key.*
+
+If possible, use gitolite version >= 2.0.3, so that the plugin will be able to recover from a
+variety of failures that mess up administrative access to the gitolite repository (the plugin will utilize **gl-admin-push**
+to fixup admin access in these circumstances).  Note that the plugin will work with earlier versions of gitolite; however,
+it will not be able to recover from as many faults (it will attempt to use **gl-setup** which doesn't work quite as well).
 
 **(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to
 install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
@@ -464,12 +473,12 @@ Scripts and selinux policy/tags can be reinstalled with:
 
 Alternately, you can change the frozen parameters by altering them in the init.rb file and resetting the options to the defaults via:
 
-    rake redmine_git_hosting:restore_defaults RAILS_ENV=xxx
+    rake redmine_git_hosting:restore_defaults RAILS_ENV=production
 
 One final comment: The selinux policy exists in binary form as selinux/redmine_git.pp. Should this policy
 need to be rebuilt, an additional rake task exists which will build the policy from selinux/redmine_git.te:
 
-     rake selinux:redmine_git_hosting:build_policy
+    rake selinux:redmine_git_hosting:build_policy RAILS_ENV=productinon
 
 This task can be followed by the selinux:install task.
 

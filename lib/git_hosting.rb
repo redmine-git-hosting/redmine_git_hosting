@@ -390,7 +390,8 @@ module GitHosting
                 end
       		if code != 0
                   	logger.error "Command failed (return #{code}): #{command}"
-                  	logger.error "#{result}"
+                	message = "  "+result.split("\n").join("\n  ")
+                	logger.error message
                 	raise GitHostingException, "Shell Error"
                 end
         end
@@ -408,49 +409,156 @@ module GitHosting
        	# John Kubiatowicz, 11/15/11
 	def self.clone_or_pull_gitolite_admin
 		# clone/pull from admin repo
-          	repo_dir = File.join(get_tmp_dir,"gitolite-admin")
-        	begin
-			if (File.exists? "#{repo_dir}") && (File.exists? "#{repo_dir}/.git") && (File.exists? "#{repo_dir}/keydir") && (File.exists? "#{repo_dir}/conf")
+        	repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
+        	
+          	# If preexisting directory exists, try to clone and merge....
+        	if (File.exists? "#{repo_dir}") && (File.exists? "#{repo_dir}/.git") && (File.exists? "#{repo_dir}/keydir") && (File.exists? "#{repo_dir}/conf")
+                	begin
                         	logger.info "Fetching changes from gitolite-admin repository to #{repo_dir}"
                         	shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' fetch]
 				shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' merge FETCH_HEAD]
 
                           	# unmerged changes=> non-empty return
                           	return_val = %x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' status --short].empty?
-                        else
-                        	logger.info "Cloning gitolite-admin repository to #{repo_dir}"
-                        	shell %[rm -rf "#{repo_dir}"]
-                        	shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
-                          	return_val = true # on master, since fresh clone
+
+                        	shell %[chmod 700 "#{repo_dir}" ]
+                		# Make sure we have our hooks setup
+				GitAdapterHooks.check_hooks_installed
+	                  	return return_val
+                        rescue
+                        	logger.error "Repository fetch and merge failed -- trying to delete and reclone repository."
                         end
+                end
+  	
+        	begin
+                	logger.info "Cloning gitolite-admin repository to #{repo_dir}"
+                        shell %[rm -rf "#{repo_dir}"]
+                        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
                   	shell %[chmod 700 "#{repo_dir}" ]
                 	# Make sure we have our hooks setup
 			GitAdapterHooks.check_hooks_installed
 
-                  	return return_val
+                  	return true # On master (fresh clone)
                 rescue
-                	# Hm.... perhaps we have some other sort of failure...
-  	              	logger.error "Failure to access gitolite-admin repository.  Attempting to fix..."
                 	begin
-                        	logger.info "  Reestablishing gitolite key"
-                        	shell %[cat #{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
-                		shell %[#{GitHosting.git_user_runner} 'gl-setup ~/id_rsa.pub']
-                          	shell %[#{GitHosting.git_user_runner} 'rm ~/id_rsa.pub']
+                        	# Try to repair admin access.
+                        	fixup_gitolite_admin
 
-                        	logger.info "  Deleting and recloning gitolite-admin to #{repo_dir}"
-                          	shell %[rm -r #{repo_dir}] unless !File.exists?(repo_dir)
+                        	logger.info "Recloning gitolite-admin repository to #{repo_dir}"
+                        	shell %[rm -rf "#{repo_dir}"]
                         	shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
                         	shell %[chmod 700 "#{repo_dir}" ]
                 		# Make sure we have our hooks setup
 				GitAdapterHooks.check_hooks_installed
-                          	logger.info "Successfully restablished access to gitolite-admin repository!"
+
+                  		return true # On master (fresh clone)
                         rescue
-				logger.error "Failure again.  Probably requires human intervention"
-				raise GitHostingException, "Gitolite-admine Clone Failure"
-                	end
+                        	logger.error "Cannot clone administrative repository.  Requires human intervention!!!"
+                        end
                 end
 	end
 
+        # Recover from failure to clone repository.
+        #
+        # This routine attempts to recover from a failure to clone by reestablishing the gitolite
+        # key.  It does so by directly cloning the gitolite-admin repository and editing the gitolite.conf
+        # file.  If we ever try to allow gitolite services on a separate server from Redmine, we will
+        # have to turn this into a stand-alone script.
+        #
+        # Ideally, we have gitolite >= 2.0.3 so that we have 'gl-admin-push'.  If not, we try to use gl-setup
+        # which has some quirks and is not as good.
+        #
+        # We try to:
+        #  (1) figure out what the proper name is for the access key by first looking in the conf file, then
+        #      looking for a matching keyname in the keydir.
+        #  (2) delete any keys in the keydir that match our key
+        #  (3) reestablish the keyname in the conf file and the key in the keydir
+        #  (4) push the result back to the admin repo.
+        # 
+        # Most of this activity is all done as the git user, hence the long command lines.  Only parsing of the 
+        # conf file is done as the redmine user (hence the need for the separate "tmp_conf_dir".
+        #
+        # Return: on success, returns "Success!".  On Failure, throws a GitHostingException.
+        #
+        # Consider this the "nuclear" option....
+        def self.fixup_gitolite_admin
+        	logger.warn "Attempting to restore repository access key:"
+        	begin
+                	repo_dir = File.join(Dir.tmpdir,"fixrepo",git_user,GitHosting::GitoliteConfig::ADMIN_REPO)
+                	conf_file = File.join(repo_dir,"conf","gitolite.conf")
+                	keydir = File.join(repo_dir, 'keydir')
+
+                	tmp_conf_dir = File.join(Dir.tmpdir,"fixconf",git_user)
+                	tmp_conf_file = File.join(tmp_conf_dir,"gitolite.conf")
+
+                	logger.warn "  Cloning administrative repo directly as #{git_user} in #{repo_dir}"
+                        shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
+                	admin_repo = "#{GitHosting.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
+                        shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
+                        	
+                	# Load up existing conf file
+                	shell %[mkdir -p #{tmp_conf_dir}]
+                 	shell %[#{GitHosting.git_user_runner} 'cat #{conf_file}' | cat > #{tmp_conf_file}]
+                        conf = GitoliteConfig.new(tmp_conf_file)
+
+                	# copy key into home directory...
+                  	shell %[cat #{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
+
+                	# Locate any keys that match new key -- save first one
+                	admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n").map do |name|
+              			my_basename = File.basename(name,".pub")
+              			shell %[#{GitHosting.git_user_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{my_basename}.pub]
+              			my_basename
+              		end
+
+                  	unless admin_key_matches.empty?
+                        	oldkeys = admin_key_matches.join(", ")
+                        	logger.warn "  Deleting old keys in keydir that match gitoliteIdentityPublicKeyFile: #{oldkeys}"
+                        end
+
+                	# Grab admin key name out of conf file (if it exists)
+                	my_admin_key = conf.get_admin_key
+
+                  	# Try to deduce administrative key name first from conf file, then from keydir, then use default.
+                  	# Remove all extraneous ".pub" from end, in case something crept through.
+			new_admin_key_name = (/^(.*?)(\.pub)*$/.match(my_admin_key || admin_key_matches.first || GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME))[1]  
+                	if my_admin_key
+                        	logger.warn "  Using admin key name from conf file: '#{new_admin_key_name}'"
+                        else
+                        	logger.warn "  Using '#{new_admin_key_name}' as the admin key name"
+                        end
+
+                  	conf.set_admin_key new_admin_key_name
+			conf.save                  	
+                	shell %[cat #{tmp_conf_file} | #{GitHosting.git_user_runner} 'cat > #{conf_file}']
+                	shell %[#{GitHosting.git_user_runner} 'mv ~/id_rsa.pub #{keydir}/#{new_admin_key_name}.pub']
+                	
+                  	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*"]
+                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/gitolite.conf"]
+                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
+                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
+                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Emergency repair of gitolite admin key'"]
+                	begin
+                        	logger.warn "  Pushing fixes using gl-admin-push"
+                        	shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gl-admin-push -f"]
+                        	logger.warn "Successfully reestablished gitolite admin key!"
+                        rescue
+                        	logger.error "gl-admin-push failed (pre 2.0.3 gitolite?).  Trying 'gl-setup #{keydir}/#{new_admin_key_name}.pub'"
+                        	shell %[#{GitHosting.git_user_runner} "gl-setup #{keydir}/#{new_admin_key_name}.pub"]
+                        	logger.warn "Hopefully we have successfully reestablished gitolite admin key."
+                        end
+                  	%x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
+                	%x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
+                	"Success!"
+                rescue
+                	logger.error "Failed to reestablish gitolite admin key."
+                  	%x[#{GitHosting.git_user_runner} 'rm -f ~/id_rsa.pub']
+                  	%x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
+                	%x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
+                	raise GitHostingException, "Failure to Repair Gitolite Admin Key"
+                end
+        end
+        
         # Commit Changes to the gitolite-admin repository.  This assumes that repository exists 
         # (i.e. that a clone_or_fetch_gitolite_admin has already be called).
         #
@@ -461,7 +569,7 @@ module GitHosting
 		resyncing = args && args.first
 
 		# create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-          	repo_dir = File.join(get_tmp_dir,"gitolite-admin")
+          	repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
 
 		# commit / push changes to gitolite admin repo
         	begin
