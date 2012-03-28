@@ -29,7 +29,7 @@ module GitHosting
                        		destroy_without_disable_update
 
                        		# Reenable updates to perform a single update
-				GitHostingObserver.set_update_active(true);
+				GitHostingObserver.set_update_active(:delete => true);
                        	end
 
 			def self.included(base)
