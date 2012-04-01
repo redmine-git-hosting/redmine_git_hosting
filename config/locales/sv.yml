@@ -1,4 +1,4 @@
-'en':
+sv:
   label_all_git: Automatically Initialize Git Repositories For New Projects 
   label_delete_git_repositories: Delete Git Repository When Project Deleted<br/>(will be place in Recycle Bin)
   label_git_server: Gitolite Server Domain
