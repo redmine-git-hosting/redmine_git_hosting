@@ -10,7 +10,7 @@ Redmine::Plugin.register :redmine_git_hosting do
 	name 'Redmine Git Hosting Plugin'
 	author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz and others'
 	description 'Enables Redmine / ChiliProject to control hosting of git repositories'
-	version '0.4.3x'
+	version '0.4.4x'
 	url 'https://github.com/ericpaulbishop/redmine_git_hosting'
 
 	settings :default => {
