@@ -109,11 +109,11 @@ class GitHttpController < ApplicationController
 		render :text => proc { |response, output|
 			buf_length=131072
 			buf = @git_http_control_pipe.read(buf_length)
-			while(buf.length == buf_length)
+			while(!(buf.nil?) && buf.length == buf_length)
 				output.write( buf )
 				buf = @git_http_control_pipe.read(buf_length)
 			end
-			if(buf.length > 0)
+			if(!(buf.nil?) && buf.length > 0)
 				output.write( buf )
 			end
 			@git_http_control_pipe.close
@@ -192,11 +192,11 @@ class GitHttpController < ApplicationController
 			render :text => proc { |response, output|
 				buf_length=131072
 				buf = @git_http_control_pipe.read(buf_length)
-				while(buf.length == buf_length)
+				while(!(buf.nil?) && buf.length == buf_length)
 					output.write( buf )
 					buf = @git_http_control_pipe.read(buf_length)
 				end
-				if(buf.length > 0)
+				if(!(buf.nil?) && buf.length > 0)
 					output.write( buf )
 				end
 				@git_http_control_pipe.close
