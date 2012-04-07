@@ -6,6 +6,8 @@ to provide Git Smart HTTP access.  Git repositories are automatically created wh
 Redmine.  There is also an option to automatically create a git repository for a project, when the project is created.
 Caching functionality is also implemented to speed page-load times for viewing git repositories.
 
+Release Notes are available off the wiki: https://github.com/kubitron/redmine_git_hosting/wiki/Release-Notes.
+
 ## Compatibility
 
 The current version of this plugin is not compatible with all versions of Redmine and ChiliProject.  As of this writing, it
@@ -23,11 +25,9 @@ problems that prevent administrative access (the plugin will exploit **gl-admin-
 ## Configuration Strategy
 
 One major problem when configuring ChiliProject/Redmine + Git is how the git repositories are accessed,
-and in particular setting permissions properly.
-This plugin solves this problem by allowing the web server/rails user to run git via sudo.
-A previous version of this plugin (see ssh branch) requires the configuration of git to run through ssh,
-but using sudo to allow the web server user to run commands as the git user is much faster.
-To configure your sudoers file to allow your web server user to run commands as git, and your git user
+and in particular setting permissions properly. This plugin solves this problem by allowing the web server/rails user to run git via sudo. A previous 
+version of this plugin (see ssh branch) requires the configuration of git to run through ssh, but using sudo to allow the web server user to run commands 
+as the git user is much faster. To configure your sudoers file to allow your web server user to run commands as git, and your git user
 to run commands as the web server user add these two lines to your sudoers file (run visudo to edit this file):
 
     www-data        ALL=(git)       NOPASSWD:ALL
@@ -59,17 +59,27 @@ gitolite installation) is particularly useful for a web-hosting scenario with in
 
 ## Step-By-Step configuration instructions
 
-**(1)** Install gitolite.  The details of gitolite installation are beyond the scope of these instructions, and
-there are plenty of guides elsewhere on how to do this.  For the purposes of this tutorial, we will assume
-that gitolite has been installed for user "git", and you have an ssh key called "git\_gitolite\_admin\_id\_rsa"
-(and corresponding public key) for which access to the gitolite-admin repository has been granted.  The ssh
-key should not have a password set. *It is very important that this ssh key be unique and not used for anything 
-other than administrative access, i.e. should not be used by any user as their access key.*
-
-If possible, use gitolite version >= 2.0.3, so that the plugin will be able to recover from a
-variety of failures that mess up administrative access to the gitolite repository (the plugin will utilize **gl-admin-push**
+**(1)** Install gitolite.  If possible, use gitolite version >= 2.0.3, so that the plugin will be able to 
+recover from a variety of failures that mess up administrative access to the gitolite repository (the plugin will utilize **gl-admin-push**
 to fixup admin access in these circumstances).  Note that the plugin will work with earlier versions of gitolite; however,
 it will not be able to recover from as many faults (it will attempt to use **gl-setup** which doesn't work quite as well).
+
+The fine details of gitolite configuration are beyond the scope of these instructions, and there are plenty of guides elsewhere on configuration
+options.  The following provides a simple (working) configuration.  We will assume that gitolite has been installed for user "git" (adjust accordingly
+if gitolite has been installed with some other username).  Generate an 
+administrator key and initialize the gitolite repository in the following fashion as root:
+
+    su git
+    ssh-keygen -N "" -f ~/.ssh/id_rsa
+    gl-setup ~/.ssh/id_rsa.pub
+
+Simply take any defaults offered by gl-setup (i.e. quit out of offered edit of the configuration file without making any changes). These commands 
+will generate a new key in the .ssh directory of the "git" user, and use this key as the gitolite administrative key during the 
+initialization of the gitolite repository. 
+
+You may choose to generate your administrative key in another way.  However you generate your key, it is important that this key not have a passphrase
+set.  *Further, it is very important that this ssh key be unique and not used for anything other than administrative access, i.e. should not be used by 
+any user as their access key.*
 
 **(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to
 install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
@@ -89,17 +99,21 @@ lines below the original directive:
     Defaults:git      !requiretty
     Defaults:www-data !requiretty
 
+*Note: with at least some versions of Ubuntu, you must place any additions to the sudoers file at the end, otherwise the line starting with "admin ..." ends up 
+negating these additions -- probably to your great frustration.*
+
 
 **(4)** In the root of your Redmine/ChiliProject rails directory -- the Redmine/ChiliProject root, not the plugin
-root, and not the public directory -- create a directory called .ssh, and copy the "gitolite_admin_id_rsa"
-private key and the "gitolite_admin_id_rsa.pub" files from step one into this directory. Then change the
-owner of these files to www-data and the permissions to 600 for the private key and 644 for the public key:
+root, and not the public directory -- create a directory called .ssh, and copy your gitolite administrative public/private
+key pair into this directory using "gitolite_admin_id_rsa" as the base name.  Then change the owner of these files to www-data and 
+the permissions to 600 for the private key and 644 for the public key.  Assuming that you followed the key-generation step from (1) above, 
+these instructions translate to performing the following as root:
 
     cd REDMINE_ROOT
     mkdir .ssh
-    cp [somewhere-or-other]/gitolite_admin_id_rsa     .ssh/gitolite_admin_id_rsa
-    cp [somewhere-or-other]/gitolite_admin_id_rsa.pub .ssh/gitolite_admin_id_rsa.pub
-
+    cp ~git/.ssh/id_rsa     .ssh/gitolite_admin_id_rsa
+    cp ~git/.ssh/id_rsa.pub .ssh/gitolite_admin_id_rsa.pub
+    
     chown www-data -R .ssh
     chmod 700 .ssh
     chmod 600 .ssh/gitolite_admin_id_rsa
@@ -109,8 +123,8 @@ owner of these files to www-data and the permissions to 600 for the private key 
 **(5)** Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject
 root directory:
 
-    cd vendor/plugins
-    git clone https://github.com/ericpaulbishop/redmine_git_hosting.git
+    cd REDMINE_ROOT/vendor/plugins
+    git clone https://github.com/kubitron/redmine_git_hosting.git
     rm -rf redmine_git_hosting/.git
     cd ../..
 
