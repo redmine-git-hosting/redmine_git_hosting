@@ -4,11 +4,11 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="<%= Redmine::Info.app_name %>" />
 <meta name="keywords" content="issue,bug,tracker" />
-<%= csrf_meta_tag %>
+<%= begin csrf_meta_tag; rescue; "" end %>
 <%= favicon %>
 <%= stylesheet_link_tag 'application', :media => 'all' %>
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
-<%= javascript_heads %>
+<%= defined?(javascript_heads)? javascript_heads : javascript_include_tag(:defaults) %>
 <%= heads_for_theme %>
 <!--[if IE 6]>
 <style type="text/css">
