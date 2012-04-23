@@ -407,7 +407,13 @@ module GitHosting
         # This routine must only be called after acquisition of the lock
        	#
        	# John Kubiatowicz, 11/15/11
-	def self.clone_or_pull_gitolite_admin
+        #
+        # This routine will no-longer merge in changes, since this can cause weird behavior
+        # when interacting with cron-jobs that clean up /tmp.
+        #
+        # John Kubiatowicz, 04/23/12
+        #
+	def self.clone_or_pull_gitolite_admin(resync_all_flag)
 		# clone/pull from admin repo
         	repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
         	
@@ -421,10 +427,22 @@ module GitHosting
                           	# unmerged changes=> non-empty return
                           	return_val = %x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' status --short].empty?
 
-                        	shell %[chmod 700 "#{repo_dir}" ]
-                		# Make sure we have our hooks setup
-				GitAdapterHooks.check_hooks_installed
-	                  	return return_val
+                          	if (return_val)
+                                	shell %[chmod 700 "#{repo_dir}" ]
+                			# Make sure we have our hooks setup
+					GitAdapterHooks.check_hooks_installed
+	                  		return return_val
+                                else
+                                	# The attempt to merge can cause a weird failure mode when interacting with cron jobs that clean out old
+                                	# files in /tmp.  The issue is that keys in the keydir can go idle and get deleted.  Then, when we merge we
+                                	# create an admin repo minus those keys (including the admin key!).  Only a RESYNC_ALL operation will
+                                	# actually fix.  Thus, we never return "have uncommitted changes", but instead fail the merge and reclone.
+                                	#
+                               		# 04/23/12
+                                	# --KUBI-- 
+                                	logger.error "Seems to be unmerged changes!  Going to delete and reclone for safety."
+                                	logger.error "May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
+                                end
                         rescue
                         	logger.error "Repository fetch and merge failed -- trying to delete and reclone repository."
                         end
@@ -537,7 +555,7 @@ module GitHosting
                 	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/gitolite.conf"]
                 	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
                 	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
-                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Emergency repair of gitolite admin key'"]
+                	shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of gitolite admin key'"]
                 	begin
                         	logger.warn "  Pushing fixes using gl-admin-push"
                         	shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gl-admin-push -f"]
@@ -670,7 +688,7 @@ module GitHosting
           	begin
                 	# Make sure we have gitoite-admin cloned. 
                  	# If have uncommitted changes, reflect in "changed" flag.
-			changed = !clone_or_pull_gitolite_admin
+			changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
 
                		# Get directory for the gitolite-admin
        			repo_dir = File.join(get_tmp_dir,"gitolite-admin")
