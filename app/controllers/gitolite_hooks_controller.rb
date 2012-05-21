@@ -42,10 +42,13 @@ class GitoliteHooksController < ApplicationController
 				revision = project.repository.find_changeset_by_name(rev.strip)
 				commit = {
 					:id => revision.revision,
-					:url => "",
-					:author => revision.author,
-					:message => "",
-					:timestamp => "",
+					:url => url_for_revision(revision),
+					:author => {
+						:name => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
+						:email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
+					},
+					:message => revision.comments,
+					:timestamp => revision.committed_on,
 					:added => [],
 					:modified => [],
 					:removed => []
@@ -68,16 +71,17 @@ class GitoliteHooksController < ApplicationController
 				:ref => refname,
 				:commits => commits,
 				:repository => {
-					:description => "",
-					:fork => "",
-					:homepage => "",
-					:name => "",
-					:open_issues => "",
+					:description => project.description,
+					:fork => false,
+					:forks => 0,
+					:homepage => project.homepage,
+					:name => project.identifier,
+					:open_issues => project.issues.open.length,
 					:owner => {
 						:email => "",
 						:name => ""
 					},
-					:private => true,
+					:private => !project.is_public,
 					:url => "",
 					:watchers => 0
 				}
@@ -122,7 +126,8 @@ class GitoliteHooksController < ApplicationController
 			} if @project.repository_mirrors.any?
 
 			payloads = post_receive_payloads(params[:refs])
-			GitHosting.logger.info "Payloads - #{payloads.to_json}"
+
+			# Post to each post-receive URL here
 
 			# Notify CIA
 			#Thread.abort_on_exception = true
