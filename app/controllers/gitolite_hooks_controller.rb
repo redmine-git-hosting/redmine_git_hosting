@@ -12,6 +12,80 @@ class GitoliteHooksController < ApplicationController
 		render(:code => 404)
 	end
 
+	def post_receive_payloads(refs, project=nil)
+		project ||= @project
+		payloads = []
+		refs.each do |ref|
+			oldhead, newhead, refname = ref.split(',')
+
+			# Only pay attention to branch updates
+			next if not refname.match(/refs\/heads\//)
+			branch = refname.gsub('refs/heads/', '')
+
+			if newhead.match(/^0{40}$/)
+				# Deleting a branch
+				GitHosting.logger.debug "Deleting branch \"#{branch}\""
+				next
+			elsif oldhead.match(/^0{40}$/)
+				# Creating a branch
+				GitHosting.logger.debug "Creating branch \"#{branch}\""
+				range = newhead
+			else
+				range = "#{oldhead}..#{newhead}"
+			end
+
+			revisions_in_range = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(project)}' rev-list --reverse #{range}]
+			#GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
+
+			commits = []
+			revisions_in_range.split().each do |rev|
+				revision = project.repository.find_changeset_by_name(rev.strip)
+				commit = {
+					:id => revision.revision,
+					:url => "",
+					:author => revision.author,
+					:message => "",
+					:timestamp => "",
+					:added => [],
+					:modified => [],
+					:removed => []
+				}
+				revision.changes.each do |change|
+					if change.action == "M"
+						commit[:modified] << change.path
+					elsif change.action == "A"
+						commit[:added] << change.path
+					elsif change.action == "D"
+						commit[:removed] << change.path
+					end
+				end
+				commits << commit
+			end
+
+			payloads << {
+				:before => oldhead,
+				:after => newhead,
+				:ref => refname,
+				:commits => commits,
+				:repository => {
+					:description => "",
+					:fork => "",
+					:homepage => "",
+					:name => "",
+					:open_issues => "",
+					:owner => {
+						:email => "",
+						:name => ""
+					},
+					:private => true,
+					:url => "",
+					:watchers => 0
+				}
+			}
+		end
+		payloads
+	end
+
 	def post_receive
 
 		if not @project.repository.extra.validate_encoded_time(params[:clear_time], params[:encoded_time])
@@ -47,46 +121,28 @@ class GitoliteHooksController < ApplicationController
 				output.flush
 			} if @project.repository_mirrors.any?
 
+			payloads = post_receive_payloads(params[:refs])
+			GitHosting.logger.info "Payloads - #{payloads.to_json}"
+
 			# Notify CIA
 			#Thread.abort_on_exception = true
-			Thread.new(@project, params[:refs]) {|project, refs|
+			Thread.new(@project, payloads) {|project, payloads|
 				GitHosting.logger.debug "Notifying CIA"
 				output.write("Notifying CIA\n")
 				output.flush
 				#GitHosting.logger.debug "REFS #{refs}"
 
-				refs.each {|ref|
-					oldhead, newhead, refname = ref.split(',')
-
-					# Only pay attention to branch updates
-					next if not refname.match(/refs\/heads\//)
-
-					branch = refname.gsub('refs/heads/', '')
-
-					if newhead.match(/^0{40}$/)
-						# Deleting a branch
-						GitHosting.logger.debug "Deleting branch \"#{branch}\""
-						next
-					elsif oldhead.match(/^0{40}$/)
-						# Creating a branch
-						GitHosting.logger.debug "Creating branch \"#{branch}\""
-						range = newhead
-					else
-						range = "#{oldhead}..#{newhead}"
-					end
-
-					revisions = %x[#{GitHosting.git_exec} --git-dir='#{GitHosting.repository_path(@project)}' rev-list --reverse #{range}]
-					#GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
-
-					revisions.split().each{|rev|
-						revision = project.repository.find_changeset_by_name(rev.strip)
-						#GitHosting.logger.debug "Revision Found: #{revision.revision}"
+				payloads.each do |payload|
+					branch = payload[:ref].gsub('refs/heads/', '')
+					payload[:commits].each do |commit|
+						revision = project.repository.find_changeset_by_name(commit[:id])
 						next if project.repository.cia_notifications.notified?(revision)  # Already notified about this commit
 						GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
 						CiaNotificationMailer.deliver_notification(revision, branch)
 						project.repository.cia_notifications.notified(revision)
-					}
-				}
+					end
+				end
+
 			} if !params[:refs].nil? && @project.repository.extra.notify_cia==1
 		}, :layout => false
 	end
