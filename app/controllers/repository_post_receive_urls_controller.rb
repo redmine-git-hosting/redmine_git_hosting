@@ -17,7 +17,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   end
 
   def create
-    @prurl = RepositoryMirror.new(params[:repository_post_receive_urls])
+    @prurl = RepositoryPostReceiveUrl.new(params[:repository_post_receive_urls])
     if request.get?
       # display create view
     else
