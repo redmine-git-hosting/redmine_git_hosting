@@ -249,6 +249,43 @@
 							return false;
 						})
 					})
+					
+					$$(".add-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_create)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".edit-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_edit)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".delete-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_delete)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
 				})
 			</script>
 		<% end %>
