@@ -1,0 +1,13 @@
+<% if not @is_xhr %><h2><%=l(:label_post_receive_url_delete)%></h2><% end %>
+<div class="warning">
+  <p>
+    <strong><%= @prurl.url %></strong><br/>
+    Are you sure you want to delete the repository post receive URL?
+  </p>
+  <% form_tag url_for(:controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @project, :id => @prurl.id ), :method => :delete do %>
+  <p>
+    <label><%= check_box_tag 'confirm', 1 %> <%= l(:general_text_Yes) %></label>
+    <%= submit_tag l(:button_delete) %>
+  </p>
+  <% end %>
+<div>

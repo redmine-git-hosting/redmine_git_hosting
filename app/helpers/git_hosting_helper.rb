@@ -43,6 +43,16 @@ module GitHostingHelper
 		return User.current.allowed_to?(:edit_repository_mirrors, project)
 	end
 
+	def self.can_create_post_receive_urls(project)
+		return User.current.allowed_to?(:create_repository_post_receive_urls, project)
+	end
+	def self.can_view_post_receive_urls(project)
+		return User.current.allowed_to?(:view_repository_post_receive_urls, project)
+	end
+	def self.can_edit_post_receive_urls(project)
+		return User.current.allowed_to?(:edit_repository_post_receive_urls, project)
+	end
+
 	@@file_actions = {
 		"a" => "add",
 		"m" => "modify",

@@ -45,6 +45,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 			permission :create_repository_mirrors, :repository_mirrors => :create
 			permission :view_repository_mirrors, :repository_mirrors => :index
 			permission :edit_repository_mirrors, :repository_mirrors => :edit
+      permission :create_repository_post_receive_urls, :repository_post_receive_urls => :create
+      permission :view_repository_post_receive_urls, :repository_post_receive_urls => :index
+      permission :edit_repository_post_receive_urls, :repository_post_receive_urls => :edit
 		end
 end
 require "dispatcher"
@@ -54,6 +57,9 @@ Dispatcher.to_prepare :redmine_git_patches do
 
   # initialize association from project -> repository mirrors
   Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
+  
+  # initialize association from project -> repository post receive urls
+  Project.send(:has_many, :repository_post_receive_urls, :dependent => :destroy)
 
   require_dependency 'projects_controller'
   require 'git_hosting/patches/projects_controller_patch'
