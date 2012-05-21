@@ -113,7 +113,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% @repository.project.post_receive_urls.each do |prurl| %>
+							<% @repository.project.repository_post_receive_urls.each do |prurl| %>
 								<tr class="<%= cycle('odd', 'even') %>">
 									<td class="name"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
 									<td class="center"><%= checked_image prurl.active? %></td>
