@@ -12,6 +12,8 @@ class GitoliteHooksController < ApplicationController
 		render(:code => 404)
 	end
 
+	# Returns an array of GitHub post-receive hook style hashes
+	# http://help.github.com/post-receive-hooks/
 	def post_receive_payloads(refs, project=nil)
 		project ||= @project
 		payloads = []
@@ -41,49 +43,55 @@ class GitoliteHooksController < ApplicationController
 			revisions_in_range.split().each do |rev|
 				revision = project.repository.find_changeset_by_name(rev.strip)
 				commit = {
-					:id => revision.revision,
-					:url => url_for_revision(revision),
-					:author => {
-						:name => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
-						:email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
+					"id" => revision.revision,
+					"url" => url_for(:controller => "repositories", :action => "revision", 
+						:id => project, :rev => rev, :only_path => false, 
+						:host => Setting['host_name'], :protocol => Setting['protocol']
+					),
+					"author" => {
+						"name" => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
+						"email" => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
 					},
-					:message => revision.comments,
-					:timestamp => revision.committed_on,
-					:added => [],
-					:modified => [],
-					:removed => []
+					"message" => revision.comments,
+					"timestamp" => revision.committed_on,
+					"added" => [],
+					"modified" => [],
+					"removed" => []
 				}
 				revision.changes.each do |change|
 					if change.action == "M"
-						commit[:modified] << change.path
+						commit["modified"] << change.path
 					elsif change.action == "A"
-						commit[:added] << change.path
+						commit["added"] << change.path
 					elsif change.action == "D"
-						commit[:removed] << change.path
+						commit["removed"] << change.path
 					end
 				end
 				commits << commit
 			end
 
 			payloads << {
-				:before => oldhead,
-				:after => newhead,
-				:ref => refname,
-				:commits => commits,
-				:repository => {
-					:description => project.description,
-					:fork => false,
-					:forks => 0,
-					:homepage => project.homepage,
-					:name => project.identifier,
-					:open_issues => project.issues.open.length,
-					:owner => {
-						:email => "",
-						:name => ""
+				"before" => oldhead,
+				"after" => newhead,
+				"ref" => refname,
+				"commits" => commits,
+				"repository" => {
+					"description" => project.description,
+					"fork" => false,
+					"forks" => 0,
+					"homepage" => project.homepage,
+					"name" => project.identifier,
+					"open_issues" => project.issues.open.length,
+					"owner" => {
+						"name" => Setting["app_title"],
+						"email" => Setting["mail_from"]
 					},
-					:private => !project.is_public,
-					:url => "",
-					:watchers => 0
+					"private" => !project.is_public,
+					"url" => url_for(:controller => "repositories", :action => "show", 
+						:id => project, :only_path => false, 
+						:host => Setting["host_name"], :protocol => Setting["protocol"]
+					),
+					"watchers" => 0
 				}
 			}
 		end
@@ -125,9 +133,26 @@ class GitoliteHooksController < ApplicationController
 				output.flush
 			} if @project.repository_mirrors.any?
 
-			payloads = post_receive_payloads(params[:refs])
+			payloads = []
+			if @project.repository.extra.notify_cia == 1 or @project.repository_post_receive_urls.any?
+				payloads = post_receive_payloads(params[:refs])
+			end
 
-			# Post to each post-receive URL here
+			# Post to each post-receive URL
+			@project.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each do |prurl|
+				msg = "Posting #{payloads.length} post-receive payloads to #{prurl.url} ... "
+				GitHosting.logger.debug msg
+				output.write msg
+				output.flush
+				uri = URI(prurl.url)
+				payloads.each do |payload|
+					res = Net::HTTP.post_form(uri, {"payload" => payload})
+					output.write res.is_a?(Net::HTTPSuccess) ? "[success] " : "[failure] "
+					output.flush
+				end
+				output.write "done\n"
+				output.flush
+			end if @project.repository_post_receive_urls.any?
 
 			# Notify CIA
 			#Thread.abort_on_exception = true
@@ -135,12 +160,11 @@ class GitoliteHooksController < ApplicationController
 				GitHosting.logger.debug "Notifying CIA"
 				output.write("Notifying CIA\n")
 				output.flush
-				#GitHosting.logger.debug "REFS #{refs}"
 
 				payloads.each do |payload|
-					branch = payload[:ref].gsub('refs/heads/', '')
-					payload[:commits].each do |commit|
-						revision = project.repository.find_changeset_by_name(commit[:id])
+					branch = payload["ref"].gsub("refs/heads/", "")
+					payload["commits"].each do |commit|
+						revision = project.repository.find_changeset_by_name(commit["id"])
 						next if project.repository.cia_notifications.notified?(revision)  # Already notified about this commit
 						GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
 						CiaNotificationMailer.deliver_notification(revision, branch)
