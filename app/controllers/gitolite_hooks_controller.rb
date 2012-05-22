@@ -146,7 +146,11 @@ class GitoliteHooksController < ApplicationController
 				output.flush
 				uri = URI(prurl.url)
 				payloads.each do |payload|
-					res = Net::HTTP.post_form(uri, {"payload" => payload})
+					if prurl.mode == :github
+						res = Net::HTTP.post_form(uri, {"payload" => payload})
+					else
+						res = Net::HTTP.get_response(uri)
+					end
 					output.write res.is_a?(Net::HTTPSuccess) ? "[success] " : "[failure] "
 					output.flush
 				end

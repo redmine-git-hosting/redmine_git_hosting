@@ -4,6 +4,6 @@
 <!--[form:repository_post_receive_urls]-->
   <p><%= f.text_field :url, :required => true, :size => 65 %></p>
   <p><%= f.check_box :active %></p>
-  <p><%= f.select :mode, [['Github POST', 'github'], ['Empty GET', 'get']] %></p>
+  <p><%= f.select :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
 </div>
 <!--[eoform:repository_post_receive_urls]-->

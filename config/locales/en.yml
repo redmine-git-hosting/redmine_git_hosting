@@ -104,6 +104,7 @@ en:
   post_receive_url_notice_created: Post-receive URL was successfully created
   post_receive_url_notice_updated: Post-receive URL was successfully updated
   post_receive_url_notice_create_failed: Failed to create Post-receive URL
+  field_mode: Mode
 
   button_push: Push
   button_push_title: "Push To Mirror"
