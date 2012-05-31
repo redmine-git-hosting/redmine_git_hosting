@@ -706,11 +706,29 @@ module GitHosting
 	
 	                git_projects.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq.each do |cur_user|
 	              		active_keys = cur_user.gitolite_public_keys.active || []
-	
+
 	                        # Remove old keys that happen to be left around
 				cur_token = GitolitePublicKey.user_to_user_token(cur_user)
-	                	old_keynames = old_keyhash[cur_token] || []
-			        cur_keynames = active_keys.map{|key| "#{key.identifier}.pub"}
+
+				# Current filenames
+              			old_keynames = old_keyhash[cur_token] || []
+              			cur_keynames = []
+
+              			# Get list of active keys that SHOULD be in the keydir
+              			active_keys.each do |key|
+                			key_id = key.identifier
+                			key_token = GitolitePublicKey.ident_to_user_token(key_id)
+                			if key_token != cur_token
+                                        	# Rare case -- user login changed.  Fix it.
+                                        	key_id = key.reset_identifier
+						
+                                          	# Add all key filenames with this (incorrect) token into the set of names
+                                        	old_keynames += (old_keyhash[key_token] || [])
+                                		old_keyhash.delete(key_token)
+                                	end
+			                cur_keynames << "#{key_id}.pub"
+                		end
+
 	                        (old_keynames - cur_keynames).each do |keyname|
 	                               	filename = File.join(keydir,"#{keyname}")
 	                               	logger.warn "Removing gitolite key: #{keyname}"
