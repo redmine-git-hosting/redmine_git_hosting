@@ -15,6 +15,9 @@ module GitHosting
                              	# Turn of updates during repository update
                        		GitHostingObserver.set_update_active(false);
 
+                        	# Set public key values for view
+                        	set_public_key_values
+
                        		# Do actual update
                        		update_without_disable_update
 
@@ -44,9 +47,15 @@ module GitHosting
 
                         # Add in values for viewing public keys:
                         def edit_with_public_keys
+                        	# Set public key values for view
+                        	set_public_key_values
+
                         	# Previous routine
                         	edit_without_public_keys
+                        end
 
+                        # Add in values for viewing public keys:
+                        def set_public_key_values
                         	@gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => "active=1") 
                         	@gitolite_public_key = @gitolite_public_keys.detect{|x| x.id == params[:public_key_id].to_i}
                        		if @gitolite_public_key.nil?
