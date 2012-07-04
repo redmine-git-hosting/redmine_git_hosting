@@ -784,8 +784,7 @@ module GitHosting
 	        	# Regenerate configuration file for projects of interest
                   	# Also, try to match up actual repositories with projects (being somewhat conservative
                   	# when a project might be out of control of redmine.
-                  	unless flags[:delete]
-                            git_projects.each do |proj|
+                  	git_projects.each do |proj|
 	                        repo_name = repository_name(proj)
               
                 		# Common case: these are nil or lists of one element.
@@ -883,7 +882,6 @@ module GitHosting
               			conf.delete_redmine_keys repo_name
 				conf.add_read_user repo_name, read_user_keys
 				conf.add_write_user repo_name, write_user_keys
-                	    end
 			end
 	
 			# If resyncing or deleting, check for orphan repositories which still have redmine keys...

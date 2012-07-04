@@ -32,7 +32,7 @@ module GitHosting
                        		destroy_without_disable_update
 
                        		# Reenable updates to perform a single update
-				GitHostingObserver.set_update_active(true);
+				GitHostingObserver.set_update_active(:delete);
                        	end
                         def edit_membership_with_disable_update
                              	# Turn of updates during repository update
