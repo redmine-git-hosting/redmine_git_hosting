@@ -52,12 +52,13 @@ Dispatcher.to_prepare :redmine_git_patches do
 
   require_dependency 'git_hosting'
 
-  # initialize association from project -> repository mirrors
-  Project.send(:has_many, :repository_mirrors, :dependent => :destroy)
-
   require_dependency 'projects_controller'
   require 'git_hosting/patches/projects_controller_patch'
   ProjectsController.send(:include, GitHosting::Patches::ProjectsControllerPatch)
+
+  require_dependency 'project'
+  require 'git_hosting/patches/project_patch'
+  Project.send(:include, GitHosting::Patches::ProjectPatch)
 
   require_dependency 'repositories_controller'
   require 'git_hosting/patches/repositories_controller_patch'

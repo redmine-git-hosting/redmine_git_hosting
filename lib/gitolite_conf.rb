@@ -1,6 +1,7 @@
 module GitHosting
 	class GitoliteConfig
         	DUMMY_REDMINE_KEY="redmine_dummy_key"
+		ARCHIVED_REDMINE_KEY="redmine_archived_project"
         	GIT_DAEMON_KEY="daemon"
           	ADMIN_REPO = "gitolite-admin"
           	DEFAULT_ADMIN_KEY_NAME = "id_rsa"
@@ -22,20 +23,28 @@ module GitHosting
 		end
 
 		def add_write_user repo_name, users
-			repository(repo_name).add "RW+", users
+			repository(repo_name).add "RW+", users.sort
 		end
 
 		def set_write_user repo_name, users
-			repository(repo_name).set "RW+", users
+			repository(repo_name).set "RW+", users.sort
 		end
 
 		def add_read_user repo_name, users
-			repository(repo_name).add "R", users
+			repository(repo_name).add "R", users.sort
 		end
 
 		def set_read_user repo_name, users
-			repository(repo_name).set "R", users
+			repository(repo_name).set "R", users.sort
 		end
+
+		def mark_with_dummy_key repo_name
+                	add_read_user repo_name, [DUMMY_REDMINE_KEY]
+                end
+
+		def mark_archived repo_name
+                	add_read_user repo_name, [ARCHIVED_REDMINE_KEY]
+                end
 
                 # Grab admin key (assuming it exists)
                 def get_admin_key 
@@ -80,7 +89,7 @@ module GitHosting
                 end
 
                 def is_redmine_key? keyname
-                	(GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY) ? true : false
+                	(GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY || keyname == ARCHIVED_REDMINE_KEY) ? true : false
                 end
 
                 def is_daemon_key? keyname

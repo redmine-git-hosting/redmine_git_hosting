@@ -1,7 +1,6 @@
 module GitHosting
 	module Patches
 		module ProjectsControllerPatch
-
 			def git_repo_init
 				users = @project.member_principals.map(&:user).compact.uniq
 				if users.length == 0
@@ -82,6 +81,28 @@ module GitHosting
 				GitHostingObserver.set_update_active(true);
                        	end
 
+                        def archive_with_disable_update
+                             	# Turn of updates during repository update
+                       		GitHostingObserver.set_update_active(false);
+
+                       		# Do actual update
+                       		archive_without_disable_update
+
+                       		# Reenable updates to perform a single update
+				GitHostingObserver.set_update_active(@project, :archive);
+                       	end
+
+                        def unarchive_with_disable_update
+                             	# Turn of updates during repository update
+                       		GitHostingObserver.set_update_active(false);
+
+                       		# Do actual update
+                       		unarchive_without_disable_update
+
+                       		# Reenable updates to perform a single update
+				GitHostingObserver.set_update_active(@project);
+                       	end
+
 			def self.included(base)
 				base.class_eval do
 					unloadable
@@ -89,6 +110,8 @@ module GitHosting
                         	base.send(:alias_method_chain, :create, :disable_update)
                           	base.send(:alias_method_chain, :update, :disable_update)
                          	base.send(:alias_method_chain, :destroy, :disable_update)
+                         	base.send(:alias_method_chain, :archive, :disable_update)
+                         	base.send(:alias_method_chain, :unarchive, :disable_update)
 			end
 		end
 	end
