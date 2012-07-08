@@ -10,6 +10,10 @@ module GitHosting
 
                             		# initialize association from project -> repository mirrors
 					has_many :repository_mirrors, :dependent => :destroy
+
+                            		# initialize association from project -> repository post receive urls
+  					has_many :repository_post_receive_urls, :dependent => :destroy
+
                         	end
 			end
 		end

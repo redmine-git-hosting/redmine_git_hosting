@@ -97,6 +97,14 @@ en:
   mirror_notice_created: Mirror was successfully created
   mirror_notice_updated: Mirror was successfully updated
   mirror_notice_create_failed: Failed to create mirror
+  label_post_receive_url_create: Create Repository Post-receive URL
+  label_post_receive_url_delete: Delete Repository Post-receive URL
+  label_post_receive_url_edit: Edit Repository Post-receive URL
+  post_receive_url_notice_deleted: Post-receive URL was successfully deleted
+  post_receive_url_notice_created: Post-receive URL was successfully created
+  post_receive_url_notice_updated: Post-receive URL was successfully updated
+  post_receive_url_notice_create_failed: Failed to create Post-receive URL
+  field_mode: Mode
 
   button_push: Push
   button_push_title: "Push To Mirror"

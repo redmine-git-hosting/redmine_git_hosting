@@ -1,0 +1,7 @@
+<% if not @is_xhr %><h2><%=l(:label_post_receive_url_create)%></h2><% end %>
+<% labelled_form_for :repository_post_receive_urls, @prurl, 
+  :url => { :controller => 'repository_post_receive_urls', :action => 'create', :project_id => @project, :id => @prurl.id }, 
+  :html => {:method => :post, :class => 'tabular'} do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>

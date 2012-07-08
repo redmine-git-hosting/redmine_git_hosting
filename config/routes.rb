@@ -21,6 +21,12 @@ def install_redmine_git_hosting_routes(map)
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/update/:id', :action => 'update', :conditions => {:method => :post}
 			project_views.connect 'projects/:project_id/settings/repository/mirrors/delete/:id', :action => 'destroy', :conditions => {:method => [:get, :delete]}
 		end
+		project_mapper.with_options :controller => 'repository_post_receive_urls' do |project_views|
+			project_views.connect 'projects/:project_id/settings/repository/post-receive-urls/new', :action => 'create', :conditions => {:method => [:get, :post]}
+			project_views.connect 'projects/:project_id/settings/repository/post-receive-urls/edit/:id', :action => 'edit'
+			project_views.connect 'projects/:project_id/settings/repository/post-receive-urls/update/:id', :action => 'update', :conditions => {:method => :post}
+			project_views.connect 'projects/:project_id/settings/repository/post-receive-urls/delete/:id', :action => 'destroy', :conditions => {:method => [:get, :delete]}
+		end
 	end
 end
 

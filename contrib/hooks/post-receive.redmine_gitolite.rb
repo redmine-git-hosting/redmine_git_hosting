@@ -44,7 +44,7 @@ def run_query(url_str, params, with_https)
 		req.set_form_data(params)
 		response = http.request(req) do |response|
 			response.read_body do |body_frag|
-				success = true
+				success = response.code.to_i == 200 ? true : false
 				log(body_frag, false, false)
 			end
 		end

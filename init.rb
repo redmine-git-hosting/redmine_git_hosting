@@ -45,6 +45,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 			permission :create_repository_mirrors, :repository_mirrors => :create
 			permission :view_repository_mirrors, :repository_mirrors => :index
 			permission :edit_repository_mirrors, :repository_mirrors => :edit
+			permission :create_repository_post_receive_urls, :repository_post_receive_urls => :create
+    			permission :view_repository_post_receive_urls, :repository_post_receive_urls => :index
+    			permission :edit_repository_post_receive_urls, :repository_post_receive_urls => :edit
 		end
 end
 require "dispatcher"

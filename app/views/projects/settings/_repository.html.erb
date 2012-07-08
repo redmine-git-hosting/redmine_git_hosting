@@ -94,6 +94,44 @@
 		<div class="splitcontentright">
 		<div class="box tabular">
 
+			<h3>Post Receive URLs</h3>
+
+			<% if GitHostingHelper.can_create_post_receive_urls(@repository.project) %>
+				<div style="left:0px;clear:left;margin: 4px 5px;width: 96%;">
+					<%= link_to("Add Post Receive URL", url_for(:controller => 'repository_post_receive_urls', :action => 'create', :project_id => @repository.project.identifier), :class => 'icon icon-add add-post-receive-url' ) %>
+				</div>
+			<% end %>
+
+			<% if @repository.project.repository_post_receive_urls.any? %>
+				<div class="autoscroll">
+					<table class="list" style="margin: 4px 5px; width: 96%">
+						<thead>
+							<tr>
+								<th>URL</th>
+								<th>Active</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @repository.project.repository_post_receive_urls.each do |prurl| %>
+								<tr class="<%= cycle('odd', 'even') %>">
+									<td class="name"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
+									<td class="center"><%= checked_image prurl.active? %></td>
+									<td class="buttons">
+									<% if GitHostingHelper.can_edit_post_receive_urls(@repository.project) %>
+										<%= link_to(l(:button_edit), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-edit edit-post-receive-url') %>
+										<%= link_to(l(:button_delete), url_for(:controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-del delete-post-receive-url') %>
+									<% end %>
+									</td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div>
+			<% else %>
+				<p class="nodata" style="margin: 4px 5px; width: 96%; padding: 8px;">No Post Receive URLs Defined</p>
+			<% end %>
+
 			<h3>Repository Mirrors</h3>
 
 			<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
@@ -205,6 +243,43 @@
 							Modalbox.show(
 								elem.href, {
 									title: "<%=l(:button_push_title)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					
+					$$(".add-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_create)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".edit-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_edit)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".delete-post-receive-url").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_post_receive_url_delete)%>",
 									width: getWidth()
 								}
 							)
