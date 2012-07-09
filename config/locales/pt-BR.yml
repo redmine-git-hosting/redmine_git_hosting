@@ -50,7 +50,8 @@ pt-BR:
 
   label_git_hook_header: Hooks dos Repositórios
   label_git_hook_debug: Correr os hooks em mode Debug
-  label_git_hooks_are_asynchronous: Run hooks asynchronously
+  label_git_hooks_are_asynchronous: Run hooks de forma assíncrona
+  label_git_force_hooks_update: Força hooks a ser atualizado
   label_hook_installed: '"Hook" instalado'
 
   label_public_keys: 'Chaves públicas'

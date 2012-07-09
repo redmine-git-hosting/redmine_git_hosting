@@ -45,10 +45,24 @@ module GitHosting
 					@@check_hooks_installed_cached = true
 					return @@check_hooks_installed_cached
 				else
-					error_msg = "\"post-receive\" is alreay present but it's not ours!"
+					error_msg = "\"post-receive\" is already present but it's not ours!"
 					logger.warn error_msg
-					@@check_hooks_installed_stamp = Time.new
 					@@check_hooks_installed_cached = error_msg
+                                	if Setting.plugin_redmine_git_hosting['gitForceHooksUpdate']!='false'
+                                        	begin
+							logger.info "Restoring \"post-receive\" hook since forceInstallHook==true"
+                                                	install_hook("post-receive.redmine_gitolite.rb")
+							logger.info "\"post-receive.redmine_gitolite\ installed"
+							logger.info "Running \"gl-setup\" on the gitolite install..."
+							GitHosting.shell %[#{GitHosting.git_user_runner} gl-setup]
+                                                  	update_global_hook_params
+							logger.info "Finished installing hooks in the gitolite install..."
+							@@check_hooks_installed_cached = true
+                                                rescue
+                                                	logger.error "check_hooks_installed(): Problems installing hooks and initializing gitolite!"
+                                                end
+                                        end
+					@@check_hooks_installed_stamp = Time.new
 					return @@check_hooks_installed_cached
 				end
 			end

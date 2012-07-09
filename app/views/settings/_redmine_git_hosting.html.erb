@@ -150,6 +150,12 @@
 	</p>
 
 	<p>
+		<label><%= l(:label_git_force_hooks_update)%></label>
+		<%= select_tag("settings[gitForceHooksUpdate]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitForceHooksUpdate'])) %>
+		<br />
+	</p>
+
+	<p>
 		<label><%= l(:label_hook_installed)%></label>
 		<%= image_tag((GitHosting.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
 		<em><%= (GitHosting.check_hooks_installed==true ? '' : GitHosting.check_hooks_installed) %></em>

@@ -53,6 +53,7 @@ bs:
   label_git_hook_header: Repository Hooks
   label_git_hook_debug: Run hooks in Debug mode
   label_git_hooks_are_asynchronous: Run hooks asynchronously
+  label_git_force_hooks_update: Force hooks to be Updated
   label_hook_installed: Hook installed
 
   label_public_keys: Public keys
