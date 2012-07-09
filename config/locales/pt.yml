@@ -95,6 +95,14 @@ pt:
   mirror_notice_created: O Espelho foi criado com sucesso
   mirror_notice_updated: O Espelho foi actualizado com sucesso
   mirror_notice_create_failed: Houve um erro na criação do espelho
+  label_post_receive_url_create: Criar URL Pós-receber do Repositório
+  label_post_receive_url_delete: Apagar URL Pós-receber do Repositório
+  label_post_receive_url_edit: Editar URL Pós-receber do Repositório
+  post_receive_url_notice_deleted: A URL Pós-receber foi apagado com sucesso
+  post_receive_url_notice_created: A URL Pós-receber foi criado com sucesso
+  post_receive_url_notice_updated: A URL Pós-receber foi actualizado com sucesso
+  post_receive_url_notice_create_failed: Houve um erro na criação a URL pós-receber
+  field_mode: Modo
 
   button_push: Push
   button_push_title: '"Push" Para o Espelho'

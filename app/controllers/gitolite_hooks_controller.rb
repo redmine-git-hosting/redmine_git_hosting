@@ -139,24 +139,24 @@ class GitoliteHooksController < ApplicationController
 			end
 
 			# Post to each post-receive URL
-			@project.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each do |prurl|
+            		@project.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
 				msg = "Posting #{payloads.length} post-receive payloads to #{prurl.url} ... "
 				GitHosting.logger.debug msg
 				output.write msg
 				output.flush
 				uri = URI(prurl.url)
-				payloads.each do |payload|
+              			payloads.each {|payload|
 					if prurl.mode == :github
-						res = Net::HTTP.post_form(uri, {"payload" => payload})
+						res = Net::HTTP.post_form(uri, {"payload" => payload.to_json})
 					else
 						res = Net::HTTP.get_response(uri)
 					end
 					output.write res.is_a?(Net::HTTPSuccess) ? "[success] " : "[failure] "
 					output.flush
-				end
+              			}
 				output.write "done\n"
 				output.flush
-			end if @project.repository_post_receive_urls.any?
+            		} if @project.repository_post_receive_urls.any?
 
 			# Notify CIA
 			#Thread.abort_on_exception = true
