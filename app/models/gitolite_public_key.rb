@@ -13,6 +13,7 @@ class GitolitePublicKey < ActiveRecord::Base
 	validate :has_not_been_changed
 
 	before_validation :set_identifier
+    	before_validation :remove_control_characters
 
 	def has_not_been_changed
 		unless new_record?
@@ -44,6 +45,11 @@ class GitolitePublicKey < ActiveRecord::Base
 
         	self.identifier
 	end
+
+        # Remove control characters from key
+        def remove_control_characters
+            self.key=key.gsub(/[\a\r\n\t]/,'')
+        end
 
 	def to_s ; title ; end
 
