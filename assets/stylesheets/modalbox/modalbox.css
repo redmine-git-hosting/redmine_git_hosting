@@ -9,49 +9,49 @@
 #MB_overlay[id] { position: fixed; }
 
 #MB_window {
-	position:absolute;
+	position: absolute;
 	top: 0;
 	border: 0 solid;
-	text-align:left;
-	z-index:10000;
+	text-align: left;
+	z-index: 10000;
 }
 #MB_window[id] { position: fixed!important; }
 
 #MB_frame {
-	position:relative;
+	position: relative;
 	background-color: #EFEFEF;
-	height:100%;
+	height: 100%;
 }
 
 #MB_header {
-	margin:0;
-	height: 28px;
+	margin: 0;
+	padding: 0;
 }
 
 #MB_content {
 	padding: 6px .75em;
-	overflow:auto;
+	overflow: auto;
 }
 
 #MB_caption {
-	font: bold 85% "Lucida Grande", Arial, sans-serif;
+	font: bold 100% "Lucida Grande", Arial, sans-serif;
 	text-shadow: #FFF 0 1px 0;
-	padding: .5em 2em 0 .75em;
+	padding: .5em 2em .5em .75em;
 	margin: 0;
 	text-align: left;
 }
 
 #MB_close {
-	display:block;
-	position:absolute;
-	right:5px; top:4px;
-	padding:2px 3px;
-	font-weight:bold;
-	text-decoration:none;
-	font-size:13px;
+	display: block;
+	position: absolute;
+	right: 5px; top: 4px;
+	padding: 2px 3px;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 13px;
 }
 #MB_close:hover {
-	background:transparent;
+	background: transparent;
 }
 
 #MB_loading {
@@ -61,18 +61,31 @@
 }
 
 /* Color scheme */
+#MB_frame {
+	padding-bottom: 7px;
+	-webkit-border-radius: 7px; 
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+}
 #MB_window {
-	background-color:#EFEFEF;
-	color:#000;
+	background-color: #EFEFEF;
+	color: #000;
+	-webkit-box-shadow: 0 8px 64px #000; 
+	-moz-box-shadow: 0 0 64px #000; 
+	box-shadow: 0 0 64px #000;
+	
+	-webkit-border-radius: 7px; 
+	-moz-border-radius: 7px;
+	border-radius: 7px;
 }
 #MB_content { border-top: 1px solid #F9F9F9; }
 #MB_header {
-  background-color:#DDD;
+  background-color: #DDD;
   border-bottom: 1px solid #CCC;
 }
-#MB_caption { color:#000 }
-#MB_close { color:#777 }
-#MB_close:hover { color:#000 }
+#MB_caption { color: #000 }
+#MB_close { color: #777 }
+#MB_close:hover { color: #000 }
 
 
 /* Alert message */
