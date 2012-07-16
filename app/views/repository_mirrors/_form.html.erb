@@ -1,8 +1,36 @@
-<%= error_messages_for 'repository_mirrors' %>
+<div id="validation_messages"><%= error_messages_for 'mirror' %></div>
 
 <div class="box">
 <!--[form:repository_mirrors]-->
 	<p><%= f.text_field :url, :required => true, :size => 65 %></p>
-	<p><%= f.check_box :active %></p>
+	<p><%= f.select :push_mode, options_for_select([[l(:label_full_mirror),0],[l(:label_forced_update),1],[l(:label_fast_forward),2]], @mirror.push_mode), :label => :label_push_mode %>
+	<div id="ref_spec_options" style="display:none;">
+		<p><%= f.check_box :include_all_branches, :label => :field_include_all_branches %></p>
+		<p><%= f.check_box :include_all_tags, :label => :field_include_all_tags %> </p>
+		<p><%= f.text_field :explicit_refspec, :size => 65 %></p>
+		<p><%= f.check_box :active %></p>
+	</div>
 </div>
 <!--[eoform:repository_mirrors]-->
+
+<script type="text/javascript">
+	Event.observe(window, 'load', load_form_actions);
+	function load_form_actions() {
+		push_mode_change($('repository_mirrors_push_mode'));
+		Event.observe('repository_mirrors_push_mode', 'change', function(event) {
+			push_mode_change(this);
+		});
+  	}
+	function push_mode_change(elem) {
+		if (!elem) return;
+
+		var idx = elem.selectedIndex;
+		if (idx == 0) {
+			$('ref_spec_options').hide();
+		} else {
+			$('ref_spec_options').show();
+		}
+		if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+	}
+	load_form_actions();
+</script>

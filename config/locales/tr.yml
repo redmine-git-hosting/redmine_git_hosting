@@ -30,7 +30,7 @@ tr:
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP
   field_notify_cia: Notify CIA.vc
-
+  
 
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
@@ -98,6 +98,22 @@ tr:
   mirror_notice_created: Mirror was successfully created
   mirror_notice_updated: Mirror was successfully updated
   mirror_notice_create_failed: Failed to create mirror
+  mirror_notice_update_failed: Failed to update mirror
+  label_push_mode: Mirror update mode
+  label_full_mirror: Complete Mirroring
+  label_forced_update: Force Update Remote
+  label_fast_forward: Fast Forward (Unforced)
+  label_inactive: Inactive
+  label_mirror: Mirror
+  label_forced: Forced
+  label_unforced: Unforced
+  all_references: All&nbsp;Refs
+  all_branches: All&nbsp;Branches
+  all_tags: All&nbsp;Tags
+  explicit: Explicit
+  field_include_all_branches: Push all Branches
+  field_include_all_tags: Push all Tags
+  field_explicit_refspec: Explicit Reference Spec
   label_post_receive_url_create: Create Repository Post-receive URL
   label_post_receive_url_delete: Delete Repository Post-receive URL
   label_post_receive_url_edit: Edit Repository Post-receive URL
@@ -105,7 +121,10 @@ tr:
   post_receive_url_notice_created: Post-receive URL was successfully created
   post_receive_url_notice_updated: Post-receive URL was successfully updated
   post_receive_url_notice_create_failed: Failed to create Post-receive URL
+  post_receive_url_notice_update_failed: Failed to update Post-receive URL
   field_mode: Mode
+  label_github_post: GitHub&nbsp;POST
+  label_empty_get: Empty&nbsp;GET
 
   button_push: Push
   button_push_title: "Push To Mirror"

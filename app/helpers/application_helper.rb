@@ -37,4 +37,37 @@ module ApplicationHelper
           	((stripped[0,1] != "/")?".":"") + norm + ((norm[-1,1] != "/")?"/":"")
         end
         	
+        # Port-receive Mode
+        def post_receive_mode(prurl)
+ 		if prurl.active==0
+                	l(:label_inactive)
+                elsif prurl.mode == :github
+                	l(:label_github_post)
+                else
+                	l(:label_empty_get)
+                end
+        end
+
+        # Refspec for mirrors
+	def refspec(mirror, max_refspec=0)
+        	if mirror.push_mode==RepositoryMirror::PUSHMODE_MIRROR
+                	l(:all_references)
+                else
+                	result=[]
+                	result << l(:all_branches) if mirror.include_all_branches
+                	result << l(:all_tags) if mirror.include_all_tags
+                	result << mirror.explicit_refspec if (max_refspec == 0) || ((1..max_refspec) === mirror.explicit_refspec.length)
+                	result << l(:explicit) if (max_refspec > 0) && (mirror.explicit_refspec.length > max_refspec)
+                	result.join(",<br />")
+                end
+        end        
+
+        # Mirror Mode
+        def mirror_mode(mirror)
+        	if mirror.active==0
+                	l(:label_inactive)
+                else
+                	[l(:label_mirror),l(:label_forced),l(:label_unforced)][mirror.push_mode] 
+                end
+        end
 end

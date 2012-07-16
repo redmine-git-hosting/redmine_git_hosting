@@ -38,7 +38,7 @@
 
 <% labelled_remote_form_for :repository, @repository, :url => { :controller => 'repositories', :action => 'edit', :id => @project } do |f| %>
 	<%= error_messages_for 'repository' %>
-	<div class="splitcontentleft">
+<!--	<div class="splitcontentleft"> -->
 		<div class="box tabular">
 			<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
 				<h3>Repository Options</h3>
@@ -75,51 +75,43 @@
 				<%= repository_field_tags(f, @repository) if @repository %>
 			<% end %>
 		</div>
-		<div class="contextual">
-			<% if @repository && !@repository.new_record? %>
-				<%= link_to(l(:label_user_plural), {:controller => 'repositories', :action => 'committers', :id => @project}, :class => 'icon icon-user') %>
-				<%= link_to(l(:button_delete), {:controller => 'repositories', :action => 'destroy', :id => @project}, :confirm => l(:text_are_you_sure),:method => :post,:class => 'icon icon-del') %>
-			<% end %>
-		</div>
-		<%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
-	</div>
+<!--	</div> -->
 
 
 
-	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
+	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_post_receive_urls(@repository.project) %>
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
 
 
-
-		<div class="splitcontentright">
+<!--		<div class="splitcontentright"> -->
 		<div class="box tabular">
 
 			<h3>Post Receive URLs</h3>
 
 			<% if GitHostingHelper.can_create_post_receive_urls(@repository.project) %>
-				<div style="left:0px;clear:left;margin: 4px 5px;width: 96%;">
+				<div style="left:0px;clear:left;margin: 2px 3px;width: 98%;">
 					<%= link_to("Add Post Receive URL", url_for(:controller => 'repository_post_receive_urls', :action => 'create', :project_id => @repository.project.identifier), :class => 'icon icon-add add-post-receive-url' ) %>
 				</div>
 			<% end %>
 
 			<% if @repository.project.repository_post_receive_urls.any? %>
 				<div class="autoscroll">
-					<table class="list" style="margin: 4px 5px; width: 96%">
+					<table class="list" style="margin: 1px 2px; width: 99%">
 						<thead>
 							<tr>
 								<th>URL</th>
-								<th>Active</th>
-								<th>&nbsp;</th>
+								<th style="text-align:center;">Mode</th>
+								<th style="text-align:center;">&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>
 							<% @repository.project.repository_post_receive_urls.each do |prurl| %>
 								<tr class="<%= cycle('odd', 'even') %>">
-									<td class="name"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
-									<td class="center"><%= checked_image prurl.active? %></td>
-									<td class="buttons">
+									<td class="name" style="vertical-align:middle;"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
+									<td class="center" width="12%" style="vertical-align:middle;"><%= post_receive_mode prurl %><br /><%= checked_image prurl.active? %></td>
+									<td class="buttons" width="10%" style="text-align:left; vertical-align:middle;">
 									<% if GitHostingHelper.can_edit_post_receive_urls(@repository.project) %>
-										<%= link_to(l(:button_edit), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-edit edit-post-receive-url') %>
+										<%= link_to(l(:button_edit), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-edit edit-post-receive-url') %><br />
 										<%= link_to(l(:button_delete), url_for(:controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-del delete-post-receive-url') %>
 									<% end %>
 									</td>
@@ -129,40 +121,47 @@
 					</table>
 				</div>
 			<% else %>
-				<p class="nodata" style="margin: 4px 5px; width: 96%; padding: 8px;">No Post Receive URLs Defined</p>
+				<p class="nodata" style="margin: 2px 3px; width: 95%; padding: 8px;">No Post Receive URLs Defined</p>
 			<% end %>
 
+		</div>
+	<% end %>
+	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_mirrors(@repository.project) %>
+		<div class="box tabular">
 			<h3>Repository Mirrors</h3>
 
 			<% if GitHostingHelper.can_create_mirrors(@repository.project) %>
-				<div style="left:0px;clear:left;margin: 4px 5px;width: 96%;">
+				<div style="left:0px;clear:left;margin: 2px 3px;width: 98%;">
 					<%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :project_id => @repository.project.identifier), :class => 'icon icon-add add-mirror' ) %>
 				</div>
 			<% end %>
 
 			<% if @repository.project.repository_mirrors.any? %>
 				<div class="autoscroll">
-					<table class="list" style="margin: 4px 5px; width: 96%">
+					<table class="list" style="margin: 2px 3px; width: 99%; ">
 						<thead>
 							<tr>
 								<th>URL</th>
-								<th>Active</th>
-								<th>&nbsp;</th>
+								<th style="text-align:center;">Refspec</th>
+								<th style="text-align:center;">Mode</th>
+								<th style="text-align:center;">&nbsp</th>
 							</tr>
 						</thead>
 						<tbody>
 							<% @repository.project.repository_mirrors.each do |mirror| %>
 								<tr class="<%= cycle('odd', 'even') %>">
-									<td class="name"><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %></td>
-									<td class="center"><%= checked_image mirror.active? %></td>
-									<td class="buttons">
-									<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
-										<% if mirror.active==1 -%>
-											<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => @repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
+									<td class="name" style="vertical-align:middle;" ><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %>
+									</td>
+									<td class="center" style="vertical-align:middle;"><%= refspec mirror, 64 %></td>
+									<td class="center" width="12%" style="vertical-align:middle;"><%= mirror_mode mirror %><br/><%= checked_image mirror.active? %></td>
+									<td class="buttons" width"10%" style="text-align:left;">
+										<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
+											<% if mirror.active==1 -%>
+												<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => @repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %><br/>
+											<% end %>
+											<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %><br/>
+											<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
 										<% end %>
-										<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
-										<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
-									<% end %>
 									</td>
 								</tr>
 							<% end %>
@@ -170,21 +169,28 @@
 					</table>
 				</div>
 			<% else %>
-				<p class="nodata" style="margin: 4px 5px; width: 96%; padding: 8px;">No Mirrors Defined</p>
+				<p class="nodata" style="margin: 2px 3px; width: 95%; padding: 8px;">No Mirrors Defined</p>
 			<% end %>
-			<div style="margin: 15px 5px; width: 96%;">
+			<div style="margin: 2px 3px; width: 99%;">
 				<div id="clipboard_container" title="<%= l(:label_copy_to_clipboard) %>" style="font-family:sans-serif;" >
 					<div id="clipboard_button"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
 				</div>
 				<span style="margin-left:10px;" >Mirrors Must Grant Write Access To The Following Public Key:</span>
 				<br/>
-				<textarea cols="40" id="mirror_pubkey" readonly="readonly" rows="20" style="height:140px;width:96%"><%= mirror_pubkey  %></textarea>
+				<textarea cols="40" id="mirror_pubkey" readonly="readonly" rows="20" style="height:140px;width:99%"><%= mirror_pubkey  %></textarea>
 			</div>
 
 			<div id="mirror_bottom_spacer" style="display:block;height:10px;clear:both;"></div>
 
+<!--		</div> -->
 		</div>
+		<div class="contextual">
+			<% if @repository && !@repository.new_record? %>
+				<%= link_to(l(:label_user_plural), {:controller => 'repositories', :action => 'committers', :id => @project}, :class => 'icon icon-user') %>
+				<%= link_to(l(:button_delete), {:controller => 'repositories', :action => 'destroy', :id => @project}, :confirm => l(:text_are_you_sure),:method => :post,:class => 'icon icon-del') %>
+			<% end %>
 		</div>
+		<%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
 		<% content_for :header_tags do %>
 			<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
 			<%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
@@ -287,6 +293,7 @@
 						})
 					})
 				})
+
 			</script>
 		<% end %>
 	<% end %>

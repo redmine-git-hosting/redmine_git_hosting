@@ -43,55 +43,55 @@ class GitoliteHooksController < ApplicationController
 			revisions_in_range.split().each do |rev|
 				revision = project.repository.find_changeset_by_name(rev.strip)
 				commit = {
-					"id" => revision.revision,
-					"url" => url_for(:controller => "repositories", :action => "revision", 
+					:id => revision.revision,
+					:url => url_for(:controller => "repositories", :action => "revision", 
 						:id => project, :rev => rev, :only_path => false, 
 						:host => Setting['host_name'], :protocol => Setting['protocol']
 					),
-					"author" => {
-						"name" => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
-						"email" => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
+					:author => {
+						:name => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
+						:email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
 					},
-					"message" => revision.comments,
-					"timestamp" => revision.committed_on,
-					"added" => [],
-					"modified" => [],
-					"removed" => []
+					:message => revision.comments,
+					:timestamp => revision.committed_on,
+					:added => [],
+					:modified => [],
+					:removed => []
 				}
 				revision.changes.each do |change|
 					if change.action == "M"
-						commit["modified"] << change.path
+						commit[:modified] << change.path
 					elsif change.action == "A"
-						commit["added"] << change.path
+						commit[:added] << change.path
 					elsif change.action == "D"
-						commit["removed"] << change.path
+						commit[:removed] << change.path
 					end
 				end
 				commits << commit
 			end
 
 			payloads << {
-				"before" => oldhead,
-				"after" => newhead,
-				"ref" => refname,
-				"commits" => commits,
-				"repository" => {
-					"description" => project.description,
-					"fork" => false,
-					"forks" => 0,
-					"homepage" => project.homepage,
-					"name" => project.identifier,
-					"open_issues" => project.issues.open.length,
-					"owner" => {
-						"name" => Setting["app_title"],
-						"email" => Setting["mail_from"]
+				:before => oldhead,
+				:after => newhead,
+				:ref => refname,
+				:commits => commits,
+				:repository => {
+					:description => project.description,
+					:fork => false,
+					:forks => 0,
+					:homepage => project.homepage,
+					:name => project.identifier,
+					:open_issues => project.issues.open.length,
+					:owner => {
+						:name => Setting["app_title"],
+						:email => Setting["mail_from"]
 					},
-					"private" => !project.is_public,
-					"url" => url_for(:controller => "repositories", :action => "show", 
+					:private => !project.is_public,
+					:url => url_for(:controller => "repositories", :action => "show", 
 						:id => project, :only_path => false, 
 						:host => Setting["host_name"], :protocol => Setting["protocol"]
 					),
-					"watchers" => 0
+					:watchers => 0
 				}
 			}
 		end
@@ -121,22 +121,24 @@ class GitoliteHooksController < ApplicationController
 			output.write("Done\n")
 			output.flush
 
-			@project.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
-              			GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
-				output.write("Pushing changes to mirror #{mirror.url} ... ")
-				output.flush
-
-				(mirror_err,mirror_message) = mirror.push
-
-				result = mirror_err ? "Failed!\n" + mirror_message : "Done\n"
-				output.write(result)
-				output.flush
-			} if @project.repository_mirrors.any?
-
 			payloads = []
-			if @project.repository.extra.notify_cia == 1 or @project.repository_post_receive_urls.any?
+			if @project.repository_mirrors.has_explicit_refspec.any? or @project.repository.extra.notify_cia == 1 or @project.repository_post_receive_urls.any? 
 				payloads = post_receive_payloads(params[:refs])
 			end
+
+			@project.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
+              			if mirror.needs_push payloads
+                                	GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
+					output.write("Pushing changes to mirror #{mirror.url} ... ")
+					output.flush
+
+					(mirror_err,mirror_message) = mirror.push
+
+					result = mirror_err ? "Failed!\n" + mirror_message : "Done\n"
+					output.write(result)
+					output.flush
+                                end
+			} if @project.repository_mirrors.any?
 
 			# Post to each post-receive URL
             		@project.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
@@ -166,8 +168,8 @@ class GitoliteHooksController < ApplicationController
 				output.flush
 
 				payloads.each do |payload|
-					branch = payload["ref"].gsub("refs/heads/", "")
-					payload["commits"].each do |commit|
+					branch = payload[:ref].gsub("refs/heads/", "")
+					payload[:commits].each do |commit|
 						revision = project.repository.find_changeset_by_name(commit["id"])
 						next if project.repository.cia_notifications.notified?(revision)  # Already notified about this commit
 						GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
