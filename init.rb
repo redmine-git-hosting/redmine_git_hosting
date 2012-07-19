@@ -1,7 +1,5 @@
 # coding: utf-8
 require 'redmine'
-require_dependency 'principal'
-require_dependency 'user'
 
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
 require File.join(File.dirname(__FILE__), 'app', 'models', 'git_cia_notification')
@@ -54,6 +52,8 @@ end
 require "dispatcher"
 Dispatcher.to_prepare :redmine_git_patches do
 
+  require_dependency 'principal'
+  require_dependency 'user'
   require_dependency 'git_hosting'
 
   require_dependency 'projects_controller'
