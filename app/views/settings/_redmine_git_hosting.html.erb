@@ -40,6 +40,16 @@
 
 	<h3><%= l(:label_gitolite_repository_settings)%></h3>
 	<p>
+		<label><%= l(:label_gitolite_config_file)%></label>
+		<%= text_field_tag("settings[gitConfigFile]", "./#{@settings['gitConfigFile']||GitHosting::GitoliteConfig::PRIMARY_CONF_FILE}", :size => 60) %>
+		<br />
+	</p>
+	<p>
+		<label><%= l(:label_gitolite_config_has_admin_key)%></label>
+		<%= select_tag("settings[gitConfigHasAdminKey]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], @settings['gitConfigHasAdminKey'])) %>
+		<br />
+	</p>
+	<p>
 		<label><%= l(:label_git_repository_base_path)%></label>
 		<%= text_field_tag("settings[gitRepositoryBasePath]", "./#{@settings['gitRepositoryBasePath']}", :size => 60) %>
 		<br />

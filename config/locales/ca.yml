@@ -6,6 +6,8 @@ ca:
   label_git_user: Git Username
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
+  label_gitolite_config_file: Gitolite Configuration File<br/>(Relative to conf directory)
+  label_gitolite_config_has_admin_key: Gitolite Configuration File has Admin Key
   label_git_repository_base_path: Git Repository Base Path<br/>(Relative to git user home)
   label_git_recycle_base_path: Git Recycle Bin Base Path <br/>(Relative to git user home)
   label_git_recycle_expire_time: Expire Time for Repositories in Recycle Bin <br/>(in hours)
@@ -35,6 +37,8 @@ ca:
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
   label_disabled: Disabled
+  label_true: "True"
+  label_false: "False"
   label_flat: Flat
   label_hierarchical: Hierarchical
   label_https_only: HTTPS Only

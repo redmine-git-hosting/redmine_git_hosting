@@ -13,21 +13,23 @@ Redmine::Plugin.register :redmine_git_hosting do
 
 	settings :default => {
 		'httpServer' => 'localhost',
-    		'httpServerSubdir' => '',
+		'httpServerSubdir' => '',
 		'gitServer' => 'localhost',
 		'gitUser' => 'git',
+		'gitConfigPath' => 'gitolite.conf', # Redmine gitolite config file
+                'gitConfigHasAdminKey' => 'true',   # Conf file should have admin key
 		'gitRepositoryBasePath' => 'repositories/',
-    		'gitRedmineSubdir' => '',
-    		'gitRepositoryHierarchy' => 'true',
-    		'gitRecycleBasePath' => 'recycle_bin/',
-    		'gitRecycleExpireTime' => '24.0',
-    		'gitLockWaitTime' => '10',
+		'gitRedmineSubdir' => '',
+		'gitRepositoryHierarchy' => 'true',
+		'gitRecycleBasePath' => 'recycle_bin/',
+		'gitRecycleExpireTime' => '24.0',
+		'gitLockWaitTime' => '10',
 		'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
 		'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
 		'allProjectsUseGit' => 'false',
-    		'gitDaemonDefault' => '1',   # Default is Daemon enabled
+		'gitDaemonDefault' => '1',   # Default is Daemon enabled
 		'gitHttpDefault' => '1',     # Default is HTTP_ONLY
-   		'gitNotifyCIADefault' => '0', # Default is CIA Notification disabled
+		'gitNotifyCIADefault' => '0', # Default is CIA Notification disabled
 		'deleteGitRepositories' => 'false',
 		'gitRepositoriesShowUrl' => 'true',
 		'gitCacheMaxTime' => '-1',
@@ -35,9 +37,9 @@ Redmine::Plugin.register :redmine_git_hosting do
 		'gitCacheMaxSize' => '16',
 		'gitHooksDebug' => 'false',
 		'gitHooksAreAsynchronous' => 'true',
-    		'gitTempDataDir' => '/tmp/redmine_git_hosting/',
+		'gitTempDataDir' => '/tmp/redmine_git_hosting/',
 		'gitScriptDir' => '',
-    		'gitForceHooksUpdate' => 'true'
+		'gitForceHooksUpdate' => 'true'
 		},
 		:partial => 'redmine_git_hosting'
 		project_module :repository do
@@ -45,8 +47,8 @@ Redmine::Plugin.register :redmine_git_hosting do
 			permission :view_repository_mirrors, :repository_mirrors => :index
 			permission :edit_repository_mirrors, :repository_mirrors => :edit
 			permission :create_repository_post_receive_urls, :repository_post_receive_urls => :create
-    			permission :view_repository_post_receive_urls, :repository_post_receive_urls => :index
-    			permission :edit_repository_post_receive_urls, :repository_post_receive_urls => :edit
+			permission :view_repository_post_receive_urls, :repository_post_receive_urls => :index
+			permission :edit_repository_post_receive_urls, :repository_post_receive_urls => :edit
 		end
 end
 require "dispatcher"
