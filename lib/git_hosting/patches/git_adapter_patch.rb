@@ -1,3 +1,9 @@
+require 'stringio'
+require_dependency 'principal'
+require_dependency 'user'
+require_dependency 'git_hosting'
+require_dependency 'redmine/scm/adapters/git_adapter'
+
 module GitHosting
 	module Patches
 		module GitAdapterPatch
@@ -15,17 +21,17 @@ module GitHosting
 				base.extend(ClassMethods)
 				base.class_eval do
 					class << self
-                                        	begin
-                                                	alias_method_chain :sq_bin, :sudo
-                                                	begin
+						begin
+							alias_method_chain :sq_bin, :sudo
+							begin
 								alias_method_chain :client_command, :sudo
 							rescue Exception =>e
 							end
-                                                rescue Exception => e
-                                                	# Hm.... Might be Redmine version < 1.2 (i.e. 1.1).  Try redefining GIT_BIN.
-                                                	GitHosting.logger.warn "Seems to be early version of Redmine(1.1?), try redefining GIT_BIN."
-			                        	Redmine::Scm::Adapters::GitAdapter::GIT_BIN = GitHosting::git_exec()
-                                                end
+						rescue Exception => e
+							# Hm.... Might be Redmine version < 1.2 (i.e. 1.1).  Try redefining GIT_BIN.
+							GitHosting.logger.warn "Seems to be early version of Redmine(1.1?), try redefining GIT_BIN."
+							Redmine::Scm::Adapters::GitAdapter::GIT_BIN = GitHosting::git_exec()
+						end
 					end
 				end
 			end
@@ -43,9 +49,9 @@ module GitHosting
 
 			def scm_cmd_with_sudo(*args, &block)
 
-				max_cache_time     = (Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i             # in seconds, default = 60
-				max_cache_elements = (Setting.plugin_redmine_git_hosting['gitCacheMaxElements']).to_i         # default = 100
-				max_cache_size     = (Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024   # In MB, default = 16MB, converted to bytes
+				max_cache_time	   = (Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i	      # in seconds, default = 60
+				max_cache_elements = (Setting.plugin_redmine_git_hosting['gitCacheMaxElements']).to_i	      # default = 100
+				max_cache_size	   = (Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024   # In MB, default = 16MB, converted to bytes
 
 				repo_path = root_url || url
 				full_args = [GitHosting::git_exec(), '--git-dir', repo_path]
@@ -107,3 +113,6 @@ module GitHosting
 		end
 	end
 end
+
+# Patch in changes
+Redmine::Scm::Adapters::GitAdapter.send(:include, GitHosting::Patches::GitAdapterPatch)

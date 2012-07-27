@@ -1,3 +1,8 @@
+require_dependency 'principal'
+require_dependency 'user'
+require_dependency 'git_hosting'
+require_dependency 'repositories_controller'
+
 module GitHosting
 	module Patches
 		module RepositoriesControllerPatch
@@ -12,8 +17,8 @@ module GitHosting
 			def edit_with_scm_settings
 				GitHosting.logger.debug "On edit_with_scm_settings"
 
-                             	# Turn off updates during repository update
-                       		GitHostingObserver.set_update_active(false);
+				# Turn off updates during repository update
+				GitHostingObserver.set_update_active(false);
 				params[:repository] ||= {}
 
 				if params[:repository_scm] == "Git"
@@ -44,15 +49,15 @@ module GitHosting
 							page.replace_html "main-menu", render_main_menu(@project)
 						end
 					end
-                                  	
-                                  	if !@project.repository.nil?
-						GitHostingObserver.bracketed_update_repositories(@project) 
-                                        end
+
+					if !@project.repository.nil?
+						GitHostingObserver.bracketed_update_repositories(@project)
+					end
 				else
 					edit_without_scm_settings
 				end
 
-                        	GitHostingObserver.set_update_active(true);
+				GitHostingObserver.set_update_active(true);
 			end
 
 			def self.included(base)
@@ -65,3 +70,6 @@ module GitHosting
 		end
 	end
 end
+
+# Patch in changes
+RepositoriesController.send(:include, GitHosting::Patches::RepositoriesControllerPatch)

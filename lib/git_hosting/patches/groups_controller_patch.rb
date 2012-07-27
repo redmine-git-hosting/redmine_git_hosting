@@ -1,3 +1,8 @@
+require_dependency 'principal'
+require_dependency 'user'
+require_dependency 'git_hosting'
+require_dependency 'groups_controller'
+
 module GitHosting
 	module Patches
 		module GroupsControllerPatch
@@ -23,3 +28,6 @@ module GitHosting
 		end
 	end
 end
+
+# Patch in changes
+GroupsController.send(:include, GitHosting::Patches::GroupsControllerPatch)
