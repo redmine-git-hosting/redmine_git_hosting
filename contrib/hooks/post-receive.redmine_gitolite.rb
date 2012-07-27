@@ -28,8 +28,25 @@ def get_http_params(rgh_vars)
 	params
 end
 
+# Need to do this ourselves, because 1.8.7 ruby is broken
+def set_form_data(request, params, sep = '&')
+	request.body = params.map {|k,v|
+		if v.instance_of?(Array)
+			v.map {|e| "#{urlencode(k.to_s)}=#{urlencode(e.to_s)}"}.join(sep)
+		else
+			"#{urlencode(k.to_s)}=#{urlencode(v.to_s)}"
+		end
+	}.join(sep)
+
+	request.content_type = 'application/x-www-form-urlencoded'
+end
+
+def urlencode(str)
+	str.gsub(/[^a-zA-Z0-9_\.\-]/n) {|s| sprintf('%%%02x', s[0]) }
+end
+
 def run_query(url_str, params, with_https)
-	url_str = (with_https ?  "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
+	url_str = (with_https ?	 "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
 	success = false
 	begin
 		url  = URI.parse(url_str)
@@ -41,7 +58,7 @@ def run_query(url_str, params, with_https)
 			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		end
 		req  = Net::HTTP::Post.new(url.request_uri)
-		req.set_form_data(params)
+		set_form_data(req,params)
 		response = http.request(req) do |response|
 			response.read_body do |body_frag|
 				success = response.code.to_i == 200 ? true : false
@@ -78,7 +95,7 @@ $debug = rgh_vars["debug"] == "true"
 
 # Let's read the refs passed to us
 refs = []
-$<.each  do |line|
+$<.each	 do |line|
 	r = line.chomp.strip.split
 	refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
 end
