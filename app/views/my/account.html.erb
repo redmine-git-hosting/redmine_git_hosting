@@ -4,7 +4,7 @@
 </div>
 <h2><%=l(:label_my_account)%></h2>
 <%= error_messages_for 'user' %>
-<%= error_messages_for :gitolite_public_key %>
+<%= error_messages_for 'gitolite_public_key' %>
 
 <div class="splitcontentleft">
 	<% labelled_form_for :user, @user, :url => { :action => "account" }, :html => { :id => 'my_account_form' } do |f| %>

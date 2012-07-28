@@ -1,15 +1,15 @@
 def install_redmine_git_hosting_routes(map)
 	# URL for items of type httpServer/XXX.git.  Some versions of rails has problems with multiple regex expressions, so avoid...
-  	# Note that 'http_server_subdir' is either empty (default case) or ends in '/'.
-	map.connect ":project_path/*path", 
-  		:prefix => Setting.plugin_redmine_git_hosting['httpServerSubdir'], :project_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
+	# Note that 'http_server_subdir' is either empty (default case) or ends in '/'.
+	map.connect ":project_path/*path",
+		:prefix => Setting.plugin_redmine_git_hosting['httpServerSubdir'], :project_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
 
 	# Handle the public keys plugin to my/account.
 	map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
-	map.connect 'my/account/public_key/:public_key_id', :controller => 'my', :action => 'account', :conditions => {:method => [:get]}
+	map.connect 'my/account/public_key/:public_key_id', :controller => 'my', :action => 'account'
 	map.connect 'users/:id/edit/public_key/:public_key_id', :controller => 'users', :action => 'edit', :conditions => {:method => [:get]}
 
-  	# Handle hooks and mirrors
+	# Handle hooks and mirrors
 	map.connect 'githooks', :controller => 'gitolite_hooks', :action => 'stub'
 	map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
 	map.connect 'githooks/test', :controller => 'gitolite_hooks', :action => 'test'
@@ -35,5 +35,5 @@ if defined? map
 else
 	ActionController::Routing::Routes.draw do |map|
 		install_redmine_git_hosting_routes(map)
-        end
+	end
 end
