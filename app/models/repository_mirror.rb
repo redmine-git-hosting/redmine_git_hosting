@@ -12,7 +12,6 @@ class RepositoryMirror < ActiveRecord::Base
 
     validates_uniqueness_of :url, :scope => [:project_id]
     validates_presence_of :project_id, :url
-    validates_format_of :url, :with => URI::regexp(%w(http https ssh ftp ftps rsync file))
     validates_associated :project
 
     validate :check_refspec
@@ -38,8 +37,8 @@ class RepositoryMirror < ActiveRecord::Base
 	    push_args << "--all " if include_all_branches
 	    push_args << "--tags " if include_all_tags
 	end
-	push_args << "#{url} "
-	push_args << "\"#{explicit_refspec}\" " unless explicit_refspec.blank?
+	push_args << "\"#{dequote(url)}\" "
+	push_args << "\"#{dequote(explicit_refspec)}\" " unless explicit_refspec.blank?
 
 #	 mycom = %[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args}2>&1' | #{GitHosting.git_user_runner} "bash" ]
 #	 GitHosting.logger.error "Pushing: #{mycom}"
@@ -77,6 +76,11 @@ class RepositoryMirror < ActiveRecord::Base
     end
 
     protected
+
+    # Put backquote in front of crucial characters
+    def dequote(in_string)
+	in_string.gsub(/[$,"\\\n]/) {|x| "\\"+x}
+    end
 
     def check_refspec
 	self.explicit_refspec = explicit_refspec.strip
