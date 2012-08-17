@@ -1,4 +1,3 @@
-
 <% content_for :header_tags do %>
 	<%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
 	<%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
@@ -79,6 +78,66 @@
 
 
 
+	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_deployment_keys(@repository.project) %>
+		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
+
+
+<!--		<div class="splitcontentright"> -->
+		<div class="box tabular">
+			<h3>Deployment Credentials</h3>
+
+			<% if GitHostingHelper.can_create_deployment_keys(@repository.project) %>
+				<div style="left:0px;clear:left;margin: 2px 3px;width: 98%;">
+					<%= link_to("Add Deployment Credential", url_for(:controller => 'deployment_credentials', :action => 'create_with_key', :project_id => @repository.project.identifier), :class => 'icon icon-add add-deployment-credential' ) %>
+				</div>
+			<% end %>
+
+			<% if @repository.deployment_credentials.active.any? %>
+				<div class="autoscroll">
+					<table class="list" style="margin: 1px 2px; width: 99%">
+						<thead>
+							<tr>
+								<th>Owner</th>
+								<th>Public Key Name</th>
+								<th style="text-align:center;">Public Key File</th>
+								<th style="text-align:center;">Perm</th>
+								<th style="text-align:center;">Honored?</th>
+								<th style="text-align:center;">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @repository.deployment_credentials.active.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |cred| %>
+								<tr class="<%= cycle('odd', 'even') %>">
+									<td class="name" style="vertical-align:middle;"> <%= cred.user.login %> </td>
+									<td class="name" style="vertical-align:middle;">
+									  <% if cred.user == User.current %>
+									    <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'my', :action => 'account', :public_key_id => cred.gitolite_public_key.id)) %>
+									  <% elsif User.current.admin? %>
+									    <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'users', :action => 'edit', :id => cred.gitolite_public_key.user.id, :public_key_id => cred.gitolite_public_key.id, :tab => 'keys')) %>
+									  <% else %>
+									    <%= cred.gitolite_public_key.title %> 
+									  <% end %>
+									</td>
+									<td class="center" style="text-align:center; vertical-align:middle;"><%= "keydir/#{cred.gitolite_public_key.identifier}.pub" %></td>
+									<td class="center" style="vertical-align:middle;"><%= cred.perm %></td>
+									<td class="center" style="vertical-align:middle;"><%= checked_image cred.honored? %></td>
+									<td class="buttons" width="20%" style="vertical-align:middle; text-align:right; ">
+									<% if GitHostingHelper.can_edit_deployment_keys(@repository.project) && (User.current.admin?|| User.current == cred.user)  %>
+										<%= link_to(l(:button_edit), url_for(:controller => 'deployment_credentials', :action => 'edit', :project_id => @repository.project.identifier, :id => cred.id), :class => 'icon icon-edit edit-deployment-credential') %>
+										<%= link_to(l(:button_delete), url_for(:controller => 'deployment_credentials', :action => 'destroy', :project_id => @repository.project.identifier, :id => cred.id), :class => 'icon icon-del delete-deployment-credential') %>
+									<% end %>
+									</td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div>
+			<% else %>
+				<p class="nodata" style="margin: 2px 3px; width: 95%; padding: 8px;">No Deployment Credentials Defined</p>
+			<% end %>
+
+		</div>
+	<% end %>
 	<% if @repository && @repository.is_a?(Repository::Git) && GitHostingHelper.can_view_post_receive_urls(@repository.project) %>
 		<!-- <div id="mirror_top_spacer" style="display:block;height:25px;clear:both;"></div> -->
 
@@ -108,10 +167,10 @@
 							<% @repository.project.repository_post_receive_urls.each do |prurl| %>
 								<tr class="<%= cycle('odd', 'even') %>">
 									<td class="name" style="vertical-align:middle;"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
-									<td class="center" width="12%" style="vertical-align:middle;"><%= post_receive_mode prurl %><br /><%= checked_image prurl.active? %></td>
-									<td class="buttons" width="10%" style="text-align:left; vertical-align:middle;">
+									<td class="center" width="10%" style="vertical-align:middle;"><%= post_receive_mode prurl %><br /><%= checked_image prurl.active? %></td>
+									<td class="buttons" width="20%" style="vertical-align:middle; text-align:right;">
 									<% if GitHostingHelper.can_edit_post_receive_urls(@repository.project) %>
-										<%= link_to(l(:button_edit), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-edit edit-post-receive-url') %><br />
+										<%= link_to(l(:button_edit), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-edit edit-post-receive-url') %>
 										<%= link_to(l(:button_delete), url_for(:controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @repository.project.identifier, :id => prurl.id), :class => 'icon icon-del delete-post-receive-url') %>
 									<% end %>
 									</td>
@@ -153,13 +212,13 @@
 									<td class="name" style="vertical-align:middle;" ><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'edit-mirror') %>
 									</td>
 									<td class="center" style="vertical-align:middle;"><%= refspec mirror, 64 %></td>
-									<td class="center" width="12%" style="vertical-align:middle;"><%= mirror_mode mirror %><br/><%= checked_image mirror.active? %></td>
-									<td class="buttons" width"10%" style="text-align:left;">
+									<td class="center" style="vertical-align:middle;"><%= mirror_mode mirror %><br/><%= checked_image mirror.active? %></td>
+									<td class="buttons" width="20%" style="vertical-align:middle;text-align:right;">
 										<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
 											<% if mirror.active==1 -%>
-												<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => @repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %><br/>
+												<%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :project_id => @repository.project.identifier, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
 											<% end %>
-											<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %><br/>
+											<%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
 											<%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :project_id => @repository.project.identifier, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
 										<% end %>
 									</td>
@@ -286,6 +345,42 @@
 							Modalbox.show(
 								elem.href, {
 									title: "<%=l(:label_post_receive_url_delete)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".add-deployment-credential").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_deployment_credential_create)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".edit-deployment-credential").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_deployment_credential_edit)%>",
+									width: getWidth()
+								}
+							)
+							return false;
+						})
+					})
+					$$(".delete-deployment-credential").each(function(elem) {
+						Event.observe(elem, 'click', function(event) {
+							Event.stop(event);
+							Modalbox.show(
+								elem.href, {
+									title: "<%=l(:label_deployment_credential_delete)%>",
 									width: getWidth()
 								}
 							)

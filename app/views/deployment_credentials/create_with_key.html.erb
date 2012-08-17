@@ -1,0 +1,7 @@
+<% if not @is_xhr %><h2><%=l(:label_deployment_credential_create)%></h2><% end %>
+<% labelled_remote_form_for :deployment_credentials, @cred,
+	:url => { :controller => 'deployment_credentials', :action => 'create_with_key', :project_id => @project, :id => @cred.id }, 
+	:html => {:method => :post} do |f| %>
+<%= render :partial => 'form_with_key', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>

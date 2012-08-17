@@ -6,4 +6,19 @@ module GitolitePublicKeysHelper
 			    ["#{l(:status_locked)} (#{key_count_by_active[false].to_i})", GitolitePublicKey::STATUS_LOCKED]], selected)
     end
 
+    def keylabel(key)
+	if key.user == User.current
+	    "\"#{key.title}\""
+	else
+	    "\"#{key.user.login}@#{key.title}\""
+	end
+    end
+
+    def keylabel_text(key)
+	if key.user == User.current
+	    "#{key.title}"
+	else
+	    "#{key.user.login}@#{key.title}"
+	end
+    end
 end

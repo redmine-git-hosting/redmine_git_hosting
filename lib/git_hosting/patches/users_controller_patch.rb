@@ -61,12 +61,14 @@ module GitHosting
 
 	    # Add in values for viewing public keys:
 	    def set_public_key_values
-		@gitolite_public_keys = @user.gitolite_public_keys.all(:order => 'active DESC, created_at DESC', :conditions => "active=1")
+		@gitolite_user_keys = @user.gitolite_public_keys.all(:order => 'title ASC, created_at ASC', :conditions => "active=1 && key_type=#{GitolitePublicKey::KEY_TYPE_USER}")
+		@gitolite_deploy_keys = @user.gitolite_public_keys.all(:order => 'title ASC, created_at ASC', :conditions => "active=1 && key_type=#{GitolitePublicKey::KEY_TYPE_DEPLOY}")
+		@gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
 		@gitolite_public_key = @gitolite_public_keys.detect{|x| x.id == params[:public_key_id].to_i}
 		if @gitolite_public_key.nil?
 		    if params[:public_key_id]
 			# public_key specified that doesn't belong to @user.  Kill off public_key_id and try again
-			redirect_to :public_key_id => nil, :tab => params[:tab]
+			redirect_to :public_key_id => nil, :tab => nil
 			return
 		    else
 			@gitolite_public_key = GitolitePublicKey.new
@@ -74,10 +76,11 @@ module GitHosting
 		end
 	    end
 
-
 	    def self.included(base)
 		base.class_eval do
 		    unloadable
+
+		    helper :gitolite_public_keys
 		end
 		# Edit adds new functionality, so don't silently fail!
 		base.send(:alias_method_chain, :edit, :public_keys)

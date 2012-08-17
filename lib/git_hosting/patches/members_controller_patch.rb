@@ -37,14 +37,32 @@ module GitHosting
 		GitHostingObserver.set_update_active(:delete => true);
 	    end
 
+	    # Need to make sure that we can re-render the repository settings page
+	    def render_with_trigger_refresh(*options, &myblock)
+		doing_update = options.detect {|x| x==:update || (x.is_a?(Hash) && x[:update])}
+		if !doing_update
+		    render_without_trigger_refresh(*options, &myblock)
+		else
+		    # For repository partial
+		    @repository ||= @project.repository
+		    render_without_trigger_refresh *options do |page|
+			yield page
+			page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
+		    end
+		end
+	    end
+
 	    def self.included(base)
 		base.class_eval do
 		    unloadable
+
+		    helper :repositories
 		end
 		begin
 		    base.send(:alias_method_chain, :new, :disable_update)
 		    base.send(:alias_method_chain, :edit, :disable_update)
 		    base.send(:alias_method_chain, :destroy, :disable_update)
+		    base.send(:alias_method_chain, :render, :trigger_refresh)
 		rescue
 		end
 	    end

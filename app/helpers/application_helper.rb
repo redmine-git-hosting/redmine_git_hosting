@@ -11,6 +11,7 @@ module ApplicationHelper
     #	  and override properly defined versions).  Note that Redmine 1.4+ removes
     #	  lib/tabular_form_builder.rb but defines these functions using new
     #	  builder functions...
+    # 8/10/12 Added "labelled_fields_for", since that seems to be coming in 1.4
     if !defined?(labelled_form_for) && File.exists?(Rails.root.join("lib/tabular_form_builder.rb"))
 	def labelled_form_for(*args, &proc)
 	    args << {} unless args.last.is_a?(Hash)
@@ -26,6 +27,15 @@ module ApplicationHelper
 	    options = args.last
 	    options.merge!({:builder => TabularFormBuilder,:lang => current_language})
 	    remote_form_for(*args, &proc)
+	end
+    end
+
+    if !defined?(labelled_fields_for) && File.exists?(Rails.root.join("lib/tabular_form_builder.rb"))
+	def labelled_fields_for(*args, &proc)
+	    args << {} unless args.last.is_a?(Hash)
+	    options = args.last
+	    options.merge!({:builder => TabularFormBuilder,:lang => current_language})
+	    fields_for(*args, &proc)
 	end
     end
 

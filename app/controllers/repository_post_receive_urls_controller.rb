@@ -94,15 +94,20 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 	if request.get?
 	    # display confirmation view
 	else
+	    redirect_url = url_for(:controller => 'projects',
+				   :action => 'settings',
+				   :id => @prurl.project.identifier,
+				   :tab => 'repository')
 	    if params[:confirm]
-		redirect_url = url_for(:controller => 'projects',
-				       :action => 'settings',
-				       :id => @prurl.project.identifier,
-				       :tab => 'repository')
 		@prurl.destroy
-		respond_to do |format|
-		    format.html {redirect_to(redirect_url, :notice => l(:post_receive_url_notice_deleted))}
-		end
+
+		flash[:notice] = l(:post_receive_url_notice_deleted)
+	    end
+
+	    respond_to do |format|
+		format.html {
+		    redirect_to(redirect_url)
+		}
 	    end
 	end
     end
@@ -118,7 +123,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
     end
 
     def set_project_variable
-	@project = Project.find(:first, :conditions => ["identifier = ?", params[:project_id]])
+	@project = Project.find_by_identifier(params[:project_id])
     end
 
     def find_repository_post_receive_url

@@ -94,15 +94,20 @@ class RepositoryMirrorsController < ApplicationController
 	if request.get?
 	    # display confirmation view
 	else
+	    redirect_url = url_for(:controller => 'projects',
+				   :action => 'settings',
+				   :id => @mirror.project.identifier,
+				   :tab => 'repository')
 	    if params[:confirm]
-		redirect_url = url_for(:controller => 'projects',
-				       :action => 'settings',
-				       :id => @mirror.project.identifier,
-				       :tab => 'repository')
 		@mirror.destroy
-		respond_to do |format|
-		    format.html {redirect_to(redirect_url, :notice => l(:mirror_notice_deleted))}
-		end
+
+		flash[:notice] = l(:mirror_notice_deleted)
+	    end
+
+	    respond_to do |format|
+		format.html {
+		    redirect_to(redirect_url)
+		}
 	    end
 	end
     end
@@ -126,7 +131,7 @@ class RepositoryMirrorsController < ApplicationController
     end
 
     def set_project_variable
-	@project = Project.find(:first, :conditions => ["identifier = ?", params[:project_id]])
+	@project = Project.find_by_identifier(params[:project_id])
     end
 
     def find_repository_mirror

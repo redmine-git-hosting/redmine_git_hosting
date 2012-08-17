@@ -10,13 +10,13 @@ require 'git_adapter_hooks.rb'
 
 
 module GitHosting
-    LOCK_WAIT_IF_UNDEF = 10			# In case settings not migrated (normally from settings)
-    REPOSITORY_IF_UNDEF = "repositories/"	# In case settings not migrated (normally from settings)
-    REDMINE_SUBDIR = ""				# In case settings not migrated (normally from settings)
-    REDMINE_HIERARCHICAL = "true"		# In case settings not migrated (normally from settings)
-    HTTP_SERVER_SUBDIR = ""			# In case settings not migrated (normally from settings)
+    LOCK_WAIT_IF_UNDEF = 10		       # In case settings not migrated (normally from settings)
+    REPOSITORY_IF_UNDEF = "repositories/"  # In case settings not migrated (normally from settings)
+    REDMINE_SUBDIR = ""		       # In case settings not migrated (normally from settings)
+    REDMINE_HIERARCHICAL = "true"	       # In case settings not migrated (normally from settings)
+    HTTP_SERVER_SUBDIR = ""		       # In case settings not migrated (normally from settings)
     TEMP_DATA_DIR = "/tmp/redmine_git_hosting"	# In case settings not migrated (normally from settings)
-    SCRIPT_DIR = ""				# In case settings not migrated (normally from settings)
+    SCRIPT_DIR = ""			       # In case settings not migrated (normally from settings)
     SCRIPT_PARENT = "bin"
 
     # Used to register errors when pulling and pushing the conf file
@@ -719,11 +719,20 @@ module GitHosting
 	    end
 
 	    # Collect relevant users into hash with user as key and activity (in some active project) as value
-	    git_projects.select{|proj| proj.active?}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq.each do |cur_user|
-		active_keys = cur_user.gitolite_public_keys.active || []
+	    (git_projects.select{|proj| proj.active?}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
+		if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
+		    active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
+		    cur_token = cur_user
 
-		# Remove old keys that happen to be left around
-		cur_token = GitolitePublicKey.user_to_user_token(cur_user)
+		    # Remove inactive Deployment Credentials
+		    DeploymentCredential.inactive.each {|cred| DeploymentCredential.destroy(cred.id)}
+		else
+		    active_keys = cur_user.gitolite_public_keys.active.select{|x| x.user_key?} || []
+		    cur_token = GitolitePublicKey.user_to_user_token(cur_user)
+
+		    # Remove inactive keys (will be deleted below)
+		    cur_user.gitolite_public_keys.inactive.each {|key| GitolitePublicKey.destroy(key.id)}
+		end
 
 		# Current filenames
 		old_keynames = old_keyhash[cur_token] || []
@@ -750,9 +759,6 @@ module GitHosting
 		    %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
 		    changed = true
 		end
-
-		# Remove inactive keys (will already be deleted by above code)
-		cur_user.gitolite_public_keys.inactive.each {|key| GitolitePublicKey.destroy(key.id)}
 
 		# Add missing keys to the keydir
 		active_keys.each do |key|
@@ -876,19 +882,19 @@ module GitHosting
 
 		# If this is an active (non-archived) project, then update gitolite entry.  Add GIT_DAEMON_KEY.
 		if proj.active?
+		    # Get deployment keys (could be empty)
+		    write_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+		    read_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+
 		    # fetch users
 		    users = proj.member_principals.map(&:user).compact.uniq
 		    write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
 		    read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
 
-		    # update users
-		    read_user_keys = []
-		    write_user_keys = []
-
-		    read_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+		    read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
 			read_user_keys.push key.identifier
 		    end
-		    write_users.map{|u| u.gitolite_public_keys.active}.flatten.compact.uniq.each do |key|
+		    write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
 			write_user_keys.push key.identifier
 		    end
 
@@ -902,8 +908,8 @@ module GitHosting
 		    # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
 		    # (to be put back as above, when appropriate).
 		    conf.delete_redmine_keys repo_name
-		    conf.add_read_user repo_name, read_user_keys
-		    conf.add_write_user repo_name, write_user_keys
+		    conf.add_read_user repo_name, read_user_keys.uniq
+		    conf.add_write_user repo_name, write_user_keys.uniq
 
 		    # If no redmine keys, mark with dummy key
 		    if (read_user_keys+write_user_keys).empty?

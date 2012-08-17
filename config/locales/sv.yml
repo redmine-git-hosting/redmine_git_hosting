@@ -62,20 +62,45 @@ sv:
 
   label_public_keys: Public keys
   label_current_public_keys: Current Public keys
+  label_current_user_keys: Current User Keys
+  label_current_deploy_keys: Current Deployment Keys
+  label_user_key: User Key
+  label_deploy_key: Deploy Key
+  field_key_type: Public Key Type
+  field_delete_when_unused: Delete Key When Unused
   label_identifier_can_be_arbitrary: Identifier (can be any meaningful string)
   label_cut_and_paste: Key (cut and paste entire .pub file)
   label_public_key_new: Enter new Public key
   label_public_key_edit: Edit existing Public key
+  field_key: Key
   field_public_key: Key
-  notice_public_key_updated: Public key '%{title}' was successfully updated.
-  notice_public_key_added: Public key '%{title}' was successfully added.
-  notice_public_key_deleted: Public key '%{title}' was successfully deleted.
+  field_title: Identifier
+  notice_public_key_updated: Public key <strong>%{title}</strong> was successfully updated.
+  notice_public_key_added: Public key <strong>%{title}</strong> was successfully added.
+  notice_public_key_deleted: Public key <strong>%{title}</strong> was successfully deleted.
+  error_public_key_create_failed: Failed to create public key.
+  error_public_key_update_failed: Failed to update public key.
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
   activerecord:
     errors:
       messages:
         'may not be changed': 'may not be changed'
-  text_gitolite_key_destroy_confirmation: Are you sure you want to destroy '%{title}'?
+  text_gitolite_key_destroy_confirmation: Are you sure you want to destroy %{title}?
+  text_this_key: this key
+  label_deploy_perm: Access Permissions
+  select_create_new_key: Create New Key (Below)
+  select_other_keys: 'Other Keys'
+  label_deployment_credential_create: Create New Deployment Credential
+  label_deployment_credential_edit: Edit Deployment Credential
+  label_deployment_credential_delete: Delete Deployment Credential
+  label_which_deploy_key: Select Deployment Key
+  notice_deployment_credential_updated: Deployment Credential <strong>%{title} => %{perm}</strong> was successfully updated.
+  notice_deployment_credential_added: Deployment Credential <strong>%{title} => %{perm}</strong> was successfully added.
+  notice_deployment_credential_deleted: Deployment Credential <strong>%{title} =>%{perm}</strong> was successfully deleted.
+  notice_deployment_credential_deleted_with_key: Both Deployment Credential <strong>%{title} => %{perm}</strong> and Key <strong>%{title}</strong> were successfully deleted.
+  error_deployment_credential_create_failed: Failed to create Deployment Credential.
+  error_deployment_credential_update_failed: Failed to update Deployment Credential.
+  field_perm: Permissions
 
   label_git_cache_max_time: Max Cache Time
   label_git_cache_max_elements: Max Cache Elements

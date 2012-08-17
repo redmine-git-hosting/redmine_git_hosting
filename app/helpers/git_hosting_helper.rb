@@ -53,6 +53,23 @@ module GitHostingHelper
 	return User.current.allowed_to?(:edit_repository_post_receive_urls, project)
     end
 
+    def self.can_create_deployment_keys(project)
+	return User.current.admin? || User.current.allowed_to?(:create_deployment_keys, project)
+    end
+    def self.can_view_deployment_keys(project)
+	return User.current.admin? || User.current.allowed_to?(:view_deployment_keys, project)
+    end
+    def self.can_edit_deployment_keys(project)
+	return User.current.admin? || User.current.allowed_to?(:edit_deployment_keys, project)
+    end
+    def self.can_create_deployment_keys_for_some_project(theuser=User.current)
+	return true if theuser.admin?
+	theuser.projects_by_role.each_key do |role|
+	    return true if role.allowed_to?(:create_deployment_keys)
+	end
+	false
+    end
+
     @@file_actions = {
 	"a" => "add",
 	"m" => "modify",

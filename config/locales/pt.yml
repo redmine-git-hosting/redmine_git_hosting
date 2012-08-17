@@ -6,8 +6,8 @@ pt:
   label_git_user: Nome de Utilizador Git
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Ficheiro de identidade SSH Gitolite (Chave Privada)
-  label_gitolite_config_file: Arquivo de configuração Gitolite <br/> (relativo ao diretório conf)
-  label_gitolite_config_has_admin_key: Arquivo de configuração Gitolite tem admin chave
+  label_gitolite_config_file: 'Arquivo de configuração Gitolite <br/> (relativo ao diretório conf)'
+  label_gitolite_config_has_admin_key: 'Arquivo de configuração Gitolite tem admin chave'
   label_git_repository_base_path: 'Directório Git base (Relativo à "home" do utilizador git)'
   label_git_recycle_base_path: 'Directório Recycle Bin base (Relativo à "home" do utilizador git)'
   label_git_recycle_expire_time: 'expirar o tempo para Recycle Bin (em horas)'
@@ -60,20 +60,45 @@ pt:
 
   label_public_keys: 'Chaves públicas'
   label_current_public_keys: 'As chaves públicas atuais'
+  label_current_user_keys: 'Atuais Chaves Usuário'
+  label_current_deploy_keys: 'Atuais Chaves Deployment'
+  label_user_key: 'Chaves Usuário'
+  label_deploy_key: 'Chaves Deployment'
+  field_key_type: 'Tipo de Chave Pública'
+  field_delete_when_unused: 'Excluir chave quando não for utilizado'
   label_identifier_can_be_arbitrary: 'Identificador (Qualquer texto significativa)'
   label_cut_and_paste: 'Chave (cortar e colar arquivo .pub ficheiro)'
   label_public_key_new: 'Nova chave pública'
   label_public_key_edit: 'Editar a chave pública existentes'
+  field_key: Chave
   field_public_key: Chave
-  notice_public_key_updated: 'A chave pública "%{title}" foi actualizada com sucesso.'
-  notice_public_key_added: 'A chave pública "%{title}" foi adicionada com sucesso.'
-  notice_public_key_deleted: 'A chave pública "%{title}" foi excluído com sucesso.'
+  field_title: Identifier
+  notice_public_key_updated: 'A chave pública <strong>%{title}</strong> foi actualizada com sucesso.'
+  notice_public_key_added: 'A chave pública <strong>%{title}</strong> foi adicionada com sucesso.'
+  notice_public_key_deleted: 'A chave pública <strong>%{title}</strong> foi excluído com sucesso.'
+  error_public_key_create_failed: 'Não Conseguiu Criar Chave Pública'
+  error_public_key_update_failed: 'Não Conseguiu Atualizar Chave Pública'
   label_key_cannot_be_changed_please_create_new_key: 'A chave já não pode ser alterada. No entanto, pode excluí-lo e criar uma nova.'
   activerecord:
     errors:
       messages:
         'não pode ser mudada': 'não pode ser mudada'
-  text_gitolite_key_destroy_confirmation: 'Tem certeza de que quer destruir "%{title}"?'
+  text_gitolite_key_destroy_confirmation: 'Tem certeza de que quer destruir %{title}?'
+  text_this_key: esta chave
+  label_deploy_perm: 'Permissões de Acesso'
+  select_create_new_key: 'Criar Nova Chave (Abaixo)'
+  select_other_keys: 'Outras Chaves'
+  label_deployment_credential_create: 'Criar Credencial Deployment Novo'
+  label_deployment_credential_edit: 'Editar Credencial Deployment'
+  label_deployment_credential_delete: 'Excluir Credencial Deployment'
+  label_which_deploy_key: 'Selecione a Chave Deployment'
+  notice_deployment_credential_updated: "Credencial Deployment <strong>%{title} => %{perm}</strong> foi atualizado com sucesso."
+  notice_deployment_credential_added: "Credencial Deployment <strong>%{title} => %{perm}</strong> foi adicionado com sucesso."
+  notice_deployment_credential_deleted: "Credencial Deployment <strong>%{title} => %{perm}</strong> excluído com sucesso."
+  notice_deployment_credential_deleted_with_key: "Ambos os Credencial Deployment <strong>%{title} => %{perm}</strong> and Key <strong>%{title}</strong> foram excluído com sucesso."
+  error_deployment_credential_create_failed: 'Não Conseguiu Criar Credencial Deployment.' 
+  error_deployment_credential_update_failed: 'Não Conseguiu Atualizar Credencial Deployment.' 
+  field_perm: 'Permissões'
 
   label_git_cache_max_time: Max Cache Time
   label_git_cache_max_elements: Max Cache Elements

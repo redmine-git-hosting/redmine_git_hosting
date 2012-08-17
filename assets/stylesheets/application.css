@@ -45,7 +45,7 @@ padding:5px;
 
 .public_key_view label {
 font-weight: bold;
-text-align: left;
+text-align: right;
 }
 
 .public_key_view .myhead {
