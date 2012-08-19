@@ -1,3 +1,6 @@
+require 'base64'
+include GitolitePublicKeysHelper
+
 class GitolitePublicKey < ActiveRecord::Base
     STATUS_ACTIVE = 1
     STATUS_LOCKED = 0
@@ -6,6 +9,10 @@ class GitolitePublicKey < ActiveRecord::Base
     KEY_TYPE_DEPLOY = 1
 
     DEPLOY_PSEUDO_USER = "_deploy_key_"
+
+    # These two constants are related -- don't change one without the other
+    KEY_FORMATS = ['ssh-rsa', 'ssh-dss']
+    KEY_NUM_COMPONENTS = [3,5]
 
     belongs_to :user
     validates_uniqueness_of :title, :scope => :user_id
@@ -23,17 +30,11 @@ class GitolitePublicKey < ActiveRecord::Base
 
     validate :has_not_been_changed
     validates_inclusion_of :key_type, :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY]
+    validate :key_format_and_uniqueness
 
     before_validation :set_identifier
+    before_validation :strip_whitespace
     before_validation :remove_control_characters
-
-    def has_not_been_changed
-	unless new_record?
-	    %w(identifier key user_id key_type).each do |attribute|
-		errors.add(attribute, 'may not be changed') unless changes[attribute].blank?
-	    end
-	end
-    end
 
     def set_identifier
 	self.identifier ||=
@@ -81,11 +82,6 @@ class GitolitePublicKey < ActiveRecord::Base
 	self.identifier
     end
 
-    # Remove control characters from key
-    def remove_control_characters
-	self.key=key.gsub(/[\a\r\n\t]/,'')
-    end
-
     def to_s ; title ; end
 
     @@myregular = /^redmine_(.*)_\d*_\d*(.pub)?$/
@@ -96,5 +92,114 @@ class GitolitePublicKey < ActiveRecord::Base
 
     def self.user_to_user_token(user)
 	user.login.underscore.gsub(/[^0-9a-zA-Z\-]/,'_')
+    end
+
+    protected
+
+    # Strip leading and trailing whitespace
+    def strip_whitespace
+	self.title = title.strip
+	self.key = key.strip
+    end
+
+    # Remove control characters from key
+    def remove_control_characters
+	# First -- let the first control char or space stand (to divide key type from key)
+	# Really, this is catching a special case in which there is a \n between type and key.
+	# Most common case turns first space back into space....
+	self.key=key.sub(/[ \r\n\t]/,' ')
+
+	# Next, if comment divided from key by control char, let that one stand as well
+	# We can only tell this if there is an "=" in the key.	So, won't help 1/3 times.
+	self.key=key.sub(/=[ \r\n\t]/,'= ')
+
+	# Delete any remaining control characters....
+	self.key=key.gsub(/[\a\r\n\t]/,'').strip
+    end
+
+    def has_not_been_changed
+	unless new_record?
+	    %w(identifier key user_id key_type).each do |attribute|
+		errors.add(attribute, 'may not be changed') unless changes[attribute].blank?
+	    end
+	end
+    end
+
+    def key_format_and_uniqueness
+	return if key.blank? || !new_record?
+
+	# First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
+	# crypto type matches.	Note that we ignore presence of comment!
+	keypieces = key.match(/^(\S+)\s+(\S+)/)
+	if !keypieces || keypieces[1].length > 10  # Probably has key as first component
+	    errors.add(:key,l(:error_key_needs_two_components))
+	    return
+	end
+
+	if !(KEY_FORMATS.index(keypieces[1]))
+	    errors.add(:key,l(:error_key_bad_type,:types=>wrap_and_join(KEY_FORMATS,l(:word_or))))
+	    return
+	end
+
+	# Make sure that key has proper number of characters (divisible by 4) and no more than 2 '='
+	if (keypieces[2].length % 4) != 0 || !(keypieces[2].match(/^[a-zA-Z0-9\+\/]+={0,2}$/))
+	    Rails.logger.error "Key error: #{keypieces[2].length % 4}"
+	    errors.add(:key,l(:error_key_corrupted))
+	    return
+	end
+
+	deckey = Base64.decode64(keypieces[2])
+	piecearray=[]
+	while deckey.length >= 4
+	    length = 0
+	    deckey.slice!(0..3).bytes do |byte|
+		length = length * 256 + byte
+	    end
+	    if deckey.length < length
+		errors.add(:key,l(:error_key_corrupted))
+		return
+	    end
+	    piecearray << deckey.slice!(0..length-1)
+	end
+	if deckey.length != 0
+	    errors.add(:key,l(:error_key_corrupted))
+	    return
+	end
+
+	if piecearray[0] != keypieces[1]
+	    errors.add(:key,l(:error_key_type_mismatch,:type1=>keypieces[1],:type2=>piecearray[0]))
+	    return
+	end
+
+	if piecearray.length != KEY_NUM_COMPONENTS[KEY_FORMATS.index(piecearray[0])]
+	    errors.add(:key,l(:error_key_corrupted))
+	    return
+	end
+
+
+	# First version of uniqueness check -- simply check all keys...
+
+	# Check against the gitolite administrator key file (owned by noone).
+	allkeys = [GitolitePublicKey.new({ :user=>nil, :key=>%x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}'] })]
+	# Check all active keys
+	allkeys += (GitolitePublicKey.active.all)
+
+	allkeys.each do |existingkey|
+	    existingpieces = existingkey.key.match(/^(\S+)\s+(\S+)/)
+	    if existingpieces && (existingpieces[2] == keypieces[2])
+		# Hm.... have a duplicate key!
+		if existingkey.user == User.current
+		    errors.add(:key,l(:error_key_in_use_by_you,:name=>existingkey.title))
+		elsif User.current.admin?
+		    if existingkey.user
+			errors.add(:key,l(:error_key_in_use_by_other,:login=>existingkey.user.login,:name=>existingkey.title))
+		    else
+			errors.add(:key,l(:error_key_in_use_by_admin))
+		    end
+		else
+		    errors.add(:key,l(:error_key_in_use_by_someone))
+		end
+	    end
+	end
     end
 end

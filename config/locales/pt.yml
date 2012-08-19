@@ -79,6 +79,15 @@ pt:
   error_public_key_create_failed: 'Não Conseguiu Criar Chave Pública'
   error_public_key_update_failed: 'Não Conseguiu Atualizar Chave Pública'
   label_key_cannot_be_changed_please_create_new_key: 'A chave já não pode ser alterada. No entanto, pode excluí-lo e criar uma nova.'
+  error_key_corrupted: parece ser corrompido.
+  error_key_needs_two_components: 'precisa de pelo menos dois componentes: a tecla [tipo] e [valor-chave].'
+  error_key_bad_type: 'tem um tipo ruim. Os tipos válidos são %{types}.'
+  word_or: ou
+  error_key_type_mismatch: tipo (%{type1}) não corresponde ao tipo dentro do corpo da chave (%{type2}).
+  error_key_in_use_by_you: 'já está em uso por você como "%{name}".'
+  error_key_in_use_by_other: 'já está em uso por "%{login}" usuário como "%{name}".'
+  error_key_in_use_by_admin: 'já está em uso como a chave administrador gitolite.'
+  error_key_in_use_by_someone: 'já está em uso. Ela pertence a outro usuário (perguntar ao administrador para detalhes).'
   activerecord:
     errors:
       messages:

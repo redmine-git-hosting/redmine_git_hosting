@@ -81,6 +81,15 @@ th:
   error_public_key_create_failed: Failed to create public key.
   error_public_key_update_failed: Failed to update public key.
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
+  error_key_corrupted: seems to be corrupted.
+  error_key_needs_two_components: 'needs at least two components: [key-type] and [key-value].'
+  error_key_bad_type: 'has a bad type.  Valid types are %{types}.'
+  word_or: or
+  error_key_type_mismatch: type (%{type1}) does not match type within body of key (%{type2}).
+  error_key_in_use_by_you: 'is already in use by you as "%{name}".'
+  error_key_in_use_by_other: 'is already in use by user "%{login}" as "%{name}".'
+  error_key_in_use_by_admin: is already in use as the gitolite administrator key.
+  error_key_in_use_by_someone: is already in use. It belongs to another user (ask administrator for details).
   activerecord:
     errors:
       messages:
