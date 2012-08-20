@@ -127,7 +127,10 @@ class GitolitePublicKeysController < ApplicationController
 
     def destroy_key
 	@gitolite_public_key[:active] = 0
-	@gitolite_public_key.save
+
+	# Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
+	@gitolite_public_key.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
+
 	flash[:notice] = l(:notice_public_key_deleted, :title=>keylabel(@gitolite_public_key))
     end
 end

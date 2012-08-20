@@ -98,12 +98,18 @@ class GitolitePublicKey < ActiveRecord::Base
 
     # Strip leading and trailing whitespace
     def strip_whitespace
+	# Don't mess with existing keys (since cannot change key text anyway)
+	return if !new_record?
+
 	self.title = title.strip
 	self.key = key.strip
     end
 
     # Remove control characters from key
     def remove_control_characters
+	# Don't mess with existing keys (since cannot change key text anyway)
+	return if !new_record?
+
 	# First -- let the first control char or space stand (to divide key type from key)
 	# Really, this is catching a special case in which there is a \n between type and key.
 	# Most common case turns first space back into space....
@@ -126,7 +132,7 @@ class GitolitePublicKey < ActiveRecord::Base
     end
 
     def key_format_and_uniqueness
-	return if key.blank? || !new_record?
+	return if key.blank?
 
 	# First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
 	# crypto type matches.	Note that we ignore presence of comment!
@@ -185,6 +191,7 @@ class GitolitePublicKey < ActiveRecord::Base
 	allkeys += (GitolitePublicKey.active.all)
 
 	allkeys.each do |existingkey|
+	    next if existingkey.id == id
 	    existingpieces = existingkey.key.match(/^(\S+)\s+(\S+)/)
 	    if existingpieces && (existingpieces[2] == keypieces[2])
 		# Hm.... have a duplicate key!
