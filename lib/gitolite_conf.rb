@@ -2,6 +2,7 @@ module GitHosting
     class GitoliteConfig
 	DUMMY_REDMINE_KEY="redmine_dummy_key"
 	ARCHIVED_REDMINE_KEY="redmine_archived_project"
+	DISABLED_REDMINE_KEY="redmine_disabled_project"
 	GIT_DAEMON_KEY="daemon"
 	ADMIN_REPO = "gitolite-admin"
 	PRIMARY_CONF_FILE = "gitolite.conf"
@@ -64,6 +65,10 @@ module GitHosting
 	    add_read_user repo_name, [ARCHIVED_REDMINE_KEY]
 	end
 
+	def mark_disabled repo_name
+	    add_read_user repo_name, [DISABLED_REDMINE_KEY]
+	end
+
 	# Grab admin key (assuming it exists)
 	def get_admin_key
 	    return (repository(ADMIN_REPO).get "RW+").first
@@ -91,6 +96,11 @@ module GitHosting
 	    repository(repo_name).rights.detect {|perm, users| users.detect {|key| is_redmine_key? key}} || (repo_has_no_keys? repo_name)
 	end
 
+	# Return true if repository has any redmine keys other than the DUMMY_REDMINE_KEY
+	def has_actual_redmine_keys? repo_name
+	    repository(repo_name).rights.detect {|perm, users| users.detect {|key| GitolitePublicKey::ident_to_user_token(key)}}
+	end
+
 	# Delete all of the redmine keys from a repository
 	# In addition, if there are any redmine keys, delete the GIT_DAEMON_KEY as well,
 	# since we assume this under control of redmine server.
@@ -107,7 +117,7 @@ module GitHosting
 	end
 
 	def is_redmine_key? keyname
-	    (GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY || keyname == ARCHIVED_REDMINE_KEY) ? true : false
+	    (GitolitePublicKey::ident_to_user_token(keyname) || keyname == DUMMY_REDMINE_KEY || keyname == ARCHIVED_REDMINE_KEY || keyname == DISABLED_REDMINE_KEY) ? true : false
 	end
 
 	def is_daemon_key? keyname

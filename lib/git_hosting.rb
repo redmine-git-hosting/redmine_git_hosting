@@ -662,20 +662,20 @@ module GitHosting
 	args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
 	if flags[:resync_all]
 	    logger.info "Executing RESYNC_ALL operation on gitolite configuration"
-	    projects = Project.active_or_archived.has_module(:repository).find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => :repository)
 	elsif flags[:delete]
 	    # When delete, want to recompute users, so need to go through all projects
 	    logger.info "Executing DELETE operation (resync keys, remove dead repositories)"
-	    projects = Project.active_or_archived.has_module(:repository).find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => :repository)
 	elsif flags[:archive]
 	    # When archive, want to recompute users, so need to go through all projects
 	    logger.info "Executing ARCHIVE operation (remove keys)"
-	    projects = Project.active_or_archived.has_module(:repository).find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => :repository)
 	elsif flags[:descendants]
 	    if Project.method_defined?(:self_and_descendants)
 		projects = (args.flatten.select{|p| p.is_a?(Project)}).collect{|p| p.self_and_descendants}.flatten
 	    else
-		projects = Project.active_or_archived.has_module(:repository).find(:all, :include => :repository)
+		projects = Project.active_or_archived.find(:all, :include => :repository)
 	    end
 	else
 	    projects = args.flatten.select{|p| p.is_a?(Project)}
@@ -719,7 +719,7 @@ module GitHosting
 	    end
 
 	    # Collect relevant users into hash with user as key and activity (in some active project) as value
-	    (git_projects.select{|proj| proj.active?}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
+	    (git_projects.select{|proj| proj.active? && proj.module_enabled?(:repository)}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
 		if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
 		    active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
 		    cur_token = cur_user
@@ -882,41 +882,47 @@ module GitHosting
 
 		# If this is an active (non-archived) project, then update gitolite entry.  Add GIT_DAEMON_KEY.
 		if proj.active?
-		    # Get deployment keys (could be empty)
-		    write_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
-		    read_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+		    if proj.module_enabled?(:repository)
+			# Get deployment keys (could be empty)
+			write_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+			read_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
 
-		    # fetch users
-		    users = proj.member_principals.map(&:user).compact.uniq
-		    write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
-		    read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
+			# fetch users
+			users = proj.member_principals.map(&:user).compact.uniq
+			write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
+			read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
 
-		    read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-			read_user_keys.push key.identifier
-		    end
-		    write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-			write_user_keys.push key.identifier
-		    end
+			read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
+			    read_user_keys.push key.identifier
+			end
+			write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
+			    write_user_keys.push key.identifier
+			end
 
-		    #git daemon support
-		    if (proj.repository.extra.git_daemon == 1 || proj.repository.extra.git_daemon == nil )	&& proj.is_public
-			read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
-		    end
+			#git daemon support
+			if (proj.repository.extra.git_daemon == 1 || proj.repository.extra.git_daemon == nil )	&& proj.is_public
+			    read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
+			end
 
-		    # Remove previous redmine keys, then add new keys
-		    # By doing things this way, we leave non-redmine keys alone
-		    # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
-		    # (to be put back as above, when appropriate).
-		    conf.delete_redmine_keys repo_name
-		    conf.add_read_user repo_name, read_user_keys.uniq
-		    conf.add_write_user repo_name, write_user_keys.uniq
+			# Remove previous redmine keys, then add new keys
+			# By doing things this way, we leave non-redmine keys alone
+			# Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
+			# (to be put back as above, when appropriate).
+			conf.delete_redmine_keys repo_name
+			conf.add_read_user repo_name, read_user_keys.uniq
+			conf.add_write_user repo_name, write_user_keys.uniq
 
-		    # If no redmine keys, mark with dummy key
-		    if (read_user_keys+write_user_keys).empty?
-			conf.mark_with_dummy_key repo_name
+			# If no redmine keys, mark with dummy key
+			if (read_user_keys+write_user_keys).empty?
+			    conf.mark_with_dummy_key repo_name
+			end
+		    else
+			# Must be a project that has repositories disabled. Mark as disabled project.
+			conf.delete_redmine_keys repo_name
+			conf.mark_disabled repo_name
 		    end
 		else
-		    # Must be an archived project! Clear out redmine keys.	Mark as an archived project.
+		    # Must be an archived project! Clear out redmine keys.  Mark as an archived project.
 		    conf.delete_redmine_keys repo_name
 		    conf.mark_archived repo_name
 		end
@@ -938,20 +944,23 @@ module GitHosting
 		    redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
 		end
 		redmine_repos.values.flatten.each do |repo_name|
-		    # First, delete redmine keys for this repository
+		    # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
+		    has_keys = conf.has_actual_redmine_keys? repo_name
+
+		    # Next, delete redmine keys for this repository
 		    conf.delete_redmine_keys repo_name
 		    if (Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true")
 			if conf.repo_has_no_keys? repo_name
 			    logger.warn "Deleting #{orphanString}entry '#{repo_name}' from #{gitolite_conf}"
 			    conf.delete_repo repo_name
 			    GitoliteRecycle.move_repository_to_recycle repo_name
-			else
+			elsif has_keys # Something changed when we deleted keys
 			    logger.info "Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
 			    if git_repository_exists? repo_name
 				logger.info "  Not removing #{repo_name}.git from gitolite repository, because non-redmine keys remain."
 			    end
 			end
-		    else
+		    elsif has_keys # Something changed when we deleted keys
 			logger.info "Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
 		    end
 		end
