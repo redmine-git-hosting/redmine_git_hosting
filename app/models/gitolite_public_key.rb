@@ -98,11 +98,12 @@ class GitolitePublicKey < ActiveRecord::Base
 
     # Strip leading and trailing whitespace
     def strip_whitespace
-	# Don't mess with existing keys (since cannot change key text anyway)
-	return if !new_record?
-
 	self.title = title.strip
-	self.key = key.strip
+
+	# Don't mess with existing keys (since cannot change key text anyway)
+	if new_record?
+	    self.key = key.strip
+	end
     end
 
     # Remove control characters from key

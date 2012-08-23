@@ -16,6 +16,8 @@ class RepositoryMirror < ActiveRecord::Base
 
     validate :check_refspec
 
+    before_validation :strip_whitespace
+
     named_scope :active, {:conditions => {:active => RepositoryMirror::STATUS_ACTIVE}}
     named_scope :inactive, {:conditions => {:active => RepositoryMirror::STATUS_INACTIVE}}
 
@@ -76,6 +78,12 @@ class RepositoryMirror < ActiveRecord::Base
     end
 
     protected
+
+    # Strip leading and trailing whitespace
+    def strip_whitespace
+	self.url = url.strip
+	self.explicit_refspec = explicit_refspec.strip
+    end
 
     # Put backquote in front of crucial characters
     def dequote(in_string)

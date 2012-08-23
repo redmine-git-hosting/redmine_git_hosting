@@ -7,9 +7,11 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
     attr_accessible :url, :mode, :active
 
     validates_uniqueness_of :url, :scope => [:project_id]
-    validates_presence_of :project_id, :url
+    validates_presence_of :project_id
     validates_format_of :url, :with => URI::regexp(%w(http https))
     validates_associated :project
+
+    before_validation :strip_whitespace
 
     named_scope :active, {:conditions => {:active => RepositoryPostReceiveUrl::STATUS_ACTIVE}}
     named_scope :inactive, {:conditions => {:active => RepositoryPostReceiveUrl::STATUS_INACTIVE}}
@@ -24,5 +26,12 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
     def to_s
 	return File.join("#{project.identifier}-#{url}")
+    end
+
+    protected
+
+    # Strip leading and trailing whitespace
+    def strip_whitespace
+	self.url = url.strip
     end
 end
