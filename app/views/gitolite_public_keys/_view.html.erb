@@ -66,7 +66,7 @@
 		</div>
 	<% end %>
 	<p><%= f.text_area :key, :label => (@new_key? :label_cut_and_paste : :field_public_key), :required => true, :disabled => !@new_key, 
-        	           :style => "width:99%;height:#{params[:id]?100:200}px;overflow:auto;",
+        	           :style => "width:99%;height:200px;overflow:auto;",
 			   :cols => nil, :rows => nil %>
 	<%= hidden_field_tag :button_submit_field, "true" %>
 	<% if !@new_key%>
