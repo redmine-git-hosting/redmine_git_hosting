@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin (v0.4.5x)
+# Redmine Git Hosting Plugin (v0.4.6x)
 
 A ChiliProject / Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
@@ -354,6 +354,43 @@ This command will install the new values in the database.  You should follow up 
 parameter(s)).  If you are moving the location of the *gitScriptDir*, you might want to remove the old scripts before executing 'restore_defaults'
 as described above.
 
+## Deployment Credentials
+
+As of version 0.4.6x, this plugin provides deployment credentials on a per-repository basis.  These credentials are combinations of a public key and access 
+permissions (R or RW+) which are attached directly to a repository rather than by attaching users to repositories.  Deployment credentials may be 
+added to a repository through the repository settings interface.  They may be added by anyone who is a manager for the project or by the administrator. 
+
+Public keys used in this way are called "deploy keys".  They are owned by the user who created them and may be edited on the user's public_key page (which is under 
+"my account" for individual users).  Since keys have unique names (per creator), they may be reused in multiple deployment credentials (in multiple repositories), 
+simply by selecting them from the pulldown menu on the "deployment credentials create" dialog box.
+
+One typical use-case would be for all deploy keys to be owned by the administrator and attached selectively to various repositories.  Note that the "deployment 
+credentials create" dialog is actually a convenience dialog in that it allows the simultaneous creation of both a deploy key and deployment credential in a single step, 
+even suggesting a name for the deployment credential, with the eye to deployments that have a separate deploy key for each repository.  Reusing a deploy key in 
+another credential is a simple matter of selecting the key from a drop-down menu.
+
+## Post-Receive URLs
+
+As of version 0.4.6x, this plugin supports the inclusion of GitHub-style Post-Receive URLs.  Once added, a post-receive URL will be notified when new changes
+are pushed to the repository.  Two versions of this functionality are available: (1) either a GitHub-style POST operation will include json-encoded information
+about the updated branch or (2) an empty GET request will be issued to the given URL.  Post-Receive URLs may be added from the repository settings page.
+
+## Automatic Mirror Updates
+
+As of version 0.4.0, this plugin can automatically push updates to repository mirrors when new changes are pushed to the repository.  Mirrors
+must grant access to the public key defined in the gitolite_admin_id_rsa.pub public key file, which is displayed for convenience in the 
+repository settings tab.
+
+Note that 0.4.6x introduced the ability to selectively push branches to the mirror (using the git-push refspec mechanism) rather than mirroring all branches and tags.  
+To utilize this feature, simply select a mirror update mode of "Force Update Remote" or "Fast Forward (unforced)" instead of the default "Complete Mirroring" in the
+mirror create/edit dialog.  More options will then become available.
+
+
+## Notification to CIA.vc
+
+As of version 0.4.0, this plugin can notify CIA.vc when changes are pushed to the repository.  The project identifier on CIA.vc must match the 
+project identifier specified in ChiliProject/Redmine exactly
+
 
 ## "Smart" HTTP Functionality
 
@@ -428,19 +465,6 @@ max_allowed_packet=32M
 </pre>    
 
 The above example should allow **Max Cache Element Size** == 32M.
-
-## Notification to CIA.vc
-
-As of version 0.4.0, this plugin can notify CIA.vc when changes are pushed to the repository.  The project identifier on CIA.vc must match the 
-project identifier specified in ChiliProject/Redmine exactly
-
-
-## Automatic Mirror Updates
-
-As of version 0.4.0, this plugin can automatically push updates to repository mirrors when new changes are pushed to the repository.  Mirrors
-must grant access to the public key defined in the gitolite_admin_id_rsa.pub public key file, which is displayed for convenience in the 
-repository settings tab.
-
 
 ## Fast Deployment with YourChili Bash Library
 
