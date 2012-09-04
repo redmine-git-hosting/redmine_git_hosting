@@ -1,0 +1,111 @@
+<!-- This partial used in listing deployment credentials -->
+<div class="box tabular">
+  <% if GitHostingHelper.can_create_deployment_keys(@repository.project) %>
+    <div class="contextual">
+      <%= link_to("Add Deployment Credential", url_for(:controller => 'deployment_credentials', :action => 'create_with_key', :repository_id => @repository.id), :class => 'icon icon-add add-deployment-credential' ) %>
+    </div>
+  <% end %>
+
+  <h3>Deployment Credentials</h3>
+  
+  <% if @repository.deployment_credentials.active.any? %>
+    <div class="autoscroll">
+      <table class="list" style="margin: 1px 2px; width: 99%">
+	<thead>
+	  <tr>
+	    <th>Owner</th>
+	    <th>Public Key Name</th>
+	    <th style="text-align:center;">Public Key File</th>
+	    <th style="text-align:center;">Perm</th>
+	    <th style="text-align:center;">Honored?</th>
+	    <th style="text-align:center;">&nbsp;</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @repository.deployment_credentials.active.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |cred| %>
+	    <tr class="<%= cycle('odd', 'even') %>">
+	      <td class="name" style="vertical-align:middle;"> <%= cred.user.login %> </td>
+	      <td class="name" style="vertical-align:middle;">
+		<% if cred.user == User.current %>
+		  <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'my', :action => 'account', :public_key_id => cred.gitolite_public_key.id)) %>
+		<% elsif User.current.admin? %>
+		  <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'users', :action => 'edit', :id => cred.gitolite_public_key.user.id, :public_key_id => cred.gitolite_public_key.id, :tab => 'keys')) %>
+		<% else %>
+		  <%= cred.gitolite_public_key.title %> 
+		<% end %>
+	      </td>
+	      <td class="center" style="text-align:center; vertical-align:middle;"><%= "keydir/#{cred.gitolite_public_key.identifier}.pub" %></td>
+	      <td class="center" style="vertical-align:middle;"><%= cred.perm %></td>
+	      <td class="center" style="vertical-align:middle;"><%= checked_image cred.honored? %></td>
+	      <td class="buttons" width="20%" style="vertical-align:middle; text-align:right; ">
+		<% if GitHostingHelper.can_edit_deployment_keys(@repository.project) && (User.current.admin?|| User.current == cred.user)  %>
+		  <%= link_to(l(:button_edit), url_for(:controller => 'deployment_credentials', :action => 'edit', :repository_id => @repository.id, :id => cred.id), :class => 'icon icon-edit edit-deployment-credential') %>
+		  <%= link_to(l(:button_delete), url_for(:controller => 'deployment_credentials', :action => 'destroy', :repository_id => @repository.id, :id => cred.id), :class => 'icon icon-del delete-deployment-credential') %>
+		<% end %>
+	      </td>
+	    </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+  <% else %>
+    <table class="list" style="margin:1px 2px; width:99%">
+      <thead><tr><th style="text-align:center;">No Deployment Credentials Defined</td></th></thead>
+    </table>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+    function getWidth() {
+	var width = 60*document.viewport.getWidth()/100;
+	if (width<750) { width=750 };
+	return width;
+    }
+
+    function set_deployment_credential_modal_box() {
+	$$(".add-deployment-credential").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+		Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_deployment_credential_create)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+	$$(".edit-deployment-credential").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+		Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_deployment_credential_edit)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+	$$(".delete-deployment-credential").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+		Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_deployment_credential_delete)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+    }
+
+    // If loaded via ajax, load immediately, else observe events 
+    <% if request.xhr? %>
+      set_deployment_credential_modal_box();
+    <% else %>
+      Event.observe(window, 'load', set_deployment_credential_modal_box);
+    <% end %>
+
+</script>

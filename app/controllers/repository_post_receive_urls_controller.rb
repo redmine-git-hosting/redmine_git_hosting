@@ -3,6 +3,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
     before_filter :require_login
     before_filter :set_user_variable
+    before_filter :set_repository_variable
     before_filter :set_project_variable
     before_filter :check_required_permissions
     before_filter :check_xhr_request
@@ -26,11 +27,8 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
 	    if @prurl.save
 		flash[:notice] = l(:post_receive_url_notice_created)
-		redirect_url = url_for(:controller => 'projects',
-				       :action => 'settings',
-				       :id => @prurl.project.identifier,
-				       :tab => 'repository')
 
+		redirect_url = success_url
 		respond_to do |format|
 		    format.html {
 			redirect_to redirect_url
@@ -61,11 +59,8 @@ class RepositoryPostReceiveUrlsController < ApplicationController
     def update
 	if @prurl.update_attributes(params[:repository_post_receive_urls])
 	    flash[:notice] = l(:post_receive_url_notice_updated)
-	    redirect_url = url_for(:controller => 'projects',
-				   :action => 'settings',
-				   :id => @prurl.project.identifier,
-				   :tab => 'repository')
 
+	    redirect_url = success_url
 	    respond_to do |format|
 		format.html {
 		    redirect_to redirect_url
@@ -94,16 +89,13 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 	if request.get?
 	    # display confirmation view
 	else
-	    redirect_url = url_for(:controller => 'projects',
-				   :action => 'settings',
-				   :id => @prurl.project.identifier,
-				   :tab => 'repository')
 	    if params[:confirm]
 		@prurl.destroy
 
 		flash[:notice] = l(:post_receive_url_notice_deleted)
 	    end
 
+	    redirect_url = success_url
 	    respond_to do |format|
 		format.html {
 		    redirect_to(redirect_url)
@@ -117,13 +109,36 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
     protected
 
+    # This is a success URL to return to basic listing
+    def success_url
+	if GitHosting.multi_repos?
+	    url_for(:controller => 'repositories',
+		    :action => 'edit',
+		    :id => @repository.id)
+	else
+	    url_for(:controller => 'projects',
+		    :action => 'settings',
+		    :id => @project.id,
+		    :tab => 'repository')
+	end
+    end
 
     def set_user_variable
 	@user = User.current
     end
 
+    def set_repository_variable
+	@repository = Repository.find_by_id(params[:repository_id])
+	if !@repository
+	    render_404
+	end
+    end
+
     def set_project_variable
-	@project = Project.find_by_identifier(params[:project_id])
+	@project = @repository.project
+	if !@project
+	    render_404
+	end
     end
 
     def find_repository_post_receive_url

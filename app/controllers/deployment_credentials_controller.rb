@@ -2,8 +2,8 @@ class DeploymentCredentialsController < ApplicationController
 
     before_filter :require_login
     before_filter :set_user_variable
-    before_filter :set_project_variable
     before_filter :set_repository_variable
+    before_filter :set_project_variable
 
     before_filter :can_create_credentials, :only => [:create, :create_with_key]
     before_filter :can_edit_credentials, :only => [:edit, :update, :destroy]
@@ -74,11 +74,7 @@ class DeploymentCredentialsController < ApplicationController
 	    if @cred.valid? && @key.save && @cred.save
 		flash[:notice] = l(:notice_deployment_credential_added, :title=>keylabel(@key),:perm=>@cred[:perm])
 
-		redirect_url = url_for(:controller => 'projects',
-				       :action => 'settings',
-				       :id => @project.id,
-				       :tab => 'repository')
-
+		redirect_url = success_url
 		respond_to do |format|
 		    format.html {
 			redirect_to redirect_url
@@ -114,11 +110,8 @@ class DeploymentCredentialsController < ApplicationController
 	# Can only alter the permissions
 	if @cred.update_attributes(params[:deployment_credentials])
 	    flash[:notice] = l(:notice_deployment_credential_updated, :title=>keylabel(@key),:perm=>@cred[:perm])
-	    redirect_url = url_for(:controller => 'projects',
-				   :action => 'settings',
-				   :id => @project.id,
-				   :tab => 'repository')
 
+	    redirect_url = success_url
 	    respond_to do |format|
 		format.html {
 		    redirect_to redirect_url
@@ -150,10 +143,6 @@ class DeploymentCredentialsController < ApplicationController
 	    # display confirmation view
 	else
 	    GitHostingObserver.set_update_active(false);
-	    redirect_url = url_for(:controller => 'projects',
-				   :action => 'settings',
-				   :id => @project.id,
-				   :tab => 'repository')
 	    if params[:confirm]
 		key = @cred.gitolite_public_key
 		@cred.destroy
@@ -166,6 +155,7 @@ class DeploymentCredentialsController < ApplicationController
 
 		end
 	    end
+	    redirect_url = success_url
 	    respond_to do |format|
 		format.html {redirect_to(redirect_url)}
 	    end
@@ -178,6 +168,19 @@ class DeploymentCredentialsController < ApplicationController
 
     protected
 
+    # This is a success URL to return to basic listing
+    def success_url
+	if GitHosting.multi_repos?
+	    url_for(:controller => 'repositories',
+		    :action => 'edit',
+		    :id => @repository.id)
+	else
+	    url_for(:controller => 'projects',
+		    :action => 'settings',
+		    :id => @project.id,
+		    :tab => 'repository')
+	end
+    end
 
     def can_view_credentials
 	render_403 unless GitHostingHelper.can_view_deployment_keys(@project)
@@ -195,16 +198,16 @@ class DeploymentCredentialsController < ApplicationController
 	@user = User.current
     end
 
-    def set_project_variable
-	@project = Project.find_by_identifier(params[:project_id])
-	if !@project
+    def set_repository_variable
+	@repository = Repository.find_by_id(params[:repository_id])
+	if !@repository
 	    render_404
 	end
     end
 
-    def set_repository_variable
-	@repository = @project.repository
-	if !@repository
+    def set_project_variable
+	@project = @repository.project
+	if !@project
 	    render_404
 	end
     end

@@ -77,7 +77,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
 	# Need to override the "never change identifier" constraint
 	# Note that Rails 3 has a different calling convention...
-	self.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
+	self.save(GitHosting.rails_3? ? { :validate => false } : false)
 
 	self.identifier
     end

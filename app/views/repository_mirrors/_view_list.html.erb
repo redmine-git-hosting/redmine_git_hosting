@@ -1,0 +1,157 @@
+<!-- This partial used in listing repository mirrors -->
+<div class="box tabular">
+  <% if GitHostingHelper.can_create_mirrors(@repository.project) %>
+    <div class="contextual">
+      <%= link_to("Add Repository Mirror", url_for(:controller => 'repository_mirrors', :action => 'create', :repository_id => @repository.id), :class => 'icon icon-add add-mirror' ) %>
+    </div>
+  <% end %>
+
+  <h3>Repository Mirrors</h3>
+
+  <% if @repository.project.repository_mirrors.any? %>
+    <div class="autoscroll">
+      <table class="list" style="margin: 2px 3px; width: 99%; ">
+	<thead>
+	  <tr>
+	    <th>URL</th>
+	    <th style="text-align:center;">Refspec</th>
+	    <th style="text-align:center;">Mode</th>
+	    <th style="text-align:center;">&nbsp</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @repository.project.repository_mirrors.each do |mirror| %>
+	    <tr class="<%= cycle('odd', 'even') %>">
+	      <td class="name" style="vertical-align:middle;" ><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :repository_id => @repository.id, :id => mirror.id), :class => 'edit-mirror') %>
+	      </td>
+	      <td class="center" style="vertical-align:middle;"><%= refspec mirror, 64 %></td>
+	      <td class="center" style="vertical-align:middle;"><%= mirror_mode mirror %><br/><%= checked_image mirror.active? %></td>
+	      <td class="buttons" width="20%" style="vertical-align:middle;text-align:right;">
+		<% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
+		  <% if mirror.active==1 -%>
+		    <%= link_to(l(:button_push), url_for(:controller => 'repository_mirrors', :action => 'push', :repository_id => @repository.id, :id => mirror.id), :title => l(:button_push_title), :alt => l(:button_push_title), :class => 'icon icon-push push-mirror') %>
+		  <% end %>
+
+		  <%= link_to(l(:button_edit), url_for(:controller => 'repository_mirrors', :action => 'edit', :repository_id => @repository.id, :id => mirror.id), :class => 'icon icon-edit edit-mirror') %>
+		  <%= link_to(l(:button_delete), url_for(:controller => 'repository_mirrors', :action => 'destroy', :repository_id => @repository.id, :id => mirror.id), :class => 'icon icon-del delete-mirror') %>
+		<% end %>
+	      </td>
+	    </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+  <% else %>
+    <table class="list" style="margin:1px 2px; width:99%">
+      <thead><tr><th style="text-align:center;">No Mirrors Defined</th></tr></thead>
+    </table>
+  <% end %>
+
+  <% mirror_pubkey = GitHosting.mirror_push_public_key %>
+  <div style="margin: 2px 3px; width: 99%;">
+    <div id="clipboard_container" title="<%= l(:label_copy_to_clipboard) %>" style="font-family:sans-serif;" >
+      <div id="clipboard_button"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
+    </div>
+    <span style="margin-left:10px;" >Mirrors Must Grant Write Access To The Following Public Key:</span>
+    <br/>
+    <textarea cols="40" id="mirror_pubkey" readonly="readonly" rows="20" style="height:140px;width:99%"><%= mirror_pubkey  %></textarea>
+  </div>
+
+  <div id="mirror_bottom_spacer" style="display:block;height:10px;clear:both;"></div>
+</div>
+
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag('zero_clipboard', :plugin => 'redmine_git_hosting') %>
+    <%= javascript_include_tag('ZeroClipboard', :plugin => 'redmine_git_hosting') %>
+    <%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
+<% end %>
+
+<script type="text/javascript">
+    function test_zc_vis() {
+	var cc = document.getElementById('clipboard_container')
+	if(cc != null) {
+	    if (cc.style.fontFamily == 'sans-serif' ) {
+		reset_zero_clipboard();
+	    }
+	}
+    }
+
+    document.observe("dom:loaded", function() {
+	ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+	setZeroClipboardInputSource("mirror_pubkey");
+
+    
+	// tab visiblity javascript screws up zeroclipboard, need to reset when we change
+	// to repo tab where the clipboard is visible 
+	// and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
+	document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
+	setInterval(test_zc_vis, 500);
+	test_zc_vis();
+		    
+    });
+
+    function getWidth() {
+	var width = 60*document.viewport.getWidth()/100;
+	if (width<750) { width=750 };
+	return width;
+    }
+
+    function set_mirror_modal_box() {
+	$$(".add-mirror").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+		Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_mirror_create)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+	$$(".edit-mirror").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+		Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_mirror_edit)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+	$$(".delete-mirror").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+	    Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:label_mirror_delete)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    })
+	});
+	$$(".push-mirror").each(function(elem) {
+	    Event.observe(elem, 'click', function(event) {
+	    Event.stop(event);
+		Modalbox.show(
+		    elem.href, {
+			title: "<%=l(:button_push_title)%>",
+			width: getWidth()
+		    }
+		)
+		return false;
+	    });
+	});
+    }
+
+    // If loaded via ajax, load immediately, else observe events 
+    <% if request.xhr? %>
+      set_mirror_modal_box();
+    <% else %>
+      Event.observe(window, 'load', set_mirror_modal_box);
+    <% end %>
+
+</script>

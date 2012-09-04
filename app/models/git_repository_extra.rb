@@ -33,7 +33,6 @@ class GitRepositoryExtra < ActiveRecord::Base
     def generate
 	if self.key.nil?
 	    write_attribute(:key, (0...64+rand(64) ).map{65.+(rand(25)).chr}.join )
-	    self.save
 	end
     end
 
@@ -41,7 +40,6 @@ class GitRepositoryExtra < ActiveRecord::Base
 	write_attribute(:git_http,Setting.plugin_redmine_git_hosting['gitHttpDefault']) if Setting.plugin_redmine_git_hosting['gitHttpDefault']
 	write_attribute(:git_daemon,Setting.plugin_redmine_git_hosting['gitDaemonDefault']) if Setting.plugin_redmine_git_hosting['gitDaemonDefault']
 	write_attribute(:notify_cia,Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']) if Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']
-	self.save
     end
 
 end

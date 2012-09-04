@@ -23,6 +23,21 @@ module GitHosting
     class GitHostingException < StandardError
     end
 
+    # Are we in the multiple-repositories-per-project version of Redmine?
+    @@multi_repos = nil
+    def self.multi_repos?
+	# Simple -- if Project.repositories exists, it will be an array. Otherwise
+	# will throw an exception.
+	@@multi_repos ||= Project.new.repositories.is_a?(Array) rescue false
+    end
+
+    # Are we in RAILS 3 mode?
+    @@rails_3 = nil
+    def self.rails_3?
+	# Grab major mode from version string....
+	@@rails_3 ||= (Rails::VERSION::STRING.split('.')[0].to_i > 2)
+    end
+
     # Time in seconds to wait before giving up on acquiring the lock
     def self.lock_wait_time
 	Setting.plugin_redmine_git_hosting['gitLockWaitTime'].to_i || LOCK_WAIT_IF_UNDEF

@@ -14,6 +14,7 @@ module GitHosting
 		end
 	    end
 
+	    # This patch is only for pre-1.4 Redmine (since they made this controller RESTful
 	    def edit_with_scm_settings
 		GitHosting.logger.debug "On edit_with_scm_settings"
 
@@ -33,14 +34,13 @@ module GitHosting
 			@repository = Repository.factory(params[:repository_scm])
 			@repository.project = @project if @repository
 		    end
-		    if request.post? && @repository
+		    if request.post?
 			@repository.attributes = params[:repository]
 			if !params[:extra].nil?
 			    @repository.extra.update_attributes(params[:extra])
 			end
 			@repository.save
 		    end
-
 
 		    render(:update) do |page|
 			page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
@@ -54,10 +54,49 @@ module GitHosting
 			GitHostingObserver.bracketed_update_repositories(@project)
 		    end
 		else
-		    edit_without_scm_settings
+		    edit_without_scm_settings_old
 		end
 
 		GitHostingObserver.set_update_active(true);
+	    end
+
+	    # Post-1.4, all creation is done by create (rather than edit)
+	    def create_with_scm_settings
+		GitHostingObserver.set_update_active(false)
+
+		# FixME XXXXXXXXXXXXXXXXXXXXXX
+		if params[:repository_scm] == "Git"
+		    params[:repository][:url] = GitHosting.repository_path(@project)
+		end
+
+		# Must create repository first
+		create_without_scm_settings
+
+		# Update repository extras
+		if @repository && !params[:extra].nil?
+		    @repository.extra.update_attributes(params[:extra])
+		end
+
+		GitHostingObserver.set_update_active(@project)
+	    end
+
+	    # Post-1.4, all of the updates are done by update (rather than edit with post)
+	    def update_with_scm_settings
+		GitHostingObserver.set_update_active(false)
+
+		# FixME XXXXXXXXXXXXXXXXXXXXXX
+		if params[:repository_scm] == "Git"
+		    params[:repository][:url] = GitHosting.repository_path(@project)
+		end
+
+		update_without_scm_settings
+
+		# Update repository extras
+		if @repository && !params[:extra].nil?
+		    @repository.extra.update_attributes(params[:extra])
+		end
+
+		GitHostingObserver.set_update_active(@project)
 	    end
 
 	    def self.included(base)
@@ -65,7 +104,17 @@ module GitHosting
 		    unloadable
 		end
 		base.send(:alias_method_chain, :show, :git_instructions)
-		base.send(:alias_method_chain, :edit, :scm_settings)
+
+		# RESTful (post-1.4).
+		base.send(:alias_method_chain, :create, :scm_settings) rescue nil
+
+		begin
+		    # RESTfull (post-1.4)
+		    base.send(:alias_method_chain, :update, :scm_settings)
+		rescue
+		    # Not RESTfull (pre-1.4)
+		    base.send(:alias_method_chain, :edit, :scm_settings) rescue nil
+		end
 	    end
 	end
     end

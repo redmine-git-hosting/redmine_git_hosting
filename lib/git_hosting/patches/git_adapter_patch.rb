@@ -14,8 +14,10 @@ module GitHosting
 		end
 
 		begin
-		    base.send(:alias_method_chain, :scm_cmd, :sudo)
-		rescue Exception =>e
+		    base.send(:alias_method_chain, :git_cmd, :sudo)
+		rescue
+		    # Hm... might be pre-1.4, where :git_cmd => :scm_cmd
+		    base.send(:alias_method_chain, :scm_cmd, :sudo) rescue nil
 		end
 
 		base.extend(ClassMethods)
@@ -47,8 +49,13 @@ module GitHosting
 	    end
 
 
+	    # Pre-1.4 command syntax
 	    def scm_cmd_with_sudo(*args, &block)
+		git_cmd_with_sudo(args, &block)
+	    end
 
+	    # Post-1.4 command syntax
+	    def git_cmd_with_sudo(args, options = {}, &block)
 		max_cache_time	   = (Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i	      # in seconds, default = 60
 		max_cache_elements = (Setting.plugin_redmine_git_hosting['gitCacheMaxElements']).to_i	      # default = 100
 		max_cache_size	   = (Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024   # In MB, default = 16MB, converted to bytes
