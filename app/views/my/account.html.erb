@@ -6,10 +6,10 @@
 <%= error_messages_for 'user' %>
 
 <div class="splitcontentleft">
-  <% form_for :user, @user, :url => { :action => "account" },
-                          :builder => TabularFormBuilder,
-                          :lang => current_language,
-                          :html => { :id => 'my_account_form' } do |f| %>
+  <% labelled_form_for :user, @user, 
+     		       :url => { :action => "account" },
+  		       :html => { :id => 'my_account_form',
+  				  :method => :post } do |f| %>
 	<fieldset class="box tabular">
 		<legend><%=l(:label_information_plural)%></legend>
 		<p><%= f.text_field :firstname, :required => true %></p>
@@ -34,7 +34,7 @@
 
 		<%= submit_tag l(:button_save) %>
 	</fieldset>
-	<% end %>
+  <% end %>
 </div>
 
 <div class="splitcontentright">

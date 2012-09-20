@@ -78,12 +78,15 @@ end
 
 
 rgh_vars = {}
-rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
+rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.repositoryid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
 rgh_var_names.each do |var_name|
     var_val = get_git_repository_config(var_name)
     if var_val.to_s == ""
-	log("\n\nRepository does not have \"#{var_name}\" set. Skipping hook.\n\n", false, true)
-	exit
+	# Allow blank repositoryID (as default)
+	if var_name != "hooks.redmine_gitolite.repositoryid"
+	    log("\n\nRepository does not have \"#{var_name}\" set. Skipping hook.\n\n", false, true)
+	    exit
+	end
     else
 	var_name = var_name.gsub(/^.*\./, "")
 	rgh_vars[ var_name ] = var_val

@@ -1,4 +1,3 @@
-
 require 'rack/response'
 require 'rack/utils'
 require 'time'
@@ -11,12 +10,11 @@ class GitHttpController < ApplicationController
     before_filter :authenticate
 
     def index
-	if proj_path_split = (params[:project_path].match(/^(.*?([^\/]+))\.git$/))
-	    proj_id = proj_path_split[2]
-	    project = Project.find_by_identifier(proj_id)
-	    @git_http_repo_path = project_path = proj_path_split[1]
+	# Have already parsed path and found @repository during authentication
+	if proj_path_split = (params[:repo_path].match(/^(.*)\.git$/))
+	    @git_http_repo_path = repo_path = proj_path_split[1]
 
-	    if GitHosting.http_access_url(project) == project_path
+	    if GitHosting.http_access_url(@repository) == repo_path
 		p1 = params[:path][0] || ""
 		p2 = params[:path][1] || ""
 		p3 = params[:path][2] || ""
@@ -52,10 +50,9 @@ class GitHttpController < ApplicationController
 		# repository URL doesn't match
 		render_not_found
 	    end
-	    return
+	else
+	    render_not_found
 	end
-	# Wrong prefix or :base doesn't end in .git or doesn't at least have one char in base name
-	render_not_found
     end
 
     private
@@ -65,19 +62,17 @@ class GitHttpController < ApplicationController
 	query_valid = false
 	authentication_valid = true
 
-	if proj_path_split = (params[:project_path].match(/^(.*?([^\/]+))\.git$/))
-	    project = Project.find_by_identifier(proj_path_split[2])
-	    repository = project != nil ? project.repository : nil
-	    if(project != nil && repository !=nil)
-		if repository.extra[:git_http] == 2 || (repository.extra[:git_http] == 1 && is_ssl?)
+	if (@repository = Repository.find_by_path(params[:repo_path],:parse_ext=>true)) && @repository.is_a?(Repository::Git)
+	    if @project = @repository.project
+		if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?)
 		    query_valid = true
-		    allow_anonymous_read = project.is_public
+		    allow_anonymous_read = @project.is_public
 		    if is_push || (!allow_anonymous_read)
 			authentication_valid = false
 			authenticate_or_request_with_http_basic do |login, password|
 			    user = User.find_by_login(login);
 			    if user.is_a?(User)
-				if user.allowed_to?( :commit_access, project ) || ((!is_push) && user.allowed_to?( :view_changesets, project ))
+				if user.allowed_to?( :commit_access, @project ) || ((!is_push) && user.allowed_to?( :view_changesets, @project ))
 				    authentication_valid = user.check_password?(password)
 				end
 			    end
@@ -206,7 +201,6 @@ class GitHttpController < ApplicationController
     end
 
     def file_exists(reqfile)
-
 	cmd="#{run_git_prefix()} if [ -e \"#{reqfile}\" ] ; then echo found ; else echo bad ; fi ' "
 	is_found=%x[#{cmd}]
 	is_found.chomp!

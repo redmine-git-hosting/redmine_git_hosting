@@ -16,6 +16,7 @@ pt:
   label_git_redmine_subdir: 'Subdiretório para Redmine de gestão Repos<br/>(Relativo à Git base)'
   label_http_server_subdir: 'Subdiretório para o acesso via HTTP<br/>(Relativo à Redmine diretório raiz)'
   label_git_repository_hierarchy: 'Estrutura de diretórios e URL para o<br/>Redmine de gestão repositórios'
+  label_git_repository_ident_unique: 'Identificadores de repositório são globalmente únicos'
   label_basic_settings: 'Configurações básicas'
   label_gitolite_access_URLs: 'URL Gitolite Definições de Acesso'
   label_gitolite_repository_settings: 'Repositório Configurações Gitolite'
@@ -73,6 +74,7 @@ pt:
   field_key: Chave
   field_public_key: Chave
   field_title: Identifier
+  label_identifier_cannot_be_changed: 'Identificador<br/><em>(não pode ser alterado)</em>'
   notice_public_key_updated: 'A chave pública <strong>%{title}</strong> foi actualizada com sucesso.'
   notice_public_key_added: 'A chave pública <strong>%{title}</strong> foi adicionada com sucesso.'
   notice_public_key_deleted: 'A chave pública <strong>%{title}</strong> foi excluído com sucesso.'
@@ -92,6 +94,11 @@ pt:
     errors:
       messages:
         'não pode ser mudada': 'não pode ser mudada'
+        cannot_change: "não pode ser alterado"
+        ident_not_unique: "corresponde identificador de repositório existente"
+        ident_cannot_equal_project: "pode não coincidir com identificador de projeto existente"
+        blank_default_exists: "Não é possível fazer o repositório padrão porque tem um identificador de padrão atual em branco."
+
   text_gitolite_key_destroy_confirmation: 'Tem certeza de que quer destruir %{title}?'
   text_this_key: esta chave
   label_deploy_perm: 'Permissões de Acesso'
@@ -169,7 +176,7 @@ pt:
   mirror_push_sucess: Sucesso.
   mirror_push_fail: Falhou!
 
-  display_access_setup: Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s repository has the following properties
+  display_access_setup: Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s %{type}repository has the following properties
   display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements. 
   display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
   display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.

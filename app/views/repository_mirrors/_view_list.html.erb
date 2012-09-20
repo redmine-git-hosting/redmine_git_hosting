@@ -8,7 +8,7 @@
 
   <h3>Repository Mirrors</h3>
 
-  <% if @repository.project.repository_mirrors.any? %>
+  <% if @repository.repository_mirrors.any? %>
     <div class="autoscroll">
       <table class="list" style="margin: 2px 3px; width: 99%; ">
 	<thead>
@@ -20,7 +20,7 @@
 	  </tr>
 	</thead>
 	<tbody>
-	  <% @repository.project.repository_mirrors.each do |mirror| %>
+	  <% @repository.repository_mirrors.each do |mirror| %>
 	    <tr class="<%= cycle('odd', 'even') %>">
 	      <td class="name" style="vertical-align:middle;" ><%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :repository_id => @repository.id, :id => mirror.id), :class => 'edit-mirror') %>
 	      </td>
@@ -67,6 +67,9 @@
 <% end %>
 
 <script type="text/javascript">
+    ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+    setZeroClipboardInputSource("mirror_pubkey");
+
     function test_zc_vis() {
 	var cc = document.getElementById('clipboard_container')
 	if(cc != null) {
@@ -76,19 +79,15 @@
 	}
     }
 
-    document.observe("dom:loaded", function() {
-	ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
-	setZeroClipboardInputSource("mirror_pubkey");
+    function set_up_clipboard() {
+    	// tab visiblity javascript screws up zeroclipboard, need to reset when we change
+    	// to repo tab where the clipboard is visible 
+    	// and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
 
-    
-	// tab visiblity javascript screws up zeroclipboard, need to reset when we change
-	// to repo tab where the clipboard is visible 
-	// and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
-	document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
-	setInterval(test_zc_vis, 500);
-	test_zc_vis();
-		    
-    });
+    	document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
+    	setInterval(test_zc_vis, 500);
+    	test_zc_vis();
+    }
 
     function getWidth() {
 	var width = 60*document.viewport.getWidth()/100;
@@ -122,7 +121,7 @@
 	    })
 	});
 	$$(".delete-mirror").each(function(elem) {
-	    Event.observe(elem, 'click', function(event) {
+ 	    Event.observe(elem, 'click', function(event) {
 	    Event.stop(event);
 		Modalbox.show(
 		    elem.href, {
@@ -149,8 +148,10 @@
 
     // If loaded via ajax, load immediately, else observe events 
     <% if request.xhr? %>
+      set_up_clipboard();
       set_mirror_modal_box();
     <% else %>
+      Event.observe(window, 'load', set_up_clipboard);
       Event.observe(window, 'load', set_mirror_modal_box);
     <% end %>
 

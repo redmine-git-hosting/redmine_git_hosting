@@ -6,13 +6,13 @@ class RepositoryMirror < ActiveRecord::Base
     PUSHMODE_FORCE = 1
     PUSHMODE_FAST_FORWARD = 2
 
-    belongs_to :project
+    belongs_to :repository
 
     attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
 
-    validates_uniqueness_of :url, :scope => [:project_id]
-    validates_presence_of :project_id, :url
-    validates_associated :project
+    validates_uniqueness_of :url, :scope => [:repository_id]
+    validates_presence_of :repository_id, :url
+    validates_associated :repository
 
     validate :check_refspec
 
@@ -23,12 +23,8 @@ class RepositoryMirror < ActiveRecord::Base
 
     named_scope :has_explicit_refspec, {:conditions => ['push_mode > 0']}
 
-    def to_s
-	return File.join("#{project.identifier}-#{url}")
-    end
-
     def push
-	repo_path = GitHosting.repository_path(project)
+	repo_path = GitHosting.repository_path(repository)
 
 	push_args = ""
 	if push_mode == PUSHMODE_MIRROR
@@ -74,7 +70,7 @@ class RepositoryMirror < ActiveRecord::Base
     end
 
     def to_s
-	return File.join("#{project.identifier}-#{url}")
+	return File.join("#{repository.project.identifier}-#{url}")
     end
 
     protected

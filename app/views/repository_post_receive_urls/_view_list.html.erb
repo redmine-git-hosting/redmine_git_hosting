@@ -8,7 +8,7 @@
 
   <h3>Post Receive URLs</h3>
   
-  <% if @repository.project.repository_post_receive_urls.any? %>
+  <% if @repository.repository_post_receive_urls.any? %>
     <div class="autoscroll">
       <table class="list" style="margin: 1px 2px; width: 99%">
 	<thead>
@@ -19,7 +19,7 @@
 	  </tr>
 	</thead>
 	<tbody>
-	  <% @repository.project.repository_post_receive_urls.each do |prurl| %>
+	  <% @repository.repository_post_receive_urls.each do |prurl| %>
 	    <tr class="<%= cycle('odd', 'even') %>">
 	      <td class="name" style="vertical-align:middle;"><%= link_to(h(prurl.url), url_for(:controller => 'repository_post_receive_urls', :action => 'edit', :repository_id => @repository.id, :id => prurl.id), :class => 'edit-post-receive-url') %></td>
 	      <td class="center" width="10%" style="vertical-align:middle;"><%= post_receive_mode prurl %><br /><%= checked_image prurl.active? %></td>

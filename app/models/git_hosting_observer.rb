@@ -70,7 +70,7 @@ class GitHostingObserver < ActiveRecord::Observer
     def after_destroy(object)
 	if object.is_a?(Repository::Git)
 	    update_repositories(object,:delete=>true)
-	    GitHosting::clear_cache_for_project(object.project)
+	    CachedShellRedirector::clear_cache_for_repository(object)
 	else
 	    update_repositories(object)
 	end

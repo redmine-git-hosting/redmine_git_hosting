@@ -45,19 +45,20 @@
     </div>
     <%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
   </div>
- 
-  <% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
-    <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>
-      <%= render :partial => 'deployment_credentials/view_list' %>
-    <% end %>
+<% end %> 
 
-    <% if GitHostingHelper.can_view_post_receive_urls(@repository.project) %>
-      <%= render :partial => 'repository_post_receive_urls/view_list' %>
-    <% end %>
-
-    <% if GitHostingHelper.can_view_mirrors(@repository.project) %>
-      <%= render :partial => 'repository_mirrors/view_list' %>
-    <% end %>
+<% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
+  <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>
+    <%= render :partial => 'deployment_credentials/view_list' %>
   <% end %>
 
+  <% if GitHostingHelper.can_view_post_receive_urls(@repository.project) %>
+    <%= render :partial => 'repository_post_receive_urls/view_list' %>
+  <% end %>
+
+  <% if GitHostingHelper.can_view_mirrors(@repository.project) %>
+    <%= render :partial => 'repository_mirrors/view_list' %>
+  <% end %>
 <% end %>
+
+

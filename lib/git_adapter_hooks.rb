@@ -72,7 +72,7 @@ module GitHosting
 	    check_hooks_installed
 
 	    if projects.nil?
-		projects = Project.visible.find(:all).select{|p| p.repository.is_a?(Repository::Git)}
+		projects = Project.visible.all.select{|proj| proj.gl_repos.any?}
 	    elsif projects.instance_of? Project
 		projects = [projects]
 	    end
@@ -86,7 +86,9 @@ module GitHosting
 
 	    local_config_map = get_local_config_map
 	    projects.each do |project|
-		setup_hooks_for_project(project,local_config_map[GitHosting.repository_path(project)])
+		project.gl_repos.each do |repo|
+		    setup_hooks_for_repository(repo,local_config_map[GitHosting.repository_path(repo)])
+		end
 	    end
 	end
 
@@ -175,10 +177,10 @@ module GitHosting
 	    local_config_map
 	end
 
-	# Return a hash with local config parameters for a single project
-	def self.get_local_config_params(project)
+	# Return a hash with local config parameters for a single repository
+	def self.get_local_config_params(repo)
 	    value_hash = {}
-	    repo_path = GitHosting.repository_path(project)
+	    repo_path = GitHosting.repository_path(repo)
 	    params = %x[#{GitHosting.git_exec} config -f '#{repo_path}/config' --get-regexp hooks.redmine_gitolite].split("\n").each do |valuepair|
 		pair=valuepair.split(' ')
 		value_hash[pair[0]]=pair[1]
@@ -196,28 +198,24 @@ module GitHosting
 	    value_hash
 	end
 
-	def self.setup_hooks_for_project(project,value_hash=nil)
-	    if project.repository.nil?
-		logger.error "Cannot setup hooks for project #{project.identifier}.  Repository is not yet created."
-		return
-	    end
-
+	def self.setup_hooks_for_repository(repo,value_hash=nil)
 	    # if no value_hash given, go fetch
-	    value_hash = get_local_config_params(project) if value_hash.nil?
-	    hook_key = project.repository.extra.key
-	    if value_hash["hooks.redmine_gitolite.key"] != hook_key || value_hash["hooks.redmine_gitolite.projectid"] != project.identifier
+	    value_hash = get_local_config_params(repo) if value_hash.nil?
+	    hook_key = repo.extra.key
+	    if value_hash["hooks.redmine_gitolite.key"] != hook_key || value_hash["hooks.redmine_gitolite.projectid"] != repo.project.identifier || value_hash["hooks.redmine_gitolite.repositoryid"] != repo.identifier
 		if value_hash["hooks.redmine_gitolite.key"]
-		    logger.info "Repairing hooks for project '#{project.identifier}' (in gitolite repository at '#{GitHosting.repository_path(project)}')"
+		    logger.info "Repairing hooks for repository '#{GitHosting.repository_name(repo)}' (in gitolite repository at '#{GitHosting.repository_path(repo)}')"
 		else
-		    logger.info "Setting up hooks for project '#{project.identifier}' (in gitolite repository at '#{GitHosting.repository_path(project)}')"
+		    logger.info "Setting up hooks for repository '#{GitHosting.repository_name(repo)}' (in gitolite repository at '#{GitHosting.repository_path(repo)}')"
 		end
 
 		begin
-		    repo_path = GitHosting.repository_path(project)
+		    repo_path = GitHosting.repository_path(repo)
 		    GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.key "#{hook_key}"]
-		    GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.projectid "#{project.identifier}"]
+		    GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.projectid "#{repo.project.identifier}"]
+		    GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.repositoryid "#{repo.identifier}"]
 		rescue
-		    logger.error "setup_hooks_for_project(#{project.id}) failed!"
+		    logger.error "setup_hooks_for_repository(#{repo.git_label}) failed!"
 		end
 	    end
 	end

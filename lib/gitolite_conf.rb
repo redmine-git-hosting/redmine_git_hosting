@@ -152,7 +152,7 @@ module GitHosting
 	def self.gitolite_repository_map
 	    gitolite_repos=Hash.new{|hash, key| hash[key] = []}	 # default -- empty list
 	    myfiles = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print'].chomp.split("\n")
-	    filesplit = /(\.\/)*#{GitHosting.repository_base}(.*?)([^\/]+)\.git/
+	    filesplit = /^(\.\/)*#{GitHosting.repository_base}(.*?)([^\/]+)\.git$/
 	    myfiles.each do |nextfile|
 		if filesplit =~ nextfile
 		    gitolite_repos[$3] << "#{$2}#{$3}"

@@ -8,6 +8,12 @@ module GitHosting
     module Patches
 	module GitRepositoryPatch
 
+	    # Set up git urls for new repositories
+	    def set_git_urls
+		self.url = GitHosting.repository_path(self) if url.blank?
+		self.root_url = url if root_url.blank?
+	    end
+
 	    def report_last_commit_with_always_true
 		true
 	    end
@@ -19,6 +25,9 @@ module GitHosting
 		# Turn of updates during repository update
 		GitHostingObserver.set_update_active(false);
 
+		# Make sure to invalidate old cache entries
+		GitHosting.set_repository_limit_cache(self)
+
 		# Do actual update
 		fetch_changesets_without_disable_update
 
@@ -29,7 +38,10 @@ module GitHosting
 	    def self.included(base)
 		base.class_eval do
 		    unloadable
+
+		    before_validation :set_git_urls
 		end
+
 		begin
 		    base.send(:alias_method_chain, :report_last_commit, :always_true)
 		    base.send(:alias_method_chain, :extra_report_last_commit, :always_true)

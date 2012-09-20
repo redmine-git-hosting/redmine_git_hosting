@@ -23,9 +23,11 @@ class CachedShellRedirector
     # Primary interface: execute given command and send IO to block
     # options[:write_stdin] will derive caching key from data that block writes to io stream
     def self.execute(cmd_str, repo_id, options={}, &block)
-	if max_cache_time == 0
+	if max_cache_time == 0 || repo_id.nil? || options[:uncached]
 	    # Disabled cache, simply launch shell, don't redirect
-	    retio = options.empty? ? shellout(cmd_str, &block) : shellout(cmd_str, options, &block)
+	    Rails.logger.error "Cache disabled: repo_id(#{repo_id}), cmd_str: #{cmd_str}"
+	    options.delete(:uncached)
+	    retio = options.empty? ? Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, &block) : Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
 	    status = $?
 	elsif !options[:write_stdin] && out = self.check_cache(cmd_str)
 	    # Simple case -- have cached result that depends only on cmd_str
@@ -305,7 +307,7 @@ class CachedShellRedirector
 	    @state = DEAD
 	    Rails.logger.error "Output from shell#{@my_buffer_overfull ? "(Overflow)" : ""}:\n#{@my_buffer}"
 	    if !@my_buffer_overfull
-		self.class.set_cache(@repo_id,@my_buffer,@my_cmd_str,@my_extra_args)
+		self.class.set_cache(@my_repo_id,@my_buffer,@my_cmd_str,@my_extra_args)
 		# Insert result into cache
 	    end
 	end
@@ -342,7 +344,8 @@ class CachedShellRedirector
 	cached = GitCache.find_by_command(compose_key(primary_key,secondary_key))
 	if cached
 	    cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-	    if cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0
+	    if (cached.created_at.to_i >= expire_at(cached.proj_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
+		# cached.touch # Update updated_at flag
 		out = cached.command_output == nil ? "" : cached.command_output
 	    else
 		GitCache.destroy(cached.id)
@@ -369,5 +372,28 @@ class CachedShellRedirector
 	    GitCache.destroy(oldest.id)
 	end
     end
-end
 
+    @@time_limits=nil
+    def self.limit_cache(repo,date)
+	repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
+	Rails.logger.error "EXECUTING LIMIT CACHE: '#{repo_id}' for '#{date}'"
+	@@time_limits ||= {}
+	@@time_limits[repo_id]=(ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
+    end
+
+    def self.expire_at(repo_id)
+	@@time_limits[repo_id] || 0
+    end
+
+    # Given repository or repository_path, clear the cache entries
+    def self.clear_cache_for_repository(repo)
+	repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
+
+	# Clear cache
+	old_cached=GitCache.find_all_by_proj_identifier(repo_id)
+	if old_cached != nil
+	    old_ids = old_cached.collect(&:id)
+	    GitCache.destroy(old_ids)
+	end
+    end
+end

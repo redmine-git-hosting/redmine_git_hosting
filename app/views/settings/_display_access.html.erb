@@ -1,6 +1,6 @@
 <div class="git_hosting_access_box">
         <h3><%= l(:label_current_access_patterns) %></h3>
-	<%= l(:display_access_setup) %>:
+	<%= l(:display_access_setup, :type => (GitHosting.multi_repos? ? "default " : "")) %>:
 	<p>
 		<label>Repo Storage:</label>
 		<%= "~#{@settings['gitUser']}/#{@settings['gitRepositoryBasePath']}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"

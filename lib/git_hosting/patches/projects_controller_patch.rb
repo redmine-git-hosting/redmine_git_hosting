@@ -19,21 +19,21 @@ module GitHosting
 		if @project.module_enabled?('repository') && Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
 		    # Create new repository
 		    repo = Repository.factory("Git")
-		    # Set urls
-		    repo.url = repo.root_url = GitHosting.repository_path(@project)
-		    @project.repository = repo
-		    repo.save
+		    if GitHosting.multi_repos?
+			@project.repositories << repo
+		    else
+			@project.repository = repo
+		    end
 		end
 	    end
 
 	    def disable_git_daemon_if_not_public
-		if @project.repository != nil
-		    if @project.repository.is_a?(Repository::Git)
-			if @project.repository.extra.git_daemon == 1 && (not @project.is_public )
-			    @project.repository.extra.git_daemon = 0;
-			    @project.repository.extra.save
-			    @project.repository.save # Trigger update_repositories
-			end
+		# Go through all gitolite repos and diable git_daemon if necessary
+		@project.gl_repos.each do |repo|
+		    if repo.extra.git_daemon == 1 && (not @project.is_public )
+			repo.extra.git_daemon = 0;
+			repo.extra.save
+			repo.save # Trigger update_repositories
 		    end
 		end
 	    end
@@ -45,8 +45,10 @@ module GitHosting
 		# Do actual update
 		create_without_disable_update
 
+		Rails.logger.error "About to create new repo!"
 		# Fix up repository
 		git_repo_init
+		Rails.logger.error "Done creating new repo!"
 
 		# Adjust daemon status
 		disable_git_daemon_if_not_public
@@ -65,8 +67,7 @@ module GitHosting
 		# Adjust daemon status
 		disable_git_daemon_if_not_public
 
-		myrepo = @project.repository
-		if myrepo.is_a?(Repository::Git) && (myrepo.url != GitHosting::repository_path(@project) || myrepo.url != myrepo.root_url)
+		if @project.gl_repos.detect {|repo| repo.url != GitHosting::repository_path(repo) || repo.url != repo.root_url}
 		    # Hm... something about parent hierarchy changed.  Update us and our children
 		    GitHostingObserver.set_update_active(@project, :descendants)
 		else

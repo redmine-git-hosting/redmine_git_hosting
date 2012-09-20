@@ -2,14 +2,14 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
     STATUS_ACTIVE = 1
     STATUS_INACTIVE = 0
 
-    belongs_to :project
+    belongs_to :repository
 
     attr_accessible :url, :mode, :active
 
-    validates_uniqueness_of :url, :scope => [:project_id]
-    validates_presence_of :project_id
+    validates_uniqueness_of :url, :scope => [:repository_id]
+    validates_presence_of :repository_id
     validates_format_of :url, :with => URI::regexp(%w(http https))
-    validates_associated :project
+    validates_associated :repository
 
     before_validation :strip_whitespace
 
@@ -25,7 +25,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
     end
 
     def to_s
-	return File.join("#{project.identifier}-#{url}")
+	return File.join("#{repository.project.identifier}-#{url}")
     end
 
     protected

@@ -69,10 +69,11 @@ module GitHosting
 		    render_without_trigger_refresh(*options, &myblock)
 		else
 		    # For repository partial
-		    @repository ||= @project.repository
-		    render_without_trigger_refresh *options do |page|
-			yield page
-			Page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
+		    if (@repository ||= @project.repository)
+			render_without_trigger_refresh *options do |page|
+			    yield page
+			    Page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
+			end
 		    end
 		end
 	    end
@@ -85,22 +86,24 @@ module GitHosting
 		end
 		begin
 		    # RESTfull (post-1.4)
-		    base.send(:alias_method_chain, :create, :scm_settings)
+		    base.send(:alias_method_chain, :create, :disable_update)
 		rescue
 		    # Not RESTfull (pre-1.4)
-		    base.send(:alias_method_chain, :new, :scm_settings) rescue nil
+		    base.send(:alias_method_chain, :new, :disable_update) rescue nil
 		end
 		begin
 		    # RESTfull (post-1.4)
-		    base.send(:alias_method_chain, :update, :scm_settings)
+		    base.send(:alias_method_chain, :update, :disable_update)
 		rescue
 		    # Not RESTfull (pre-1.4)
-		    base.send(:alias_method_chain, :edit, :scm_settings) rescue nil
+		    base.send(:alias_method_chain, :edit, :disable_update) rescue nil
 		end
 		base.send(:alias_method_chain, :destroy, :disable_update) rescue nil
 
 		# This patch only needed when repository settings in same set
 		# if tabs as members (i.e. pre-1.4, single repo)
+		# (Note that patches not stabilized yet, so cannot just call:
+		# Project.multi_repos?
 		if !GitHosting.multi_repos?
 		    base.send(:alias_method_chain, :render, :trigger_refresh) rescue nil
 		end

@@ -39,7 +39,8 @@ Redmine::Plugin.register :redmine_git_hosting do
 	'gitHooksAreAsynchronous' => 'true',
 	'gitTempDataDir' => '/tmp/redmine_git_hosting/',
 	'gitScriptDir' => '',
-	'gitForceHooksUpdate' => 'true'
+	'gitForceHooksUpdate' => 'true',
+	'gitRepositoryIdentUnique' => 'true'
     },
     :partial => 'redmine_git_hosting'
     project_module :repository do

@@ -23,7 +23,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 	    # display create view
 	else
 	    @prurl.update_attributes(params[:repository_post_receive_urls])
-	    @prurl.project = @project
+	    @prurl.repository = @repository
 
 	    if @prurl.save
 		flash[:notice] = l(:post_receive_url_notice_created)
@@ -144,9 +144,9 @@ class RepositoryPostReceiveUrlsController < ApplicationController
     def find_repository_post_receive_url
 	prurl = RepositoryPostReceiveUrl.find_by_id(params[:id])
 
-	@prurls = @project.repository_post_receive_urls
+	@prurls = @repository.repository_post_receive_urls
 
-	if prurl and prurl.project == @project
+	if prurl and prurl.repository == @repository
 	    @prurl = prurl
 	elsif prurl
 	    render_403

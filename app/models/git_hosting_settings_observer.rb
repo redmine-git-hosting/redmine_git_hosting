@@ -138,6 +138,16 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 		end
 	    end
 
+	    # Check to see if we are trying to claim all repository identifiers are unique
+	    if valuehash['gitRepositoryIdentUnique'] == "true"
+		prev=nil
+		if Repository.all(:order => 'identifier ASC').map(&:identifier).detect{|x| old_prev=prev; prev=x; old_prev==prev}
+		    # Oops -- have duplication.	 Force to false.
+		    valuehash['gitRepositoryIdentUnique'] == "false"
+		end
+	    end
+
+
 	    # Exclude bad expire times (and exclude non-numbers)
 	    if valuehash['gitRecycleExpireTime']
 		if valuehash['gitRecycleExpireTime'].to_f > 0
@@ -188,7 +198,8 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 		    @@old_valuehash['gitRepositoryHierarchy'] != valuehash['gitRepositoryHierarchy'] ||
 		    @@old_valuehash['gitUser'] != valuehash['gitUser'] ||
 		    @@old_valuehash['gitConfigFile'] != valuehash['gitConfigFile'] ||
-		    @@old_valuehash['gitConfigHasAdminKey'] != valuehash['gitConfigHasAdminKey']
+		    @@old_valuehash['gitConfigHasAdminKey'] != valuehash['gitConfigHasAdminKey'] ||
+		    GitHosting.multi_repos? && @@old_valuehash['gitRepositoryIdentUnique'] != valuehash['gitRepositoryIdentUnique']
 		# Need to update everyone!
 		GitHostingObserver.bracketed_update_repositories(:resync_all)
 	    end

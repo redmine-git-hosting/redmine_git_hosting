@@ -1,4 +1,4 @@
-<% if @project.repository && @project.repository.is_a?(Repository::Git) %>
+<% if project.repository && project.repository.is_a?(Repository::Git) %>
 	<% content_for :header_tags do %>
 
 		<%= stylesheet_link_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
@@ -10,16 +10,16 @@
 
 
 		<script type="text/javascript">
-			guProjectName= "<%= GitHosting.git_access_url(project)+'.git' %>";
-			guSshURL = "<%= GitHosting.git_access_url(project)+'.git' %>";
-			guHttpURL = "<%= GitHosting.http_access_url(project)+'.git' %>";
+			guProjectName= "<%= GitHosting.git_access_url(project.repository)+'.git' %>";
+			guSshURL = "<%= GitHosting.git_access_url(project.repository)+'.git' %>";
+			guHttpURL = "<%= GitHosting.http_access_url(project.repository)+'.git' %>";
 			guProjectIsPublic= <%= project.is_public.to_s %> ;
 			guUser= "<%= User.current.login %>";
 			guUserIsCommitter= <%= User.current.allowed_to?(:commit_access, project) ? "true" : "false" %> ;
 			guGitUser="<%= Setting.plugin_redmine_git_hosting['gitUser'] %>";
 			guGitServer="<%= Setting.plugin_redmine_git_hosting['gitServer'] %>";
 			guHttpBase="<%= GitHosting.my_root_url %>";
-			guHttpProto="<%= @project.repository.extra[:git_http].to_s == "2" ? "http" : "https" %>";
+			guHttpProto="<%= project.repository.extra[:git_http].to_s == "2" ? "http" : "https" %>";
 
 			if (!(window.Event === undefined) && !(Event.observe === undefined)) {
 				Event.observe(window,"load", setGitUrlOnload);

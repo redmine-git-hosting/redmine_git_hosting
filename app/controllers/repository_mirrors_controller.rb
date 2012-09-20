@@ -23,7 +23,7 @@ class RepositoryMirrorsController < ApplicationController
 	    # display create view
 	else
 	    @mirror.update_attributes(params[:repository_mirrors])
-	    @mirror.project = @project
+	    @mirror.repository = @repository
 
 	    if @mirror.save
 		flash[:notice] = l(:mirror_notice_created)
@@ -152,9 +152,9 @@ class RepositoryMirrorsController < ApplicationController
     def find_repository_mirror
 	mirror = RepositoryMirror.find_by_id(params[:id])
 
-	@mirrors = @project.repository_mirrors
+	@mirrors = @repository.repository_mirrors
 
-	if mirror and mirror.project == @project
+	if mirror and mirror.repository == @repository
 	    @mirror = mirror
 	elsif mirror
 	    render_403

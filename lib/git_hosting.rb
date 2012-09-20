@@ -68,14 +68,14 @@ module GitHosting
     end
 
     # This is the file portion of the url used when talking through ssh to the repository.
-    def self.git_access_url project
-	return "#{repository_name(project)}"
+    def self.git_access_url repository
+	return "#{repository_name(repository)}"
     end
 
     # This is the relative portion of the url (below the rails_root) used when talking through httpd to the repository
     # Note that this differs from the git_access_url in not including 'repository_redmine_subdir' as part of the path.
-    def self.http_access_url project
-	return "#{http_server_subdir}#{redmine_name(project)}"
+    def self.http_access_url repository
+	return "#{http_server_subdir}#{redmine_name(repository)}"
     end
 
     # Server path (minus protocol)
@@ -183,7 +183,8 @@ module GitHosting
 	return @@sudo_web_to_git_user_cached
     end
 
-    def self.get_full_parent_path(project, is_file_path)
+    def self.get_full_parent_path(repository, is_file_path)
+	project = repository.project
 	return "" if !project.parent || !repository_hierarchy
 	parent_parts = [];
 	p = project
@@ -195,14 +196,14 @@ module GitHosting
 	return is_file_path ? File.join(parent_parts) : parent_parts.join("/")
     end
 
-    def self.redmine_name(project)
-	return File.expand_path(File.join("./",get_full_parent_path(project, false),project.identifier),"/")[1..-1]
+    def self.redmine_name(repository)
+	return File.expand_path(File.join("./",get_full_parent_path(repository, false),repository.git_label),"/")[1..-1]
     end
-    def self.repository_name(project)
-	return File.expand_path(File.join("./",repository_redmine_subdir,get_full_parent_path(project, false),project.identifier),"/")[1..-1]
+    def self.repository_name(repository,flags=nil)
+	return File.expand_path(File.join("./",repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
     end
-    def self.repository_path projectId
-	repo_name = projectId.is_a?(String) ? projectId : repository_name(projectId)
+    def self.repository_path(repositoryID)
+	repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
 	return File.join(repository_base, repo_name) + ".git"
     end
 
@@ -675,27 +676,29 @@ module GitHosting
     def self.update_repositories(*args)
 	flags = {}
 	args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
+	reposym = (multi_repos? ? :repositories : :repository)
 	if flags[:resync_all]
 	    logger.info "Executing RESYNC_ALL operation on gitolite configuration"
-	    projects = Project.active_or_archived.find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => reposym)
 	elsif flags[:delete]
 	    # When delete, want to recompute users, so need to go through all projects
 	    logger.info "Executing DELETE operation (resync keys, remove dead repositories)"
-	    projects = Project.active_or_archived.find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => reposym)
 	elsif flags[:archive]
 	    # When archive, want to recompute users, so need to go through all projects
 	    logger.info "Executing ARCHIVE operation (remove keys)"
-	    projects = Project.active_or_archived.find(:all, :include => :repository)
+	    projects = Project.active_or_archived.find(:all, :include => reposym)
 	elsif flags[:descendants]
 	    if Project.method_defined?(:self_and_descendants)
 		projects = (args.flatten.select{|p| p.is_a?(Project)}).collect{|p| p.self_and_descendants}.flatten
 	    else
-		projects = Project.active_or_archived.find(:all, :include => :repository)
+		projects = Project.active_or_archived.find(:all, :include => reposym)
 	    end
 	else
 	    projects = args.flatten.select{|p| p.is_a?(Project)}
 	end
-	git_projects = projects.uniq.select{|p| p.repository.is_a?(Repository::Git) }
+	# Only take projects that have Git repos.
+	git_projects = projects.uniq.select{|p| p.gl_repos.any?}
 	return if git_projects.empty?
 
 	if(defined?(@@recursionCheck))
@@ -818,128 +821,138 @@ module GitHosting
 	    # Projects for which we want to update hooks
 	    new_projects = []
 
-	    # Regenerate configuration file for projects of interest
+	    # Regenerate configuration file for repos of projects of interest
 	    # Also, try to match up actual repositories with projects (being somewhat conservative
 	    # when a project might be out of control of redmine.
 	    #
 	    # Note that we go through all projects, including archived ones, since we may need to
 	    # find orphaned repos.	Archived projects get left with a "ARCHIVED_REDMINE_KEY".
 	    git_projects.each do |proj|
-		repo_name = repository_name(proj)
+		proj.gl_repos.each do |repo|
+		    repo_name = repository_name(repo)
 
-		# Common case: these are nil or lists of one element.
-		my_entries = redmine_repos[proj.identifier]
-		my_repos = actual_repos[proj.identifier]
+		    logger.error "Checking out repository: #{repository_name(repo, :assume_unique => false)}"
 
-		# We have one or more gitolite.conf entries with the right base name.  Pick one with
-		# closest name (will pick one with 'repo_name' if it exists.
-		closest_entry = closest_path(my_entries,repo_name)
-		if !closest_entry
-		    # CREATION case.
-		    if !total_entries[repo_name]
-			logger.warn "Creating new entry '#{repo_name}' in #{gitolite_conf}"
+		    # Common case: these are hashes with zero or one one element (except when
+		    # Repository.repo_ident_unique? is false)
+		    my_entries = redmine_repos[repo.git_name]
+		    my_repos = actual_repos[repo.git_name]
+
+		    # We have one or more gitolite.conf entries with the right base name.  Pick one with
+		    # closest name (will pick one with 'repo_name' if it exists.
+		    closest_entry = closest_path(my_entries,repo)
+		    if !closest_entry
+			# CREATION case.
+			if !total_entries[repo_name]
+			    logger.warn "Creating new entry '#{repo_name}' in #{gitolite_conf}"
+			else
+			    logger.warn "Utilizing existing non-redmine entry '#{repo_name}' in #{gitolite_conf}"
+			end
+		    elsif closest_entry != repo_name
+			# MOVE case.
+			logger.warn "Moving entry '#{closest_entry}' to '#{repo_name}' in #{gitolite_conf}."
+			conf.rename_repo(closest_entry,repo_name)
 		    else
-			logger.warn "Utilizing existing non-redmine entry '#{repo_name}' in #{gitolite_conf}"
+			# NORMAL case. Have entry with correct name.
+			if !my_repos.index(repo_name)
+			    logger.warn "Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
+			end
 		    end
-		elsif closest_entry != repo_name
-		    # MOVE case.
-		    logger.warn "Moving entry '#{closest_entry}' to '#{repo_name}' in #{gitolite_conf}."
-		    conf.rename_repo(closest_entry,repo_name)
-		else
-		    # NORMAL case. Have entry with correct name.
-		    if !my_repos.index(repo_name)
-			logger.warn "Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
-		    end
-		end
-		new_projects << proj unless my_repos.index(closest_entry) # Reinit hooks unless NORMAL or MOVE case
-		my_entries.delete closest_entry	 # Claimed this one => don't need to delete later
+		    new_projects << proj unless my_repos.index(closest_entry) # Reinit hooks unless NORMAL or MOVE case
+		    my_entries.delete closest_entry	 # Claimed this one => don't need to delete later
 
-		if my_repos.empty?
-		    # This is the normal CREATION case.	 No repositories with matching basenames
-		    # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
-		    if !GitoliteRecycle.recover_repository_if_present repo_name
-			logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
-		    end
-		elsif my_repos.index(closest_entry)
-		    # We have a repository that matches the entry we used above.  Move this one to match if necessary
-		    # If closest_entry == repo_name, this is a NORMAL case (do nothing!)
-		    # If closest_entry != repo_name, this is the MOVE case.
-		    move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
-		elsif my_repos.index(repo_name)
-		    # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-		    logger.warn "  Using existing repository: '#{repository_path(repo_name)}'"
-		else
-		    # Of the repos in my_repo with a matching base name, only steal away those not already controlled
-		    # by gitolite.conf.	 The one reasonable case here is if (for some reason) a move was properly
-		    # executed in gitolite.conf but the repo didn't get moved.
-		    closest_repo = closest_path((my_repos - total_entries.keys),repo_name)
-		    if !closest_repo
-			logger.error "One or more repositories with matching base name '#{proj.identifier}' exist, but already have entries in gitolite.conf"
-			logger.error "They are: #{my_repos.join(', ')}"
-			# Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
+		    if my_repos.empty?
+			# This is the normal CREATION case for primary repos or when repo_ident_unique? true.
+			# No repositories with matching basenames.  Attempt to recover repository from recycle_bin,
+			# if present.  Else, create new repository.
+			if !GitoliteRecycle.recover_repository_if_present repo_name
+			    logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+			end
+		    elsif my_repos.index(closest_entry)
+			# We have a repository that matches the entry we used above.  Move this one to match if necessary
+			# If closest_entry == repo_name, this is a NORMAL case (do nothing!)
+			# If closest_entry != repo_name, this is the MOVE case.
+			move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
+		    elsif my_repos.index(repo_name)
+			# Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
+			logger.warn "  Using existing repository: '#{repository_path(repo_name)}'"
+		    elsif !Repository.repo_ident_unique? && my_repos.select{|test_path| test_path.match(/^(.*\/)?#{repo.git_label}$/)}.empty?
+			# Filter out everything but paths that look like project/repo_ident; if none, assume creating new repo with non-unique identifier
 			if !GitoliteRecycle.recover_repository_if_present repo_name
 			    logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
 			end
 		    else
-			logger.warn "  Claiming orphan repository '#{repository_path(closest_repo)}' in gitolite repository."
-			move_physical_repo(closest_repo,repo_name)
+			# Of the repos in my_repo with a matching base name, only steal away those not already controlled
+			# by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
+			# in gitolite.conf but the repo didn't get moved.
+			closest_repo = closest_path((my_repos - total_entries.keys),repo)
+			if !closest_repo
+			    logger.error "One or more repositories with matching base name '#{repo.git_name}' exist, but already have entries in gitolite.conf"
+			    logger.error "They are: #{my_repos.join(', ')}"
+			    # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
+			    if !GitoliteRecycle.recover_repository_if_present repo_name
+				logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+			    end
+			else
+			    logger.warn "  Claiming orphan repository '#{repository_path(closest_repo)}' in gitolite repository."
+			    move_physical_repo(closest_repo,repo_name)
+			end
 		    end
-		end
 
-		# Update repository url and root_url if necessary
-		myrepo = proj.repository
-		target_url = repository_path(proj)
-		if myrepo.url != target_url || myrepo.root_url != target_url
-		    # logger.warn "	 Updating internal access path to '#{target_url}'."
-		    myrepo.url = myrepo.root_url = target_url
-		    proj.repository.save
-		end
+		    # Update repository url and root_url if necessary
+		    target_url = repository_path(repo)
+		    if repo.url != target_url || repo.root_url != target_url
+			# logger.warn "	 Updating internal access path to '#{target_url}'."
+			repo.url = repo.root_url = target_url
+			repo.save
+		    end
 
-		# If this is an active (non-archived) project, then update gitolite entry.  Add GIT_DAEMON_KEY.
-		if proj.active?
-		    if proj.module_enabled?(:repository)
-			# Get deployment keys (could be empty)
-			write_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
-			read_user_keys = myrepo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+		    # If this is an active (non-archived) project, then update gitolite entry.	Add GIT_DAEMON_KEY.
+		    if proj.active?
+			if proj.module_enabled?(:repository)
+			    # Get deployment keys (could be empty)
+			    write_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+			    read_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
 
-			# fetch users
-			users = proj.member_principals.map(&:user).compact.uniq
-			write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
-			read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
+			    # fetch users
+			    users = proj.member_principals.map(&:user).compact.uniq
+			    write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
+			    read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
 
-			read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-			    read_user_keys.push key.identifier
-			end
-			write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-			    write_user_keys.push key.identifier
-			end
+			    read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
+				read_user_keys.push key.identifier
+			    end
+			    write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
+				write_user_keys.push key.identifier
+			    end
 
-			#git daemon support
-			if (proj.repository.extra.git_daemon == 1 || proj.repository.extra.git_daemon == nil )	&& proj.is_public
-			    read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
-			end
+			    #git daemon support
+			    if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.is_public
+				read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
+			    end
 
-			# Remove previous redmine keys, then add new keys
-			# By doing things this way, we leave non-redmine keys alone
-			# Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
-			# (to be put back as above, when appropriate).
-			conf.delete_redmine_keys repo_name
-			conf.add_read_user repo_name, read_user_keys.uniq
-			conf.add_write_user repo_name, write_user_keys.uniq
+			    # Remove previous redmine keys, then add new keys
+			    # By doing things this way, we leave non-redmine keys alone
+			    # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
+			    # (to be put back as above, when appropriate).
+			    conf.delete_redmine_keys repo_name
+			    conf.add_read_user repo_name, read_user_keys.uniq
+			    conf.add_write_user repo_name, write_user_keys.uniq
 
-			# If no redmine keys, mark with dummy key
-			if (read_user_keys+write_user_keys).empty?
-			    conf.mark_with_dummy_key repo_name
+			    # If no redmine keys, mark with dummy key
+			    if (read_user_keys+write_user_keys).empty?
+				conf.mark_with_dummy_key repo_name
+			    end
+			else
+			    # Must be a project that has repositories disabled. Mark as disabled project.
+			    conf.delete_redmine_keys repo_name
+			    conf.mark_disabled repo_name
 			end
 		    else
-			# Must be a project that has repositories disabled. Mark as disabled project.
+			# Must be an archive project! Clear out redmine keys.	Mark as an archived project.
 			conf.delete_redmine_keys repo_name
-			conf.mark_disabled repo_name
+			conf.mark_archived repo_name
 		    end
-		else
-		    # Must be an archived project! Clear out redmine keys.  Mark as an archived project.
-		    conf.delete_redmine_keys repo_name
-		    conf.mark_archived repo_name
 		end
 	    end
 
@@ -953,11 +966,11 @@ module GitHosting
 	    #	 => remove redmine keys (will leave redmine_dummy_key when we save)
 	    # 3) They have only redmine keys and repository delete is enabled => delete repository
 	    if flags[:resync_all] || flags[:delete]
-		if flags[:delete]
-		    # Get rid of all live repos from redmine_repos
-		    proj_ids = git_projects.map{|proj| proj.identifier}
-		    redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
-		end
+		# if flags[:delete]
+		#	# Get rid of all live repos from redmine_repos
+		#	proj_ids = git_projects.map{|proj| proj.identifier}
+		#	redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
+		# end
 		redmine_repos.values.flatten.each do |repo_name|
 		    # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
 		    has_keys = conf.has_actual_redmine_keys? repo_name
@@ -1060,8 +1073,44 @@ module GitHosting
 
     # Takes a list of path names and a path name and attempts to find the item in the list that matches
     # in the most components.  Assume at least one element in list
-    def self.closest_path(path_list,target_path)
-	path_list.sort do |x, y|
+    #
+    # Dealing with the multi-repo spec makes this slightly more complex that without.  We want
+    # to be able to recognize the path in either of the two repository naming schemes:
+    #
+    # 1) proj1/proj2/repo_name		     : Used when all repo identifiers are unique
+    # 2) proj1/proj2/parent-proj/repo_name   : Used when repo identifiers may not be unique
+    #
+    # Note that all the complexity of dealing with multi-repo path formats is handled here
+    def self.closest_path(path_list,repo)
+	# Creation case if repo.identifier.blank? is true or Repository.repo_ident_unique? is true
+	return nil if path_list.empty?
+
+	if path_list.count == 1
+	    # Common case -- only one match.
+	    # This catches a number normal operation cases
+	    # 1) cases in which repo.identifier.blank? is true (since there repo.git_name unique)
+	    # 2) cases in which Repository.repo_ident_unique? is true (since repo.git_name should be unique)
+	    # 3) cases in which Repository.repo_ident_unique? is false, but this particular identifier is unique
+	    #
+	    # Make sure that there isn't another repo who owns this path (only possible if we have non-unique
+	    # repository identifiers--verify case #3, i.e. that we are not about to create non-unique identifier)
+	    if !Repository.repo_ident_unique? && (Repository.find_by_path(path_list.first) != repo)
+		return nil
+	    else
+		return path_list.first
+	    end
+	end
+
+	# Look for exact matching path (also common case if Repository.repo_ident_unique? is false and multiple
+	# repos exist with the same identifier).
+	target_path = repository_name(repo)
+	path_list.each {|test_path| return test_path if test_path==target_path}
+
+	# Beyond this point, we do not have an exact matching path, thus something has changed.
+	# We need to clean things up a bit.
+
+	# Ok we will choose candidates based on path length
+	sort_proc = Proc.new {|x,y|
 	    # sort by length of match, then dictionary
 	    lmatchx = longest_match_length(x,target_path)
 	    lmatchy = longest_match_length(y,target_path)
@@ -1073,7 +1122,28 @@ module GitHosting
 		# in case of equivalence, want earliest alphabetical
 		y <=> x
 	    end
-	end.last
+	}
+
+	# Special handling if repository name could change with Repository.repo_ident_unique?
+	if !repo.identifier.blank? && GitHosting.multi_repos?
+	    # See if we find match by merely changing value of Repository.repo_ident_unique?
+	    target_path_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
+	    path_list.each {|test_path| return test_path if test_path==target_path_alt}
+
+	    # Preferentially match against project-name/repo_identifier paths if they exist
+	    # Under normal operation, there should be only one of these, since proj_name/repo_identifier
+	    # should always be unique.	Note that we check this even if Repository.repo_ident_unique? is true
+	    # in case we just switched from false.
+	    matchname=repo.git_label(:assume_unique => false)
+	    if (reasonable_paths=path_list.select{|test_path| test_path.match(/^(.*\/)?#{matchname}$/)}).any?
+		return (reasonable_paths.sort &sort_proc).last
+	    end
+	end
+
+	# Just find longest matching path.  This works pretty much for most weird issues we can find.
+	# It works the same as previous version if identifier.blank? is true (i.e. repo named by project.identifier)
+	# or Repository.repo_ident_unique? is true (unique again)
+	(path_list.sort &sort_proc).last
     end
 
     # return the number of characters that match between str1 and str2
@@ -1086,19 +1156,6 @@ module GitHosting
 	end
 	str1.length
     end
-
-    def self.clear_cache_for_project(project)
-	if project.is_a?(Project)
-	    project = project.identifier
-	end
-	# Clear cache
-	old_cached=GitCache.find_all_by_proj_identifier(project)
-	if old_cached != nil
-	    old_ids = old_cached.collect(&:id)
-	    GitCache.destroy(old_ids)
-	end
-    end
-
 
     def self.check_hooks_installed
 	installed = false
@@ -1119,6 +1176,14 @@ module GitHosting
 	    GitAdapterHooks.update_global_hook_params
 	    unlock()
 	end
+    end
+
+    # Set the history limit for caching on the given repo
+    # We assume that the time stamps on the reference files indicate when the latest update occurred.
+    def self.set_repository_limit_cache(repo)
+	# Find time of newest reference file
+	result = %x[#{GitHosting.git_user_runner} find '#{repository_path(repo)}/refs' '#{repository_path(repo)}/packed-refs' -type f -printf "%c," 2> /dev/null].split(",").compact.map{|x| Time.parse(x)}.max
+	CachedShellRedirector.limit_cache(repo,result)
     end
 
     class MyLogger
