@@ -216,6 +216,11 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 		GitHosting.update_global_hook_params
 	    end
+
+	    if @@old_valuehash['gitCacheMaxTime'] != valuehash['gitCacheMaxTime']
+		CachedShellRedirector.clear_obsolete_cache_entries
+	    end
+
 	    @@old_valuehash = valuehash.clone
 	end
     end

@@ -25,7 +25,7 @@ class CachedShellRedirector
     def self.execute(cmd_str, repo_id, options={}, &block)
 	if max_cache_time == 0 || repo_id.nil? || options[:uncached]
 	    # Disabled cache, simply launch shell, don't redirect
-	    Rails.logger.error "Cache disabled: repo_id(#{repo_id}), cmd_str: #{cmd_str}"
+	    # Rails.logger.error "Cache disabled: repo_id(#{repo_id}), cmd_str: #{cmd_str}"
 	    options.delete(:uncached)
 	    retio = options.empty? ? Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, &block) : Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
 	    status = $?
@@ -114,14 +114,11 @@ class CachedShellRedirector
 	end
 
 	# Buffer up results from read operations. Proxy everything else directly to IO stream.
-	Rails.logger.error "method_missing handling: #{my_method}"
 	my_name = my_method.to_s
 	if my_name =~ /^(each|bytes)/
 	    # Handle Enumerator read functions (Class #1)
-	    Rails.logger.error "Defining new function: #{my_method}"
 	    self.class.class_eval <<-EOF, __FILE__, __LINE__
 		def #{my_method}(*args, &block)
-		    Rails.logger.error "Enumerator Diverter (#{my_method})"
 		    if @state == RUNNING_SHELL
 			# Must Divert results into buffer.
 			if block_given?
@@ -134,37 +131,28 @@ class CachedShellRedirector
 			    EnumerableRedirector.new(myvalue,self)
 			end
 		    else
-			Rails.logger.error "Direct forwarding"
 			@my_read_stream.#{my_method}(*args,&block)
 		    end
 		end
 	    EOF
-	    Rails.logger.error "Finished definition."
 	elsif my_name =~ /^(get|read)/
 	    # Handle "regular" read functions (Class #2)
-	    Rails.logger.error "Defining new function: #{my_method}"
 	    self.class.class_eval <<-EOF, __FILE__, __LINE__
 		def #{my_method}(*args, &block)
-		    Rails.logger.error "Normal Diverter"
 		    myvalue = @my_read_stream.#{my_method}(*args)
 		    add_to_buffer(myvalue) if @state == RUNNING_SHELL
 		    myvalue
 		end
 	    EOF
-	    Rails.logger.error "Finished definition."
 	else
 	    # Handle every thing else by simply forwarding (Class #3)
-	    Rails.logger.error "Defining new function: #{my_method}"
 	    self.class.class_eval <<-EOF, __FILE__, __LINE__
 		def #{my_method}(*args, &block)
-		    Rails.logger.error "Simple Proxy"
 		    @my_read_stream.#{my_method}(*args,&block)
 		end
 	    EOF
-	    Rails.logger.error "Finished definition."
 	end
 	# Call new function once
-	Rails.logger.error "Calling new function once!"
 	self.send(my_method,*args,&block)
 	end
 
@@ -212,7 +200,6 @@ class CachedShellRedirector
     ##############################################################################
     # Class #1 functions (Read functions with block/enumerator behavior)
     def enumerator_diverter(my_method,*args,&block)
-	Rails.logger.error "Enumerator Diverter"
 	if @state == RUNNING_SHELL
 	    # Must Divert results into buffer.
 	    if block_given?
@@ -232,14 +219,12 @@ class CachedShellRedirector
     # Class #2 functions (Return of Array, String, or Integer)
     def normal_diverter(my_method,*args)
 	myvalue = @my_read_stream.send(my_method,*args)
-	Rails.logger.error "Normal Diverter: #{myvalue}"
 	add_to_buffer(myvalue) if @state == RUNNING_SHELL
 	myvalue
     end
 
     # Class #3 functions (Everything by read functions)
     def simple_proxy(my_method,*args,&block)
-	Rails.logger.error "Simple Proxy"
 	@my_read_stream.send(my_method,*args,&block)
     end
 
@@ -305,7 +290,6 @@ class CachedShellRedirector
 	    @wrap_thread.run
 	    @wrap_thread.join
 	    @state = DEAD
-	    Rails.logger.error "Output from shell#{@my_buffer_overfull ? "(Overflow)" : ""}:\n#{@my_buffer}"
 	    if !@my_buffer_overfull
 		self.class.set_cache(@my_repo_id,@my_buffer,@my_cmd_str,@my_extra_args)
 		# Insert result into cache
@@ -339,7 +323,7 @@ class CachedShellRedirector
     end
 
     def self.check_cache(primary_key,secondary_key=nil)
-	Rails.logger.error "Probing cache with key: #{compose_key(primary_key,secondary_key)}"
+	# Rails.logger.error "Probing cache with key: #{compose_key(primary_key,secondary_key)}"
 	out=nil
 	cached = GitCache.find_by_command(compose_key(primary_key,secondary_key))
 	if cached
@@ -352,17 +336,17 @@ class CachedShellRedirector
 	    end
 	end
 	if out
-	    Rails.logger.error "********* Matched ***********\n#{out.to_s}"
 	    # Return result as a string stream
+	    # Rails.logger.error "********* Matched ***********\n#{out.to_s}"
 	    StringIO.new(out)
 	else
-	    Rails.logger.error "********* Failed ************\n"
+	    # Rails.logger.error "********* Failed ************\n"
 	    nil
 	end
     end
 
     def self.set_cache(repo_id,out_value,primary_key,secondary_key=nil)
-	Rails.logger.error "Inserting into cache with key: #{compose_key(primary_key,secondary_key)}"
+	# Rails.logger.error "Inserting into cache with key: #{compose_key(primary_key,secondary_key)}"
 	gitc = GitCache.create( :command=>compose_key(primary_key,secondary_key),
 				:command_output=>out_value,
 				:proj_identifier=>repo_id )
@@ -376,13 +360,13 @@ class CachedShellRedirector
     @@time_limits=nil
     def self.limit_cache(repo,date)
 	repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
-	Rails.logger.error "EXECUTING LIMIT CACHE: '#{repo_id}' for '#{date}'"
+	# Rails.logger.error "EXECUTING LIMIT CACHE: '#{repo_id}' for '#{date}'"
 	@@time_limits ||= {}
 	@@time_limits[repo_id]=(ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
     end
 
     def self.expire_at(repo_id)
-	@@time_limits[repo_id] || 0
+	@@time_limits ? @@time_limits[repo_id] : 0
     end
 
     # Given repository or repository_path, clear the cache entries
@@ -392,6 +376,19 @@ class CachedShellRedirector
 	# Clear cache
 	old_cached=GitCache.find_all_by_proj_identifier(repo_id)
 	if old_cached != nil
+	    old_ids = old_cached.collect(&:id)
+	    GitCache.destroy(old_ids)
+	end
+    end
+
+    # After resetting cache timing parameters -- delete entries that no-longer match
+    def self.clear_obsolete_cache_entries
+	return if max_cache_time < 0  # No expiration needed
+
+	target_limit = Time.now - max_cache_time
+	old_cached=GitCache.all(:conditions => ["created_at < ?",target_limit])
+	if old_cached != nil
+	    GitHosting.logger.warn "Removing #{old_cached.count} expired cache entries."
 	    old_ids = old_cached.collect(&:id)
 	    GitCache.destroy(old_ids)
 	end

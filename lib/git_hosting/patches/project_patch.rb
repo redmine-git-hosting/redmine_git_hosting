@@ -9,13 +9,17 @@ module GitHosting
 	    # Find all repositories owned by project which are Repository::Git
 	    # Works for both multi- and single- repo/project
 	    def gl_repos
-		Repository.find_all_by_project_id_and_type(id,"Git")
+		all_repos.select{|x| x.is_a?(Repository::Git)}
 	    end
 
 	    # Find all repositories owned by project.  Works for both multi- and
 	    # single- repo/project
 	    def all_repos
-		Repository.find_all_by_project_id(id)
+		if GitHosting.multi_repos?
+		    Repository.find_all_by_project_id(id)
+		else
+		    [ Repository.find_by_project_id(id) ].compact
+		end
 	    end
 
 	    # Return first repo with a blank identifier (should be only one!)

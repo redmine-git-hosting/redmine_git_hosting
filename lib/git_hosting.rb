@@ -745,7 +745,7 @@ module GitHosting
 		    # Remove inactive Deployment Credentials
 		    DeploymentCredential.inactive.each {|cred| DeploymentCredential.destroy(cred.id)}
 		else
-		    active_keys = cur_user.gitolite_public_keys.active.select{|x| x.user_key?} || []
+		    active_keys = cur_user.gitolite_public_keys.active.user_key || []
 		    cur_token = GitolitePublicKey.user_to_user_token(cur_user)
 
 		    # Remove inactive keys (will be deleted below)
@@ -828,10 +828,18 @@ module GitHosting
 	    # Note that we go through all projects, including archived ones, since we may need to
 	    # find orphaned repos.	Archived projects get left with a "ARCHIVED_REDMINE_KEY".
 	    git_projects.each do |proj|
+
+		# First, get project-specific read/write keys
+		# fetch users
+		users = proj.member_principals.map(&:user).compact.uniq
+		write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
+		read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
+
+		proj_read_user_keys = read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.map(&:identifier)
+		proj_write_user_keys = write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.map(&:identifier)
+
 		proj.gl_repos.each do |repo|
 		    repo_name = repository_name(repo)
-
-		    logger.error "Checking out repository: #{repository_name(repo, :assume_unique => false)}"
 
 		    # Common case: these are hashes with zero or one one element (except when
 		    # Repository.repo_ident_unique? is false)
@@ -840,7 +848,7 @@ module GitHosting
 
 		    # We have one or more gitolite.conf entries with the right base name.  Pick one with
 		    # closest name (will pick one with 'repo_name' if it exists.
-		    closest_entry = closest_path(my_entries,repo)
+		    closest_entry = closest_path(my_entries,repo_name,repo)
 		    if !closest_entry
 			# CREATION case.
 			if !total_entries[repo_name]
@@ -885,7 +893,7 @@ module GitHosting
 			# Of the repos in my_repo with a matching base name, only steal away those not already controlled
 			# by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
 			# in gitolite.conf but the repo didn't get moved.
-			closest_repo = closest_path((my_repos - total_entries.keys),repo)
+			closest_repo = closest_path((my_repos - total_entries.keys),repo_name,repo)
 			if !closest_repo
 			    logger.error "One or more repositories with matching base name '#{repo.git_name}' exist, but already have entries in gitolite.conf"
 			    logger.error "They are: #{my_repos.join(', ')}"
@@ -900,7 +908,7 @@ module GitHosting
 		    end
 
 		    # Update repository url and root_url if necessary
-		    target_url = repository_path(repo)
+		    target_url = repository_path(repo_name)
 		    if repo.url != target_url || repo.root_url != target_url
 			# logger.warn "	 Updating internal access path to '#{target_url}'."
 			repo.url = repo.root_url = target_url
@@ -913,18 +921,9 @@ module GitHosting
 			    # Get deployment keys (could be empty)
 			    write_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
 			    read_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
-
-			    # fetch users
-			    users = proj.member_principals.map(&:user).compact.uniq
-			    write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
-			    read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
-
-			    read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-				read_user_keys.push key.identifier
-			    end
-			    write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.each do |key|
-				write_user_keys.push key.identifier
-			    end
+			    # Add project-specific keys
+			    write_user_keys << proj_write_user_keys
+			    read_user_keys << proj_read_user_keys
 
 			    #git daemon support
 			    if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.is_public
@@ -1081,30 +1080,23 @@ module GitHosting
     # 2) proj1/proj2/parent-proj/repo_name   : Used when repo identifiers may not be unique
     #
     # Note that all the complexity of dealing with multi-repo path formats is handled here
-    def self.closest_path(path_list,repo)
-	# Creation case if repo.identifier.blank? is true or Repository.repo_ident_unique? is true
-	return nil if path_list.empty?
-
-	if path_list.count == 1
-	    # Common case -- only one match.
+    def self.closest_path(path_list,repo_name,repo)
+	if path_list.count < 2
+	    # Common case -- only one or zero matches.
 	    # This catches a number normal operation cases
+	    # 0) Creation case if repo.identifier.blank? is true or Repository.repo_ident_unique? is true
 	    # 1) cases in which repo.identifier.blank? is true (since there repo.git_name unique)
 	    # 2) cases in which Repository.repo_ident_unique? is true (since repo.git_name should be unique)
 	    # 3) cases in which Repository.repo_ident_unique? is false, but this particular identifier is unique
 	    #
 	    # Make sure that there isn't another repo who owns this path (only possible if we have non-unique
 	    # repository identifiers--verify case #3, i.e. that we are not about to create non-unique identifier)
-	    if !Repository.repo_ident_unique? && (Repository.find_by_path(path_list.first) != repo)
-		return nil
-	    else
+	    if repo.identifier.blank? || Repository.repo_ident_unique? || path_list.first && (path_list.first.match(/^(.*\/)?#{repo.git_label}$/))
 		return path_list.first
+	    else
+		return nil
 	    end
 	end
-
-	# Look for exact matching path (also common case if Repository.repo_ident_unique? is false and multiple
-	# repos exist with the same identifier).
-	target_path = repository_name(repo)
-	path_list.each {|test_path| return test_path if test_path==target_path}
 
 	# Beyond this point, we do not have an exact matching path, thus something has changed.
 	# We need to clean things up a bit.
@@ -1112,8 +1104,8 @@ module GitHosting
 	# Ok we will choose candidates based on path length
 	sort_proc = Proc.new {|x,y|
 	    # sort by length of match, then dictionary
-	    lmatchx = longest_match_length(x,target_path)
-	    lmatchy = longest_match_length(y,target_path)
+	    lmatchx = longest_match_length(x,repo_name)
+	    lmatchy = longest_match_length(y,repo_name)
 	    if (lmatchx < lmatchy)
 		-1
 	    elsif (lmatchy < lmatchx)
@@ -1124,11 +1116,15 @@ module GitHosting
 	    end
 	}
 
+	# Look for exact matching path (also common case if Repository.repo_ident_unique? is false and multiple
+	# repos exist with the same identifier).
+	path_list.each {|test_path| return test_path if test_path==repo_name}
+
 	# Special handling if repository name could change with Repository.repo_ident_unique?
 	if !repo.identifier.blank? && GitHosting.multi_repos?
 	    # See if we find match by merely changing value of Repository.repo_ident_unique?
-	    target_path_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
-	    path_list.each {|test_path| return test_path if test_path==target_path_alt}
+	    repo_name_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
+	    path_list.each {|test_path| return test_path if test_path==repo_name_alt}
 
 	    # Preferentially match against project-name/repo_identifier paths if they exist
 	    # Under normal operation, there should be only one of these, since proj_name/repo_identifier

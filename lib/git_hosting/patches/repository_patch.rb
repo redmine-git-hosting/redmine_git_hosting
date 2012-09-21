@@ -21,7 +21,6 @@ module GitHosting
 		# use the immediate parent (<proj3>) to try to identify the repo.
 		#
 		# Flags:
-		#    :parse_ext => true	   : check for trailing ".git"
 		#    :loose => true	   : Try to identify corresponding repo even if
 		#			     path is not quite correct
 		#
@@ -30,10 +29,7 @@ module GitHosting
 		# form, it will still identify the repository (as long as there are not more than
 		# one repo with the same identifier.
 		def find_by_path(path,flags={})
-		    Rails.logger.error "Calling find_by_path. Path: #{path}"
-		    gitmatch = flags[:parse_ext] ? '\.git' : ''
-		    if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)#{gitmatch}$/)
-			Rails.logger.error "Find_by_path parse: parent(#{parseit[2]?parseit[2]:'nil'}), child(#{parseit[3]})"
+		    if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
 			if proj=Project.find_by_identifier(parseit[3])
 			    # return default or first repo with blank identifier (or first Git repo--very rare?)
 			    proj.repository || proj.repo_blank_ident || proj.gl_repos.first

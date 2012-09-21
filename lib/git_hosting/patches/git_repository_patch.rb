@@ -25,9 +25,6 @@ module GitHosting
 		# Turn of updates during repository update
 		GitHostingObserver.set_update_active(false);
 
-		# Make sure to invalidate old cache entries
-		GitHosting.set_repository_limit_cache(self)
-
 		# Do actual update
 		fetch_changesets_without_disable_update
 
