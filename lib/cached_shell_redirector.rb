@@ -328,7 +328,7 @@ class CachedShellRedirector
 	cached = GitCache.find_by_command(compose_key(primary_key,secondary_key))
 	if cached
 	    cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-	    if (cached.created_at.to_i >= expire_at(cached.proj_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
+	    if (cached.created_at.to_i >= expire_at(cached.repo_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
 		# cached.touch # Update updated_at flag
 		out = cached.command_output == nil ? "" : cached.command_output
 	    else
@@ -349,7 +349,7 @@ class CachedShellRedirector
 	# Rails.logger.error "Inserting into cache with key: #{compose_key(primary_key,secondary_key)}"
 	gitc = GitCache.create( :command=>compose_key(primary_key,secondary_key),
 				:command_output=>out_value,
-				:proj_identifier=>repo_id )
+				:repo_identifier=>repo_id )
 	gitc.save
 	if GitCache.count > max_cache_elements && max_cache_elements >= 0
 	    oldest = GitCache.find(:last, :order => "created_at DESC")
@@ -374,7 +374,7 @@ class CachedShellRedirector
 	repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
 
 	# Clear cache
-	old_cached=GitCache.find_all_by_proj_identifier(repo_id)
+	old_cached=GitCache.find_all_by_repo_identifier(repo_id)
 	if old_cached != nil
 	    old_ids = old_cached.collect(&:id)
 	    GitCache.destroy(old_ids)

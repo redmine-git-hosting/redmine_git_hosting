@@ -39,14 +39,24 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 	add_index :projects, [:identifier]
 	add_index :repositories, [:identifier]
 	add_index :repositories, [:identifier, :project_id]
+	rename_column :git_caches, :proj_identifier, :repo_identifier
 
 	begin
 	    # Add some new settings to settings page, if they don't exist
 	    valuehash = (Setting.plugin_redmine_git_hosting).clone
-	    valuehash['gitRepositoryIdentUnique'] ||= 'true'
+	    if (Repository.all.map(&:identifier).inject(Hash.new(0)) do |h,x|
+		    h[x]+=1 unless x.blank?
+		    h
+		end.values.max > 1)
+		# Oops -- have duplication.	 Force to false.
+		valuehash['gitRepositoryIdentUnique'] = "false"
+	    else
+		# If no duplication -- set to true only if it doesn't already exist
+		valuehash['gitRepositoryIdentUnique'] ||= 'true'
+	    end
 
 	    if (Setting.plugin_redmine_git_hosting != valuehash)
-		say "Added redmine_git_hosting settings: 'gitRepositoryIdentUnique'"
+		say "Added redmine_git_hosting settings: 'gitRepositoryIdentUnique' => #{valuehash['gitRepositoryIdentUnique']}"
 		Setting.plugin_redmine_git_hosting = valuehash
 	    end
 	rescue => e
@@ -94,6 +104,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 	remove_index :projects, [:identifier]
 	remove_index :repositories, [:identifier]
 	remove_index :repositories, [:identifier, :project_id]
+	rename_column :git_caches, :repo_identifier, :proj_identifier
 
 	begin
 	    # Remove above settings from plugin page
