@@ -937,7 +937,7 @@ module GitHosting
 			    read_user_keys << proj_read_user_keys
 
 			    #git daemon support
-			    if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.is_public
+			    if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
 				read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
 			    end
 
