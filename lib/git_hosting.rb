@@ -831,12 +831,15 @@ module GitHosting
 
 		# First, get project-specific read/write keys
 		# fetch users
-		users = proj.member_principals.map(&:user).compact.uniq
-		write_users = users.select{ |user| user.allowed_to?( :commit_access, proj ) }
-		read_users = users.select{ |user| user.allowed_to?( :view_changesets, proj ) && !user.allowed_to?( :commit_access, proj ) }
-
-		proj_read_user_keys = read_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.map(&:identifier)
-		proj_write_user_keys = write_users.map{|u| u.gitolite_public_keys.active.user_key}.flatten.compact.uniq.map(&:identifier)
+		proj_read_user_keys=[]
+		proj_write_user_keys=[]
+		proj.member_principals.map(&:user).compact.uniq.each do |user|
+		    if user.allowed_to?( :commit_access, proj )
+			proj_write_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
+		    elsif user.allowed_to? ( :view_changesets, proj )
+			proj_read_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
+		    end
+		end
 
 		proj.gl_repos.each do |repo|
 		    repo_name = repository_name(repo)
@@ -919,8 +922,16 @@ module GitHosting
 		    if proj.active?
 			if proj.module_enabled?(:repository)
 			    # Get deployment keys (could be empty)
-			    write_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
-			    read_user_keys = repo.deployment_credentials.active.select{|cred| cred.honored? && cred.allowed_to?(:view_changesets) && !cred.allowed_to?(:commit_access)}.map{|x| x.gitolite_public_key.identifier}
+			    read_user_keys=[]
+			    write_user_keys=[]
+			    repo.deployment_credentials.active.select(&:honored?).each do |cred|
+				if cred.allowed_to?(:commit_access)
+				    write_user_keys << cred.gitolite_public_key.identifier
+				elsif cred.allowed_to? (:view_changesets)
+				    read_user_keys << cred.gitolite_publci_key.identifier
+				end
+			    end
+
 			    # Add project-specific keys
 			    write_user_keys << proj_write_user_keys
 			    read_user_keys << proj_read_user_keys
@@ -1046,7 +1057,7 @@ module GitHosting
 	    old_prefix = old_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
 	    if old_prefix
 		repo_subpath = File.join(repository_base, old_prefix)
-		result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -type d ! -regex '.*\.git/.*' -empty -depth -delete -print].chomp.split("\n")
+		result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
 		result.each { |dir| logger.warn "  Removing empty repository subdirectory: #{dir}"}
 	    end
 	rescue GitHostingException

@@ -1,5 +1,8 @@
 <%# This is used to display basic git setup instructions, like on github... %>
 <% flash.now[:warning] = "Repository is empty. Get started by following the instructions below." %>
+
+<%= render :partial => 'git_urls', :locals => {:repository => @repository, :project => @project} %>
+
 <% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
 <% git_ssh_url =
    "#{gitSHP ? 'ssh://' : ''}#{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@repository)}.git" %>
@@ -17,7 +20,7 @@
 	git init
 	touch readme.txt
 	git add readme.txt
-	git commit -m 'Initializing <%= @git_label %> repository'
+	git commit -m 'Initializing <%= @repository.git_label %> repository'
 	git remote add origin <%= git_ssh_url %>
 	git push -u origin master
 </pre>

@@ -29,7 +29,7 @@
 	height: 23px;
 	float: left;
 	margin: 0px;
-	padding: 0px;
+	padding: 0px 0px 0px 2px;
 	list-style-image:none;
 }
 
@@ -133,7 +133,7 @@
 	height: 16px;
 	padding: 3px 5px 2px;
 	min-width:275px;
-	width: 60%;
+	width: 75%;
 	font-family: Monaco,"DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
 	margin: 0;
 	float: left;

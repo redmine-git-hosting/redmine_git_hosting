@@ -19,7 +19,7 @@ class GitoliteHooksController < ApplicationController
 	end
 
 	# Clear existing cache
-	CachedShellRedirectory.clear_cache_for_repository(@repository)
+	CachedShellRedirector.clear_cache_for_repository(@repository)
 
 	render :text => Proc.new { |response, output|
 	    response.headers["Content-Type"] = "text/plain;"
@@ -225,6 +225,7 @@ class GitoliteHooksController < ApplicationController
 	    else
 		# return default or first repo with blank identifier
 		@repository = @project.repository || @project.repo_blank_ident
+	    end
 	else
 	    @repository = @project.repository  # Only repository if redmine < 1.4
 	end

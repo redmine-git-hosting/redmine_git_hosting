@@ -63,7 +63,7 @@ module GitHosting
 		old_prefix = repo_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
 		if old_prefix
 		    repo_subpath = File.join(GitHosting.repository_base, old_prefix)
-		    result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -type d ! -regex '.*\.git/.*' -empty -depth -delete -print].chomp.split("\n")
+		    result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
 		    result.each { |dir| logger.warn "  Removing empty repository subdirectory: #{dir}"}
 		end
 		return true

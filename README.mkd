@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin (v0.4.6x)
+# Redmine Git Hosting Plugin (v0.5.0x)
 
 A ChiliProject / Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
@@ -13,11 +13,10 @@ Release Notes are available off the wiki: https://github.com/kubitron/redmine_gi
 The current version of this plugin is not compatible with all versions of Redmine and ChiliProject.  As of this writing, it
 should be compatible with the following versions:
 
-* **Redmine:** This plugin should work with Redmine branches 1.1-Stable through 1.3-Stable (including sub-versions).  **It does not currently work with
+* **Redmine:** This plugin should work with Redmine branches 1.1-Stable through 1.4-Stable (including sub-versions).  **It does not currently work with
 the Redmine trunk, since the Redmine developers are implementing multiple repos/project, which will require some significant rewriting of the plugin.**
 
-* **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.0.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x 
-releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible. 
+* **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.3.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x, and 3.3.x releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible. 
 
 This plugin is compatible with most versions of gitolite.  However, gitolite versions >= 2.0.3 provide slightly better resilience to recover from configuration
 problems that prevent administrative access (the plugin will exploit **gl-admin-push** to fix the access key).
@@ -132,7 +131,7 @@ root directory:
 **(6)** It is best to set several plugin variables BEFORE you run the db:migrate\_plugins task in step (7).  In particular it is important 
 that the **gitScriptDir**, **gitUser**, **httpServer**,  **gitServer**, **gitoliteIdentityFile** and **gitoliteIdentityPublicKeyFile**
 variables are set correctly.  Others that could be set include **gitConfigFile**, **gitConfigHasAdminKey**, **gitRepositoryBasePath**, 
-**gitRedmineSubdir**, and **gitRepositoryHierarchy**; however, the default values for these variables should be sufficient for most installations.
+**gitRedmineSubdir**, **gitRepositoryHierarchy**, and **gitRepositoryIdentUnique** (for Redmine 1.4+); however, the default values for these variables should be sufficient for most installations.
 
 To perform initial adjustment of settings, open an editor and edit 'REDMINE_ROOT/vendor/plugins/redmine_git_hosting/init.rb' file. 
 Starting on line 17, you will see the settings definitions you should edit.
@@ -155,10 +154,10 @@ value for **gitUser**).
 variable may optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:8000.  Unlike earlier versions of 
 this plugin, this variable should *not* include the path to your Redmine root.
 
-* The **gitServer** variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  Like *httpServer*, this variable may 
-optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:444.  In most configurations, the *gitServer* 
-variable will be identical to the *httpServer*, except when ports are involved.  *This plug does not currently work well when **gitServer** is on a
-different physical machine from the Redmine installation (i.e. a different host than **httpServer**).*
+* The **gitServer** variable should be set to the hostname which will be used to access the gitolite repositories via ssh.  Like **httpServer**, this variable may 
+optionally include a port using the ':portnum' syntax, i.e. www.my-own-person-git-host-server.com:444.  In most configurations, the **gitServer** 
+variable will be identical to the **httpServer**, except when ports are involved.  *This plugin does not currently work well when* **gitServer** *is on a
+different physical machine from the Redmine installation (i.e. a different host than* **httpServer***).*
 
 If you followed the above directions you will not need to modify the **gitoliteIdentityFile** or **gitoliteIdentityPublicKeyFile** variables -- these specify
 the path to the private/public key files for accessing the gitolite admin repository.  Further, although you can change the following three variables, 
@@ -179,15 +178,24 @@ is the empty string (no special subdirectory).  If you choose to set it, make su
 * The **gitRepositoryHierarchy** variable is a boolean value which denotes whether or not the plugin-managed repositories are placed into a hierarchy that 
 mirrors the project hierarchy.  Its value is either 'true' (default) or 'false'.  
 
-These variables can be modified at a later time in the Administration => Plugins => Redmine Git Hosting Plugin configuration page.  However to ensure
+* Finally for versions of Redmine with more than one repository per project (i.e. Redmine 1.4+), the **gitRepositoryIdentUnique** variable determines both
+whether or not repository identifiers must be unique across all projects and, if not, the format of repository paths.  In particular, when **gitRepositoryIdentUnique** 
+is 'true', repository identifiers must be unique across all projects (and cannot match the identifiers of projects either).  Path names are identical to those 
+of pre-1.4 versions of this plugin.  If, on the other hand, the **gitRepositoryidentUnique** is set to 'false', then repository identifiers do not have to be 
+unique across projects (although they still cannot have the same value as project identifiers). In this case, all repositories with non-blank identifiers (i.e. non-default
+repositories) have the project identifier appended to their path.
+
+All of these variables can be modified at a later time in the Administration => Plugins => Redmine Git Hosting Plugin configuration page.  However to ensure
 that the database migration from your existing repositories goes smoothly it is best to modify these variables now.
 
-As an example of the significance of the previous three variables, suppose that project-3 is a child of project-2 which is a child of project-1.
-Assume **gitRepositoryBasePath** == "repository/" and **gitRedmineSubdir** == "projects".  When **gitRepositoryHierarchy** is 'true', project-3.git will be stored in 
-repository/projects/project-1/project-2/project-3.git, which will further be reflected in the ssh access URL of repository/projects/project-1/project-2/project-3.git.
-In contrast, when **gitRepositoryHierarchy** is 'false', project-3.git will be stored directly under repository/projects -- regardless of the number and identity of
-any parents that it might have.  Note that the top of the settings page (Administration => Plugins => Redmine Git Hosting Plugin configuration page) provides 
-information about how your chosen configuration affects the storage locations and URLs for accessing projects.
+As an example of the significance of the previous three variables, suppose that project-3 is a child of project-2 which is a child of project-1. Assume 
+**gitRepositoryBasePath** == "repository/" and **gitRedmineSubdir** == "projects".  When **gitRepositoryHierarchy** is 'true', project-3.git will be stored in 
+repository/projects/project-1/project-2/project-3.git, which will further be reflected in the ssh access URL of repository/projects/project-1/project-2/project-3.git. In 
+contrast, when **gitRepositoryHierarchy** is 'false', project-3.git will be stored directly under repository/projects -- regardless of the number and identity of
+any parents that it might have.  In Redmine 1.4+, if **gitRepositoryIdentUnique** is set to 'false', then secondary repositories for project-3 will additionally
+have paths of the form repository/projects/project-1/project-2/project-3/repo-1.git (when **gitRepositoryHierarchy** is 'true').  Note that the top of the settings page 
+(Administration => Plugins => Redmine Git Hosting Plugin configuration page) provides information about how your chosen configuration affects the storage locations and 
+URLs for accessing projects. 
 
 **(7)** Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
 rails environment you have configured (e.g. production, development, testing).  For the production environment, run the following:

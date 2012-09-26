@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     name 'Redmine Git Hosting Plugin'
     author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz and others'
     description 'Enables Redmine / ChiliProject to control hosting of git repositories'
-    version '0.4.6x'
+    version '0.5.0x'
     url 'https://github.com/ericpaulbishop/redmine_git_hosting'
 
     settings :default => {
@@ -70,6 +70,8 @@ class GitRepoUrlHook < Redmine::Hook::ViewListener
     render_on :view_repositories_show_contextual, :partial => 'git_urls'
 end
 
+# Put Git SCM first in list of SCMs
+Redmine::Scm::Base.all.unshift("Git").uniq!
 
 # initialize observer
 config.after_initialize do

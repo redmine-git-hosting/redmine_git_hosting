@@ -16,9 +16,9 @@ module GitHosting
 	    # single- repo/project
 	    def all_repos
 		if GitHosting.multi_repos?
-		    Repository.find_all_by_project_id(id)
+		    repositories
 		else
-		    [ Repository.find_by_project_id(id) ].compact
+		    [ repository ].compact
 		end
 	    end
 
