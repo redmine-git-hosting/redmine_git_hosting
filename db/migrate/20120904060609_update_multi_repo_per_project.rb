@@ -44,10 +44,10 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 	begin
 	    # Add some new settings to settings page, if they don't exist
 	    valuehash = (Setting.plugin_redmine_git_hosting).clone
-	    if (Repository.all.map(&:identifier).inject(Hash.new(0)) do |h,x|
+	    if ((Repository.all.map(&:identifier).inject(Hash.new(0)) do |h,x|
 		    h[x]+=1 unless x.blank?
 		    h
-		end.values.max > 1)
+		 end.values.max) || 0) > 1
 		# Oops -- have duplication.	 Force to false.
 		valuehash['gitRepositoryIdentUnique'] = "false"
 	    else

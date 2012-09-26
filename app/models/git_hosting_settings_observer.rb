@@ -140,10 +140,10 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 	    # Check to see if we are trying to claim all repository identifiers are unique
 	    if valuehash['gitRepositoryIdentUnique'] == "true"
-		if (Repository.all.map(&:identifier).inject(Hash.new(0)) do |h,x|
+		if ((Repository.all.map(&:identifier).inject(Hash.new(0)) do |h,x|
 			h[x]+=1 unless x.blank?
 			h
-		    end.values.max > 1)
+		    end.values.max) || 0) > 1
 		    # Oops -- have duplication.	 Force to false.
 		    GitHosting.logger.error "Detected non-unique repository identifiers.  Setting gitRepositoryIdentUnique => 'false'."
 		    valuehash['gitRepositoryIdentUnique'] = "false"
