@@ -21,8 +21,10 @@ module GitHosting
 		# Turn off updates during repository update
 		GitHostingObserver.set_update_active(false);
 
+		Rails.logger.error "Git here before!"
 		edit_without_scm_settings
 
+		Rails.logger.error "Git here after!"
 		if !@repository.errors.any?
 		    # Update repository extras
 		    if request.post? && @repository && !params[:extra].nil?

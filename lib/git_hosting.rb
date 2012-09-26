@@ -928,18 +928,22 @@ module GitHosting
 				if cred.allowed_to?(:commit_access)
 				    write_user_keys << cred.gitolite_public_key.identifier
 				elsif cred.allowed_to? (:view_changesets)
-				    read_user_keys << cred.gitolite_publci_key.identifier
+				    read_user_keys << cred.gitolite_public_key.identifier
 				end
 			    end
 
 			    # Add project-specific keys
-			    write_user_keys << proj_write_user_keys
-			    read_user_keys << proj_read_user_keys
+			    write_user_keys += proj_write_user_keys
+			    read_user_keys += proj_read_user_keys
+
+			    Rails.logger.error "Read keys before: #{read_user_keys}"
 
 			    #git daemon support
 			    if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
 				read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
 			    end
+
+			    Rails.logger.error "Read keys after: #{read_user_keys}, type: #{read_user_keys.class}, Unique: #{read_user_keys.uniq.class}"
 
 			    # Remove previous redmine keys, then add new keys
 			    # By doing things this way, we leave non-redmine keys alone

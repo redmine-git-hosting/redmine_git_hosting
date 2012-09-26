@@ -50,6 +50,7 @@ module GitHosting
 	end
 
 	def add_read_user repo_name, users
+	    Rails.logger.error "I'm here: repo: #{repo_name}, Users: #{users}"
 	    repository(repo_name).add "R", users.sort
 	end
 
