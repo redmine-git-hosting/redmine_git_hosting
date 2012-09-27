@@ -1,5 +1,4 @@
-require_dependency 'principal'
-require_dependency 'user'
+require_dependency 'project'
 require_dependency 'git_hosting'
 
 module GitHosting
