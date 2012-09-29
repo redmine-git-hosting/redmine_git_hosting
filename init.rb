@@ -58,17 +58,21 @@ end
 
 # Set up autoload of patches
 require 'dispatcher' unless Rails::VERSION::MAJOR >= 3
-if Rails::VERSION::MAJOR >= 3
-    ActionDispatch::Calbacks.to_prepare do
-	Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].each do |patch|
-	    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
-	end
+def git_hosting_patch(&block)
+    if Rails::VERSION::MAJOR >= 3
+	ActionDispatch::Calbacks.to_prepare(&block)
+    else
+	Dispatcher.to_prepare(:redmine_git_patches,&block)
     end
-else
-    Dispatcher.to_prepare :redmine_git_patches do
-	Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].each do |patch|
-	    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
-	end
+end
+git_hosting_patch do
+    patches=Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].map{|x| File.basename(x,".rb")}.sort
+
+    # Special positioning necessary
+    # Put git_adapter_patch last (make sure that git_cmd stays patched!)
+    patches = (patches-["git_adapter_patch"]) << "git_adapter_patch"
+    patches.each do |patch|
+	require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
     end
 end
 
