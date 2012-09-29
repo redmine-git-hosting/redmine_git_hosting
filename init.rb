@@ -57,8 +57,19 @@ Redmine::Plugin.register :redmine_git_hosting do
 end
 
 # Set up autoload of patches
-Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].each do |patch|
-    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
+require 'dispatcher' unless Rails::VERSION::MAJOR >= 3
+if Rails::VERSION::MAJOR >= 3
+    ActionDispatch::Calbacks.to_prepare do
+	Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].each do |patch|
+	    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
+	end
+    end
+else
+    Dispatcher.to_prepare :redmine_git_patches do
+	Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].each do |patch|
+	    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
+	end
+    end
 end
 
 # initialize hooks
