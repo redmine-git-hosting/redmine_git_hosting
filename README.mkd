@@ -18,9 +18,6 @@ the Redmine trunk or Redmine version 2.x, since the plugin is not currently comp
 
 * **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.3.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x, and 3.3.x releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible. 
 
-This plugin should work with Ruby versions up to 1.9.2.  However, Ruby 1.9.3+ seems to have problems with Rails 2.3.x.  If you are having problems with 
-apparently missing files (like "sys_helper"), try downgrading to 1.9.2.
-
 This plugin is compatible with most versions of gitolite.  However, gitolite versions >= 2.0.3 provide slightly better resilience to recover from configuration
 problems that prevent administrative access (the plugin will exploit **gl-admin-push** to fix the access key).
 
