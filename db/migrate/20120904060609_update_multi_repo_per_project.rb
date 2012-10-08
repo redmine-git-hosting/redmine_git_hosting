@@ -37,8 +37,11 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 	end
 
 	add_index :projects, [:identifier]
-	add_index :repositories, [:identifier]
-	add_index :repositories, [:identifier, :project_id]
+	begin
+	    add_index :repositories, [:identifier]
+	    add_index :repositories, [:identifier, :project_id]
+	rescue
+	end
 	rename_column :git_caches, :proj_identifier, :repo_identifier
 
 	begin
@@ -102,8 +105,11 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 	end
 
 	remove_index :projects, [:identifier]
-	remove_index :repositories, [:identifier]
-	remove_index :repositories, [:identifier, :project_id]
+	begin
+	    remove_index :repositories, [:identifier]
+	    remove_index :repositories, [:identifier, :project_id]
+	rescue
+	end
 	rename_column :git_caches, :repo_identifier, :proj_identifier
 
 	begin
