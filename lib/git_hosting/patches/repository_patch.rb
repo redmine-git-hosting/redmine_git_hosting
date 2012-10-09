@@ -28,11 +28,14 @@ module GitHosting
 		# repository.  If switching back and forth between the "repo_ident_unique?"
 		# form, it will still identify the repository (as long as there are not more than
 		# one repo with the same identifier.
+		#
+		# Note about pre Redmine 1.4 -- only look at last component and try to match to a path.
+		# If that doesn't work, return nil.
 		def find_by_path(path,flags={})
 		    if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
-			if proj=Project.find_by_identifier(parseit[3])
+			if proj=Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
 			    # return default or first repo with blank identifier (or first Git repo--very rare?)
-			    proj.repository || proj.repo_blank_ident || proj.gl_repos.first
+			    proj && (proj.repository || proj.repo_blank_ident || proj.gl_repos.first)
 			elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
 			    find_by_identifier(parseit[3])
 			elsif parseit[2] && proj = Project.find_by_identifier(parseit[2])
@@ -132,7 +135,7 @@ module GitHosting
 		# Else, use directory notation: <project identifier>/<repo identifier>
 		def git_label(flags=nil)
 		    isunique=(flags ? flags[:assume_unique] : self.class.repo_ident_unique?)
-		    if identifier.blank? || !GitHosting.multi_repos?
+		    if !GitHosting.multi_repos? || identifier.blank?
 			# Should only happen with one repo/project (the default)
 			project.identifier
 		    elsif isunique
@@ -144,7 +147,7 @@ module GitHosting
 
 		# This is the (possibly non-unique) basename for the git repository
 		def git_name
-		    (identifier.blank? || !GitHosting.multi_repos?) ? project.identifier : identifier
+		    (!GitHosting.multi_repos? || identifier.blank?) ? project.identifier : identifier
 		end
 
 		# Check several aspects of repository identifier (only for Redmine 1.4+)
