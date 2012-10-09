@@ -1102,7 +1102,7 @@ module GitHosting
 	    #
 	    # Make sure that there isn't another repo who owns this path (only possible if we have non-unique
 	    # repository identifiers--verify case #3, i.e. that we are not about to create non-unique identifier)
-	    if repo.identifier.blank? || Repository.repo_ident_unique? || path_list.first && (path_list.first.match(/^(.*\/)?#{repo.git_label}$/))
+	    if !GitHosting.multi_repos? || repo.identifier.blank? || Repository.repo_ident_unique? || path_list.first && (path_list.first.match(/^(.*\/)?#{repo.git_label}$/))
 		return path_list.first
 	    else
 		return nil
@@ -1132,7 +1132,7 @@ module GitHosting
 	path_list.each {|test_path| return test_path if test_path==repo_name}
 
 	# Special handling if repository name could change with Repository.repo_ident_unique?
-	if !repo.identifier.blank? && GitHosting.multi_repos?
+	if GitHosting.multi_repos? && !repo.identifier.blank?
 	    # See if we find match by merely changing value of Repository.repo_ident_unique?
 	    repo_name_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
 	    path_list.each {|test_path| return test_path if test_path==repo_name_alt}
