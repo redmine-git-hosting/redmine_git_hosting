@@ -8,7 +8,6 @@ class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration
 	    t.column :scmid, :string
 	end
 
-
 	# Speed up searches
 	add_index(:git_cia_notifications, :scmid)
 	# Make sure uniqueness of the two columns, :scmid, :repository_id
@@ -17,7 +16,7 @@ class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration
 	Project.find(:all).each {|project|
 	    if project.repository.is_a?(Repository::Git)
 		project.repository.changesets.each { |changeset|
-		    if not changeset.notified_cia.nil? and changeset.notified_cia == 1
+		    if changeset.respond_to?(:notified_cia) and changeset.notified_cia == 1
 			#project.repository.set_notified(changeset)
 			project.repository.cia_notifications.push GitCiaNotification.new(:scmid => changeset.scmid)
 			#cia_notification = GitCiaNotification.new

@@ -4,6 +4,7 @@ class ExtendChangesetsNotifiedCia < ActiveRecord::Migration
     end
 
     def self.down
-	remove_column :changesets, :notified_cia
+	# Deal with fact that one of next migrations doesn't restore :notified_cia
+	remove_column(:changesets, :notified_cia) rescue nil
     end
 end
