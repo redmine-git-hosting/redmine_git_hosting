@@ -72,7 +72,7 @@ module GitHosting
 		    if (@repository ||= @project.repository)
 			render_without_trigger_refresh *options do |page|
 			    yield page
-			    Page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
+			    page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
 			end
 		    end
 		end
