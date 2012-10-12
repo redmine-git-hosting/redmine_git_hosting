@@ -377,6 +377,24 @@ credentials create" dialog is actually a convenience dialog in that it allows th
 even suggesting a name for the deployment credential, with the eye to deployments that have a separate deploy key for each repository.  Reusing a deploy key in 
 another credential is a simple matter of selecting the key from a drop-down menu.
 
+## Additional Post-Receive Hooks
+
+As of version 0.5.1x, this plugin supports the execution of additional
+post-receive hooks in repositories managed with it. To get updated
+about new data in the repository, the plugin installs a post-receve
+hook. If you want additional post-receive hooks to be run, you can
+place them in a directory with the name "post-receive.d" within the
+repository's hook directory. If a file in this folder is marked as
+executable, the plugin's hook will execute it. Note that additional
+hooks get passed the same STDIN stream as the plugin's hook got.
+
+In a standard gitolite install with a repository called "test", this
+will be a valid path of an additional post-receive hook:
+
+    /home/gitolite/repositories/test.git/hooks/post-receive.d/do-something
+
+If the "do-something" file is executable, the plugin will pick it up.
+
 ## Post-Receive URLs
 
 As of version 0.4.6x, this plugin supports the inclusion of GitHub-style Post-Receive URLs.  Once added, a post-receive URL will be notified when new changes

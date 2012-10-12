@@ -74,8 +74,51 @@ def run_query(url_str, params, with_https)
     success
 end
 
+def get_extra_hooks()
+	extra_hooks = Array.new
+	extra_hooks_dir = "hooks/post-receive.d"
+	if File.directory?(extra_hooks_dir)
+		log("Found dir: #{extra_hooks_dir}", true, true)
+		Dir.foreach(extra_hooks_dir) do |item|
+			next if item == '.' or item == '..'
+			# Use full relative path
+			path = "#{extra_hooks_dir}/#{item}"
+			# Test if the file is executable
+			if File.executable?(path)
+				log("Found executable file: #{path}...", true, false)
+				# Remember it, if so
+				extra_hooks.push path
+				log("Added", true, true)
+			else
+				log("Found non-executable file: #{item}", true, true)
+			end
+		end
+	else
+		log("\n\nNo additional post-receive-hooks folder (post-receive.d) found.", true, true)
+	end
+	extra_hooks
+end
 
+def call_extra_hooks(stdin, extra_hooks)
+	success = false
+	# Call each exectuble found with the parameters we got
+	log("Beginning to execute additional hooks", true, true)
+	extra_hooks.each do |extra_hook|
+		log("Executing extra hook '#{extra_hook}'")
 
+		output = ""
+		IO.popen("#{extra_hook}", "w+") do |pipe|
+			pipe.puts stdin
+			pipe.close_write
+			output = pipe.read
+		end
+
+		log("#{output}")
+		log("Done", true, true)
+	end
+	success = true
+	success
+end
 
 rgh_vars = {}
 rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.repositoryid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
@@ -96,11 +139,14 @@ end
 $debug = rgh_vars["debug"] == "true"
 
 
-# Let's read the refs passed to us
+# Let's read the refs passed to us, but also copy stdin
+# for potential use with extra hooks.
 refs = []
-$<.each do |line|
+stdin_copy = ""
+$<.each	do |line|
     r = line.chomp.strip.split
     refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
+    stdin_copy = (stdin_copy == ""? "" : $/) + line
 end
 rgh_vars["refs[]"] = refs
 
@@ -131,5 +177,21 @@ else
     log("", true, true)
 end
 log("\n\n", false, true)
+
+extra_hooks = get_extra_hooks()
+if extra_hooks.length > 0
+	log("Calling additional post-receive hooks...", true, true)
+	success = call_extra_hooks(stdin_copy, extra_hooks)
+	if(!success)
+		log("Error calling additional hooks.", false, true)
+	else
+		log("Success", true, true)
+		log("", true, true)
+	end
+	log("\n\n", false, true)
+else
+	log("No extra hooks found that could be run additionally.", true, true)
+	log("\n\n", true, true)
+end
 
 exit
