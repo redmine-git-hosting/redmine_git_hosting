@@ -1,3 +1,5 @@
+include ActionView::Helpers::TextHelper
+
 class GitoliteHooksController < ApplicationController
 
     skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
@@ -57,21 +59,41 @@ class GitoliteHooksController < ApplicationController
 
 	    # Post to each post-receive URL
 	    @repository.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
-		msg = "Posting #{payloads.length} post-receive payloads to #{prurl.url} ... "
-		GitHosting.logger.debug msg
+		if prurl.mode == :github
+		    msg = "Sending #{pluralize(payloads.length,'notification')} to #{prurl.url} ... "
+		else
+		    msg = "Notifying #{prurl.url} ... "
+		end
 		output.write msg
 		output.flush
+
 		uri = URI(prurl.url)
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = (uri.scheme == 'https')
+
+		errmsg = nil
 		payloads.each {|payload|
-		    if prurl.mode == :github
-			res = Net::HTTP.post_form(uri, {"payload" => payload.to_json})
-		    else
-			res = Net::HTTP.get_response(uri)
+		    begin
+			if prurl.mode == :github
+			    request = Net::HTTP::Post.new(uri.request_uri)
+			    request.set_form_data({"payload" => payload.to_json})
+			else
+			    request = Net::HTTP::Get.new(uri.request_uri)
+			end
+			res = http.start {|openhttp| openhttp.request request}
+			errmsg = "Return code: #{res.code} (#{res.message})." if !res.is_a?(Net::HTTPSuccess)
+		    rescue => e
+			errmsg = "Exception: #{e.message}"
 		    end
-		    output.write res.is_a?(Net::HTTPSuccess) ? "[success] " : "[failure] "
-		    output.flush
+		    break if errmsg || prurl.mode != :github
 		}
-		output.write "done\n"
+		if errmsg
+		    output.write "[failure] done\n"
+		    GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
+		else
+		    output.write "[success] done\n"
+		    GitHosting.logger.info "[ #{msg}Succeeded! ]"
+		end
 		output.flush
 	    } if @repository.repository_post_receive_urls.any?
 
