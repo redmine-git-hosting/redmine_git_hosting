@@ -24,8 +24,8 @@ module GitHosting
 		GitHostingObserver.set_update_active(false);
 		params[:repository] ||= {}
 
-		if params[:repository_scm] == "Git"
-		    params[:repository][:url] = GitHosting.repository_path(@project)
+		if params[:repository_scm] == "Git" && @project.repository
+		    params[:repository][:url] = GitHosting.repository_path(@project.repository)
 		end
 
 		if params[:repository_scm] == "Git" || @project.repository.is_a?(Repository::Git)
