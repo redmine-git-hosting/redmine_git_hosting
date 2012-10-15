@@ -48,10 +48,10 @@ class CachedShellRedirector
     end
 
     ###############################################
-    # Duck-typing of an IO interface	      #
+    # Duck-typing of an IO interface          #
     ###############################################
     def respond_to?(my_method)
-	!IO.instance_methods.index(my_method.to_s).nil? || super(my_method, *args, &block)
+	IO.instance_methods.map(&:to_sym).include?(my_method.to_sym) || super(my_method, *args, &block)
     end
 
     # Catch any extra args placed into stdin.  We explicitly code the
@@ -104,7 +104,7 @@ class CachedShellRedirector
     # Ruby 1.8 define_method doesn't work with blocks.
     def method_missing(my_method, *args, &block)
 	# Only handle IO methods!
-	if IO.instance_methods.index(my_method.to_s).nil?
+	unless IO.instance_methods.map(&:to_sym).include?(my_method.to_sym)
 	    return super(my_method, *args, &block)
 	end
 
@@ -195,8 +195,8 @@ class CachedShellRedirector
     end
 
     ##############################################################################
-    # The following three functions are the generic versions of what is		 #
-    # currently "compiled" into function definitions above in missing_method().	 #
+    # The following three functions are the generic versions of what is          #
+    # currently "compiled" into function definitions above in missing_method().  #
     ##############################################################################
     # Class #1 functions (Read functions with block/enumerator behavior)
     def enumerator_diverter(my_method,*args,&block)
@@ -229,7 +229,7 @@ class CachedShellRedirector
     end
 
     ###############################################
-    # Basic redirector methods			  #
+    # Basic redirector methods                    #
     ###############################################
 
     def initialize(cmd_str, repo_id, options={})
@@ -299,11 +299,11 @@ class CachedShellRedirector
     end
 
     ###############################################
-    # Caching interface functions		  #
+    # Caching interface functions                 #
     ###############################################
 
     def self.max_cache_time
-	(Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i	      # in seconds, default = 60
+	(Setting.plugin_redmine_git_hosting['gitCacheMaxTime']).to_i          # in seconds, default = 60
     end
 
     def	self.max_cache_elements
@@ -311,7 +311,7 @@ class CachedShellRedirector
     end
 
     def	self.max_cache_size
-	(Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024	 # In MB, default = 16MB, converted to bytes
+	(Setting.plugin_redmine_git_hosting['gitCacheMaxSize']).to_i*1024*1024   # In MB, default = 16MB, converted to bytes
     end
 
     def self.compose_key(key1,key2)
