@@ -69,9 +69,9 @@ module GitHosting
 		    render_without_trigger_refresh(*options, &myblock)
 		else
 		    # For repository partial
-		    if (@repository ||= @project.repository)
-			render_without_trigger_refresh *options do |page|
-			    yield page
+		    render_without_trigger_refresh *options do |page|
+			yield page
+			if (@repository ||= @project.repository) && (@repository.is_a?(Repository::Git))
 			    page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
 			end
 		    end
