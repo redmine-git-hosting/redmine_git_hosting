@@ -89,8 +89,10 @@ end
 Redmine::Scm::Base.all.unshift("Git").uniq!
 
 # initialize observer
+# Don't initialize this while doing migration of primary system (i.e. Redmine/Chiliproject)
+migrating_primary = (File.basename($0) == "rake" && ARGV.include?("db:migrate"))
 config.after_initialize do
-    if config.action_controller.perform_caching
+    if config.action_controller.perform_caching && !migrating_primary
 	ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
 	ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingSettingsObserver
 
@@ -102,4 +104,3 @@ config.after_initialize do
 	end
     end
 end
-

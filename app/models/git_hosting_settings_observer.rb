@@ -1,7 +1,7 @@
 class GitHostingSettingsObserver < ActiveRecord::Observer
     observe :setting
 
-    @@old_valuehash = (Setting.plugin_redmine_git_hosting).clone
+    @@old_valuehash = ((Setting.plugin_redmine_git_hosting).clone rescue {})
 
     def reload_this_observer
 	observed_classes.each do |klass|
@@ -31,14 +31,14 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 
 		# Script directory either absolute or relative to redmine root
 		stripped = valuehash['gitScriptDir'].lstrip.rstrip
-		normalizedFile = File.expand_path(stripped,"/")	 # Get rid of extra path components
+		normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
 		if (normalizedFile == "/")
 		    # Assume that we are relative bin directory ("/" and "" => "")
 		    valuehash['gitScriptDir'] = ""
 		elsif (stripped[0,1] != "/")
-		    valuehash['gitScriptDir'] = normalizedFile[1..-1] + "/"	 # Clobber leading '/' add trailing '/'
+		    valuehash['gitScriptDir'] = normalizedFile[1..-1] + "/"      # Clobber leading '/' add trailing '/'
 		else
-		    valuehash['gitScriptDir'] = normalizedFile + "/"	 # Add trailing '/'
+		    valuehash['gitScriptDir'] = normalizedFile + "/"     # Add trailing '/'
 		end
 	    elsif valuehash['gitUser'] != @@old_valuehash['gitUser'] ||
 		    valuehash['gitoliteIdentityFile'] != @@old_valuehash['gitoliteIdentityFile'] ||
@@ -53,12 +53,12 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 		%x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
 
 		stripped = valuehash['gitTempDataDir'].lstrip.rstrip
-		normalizedFile = File.expand_path(stripped,"/")	 # Get rid of extra path components
+		normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
 		if (normalizedFile == "/" || stripped[0,1] != "/")
 		    # Don't allow either root-level (absolute) or relative
 		    valuehash['gitTempDataDir'] = "/tmp/redmine_git_hosting/"
 		else
-		    valuehash['gitTempDataDir'] = normalizedFile + "/"	   # Add trailing '/'
+		    valuehash['gitTempDataDir'] = normalizedFile + "/"     # Add trailing '/'
 		end
 	    end
 
@@ -86,7 +86,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 	    if valuehash['httpServerSubdir']
 		normalizedFile	= File.expand_path(valuehash['httpServerSubdir'].lstrip.rstrip,"/")
 		if (normalizedFile != "/")
-		    valuehash['httpServerSubdir'] = normalizedFile[1..-1] + "/"	 # Clobber leading '/' add trailing '/'
+		    valuehash['httpServerSubdir'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
 		else
 		    valuehash['httpServerSubdir'] = ''
 		end
@@ -122,7 +122,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 	    if valuehash['gitRedmineSubdir']
 		normalizedFile	= File.expand_path(valuehash['gitRedmineSubdir'].lstrip.rstrip,"/")
 		if (normalizedFile != "/")
-		    valuehash['gitRedmineSubdir'] = normalizedFile[1..-1] + "/"	 # Clobber leading '/' add trailing '/'
+		    valuehash['gitRedmineSubdir'] = normalizedFile[1..-1] + "/"  # Clobber leading '/' add trailing '/'
 		else
 		    valuehash['gitRedmineSubdir'] = ''
 		end
@@ -144,7 +144,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
 			h[x]+=1 unless x.blank?
 			h
 		    end.values.max) || 0) > 1
-		    # Oops -- have duplication.	 Force to false.
+		    # Oops -- have duplication.  Force to false.
 		    GitHosting.logger.error "Detected non-unique repository identifiers.  Setting gitRepositoryIdentUnique => 'false'."
 		    valuehash['gitRepositoryIdentUnique'] = "false"
 		end
