@@ -75,28 +75,45 @@ def run_query(url_str, params, with_https)
 end
 
 def get_extra_hooks()
-	extra_hooks = Array.new
-	extra_hooks_dir = "hooks/post-receive.d"
-	if File.directory?(extra_hooks_dir)
-		log("Found dir: #{extra_hooks_dir}", true, true)
-		Dir.foreach(extra_hooks_dir) do |item|
+	# Get global extra hooks
+	global_extra_hooks = get_executables("hooks/post-receive.d")
+	if global_extra_hooks.length == 0
+		log("No global extra hooks found", true, true)
+	end
+	# Get local extra hooks
+	local_extra_hooks = get_executables("hooks/post-receive.local.d")
+	if local_extra_hooks.length == 0
+		log("No local extra hooks found", true, true)
+	end
+	# Join both results and return result
+	result = []
+	result.concat(global_extra_hooks)
+	result.concat(local_extra_hooks)
+	result
+end
+
+def get_executables(directory)
+	executables = Array.new
+	if File.directory?(directory)
+		log("Found folder: #{directory}", true, true)
+		Dir.foreach(directory) do |item|
 			next if item == '.' or item == '..'
 			# Use full relative path
-			path = "#{extra_hooks_dir}/#{item}"
+			path = "#{directory}/#{item}"
 			# Test if the file is executable
 			if File.executable?(path)
 				log("Found executable file: #{path}...", true, false)
 				# Remember it, if so
-				extra_hooks.push path
+				executables.push path
 				log("Added", true, true)
 			else
 				log("Found non-executable file: #{item}", true, true)
 			end
 		end
 	else
-		log("\n\nNo additional post-receive-hooks folder (post-receive.d) found.", true, true)
+		log("\n\nFolder not found: #{directory}", true, true)
 	end
-	extra_hooks
+	executables
 end
 
 def call_extra_hooks(stdin, extra_hooks)
@@ -108,8 +125,12 @@ def call_extra_hooks(stdin, extra_hooks)
 
 		output = ""
 		IO.popen("#{extra_hook}", "w+") do |pipe|
+			begin
 			pipe.puts stdin
 			pipe.close_write
+			rescue Errno::EPIPE
+				log("The hook #{extra_hook} does't expect data on STDIN", true, true)
+			end
 			output = pipe.read
 		end
 
