@@ -1,6 +1,6 @@
 class UpdateMultiRepoPerProject < ActiveRecord::Migration
     def self.up
-	begin
+	if !columns("repository_mirrors").index{|x| x.name=="repository_id"}
 	    add_column :repository_mirrors, :repository_id, :integer
 	    begin
 		say "Detaching repository mirrors from projects; attaching them to repositories..."
@@ -9,16 +9,16 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 		    mirror.save!
 		end
 		say "Success.  Changed #{RepositoryMirror.all.count} records."
-		remove_column :repository_mirrors, :project_id rescue nil
 	    rescue => e
 		say "Failed to attach repository mirrors to repositories."
 		say "Error: #{e.message}"
-		remove_column :repository_mirrors, :repository_id rescue nil
 	    end
-	rescue
+	    if columns("repository_mirrors").index{|x| x.name=="project_id"}
+		remove_column :repository_mirrors, :project_id
+	    end
 	end
 
-	begin
+	if !columns("repository_post_receive_urls").index{|x| x.name=="repository_id"}
 	    add_column :repository_post_receive_urls, :repository_id, :integer
 	    begin
 		say "Detaching repository post-receive-urls from projects; attaching them to repositories..."
@@ -27,20 +27,19 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 		    prurl.save!
 		end
 		say "Success.  Changed #{RepositoryPostReceiveUrl.all.count} records."
-		remove_column :repository_post_receive_urls, :project_id rescue nil
 	    rescue => e
 		say "Failed to attach repositories post-receive-urls to repositories."
 		say "Error: #{e.message}"
-		remove_column :repository_post_receive_urls, :repository_id rescue nil
 	    end
-	rescue
+	    if columns("repository_post_receive_urls").index{|x| x.name=="project_id"}
+		remove_column :repository_post_receive_urls, :project_id
+	    end
 	end
 
 	add_index :projects, [:identifier]
-	begin
+	if columns("repositories").index{|x| x.name=="identifier"}
 	    add_index :repositories, [:identifier]
 	    add_index :repositories, [:identifier, :project_id]
-	rescue
 	end
 	rename_column :git_caches, :proj_identifier, :repo_identifier
 
@@ -51,7 +50,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 		    h[x]+=1 unless x.blank?
 		    h
 		 end.values.max) || 0) > 1
-		# Oops -- have duplication.	 Force to false.
+		# Oops -- have duplication.      Force to false.
 		valuehash['gitRepositoryIdentUnique'] = "false"
 	    else
 		# If no duplication -- set to true only if it doesn't already exist
@@ -68,7 +67,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
     end
 
     def self.down
-	begin
+	if !columns("repository_mirrors").index{|x| x.name=="project_id"}
 	    add_column :repository_mirrors, :project_id, :integer
 	    begin
 		say "Detaching repository mirrors from repositories; re-attaching them to projects..."
@@ -77,16 +76,16 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 		    mirror.save!
 		end
 		say "Success.  Changed #{RepositoryMirror.all.count} records."
-		remove_column :repository_mirrors, :repository_id rescue nil
-	  rescue => e
+	    rescue => e
 		say "Failed to re-attach repository mirrors to projects."
 		say "Error: #{e.message}"
-		remove_column :repository_mirrors, :project_id rescue nil
 	    end
-	rescue
+	    if columns("repository_mirrors").index{|x| x.name=="repository_id"}
+		remove_column :repository_mirrors, :repository_id
+	    end
 	end
 
-	begin
+	if !columns("repository_post_receive_urls").index{|x| x.name=="project_id"}
 	    add_column :repository_post_receive_urls, :project_id, :integer
 	    begin
 		say "Detaching repository post-receive-urls from repositories; re-attaching them to projects..."
@@ -95,20 +94,19 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
 		    prurl.save!
 		end
 		say "Success.  Changed #{RepositoryPostReceiveUrl.all.count} records."
-		remove_column :repository_post_receive_urls, :repository_id rescue nil
 	    rescue => e
 		say "Failed to re-attach repository post-receive urls to projects."
 		say "Error: #{e.message}"
-		remove_column :repository_post_receive_urls, :project_id rescue nil
 	    end
-	rescue
+	    if columns("repository_post_receive_urls").index{|x| x.name=="repository_id"}
+		remove_column :repository_post_receive_urls, :repository_id
+	    end
 	end
 
 	remove_index :projects, [:identifier]
-	begin
+	if columns("repositories").index{|x| x.name=="identifier"}
 	    remove_index :repositories, [:identifier]
 	    remove_index :repositories, [:identifier, :project_id]
-	rescue
 	end
 	rename_column :git_caches, :repo_identifier, :proj_identifier
 
