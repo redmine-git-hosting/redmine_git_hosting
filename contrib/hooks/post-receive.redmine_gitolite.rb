@@ -18,7 +18,7 @@ def get_git_repository_config(varname)
     (%x[git config #{varname} ]).chomp.strip
 end
 def get_http_params(rgh_vars)
-    clear_time	 = Time.new.utc.to_i.to_s
+    clear_time = Time.new.utc.to_i.to_s
     params = { "clear_time" => clear_time, "encoded_time" => Digest::SHA1.hexdigest(clear_time.to_s + rgh_vars["key"]) }
     rgh_vars.each_key do |v|
 	if v != "key"
@@ -42,11 +42,11 @@ def set_form_data(request, params, sep = '&')
 end
 
 def urlencode(str)
-    str.gsub(/[^a-zA-Z0-9_\.\-]/n) {|s| sprintf('%%%02x', s[0]) }
+    URI.encode(str,/[^a-zA-Z0-9_\.\-]/)
 end
 
 def run_query(url_str, params, with_https)
-    url_str = (with_https ?	 "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
+    url_str = (with_https ? "https://" : "http://" ) + url_str.gsub(/^http[s]*:\/\//, "")
     success = false
     begin
 	url  = URI.parse(url_str)
@@ -98,7 +98,7 @@ $debug = rgh_vars["debug"] == "true"
 
 # Let's read the refs passed to us
 refs = []
-$<.each	 do |line|
+$<.each do |line|
     r = line.chomp.strip.split
     refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
 end
