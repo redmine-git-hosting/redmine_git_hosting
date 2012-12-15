@@ -10,13 +10,13 @@ require 'git_adapter_hooks.rb'
 
 
 module GitHosting
-    LOCK_WAIT_IF_UNDEF = 10		       # In case settings not migrated (normally from settings)
-    REPOSITORY_IF_UNDEF = "repositories/"  # In case settings not migrated (normally from settings)
-    REDMINE_SUBDIR = ""		       # In case settings not migrated (normally from settings)
-    REDMINE_HIERARCHICAL = "true"	       # In case settings not migrated (normally from settings)
-    HTTP_SERVER_SUBDIR = ""		       # In case settings not migrated (normally from settings)
-    TEMP_DATA_DIR = "/tmp/redmine_git_hosting"	# In case settings not migrated (normally from settings)
-    SCRIPT_DIR = ""			       # In case settings not migrated (normally from settings)
+    LOCK_WAIT_IF_UNDEF = 10                    # In case settings not migrated (normally from settings)
+    REPOSITORY_IF_UNDEF = "repositories/"      # In case settings not migrated (normally from settings)
+    REDMINE_SUBDIR = ""                        # In case settings not migrated (normally from settings)
+    REDMINE_HIERARCHICAL = "true"              # In case settings not migrated (normally from settings)
+    HTTP_SERVER_SUBDIR = ""                    # In case settings not migrated (normally from settings)
+    TEMP_DATA_DIR = "/tmp/redmine_git_hosting" # In case settings not migrated (normally from settings)
+    SCRIPT_DIR = ""                            # In case settings not migrated (normally from settings)
     SCRIPT_PARENT = "bin"
 
     # Used to register errors when pulling and pushing the conf file
@@ -120,7 +120,7 @@ module GitHosting
 	    git_user_dir = ( %x[ #{GitHosting.git_user_runner} "cd ~ ; pwd" ] ).chomp.strip
 	    %x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
 	    %x[ echo '#!/bin/sh' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh']
-	    %x[ echo 'exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa	 "$@"' | #{GitHosting.git_user_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh"  ]
+	    %x[ echo 'exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa        "$@"' | #{GitHosting.git_user_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh"  ]
 	    %x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
 	    %x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa']
 	    %x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
@@ -411,7 +411,7 @@ module GitHosting
 	end
 	if code != 0
 	    logger.error "Command failed (return #{code}): #{command}"
-	    message = "	 "+result.split("\n").join("\n	")
+	    message = "  "+result.split("\n").join("\n	")
 	    logger.error message
 	    raise GitHostingException, "Shell Error"
 	end
@@ -423,7 +423,7 @@ module GitHosting
     # in the field, including a loss of the admin key and an empty top-level directory
     #
     # Return:	false => have uncommitted changes
-    #		true =>	 directory on master
+    #		true =>  directory on master
     #
     # This routine must only be called after acquisition of the lock
     #
@@ -455,13 +455,13 @@ module GitHosting
 		    return return_val
 		else
 		    # The attempt to merge can cause a weird failure mode when interacting with cron jobs that clean out old
-		    # files in /tmp.  The issue is that keys in the keydir can go idle and get deleted.	 Then, when we merge we
-		    # create an admin repo minus those keys (including the admin key!).	 Only a RESYNC_ALL operation will
-		    # actually fix.	 Thus, we never return "have uncommitted changes", but instead fail the merge and reclone.
+		    # files in /tmp.  The issue is that keys in the keydir can go idle and get deleted.  Then, when we merge we
+		    # create an admin repo minus those keys (including the admin key!).  Only a RESYNC_ALL operation will
+		    # actually fix.      Thus, we never return "have uncommitted changes", but instead fail the merge and reclone.
 		    #
 		    # 04/23/12
 		    # --KUBI--
-		    logger.error "Seems to be unmerged changes!	 Going to delete and reclone for safety."
+		    logger.error "Seems to be unmerged changes!  Going to delete and reclone for safety."
 		    logger.error "May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
 		end
 	    rescue
@@ -501,7 +501,7 @@ module GitHosting
     #
     # This routine attempts to recover from a failure to clone by reestablishing the gitolite
     # key.	It does so by directly cloning the gitolite-admin repository and editing the configuration
-    # file (gitolite.conf).	 If we ever try to allow gitolite services on a separate server from Redmine,
+    # file (gitolite.conf).      If we ever try to allow gitolite services on a separate server from Redmine,
     # we will have to turn this into a stand-alone script.
     #
     # Ideally, we have gitolite >= 2.0.3 so that we have 'gl-admin-push'.  If not, we try to use gl-setup
@@ -509,7 +509,7 @@ module GitHosting
     #
     # We try to:
     #  (1) figure out what the proper name is for the access key by first looking in the conf file, then
-    #	   looking for a matching keyname in the keydir.
+    #      looking for a matching keyname in the keydir.
     #  (2) delete any keys in the keydir that match our key
     #  (3) reestablish the keyname in the conf file and the key in the keydir
     #  (4) push the result back to the admin repo.
@@ -637,10 +637,10 @@ module GitHosting
     # Update keys for all members of projects of interest
     #
     # This code is entirely self-correcting for keys owned by users of the specified
-    # projects.	 It should work regardless of the history of steps that got us here.
+    # projects.  It should work regardless of the history of steps that got us here.
     #
     # Note that this code has changed from the original.  Now, we look at all keys owned
-    # by users in the specified projects to make sure that they are still live.	 We
+    # by users in the specified projects to make sure that they are still live.  We
     # do this with a single pass through the keydir and do not rely on the "inactive"
     # status to tell us that a key should be deleted.  The reason is that weird
     # synchronization issues (not entirely understood) can cause phantom keys to get left
@@ -665,7 +665,7 @@ module GitHosting
     # Current flags:
     #	:resync_all =>	go through all redmine-maintained gitolite repos,
     #			clean up keydir, delete unused keys, clean up gitolite.conf
-    #	:delete	    =>	Clean up keydir, delete unused keys, remove redmine-maintaind
+    #	:delete     =>	Clean up keydir, delete unused keys, remove redmine-maintaind
     #			gitolite entries and repositories unassociated with live projects.
     #			Unlike :resync_all, do not fix up live projects
     #	:descendants => for every given project, update self and all decendants
@@ -809,10 +809,10 @@ module GitHosting
 
 	    conf = GitoliteConfig.new(File.join(repo_dir, 'conf', gitolite_conf))
 
-	    # Current redmine repositories (basename=>[repo_name1,repo_name2])
+	    # Current redmine repositories (basename=>{repo_name1=>true,repo_name2=>true})
 	    redmine_repos = conf.redmine_repo_map
 
-	    # The set of actual repositories (basename=>[repo_name1,repo_name2])
+	    # The set of actual repositories (basename=>{repo_name1=>true,repo_name2=>true})
 	    actual_repos = GitoliteConfig.gitolite_repository_map
 
 	    # Set of all entries in gitolite.conf file (name1=>1, name2=>2)
@@ -820,6 +820,9 @@ module GitHosting
 
 	    # Projects for which we want to update hooks
 	    new_projects = []
+
+	    # Flag to force conf file to get new timestamp
+	    force_change = false
 
 	    # Regenerate configuration file for repos of projects of interest
 	    # Also, try to match up actual repositories with projects (being somewhat conservative
@@ -865,43 +868,38 @@ module GitHosting
 			conf.rename_repo(closest_entry,repo_name)
 		    else
 			# NORMAL case. Have entry with correct name.
-			if !my_repos.index(repo_name)
+			if !my_repos[repo_name]
 			    logger.warn "Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
 			end
 		    end
-		    new_projects << proj unless my_repos.index(closest_entry) # Reinit hooks unless NORMAL or MOVE case
-		    my_entries.delete closest_entry	 # Claimed this one => don't need to delete later
+		    new_projects << proj unless my_repos[closest_entry] # Reinit hooks unless NORMAL or MOVE case
+		    my_entries.delete closest_entry      # Claimed this one => don't need to delete later
 
 		    if my_repos.empty?
 			# This is the normal CREATION case for primary repos or when repo_ident_unique? true.
 			# No repositories with matching basenames.  Attempt to recover repository from recycle_bin,
 			# if present.  Else, create new repository.
 			if !GitoliteRecycle.recover_repository_if_present repo_name
+			    force_change = true
 			    logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
 			end
-		    elsif my_repos.index(closest_entry)
+		    elsif my_repos[closest_entry]
 			# We have a repository that matches the entry we used above.  Move this one to match if necessary
 			# If closest_entry == repo_name, this is a NORMAL case (do nothing!)
 			# If closest_entry != repo_name, this is the MOVE case.
 			move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
-		    elsif my_repos.index(repo_name)
+		    elsif my_repos[repo_name]
 			# Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
 			logger.warn "  Using existing repository: '#{repository_path(repo_name)}'"
-		    elsif !Repository.repo_ident_unique? && my_repos.select{|test_path| test_path.match(/^(.*\/)?#{repo.git_label}$/)}.empty?
-			# Filter out everything but paths that look like project/repo_ident; if none, assume creating new repo with non-unique identifier
-			if !GitoliteRecycle.recover_repository_if_present repo_name
-			    logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
-			end
 		    else
 			# Of the repos in my_repo with a matching base name, only steal away those not already controlled
 			# by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
 			# in gitolite.conf but the repo didn't get moved.
-			closest_repo = closest_path((my_repos - total_entries.keys),repo_name,repo)
+			closest_repo = closest_path(hash_set_diff(my_repos,total_entries),repo_name,repo)
 			if !closest_repo
-			    logger.error "One or more repositories with matching base name '#{repo.git_name}' exist, but already have entries in gitolite.conf"
-			    logger.error "They are: #{my_repos.join(', ')}"
 			    # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
 			    if !GitoliteRecycle.recover_repository_if_present repo_name
+				force_change = true
 				logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
 			    end
 			else
@@ -913,7 +911,7 @@ module GitHosting
 		    # Update repository url and root_url if necessary
 		    target_url = repository_path(repo_name)
 		    if repo.url != target_url || repo.root_url != target_url
-			# logger.warn "	 Updating internal access path to '#{target_url}'."
+			# logger.warn "  Updating internal access path to '#{target_url}'."
 			repo.url = repo.root_url = target_url
 			repo.save
 		    end
@@ -973,7 +971,7 @@ module GitHosting
 	    #
 	    # 1) They have both redmine keys and other (non-redmine) keys => remove redmine keys
 	    # 2) They have only redmine keys, but repository delete is not enabled
-	    #	 => remove redmine keys (will leave redmine_dummy_key when we save)
+	    #    => remove redmine keys (will leave redmine_dummy_key when we save)
 	    # 3) They have only redmine keys and repository delete is enabled => delete repository
 	    if flags[:resync_all] || flags[:delete]
 		# if flags[:delete]
@@ -981,7 +979,7 @@ module GitHosting
 		#	proj_ids = git_projects.map{|proj| proj.identifier}
 		#	redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
 		# end
-		redmine_repos.values.flatten.each do |repo_name|
+		redmine_repos.values.map(&:keys).flatten.each do |repo_name|
 		    # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
 		    has_keys = conf.has_actual_redmine_keys? repo_name
 
@@ -1006,7 +1004,7 @@ module GitHosting
 		GitoliteRecycle.delete_expired_files
 	    end
 
-	    if conf.changed?
+	    if conf.changed? || force_change
 		conf.save
 		changed = true
 	    end
@@ -1053,7 +1051,7 @@ module GitHosting
 	    new_path = repository_path(new_name)
 	    shell %[#{git_user_runner} 'mv "#{old_path}" "#{new_path}"']
 
-	    # If any empty directories left behind, try to delete them.	 Ignore failure.
+	    # If any empty directories left behind, try to delete them.  Ignore failure.
 	    old_prefix = old_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
 	    if old_prefix
 		repo_subpath = File.join(repository_base, old_prefix)
@@ -1081,87 +1079,86 @@ module GitHosting
 	(%x[#{GitHosting.git_user_runner} test -r '#{filename}' && echo 'yes' || echo 'no']).match(/yes/) ? true : false
     end
 
-    # Takes a list of path names and a path name and attempts to find the item in the list that matches
+    # Takes a presence hash of path names and a path name and attempts to find the item in the list that matches
     # in the most components.  Assume at least one element in list
     #
     # Dealing with the multi-repo spec makes this slightly more complex that without.  We want
     # to be able to recognize the path in either of the two repository naming schemes:
     #
-    # 1) proj1/proj2/repo_name		     : Used when all repo identifiers are unique
-    # 2) proj1/proj2/parent-proj/repo_name   : Used when repo identifiers may not be unique
+    # 1) proj1/proj2/parent-proj               : Used when all repo identifiers are unique
+    # 2) proj1/proj2/parent-proj/repo_ident    : Used when repo identifiers may not be unique
     #
     # Note that all the complexity of dealing with multi-repo path formats is handled here
     def self.closest_path(path_list,repo_name,repo)
-	if path_list.count < 2
-	    # Common case -- only one or zero matches.
-	    # This catches a number normal operation cases
-	    # 0) Creation case if repo.identifier.blank? is true or Repository.repo_ident_unique? is true
-	    # 1) cases in which repo.identifier.blank? is true (since there repo.git_name unique)
-	    # 2) cases in which Repository.repo_ident_unique? is true (since repo.git_name should be unique)
-	    # 3) cases in which Repository.repo_ident_unique? is false, but this particular identifier is unique
-	    #
-	    # Make sure that there isn't another repo who owns this path (only possible if we have non-unique
-	    # repository identifiers--verify case #3, i.e. that we are not about to create non-unique identifier)
-	    if !GitHosting.multi_repos? || repo.identifier.blank? || Repository.repo_ident_unique? || path_list.first && (path_list.first.match(/^(.*\/)?#{repo.git_label}$/))
-		return path_list.first
-	    else
-		return nil
-	    end
-	end
-
-	# Beyond this point, we do not have an exact matching path, thus something has changed.
-	# We need to clean things up a bit.
-
-	# Ok we will choose candidates based on path length
-	sort_proc = Proc.new {|x,y|
-	    # sort by length of match, then dictionary
-	    lmatchx = longest_match_length(x,repo_name)
-	    lmatchy = longest_match_length(y,repo_name)
-	    if (lmatchx < lmatchy)
-		-1
-	    elsif (lmatchy < lmatchx)
-		1
-	    else
-		# in case of equivalence, want earliest alphabetical
-		y <=> x
-	    end
-	}
-
-	# Look for exact matching path (also common case if Repository.repo_ident_unique? is false and multiple
-	# repos exist with the same identifier).
-	path_list.each {|test_path| return test_path if test_path==repo_name}
+	# most common case: have exact matching path
+	return repo_name if path_list[repo_name]
 
 	# Special handling if repository name could change with Repository.repo_ident_unique?
 	if GitHosting.multi_repos? && !repo.identifier.blank?
 	    # See if we find match by merely changing value of Repository.repo_ident_unique?
 	    repo_name_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
-	    path_list.each {|test_path| return test_path if test_path==repo_name_alt}
-
-	    # Preferentially match against project-name/repo_identifier paths if they exist
-	    # Under normal operation, there should be only one of these, since proj_name/repo_identifier
-	    # should always be unique.	Note that we check this even if Repository.repo_ident_unique? is true
-	    # in case we just switched from false.
-	    matchname=repo.git_label(:assume_unique => false)
-	    if (reasonable_paths=path_list.select{|test_path| test_path.match(/^(.*\/)?#{matchname}$/)}).any?
-		return (reasonable_paths.sort &sort_proc).last
+	    if path_list[repo_name_alt]
+		# Make sure that this doesn't belong to another repo
+		owner_repo = Repository.find_by_path(repo_name_alt,:loose=>true)
+		if !owner_repo || owner_repo == repo
+		    return repo_name_alt
+		end
 	    end
 	end
 
-	# Just find longest matching path.  This works pretty much for most weird issues we can find.
-	# It works the same as previous version if identifier.blank? is true (i.e. repo named by project.identifier)
-	# or Repository.repo_ident_unique? is true (unique again)
-	(path_list.sort &sort_proc).last
+	# No exact match.  Find the longest matching path.  We will preferentially match
+	# unclaimed paths whose last two components match our desired path (which should
+	# always be unique when have multi repos and the repo identifier is not blank.
+	# This works pretty much for most weird issues we can find.
+	#
+	# Make sure that we don't choose a path that belongs to another repo.
+	matchname=repo.git_label(:assume_unique => false)
+	path_list.sort_by do |path,last_comps|
+	    matchord = longest_match_ordinal(path,repo_name)
+	    preference = (last_comps == matchname) ? (1 << 24) : 0
+
+	     # Sort in reverse order
+	    - (matchord + preference)
+	end.each do |path,last_comps|
+	    owner_repo = Repository.find_by_path(path,:loose=>true)
+	    if !owner_repo || owner_repo == repo
+		return path
+	    end
+	end
+
+	# No acceptible match
+	return nil
     end
 
-    # return the number of characters that match between str1 and str2
-    def self.longest_match_length(str1,str2)
+    # Return the number of characters that match between (str1 and str2) << 16 + codepoint
+    # of first character in str1 that doesn't match.  This is bit naive for Ruby 1.8,
+    # and works properly for 1.9 with multi-byte characters (but doesn't deal with
+    # codepoints more than 16 bits....
+    def self.longest_match_ordinal(str1,str2)
 	for result in 0..str1.length-1
 	    # note that str2[result]=nil if beyond end of string, which works fine!
 	    if str1[result] != str2[result]
-		return result
+		finalChar =
+		    case str1[result]
+		    when String
+			str1[result].ord
+		    when Integer
+			str1[result]
+		    else
+			0
+		    end
+		return (result << 16) + (finalChar & 0xFFFF)
 	    end
 	end
-	str1.length
+	str1.length << 16
+    end
+
+    # Compute the set difference of keys between two hashes.
+    def self.hash_set_diff(first_hash,second_hash)
+	first_hash.inject({}) { |hash, (key,value)|
+	    hash[key]=value unless second_hash[key]
+	    hash
+	}
     end
 
     def self.check_hooks_installed
@@ -1183,6 +1180,10 @@ module GitHosting
 	    GitAdapterHooks.update_global_hook_params
 	    unlock()
 	end
+    end
+
+    def self.print_out_hash(inhash)
+	inhash.each {|path,common| Rails.logger.error "  #{path} => #{common}"}
     end
 
     # Set the history limit for caching on the given repo
