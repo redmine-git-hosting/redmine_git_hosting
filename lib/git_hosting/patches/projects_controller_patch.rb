@@ -42,16 +42,17 @@ module GitHosting
 		# Turn of updates during repository update
 		GitHostingObserver.set_update_active(false);
 
-		# Do actual update
+		# Do actual creation
 		create_without_disable_update
 
-		Rails.logger.error "About to create new repo!"
-		# Fix up repository
-		git_repo_init
-		Rails.logger.error "Done creating new repo!"
+		# Only create/fixup repo if project creation worked
+		if validate_parent_id && @project.save
+		    # Fix up repository
+		    git_repo_init
 
-		# Adjust daemon status
-		disable_git_daemon_if_not_public
+		    # Adjust daemon status
+		    disable_git_daemon_if_not_public
+		end
 
 		# Reenable updates to perform a single update
 		GitHostingObserver.set_update_active(true);
