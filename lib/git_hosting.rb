@@ -509,11 +509,14 @@ module GitHosting
     # which has some quirks and is not as good.
     #
     # We try to:
-    #  (1) figure out what the proper name is for the access key by first looking in the conf file, then
-    #      looking for a matching keyname in the keydir.
+    #  (1) figure out what the proper name is for the access key by first looking for a matching keyname
+    #      in the keydir, then in the conf file.
     #  (2) delete any keys in the keydir that match our key
     #  (3) reestablish the keyname in the conf file and the key in the keydir
     #  (4) push the result back to the admin repo.
+    #
+    # We attempt avoid messing with other administrative keys in the conf file (unless they are unmatched
+    # by keys in the keydir directory (in which case we remove them).
     #
     # Most of this activity is all done as the git user, hence the long command lines.	Only parsing of the
     # conf file is done as the redmine user (hence the need for the separate "tmp_conf_dir".
@@ -547,35 +550,54 @@ module GitHosting
 	    # copy key into home directory...
 	    shell %[cat #{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
 
-	    # Locate any keys that match new key -- save first one
-	    admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n").map do |name|
-		my_basename = File.basename(name,".pub")
-		shell %[#{GitHosting.git_user_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{my_basename}.pub]
-		my_basename
+	    # Locate any keys that match redmine_git_hosting key
+	    raw_admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n")
+
+	    # Reorder them by putting preferred keys first
+	    preferred = ["#{GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME}","id_rsa.pub"]
+	    raw_admin_key_matches = promote_array(raw_admin_key_matches, preferred)
+
+	    # Remove all but first one
+	    first_match = nil
+	    raw_admin_key_matches.each do |name|
+		# Take basename and remove as many ".pub" as you can
+		working_basename = /^(.*\/)?([^\/]*?)(\.pub)*$/.match(name)[2]
+		if first_match || ("#{working_basename}.pub" != File.basename(name))
+		    logger.warn "  Removing duplicate administrative key '#{File.basename(name)}' from keydir"
+		    shell %[#{GitHosting.git_user_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm #{name}]
+		end
+		# First name will match this
+		first_match ||= working_basename
 	    end
 
-	    unless admin_key_matches.empty?
-		oldkeys = admin_key_matches.join(", ")
-		logger.warn "  Deleting old keys in keydir that match gitoliteIdentityPublicKeyFile: #{oldkeys}"
+	    # Find any admin keys in conf file that don't have a corresponding keyfile
+	    # At this point, would include any of the keys that we have deleted, above
+	    extrakeys = conf.get_admin_keys - Dir.entries(keydir).map {|name| File.basename(name,".pub")}
+
+	    # Try to deduce administrative key name first from keydir, then from conf file, then use default.
+	    # Remove any extra ".pub" at end, in case something slipped through
+	    new_admin_key_name = /^(.*?)(.pub)*$/.match(first_match || extrakeys.first || GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME)[1]
+
+	    # Remove extraneous keys from
+	    extrakeys.each do |keyname|
+		unless keyname == new_admin_key_name
+		    logger.warn "  Removing orphan administrative key '#{keyname}' from gitolite config file"
+		    conf.delete_admin_keys keyname
+		end
 	    end
 
-	    # Grab admin key name out of conf file (if it exists)
-	    my_admin_key = conf.get_admin_key
+	    logger.warn "  Establishing '#{new_admin_key_name}.pub' as the redmine_git_hosting administrative key"
 
-	    # Try to deduce administrative key name first from conf file, then from keydir, then use default.
-	    # Remove all extraneous ".pub" from end, in case something crept through.
-	    new_admin_key_name = (/^(.*?)(\.pub)*$/.match(my_admin_key || admin_key_matches.first || GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME))[1]
-	    if my_admin_key
-		logger.warn "  Using admin key name from conf file: '#{new_admin_key_name}'"
-	    else
-		logger.warn "  Using '#{new_admin_key_name}' as the admin key name"
+	    # Add selected key to front of admin list
+	    admin_keys = ([new_admin_key_name] + conf.get_admin_keys).uniq
+	    if (admin_keys.length > 1)
+		logger.warn "  Additional administrative key(s): #{admin_keys[1..-1].map{|x| "'#{x}.pub'"}.join(', ')}"
 	    end
-
-	    conf.set_admin_key new_admin_key_name
+	    conf.set_admin_keys admin_keys
 	    conf.save
+
 	    shell %[cat #{tmp_conf_file} | #{GitHosting.git_user_runner} 'cat > #{conf_file}']
 	    shell %[#{GitHosting.git_user_runner} 'mv ~/id_rsa.pub #{keydir}/#{new_admin_key_name}.pub']
-
 	    shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*"]
 	    shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}"]
 	    shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
@@ -593,8 +615,10 @@ module GitHosting
 	    %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
 	    %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
 	    "Success!"
-	rescue
+	rescue => e
 	    logger.error "Failed to reestablish gitolite admin key."
+	    logger.error e.message
+	    logger.error e.backtrace.join("\n")
 	    %x[#{GitHosting.git_user_runner} 'rm -f ~/id_rsa.pub']
 	    %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
 	    %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
@@ -1160,6 +1184,11 @@ module GitHosting
 	    hash[key]=value unless second_hash[key]
 	    hash
 	}
+    end
+
+    # Promote any elements from the promotion set to the front of the input list
+    def self.promote_array(input_array,promote)
+	(input_array & promote) + (input_array - promote)
     end
 
     def self.check_hooks_installed

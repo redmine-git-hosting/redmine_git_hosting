@@ -6,7 +6,7 @@ module GitHosting
 	GIT_DAEMON_KEY="daemon"
 	ADMIN_REPO = "gitolite-admin"
 	PRIMARY_CONF_FILE = "gitolite.conf"
-	DEFAULT_ADMIN_KEY_NAME = "id_rsa"
+	DEFAULT_ADMIN_KEY_NAME = "redmine_git_hosting_admin_key"
 
 	def self.gitolite_conf
 	    Setting.plugin_redmine_git_hosting['gitConfigFile'] || PRIMARY_CONF_FILE
@@ -78,13 +78,26 @@ module GitHosting
 	    add_read_user repo_name, [DISABLED_REDMINE_KEY]
 	end
 
-	# Grab admin key (assuming it exists)
+	# Grab first admin key (assuming it exists)
 	def get_admin_key
-	    return (repository(ADMIN_REPO).get "RW+").first
+	    (repository(ADMIN_REPO).get "RW+").first
 	end
 
-	def set_admin_key new_name
-	    repository(ADMIN_REPO).set "RW+", new_name
+	# Grab all admin keys as a list
+	def get_admin_keys
+	    repository(ADMIN_REPO).get "RW+"
+	end
+
+	def set_admin_keys keys
+	    repository(ADMIN_REPO).set "RW+", keys
+	end
+
+	def add_admin_keys keys
+	    repository(ADMIN_REPO).add "RW+", keys
+	end
+
+	def delete_admin_keys keys
+	    repository(ADMIN_REPO).delete "RW+", keys
 	end
 
 	def delete_repo repo_name
@@ -223,16 +236,19 @@ module GitHosting
 		# Make sure that admin repo is first
 		content << "repo\t#{ADMIN_REPO}"
 		admin_key = @repositories[ADMIN_REPO] && (@repositories[ADMIN_REPO].get "RW+").first
-		unless admin_key.nil?
-		    # Put in a single admin key
-		    content << "\tRW+\t=\t#{admin_key}"
-		else
-		    # If no repo, put in a default -- will try to fix later if problem.
+		if admin_key.nil?
+		    # If no admin key with "RW+", put in a default -- will try to fix later if problem.
 		    content << "\tRW+\t=\t#{DEFAULT_ADMIN_KEY_NAME}"
+		end
+		@repositories[ADMIN_REPO].each do |perm, users|
+		    if users.length > 0
+			content << "\t#{perm}\t=\t#{users.join(' ')}"
+		    end
 		end
 		content << ""
 	    end
 
+	    # Everything else
 	    @repositories.each do |repo, rights|
 		unless repo == ADMIN_REPO
 		    content << "repo\t#{repo}"
@@ -268,6 +284,15 @@ module GitHosting
 	    @rights[perm.to_sym] << users
 	    @rights[perm.to_sym].flatten!
 	    @rights[perm.to_sym].uniq!
+	end
+
+	def delete perm, users
+	    return if @rights[perm.to_sym].nil?
+	    if users.is_a?(Array)
+		@rights[perm.to_sym] = @rights[perm.to_sym] - users
+	    else
+		@rights[perm.to_sym].delete(users)
+	    end
 	end
 
 	def set perm, users
