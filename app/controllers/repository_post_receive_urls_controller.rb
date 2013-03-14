@@ -33,11 +33,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
           format.html {
             redirect_to redirect_url
           }
-          format.js {
-            render :update do |page|
-              page.redirect_to redirect_url
-            end
-          }
+          format.js { render :update }
         end
       else
         respond_to do |format|
@@ -65,11 +61,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
         format.html {
           redirect_to redirect_url
         }
-        format.js {
-          render :update do |page|
-            page.redirect_to redirect_url
-          end
-        }
+        format.js
       end
     else
       respond_to do |format|

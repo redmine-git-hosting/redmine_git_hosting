@@ -35,7 +35,7 @@ class GitolitePublicKeysController < ApplicationController
 
           respond_to do |format|
             format.html { redirect_to @redirect_url }
-            format.js { render :update do |page| page.redirect_to @redirect_url end }
+            format.js
           end
         else
           respond_to do |format|
@@ -54,7 +54,7 @@ class GitolitePublicKeysController < ApplicationController
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
-          format.js { render :update do |page| page.redirect_to @redirect_url end }
+          format.js
         end
       end
     end
@@ -70,7 +70,7 @@ class GitolitePublicKeysController < ApplicationController
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
-          format.js { render :update do |page| page.redirect_to @redirect_url end }
+          format.js
         end
       else
         respond_to do |format|
@@ -87,7 +87,7 @@ class GitolitePublicKeysController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to @redirect_url }
-        format.js { render :update do |page| page.redirect_to @redirect_url end }
+        format.js { render :update }
       end
     end
     GitHostingObserver.set_update_active(true)
