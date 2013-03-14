@@ -37,11 +37,14 @@
 <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting')%>
 
 <br />
+
+<%= render :partial => "display_access" %>
+
+<br />
+<br />
 <hr />
 <br />
 
-<%= render :partial => "display_access" %>
-<br/>
 <div class="tabular settings">
 
   <h3><%= l(:label_basic_settings)%></h3>

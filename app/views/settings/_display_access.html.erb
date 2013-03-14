@@ -1,20 +1,28 @@
+<%
+  gitUser                = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitUser].nil?) ? Setting.plugin_redmine_git_hosting[:gitUser] : 'git'
+  gitServer              = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitServer].nil?) ? Setting.plugin_redmine_git_hosting[:gitServer] : 'localhost'
+  gitRedmineSubdir       = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRedmineSubdir].nil?) ? Setting.plugin_redmine_git_hosting[:gitRedmineSubdir] : ''
+  gitRepositoryHierarchy = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoryHierarchy].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoryHierarchy] : false
+  gitRepositoryBasePath  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoryBasePath].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoryBasePath] : 'repositories/'
+%>
+
 <div class="git_hosting_access_box">
   <h3><%= l(:label_current_access_patterns) %></h3>
   <%= raw l(:display_access_setup, :type => (GitHosting.multi_repos? ? "default " : "")) %>:
   <p>
     <label>Repo Storage:</label>
-    <%= raw "~#{@settings['gitUser']}/#{@settings['gitRepositoryBasePath']}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    <%= raw "~#{gitUser}/#{gitRepositoryBasePath}#{gitRedmineSubdir}<em>#{(GitHostingConf.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
     %>
     <br/>
     <label><%= l(:label_ssh_access)%>:</label>
-    <% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
-    <%= raw "#{gitSHP ? 'ssh://' : ''}#{@settings['gitUser']}@#{@settings['gitServer']}#{gitSHP ? '/' : ':'}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    <% gitSHP = gitServer.match(/:\d+$/) %>
+    <%= raw "#{gitSHP ? 'ssh://' : ''}#{gitUser}@#{gitServer}#{gitSHP ? '/' : ':'}#{gitRedmineSubdir}<em>#{(GitHostingConf.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
     %>
     <br/>
     <label><%= l(:label_http_access)%>:</label>
-    <%= raw "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHosting.http_server_subdir}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    <%= raw "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHostingConf.http_server_subdir}<em>#{(GitHostingConf.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
     %>
   </p>
   <%= raw l(:display_access_emphasis) %>
-  <%= raw @settings['gitRepositoryHierarchy'] == 'true' ? l(:display_access_hierarchical) : l(:display_access_flat) %>
+  <%= raw gitRepositoryHierarchy == 'true' ? l(:display_access_hierarchical) : l(:display_access_flat) %>
 </div>
