@@ -4,31 +4,43 @@
 <%= render :partial => 'git_urls', :locals => {:repository => @repository, :project => @project} %>
 
 <% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
-<% git_ssh_url =
-   "#{gitSHP ? 'ssh://' : ''}#{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@repository)}.git" %>
- 
+<% git_ssh_url = "#{gitSHP ? 'ssh://' : ''}#{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@repository)}.git" %>
+
 <div class="box">
 
-<h2>Git Setup:</h2>
-<pre>	<a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
-	git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
-	git config --global user.email <%= User.current.mail %>
-<% if User.current.gitolite_public_keys.active.length == 0 %><%= "\t" + (link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'}) + "\n</pre>" %><% else %><%= "</pre>" %><% end %>
-<h2>Repository Setup:</h2>
-<pre>	mkdir <%= @repository.git_name %>
-	cd <%= @repository.git_name %>
-	git init
-	touch readme.txt
-	git add readme.txt
-	git commit -m 'Initializing <%= @repository.git_label %> repository'
-	git remote add origin <%= git_ssh_url %>
-	git push -u origin master
-</pre>
-<h2>Existing Git Repo?</h2>
-<pre>	cd existing_git_repo
-	git remote add origin <%= git_ssh_url %>
-	git push -u origin master
-</pre>
+  <br />
+
+  <h2>Git Setup:</h2>
+  <pre>
+    <a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
+    git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
+    git config --global user.email <%= User.current.mail %>
+    <% if User.current.gitolite_public_keys.active.length == 0 %>
+    <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'} %>
+  </pre>
+    <% else %>
+  </pre>
+    <% end %>
+
+  <h2>Repository Setup:</h2>
+  <pre>
+    mkdir <%= @repository.git_name %>
+    cd <%= @repository.git_name %>
+    git init
+    touch readme.txt
+    git add readme.txt
+    git commit -m 'Initializing <%= @repository.git_label %> repository'
+    git remote add origin <%= git_ssh_url %>
+    git push -u origin master
+  </pre>
+
+  <h2>Existing Git Repo?</h2>
+  <pre>
+    cd existing_git_repo
+    git remote add origin <%= git_ssh_url %>
+    git push -u origin master
+  </pre>
+
 </div>
 
 <% if @repositories.size > 1 %>
@@ -36,11 +48,11 @@
     <h3><%= l(:label_repository_plural) %></h3>
     <p>
       <%= @repositories.sort.collect {|repo|
-          link_to h(repo.name), 
+          link_to h(repo.name),
                   {:controller => 'repositories', :action => 'show',
                    :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                  :class => 'repository' + (repo == @repository ? ' selected' : '')
-        }.join('<br />').html_safe %>
+                   :class => 'repository' + (repo == @repository ? ' selected' : '')
+          }.join('<br />').html_safe %>
     </p>
   <% end %>
 <% end %>
