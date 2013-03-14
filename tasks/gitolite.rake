@@ -19,15 +19,17 @@
 # rake gitolite:fetch_changes RAILS_ENV=xxx
 #
 namespace :gitolite do
-	desc "Update/repair gitolite configuration"
-	task :update_repositories => [:environment] do
-		puts "WARNING: This task deprecated.  Use 'rake redmine_git_hosting:update_repositories' instead."
-		Rake::Task["redmine_git_hosting:update_repositories"].invoke
-	end
-	desc "Fetch commits from gitolite repositories/update gitolite configuration"
-	task :fetch_changes => [:environment] do
-		puts "WARNING: This task deprecated.  Use 'rake redmine_git_hosting:fetch_changesets' instead."
-		Rake::Task["redmine_git_hosting:fetch_changesets"].invoke
-	end
+
+  desc "Update/repair gitolite configuration"
+  task :update_repositories => [:environment] do
+    puts "WARNING: This task deprecated.  Use 'rake redmine_git_hosting:update_repositories' instead."
+    Rake::Task["redmine_git_hosting:update_repositories"].invoke
+  end
+
+  desc "Fetch commits from gitolite repositories/update gitolite configuration"
+  task :fetch_changes => [:environment] do
+    puts "WARNING: This task deprecated.  Use 'rake redmine_git_hosting:fetch_changesets' instead."
+    Rake::Task["redmine_git_hosting:fetch_changesets"].invoke
+  end
 
 end
