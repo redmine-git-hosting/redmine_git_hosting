@@ -1,3 +1,39 @@
+<%
+  gitLockWaitTime                = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitLockWaitTime].nil?) ? Setting.plugin_redmine_git_hosting[:gitLockWaitTime] : '10'
+  gitTempDataDir                 = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitTempDataDir].nil?) ? Setting.plugin_redmine_git_hosting[:gitTempDataDir] : '/tmp/redmine_git_hosting/'
+  gitScriptDir                   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitScriptDir].nil?) ? Setting.plugin_redmine_git_hosting[:gitScriptDir] : ''
+  gitUser                        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitUser].nil?) ? Setting.plugin_redmine_git_hosting[:gitUser] : 'git'
+  gitoliteIdentityFile           = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile] : (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s
+  gitoliteIdentityPublicKeyFile  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitoliteIdentityPublicKeyFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitoliteIdentityPublicKeyFile] : (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa.pub").to_s
+
+  gitConfigFile            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitConfigFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitConfigFile] : 'gitolite.conf'
+  gitConfigHasAdminKey     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitConfigHasAdminKey].nil?) ? Setting.plugin_redmine_git_hosting[:gitConfigHasAdminKey] : true
+  gitRepositoryBasePath    = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoryBasePath].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoryBasePath] : 'repositories/'
+  gitRedmineSubdir         = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRedmineSubdir].nil?) ? Setting.plugin_redmine_git_hosting[:gitRedmineSubdir] : ''
+  gitRepositoryHierarchy   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoryHierarchy].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoryHierarchy] : false
+  gitRepositoryIdentUnique = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoryIdentUnique].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoryIdentUnique] : true
+  allProjectsUseGit        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:allProjectsUseGit].nil?) ? Setting.plugin_redmine_git_hosting[:allProjectsUseGit] : false
+  gitDaemonDefault         = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitDaemonDefault].nil?) ? Setting.plugin_redmine_git_hosting[:gitDaemonDefault] : '1'
+  gitHttpDefault           = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitHttpDefault].nil?) ? Setting.plugin_redmine_git_hosting[:gitHttpDefault] : '1'
+  gitNotifyCIADefault      = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitNotifyCIADefault].nil?) ? Setting.plugin_redmine_git_hosting[:gitNotifyCIADefault] : '0'
+  deleteGitRepositories    = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:deleteGitRepositories].nil?) ? Setting.plugin_redmine_git_hosting[:deleteGitRepositories] : false
+  gitRecycleBasePath       = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRecycleBasePath].nil?) ? Setting.plugin_redmine_git_hosting[:gitRecycleBasePath] : 'recycle_bin/'
+  gitRecycleExpireTime     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRecycleExpireTime].nil?) ? Setting.plugin_redmine_git_hosting[:gitRecycleExpireTime] : '24.0'
+
+  gitServer              = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitServer].nil?) ? Setting.plugin_redmine_git_hosting[:gitServer] : 'localhost'
+  httpServer             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:httpServer].nil?) ? Setting.plugin_redmine_git_hosting[:httpServer] : 'localhost'
+  httpServerSubdir       = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:httpServerSubdir].nil?) ? Setting.plugin_redmine_git_hosting[:httpServerSubdir] : ''
+  gitRepositoriesShowUrl = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitRepositoriesShowUrl].nil?) ? Setting.plugin_redmine_git_hosting[:gitRepositoriesShowUrl] : true
+
+  gitCacheMaxElements = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitCacheMaxElements].nil?) ? Setting.plugin_redmine_git_hosting[:gitCacheMaxElements] : '100'
+  gitCacheMaxSize     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitCacheMaxSize].nil?) ? Setting.plugin_redmine_git_hosting[:gitCacheMaxSize] : '-1'
+  gitCacheMaxTime     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitCacheMaxTime].nil?) ? Setting.plugin_redmine_git_hosting[:gitCacheMaxTime] : '16'
+
+  gitHooksAreAsynchronous = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitHooksAreAsynchronous].nil?) ? Setting.plugin_redmine_git_hosting[:gitHooksAreAsynchronous] : true
+  gitHooksDebug           = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitHooksDebug].nil?) ? Setting.plugin_redmine_git_hosting[:gitHooksDebug] : false
+  gitForceHooksUpdate     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitForceHooksUpdate].nil?) ? Setting.plugin_redmine_git_hosting[:gitForceHooksUpdate] : true
+%>
+
 <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting')%>
 
 <br />
@@ -10,33 +46,33 @@
 
   <h3><%= l(:label_basic_settings)%></h3>
   <p>
-    <label><%= l(:label_git_lock_wait_time)%></label>
-    <%= text_field_tag("settings[gitLockWaitTime]", @settings['gitLockWaitTime'], :size => 10) %>
+    <label><%= raw l(:label_git_lock_wait_time)%></label>
+    <%= text_field_tag("settings[gitLockWaitTime]", gitLockWaitTime, :size => 10) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_tmp_data_dir) %></label>
-    <%= text_field_tag("settings[gitTempDataDir]", @settings['gitTempDataDir'], :size => 60) %>
+    <%= text_field_tag("settings[gitTempDataDir]", gitTempDataDir, :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
-    <%= text_field_tag("settings[gitScriptDir]", reldir_add_dotslash(@settings['gitScriptDir']), :size => 60) %>
+    <%= text_field_tag("settings[gitScriptDir]", reldir_add_dotslash(gitScriptDir), :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_git_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
-    <%= text_field_tag("settings[gitUser]", @settings['gitUser'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+    <%= text_field_tag("settings[gitUser]", gitUser.split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_gitolite_identity_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
-    <%= text_field_tag("settings[gitoliteIdentityFile]", @settings['gitoliteIdentityFile'], :size => 60) %>
+    <%= text_field_tag("settings[gitoliteIdentityFile]", gitoliteIdentityFile, :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
-    <%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", @settings['gitoliteIdentityPublicKeyFile'], :size => 60) %>
+    <%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", gitoliteIdentityPublicKeyFile, :size => 60) %>
     <br />
   </p>
 
@@ -46,71 +82,71 @@
 
   <h3><%= l(:label_gitolite_repository_settings)%></h3>
   <p>
-    <label><%= l(:label_gitolite_config_file)%></label>
-    <%= text_field_tag("settings[gitConfigFile]", "./#{@settings['gitConfigFile']||GitHosting::GitoliteConfig::PRIMARY_CONF_FILE}", :size => 60) %>
+    <label><%= raw l(:label_gitolite_config_file)%></label>
+    <%= text_field_tag("settings[gitConfigFile]", "./#{gitConfigFile}", :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_gitolite_config_has_admin_key)%></label>
-    <%= select_tag("settings[gitConfigHasAdminKey]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], @settings['gitConfigHasAdminKey'])) %>
+    <%= select_tag("settings[gitConfigHasAdminKey]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitConfigHasAdminKey)) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_git_repository_base_path)%></label>
-    <%= text_field_tag("settings[gitRepositoryBasePath]", "./#{@settings['gitRepositoryBasePath']}", :size => 60) %>
+    <label><%= raw l(:label_git_repository_base_path)%></label>
+    <%= text_field_tag("settings[gitRepositoryBasePath]", "./#{gitRepositoryBasePath}", :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_git_redmine_subdir)%></label>
-    <%= text_field_tag("settings[gitRedmineSubdir]", "./#{@settings['gitRedmineSubdir']}", :size => 60) %>
+    <label><%= raw l(:label_git_redmine_subdir)%></label>
+    <%= text_field_tag("settings[gitRedmineSubdir]", "./#{gitRedmineSubdir}", :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_git_repository_hierarchy)%></label>
-    <%= select_tag("settings[gitRepositoryHierarchy]", options_for_select([[l(:label_hierarchical), 'true'], [l(:label_flat), 'false']], @settings['gitRepositoryHierarchy'])) %>
+    <label><%= raw l(:label_git_repository_hierarchy)%></label>
+    <%= select_tag("settings[gitRepositoryHierarchy]", options_for_select([[l(:label_hierarchical), 'true'], [l(:label_flat), 'false']], gitRepositoryHierarchy)) %>
     <br />
   </p>
   <% if GitHosting.multi_repos? %>
     <p>
     <label><%= l(:label_git_repository_ident_unique)%></label>
-    <%= select_tag("settings[gitRepositoryIdentUnique]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], @settings['gitRepositoryIdentUnique'])) %>
+    <%= select_tag("settings[gitRepositoryIdentUnique]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitRepositoryIdentUnique)) %>
     <br />
     </p>
   <% end %>
   <p>
     <label><%= l(:label_all_git)%></label>
-    <%= select_tag("settings[allProjectsUseGit]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['allProjectsUseGit'])) %>
+    <%= select_tag("settings[allProjectsUseGit]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], allProjectsUseGit)) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_default_git_daemon) %></label>
-    <%= select_tag("settings[gitDaemonDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], @settings['gitDaemonDefault']))%>
+    <%= select_tag("settings[gitDaemonDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], gitDaemonDefault))%>
     <br />
   </p>
   <p>
     <label><%= l(:label_default_smart_http)%></label>
-    <%= select_tag("settings[gitHttpDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], @settings['gitHttpDefault'])) %>
+    <%= select_tag("settings[gitHttpDefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], gitHttpDefault)) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_default_notify_cia) %></label>
-    <%= select_tag("settings[gitNotifyCIADefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], @settings['gitNotifyCIADefault']))%>
+    <%= select_tag("settings[gitNotifyCIADefault]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], gitNotifyCIADefault))%>
     <br />
   </p>
   <p>
-    <label><%= l(:label_delete_git_repositories)%></label>
-    <%= select_tag("settings[deleteGitRepositories]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['deleteGitRepositories'])) %>
+    <label><%= raw l(:label_delete_git_repositories)%></label>
+    <%= select_tag("settings[deleteGitRepositories]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], deleteGitRepositories)) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_git_recycle_base_path)%></label>
-    <%= text_field_tag("settings[gitRecycleBasePath]", "./#{@settings['gitRecycleBasePath']}", :size => 60) %>
+    <label><%= raw l(:label_git_recycle_base_path)%></label>
+    <%= text_field_tag("settings[gitRecycleBasePath]", "./#{gitRecycleBasePath}", :size => 60) %>
     <br />
   </p>
 
   <p>
-    <label><%= l(:label_git_recycle_expire_time)%></label>
-    <%= text_field_tag("settings[gitRecycleExpireTime]", @settings['gitRecycleExpireTime'], :size => 10) %>
+    <label><%= raw l(:label_git_recycle_expire_time)%></label>
+    <%= text_field_tag("settings[gitRecycleExpireTime]", gitRecycleExpireTime, :size => 10) %>
     <br />
   </p>
 
@@ -121,22 +157,22 @@
   <h3><%= l(:label_gitolite_access_URLs)%></h3>
   <p>
     <label><%= l(:label_git_server)%></label>
-    <%= text_field_tag("settings[gitServer]", @settings['gitServer'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+    <%= text_field_tag("settings[gitServer]", gitServer.split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_http_server)%></label>
-    <%= text_field_tag("settings[httpServer]", @settings['httpServer'].split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
+    <%= text_field_tag("settings[httpServer]", httpServer.split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_http_server_subdir)%></label>
-    <%= text_field_tag("settings[httpServerSubdir]", "./#{@settings['httpServerSubdir']}", :size => 60) %>
+    <label><%= raw l(:label_http_server_subdir)%></label>
+    <%= text_field_tag("settings[httpServerSubdir]", "./#{httpServerSubdir}", :size => 60) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_git_show_urls)%></label>
-    <%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitRepositoriesShowUrl'])) %>
+    <%= select_tag("settings[gitRepositoriesShowUrl]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], gitRepositoriesShowUrl)) %>
     <br />
   </p>
 
@@ -147,17 +183,17 @@
   <h3><%= l(:label_git_cache_parameters)%></h3>
   <p>
     <label><%= l(:label_git_cache_max_elements)%></label>
-    <%= text_field_tag("settings[gitCacheMaxElements]", @settings['gitCacheMaxElements'], :size => 20) %>
+    <%= text_field_tag("settings[gitCacheMaxElements]", gitCacheMaxElements, :size => 20) %>
     <br />
   </p>
   <p>
     <label><%= l(:label_git_cache_max_size)%></label>
-    <%= text_field_tag("settings[gitCacheMaxSize]", @settings['gitCacheMaxSize'], :size => 20) %><em> MB</em>
+    <%= text_field_tag("settings[gitCacheMaxSize]", gitCacheMaxSize, :size => 20) %><em> MB</em>
     <br />
   </p>
   <p>
     <label><%= l(:label_git_cache_max_time)%></label>
-    <%= select_tag("settings[gitCacheMaxTime]",options_for_select([["Cache Disabled", "0"], ["Until Next Commit", "-1"], ["1 Minute or Until Next Commit", "60"], ["15 Minutes or Until Next Commit", "900"], ["1 Hour or Until Next Commit", "3600"], ["1 Day or Until Next Commit", "86400"]], @settings['gitCacheMaxTime'] )) %>
+    <%= select_tag("settings[gitCacheMaxTime]",options_for_select([["Cache Disabled", "0"], ["Until Next Commit", "-1"], ["1 Minute or Until Next Commit", "60"], ["15 Minutes or Until Next Commit", "900"], ["1 Hour or Until Next Commit", "3600"], ["1 Day or Until Next Commit", "86400"]], gitCacheMaxTime )) %>
     <br />
   </p>
 
@@ -169,19 +205,19 @@
 
   <p>
     <label><%= l(:label_git_hooks_are_asynchronous)%></label>
-    <%= select_tag("settings[gitHooksAreAsynchronous]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksAreAsynchronous'])) %>
+    <%= select_tag("settings[gitHooksAreAsynchronous]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], gitHooksAreAsynchronous)) %>
     <br />
   </p>
 
   <p>
     <label><%= l(:label_git_hook_debug)%></label>
-    <%= select_tag("settings[gitHooksDebug]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitHooksDebug'])) %>
+    <%= select_tag("settings[gitHooksDebug]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], gitHooksDebug)) %>
     <br />
   </p>
 
   <p>
     <label><%= l(:label_git_force_hooks_update)%></label>
-    <%= select_tag("settings[gitForceHooksUpdate]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], @settings['gitForceHooksUpdate'])) %>
+    <%= select_tag("settings[gitForceHooksUpdate]", options_for_select([[l(:label_enabled), 'true'], [l(:label_disabled), 'false']], gitForceHooksUpdate)) %>
     <br />
   </p>
 
@@ -211,7 +247,7 @@
   </p>
   <p>
     <label>PATH Directories</label>
-    <%= (ENV['PATH']).gsub(/:/, "<br/>") %>
+    <%= raw (ENV['PATH']).gsub(/:/, "<br/>") %>
     <br/>
   </p>
 
