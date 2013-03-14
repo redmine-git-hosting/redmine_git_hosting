@@ -1,9 +1,0 @@
-page.replace_html 'validation_messages', (error_messages_for 'gitolite_public_key')
-page.select('div.notice').each do |d|
-    page.replace d, nil
-end
-page[:cancel_button_div].show
-
-
-
-
