@@ -54,7 +54,7 @@ module GitHosting
 
 
   def self.git_user
-    Setting.plugin_redmine_git_hosting['gitUser']
+    GitHostingConf.git_user
   end
 
 
@@ -95,13 +95,13 @@ module GitHosting
 
 
   def self.repository_name(repository,flags=nil)
-    return File.expand_path(File.join("./",repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
+    return File.expand_path(File.join("./",GitHostingConf.repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
   end
 
 
   def self.repository_path(repositoryID)
     repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
-    return File.join(repository_base, repo_name) + ".git"
+    return File.join(GitHostingConf.repository_base, repo_name) + ".git"
   end
 
 
@@ -236,7 +236,8 @@ module GitHosting
   @@git_hosting_bin_dir = nil
   @@previous_git_script_dir = nil
   def self.get_bin_dir
-    script_dir = Setting.plugin_redmine_git_hosting['gitScriptDir'] || SCRIPT_DIR
+    script_dir = GitHostingConf.script_dir
+    script_parent = GitHostingConf.script_parent
     if @@previous_git_script_dir != script_dir
       @@previous_git_script_dir = script_dir
       @@git_bin_dir_writeable = nil
@@ -244,19 +245,21 @@ module GitHosting
       # Directory for binaries includes 'SCRIPT_PARENT' at the end.
       # Further, absolute path adds additional 'git_user' component for multi-gitolite installations.
       if script_dir[0,1] == "/"
-        @@git_hosting_bin_dir = File.join(script_dir,git_user,SCRIPT_PARENT) + "/"
+        @@git_hosting_bin_dir = File.join(script_dir, git_user, script_parent) + "/"
+      elsif Rails::VERSION::MAJOR >= 3
+        @@git_hosting_bin_dir = Rails.root.join("plugins/redmine_git_hosting", script_dir, script_parent).to_s + "/"
       else
-        @@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting",script_dir,SCRIPT_PARENT).to_s+"/"
+        @@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting", script_dir, script_parent).to_s + "/"
       end
     end
     if !File.directory?(@@git_hosting_bin_dir)
-      logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
+      logger.info "[GitHosting] Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
       %x[mkdir -p "#{@@git_hosting_bin_dir}"]
       %x[chmod 750 "#{@@git_hosting_bin_dir}"]
       %x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
 
       if !File.directory?(@@git_hosting_bin_dir)
-        logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+        logger.error "[GitHosting] Cannot create bin directory: #{@@git_hosting_bin_dir}"
       end
     end
     return @@git_hosting_bin_dir
@@ -297,7 +300,7 @@ module GitHosting
       code = -1
     end
     if code != 0
-      logger.error "Command failed (return #{code}): #{command}"
+      logger.error "[GitHosting] Command failed (return #{code}): #{command}"
       message = "  "+result.split("\n").join("\n  ")
       logger.error message
       raise GitHostingException, "Shell Error"
