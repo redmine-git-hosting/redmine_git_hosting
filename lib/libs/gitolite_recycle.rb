@@ -9,28 +9,16 @@ module GitHosting
   # John Kubiatowicz, 11/21/11
   class GitoliteRecycle
     TRASH_DIR_SEP = "__"
-    RECYCLE_BIN_IF_UNDEF = "recycle_bin/"
-    PRESERVE_TIME_IF_UNDEF = 1440
 
     def self.logger
       return GitHosting.logger
     end
 
-    # Recycle bin base path (relative to git user home directory)
-    def self.recycle_bin
-      Setting.plugin_redmine_git_hosting['gitRecycleBasePath'] || RECYCLE_BIN_IF_UNDEF
-    end
-
-    # Recycle preservation time (in minutes)
-    def self.preserve_time
-      (Setting.plugin_redmine_git_hosting['gitRecycleExpireTime'].to_f * 60).to_i || PRESERVE_TIME_IF_UNDEF
-    end
-
     # Scan through the recyclebin and delete files older than 'preserve_time' minutes
     def self.delete_expired_files
-      return unless GitHosting.file_exists?(recycle_bin)
+      return unless GitHosting.file_exists?(GitHostingConf.recycle_bin)
 
-      result = %x[#{GitHosting.git_user_runner} find '#{recycle_bin}' -type d -regex '.*\.git' -cmin +#{preserve_time} -prune -print].chomp.split("\n")
+      result = %x[#{GitHosting.git_user_runner} find '#{GitHostingConf.recycle_bin}' -type d -regex '.*\.git' -cmin +#{GitHostingConf.preserve_time} -prune -print].chomp.split("\n")
       if result.length > 0
         logger.warn "[GitHosting] Garbage-collecting expired file #{(result.length != 1) ? "s" : ""} from recycle bin:"
         result.each do |filename|
@@ -43,7 +31,7 @@ module GitHosting
         end
 
         # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
-        %x[#{GitHosting.git_user_runner} rmdir #{recycle_bin}]
+        %x[#{GitHosting.git_user_runner} rmdir #{GitHostingConf.recycle_bin}]
       end
     end
 
@@ -52,12 +40,13 @@ module GitHosting
       return unless GitHosting.git_repository_exists?(repo_name)
 
       repo_path = GitHosting.repository_path(repo_name)
-      new_path = File.join(recycle_bin,"#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{name_to_recycle_name(repo_name)}.git")
+      new_path = File.join(GitHostingConf.recycle_bin,"#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{name_to_recycle_name(repo_name)}.git")
       begin
-        GitHosting.shell %[#{GitHosting.git_user_runner} mkdir -p '#{recycle_bin}']
-        GitHosting.shell %[#{GitHosting.git_user_runner} chmod 770 '#{recycle_bin}']
+        GitHosting.shell %[#{GitHosting.git_user_runner} mkdir -p '#{GitHostingConf.recycle_bin}']
+        GitHosting.shell %[#{GitHosting.git_user_runner} chmod 770 '#{GitHostingConf.recycle_bin}']
         GitHosting.shell %[#{GitHosting.git_user_runner} mv '#{repo_path}' '#{new_path}']
-        logger.warn "  Moving '#{repo_name}' from gitolite repository => '#{new_path}'.  Will remain for at least #{preserve_time/60.0} hours"
+        logger.warn "[GitHosting] Moving '#{repo_name}' from gitolite repository => '#{new_path}'"
+        logger.warn "Will remain for at least #{GitHostingConf.preserve_time/60.0} hours"
         # If any empty directories left behind, try to delete them.  Ignore failure.
         old_prefix = repo_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
         if old_prefix
@@ -74,8 +63,8 @@ module GitHosting
 
     def self.recover_repository_if_present repo_name
       # Pull up any matching repositories.  Sort them (beginning is representation of time)
-      myregex = File.join(recycle_bin,"[0-9]+#{TRASH_DIR_SEP}#{name_to_recycle_name(repo_name)}.git")
-      files = %x[#{GitHosting.git_user_runner} find '#{recycle_bin}' -type d -regex '#{myregex}' -prune].chomp.split("\n").sort {|x,y| y <=> x }
+      myregex = File.join(GitHostingConf.recycle_bin, "[0-9]+#{TRASH_DIR_SEP}#{name_to_recycle_name(repo_name)}.git")
+      files = %x[#{GitHosting.git_user_runner} find '#{GitHostingConf.recycle_bin}' -type d -regex '#{myregex}' -prune].chomp.split("\n").sort {|x,y| y <=> x }
       if files.length > 0
         # Found something!
         logger.warn "[GitHosting] Restoring '#{repo_name}.git' to gitolite repository from recycle bin (#{files.first})"
@@ -90,7 +79,7 @@ module GitHosting
           GitHosting.shell %[#{GitHosting.git_user_runner} mv '#{files.first}' '#{repo_path}']
 
           # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
-          %x[#{GitHosting.git_user_runner} rmdir #{recycle_bin}]
+          %x[#{GitHosting.git_user_runner} rmdir #{GitHostingConf.recycle_bin}]
           return true
         rescue
           logger.error "[GitHosting] Attempt to recover '#{repo_name}.git' failed"
