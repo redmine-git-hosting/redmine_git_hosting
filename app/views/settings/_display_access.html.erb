@@ -1,20 +1,20 @@
 <div class="git_hosting_access_box">
-        <h3><%= l(:label_current_access_patterns) %></h3>
-	<%= l(:display_access_setup, :type => (GitHosting.multi_repos? ? "default " : "")) %>:
-	<p>
-		<label>Repo Storage:</label>
-		<%= "~#{@settings['gitUser']}/#{@settings['gitRepositoryBasePath']}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
-		%>
-		<br/>
-		<label><%= l(:label_ssh_access)%>:</label>
-		<% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
-		<%= "#{gitSHP ? 'ssh://' : ''}#{@settings['gitUser']}@#{@settings['gitServer']}#{gitSHP	? '/' : ':'}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
-		%>
-		<br/>
-		<label><%= l(:label_http_access)%>:</label>
-		<%= "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHosting.http_server_subdir}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
-		%>
-	</p>
-	<%= l(:display_access_emphasis) %>
-	<%= @settings['gitRepositoryHierarchy']=='true' ? l(:display_access_hierarchical) : l(:display_access_flat) %>
+  <h3><%= l(:label_current_access_patterns) %></h3>
+  <%= l(:display_access_setup, :type => (GitHosting.multi_repos? ? "default " : "")) %>:
+  <p>
+    <label>Repo Storage:</label>
+    <%= "~#{@settings['gitUser']}/#{@settings['gitRepositoryBasePath']}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    %>
+    <br/>
+    <label><%= l(:label_ssh_access)%>:</label>
+    <% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
+    <%= "#{gitSHP ? 'ssh://' : ''}#{@settings['gitUser']}@#{@settings['gitServer']}#{gitSHP ? '/' : ':'}#{@settings['gitRedmineSubdir']}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    %>
+    <br/>
+    <label><%= l(:label_http_access)%>:</label>
+    <%= "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHosting.http_server_subdir}<em>#{(GitHosting.repository_hierarchy)?'project1/project2/':''}project3.git</em>"
+    %>
+  </p>
+  <%= l(:display_access_emphasis) %>
+  <%= @settings['gitRepositoryHierarchy']=='true' ? l(:display_access_hierarchical) : l(:display_access_flat) %>
 </div>
