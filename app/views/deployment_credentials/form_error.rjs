@@ -1,3 +1,0 @@
-page.replace_html 'validation_messages', ((error_messages_for 'cred')+(error_messages_for 'key'))
-page << "if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }"
-

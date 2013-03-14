@@ -1,0 +1,2 @@
+$('#validation_messages').replaceWith("<%= escape_javascript(error_messages_for 'cred' + error_messages_for 'key') %>");
+if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
