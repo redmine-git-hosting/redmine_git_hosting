@@ -30,7 +30,7 @@ module RedmineGitHosting
         # If that doesn't work, return nil.
         def find_by_path(path,flags={})
           if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
-            if proj=Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
+            if proj = Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
               # return default or first repo with blank identifier (or first Git repo--very rare?)
               proj && (proj.repository || proj.repo_blank_ident || proj.gl_repos.first)
             elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
@@ -79,7 +79,7 @@ module RedmineGitHosting
               begin
                 repo.fetch_changesets
               rescue Redmine::Scm::Adapters::CommandFailed => e
-                logger.error "scm: error during fetching changesets: #{e.message}"
+                logger.error "[GitHosting] error during fetching changesets: #{e.message}"
               end
             end
           end
@@ -90,7 +90,7 @@ module RedmineGitHosting
           if new_repo.is_a?(Repository::Git)
             if new_repo.extra.nil?
               # Note that this autoinitializes default values and hook key
-              GitHosting.logger.error "Automatic initialization of git_repository_extra failed for #{self.project.to_s}"
+              GitHosting.logger.error "[GitHosting] Automatic initialization of git_repository_extra failed for #{self.project.to_s}"
             end
           end
           return new_repo
@@ -128,13 +128,13 @@ module RedmineGitHosting
         end
 
         def extra=(new_extra_struct)
-          self.git_extra=(new_extra_struct)
+          self.git_extra = (new_extra_struct)
         end
 
         # If repo identifiers unique, identifier forms unique label
         # Else, use directory notation: <project identifier>/<repo identifier>
         def git_label(flags=nil)
-          isunique=(flags ? flags[:assume_unique] : self.class.repo_ident_unique?)
+          isunique = (flags ? flags[:assume_unique] : self.class.repo_ident_unique?)
           if !GitHosting.multi_repos? || identifier.blank?
             # Should only happen with one repo/project (the default)
             project.identifier
@@ -182,7 +182,7 @@ module RedmineGitHosting
             # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier
             possibles = Repository.find_all_by_project_id(project.id,:conditions => ["identifier = '' or identifier is null"])
             if possibles.any? && (new_record? || possibles.detect{|x| x.id != id})
-              errors.add_to_base(:blank_default_exists)
+              errors.add(:base, :blank_default_exists)
             end
           end
         end

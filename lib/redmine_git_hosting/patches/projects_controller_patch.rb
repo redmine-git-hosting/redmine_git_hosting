@@ -6,9 +6,9 @@ module RedmineGitHosting
         users = @project.member_principals.map(&:user).compact.uniq
         if users.length == 0
           membership = Member.new(
-              :principal=>User.current,
-              :project_id=>@project.id,
-              :role_ids=>[3]
+            :principal=>User.current,
+            :project_id=>@project.id,
+            :role_ids=>[3]
           )
           membership.save
         end
@@ -65,7 +65,7 @@ module RedmineGitHosting
         # Adjust daemon status
         disable_git_daemon_if_not_public
 
-        if @project.gl_repos.detect {|repo| repo.url != GitHosting::repository_path(repo) || repo.url != repo.root_url}
+        if @project.gl_repos.detect {|repo| repo.url != GitHosting.repository_path(repo) || repo.url != repo.root_url}
           # Hm... something about parent hierarchy changed.  Update us and our children
           GitHostingObserver.set_update_active(@project, :descendants)
         else

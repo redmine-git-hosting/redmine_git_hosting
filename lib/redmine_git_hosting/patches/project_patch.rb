@@ -34,10 +34,13 @@ module RedmineGitHosting
       def self.included(base)
         base.class_eval do
           unloadable
-
-          named_scope :archived, { :conditions => {:status => "#{Project::STATUS_ARCHIVED}"}}
-          named_scope :active_or_archived, { :conditions => "status=#{Project::STATUS_ACTIVE} OR status=#{Project::STATUS_ARCHIVED}" }
-
+          if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
+            scope :archived, { :conditions => {:status => "#{Project::STATUS_ARCHIVED}"}}
+            scope :active_or_archived, { :conditions => "status=#{Project::STATUS_ACTIVE} OR status=#{Project::STATUS_ARCHIVED}" }
+          else
+            named_scope :archived, { :conditions => {:status => "#{Project::STATUS_ARCHIVED}"}}
+            named_scope :active_or_archived, { :conditions => "status=#{Project::STATUS_ACTIVE} OR status=#{Project::STATUS_ARCHIVED}" }
+          end
           # Place additional constraints on repository identifiers
           # Only for Redmine 1.4+
           if GitHosting.multi_repos?
