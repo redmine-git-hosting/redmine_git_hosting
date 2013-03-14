@@ -5,50 +5,50 @@ require_dependency 'repository'
 require_dependency 'repository/git'
 
 module GitHosting
-    module Patches
-	module GitRepositoryPatch
+  module Patches
+    module GitRepositoryPatch
 
-	    # Set up git urls for new repositories
-	    def set_git_urls
-		self.url = GitHosting.repository_path(self) if url.blank?
-		self.root_url = url if root_url.blank?
-	    end
+      # Set up git urls for new repositories
+      def set_git_urls
+        self.url = GitHosting.repository_path(self) if url.blank?
+        self.root_url = url if root_url.blank?
+      end
 
-	    def report_last_commit_with_always_true
-		true
-	    end
-	    def extra_report_last_commit_with_always_true
-		true
-	    end
+      def report_last_commit_with_always_true
+        true
+      end
 
-	    def fetch_changesets_with_disable_update
-		# Turn of updates during repository update
-		GitHostingObserver.set_update_active(false);
+      def extra_report_last_commit_with_always_true
+        true
+      end
 
-		# Do actual update
-		fetch_changesets_without_disable_update
+      def fetch_changesets_with_disable_update
+        # Turn of updates during repository update
+        GitHostingObserver.set_update_active(false);
 
-		# Reenable updates to perform a single update
-		GitHostingObserver.set_update_active(true);
-	    end
+        # Do actual update
+        fetch_changesets_without_disable_update
 
-	    def self.included(base)
-		base.class_eval do
-		    unloadable
+        # Reenable updates to perform a single update
+        GitHostingObserver.set_update_active(true);
+      end
 
-		    before_validation :set_git_urls
-		end
+      def self.included(base)
+        base.class_eval do
+          unloadable
+          before_validation :set_git_urls
+        end
 
-		begin
-		    base.send(:alias_method_chain, :report_last_commit, :always_true)
-		    base.send(:alias_method_chain, :extra_report_last_commit, :always_true)
-		    base.send(:alias_method_chain, :fetch_changesets, :disable_update)
-		rescue
-		end
+        begin
+          base.send(:alias_method_chain, :report_last_commit, :always_true)
+          base.send(:alias_method_chain, :extra_report_last_commit, :always_true)
+          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
+        rescue
+        end
+      end
 
-	    end
-	end
     end
+  end
 end
 
 # Patch in changes
