@@ -4,12 +4,9 @@ module RedmineGitHosting
 
       module ClassMethods
 
-        # Hide the mapping from repository->label
-        REPO_IDENT_UNIQUE = "true"           # In case settings not migrated (normally from settings)
-
         # Repo ident unique (definitely true if Redmine < 1.4)
         def repo_ident_unique?
-          !GitHosting.multi_repos? || (Setting.plugin_redmine_git_hosting['gitRepositoryIdentUnique'] || REPO_IDENT_UNIQUE) == "true"
+          !GitHosting.multi_repos? || GitHostingConf.repo_ident_unique?
         end
 
         # Parse a path of the form <proj1>/<proj2>/<proj3>/<repo> and return the specified
