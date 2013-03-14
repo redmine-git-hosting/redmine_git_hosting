@@ -49,7 +49,7 @@ module GitHosting
           error_msg = "[GitHosting] \"post-receive\" is already present but it's not ours!"
           logger.warn error_msg
           @@check_hooks_installed_cached = error_msg
-          if Setting.plugin_redmine_git_hosting['gitForceHooksUpdate']!='false'
+          if GitHostingConf.git_force_hooks_update?
             begin
               logger.info "[GitHosting] Restoring \"post-receive\" hook since forceInstallHook == true"
               install_hook("post-receive.redmine_gitolite.rb")
@@ -103,13 +103,13 @@ module GitHosting
           GitHosting.shell %[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{@@hook_url}"]
         end
 
-        debug_hook = Setting.plugin_redmine_git_hosting['gitHooksDebug']
+        debug_hook = GitHostingConf.git_hooks_debug?
         if cur_values["hooks.redmine_gitolite.debug"] != debug_hook
           logger.warn "[GitHosting] Updating Debug Hook: #{debug_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
         end
 
-        asynch_hook = Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous']
+        asynch_hook = GitHostingConf.git_hooks_are_asynchronous?
         if cur_values["hooks.redmine_gitolite.asynch"] != asynch_hook
           logger.warn "[GitHosting] Updating Hooks Are Asynchronous: #{asynch_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
@@ -151,7 +151,7 @@ module GitHosting
         hook_source_path = File.join(package_hooks_dir, hook_name)
         hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
         logger.info "[GitHosting] Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
-        git_user = Setting.plugin_redmine_git_hosting['gitUser']
+        git_user = GitHostingConf.git_user
         GitHosting.shell %[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
         GitHosting.shell %[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
         GitHosting.shell %[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
@@ -164,8 +164,8 @@ module GitHosting
     def self.get_local_config_map
       local_config_map=Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
 
-      lines = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print -exec git config -f {}/config --get-regexp hooks.redmine_gitolite \\;'].chomp.split("\n")
-      filesplit = /(\.\/)*(#{GitHosting.repository_base}.*?[^\/]+\.git)/
+      lines = %x[#{GitHosting.git_user_runner} 'find #{GitHostingConf.repository_base} -type d -name "*.git" -prune -print -exec git config -f {}/config --get-regexp hooks.redmine_gitolite \\;'].chomp.split("\n")
+      filesplit = /(\.\/)*(#{GitHostingConf.repository_base}.*?[^\/]+\.git)/
       cur_repo_path = nil
       lines.each do |nextline|
         if filesplit =~ nextline
