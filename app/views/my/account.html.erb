@@ -1,8 +1,10 @@
 <div class="contextual">
-<%= link_to(l(:button_change_password), {:action => 'password'}, :class => 'icon icon-passwd') if @user.change_password_allowed? %>
-<%= call_hook(:view_my_account_contextual, :user => @user)%>
+  <%= link_to(l(:button_change_password), {:action => 'password'}, :class => 'icon icon-passwd') if @user.change_password_allowed? %>
+  <%= call_hook(:view_my_account_contextual, :user => @user)%>
 </div>
+
 <h2><%=l(:label_my_account)%></h2>
+
 <%= error_messages_for 'user' %>
 
 <div class="splitcontentleft">
@@ -38,10 +40,11 @@
 </div>
 
 <div class="splitcontentright">
- 	<%= render :partial => 'gitolite_public_keys/view' %>
+  <%= render :partial => 'gitolite_public_keys/view' %>
 </div>
 
 <% content_for :sidebar do %>
-	<%= render :partial => 'my/sidebar' %>
+  <%= render :partial => 'my/sidebar' %>
 <% end %>
+
 <% html_title(l(:label_my_account)) -%>

@@ -9,6 +9,7 @@ class GitolitePublicKeysController < ApplicationController
   helper :issues
   helper :users
   helper :custom_fields
+
   helper :gitolite_public_keys
   include GitolitePublicKeysHelper
 
@@ -133,4 +134,5 @@ class GitolitePublicKeysController < ApplicationController
 
     flash[:notice] = l(:notice_public_key_deleted, :title=>keylabel(@gitolite_public_key))
   end
+
 end

@@ -1,5 +1,4 @@
 require 'digest/md5'
-require_dependency 'redmine/scm/adapters/git_adapter'
 
 module GitHosting
 

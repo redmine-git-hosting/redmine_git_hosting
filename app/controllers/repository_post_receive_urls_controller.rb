@@ -136,8 +136,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
   def find_repository_post_receive_url
     prurl = RepositoryPostReceiveUrl.find_by_id(params[:id])
-    @prurls = @repository.repository_post_receive_urls
-    if prurl and prurl.repository == @repository
+    if prurl and prurl.repository_id == @repository.id
       @prurl = prurl
     elsif prurl
       render_403

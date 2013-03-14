@@ -8,7 +8,6 @@ class GitoliteHooksController < ApplicationController
   helper :git_hosting
   include GitHostingHelper
 
-
   def stub
     # Stub method simply to generate correct urls, just return a 404 to any user requesting this
     render(:code => 404)
@@ -33,7 +32,7 @@ class GitoliteHooksController < ApplicationController
       begin
         @repository.fetch_changesets
       rescue Redmine::Scm::Adapters::CommandFailed => e
-        logger.error "scm: error during fetching changesets: #{e.message}"
+        logger.error "[GitHosting] error during fetching changesets: #{e.message}"
       end
       output.write("Done\n")
       output.flush
@@ -195,6 +194,7 @@ class GitoliteHooksController < ApplicationController
           :modified => [],
           :removed => []
         }
+
         revision.changes.each do |change|
           if change.action == "M"
             commit[:modified] << change.path
@@ -243,6 +243,7 @@ class GitoliteHooksController < ApplicationController
       render(:text => l(:project_not_found, :identifier => params[:projectid])) if @project.nil?
       return
     end
+
     if GitHosting.multi_repos?
       if params[:repositoryid] && !params[:repositoryid].blank?
         @repository = @project.repositories.find_by_identifier(params[:repositoryid])

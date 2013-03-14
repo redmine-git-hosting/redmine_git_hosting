@@ -19,7 +19,7 @@ body {behavior: url(<%= stylesheet_path "csshover.htc" %>);}
 <%= call_hook :view_layouts_base_html_head %>
 </head>
 <body class="<%=h body_css_classes %>">
-	<%= render_flash_messages %>
-	<%= yield %>
+  <%= render_flash_messages %>
+  <%= yield %>
 </body>
 </html>

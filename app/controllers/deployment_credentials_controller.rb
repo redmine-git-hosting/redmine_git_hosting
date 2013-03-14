@@ -74,7 +74,7 @@ class DeploymentCredentialsController < ApplicationController
       GitHostingObserver.set_update_active(false);
       @key.valid?  # set error messages on key (in case cred is invalid)
       if @cred.valid? && @key.save && @cred.save
-        flash[:notice] = l(:notice_deployment_credential_added, :title=>keylabel(@key),:perm=>@cred[:perm])
+        flash[:notice] = l(:notice_deployment_credential_added, :title=>keylabel(@key), :perm=>@cred[:perm])
 
         redirect_url = success_url
         respond_to do |format|
@@ -111,7 +111,7 @@ class DeploymentCredentialsController < ApplicationController
 
     # Can only alter the permissions
     if @cred.update_attributes(params[:deployment_credentials])
-      flash[:notice] = l(:notice_deployment_credential_updated, :title=>keylabel(@key),:perm=>@cred[:perm])
+      flash[:notice] = l(:notice_deployment_credential_updated, :title=>keylabel(@key), :perm=>@cred[:perm])
 
       redirect_url = success_url
       respond_to do |format|
