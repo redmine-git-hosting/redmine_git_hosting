@@ -1,10 +1,11 @@
 class GitCiaNotification < ActiveRecord::Base
+  unloadable
 
-    belongs_to :repository
+  belongs_to :repository
 
-    validates_uniqueness_of :scmid, :scope => [:repository_id]
-    validates_presence_of :repository_id, :scmid
+  validates_uniqueness_of :scmid, :scope => [:repository_id]
+  validates_presence_of :repository_id, :scmid
 
-    validates_associated :repository
+  validates_associated :repository
 
 end
