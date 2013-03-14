@@ -4,7 +4,8 @@
   <%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
 <% end %>
 
-<% labelled_remote_form_for :repository, @repository, :url => { :controller => 'repositories', :action => 'edit', :id => @project } do |f| %>
+<% form = labelled_form_for :repository, @repository, :url => { :controller => 'repositories', :action => 'edit', :id => @project } do |f| %>
+
   <%= error_messages_for 'repository' %>
 
   <div class="box tabular">
@@ -49,7 +50,9 @@
 
     <%= submit_tag((@repository.nil? || @repository.new_record?) ? l(:button_create) : l(:button_save), :disabled => @repository.nil?) %>
   </div>
-<% end %> 
+
+<% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>
 
 <% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
   <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>

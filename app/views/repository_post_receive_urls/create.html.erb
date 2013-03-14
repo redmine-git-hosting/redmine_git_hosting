@@ -1,7 +1,15 @@
-<% if not @is_xhr %><h2><%=l(:label_post_receive_url_create)%></h2><% end %>
-<% labelled_remote_form_for :repository_post_receive_urls, @prurl, 
-  :url => { :controller => 'repository_post_receive_urls', :action => 'create', :project_id => @project, :id => @prurl.id }, 
-  :html => {:method => :post, :class => 'tabular'} do |f| %>
-<%= render :partial => 'form', :locals => { :f => f } %>
-<%= submit_tag l(:button_save) %>
+<% if not @is_xhr %>
+  <h2><%=l(:label_post_receive_url_create)%></h2>
 <% end %>
+
+<% form = labelled_form_for :repository_post_receive_urls, @prurl,
+                            :url => { :controller => 'repository_post_receive_urls', :action => 'create', :project_id => @project, :id => @prurl.id },
+                            :html => {:method => :post, :class => 'tabular'} do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <%= submit_tag l(:button_save) %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+  <% end %>
+<% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>

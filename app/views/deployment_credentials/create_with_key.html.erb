@@ -1,7 +1,15 @@
-<% if not @is_xhr %><h2><%=l(:label_deployment_credential_create)%></h2><% end %>
-<% labelled_remote_form_for :deployment_credentials, @cred,
-	:url => { :controller => 'deployment_credentials', :action => 'create_with_key', :project_id => @project, :id => @cred.id }, 
-	:html => {:method => :post} do |f| %>
-<%= render :partial => 'form_with_key', :locals => { :f => f } %>
-<%= submit_tag l(:button_save) %>
+<% if not @is_xhr %>
+  <h2><%=l(:label_deployment_credential_create)%></h2>
 <% end %>
+
+<% form = labelled_form_for :deployment_credentials, @cred,
+                            :url => { :controller => 'deployment_credentials', :action => 'create_with_key', :project_id => @project, :id => @cred.id },
+                            :html => {:method => :post} do |f| %>
+
+  <%= render :partial => 'form_with_key', :locals => { :f => f } %>
+  <%= submit_tag l(:button_save) %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+  <% end %>
+<% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>

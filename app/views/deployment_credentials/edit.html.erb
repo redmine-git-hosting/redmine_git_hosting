@@ -1,11 +1,18 @@
-<% if not @is_xhr %><h2><%=l(:label_deployment_credential_edit)%></h2><% end %>
-<div id="validation_messages"><%= error_messages_for 'cred' %></div>
-<% remote_form_for :deployment_credentials, @cred,
-	:url => { :controller => 'deployment_credentials', :action => 'update', :project_id => @project, :id => @cred.id }, 
-	:html => {:method => :post} do |f| %>
-<div class="box">
-<strong><%= "#{keylabel(@key)} => ".html_safe %></strong>
-<%= f.select :perm, options_for_select(DeploymentCredential::valid_perms,@cred.perm), :required => true %>
-</div>
-<%= submit_tag l(:button_save) %>
+<% if not @is_xhr %>
+  <h2><%=l(:label_deployment_credential_edit)%></h2>
 <% end %>
+
+<% form = labelled_form_for :deployment_credentials, @cred,
+                            :url => { :controller => 'deployment_credentials', :action => 'update', :project_id => @project, :id => @cred.id },
+                            :html => {:method => :post} do |f| %>
+
+  <div class="box">
+    <strong><%= "#{keylabel(@key)} => ".html_safe %></strong>
+    <%= f.select :perm, options_for_select(DeploymentCredential::valid_perms, @cred.perm), :required => true %>
+  </div>
+  <%= submit_tag l(:button_save) %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+  <% end %>
+<% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>
