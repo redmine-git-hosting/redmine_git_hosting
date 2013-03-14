@@ -46,7 +46,7 @@ module GitHosting
         GitHosting.shell %[#{GitHosting.git_user_runner} chmod 770 '#{GitHostingConf.recycle_bin}']
         GitHosting.shell %[#{GitHosting.git_user_runner} mv '#{repo_path}' '#{new_path}']
         logger.warn "[GitHosting] Moving '#{repo_name}' from gitolite repository => '#{new_path}'"
-        logger.warn "Will remain for at least #{GitHostingConf.preserve_time/60.0} hours"
+        logger.warn "[GitHosting] Will remain for at least #{GitHostingConf.preserve_time/60.0} hours"
         # If any empty directories left behind, try to delete them.  Ignore failure.
         old_prefix = repo_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
         if old_prefix

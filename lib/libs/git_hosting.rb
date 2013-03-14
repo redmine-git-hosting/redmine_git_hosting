@@ -542,7 +542,7 @@ module GitHosting
     begin
       logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{GitHostingConf.git_server}/gitolite-admin.git #{repo_dir}]
+      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}" ]
       # Make sure we have our hooks setup
       GitAdapterHooks.check_hooks_installed
@@ -712,10 +712,10 @@ module GitHosting
     # commit / push changes to gitolite admin repo
     begin
       if (!resyncing)
-        logger.info "Committing changes to gitolite-admin repository"
+        logger.info "[GitHosting] Committing changes to gitolite-admin repository"
         message = "Updated by Redmine"
       else
-        logger.info "Committing corrections to gitolite-admin repository"
+        logger.info "[GitHosting] Committing corrections to gitolite-admin repository"
         message = "Updated by Redmine: Corrections discovered during RESYNC_ALL"
       end
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*]
@@ -723,9 +723,9 @@ module GitHosting
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}']
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine']
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -a -m '#{message}']
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' push ]
+      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' push -u origin master]
     rescue
-      logger.error "Problems committing changes to gitolite-admin repository!! Probably requires human intervention"
+      logger.error "[GitHosting] Problems committing changes to gitolite-admin repository!! Probably requires human intervention"
       raise GitHostingException, "Gitlite-admin Commit Failure"
     end
   end
@@ -1089,11 +1089,11 @@ module GitHosting
           conf.delete_redmine_keys repo_name
           if GitHostingConf.delete_git_repositories?
             if conf.repo_has_no_keys? repo_name
-              logger.warn "[GitHosting] Deleting #{orphanString}entry '#{repo_name}' from #{gitolite_conf}"
+              logger.warn "[GitHosting] Deleting #{orphanString} entry '#{repo_name}' from #{gitolite_conf}"
               conf.delete_repo repo_name
               GitoliteRecycle.move_repository_to_recycle repo_name
             elsif has_keys # Something changed when we deleted keys
-              logger.info "[GitHosting] Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
+              logger.info "[GitHosting] Deleting redmine keys from #{orphanString} entry '#{repo_name}' in #{gitolite_conf}"
               if git_repository_exists? repo_name
                 logger.info "[GitHosting] Not removing #{repo_name}.git from gitolite repository, because non-redmine keys remain."
               end

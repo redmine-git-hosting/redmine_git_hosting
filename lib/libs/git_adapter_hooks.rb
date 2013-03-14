@@ -88,7 +88,7 @@ module GitHosting
       local_config_map = get_local_config_map
       projects.each do |project|
         project.gl_repos.each do |repo|
-          setup_hooks_for_repository(repo,local_config_map[GitHosting.repository_path(repo)])
+          setup_hooks_for_repository(repo, local_config_map[GitHosting.repository_path(repo)])
         end
       end
     end
