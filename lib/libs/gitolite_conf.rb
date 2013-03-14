@@ -6,20 +6,20 @@ module GitHosting
     DISABLED_REDMINE_KEY="redmine_disabled_project"
     GIT_DAEMON_KEY="daemon"
     ADMIN_REPO = "gitolite-admin"
-    PRIMARY_CONF_FILE = "gitolite.conf"
+    GITOLITE_CONFIG_FILE = "gitolite.conf"
     DEFAULT_ADMIN_KEY_NAME = "redmine_git_hosting_admin_key"
 
     def self.gitolite_conf
-      Setting.plugin_redmine_git_hosting['gitConfigFile'] || PRIMARY_CONF_FILE
+      GitHostingConf.gitolite_config_file
     end
 
     def self.default_conf?
-      gitolite_conf == PRIMARY_CONF_FILE
+      gitolite_conf == GITOLITE_CONFIG_FILE
     end
 
     # Need admin key if conf file is default file or if there was an admin key.
     def self.has_admin_key?
-      Setting.plugin_redmine_git_hosting['gitConfigHasAdminKey'] != 'false' || default_conf?
+      GitHostingConf.gitolite_config_has_admin_key? || default_conf?
     end
 
     def initialize file_path
@@ -169,7 +169,7 @@ module GitHosting
     # i.e. basename => { path1 => last two components, path2 => last two components, }
     # See all_repos() for description of why the value is what it is.
     def redmine_repo_map
-      redmine_repos = Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
+      redmine_repos=Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
       filesplit = /^.*?([^\/]+\/)?([^\/]+)$/
       @repositories.each do |repo, rights|
         if is_redmine_repo? repo
@@ -185,8 +185,8 @@ module GitHosting
     # See all_repos() for description of why the value is what it is.
     def self.gitolite_repository_map
       gitolite_repos = Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
-      myfiles = %x[#{GitHosting.git_user_runner} 'find #{GitHosting.repository_base} -type d -name "*.git" -prune -print'].chomp.split("\n")
-      filesplit = /^(\.\/)*#{GitHosting.repository_base}(.*?([^\/]+\/)?([^\/]+))\.git$/
+      myfiles = %x[#{GitHosting.git_user_runner} 'find #{GitHostingConf.repository_base} -type d -name "*.git" -prune -print'].chomp.split("\n")
+      filesplit = /^(\.\/)*#{GitHostingConf.repository_base}(.*?([^\/]+\/)?([^\/]+))\.git$/
       myfiles.each do |nextfile|
         if filesplit =~ nextfile
           gitolite_repos[$4][$2] = "#{$3}#{$4}"
