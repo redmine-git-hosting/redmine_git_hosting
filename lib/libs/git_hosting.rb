@@ -827,7 +827,7 @@ module GitHosting
       # Get directory for the gitolite-admin
       repo_dir = File.join(get_tmp_dir,"gitolite-admin")
 
-      logger.info "[GitHosting] Updating keydirectory for projects: #{git_projects.join ', '}"
+      logger.debug "[GitHosting] Updating keydirectory for projects: #{git_projects.join ', '}"
       keydir = File.join(repo_dir,"keydir")
       old_keyhash = {}
       Dir.foreach(keydir) do |keyfile|

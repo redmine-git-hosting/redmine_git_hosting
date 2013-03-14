@@ -30,7 +30,7 @@ class GitolitePublicKeysController < ApplicationController
     GitHostingObserver.set_update_active(false)
     if !request.get?
       if params[:save_button]
-        if @gitolite_public_key.update_attributes(params[:public_key])
+        if @gitolite_public_key.update_attributes(params[:gitolite_public_key])
           flash[:notice] = l(:notice_public_key_updated, :title=>keylabel(@gitolite_public_key))
 
           respond_to do |format|
@@ -63,7 +63,7 @@ class GitolitePublicKeysController < ApplicationController
 
   def create
     GitHostingObserver.set_update_active(false)
-    @gitolite_public_key = GitolitePublicKey.new(params[:public_key].merge(:user => @user))
+    @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
     if params[:create_button]
       if @gitolite_public_key.save
         flash[:notice] = l(:notice_public_key_added, :title=>keylabel(@gitolite_public_key))

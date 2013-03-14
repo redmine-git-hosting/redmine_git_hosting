@@ -55,7 +55,7 @@
     <legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
     <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
     <% form = labelled_form_for @gitolite_public_key,
-        :as => :public_key,
+        :as => :gitolite_public_key,
         :url=>{:controller=>'gitolite_public_keys', :action=>@new_key ? 'create' : 'update', :id=>@gitolite_public_key.id, :user_id=>params[:id], :tab => params[:id]&&'keys'},
         :html => {:method=>(@new_key ? :post : :put)} do |f| %>
 
