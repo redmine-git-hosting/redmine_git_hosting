@@ -18,6 +18,100 @@ module GitHosting
   ##                           ##
   ###############################
 
+
+  def self.check_hooks_installed
+    installed = false
+    if lock(5)
+      installed = GitAdapterHooks.check_hooks_installed
+      unlock()
+    end
+    installed
+  end
+
+
+  def self.setup_hooks(projects=nil)
+    if lock(5)
+      GitAdapterHooks.setup_hooks(projects)
+      unlock()
+    end
+  end
+
+
+  def self.update_global_hook_params
+    if lock(5)
+      GitAdapterHooks.update_global_hook_params
+      unlock()
+    end
+  end
+
+
+  def self.git_user_runner
+    if !File.exists?(git_user_runner_path())
+      update_git_exec
+    end
+    return git_user_runner_path()
+  end
+
+
+  def self.git_user
+    Setting.plugin_redmine_git_hosting['gitUser']
+  end
+
+
+  def self.git_user_runner_path
+    return File.join(get_bin_dir, "run_as_git_user")
+  end
+
+
+  def self.git_exec_path
+    return File.join(get_bin_dir, "run_git_as_git_user")
+  end
+
+
+  def self.gitolite_ssh_path
+    return File.join(get_bin_dir, "gitolite_admin_ssh")
+  end
+
+
+  def self.gitolite_ssh
+    if !File.exists?(gitolite_ssh_path())
+      update_git_exec
+    end
+    return gitolite_ssh_path()
+  end
+
+
+  def self.git_exec
+    if !File.exists?(git_exec_path())
+      update_git_exec
+    end
+    return git_exec_path()
+  end
+
+
+  def self.redmine_name(repository)
+    return File.expand_path(File.join("./",get_full_parent_path(repository, false),repository.git_label),"/")[1..-1]
+  end
+
+
+  def self.repository_name(repository,flags=nil)
+    return File.expand_path(File.join("./",repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
+  end
+
+
+  def self.repository_path(repositoryID)
+    repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
+    return File.join(repository_base, repo_name) + ".git"
+  end
+
+
+  # Check to see if the given repository exists or not...
+  # Need to work a bit, since we have to su to figure it out...
+  def self.git_repository_exists?(repo_name)
+    file_exists?(repository_path(repo_name))
+  end
+
+
   # Are we in the multiple-repositories-per-project version of Redmine?
   @@multi_repos = nil
   def self.multi_repos?
@@ -116,6 +210,13 @@ module GitHosting
   ###############################
 
 
+  # Check to see if the given file exists off the git user's homedirectory.
+  # Need to work a bit, since we have to su to figure it out...
+  def self.file_exists?(filename)
+    (%x[#{GitHosting.git_user_runner} test -r '#{filename}' && echo 'yes' || echo 'no']).match(/yes/) ? true : false
+  end
+
+
   ## GET CURRENT USER
   @@web_user = nil
   def self.web_user
@@ -130,9 +231,79 @@ module GitHosting
     @@web_user = setuser
   end
 
-  def self.git_user
-    Setting.plugin_redmine_git_hosting['gitUser']
+
+  ## GET OR CREATE BIN DIR
+  @@git_hosting_bin_dir = nil
+  @@previous_git_script_dir = nil
+  def self.get_bin_dir
+    script_dir = Setting.plugin_redmine_git_hosting['gitScriptDir'] || SCRIPT_DIR
+    if @@previous_git_script_dir != script_dir
+      @@previous_git_script_dir = script_dir
+      @@git_bin_dir_writeable = nil
+
+      # Directory for binaries includes 'SCRIPT_PARENT' at the end.
+      # Further, absolute path adds additional 'git_user' component for multi-gitolite installations.
+      if script_dir[0,1] == "/"
+        @@git_hosting_bin_dir = File.join(script_dir,git_user,SCRIPT_PARENT) + "/"
+      else
+        @@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting",script_dir,SCRIPT_PARENT).to_s+"/"
+      end
+    end
+    if !File.directory?(@@git_hosting_bin_dir)
+      logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
+      %x[mkdir -p "#{@@git_hosting_bin_dir}"]
+      %x[chmod 750 "#{@@git_hosting_bin_dir}"]
+      %x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
+
+      if !File.directory?(@@git_hosting_bin_dir)
+        logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+      end
+    end
+    return @@git_hosting_bin_dir
   end
+
+
+  ## TEST DIRECTORY
+  @@git_bin_dir_writeable = nil
+  def self.bin_dir_writeable?(*option)
+    @@git_bin_dir_writeable = nil if option.length > 0 && option[0] == :reset
+    if @@git_bin_dir_writeable == nil
+      mybindir = get_bin_dir
+      mytestfile = "#{mybindir}/writecheck"
+      if (!File.directory?(mybindir))
+        @@git_bin_dir_writeable = false
+      else
+        %x[touch "#{mytestfile}"]
+        if (!File.exists?("#{mytestfile}"))
+          @@git_bin_dir_writeable = false
+        else
+          %x[rm "#{mytestfile}"]
+          @@git_bin_dir_writeable = true
+        end
+      end
+    end
+    @@git_bin_dir_writeable
+  end
+
+
+  ## DO SHELL COMMAND
+  def self.shell(command)
+    begin
+      my_command = "#{command} 2>&1"
+      result = %x[#{my_command}].chomp
+      code = $?.exitstatus
+    rescue Exception => e
+      result=e.message
+      code = -1
+    end
+    if code != 0
+      logger.error "Command failed (return #{code}): #{command}"
+      message = "  "+result.split("\n").join("\n  ")
+      logger.error message
+      raise GitHostingException, "Shell Error"
+    end
+  end
+
 
   ## HANDLE MIRROR KEYS
   @@mirror_pubkey = nil
@@ -211,20 +382,6 @@ module GitHosting
   end
 
 
-
-  def self.redmine_name(repository)
-    return File.expand_path(File.join("./",get_full_parent_path(repository, false),repository.git_label),"/")[1..-1]
-  end
-
-  def self.repository_name(repository,flags=nil)
-    return File.expand_path(File.join("./",repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
-  end
-
-  def self.repository_path(repositoryID)
-    repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
-    return File.join(repository_base, repo_name) + ".git"
-  end
-
   ## GET OR CREATE TEMP DIR
   @@git_hosting_tmp_dir = nil
   @@previous_git_tmp_dir = nil
@@ -242,88 +399,15 @@ module GitHosting
     return @@git_hosting_tmp_dir
   end
 
-  @@git_hosting_bin_dir = nil
-  @@previous_git_script_dir = nil
-  def self.get_bin_dir
-    script_dir = Setting.plugin_redmine_git_hosting['gitScriptDir'] || SCRIPT_DIR
-    if @@previous_git_script_dir != script_dir
-      @@previous_git_script_dir = script_dir
-      @@git_bin_dir_writeable = nil
 
-      # Directory for binaries includes 'SCRIPT_PARENT' at the end.
-      # Further, absolute path adds additional 'git_user' component for multi-gitolite installations.
-      if script_dir[0,1] == "/"
-        @@git_hosting_bin_dir = File.join(script_dir,git_user,SCRIPT_PARENT) + "/"
-      else
-        @@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting",script_dir,SCRIPT_PARENT).to_s+"/"
-      end
-    end
-    if !File.directory?(@@git_hosting_bin_dir)
-      logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
-      %x[mkdir -p "#{@@git_hosting_bin_dir}"]
-      %x[chmod 750 "#{@@git_hosting_bin_dir}"]
-      %x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
-
-      if !File.directory?(@@git_hosting_bin_dir)
-        logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
-      end
-    end
-    return @@git_hosting_bin_dir
+  # Set the history limit for caching on the given repo
+  # We assume that the time stamps on the reference files indicate when the latest update occurred.
+  def self.set_repository_limit_cache(repo)
+    # Find time of newest reference file
+    result = %x[#{GitHosting.git_user_runner} find '#{repository_path(repo)}/refs' '#{repository_path(repo)}/packed-refs' -type f -printf "%c," 2> /dev/null].split(",").compact.map{|x| Time.parse(x)}.max
+    CachedShellRedirector.limit_cache(repo,result)
   end
 
-  @@git_bin_dir_writeable = nil
-  def self.bin_dir_writeable?(*option)
-    @@git_bin_dir_writeable = nil if option.length > 0 && option[0] == :reset
-    if @@git_bin_dir_writeable == nil
-      mybindir = get_bin_dir
-      mytestfile = "#{mybindir}/writecheck"
-      if (!File.directory?(mybindir))
-        @@git_bin_dir_writeable = false
-      else
-        %x[touch "#{mytestfile}"]
-        if (!File.exists?("#{mytestfile}"))
-          @@git_bin_dir_writeable = false
-        else
-          %x[rm "#{mytestfile}"]
-          @@git_bin_dir_writeable = true
-        end
-      end
-    end
-    @@git_bin_dir_writeable
-  end
-
-  def self.git_exec_path
-    return File.join(get_bin_dir, "run_git_as_git_user")
-  end
-
-  def self.gitolite_ssh_path
-    return File.join(get_bin_dir, "gitolite_admin_ssh")
-  end
-
-  def self.git_user_runner_path
-    return File.join(get_bin_dir, "run_as_git_user")
-  end
-
-  def self.git_exec
-    if !File.exists?(git_exec_path())
-      update_git_exec
-    end
-    return git_exec_path()
-  end
-
-  def self.gitolite_ssh
-    if !File.exists?(gitolite_ssh_path())
-      update_git_exec
-    end
-    return gitolite_ssh_path()
-  end
-
-  def self.git_user_runner
-    if !File.exists?(git_user_runner_path())
-      update_git_exec
-    end
-    return git_user_runner_path()
-  end
 
   ## CREATE EXECUTABLE FILES
   def self.update_git_exec
@@ -399,24 +483,6 @@ module GitHosting
     %x[chown #{web_user} -R "#{get_bin_dir}"]
   end
 
-
-
-  def self.shell(command)
-    begin
-      my_command = "#{command} 2>&1"
-      result = %x[#{my_command}].chomp
-      code = $?.exitstatus
-    rescue Exception => e
-      result=e.message
-      code = -1
-    end
-    if code != 0
-      logger.error "Command failed (return #{code}): #{command}"
-      message = "  "+result.split("\n").join("\n  ")
-      logger.error message
-      raise GitHostingException, "Shell Error"
-    end
-  end
 
   # Try to get a cloned version of gitolite-admin repository.
   #
@@ -1102,17 +1168,6 @@ module GitHosting
     end
   end
 
-  # Check to see if the given repository exists or not...
-  # Need to work a bit, since we have to su to figure it out...
-  def self.git_repository_exists?(repo_name)
-    file_exists?(repository_path(repo_name))
-  end
-
-  # Check to see if the given file exists off the git user's homedirectory.
-  # Need to work a bit, since we have to su to figure it out...
-  def self.file_exists?(filename)
-    (%x[#{GitHosting.git_user_runner} test -r '#{filename}' && echo 'yes' || echo 'no']).match(/yes/) ? true : false
-  end
 
   # Takes a presence hash of path names and a path name and attempts to find the item in the list that matches
   # in the most components.  Assume at least one element in list
@@ -1203,40 +1258,11 @@ module GitHosting
     (input_array & promote) + (input_array - promote)
   end
 
-  def self.check_hooks_installed
-    installed = false
-    if lock(5)
-      installed = GitAdapterHooks.check_hooks_installed
-      unlock()
-    end
-    installed
-  end
-
-  def self.setup_hooks(projects=nil)
-    if lock(5)
-      GitAdapterHooks.setup_hooks(projects)
-      unlock()
-    end
-  end
-
-  def self.update_global_hook_params
-    if lock(5)
-      GitAdapterHooks.update_global_hook_params
-      unlock()
-    end
-  end
 
   def self.print_out_hash(inhash)
     inhash.each {|path,common| Rails.logger.error "  #{path} => #{common}"}
   end
 
-  # Set the history limit for caching on the given repo
-  # We assume that the time stamps on the reference files indicate when the latest update occurred.
-  def self.set_repository_limit_cache(repo)
-    # Find time of newest reference file
-    result = %x[#{GitHosting.git_user_runner} find '#{repository_path(repo)}/refs' '#{repository_path(repo)}/packed-refs' -type f -printf "%c," 2> /dev/null].split(",").compact.map{|x| Time.parse(x)}.max
-    CachedShellRedirector.limit_cache(repo,result)
-  end
 
   ###############################
   ##                           ##
