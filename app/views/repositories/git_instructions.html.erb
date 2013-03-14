@@ -3,8 +3,8 @@
 
 <%= render :partial => 'git_urls', :locals => {:repository => @repository, :project => @project} %>
 
-<% gitSHP = Setting.plugin_redmine_git_hosting['gitServer'].match(/:\d+$/) %>
-<% git_ssh_url = "#{gitSHP ? 'ssh://' : ''}#{Setting.plugin_redmine_git_hosting['gitUser']}@#{Setting.plugin_redmine_git_hosting['gitServer']}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@repository)}.git" %>
+<% gitSHP = GitHostingConf.git_server.match(/:\d+$/) %>
+<% git_ssh_url = "#{gitSHP ? 'ssh://' : ''}#{GitHostingConf.git_user}@#{GitHostingConf.git_server}#{gitSHP ? '/' : ':'}#{GitHosting.repository_name(@repository)}.git" %>
 
 <div class="box">
 
