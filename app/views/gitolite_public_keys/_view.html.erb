@@ -54,9 +54,10 @@
   <fieldset class="public_key_view">
     <legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
     <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
-    <% labelled_remote_form_for :public_key, @gitolite_public_key,
-                                :url=>{:controller=>'gitolite_public_keys', :action=>@new_key ? 'create' : 'update', :id=>@gitolite_public_key.id, :user_id=>params[:id], :tab => params[:id]&&'keys'},
-                                :html => {:method=>(@new_key ? :post : :put)} do |f| %>
+    <% form = labelled_form_for @gitolite_public_key,
+        :as => :public_key,
+        :url=>{:controller=>'gitolite_public_keys', :action=>@new_key ? 'create' : 'update', :id=>@gitolite_public_key.id, :user_id=>params[:id], :tab => params[:id]&&'keys'},
+        :html => {:method=>(@new_key ? :post : :put)} do |f| %>
 
       <p><%= f.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width:99%;' %></p>
 
@@ -80,7 +81,8 @@
       <%= hidden_field_tag :button_submit_field, "true" %>
 
       <% if !@new_key%>
-        <em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em></p>
+        <em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em>
+        </p>
         <%= submit_tag l(:button_save), :name=>'save_button' %>
         <%= submit_tag l(:button_delete), :name=>'delete_button', :confirm => l(:text_gitolite_key_destroy_confirmation,:title=>(@gitolite_public_key[:title].blank? ? l(:text_this_key) : keylabel(@gitolite_public_key))) %>
         <%= submit_tag l(:button_cancel), :name=>'cancel_button' %>
@@ -93,44 +95,40 @@
         </span>
       <% end %>
     <% end %>
+    <%= form if Rails::VERSION::MAJOR >= 3 %>
   </fieldset>
 </fieldset>
 
 <script type="text/javascript">
-  Event.observe(window, 'load', load_form_actions);
   function load_form_actions() {
-    key_type_change($('public_key_key_type'));
-    Event.observe('public_key_key_type', 'change', function(event) {
-      key_type_change(this);
-    });
-
-    $$('input[type="submit"]').each(function(item) {
-      if (item.name.indexOf("__") != 0) {
-        myname = item.name;
-        item.name = "__"+item.name;
-        set_submit_change(item,myname);
+    key_type_change($('#public_key_key_type')[0]);
+    $('#public_key_key_type').bind('change', function() { key_type_change(this) });
+    $('input[type="submit"]').each(function() {
+      if (this.name.indexOf("__") != 0) {
+        myname = this.name;
+        this.name = "__"+this.name;
+        set_submit_change(this,myname);
       }
     });
   }
 
   function key_type_change(elem) {
-    if (!elem) return;
-
+    if (!elem.length) return;
     var idx = elem.selectedIndex;
     if (idx == 0) {
-      $('key_type_options').hide();
-      $('public_key_delete_when_unused').checked = 'checked'
+      $('#key_type_options').hide();
+      $('#public_key_delete_when_unused').prop("checked", true);
     } else {
-      $('key_type_options').show();
+      $('#key_type_options').show();
     }
     if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
   }
 
   function set_submit_change(item,myname) {
-    Event.observe(item, 'click', function() {
-      $('button_submit_field').name = myname;
+    $(item).bind('click', function() {
+      $('#button_submit_field').prop("name", myname);
     });
   }
 
-  load_form_actions();
+  $(window).load(load_form_actions);
 </script>
