@@ -4,7 +4,7 @@ httpd-compatible type, "httpd_redmine_git_script_exec_t" which can be
 placed on the redmine_git_hosting/bin directory to allow sudo access
 from redmine code.  The basic assumption is that scripts placed into
 this directory will be called from context "httpd_script_t" (i.e
-redmine). 
+redmine).
 
 Once this plugin is placed under selinux control, three of the
 redmine_git_hosting settings can no longer be modified from the
@@ -24,8 +24,8 @@ statically so that it can be labeled.  You can do this with a series
 of rake tasks at the top-level of the redmine directory (after fixing
 up the defaults in the redmine_git_hosting init.rb file):
 
-    # Build bin directory with customized scripts for redmine_git_hosting, 
-    # install new selinux policy, and install complete selinux context for 
+    # Build bin directory with customized scripts for redmine_git_hosting,
+    # install new selinux policy, and install complete selinux context for
     # redmine+this plugin:
 
     rake selinux:install RAILS_ENV=production
@@ -49,9 +49,9 @@ double-quotes!):
 Somewhat less far-reaching options include:
 
     # Build bin directory with customized scripts for redmine_git_hosting,
-    # install new selinux policy, and install selinux context for 
+    # install new selinux policy, and install selinux context for
     # the redmine_git_hosting plugin
-   
+
     rake selinux:redmine_git_hosting:install RAILS_ENV=production
 
 For those who are hand-crafting their own file context:
@@ -68,8 +68,3 @@ you can type:
     # Rebuild redmine_git_hosting selinux policy from source
 
     rake selinux:redmine_git_hosting:build_policy RAILS_ENV=production
-
-
-
-
-	  
