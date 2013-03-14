@@ -26,6 +26,7 @@ module GitHosting
     @@multi_repos ||= Project.new.repositories.is_a?(Array) rescue false
   end
 
+
   # Are we in RAILS 3 mode?
   @@rails_3 = nil
   def self.rails_3?
@@ -67,11 +68,13 @@ module GitHosting
     return "#{repository_name(repository)}"
   end
 
+
   # This is the relative portion of the url (below the rails_root) used when talking through httpd to the repository
   # Note that this differs from the git_access_url in not including 'repository_redmine_subdir' as part of the path.
   def self.http_access_url repository
     return "#{http_server_subdir}#{redmine_name(repository)}"
   end
+
 
   # Server path (minus protocol)
   def self.my_root_url
@@ -94,6 +97,7 @@ module GitHosting
     return @@web_user
   end
 
+
   def self.web_user=(setuser)
     @@web_user = setuser
   end
@@ -102,6 +106,7 @@ module GitHosting
     Setting.plugin_redmine_git_hosting['gitUser']
   end
 
+  ## HANDLE MIRROR KEYS
   @@mirror_pubkey = nil
   def self.mirror_push_public_key
     if @@mirror_pubkey.nil?
@@ -121,21 +126,19 @@ module GitHosting
       %x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
 
       @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
-
-      #settings = Setting["plugin_redmine_git_hosting"]
-      #settings["gitMirrorPushPublicKey"] = publicKey
-      #Setting["plugin_redmine_git_hosting"] = settings
     end
     @@mirror_pubkey
   end
 
+
+  ## SUDO TEST1
   @@sudo_git_to_web_user_stamp = nil
   @@sudo_git_to_web_user_cached = nil
   def self.sudo_git_to_web_user
     if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 0.5)
       return @@sudo_git_to_web_user_cached
     end
-    logger.info "Testing if git user(\"#{git_user}\") can sudo to web user(\"#{web_user}\")"
+    logger.info "[GitHosting] Testing if git user(\"#{git_user}\") can sudo to web user(\"#{web_user}\")"
     if git_user == web_user
       @@sudo_git_to_web_user_cached = true
       @@sudo_git_to_web_user_stamp = Time.new
@@ -147,19 +150,21 @@ module GitHosting
       @@sudo_git_to_web_user_stamp = Time.new
       return @@sudo_git_to_web_user_cached
     end
-    logger.warn "Error while testing sudo_git_to_web_user: #{test}"
+    logger.warn "[GitHosting] Error while testing sudo_git_to_web_user: #{test}"
     @@sudo_git_to_web_user_cached = test
     @@sudo_git_to_web_user_stamp = Time.new
     return @@sudo_git_to_web_user_cached
   end
 
+
+  ## SUDO TEST2
   @@sudo_web_to_git_user_stamp = nil
   @@sudo_web_to_git_user_cached = nil
   def self.sudo_web_to_git_user
     if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 0.5)
       return @@sudo_web_to_git_user_cached
     end
-    logger.info "Testing if web user(\"#{web_user}\") can sudo to git user(\"#{git_user}\")"
+    logger.info "[GitHosting] Testing if web user(\"#{web_user}\") can sudo to git user(\"#{git_user}\")"
     if git_user == web_user
       @@sudo_web_to_git_user_cached = true
       @@sudo_web_to_git_user_stamp = Time.new
@@ -171,7 +176,7 @@ module GitHosting
       @@sudo_web_to_git_user_stamp = Time.new
       return @@sudo_web_to_git_user_cached
     end
-    logger.warn "Error while testing sudo_web_to_git_user: #{test}"
+    logger.warn "[GitHosting] Error while testing sudo_web_to_git_user: #{test}"
     @@sudo_web_to_git_user_cached = test
     @@sudo_web_to_git_user_stamp = Time.new
     return @@sudo_web_to_git_user_cached
@@ -203,6 +208,7 @@ module GitHosting
     return File.join(repository_base, repo_name) + ".git"
   end
 
+  ## GET OR CREATE TEMP DIR
   @@git_hosting_tmp_dir = nil
   @@previous_git_tmp_dir = nil
   def self.get_tmp_dir
@@ -211,7 +217,6 @@ module GitHosting
       @@previous_git_tmp_dir = tmp_dir
       @@git_hosting_tmp_dir = File.join(tmp_dir,git_user) + "/"
     end
-
     if !File.directory?(@@git_hosting_tmp_dir)
       %x[mkdir -p "#{@@git_hosting_tmp_dir}"]
       %x[chmod 700 "#{@@git_hosting_tmp_dir}"]
@@ -303,9 +308,10 @@ module GitHosting
     return git_user_runner_path()
   end
 
+  ## CREATE EXECUTABLE FILES
   def self.update_git_exec
-    logger.info "Setting up #{get_bin_dir}"
-    gitolite_key=Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+    logger.info "[GitHosting] Setting up #{get_bin_dir}"
+    gitolite_key = Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
 
     File.open(gitolite_ssh_path(), "w") do |f|
       f.puts "#!/bin/sh"
@@ -440,7 +446,7 @@ module GitHosting
     # If preexisting directory exists, try to clone and merge....
     if (File.exists? "#{repo_dir}") && (File.exists? "#{repo_dir}/.git") && (File.exists? "#{repo_dir}/keydir") && (File.exists? "#{repo_dir}/conf")
       begin
-        logger.info "Fetching changes from gitolite-admin repository to #{repo_dir}"
+        logger.info "[GitHosting] Fetching changes from gitolite-admin repository to #{repo_dir}"
         shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' fetch]
         shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' merge FETCH_HEAD]
 
@@ -460,16 +466,16 @@ module GitHosting
           #
           # 04/23/12
           # --KUBI--
-          logger.error "Seems to be unmerged changes!  Going to delete and reclone for safety."
-          logger.error "May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
+          logger.error "[GitHosting] Seems to be unmerged changes!  Going to delete and reclone for safety."
+          logger.error "[GitHosting] May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
         end
       rescue
-        logger.error "Repository fetch and merge failed -- trying to delete and reclone repository."
+        logger.error "[GitHosting] Repository fetch and merge failed -- trying to delete and reclone repository."
       end
     end
 
     begin
-      logger.info "Cloning gitolite-admin repository to #{repo_dir}"
+      logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"]
       shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}" ]
@@ -478,23 +484,23 @@ module GitHosting
 
       return true # On master (fresh clone)
     rescue
+
       begin
         # Try to repair admin access.
         fixup_gitolite_admin
-
-        logger.info "Recloning gitolite-admin repository to #{repo_dir}"
+        logger.info "[GitHosting] Recloning gitolite-admin repository to #{repo_dir}"
         shell %[rm -rf "#{repo_dir}"]
         shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
         shell %[chmod 700 "#{repo_dir}" ]
         # Make sure we have our hooks setup
         GitAdapterHooks.check_hooks_installed
-
         return true # On master (fresh clone)
       rescue
-        logger.error "Cannot clone administrative repository.  Requires human intervention!!!"
+        logger.error "[GitHosting] Cannot clone administrative repository. Requires human intervention !!!"
       end
     end
   end
+
 
   # Recover from failure to clone repository.
   #
@@ -526,8 +532,8 @@ module GitHosting
     unless GitoliteConfig.has_admin_key?
       raise GitHostingException, "Cannot repair Admin Key: Key not managed by Redmine!"
     end
-
     logger.warn "Attempting to restore repository access key:"
+
     begin
       repo_dir = File.join(Dir.tmpdir,"fixrepo",git_user,GitHosting::GitoliteConfig::ADMIN_REPO)
       conf_file = File.join(repo_dir,"conf",gitolite_conf)
@@ -625,6 +631,7 @@ module GitHosting
     end
   end
 
+
   # Commit Changes to the gitolite-admin repository.  This assumes that repository exists
   # (i.e. that a clone_or_fetch_gitolite_admin has already be called).
   #
@@ -658,90 +665,96 @@ module GitHosting
     end
   end
 
-    # Update keys for all members of projects of interest
-    #
-    # This code is entirely self-correcting for keys owned by users of the specified
-    # projects.  It should work regardless of the history of steps that got us here.
-    #
-    # Note that this code has changed from the original.  Now, we look at all keys owned
-    # by users in the specified projects to make sure that they are still live.  We
-    # do this with a single pass through the keydir and do not rely on the "inactive"
-    # status to tell us that a key should be deleted.  The reason is that weird
-    # synchronization issues (not entirely understood) can cause phantom keys to get left
-    # in the keydir which can really mess up gitolite.
-    #
-    # As of the latest release, we also recover from a variety of aborted MOVE and DELETE
-    # operations.  Further, we better handle movement of complete trees of projects.
-    #
-    # Also, when performing :resync_all, if the 'deleteGitRepositories' setting is 'true',
-    # then we will remove repositories in the configuration file (gitolite.conf) that are
-    # identifiable as "redmine managed" (because they have one or more keys of the right form)
-    # but which are nolonger live for some reason (probably because the project was deleted).
-    #
-    # John Kubiatowicz, 01/04/12
-    #
-    # Usage:
-    #
-    # 1) update_repositories(project) => update for specified project
-    # 2) update_repositories([list of projects]) => update all projects
-    # 3) update_repositories(:flag1=>true, :flag2 => false)
-    #
-    # Current flags:
-    # :resync_all =>  go through all redmine-maintained gitolite repos,
-    #     clean up keydir, delete unused keys, clean up gitolite.conf
-    # :delete     =>  Clean up keydir, delete unused keys, remove redmine-maintaind
-    #     gitolite entries and repositories unassociated with live projects.
-    #     Unlike :resync_all, do not fix up live projects
-    # :descendants => for every given project, update self and all decendants
-    # :archive    =>  Project is being archived -- remove keys from gitolite.conf,
-    #     and possibly keydir if not used by any other project
-    #
-    @@recursionCheck = false
-    def self.update_repositories(*args)
-  flags = {}
-  args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
-  reposym = (multi_repos? ? :repositories : :repository)
-  if flags[:resync_all]
-      logger.info "Executing RESYNC_ALL operation on gitolite configuration"
+
+  # Update keys for all members of projects of interest
+  #
+  # This code is entirely self-correcting for keys owned by users of the specified
+  # projects.  It should work regardless of the history of steps that got us here.
+  #
+  # Note that this code has changed from the original.  Now, we look at all keys owned
+  # by users in the specified projects to make sure that they are still live.  We
+  # do this with a single pass through the keydir and do not rely on the "inactive"
+  # status to tell us that a key should be deleted.  The reason is that weird
+  # synchronization issues (not entirely understood) can cause phantom keys to get left
+  # in the keydir which can really mess up gitolite.
+  #
+  # As of the latest release, we also recover from a variety of aborted MOVE and DELETE
+  # operations.  Further, we better handle movement of complete trees of projects.
+  #
+  # Also, when performing :resync_all, if the 'deleteGitRepositories' setting is 'true',
+  # then we will remove repositories in the configuration file (gitolite.conf) that are
+  # identifiable as "redmine managed" (because they have one or more keys of the right form)
+  # but which are nolonger live for some reason (probably because the project was deleted).
+  #
+  # John Kubiatowicz, 01/04/12
+  #
+  # Usage:
+  #
+  # 1) update_repositories(project) => update for specified project
+  # 2) update_repositories([list of projects]) => update all projects
+  # 3) update_repositories(:flag1=>true, :flag2 => false)
+  #
+  # Current flags:
+  # :resync_all =>  go through all redmine-maintained gitolite repos,
+  #     clean up keydir, delete unused keys, clean up gitolite.conf
+  # :delete     =>  Clean up keydir, delete unused keys, remove redmine-maintaind
+  #     gitolite entries and repositories unassociated with live projects.
+  #     Unlike :resync_all, do not fix up live projects
+  # :descendants => for every given project, update self and all decendants
+  # :archive    =>  Project is being archived -- remove keys from gitolite.conf,
+  #     and possibly keydir if not used by any other project
+  #
+  @@recursionCheck = false
+  def self.update_repositories(*args)
+    flags = {}
+    args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
+    reposym = (multi_repos? ? :repositories : :repository)
+    if flags[:resync_all]
+      logger.info "[GitHosting] Executing RESYNC_ALL operation on gitolite configuration"
       projects = Project.active_or_archived.find(:all, :include => reposym)
-  elsif flags[:delete]
+    elsif flags[:delete]
       # When delete, want to recompute users, so need to go through all projects
-      logger.info "Executing DELETE operation (resync keys, remove dead repositories)"
+      logger.info "[GitHosting] Executing DELETE operation (resync keys, remove dead repositories)"
       projects = Project.active_or_archived.find(:all, :include => reposym)
-  elsif flags[:archive]
+    elsif flags[:archive]
       # When archive, want to recompute users, so need to go through all projects
-      logger.info "Executing ARCHIVE operation (remove keys)"
+      logger.info "[GitHosting] Executing ARCHIVE operation (remove keys)"
       projects = Project.active_or_archived.find(:all, :include => reposym)
-  elsif flags[:descendants]
+    elsif flags[:descendants]
       if Project.method_defined?(:self_and_descendants)
-    projects = (args.flatten.select{|p| p.is_a?(Project)}).collect{|p| p.self_and_descendants}.flatten
+        projects = (args.flatten.select{|p| p.is_a?(Project)}).collect{|p| p.self_and_descendants}.flatten
       else
-    projects = Project.active_or_archived.find(:all, :include => reposym)
+        projects = Project.active_or_archived.find(:all, :include => reposym)
       end
-  else
+    else
       projects = args.flatten.select{|p| p.is_a?(Project)}
-  end
-  # Only take projects that have Git repos.
-  git_projects = projects.uniq.select{|p| p.gl_repos.any?}
-  return if git_projects.empty?
+    end
 
-  if(defined?(@@recursionCheck))
+    # Only take projects that have Git repos.
+    git_projects = projects.uniq.select{|p| p.gl_repos.any?}
+    return if git_projects.empty?
+
+    logger.info ""
+    logger.info "[GitHosting] Got projects, move on!"
+
+    if(defined?(@@recursionCheck))
       if(@@recursionCheck)
-    # This shouldn't happen any more -- log as error
-    logger.error "git_hosting: update_repositories() exited with positive recursionCheck flag!"
-    return
+        # This shouldn't happen any more -- log as error
+        logger.error "[GitHosting] update_repositories() exited with positive recursionCheck flag!"
+        return
       end
-  end
-  @@recursionCheck = true
+    end
 
-  # Grab actual lock
-  if !lock(lock_wait_time)
-      logger.error "git_hosting: update_repositories() exited without acquiring lock!"
+    @@recursionCheck = true
+
+    # Grab actual lock
+    if !lock(lock_wait_time)
+      logger.error "[GitHosting] update_repositories() exited without acquiring lock!"
       @@recursionCheck = false
       return
-  end
+    end
 
-  begin
+    begin
       # Make sure we have gitoite-admin cloned.
       # If have uncommitted changes, reflect in "changed" flag.
       changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
@@ -753,82 +766,82 @@ module GitHosting
       keydir = File.join(repo_dir,"keydir")
       old_keyhash = {}
       Dir.foreach(keydir) do |keyfile|
-    user_token = GitolitePublicKey.ident_to_user_token(keyfile)
-    if !user_token.nil?
-        old_keyhash[user_token] ||= []
-        old_keyhash[user_token] << keyfile
-    end
+        user_token = GitolitePublicKey.ident_to_user_token(keyfile)
+        if !user_token.nil?
+          old_keyhash[user_token] ||= []
+          old_keyhash[user_token] << keyfile
+        end
       end
 
       # Collect relevant users into hash with user as key and activity (in some active project) as value
       (git_projects.select{|proj| proj.active? && proj.module_enabled?(:repository)}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
-    if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
-        active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
-        cur_token = cur_user
+        if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
+          active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
+          cur_token = cur_user
 
-        # Remove inactive Deployment Credentials
-        DeploymentCredential.inactive.each {|cred| DeploymentCredential.destroy(cred.id)}
-    else
-        active_keys = cur_user.gitolite_public_keys.active.user_key || []
-        cur_token = GitolitePublicKey.user_to_user_token(cur_user)
+          # Remove inactive Deployment Credentials
+          DeploymentCredential.inactive.each {|cred| DeploymentCredential.destroy(cred.id)}
+        else
+          active_keys = cur_user.gitolite_public_keys.active.user_key || []
+          cur_token = GitolitePublicKey.user_to_user_token(cur_user)
 
-        # Remove inactive keys (will be deleted below)
-        cur_user.gitolite_public_keys.inactive.each {|key| GitolitePublicKey.destroy(key.id)}
-    end
-
-    # Current filenames
-    old_keynames = old_keyhash[cur_token] || []
-    cur_keynames = []
-
-    # Get list of active keys that SHOULD be in the keydir
-    active_keys.each do |key|
-        key_id = key.identifier
-        key_token = GitolitePublicKey.ident_to_user_token(key_id)
-        if key_token != cur_token
-      # Rare case -- user login changed.  Fix it.
-      key_id = key.reset_identifier
-
-      # Add all key filenames with this (incorrect) token into the set of names
-      old_keynames += (old_keyhash[key_token] || [])
-      old_keyhash.delete(key_token)
+          # Remove inactive keys (will be deleted below)
+          cur_user.gitolite_public_keys.inactive.each {|key| GitolitePublicKey.destroy(key.id)}
         end
-        cur_keynames << "#{key_id}.pub"
-    end
 
-    (old_keynames - cur_keynames).each do |keyname|
-        filename = File.join(keydir,"#{keyname}")
-        logger.warn "Removing gitolite key: #{keyname}"
-        %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
-        changed = true
-    end
+        # Current filenames
+        old_keynames = old_keyhash[cur_token] || []
+        cur_keynames = []
 
-    # Add missing keys to the keydir
-    active_keys.each do |key|
-        keyname = "#{key.identifier}.pub"
-        unless old_keynames.index(keyname)
-      filename = File.join(keydir,"#{keyname}")
-      logger.info "Adding gitolite key: #{keyname}"
-      File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
-      changed = true
+        # Get list of active keys that SHOULD be in the keydir
+        active_keys.each do |key|
+          key_id = key.identifier
+          key_token = GitolitePublicKey.ident_to_user_token(key_id)
+          if key_token != cur_token
+            # Rare case -- user login changed.  Fix it.
+            key_id = key.reset_identifier
+
+            # Add all key filenames with this (incorrect) token into the set of names
+            old_keynames += (old_keyhash[key_token] || [])
+            old_keyhash.delete(key_token)
+          end
+          cur_keynames << "#{key_id}.pub"
         end
-    end
 
-    # In preparation for resync_all, below
-    old_keyhash.delete(cur_token)
+        (old_keynames - cur_keynames).each do |keyname|
+          filename = File.join(keydir,"#{keyname}")
+          logger.warn "Removing gitolite key: #{keyname}"
+          %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
+          changed = true
+        end
+
+        # Add missing keys to the keydir
+        active_keys.each do |key|
+          keyname = "#{key.identifier}.pub"
+          unless old_keynames.index(keyname)
+            filename = File.join(keydir,"#{keyname}")
+            logger.info "Adding gitolite key: #{keyname}"
+            File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
+            changed = true
+          end
+        end
+
+        # In preparation for resync_all, below
+        old_keyhash.delete(cur_token)
       end
 
       # Remove keys for deleted users
       orphanString=flags[:resync_all] ? "orphan " : ""
       if flags[:resync_all] || flags[:delete] || flags[:archive]
-    # All keys left in old_keyhash should be for users nolonger authorized for gitolite repos
-    old_keyhash.each_value do |keyset|
-        keyset.each do |keyname|
-      filename = File.join(keydir,"#{keyname}")
-      logger.warn "Removing #{orphanString}gitolite key: #{keyname}"
-      %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
-      changed = true
+        # All keys left in old_keyhash should be for users nolonger authorized for gitolite repos
+        old_keyhash.each_value do |keyset|
+          keyset.each do |keyname|
+            filename = File.join(keydir,"#{keyname}")
+            logger.warn "Removing #{orphanString}gitolite key: #{keyname}"
+            %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
+            changed = true
+          end
         end
-    end
       end
 
       conf = GitoliteConfig.new(File.join(repo_dir, 'conf', gitolite_conf))
@@ -856,136 +869,136 @@ module GitHosting
       # find orphaned repos.  Archived projects get left with a "ARCHIVED_REDMINE_KEY".
       git_projects.each do |proj|
 
-    # First, get project-specific read/write keys
-    # fetch users
-    proj_read_user_keys=[]
-    proj_write_user_keys=[]
-    proj.member_principals.map(&:user).compact.uniq.each do |user|
-        if user.allowed_to?( :commit_access, proj )
-      proj_write_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
-        elsif user.allowed_to?( :view_changesets, proj )
-      proj_read_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
-        end
-    end
-
-    proj.gl_repos.each do |repo|
-        repo_name = repository_name(repo)
-
-        # Common case: these are hashes with zero or one one element (except when
-        # Repository.repo_ident_unique? is false)
-        my_entries = redmine_repos[repo.git_name]
-        my_repos = actual_repos[repo.git_name]
-
-        # We have one or more gitolite.conf entries with the right base name.  Pick one with
-        # closest name (will pick one with 'repo_name' if it exists.
-        closest_entry = closest_path(my_entries,repo_name,repo)
-        if !closest_entry
-      # CREATION case.
-      if !total_entries[repo_name]
-          logger.warn "Creating new entry '#{repo_name}' in #{gitolite_conf}"
-      else
-          logger.warn "Utilizing existing non-redmine entry '#{repo_name}' in #{gitolite_conf}"
-      end
-        elsif closest_entry != repo_name
-      # MOVE case.
-      logger.warn "Moving entry '#{closest_entry}' to '#{repo_name}' in #{gitolite_conf}."
-      conf.rename_repo(closest_entry,repo_name)
-        else
-      # NORMAL case. Have entry with correct name.
-      if !my_repos[repo_name]
-          logger.warn "Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
-      end
-        end
-        new_projects << proj unless my_repos[closest_entry] # Reinit hooks unless NORMAL or MOVE case
-        my_entries.delete closest_entry      # Claimed this one => don't need to delete later
-
-        if my_repos.empty?
-      # This is the normal CREATION case for primary repos or when repo_ident_unique? true.
-      # No repositories with matching basenames.  Attempt to recover repository from recycle_bin,
-      # if present.  Else, create new repository.
-      if !GitoliteRecycle.recover_repository_if_present repo_name
-          force_change = true
-          logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
-      end
-        elsif my_repos[closest_entry]
-      # We have a repository that matches the entry we used above.  Move this one to match if necessary
-      # If closest_entry == repo_name, this is a NORMAL case (do nothing!)
-      # If closest_entry != repo_name, this is the MOVE case.
-      move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
-        elsif my_repos[repo_name]
-      # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-      logger.warn "  Using existing repository: '#{repository_path(repo_name)}'"
-        else
-      # Of the repos in my_repo with a matching base name, only steal away those not already controlled
-      # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
-      # in gitolite.conf but the repo didn't get moved.
-      closest_repo = closest_path(hash_set_diff(my_repos,total_entries),repo_name,repo)
-      if !closest_repo
-          # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
-          if !GitoliteRecycle.recover_repository_if_present repo_name
-        force_change = true
-        logger.warn "  Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+        # First, get project-specific read/write keys
+        # fetch users
+        proj_read_user_keys=[]
+        proj_write_user_keys=[]
+        proj.member_principals.map(&:user).compact.uniq.each do |user|
+          if user.allowed_to?( :commit_access, proj )
+            proj_write_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
+          elsif user.allowed_to?( :view_changesets, proj )
+            proj_read_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
           end
-      else
-          logger.warn "  Claiming orphan repository '#{repository_path(closest_repo)}' in gitolite repository."
-          move_physical_repo(closest_repo,repo_name)
-      end
         end
 
-        # Update repository url and root_url if necessary
-        target_url = repository_path(repo_name)
-        if repo.url != target_url || repo.root_url != target_url
-      # logger.warn "  Updating internal access path to '#{target_url}'."
-      repo.url = repo.root_url = target_url
-      repo.save
-        end
+        proj.gl_repos.each do |repo|
+          repo_name = repository_name(repo)
 
-        # If this is an active (non-archived) project, then update gitolite entry.  Add GIT_DAEMON_KEY.
-        if proj.active?
-      if proj.module_enabled?(:repository)
-          # Get deployment keys (could be empty)
-          read_user_keys=[]
-          write_user_keys=[]
-          repo.deployment_credentials.active.select(&:honored?).each do |cred|
-        if cred.allowed_to?(:commit_access)
-            write_user_keys << cred.gitolite_public_key.identifier
-        elsif cred.allowed_to?(:view_changesets)
-            read_user_keys << cred.gitolite_public_key.identifier
-        end
+          # Common case: these are hashes with zero or one one element (except when
+          # Repository.repo_ident_unique? is false)
+          my_entries = redmine_repos[repo.git_name]
+          my_repos = actual_repos[repo.git_name]
+
+          # We have one or more gitolite.conf entries with the right base name.  Pick one with
+          # closest name (will pick one with 'repo_name' if it exists.
+          closest_entry = closest_path(my_entries,repo_name,repo)
+          if !closest_entry
+            # CREATION case.
+            if !total_entries[repo_name]
+              logger.warn "[GitHosting] Creating new entry '#{repo_name}' in #{gitolite_conf}"
+            else
+              logger.warn "[GitHosting] Utilizing existing non-redmine entry '#{repo_name}' in #{gitolite_conf}"
+            end
+          elsif closest_entry != repo_name
+            # MOVE case.
+            logger.warn "[GitHosting] Moving entry '#{closest_entry}' to '#{repo_name}' in #{gitolite_conf}."
+            conf.rename_repo(closest_entry,repo_name)
+          else
+            # NORMAL case. Have entry with correct name.
+            if !my_repos[repo_name]
+              logger.warn "[GitHosting] Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
+            end
+          end
+          new_projects << proj unless my_repos[closest_entry] # Reinit hooks unless NORMAL or MOVE case
+          my_entries.delete closest_entry      # Claimed this one => don't need to delete later
+
+          if my_repos.empty?
+            # This is the normal CREATION case for primary repos or when repo_ident_unique? true.
+            # No repositories with matching basenames.  Attempt to recover repository from recycle_bin,
+            # if present.  Else, create new repository.
+            if !GitoliteRecycle.recover_repository_if_present repo_name
+              force_change = true
+              logger.warn "[GitHosting] Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+            end
+          elsif my_repos[closest_entry]
+            # We have a repository that matches the entry we used above.  Move this one to match if necessary
+            # If closest_entry == repo_name, this is a NORMAL case (do nothing!)
+            # If closest_entry != repo_name, this is the MOVE case.
+            move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
+          elsif my_repos[repo_name]
+            # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
+            logger.warn "[GitHosting] Using existing repository: '#{repository_path(repo_name)}'"
+          else
+            # Of the repos in my_repo with a matching base name, only steal away those not already controlled
+            # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
+            # in gitolite.conf but the repo didn't get moved.
+            closest_repo = closest_path(hash_set_diff(my_repos,total_entries),repo_name,repo)
+            if !closest_repo
+              # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
+              if !GitoliteRecycle.recover_repository_if_present repo_name
+                force_change = true
+                logger.warn "[GitHosting] Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+              end
+            else
+              logger.warn "[GitHosting] Claiming orphan repository '#{repository_path(closest_repo)}' in gitolite repository."
+              move_physical_repo(closest_repo,repo_name)
+            end
           end
 
-          # Add project-specific keys
-          write_user_keys += proj_write_user_keys
-          read_user_keys += proj_read_user_keys
-
-          #git daemon support
-          if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
-        read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
+          # Update repository url and root_url if necessary
+          target_url = repository_path(repo_name)
+          if repo.url != target_url || repo.root_url != target_url
+            # logger.warn "  Updating internal access path to '#{target_url}'."
+            repo.url = repo.root_url = target_url
+            repo.save
           end
 
-          # Remove previous redmine keys, then add new keys
-          # By doing things this way, we leave non-redmine keys alone
-          # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
-          # (to be put back as above, when appropriate).
-          conf.delete_redmine_keys repo_name
-          conf.add_read_user repo_name, read_user_keys.uniq
-          conf.add_write_user repo_name, write_user_keys.uniq
+          # If this is an active (non-archived) project, then update gitolite entry.  Add GIT_DAEMON_KEY.
+          if proj.active?
+            if proj.module_enabled?(:repository)
+              # Get deployment keys (could be empty)
+              read_user_keys=[]
+              write_user_keys=[]
+              repo.deployment_credentials.active.select(&:honored?).each do |cred|
+                if cred.allowed_to?(:commit_access)
+                  write_user_keys << cred.gitolite_public_key.identifier
+                elsif cred.allowed_to?(:view_changesets)
+                  read_user_keys << cred.gitolite_public_key.identifier
+                end
+              end
 
-          # If no redmine keys, mark with dummy key
-          if (read_user_keys+write_user_keys).empty?
-        conf.mark_with_dummy_key repo_name
+              # Add project-specific keys
+              write_user_keys += proj_write_user_keys
+              read_user_keys += proj_read_user_keys
+
+              #git daemon support
+              if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
+                read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
+              end
+
+              # Remove previous redmine keys, then add new keys
+              # By doing things this way, we leave non-redmine keys alone
+              # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
+              # (to be put back as above, when appropriate).
+              conf.delete_redmine_keys repo_name
+              conf.add_read_user repo_name, read_user_keys.uniq
+              conf.add_write_user repo_name, write_user_keys.uniq
+
+              # If no redmine keys, mark with dummy key
+              if (read_user_keys+write_user_keys).empty?
+                conf.mark_with_dummy_key repo_name
+              end
+            else
+              # Must be a project that has repositories disabled. Mark as disabled project.
+              conf.delete_redmine_keys repo_name
+              conf.mark_disabled repo_name
+            end
+          else
+            # Must be an archive project! Clear out redmine keys. Mark as an archived project.
+            conf.delete_redmine_keys repo_name
+            conf.mark_archived repo_name
           end
-      else
-          # Must be a project that has repositories disabled. Mark as disabled project.
-          conf.delete_redmine_keys repo_name
-          conf.mark_disabled repo_name
-      end
-        else
-      # Must be an archive project! Clear out redmine keys. Mark as an archived project.
-      conf.delete_redmine_keys repo_name
-      conf.mark_archived repo_name
         end
-    end
       end
 
       # If resyncing or deleting, check for orphan repositories which still have redmine keys...
@@ -998,69 +1011,71 @@ module GitHosting
       #    => remove redmine keys (will leave redmine_dummy_key when we save)
       # 3) They have only redmine keys and repository delete is enabled => delete repository
       if flags[:resync_all] || flags[:delete]
-    # if flags[:delete]
-    # # Get rid of all live repos from redmine_repos
-    # proj_ids = git_projects.map{|proj| proj.identifier}
-    # redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
-    # end
-    redmine_repos.values.map(&:keys).flatten.each do |repo_name|
-        # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
-        has_keys = conf.has_actual_redmine_keys? repo_name
+        # if flags[:delete]
+        # # Get rid of all live repos from redmine_repos
+        # proj_ids = git_projects.map{|proj| proj.identifier}
+        # redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
+        # end
+        redmine_repos.values.map(&:keys).flatten.each do |repo_name|
+          # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
+          has_keys = conf.has_actual_redmine_keys? repo_name
 
-        # Next, delete redmine keys for this repository
-        conf.delete_redmine_keys repo_name
-        if (Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true")
-      if conf.repo_has_no_keys? repo_name
-          logger.warn "Deleting #{orphanString}entry '#{repo_name}' from #{gitolite_conf}"
-          conf.delete_repo repo_name
-          GitoliteRecycle.move_repository_to_recycle repo_name
-      elsif has_keys # Something changed when we deleted keys
-          logger.info "Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
-          if git_repository_exists? repo_name
-        logger.info "  Not removing #{repo_name}.git from gitolite repository, because non-redmine keys remain."
+          # Next, delete redmine keys for this repository
+          conf.delete_redmine_keys repo_name
+          if (Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true")
+            if conf.repo_has_no_keys? repo_name
+              logger.warn "[GitHosting] Deleting #{orphanString}entry '#{repo_name}' from #{gitolite_conf}"
+              conf.delete_repo repo_name
+              GitoliteRecycle.move_repository_to_recycle repo_name
+            elsif has_keys # Something changed when we deleted keys
+              logger.info "[GitHosting] Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
+              if git_repository_exists? repo_name
+                logger.info "[GitHosting] Not removing #{repo_name}.git from gitolite repository, because non-redmine keys remain."
+              end
+            end
+          elsif has_keys # Something changed when we deleted keys
+            logger.info "[GitHosting] Deleting redmine keys from #{orphanString} entry '#{repo_name}' in #{gitolite_conf}"
           end
-      end
-        elsif has_keys # Something changed when we deleted keys
-      logger.info "Deleting redmine keys from #{orphanString}entry '#{repo_name}' in #{gitolite_conf}"
         end
-    end
-    # Delete expired files from recycle bin.
-    GitoliteRecycle.delete_expired_files
+
+        # Delete expired files from recycle bin.
+        GitoliteRecycle.delete_expired_files
       end
 
       if conf.changed? || force_change
-    conf.save
-    changed = true
+        conf.save
+        changed = true
       end
 
       if changed
-    # Have changes. Commit / push changes to gitolite admin repo
-    commit_gitolite_admin flags[:resync_all]
+        # Have changes. Commit / push changes to gitolite admin repo
+        commit_gitolite_admin flags[:resync_all]
       end
 
       # Set post receive hooks for new projects (or check all repositories on :resync_all).
       # We need to do this AFTER push, otherwise necessary repos may not be created yet.
       GitAdapterHooks.setup_hooks_params((flags[:resync_all]||flags[:resync_hooks]) ? git_projects : new_projects)
 
-  rescue GitHostingException
-      logger.error "git_hosting: update_repositories() failed"
-  rescue => e
+    rescue GitHostingException
+      logger.error "[GitHosting] update_repositories() failed"
+    rescue => e
       logger.error e.message
       logger.error e.backtrace[0..4].join("\n")
-      logger.error "git_hosting: update_repositories() failed"
+      logger.error "[GitHosting] update_repositories() failed"
+    end
+
+    unlock()
+    @@recursionCheck = false
   end
 
-  unlock()
-  @@recursionCheck = false
-    end
 
   # This routine moves a repository in the gitolite repository structure.
   def self.move_physical_repo(old_name,new_name)
     begin
-      logger.warn "  Moving gitolite repository from '#{old_name}.git' to '#{new_name}.git'"
+      logger.warn "[GitHosting] Moving gitolite repository from '#{old_name}.git' to '#{new_name}.git'"
 
       if git_repository_exists? new_name
-        logger.error "Repository already exists at #{new_name}.git!  Moving to recycle bin to avoid overwrite."
+        logger.error "[GitHosting] Repository already exists at #{new_name}.git!  Moving to recycle bin to avoid overwrite."
         GitoliteRecycle.move_repository_to_recycle new_name
       end
 
@@ -1083,11 +1098,11 @@ module GitHosting
         result.each { |dir| logger.warn "  Removing empty repository subdirectory: #{dir}"}
       end
     rescue GitHostingException
-      logger.error "git_hosting: move_physical_repo(#{old_name},#{new_name}) failed"
+      logger.error "[GitHosting] move_physical_repo(#{old_name},#{new_name}) failed"
     rescue => e
       logger.error e.message
       logger.error e.backtrace[0..4].join("\n")
-      logger.error "git_hosting: move_physical_repo(#{old_name},#{new_name}) failed"
+      logger.error "[GitHosting] move_physical_repo(#{old_name},#{new_name}) failed"
     end
   end
 
@@ -1153,6 +1168,7 @@ module GitHosting
     return nil
   end
 
+
   # Return the number of characters that match between (str1 and str2) << 16 + codepoint
   # of first character in str1 that doesn't match.  This is bit naive for Ruby 1.8,
   # and works properly for 1.9 with multi-byte characters (but doesn't deal with
@@ -1176,6 +1192,7 @@ module GitHosting
     str1.length << 16
   end
 
+
   # Compute the set difference of keys between two hashes.
   def self.hash_set_diff(first_hash,second_hash)
     first_hash.inject({}) { |hash, (key,value)|
@@ -1183,6 +1200,7 @@ module GitHosting
       hash
     }
   end
+
 
   # Promote any elements from the promotion set to the front of the input list
   def self.promote_array(input_array,promote)
@@ -1223,6 +1241,12 @@ module GitHosting
     result = %x[#{GitHosting.git_user_runner} find '#{repository_path(repo)}/refs' '#{repository_path(repo)}/packed-refs' -type f -printf "%c," 2> /dev/null].split(",").compact.map{|x| Time.parse(x)}.max
     CachedShellRedirector.limit_cache(repo,result)
   end
+
+  ###############################
+  ##                           ##
+  ##   ADDITIONAL CLASSES      ##
+  ##                           ##
+  ###############################
 
   class MyLogger
     # Prefix to error messages
