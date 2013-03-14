@@ -827,7 +827,7 @@ module GitHosting
       # Get directory for the gitolite-admin
       repo_dir = File.join(get_tmp_dir,"gitolite-admin")
 
-      # logger.info "Updating keydirectory for projects: #{git_projects.join ', '}"
+      logger.info "[GitHosting] Updating keydirectory for projects: #{git_projects.join ', '}"
       keydir = File.join(repo_dir,"keydir")
       old_keyhash = {}
       Dir.foreach(keydir) do |keyfile|
@@ -875,7 +875,7 @@ module GitHosting
 
         (old_keynames - cur_keynames).each do |keyname|
           filename = File.join(keydir,"#{keyname}")
-          logger.warn "Removing gitolite key: #{keyname}"
+          logger.warn "[GitHosting] Removing gitolite key: #{keyname}"
           %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
           changed = true
         end
@@ -885,7 +885,7 @@ module GitHosting
           keyname = "#{key.identifier}.pub"
           unless old_keynames.index(keyname)
             filename = File.join(keydir,"#{keyname}")
-            logger.info "Adding gitolite key: #{keyname}"
+            logger.info "[GitHosting] Adding gitolite key: #{keyname}"
             File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
             changed = true
           end
@@ -902,7 +902,7 @@ module GitHosting
         old_keyhash.each_value do |keyset|
           keyset.each do |keyname|
             filename = File.join(keydir,"#{keyname}")
-            logger.warn "Removing #{orphanString}gitolite key: #{keyname}"
+            logger.warn "[GitHosting] Removing #{orphanString}gitolite key: #{keyname}"
             %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
             changed = true
           end
@@ -1263,7 +1263,7 @@ module GitHosting
 
 
   def self.print_out_hash(inhash)
-    inhash.each {|path,common| Rails.logger.error "  #{path} => #{common}"}
+    inhash.each {|path,common| Rails.logger.error "[GitHosting] #{path} => #{common}"}
   end
 
 
