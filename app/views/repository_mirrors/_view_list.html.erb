@@ -28,8 +28,8 @@
               <td class="name" style="vertical-align:middle;" >
                 <%= link_to(h(mirror.url), url_for(:controller => 'repository_mirrors', :action => 'edit', :repository_id => @repository.id, :id => mirror.id), :class => 'edit-mirror') %>
               </td>
-              <td class="center" style="vertical-align:middle;"><%= refspec mirror, 64 %></td>
-              <td class="center" style="vertical-align:middle;"><%= mirror_mode mirror %><br/><%= checked_image mirror.active? %></td>
+              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.refspec(mirror, 64).html_safe %></td>
+              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.mirror_mode(mirror).html_safe %><br/><%= checked_image mirror.active? %></td>
               <td class="buttons" width="20%" style="vertical-align:middle;text-align:right;">
                 <% if GitHostingHelper.can_edit_mirrors(@repository.project) %>
                   <% if mirror.active == 1 -%>
@@ -73,7 +73,7 @@
 <% end %>
 
 <script type="text/javascript">
-  ZeroClipboard.setMoviePath('<%= image_path('ZeroClipboard.swf', :plugin => 'redmine_git_hosting') %>');
+  ZeroClipboard.setMoviePath('<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>');
   setZeroClipboardInputSource("mirror_pubkey");
 
   function test_zc_vis() {
