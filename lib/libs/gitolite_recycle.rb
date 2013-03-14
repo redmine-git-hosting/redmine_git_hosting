@@ -32,13 +32,13 @@ module GitHosting
 
       result = %x[#{GitHosting.git_user_runner} find '#{recycle_bin}' -type d -regex '.*\.git' -cmin +#{preserve_time} -prune -print].chomp.split("\n")
       if result.length > 0
-        logger.warn "Garbage-collecting expired file#{(result.length != 1) ? "s" : ""} from recycle bin:"
+        logger.warn "[GitHosting] Garbage-collecting expired file #{(result.length != 1) ? "s" : ""} from recycle bin:"
         result.each do |filename|
           begin
             GitHosting.shell %[#{GitHosting.git_user_runner} rm -r #{filename}]
-            logger.warn "  Deleting #{filename}"
+            logger.warn "[GitHosting] Deleting #{filename}"
           rescue
-            logger.error "GitoliteRecycle.delete_expired_files() failed trying to delete repository #{filename}!"
+            logger.error "[GitHosting] GitoliteRecycle.delete_expired_files() failed trying to delete repository #{filename} !"
           end
         end
 
@@ -63,11 +63,11 @@ module GitHosting
         if old_prefix
           repo_subpath = File.join(GitHosting.repository_base, old_prefix)
           result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
-          result.each { |dir| logger.warn "  Removing empty repository subdirectory: #{dir}"}
+          result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory: #{dir}"}
         end
         return true
       rescue
-        logger.error "Attempt to move repository '#{repo_name}.git' to recycle bin failed"
+        logger.error "[GitHosting] Attempt to move repository '#{repo_name}.git' to recycle bin failed"
         return false
       end
     end
@@ -78,7 +78,7 @@ module GitHosting
       files = %x[#{GitHosting.git_user_runner} find '#{recycle_bin}' -type d -regex '#{myregex}' -prune].chomp.split("\n").sort {|x,y| y <=> x }
       if files.length > 0
         # Found something!
-        logger.warn "  Restoring '#{repo_name}.git' to gitolite repository from recycle bin (#{files.first})"
+        logger.warn "[GitHosting] Restoring '#{repo_name}.git' to gitolite repository from recycle bin (#{files.first})"
         begin
           prefix = repo_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
           if prefix
@@ -93,7 +93,7 @@ module GitHosting
           %x[#{GitHosting.git_user_runner} rmdir #{recycle_bin}]
           return true
         rescue
-          logger.error "Attempt to recover '#{repo_name}.git' failed"
+          logger.error "[GitHosting] Attempt to recover '#{repo_name}.git' failed"
           return false
         end
       else
@@ -109,4 +109,5 @@ module GitHosting
     end
 
   end
+
 end
