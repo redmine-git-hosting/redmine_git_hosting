@@ -45,6 +45,7 @@
         </tbody>
       </table>
     </div>
+
   <% else %>
     <table class="list" style="margin:1px 2px; width:99%">
       <thead><tr><th style="text-align:center;">No Mirrors Defined</th></tr></thead>
@@ -52,6 +53,7 @@
   <% end %>
 
   <% mirror_pubkey = GitHosting.mirror_push_public_key %>
+
   <div style="margin: 2px 3px; width: 99%;">
     <div id="clipboard_container" title="<%= l(:label_copy_to_clipboard) %>" style="font-family:sans-serif;" >
       <div id="clipboard_button"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
@@ -96,7 +98,7 @@
   function getWidth() {
     var width = 60*document.viewport.getWidth()/100;
     if (width<750) { width=750 };
-      return width;
+    return width;
   }
 
   function set_mirror_modal_box() {
