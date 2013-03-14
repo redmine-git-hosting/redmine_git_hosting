@@ -1,8 +1,3 @@
-require_dependency 'principal'
-require_dependency 'user'
-require_dependency 'git_hosting'
-require_dependency 'my_controller'
-
 module GitHosting
   module Patches
     module MyControllerPatch

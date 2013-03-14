@@ -1,8 +1,3 @@
-require_dependency 'principal'
-require_dependency 'user'
-require_dependency 'git_hosting'
-require_dependency 'redmine/scm/adapters/git_adapter'
-
 module GitHosting
   module Patches
     module GitAdapterPatch

@@ -1,7 +1,3 @@
-require_dependency 'principal'
-require_dependency 'user'
-require_dependency 'git_hosting'
-
 module GitHosting
   module Patches
     module UserPatch

@@ -1,9 +1,3 @@
-require_dependency 'principal'
-require_dependency 'user'
-require_dependency 'git_hosting'
-require_dependency 'repository'
-require_dependency 'repository/git'
-
 module GitHosting
   module Patches
     module GitRepositoryPatch

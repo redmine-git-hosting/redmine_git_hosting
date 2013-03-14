@@ -1,16 +1,17 @@
 # coding: utf-8
-
 require 'redmine'
 
-require File.join(File.dirname(__FILE__), 'app', 'models', 'git_repository_extra')
-require File.join(File.dirname(__FILE__), 'app', 'models', 'git_cia_notification')
+require 'redmine_git_hosting'
+
+VERSION_NUMBER = '0.6'
 
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
-  author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz and others'
-  description 'Enables Redmine / ChiliProject to control hosting of git repositories'
-  version '0.5.1x'
+  author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
+  description 'Enables Redmine / ChiliProject to control hosting of Git repositories through Gitolite'
+  version VERSION_NUMBER
   url 'https://github.com/ericpaulbishop/redmine_git_hosting'
+  author_url 'https://github.com/jbox-web'
 
   settings :default => {
     'httpServer' => 'localhost',
@@ -58,42 +59,10 @@ Redmine::Plugin.register :redmine_git_hosting do
   end
 end
 
-# Set up autoload of patches
-require 'dispatcher' unless Rails::VERSION::MAJOR >= 3
-def git_hosting_patch(&block)
-  if Rails::VERSION::MAJOR >= 3
-    ActionDispatch::Calbacks.to_prepare(&block)
-  else
-    Dispatcher.to_prepare(:redmine_git_patches,&block)
-  end
-end
-
-git_hosting_patch do
-  patches=Dir[File.dirname(__FILE__)+"/lib/git_hosting/patches/*.rb"].map{|x| File.basename(x,".rb")}.sort
-
-  # Special positioning necessary
-  # Put git_adapter_patch last (make sure that git_cmd stays patched!)
-  patches = (patches-["git_adapter_patch"]) << "git_adapter_patch"
-  patches.each do |patch|
-    require_dependency 'git_hosting/patches/'+File.basename(patch,".rb")
-  end
-end
-
-# initialize hooks
-class GitProjectShowHook < Redmine::Hook::ViewListener
-  render_on :view_projects_show_left, :partial => 'git_urls'
-end
-
-class GitRepoUrlHook < Redmine::Hook::ViewListener
-  render_on :view_repositories_show_contextual, :partial => 'git_urls'
-end
-
-# Put Git SCM first in list of SCMs
-Redmine::Scm::Base.all.unshift("Git").uniq!
-
 # initialize observer
 # Don't initialize this while doing migration of primary system (i.e. Redmine/Chiliproject)
 migrating_primary = (File.basename($0) == "rake" && ARGV.include?("db:migrate"))
+
 config.after_initialize do
   if config.action_controller.perform_caching && !migrating_primary
     ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
