@@ -200,7 +200,7 @@ module RedmineGitHosting
           has_one :git_extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
 
           # initialize association from git repository -> cia_notifications
-          has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => GitHosting::Patches::RepositoryCiaFilters::FilterMethods
+          has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
 
           # initialize association from repository -> deployment_credentials
           has_many :deployment_credentials, :dependent => :destroy
