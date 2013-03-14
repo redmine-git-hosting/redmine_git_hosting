@@ -7,52 +7,57 @@
 <% end %>
 
 <div class="box tabular">
-    <% if @repository && @repository.is_a?(Repository::Git) && (GitHostingHelper.can_view_deployment_keys(@repository.project) || GitHostingHelper.can_view_post_receive_urls(@repository.project) || GitHostingHelper.can_view_mirrors(@repository.project)) %>
-      <h3>Repository Options</h3>
+  <% if @repository && @repository.is_a?(Repository::Git) && (GitHostingHelper.can_view_deployment_keys(@repository.project) || GitHostingHelper.can_view_post_receive_urls(@repository.project) || GitHostingHelper.can_view_mirrors(@repository.project)) %>
+    <h3>Repository Options</h3>
+  <% end %>
+
+  <p>
+    <%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
+    <% if @repository && ! @repository.class.scm_available %>
+      <em class="info error"><%= l(:text_scm_command_not_available) %></em>
     <% end %>
+  </p>
+
+  <p><%= f.check_box :is_default, :label => :field_repository_is_default %></p>
+  <% if @repository && @repository.is_a?(Repository::Git) %>
+    <p><%= f.text_field :identifier, :label => (@repository.new_record? ? :field_identifier : :label_identifier_cannot_be_changed), :disabled => !@repository.new_record? %></p>
+  <% else %>
+    <p><%= f.text_field :identifier %></p>
+  <% end %>
+
+  <% button_disabled = true %>
+  <% if @repository %>
+    <% button_disabled = ! @repository.class.scm_available %>
+  <% end %>
+
+  <% if @repository && @repository.is_a?(Repository::Git) %>
+    <p>
+      <%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
+      <%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>(@project.is_public ? @repository.extra[:git_daemon].to_s : "0")), :disabled => !@project.is_public %>
+    </p>
 
     <p>
-      <%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
-      <% if @repository && ! @repository.class.scm_available %>
-        <em class="info error"><%= l(:text_scm_command_not_available) %></em>
+      <%= label_tag  "extra[git_http]", l(:field_git_http) %>
+      <%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected=>@repository.extra[:git_http].to_s) %>
+    </p>
+
+    <p>
+      <%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
+      <%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>@repository.extra[:notify_cia].to_s) %>
+      <% if @repository.extra[:notify_cia].to_s == "1" %>
+        <a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :projectid => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
+        <em><b><span id="notify_cia_result"></span></b></em>
       <% end %>
     </p>
 
-    <p><%= f.check_box :is_default, :label => :field_repository_is_default %></p>
-    <% if @repository && @repository.is_a?(Repository::Git) %>
-       <p><%= f.text_field :identifier, :label => (@repository.new_record? ? :field_identifier : :label_identifier_cannot_be_changed), :disabled => !@repository.new_record? %></p>
-    <% else %>
-       <p><%= f.text_field :identifier %></p>
-    <% end %>
+    <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
 
-    <% button_disabled = true %>
-    <% if @repository %>
-    <%   button_disabled = ! @repository.class.scm_available %>
-    <% end %>
+    <br/>
 
-    <% if @repository && @repository.is_a?(Repository::Git) %>
-      <p>
-	<%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
-	<%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>(@project.is_public ? @repository.extra[:git_daemon].to_s : "0")), :disabled => !@project.is_public %>
-      </p>
-      <p>
-	<%= label_tag  "extra[git_http]", l(:field_git_http) %>
-	<%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected=>@repository.extra[:git_http].to_s) %>
-      </p>
-      <p>
-	<%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
-	<%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>@repository.extra[:notify_cia].to_s) %>
-	<% if @repository.extra[:notify_cia].to_s == "1" %>
-          <a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :projectid => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
-	  <em><b><span id="notify_cia_result"></span></b></em>
-	<% end %>
-      </p>
-      <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
-      <br/>
-    <% else %>
-      <%= repository_field_tags(f, @repository) if @repository %>
-    <% end %>
+  <% else %>
+    <%= repository_field_tags(f, @repository) if @repository %>
+  <% end %>
 
-      <%= submit_tag(@repository.new_record? ? l(:button_create) : l(:button_save), :disabled => button_disabled) %>
-      <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+  <%= submit_tag(@repository.new_record? ? l(:button_create) : l(:button_save), :disabled => button_disabled) %>
+  <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
 </div>
