@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module GitAdapterPatch
 
@@ -32,7 +32,6 @@ module GitHosting
             end
           end
         end
-
       end
 
       module ClassMethods
@@ -97,5 +96,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-Redmine::Scm::Adapters::GitAdapter.send(:include, GitHosting::Patches::GitAdapterPatch)
+unless Redmine::Scm::Adapters::GitAdapter.included_modules.include?(RedmineGitHosting::Patches::GitAdapterPatch)
+  Redmine::Scm::Adapters::GitAdapter.send(:include, RedmineGitHosting::Patches::GitAdapterPatch)
+end

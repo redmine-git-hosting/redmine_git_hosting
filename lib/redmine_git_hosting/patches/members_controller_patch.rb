@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module MembersControllerPatch
 
@@ -115,5 +115,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-MembersController.send(:include, GitHosting::Patches::MembersControllerPatch)
+unless MembersController.included_modules.include?(RedmineGitHosting::Patches::MembersControllerPatch)
+  MembersController.send(:include, RedmineGitHosting::Patches::MembersControllerPatch)
+end

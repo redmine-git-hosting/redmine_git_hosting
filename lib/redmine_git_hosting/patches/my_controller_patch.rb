@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module MyControllerPatch
 
@@ -38,5 +38,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-MyController.send(:include, GitHosting::Patches::MyControllerPatch)
+unless MyController.included_modules.include?(RedmineGitHosting::Patches::MyControllerPatch)
+  MyController.send(:include, RedmineGitHosting::Patches::MyControllerPatch)
+end

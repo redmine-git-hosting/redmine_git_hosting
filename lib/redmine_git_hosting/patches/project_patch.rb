@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module ProjectPatch
 
@@ -50,5 +50,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-Project.send(:include, GitHosting::Patches::ProjectPatch)
+unless Project.included_modules.include?(RedmineGitHosting::Patches::ProjectPatch)
+  Project.send(:include, RedmineGitHosting::Patches::ProjectPatch)
+end

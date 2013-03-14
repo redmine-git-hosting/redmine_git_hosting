@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module GroupsControllerPatch
 
@@ -24,5 +24,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-GroupsController.send(:include, GitHosting::Patches::GroupsControllerPatch)
+unless GroupsController.included_modules.include?(RedmineGitHosting::Patches::GroupsControllerPatch)
+  GroupsController.send(:include, RedmineGitHosting::Patches::GroupsControllerPatch)
+end

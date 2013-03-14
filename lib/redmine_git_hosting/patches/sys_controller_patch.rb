@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module SysControllerPatch
 
@@ -27,5 +27,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-SysController.send(:include, GitHosting::Patches::SysControllerPatch)
+unless SysController.included_modules.include?(RedmineGitHosting::Patches::SysControllerPatch)
+  SysController.send(:include, RedmineGitHosting::Patches::SysControllerPatch)
+end

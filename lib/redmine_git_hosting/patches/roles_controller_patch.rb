@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module RolesControllerPatch
 
@@ -89,5 +89,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-RolesController.send(:include, GitHosting::Patches::RolesControllerPatch)
+unless RolesController.included_modules.include?(RedmineGitHosting::Patches::RolesControllerPatch)
+  RolesController.send(:include, RedmineGitHosting::Patches::RolesControllerPatch)
+end

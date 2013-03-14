@@ -1,4 +1,4 @@
-module GitHosting
+module RedmineGitHosting
   module Patches
     module UsersControllerPatch
 
@@ -109,5 +109,6 @@ module GitHosting
   end
 end
 
-# Patch in changes
-UsersController.send(:include, GitHosting::Patches::UsersControllerPatch)
+unless UsersController.included_modules.include?(RedmineGitHosting::Patches::UsersControllerPatch)
+  UsersController.send(:include, RedmineGitHosting::Patches::UsersControllerPatch)
+end
