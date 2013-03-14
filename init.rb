@@ -13,38 +13,44 @@ Redmine::Plugin.register :redmine_git_hosting do
   url 'https://github.com/ericpaulbishop/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
-  settings :default => {
-    'httpServer' => 'localhost',
-    'httpServerSubdir' => '',
-    'gitServer' => 'localhost',
-    'gitUser' => 'git',
-    'gitConfigPath' => 'gitolite.conf', # Redmine gitolite config file
-    'gitConfigHasAdminKey' => 'true',   # Conf file should have admin key
-    'gitRepositoryBasePath' => 'repositories/',
-    'gitRedmineSubdir' => '',
-    'gitRepositoryHierarchy' => 'true',
-    'gitRecycleBasePath' => 'recycle_bin/',
-    'gitRecycleExpireTime' => '24.0',
-    'gitLockWaitTime' => '10',
-    'gitoliteIdentityFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa',
-    'gitoliteIdentityPublicKeyFile' => RAILS_ROOT + '/.ssh/gitolite_admin_id_rsa.pub',
-    'allProjectsUseGit' => 'false',
-    'gitDaemonDefault' => '1',   # Default is Daemon enabled
-    'gitHttpDefault' => '1',     # Default is HTTP_ONLY
-    'gitNotifyCIADefault' => '0', # Default is CIA Notification disabled
-    'deleteGitRepositories' => 'false',
-    'gitRepositoriesShowUrl' => 'true',
-    'gitCacheMaxTime' => '-1',
-    'gitCacheMaxElements' => '100',
-    'gitCacheMaxSize' => '16',
-    'gitHooksDebug' => 'false',
-    'gitHooksAreAsynchronous' => 'true',
-    'gitTempDataDir' => '/tmp/redmine_git_hosting/',
-    'gitScriptDir' => '',
-    'gitForceHooksUpdate' => 'true',
-    'gitRepositoryIdentUnique' => 'true'
-  },
-  :partial => 'redmine_git_hosting'
+  settings({
+    :partial => 'settings/redmine_git_hosting',
+    :default => {
+      'gitLockWaitTime'               => '10',
+      'gitTempDataDir'                => '/tmp/redmine_git_hosting/',
+      'gitScriptDir'                  => '',
+      'gitUser'                       => 'git',
+      'gitoliteIdentityFile'          => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s,
+      'gitoliteIdentityPublicKeyFile' => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa.pub").to_s,
+
+      'gitConfigFile'                 => 'gitolite.conf',
+      'gitConfigHasAdminKey'          => true,
+      'gitRepositoryBasePath'         => 'repositories/',
+      'gitRedmineSubdir'              => '',
+      'gitRepositoryHierarchy'        => false,
+      'gitRepositoryIdentUnique'      => true,
+      'allProjectsUseGit'             => false,
+      'gitDaemonDefault'              => '1',
+      'gitHttpDefault'                => '1',
+      'gitNotifyCIADefault'           => '0',
+      'deleteGitRepositories'         => false,
+      'gitRecycleBasePath'            => 'recycle_bin/',
+      'gitRecycleExpireTime'          => '24.0',
+
+      'gitServer'                     => 'localhost',
+      'httpServer'                    => 'localhost',
+      'httpServerSubdir'              => '',
+      'gitRepositoriesShowUrl'        => true,
+
+      'gitCacheMaxElements'           => '100',
+      'gitCacheMaxTime'               => '-1',
+      'gitCacheMaxSize'               => '16',
+
+      'gitHooksAreAsynchronous'       => true,
+      'gitHooksDebug'                 => false,
+      'gitForceHooksUpdate'           => true,
+    }
+  })
 
   project_module :repository do
     permission :create_repository_mirrors, :repository_mirrors => :create
@@ -63,17 +69,30 @@ end
 # Don't initialize this while doing migration of primary system (i.e. Redmine/Chiliproject)
 migrating_primary = (File.basename($0) == "rake" && ARGV.include?("db:migrate"))
 
-config.after_initialize do
-  if config.action_controller.perform_caching && !migrating_primary
-    ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
-    ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingSettingsObserver
-
-    ActionController::Dispatcher.to_prepare(:git_hosting_observer_reload) do
+if Rails::VERSION::MAJOR >= 3
+  Rails.configuration.after_initialize do
+    if !migrating_primary
+      ActiveRecord::Base.observers << GitHostingObserver
+      ActiveRecord::Base.observers << GitHostingSettingsObserver
       GitHostingObserver.instance.reload_this_observer
-    end
-
-    ActionController::Dispatcher.to_prepare(:git_hosting_settings_observer_reload) do
       GitHostingSettingsObserver.instance.reload_this_observer
+    end
+  end
+else
+  config.after_initialize do
+    if !migrating_primary
+
+      ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingObserver
+      ActiveRecord::Base.observers = ActiveRecord::Base.observers << GitHostingSettingsObserver
+
+      ActionController::Dispatcher.to_prepare(:git_hosting_observer_reload) do
+        GitHostingObserver.instance.reload_this_observer
+      end
+
+      ActionController::Dispatcher.to_prepare(:git_hosting_settings_observer_reload) do
+        GitHostingSettingsObserver.instance.reload_this_observer
+      end
+
     end
   end
 end
