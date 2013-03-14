@@ -2,10 +2,14 @@
   <h2><%=l(:label_mirror_edit)%></h2>
 <% end %>
 
-<% labelled_remote_form_for :repository_mirrors, @mirror,
+<% form = labelled_form_for :repository_mirrors, @mirror,
                             :url => { :controller => 'repository_mirrors', :action => 'update', :project_id => @project, :id => @mirror.id },
                             :html => {:method => :post, :class => 'tabular'} do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>
   <%= submit_tag l(:button_save) %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+  <% end %>
 <% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>
