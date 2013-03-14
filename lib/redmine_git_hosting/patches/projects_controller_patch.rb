@@ -13,7 +13,7 @@ module RedmineGitHosting
           membership.save
         end
 
-        if @project.module_enabled?('repository') && Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == "true"
+        if @project.module_enabled?('repository') && GitHostingConf.all_projects_use_git?
           # Create new repository
           repo = Repository.factory("Git")
           if GitHosting.multi_repos?
