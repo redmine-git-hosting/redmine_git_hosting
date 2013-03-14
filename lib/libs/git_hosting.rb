@@ -5,18 +5,18 @@ require 'tempfile'
 require 'stringio'
 
 module GitHosting
-  LOCK_WAIT_IF_UNDEF = 10                    # In case settings not migrated (normally from settings)
-  REPOSITORY_IF_UNDEF = "repositories/"      # In case settings not migrated (normally from settings)
-  REDMINE_SUBDIR = ""                        # In case settings not migrated (normally from settings)
-  REDMINE_HIERARCHICAL = "true"              # In case settings not migrated (normally from settings)
-  HTTP_SERVER_SUBDIR = ""                    # In case settings not migrated (normally from settings)
-  TEMP_DATA_DIR = "/tmp/redmine_git_hosting" # In case settings not migrated (normally from settings)
-  SCRIPT_DIR = ""                            # In case settings not migrated (normally from settings)
-  SCRIPT_PARENT = "bin"
 
-  # Used to register errors when pulling and pushing the conf file
-  class GitHostingException < StandardError
+  @@logger = nil
+  def self.logger
+    @@logger ||= MyLogger.new
   end
+
+
+  ###############################
+  ##                           ##
+  ##     VARIOUS ACCESSORS     ##
+  ##                           ##
+  ###############################
 
   # Are we in the multiple-repositories-per-project version of Redmine?
   @@multi_repos = nil
@@ -34,34 +34,12 @@ module GitHosting
     @@rails_3 ||= (Rails::VERSION::STRING.split('.')[0].to_i > 2)
   end
 
-  # Time in seconds to wait before giving up on acquiring the lock
-  def self.lock_wait_time
-    Setting.plugin_redmine_git_hosting['gitLockWaitTime'].to_i || LOCK_WAIT_IF_UNDEF
-  end
 
   # Configuration file (relative to git conf directory)
   def self.gitolite_conf
     GitoliteConfig.gitolite_conf
   end
 
-  # Repository base path (relative to git user home directory)
-  def self.repository_base
-    Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'] || REPOSITORY_IF_UNDEF
-  end
-
-  # Redmine subdirectory path (relative to Repository base path
-  def self.repository_redmine_subdir
-    Setting.plugin_redmine_git_hosting['gitRedmineSubdir'] || REDMINE_SUBDIR
-  end
-
-  # Redmine repositories in hierarchy
-  def self.repository_hierarchy
-    (Setting.plugin_redmine_git_hosting['gitRepositoryHierarchy'] || REDMINE_HIERARCHICAL) != "false"
-  end
-
-  def self.http_server_subdir
-    Setting.plugin_redmine_git_hosting['httpServerSubdir'] || HTTP_SERVER_SUBDIR
-  end
 
   # This is the file portion of the url used when talking through ssh to the repository.
   def self.git_access_url repository
@@ -72,7 +50,7 @@ module GitHosting
   # This is the relative portion of the url (below the rails_root) used when talking through httpd to the repository
   # Note that this differs from the git_access_url in not including 'repository_redmine_subdir' as part of the path.
   def self.http_access_url repository
-    return "#{http_server_subdir}#{redmine_name(repository)}"
+    return "#{GitHostingConf.http_server_subdir}#{redmine_name(repository)}"
   end
 
 
@@ -81,14 +59,64 @@ module GitHosting
     # Remove any path from httpServer in case they are leftover from previous installations.
     # No trailing /.
     my_root_path = Redmine::Utils::relative_url_root
-    File.join(Setting.plugin_redmine_git_hosting['httpServer'][/^[^\/]*/],my_root_path,"/")[0..-2]
+    File.join(GitHostingConf.http_server[/^[^\/]*/],my_root_path,"/")[0..-2]
   end
 
-  @@logger = nil
-  def self.logger
-    @@logger ||= MyLogger.new
+
+  def self.get_full_parent_path(repository, is_file_path)
+    project = repository.project
+    return "" if !project.parent || !GitHostingConf.repository_hierarchy
+    parent_parts = [];
+    p = project
+    while p.parent
+      parent_id = p.parent.identifier.to_s
+      parent_parts.unshift(parent_id)
+      p = p.parent
+    end
+    return is_file_path ? File.join(parent_parts) : parent_parts.join("/")
   end
 
+
+  ###############################
+  ##                           ##
+  ##      LOCK FUNCTIONS       ##
+  ##                           ##
+  ###############################
+
+
+  @@lock_file = nil
+  def self.lock(retries)
+    is_locked = false
+    if @@lock_file.nil?
+      @@lock_file=File.new(File.join(get_tmp_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
+    end
+
+    while retries > 0
+      is_locked = @@lock_file.flock(File::LOCK_EX|File::LOCK_NB)
+      retries-=1
+      if (!is_locked) && retries > 0
+        sleep 1
+      end
+    end
+    return is_locked
+  end
+
+
+  def self.unlock
+    if !@@lock_file.nil?
+      @@lock_file.flock(File::LOCK_UN)
+    end
+  end
+
+
+  ###############################
+  ##                           ##
+  ##      SHELL FUNCTIONS      ##
+  ##                           ##
+  ###############################
+
+
+  ## GET CURRENT USER
   @@web_user = nil
   def self.web_user
     if @@web_user.nil?
@@ -111,12 +139,12 @@ module GitHosting
   def self.mirror_push_public_key
     if @@mirror_pubkey.nil?
 
-      %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa ' ]
-      %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
+      %x[cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa ' ]
+      %x[cat '#{GitHostingConf.gitolite_ssh_public_key}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
       %x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
       %x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
 
-      pubk =  ( %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}' ]  ).chomp.strip
+      pubk = ( %x[cat '#{GitHostingConf.gitolite_ssh_public_key}' ]  ).chomp.strip
       git_user_dir = ( %x[ #{GitHosting.git_user_runner} "cd ~ ; pwd" ] ).chomp.strip
       %x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
       %x[ echo '#!/bin/sh' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh']
@@ -182,18 +210,7 @@ module GitHosting
     return @@sudo_web_to_git_user_cached
   end
 
-  def self.get_full_parent_path(repository, is_file_path)
-    project = repository.project
-    return "" if !project.parent || !repository_hierarchy
-    parent_parts = [];
-    p = project
-    while p.parent
-      parent_id = p.parent.identifier.to_s
-      parent_parts.unshift(parent_id)
-      p = p.parent
-    end
-    return is_file_path ? File.join(parent_parts) : parent_parts.join("/")
-  end
+
 
   def self.redmine_name(repository)
     return File.expand_path(File.join("./",get_full_parent_path(repository, false),repository.git_label),"/")[1..-1]
@@ -212,7 +229,7 @@ module GitHosting
   @@git_hosting_tmp_dir = nil
   @@previous_git_tmp_dir = nil
   def self.get_tmp_dir
-    tmp_dir = (Setting.plugin_redmine_git_hosting['gitTempDataDir'] || TEMP_DATA_DIR)
+    tmp_dir = GitHostingConf.temp_data_dir
     if (@@previous_git_tmp_dir != tmp_dir)
       @@previous_git_tmp_dir = tmp_dir
       @@git_hosting_tmp_dir = File.join(tmp_dir,git_user) + "/"
@@ -311,7 +328,7 @@ module GitHosting
   ## CREATE EXECUTABLE FILES
   def self.update_git_exec
     logger.info "[GitHosting] Setting up #{get_bin_dir}"
-    gitolite_key = Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+    gitolite_key = GitHostingConf.gitolite_ssh_private_key
 
     File.open(gitolite_ssh_path(), "w") do |f|
       f.puts "#!/bin/sh"
@@ -382,28 +399,7 @@ module GitHosting
     %x[chown #{web_user} -R "#{get_bin_dir}"]
   end
 
-  @@lock_file = nil
-  def self.lock(retries)
-    is_locked = false
-    if @@lock_file.nil?
-      @@lock_file=File.new(File.join(get_tmp_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
-    end
 
-    while retries > 0
-      is_locked = @@lock_file.flock(File::LOCK_EX|File::LOCK_NB)
-      retries-=1
-      if (!is_locked) && retries > 0
-      sleep 1
-      end
-    end
-    return is_locked
-  end
-
-  def self.unlock
-    if !@@lock_file.nil?
-      @@lock_file.flock(File::LOCK_UN)
-    end
-  end
 
   def self.shell(command)
     begin
@@ -477,7 +473,7 @@ module GitHosting
     begin
       logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
+      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{GitHostingConf.git_server}/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}" ]
       # Make sure we have our hooks setup
       GitAdapterHooks.check_hooks_installed
@@ -490,7 +486,7 @@ module GitHosting
         fixup_gitolite_admin
         logger.info "[GitHosting] Recloning gitolite-admin repository to #{repo_dir}"
         shell %[rm -rf "#{repo_dir}"]
-        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{Setting.plugin_redmine_git_hosting['gitServer']}/gitolite-admin.git #{repo_dir}]
+        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{GitHostingConf.git_server}/gitolite-admin.git #{repo_dir}]
         shell %[chmod 700 "#{repo_dir}" ]
         # Make sure we have our hooks setup
         GitAdapterHooks.check_hooks_installed
@@ -553,7 +549,7 @@ module GitHosting
       conf = GitoliteConfig.new(tmp_conf_file)
 
       # copy key into home directory...
-      shell %[cat #{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
+      shell %[cat #{GitoliteConfig.gitolite_ssh_public_key} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
 
       # Locate any keys that match redmine_git_hosting key
       raw_admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n")
@@ -748,7 +744,7 @@ module GitHosting
     @@recursionCheck = true
 
     # Grab actual lock
-    if !lock(lock_wait_time)
+    if !lock(GitHostingConf.lock_wait_time)
       logger.error "[GitHosting] update_repositories() exited without acquiring lock!"
       @@recursionCheck = false
       return
@@ -1022,7 +1018,7 @@ module GitHosting
 
           # Next, delete redmine keys for this repository
           conf.delete_redmine_keys repo_name
-          if (Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == "true")
+          if GitHostingConf.delete_git_repositories?
             if conf.repo_has_no_keys? repo_name
               logger.warn "[GitHosting] Deleting #{orphanString}entry '#{repo_name}' from #{gitolite_conf}"
               conf.delete_repo repo_name
@@ -1083,7 +1079,7 @@ module GitHosting
       prefix = new_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
       if prefix
         # Has subdirectory.  Must construct destination directory
-        repo_prefix = File.join(repository_base, prefix)
+        repo_prefix = File.join(GitHostingConf.repository_base, prefix)
         GitHosting.shell %[#{git_user_runner} mkdir -p '#{repo_prefix}']
       end
       old_path = repository_path(old_name)
@@ -1093,9 +1089,9 @@ module GitHosting
       # If any empty directories left behind, try to delete them.  Ignore failure.
       old_prefix = old_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
       if old_prefix
-        repo_subpath = File.join(repository_base, old_prefix)
+        repo_subpath = File.join(GitHostingConf.repository_base, old_prefix)
         result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
-        result.each { |dir| logger.warn "  Removing empty repository subdirectory: #{dir}"}
+        result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory: #{dir}"}
       end
     rescue GitHostingException
       logger.error "[GitHosting] move_physical_repo(#{old_name},#{new_name}) failed"
@@ -1247,6 +1243,11 @@ module GitHosting
   ##   ADDITIONAL CLASSES      ##
   ##                           ##
   ###############################
+
+
+  # Used to register errors when pulling and pushing the conf file
+  class GitHostingException < StandardError
+  end
 
   class MyLogger
     # Prefix to error messages
