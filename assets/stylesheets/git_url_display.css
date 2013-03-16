@@ -128,11 +128,11 @@
   border-width: 1px 1px 1px 1px;
   background-color: #fff;
   color: #000;
-  font-size: 11px;
-  height: 16px;
+  font-size: 10px;
+  height: 17px;
   padding: 3px 5px 2px;
-  min-width:275px;
-  width: 75%;
+  min-width: 275px;
+  width: 97%;
   font-family: Monaco,"DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
   margin: 0;
   float: left;
