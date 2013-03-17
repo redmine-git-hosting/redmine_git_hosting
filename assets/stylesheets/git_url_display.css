@@ -82,7 +82,7 @@
   display: block;
   font-size: 11px;
   font-weight: bold;
-  line-height: 21px;
+  line-height: 22px;
   margin: 0;
   padding: 0 10px 0 11px;
   text-decoration: none;
@@ -132,7 +132,7 @@
   height: 17px;
   padding: 3px 5px 2px;
   min-width: 275px;
-  width: 97%;
+  width: 87%;
   font-family: Monaco,"DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
   margin: 0;
   float: left;
