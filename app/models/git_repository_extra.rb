@@ -7,7 +7,9 @@ class GitRepositoryExtra < ActiveRecord::Base
   validates_associated :repository
   attr_accessible :id, :repository_id, :key, :git_http, :git_daemon, :notify_cia
 
-  def after_initialize
+  after_initialize :set_values
+
+  def set_values
     if self.repository.nil?
       generate
       setup_defaults
@@ -26,7 +28,7 @@ class GitRepositoryExtra < ActiveRecord::Base
           valid = true
         end
       end
-    rescue Exception=>e
+    rescue Exception => e
     end
     valid
   end
@@ -38,9 +40,9 @@ class GitRepositoryExtra < ActiveRecord::Base
   end
 
   def setup_defaults
-    write_attribute(:git_http,Setting.plugin_redmine_git_hosting['gitHttpDefault']) if Setting.plugin_redmine_git_hosting['gitHttpDefault']
-    write_attribute(:git_daemon,Setting.plugin_redmine_git_hosting['gitDaemonDefault']) if Setting.plugin_redmine_git_hosting['gitDaemonDefault']
-    write_attribute(:notify_cia,Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']) if Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']
+    write_attribute(:git_http,   Setting.plugin_redmine_git_hosting['gitHttpDefault']) if Setting.plugin_redmine_git_hosting['gitHttpDefault']
+    write_attribute(:git_daemon, Setting.plugin_redmine_git_hosting['gitDaemonDefault']) if Setting.plugin_redmine_git_hosting['gitDaemonDefault']
+    write_attribute(:notify_cia, Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']) if Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']
   end
 
 end
