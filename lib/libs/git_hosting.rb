@@ -217,6 +217,11 @@ module GitHosting
   end
 
 
+  def self.gitolite_version
+    %x[#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost]
+  end
+
+
   ## GET CURRENT USER
   @@web_user = nil
   def self.web_user
