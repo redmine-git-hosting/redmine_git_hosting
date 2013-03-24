@@ -30,7 +30,7 @@ apply_patch do
   ## Redmine Git Hosting Libs
   require_dependency 'libs/git_hosting'
   require_dependency 'libs/git_hosting_conf'
-  require_dependency 'libs/gitolite_conf'
+  require_dependency 'libs/gitolite_config'
   require_dependency 'libs/gitolite_recycle'
   require_dependency 'libs/git_adapter_hooks'
   require_dependency 'libs/cached_shell_redirector'
