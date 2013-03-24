@@ -614,7 +614,7 @@ module GitHosting
 
       logger.warn "  Cloning administrative repo directly as #{git_user} in #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
-      admin_repo = "#{GitHosting.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
+      admin_repo = "#{GitHostingConf.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
       shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
 
       # Load up existing conf file
