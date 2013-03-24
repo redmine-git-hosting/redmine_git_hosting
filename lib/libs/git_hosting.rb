@@ -623,7 +623,7 @@ module GitHosting
       conf = GitoliteConfig.new(tmp_conf_file)
 
       # copy key into home directory...
-      shell %[cat #{GitoliteConfig.gitolite_ssh_public_key} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
+      shell %[cat #{GitHostingConf.gitolite_ssh_public_key} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
 
       # Locate any keys that match redmine_git_hosting key
       raw_admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n")
