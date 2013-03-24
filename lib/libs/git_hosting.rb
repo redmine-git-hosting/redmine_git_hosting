@@ -602,7 +602,7 @@ module GitHosting
     unless GitoliteConfig.has_admin_key?
       raise GitHostingException, "Cannot repair Admin Key: Key not managed by Redmine!"
     end
-    logger.warn "Attempting to restore repository access key:"
+    logger.warn "[GitHosting] Attempting to restore repository access key:"
 
     begin
       repo_dir = File.join(Dir.tmpdir,"fixrepo",git_user,GitHosting::GitoliteConfig::ADMIN_REPO)
@@ -612,7 +612,7 @@ module GitHosting
       tmp_conf_dir = File.join(Dir.tmpdir,"fixconf",git_user)
       tmp_conf_file = File.join(tmp_conf_dir,gitolite_conf)
 
-      logger.warn "  Cloning administrative repo directly as #{git_user} in #{repo_dir}"
+      logger.warn "[GitHosting] Cloning administrative repo directly as #{git_user} in #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
       admin_repo = "#{GitHostingConf.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
       shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
@@ -638,7 +638,7 @@ module GitHosting
         # Take basename and remove as many ".pub" as you can
         working_basename = /^(.*\/)?([^\/]*?)(\.pub)*$/.match(name)[2]
         if first_match || ("#{working_basename}.pub" != File.basename(name))
-          logger.warn "  Removing duplicate administrative key '#{File.basename(name)}' from keydir"
+          logger.warn "[GitHosting] Removing duplicate administrative key '#{File.basename(name)}' from keydir"
           shell %[#{GitHosting.git_user_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm #{name}]
         end
         # First name will match this
@@ -656,17 +656,17 @@ module GitHosting
       # Remove extraneous keys from
       extrakeys.each do |keyname|
         unless keyname == new_admin_key_name
-          logger.warn "  Removing orphan administrative key '#{keyname}' from gitolite config file"
+          logger.warn "[GitHosting] Removing orphan administrative key '#{keyname}' from gitolite config file"
           conf.delete_admin_keys keyname
         end
       end
 
-      logger.warn "  Establishing '#{new_admin_key_name}.pub' as the redmine_git_hosting administrative key"
+      logger.warn "[GitHosting] Establishing '#{new_admin_key_name}.pub' as the redmine_git_hosting administrative key"
 
       # Add selected key to front of admin list
       admin_keys = ([new_admin_key_name] + conf.get_admin_keys).uniq
       if (admin_keys.length > 1)
-        logger.warn "  Additional administrative key(s): #{admin_keys[1..-1].map{|x| "'#{x}.pub'"}.join(', ')}"
+        logger.warn "[GitHosting] Additional administrative key(s): #{admin_keys[1..-1].map{|x| "'#{x}.pub'"}.join(', ')}"
       end
       conf.set_admin_keys admin_keys
       conf.save
@@ -679,19 +679,19 @@ module GitHosting
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of gitolite admin key'"]
       begin
-        logger.warn "  Pushing fixes using gl-admin-push"
+        logger.warn "[GitHosting] Pushing fixes using gl-admin-push"
         shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gl-admin-push -f"]
-        logger.warn "Successfully reestablished gitolite admin key!"
+        logger.warn "[GitHosting] Successfully reestablished gitolite admin key!"
       rescue
-        logger.error "gl-admin-push failed (pre 2.0.3 gitolite?).  Trying 'gl-setup #{keydir}/#{new_admin_key_name}.pub'"
+        logger.error "[GitHosting] gl-admin-push failed (pre 2.0.3 gitolite?). Trying 'gl-setup #{keydir}/#{new_admin_key_name}.pub'"
         shell %[#{GitHosting.git_user_runner} "gl-setup #{keydir}/#{new_admin_key_name}.pub"]
-        logger.warn "Hopefully we have successfully reestablished gitolite admin key."
+        logger.warn "[GitHosting] Hopefully we have successfully reestablished gitolite admin key."
       end
       %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
       "Success!"
     rescue => e
-      logger.error "Failed to reestablish gitolite admin key."
+      logger.error "[GitHosting] Failed to reestablish gitolite admin key."
       logger.error e.message
       logger.error e.backtrace.join("\n")
       %x[#{GitHosting.git_user_runner} 'rm -f ~/id_rsa.pub']
