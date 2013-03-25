@@ -118,7 +118,7 @@ if rgh_vars["asynch"] == "true"
 end
 
 log("\n\n", false, true)
-log("Notifying ChiliProject/Redmine project #{rgh_vars['projectid']} about changes to this repo...", true, true)
+log("Notifying ChiliProject/Redmine project '#{rgh_vars['projectid']}' about changes to this repo...", true, true)
 
 success = run_query(rgh_vars["url"], get_http_params(rgh_vars), true)
 if !success
