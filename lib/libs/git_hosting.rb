@@ -689,7 +689,7 @@ module GitHosting
       end
       %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
-      "Success!"
+      logger.info "[GitHosting] Success!"
     rescue => e
       logger.error "[GitHosting] Failed to reestablish gitolite admin key."
       logger.error e.message
