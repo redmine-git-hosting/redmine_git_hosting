@@ -22,102 +22,192 @@ class GitoliteHooksController < ApplicationController
     # Clear existing cache
     CachedShellRedirector.clear_cache_for_repository(@repository)
 
-    render :text => Proc.new { |response, output|
-      response.headers["Content-Type"] = "text/plain;"
-
-      # Fetch commits from the repository
-      GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
-      output.write("Fetching changesets for #{@project.name}'s repository ... ")
-      output.flush
-      begin
-        @repository.fetch_changesets
-      rescue Redmine::Scm::Adapters::CommandFailed => e
-        logger.error "[GitHosting] error during fetching changesets: #{e.message}"
-      end
-      output.write("Done\n")
-      output.flush
-
-      payloads = []
-      if @repository.repository_mirrors.has_explicit_refspec.any? or @repository.extra.notify_cia == 1 or @repository.repository_post_receive_urls.any?
-        payloads = post_receive_payloads(params[:refs])
-      end
-
-      @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
-        if mirror.needs_push payloads
-          GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
-          output.write("Pushing changes to mirror #{mirror.url} ... ")
-          output.flush
-
-          (mirror_err,mirror_message) = mirror.push
-
-          result = mirror_err ? "Failed!\n" + mirror_message : "Done\n"
-          output.write(result)
-          output.flush
+    if Rails::VERSION::MAJOR >= 3
+      self.response_body = Enumerator.new do |y|
+        # Fetch commits from the repository
+        GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
+        y << "Fetching changesets for #{@project.name}'s repository ... "
+        begin
+          @repository.fetch_changesets
+        rescue Redmine::Scm::Adapters::CommandFailed => e
+          logger.error "[GitHosting] error during fetching changesets: #{e.message}"
         end
-      } if @repository.repository_mirrors.any?
+        y << "Done\n"
 
-      # Post to each post-receive URL
-      @repository.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
-        if prurl.mode == :github
-          msg = "Sending #{pluralize(payloads.length,'notification')} to #{prurl.url} ... "
-        else
-          msg = "Notifying #{prurl.url} ... "
+        payloads = []
+        if @repository.repository_mirrors.has_explicit_refspec.any? or @repository.extra.notify_cia == 1 or @repository.repository_post_receive_urls.any?
+          payloads = post_receive_payloads(params[:refs])
         end
-        output.write msg
-        output.flush
 
-        uri = URI(prurl.url)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == 'https')
+        @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
+          if mirror.needs_push payloads
+            GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
+            y << "Pushing changes to mirror #{mirror.url} ... "
 
-        errmsg = nil
-        payloads.each {|payload|
-          begin
-            if prurl.mode == :github
-              request = Net::HTTP::Post.new(uri.request_uri)
-              request.set_form_data({"payload" => payload.to_json})
-            else
-              request = Net::HTTP::Get.new(uri.request_uri)
+            (mirror_err,mirror_message) = mirror.push
+
+            result = mirror_err ? "Failed!\n" + mirror_message : "Done\n"
+            y << result
+          end
+        } if @repository.repository_mirrors.any?
+
+        # Post to each post-receive URL
+        @repository.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
+          if prurl.mode == :github
+            msg = "Sending #{pluralize(payloads.length,'notification')} to #{prurl.url} ... "
+          else
+            msg = "Notifying #{prurl.url} ... "
+          end
+          y << msg
+
+          uri = URI(prurl.url)
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = (uri.scheme == 'https')
+
+          errmsg = nil
+          payloads.each {|payload|
+            begin
+              if prurl.mode == :github
+                request = Net::HTTP::Post.new(uri.request_uri)
+                request.set_form_data({"payload" => payload.to_json})
+              else
+                request = Net::HTTP::Get.new(uri.request_uri)
+              end
+              res = http.start {|openhttp| openhttp.request request}
+              errmsg = "Return code: #{res.code} (#{res.message})." if !res.is_a?(Net::HTTPSuccess)
+            rescue => e
+              errmsg = "Exception: #{e.message}"
             end
-            res = http.start {|openhttp| openhttp.request request}
-            errmsg = "Return code: #{res.code} (#{res.message})." if !res.is_a?(Net::HTTPSuccess)
-          rescue => e
-            errmsg = "Exception: #{e.message}"
+            break if errmsg || prurl.mode != :github
+          }
+
+          if errmsg
+            y << "[failure] done\n"
+            GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
+          else
+            y << "[success] done\n"
+            GitHosting.logger.info "[ #{msg}Succeeded! ]"
           end
-          break if errmsg || prurl.mode != :github
-        }
+        } if @repository.repository_post_receive_urls.any?
 
-        if errmsg
-          output.write "[failure] done\n"
-          GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
-        else
-          output.write "[success] done\n"
-          GitHosting.logger.info "[ #{msg}Succeeded! ]"
-        end
-        output.flush
-      } if @repository.repository_post_receive_urls.any?
+        # Notify CIA
+        #Thread.abort_on_exception = true
+        Thread.new(@repository, payloads) {|repository, payloads|
+          GitHosting.logger.debug "Notifying CIA"
+          y << "Notifying CIA\n"
 
-      # Notify CIA
-      #Thread.abort_on_exception = true
-      Thread.new(@repository, payloads) {|repository, payloads|
-        GitHosting.logger.debug "Notifying CIA"
-        output.write("Notifying CIA\n")
-        output.flush
-
-        payloads.each do |payload|
-          branch = payload[:ref].gsub("refs/heads/", "")
-          payload[:commits].each do |commit|
-            revision = repository.find_changeset_by_name(commit["id"])
-            next if repository.cia_notifications.notified?(revision)  # Already notified about this commit
-            GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
-            CiaNotificationMailer.deliver_notification(revision, branch)
-            repository.cia_notifications.notified(revision)
+          payloads.each do |payload|
+            branch = payload[:ref].gsub("refs/heads/", "")
+            payload[:commits].each do |commit|
+              revision = repository.find_changeset_by_name(commit["id"])
+              next if repository.cia_notifications.notified?(revision)  # Already notified about this commit
+              GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
+              CiaNotificationMailer.deliver_notification(revision, branch)
+              repository.cia_notifications.notified(revision)
+            end
           end
+
+        } if !params[:refs].nil? && @repository.extra.notify_cia == 1
+
+      end
+    else
+      render :text => Proc.new { |response, output|
+        response.headers["Content-Type"] = "text/plain;"
+
+        # Fetch commits from the repository
+        GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
+        output.write("Fetching changesets for #{@project.name}'s repository ... ")
+        output.flush
+        begin
+          @repository.fetch_changesets
+        rescue Redmine::Scm::Adapters::CommandFailed => e
+          logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+        end
+        output.write("Done\n")
+        output.flush
+
+        payloads = []
+        if @repository.repository_mirrors.has_explicit_refspec.any? or @repository.extra.notify_cia == 1 or @repository.repository_post_receive_urls.any?
+          payloads = post_receive_payloads(params[:refs])
         end
 
-      } if !params[:refs].nil? && @repository.extra.notify_cia == 1
+        @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
+          if mirror.needs_push payloads
+            GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
+            output.write("Pushing changes to mirror #{mirror.url} ... ")
+            output.flush
 
-    }, :layout => false
+            (mirror_err,mirror_message) = mirror.push
+
+            result = mirror_err ? "Failed!\n" + mirror_message : "Done\n"
+            output.write(result)
+            output.flush
+          end
+        } if @repository.repository_mirrors.any?
+
+        # Post to each post-receive URL
+        @repository.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each {|prurl|
+          if prurl.mode == :github
+            msg = "Sending #{pluralize(payloads.length,'notification')} to #{prurl.url} ... "
+          else
+            msg = "Notifying #{prurl.url} ... "
+          end
+          output.write msg
+          output.flush
+
+          uri = URI(prurl.url)
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = (uri.scheme == 'https')
+
+          errmsg = nil
+          payloads.each {|payload|
+            begin
+              if prurl.mode == :github
+                request = Net::HTTP::Post.new(uri.request_uri)
+                request.set_form_data({"payload" => payload.to_json})
+              else
+                request = Net::HTTP::Get.new(uri.request_uri)
+              end
+              res = http.start {|openhttp| openhttp.request request}
+              errmsg = "Return code: #{res.code} (#{res.message})." if !res.is_a?(Net::HTTPSuccess)
+            rescue => e
+              errmsg = "Exception: #{e.message}"
+            end
+            break if errmsg || prurl.mode != :github
+          }
+
+          if errmsg
+            output.write "[failure] done\n"
+            GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
+          else
+            output.write "[success] done\n"
+            GitHosting.logger.info "[ #{msg}Succeeded! ]"
+          end
+          output.flush
+        } if @repository.repository_post_receive_urls.any?
+
+        # Notify CIA
+        #Thread.abort_on_exception = true
+        Thread.new(@repository, payloads) {|repository, payloads|
+          GitHosting.logger.debug "Notifying CIA"
+          output.write("Notifying CIA\n")
+          output.flush
+
+          payloads.each do |payload|
+            branch = payload[:ref].gsub("refs/heads/", "")
+            payload[:commits].each do |commit|
+              revision = repository.find_changeset_by_name(commit["id"])
+              next if repository.cia_notifications.notified?(revision)  # Already notified about this commit
+              GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
+              CiaNotificationMailer.deliver_notification(revision, branch)
+              repository.cia_notifications.notified(revision)
+            end
+          end
+
+        } if !params[:refs].nil? && @repository.extra.notify_cia == 1
+
+      }, :layout => false
+    end
   end
 
   def test
