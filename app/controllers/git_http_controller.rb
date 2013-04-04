@@ -83,6 +83,15 @@ class GitHttpController < ApplicationController
   end
 
 
+  def get_enumerator
+    if RUBY_VERSION == '1.8.7'
+      Enumerable::Enumerator
+    else
+      Enumerator
+    end
+  end
+
+
   def service_rpc
     input = read_body
 
@@ -101,7 +110,7 @@ class GitHttpController < ApplicationController
         pipe.write(input)
         while !pipe.eof?
           block = pipe.read()
-          self.response_body = Enumerator.new do |y|
+          self.response_body = get_enumerator.new do |y|
             y << block.to_s
           end
         end
@@ -147,7 +156,7 @@ class GitHttpController < ApplicationController
       hdr_nocache
 
       if Rails::VERSION::MAJOR >= 3
-        self.response_body = Enumerator.new do |y|
+        self.response_body = get_enumerator.new do |y|
           y << pkt_write("# service=git-#{service_name}\n")
           y << pkt_flush
           y << refs

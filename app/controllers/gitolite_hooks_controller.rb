@@ -1,5 +1,7 @@
 include ActionView::Helpers::TextHelper
 
+
+
 class GitoliteHooksController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
@@ -11,6 +13,14 @@ class GitoliteHooksController < ApplicationController
   def stub
     # Stub method simply to generate correct urls, just return a 404 to any user requesting this
     render(:code => 404)
+  end
+
+  def get_enumerator
+    if RUBY_VERSION == '1.8.7'
+      Enumerable::Enumerator
+    else
+      Enumerator
+    end
   end
 
   def post_receive
@@ -25,7 +35,7 @@ class GitoliteHooksController < ApplicationController
     if Rails::VERSION::MAJOR >= 3
       self.response.headers["Content-Type"] = "text/plain;"
 
-      self.response_body = Enumerator.new do |y|
+      self.response_body = get_enumerator.new do |y|
         # Fetch commits from the repository
         GitHosting.logger.info "[GitHosting] Fetching changesets for '#{@project.identifier}' repository"
         y << "Fetching changesets for '#{@project.identifier}' repository ... "
