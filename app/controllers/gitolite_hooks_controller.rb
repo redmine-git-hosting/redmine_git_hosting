@@ -23,10 +23,12 @@ class GitoliteHooksController < ApplicationController
     CachedShellRedirector.clear_cache_for_repository(@repository)
 
     if Rails::VERSION::MAJOR >= 3
+      self.response.headers["Content-Type"] = "text/plain;"
+
       self.response_body = Enumerator.new do |y|
         # Fetch commits from the repository
-        GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
-        y << "Fetching changesets for #{@project.name}'s repository ... "
+        GitHosting.logger.info "[GitHosting] Fetching changesets for '#{@project.identifier}' repository"
+        y << "Fetching changesets for '#{@project.identifier}' repository ... "
         begin
           @repository.fetch_changesets
         rescue Redmine::Scm::Adapters::CommandFailed => e
@@ -41,7 +43,7 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
+            GitHosting.logger.debug "[GitHosting] Pushing changes to #{mirror.url} ... "
             y << "Pushing changes to mirror #{mirror.url} ... "
 
             (mirror_err,mirror_message) = mirror.push
