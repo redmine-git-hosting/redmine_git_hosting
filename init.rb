@@ -3,7 +3,7 @@ require 'redmine'
 
 require 'redmine_git_hosting'
 
-VERSION_NUMBER = '0.6'
+VERSION_NUMBER = '0.6.1'
 
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'

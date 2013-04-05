@@ -1,4 +1,4 @@
-# Redmine Git Hosting Plugin (v0.6)
+# Redmine Git Hosting Plugin (v0.6.1)
 
 A ChiliProject / Redmine plugin which makes configuring your own git hosting easy. This plugin allows straightforward management
 of gitolite and associated public keys, the git daemon, and integrates code from Scott Schacon's "grack" utility
