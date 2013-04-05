@@ -516,6 +516,8 @@ This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http:
 were provided by github users untoldwind, tingar and ericpaulbishop. These updates were merged together and
 expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
 
+Copyright (c) 2013 Nicolas Rodriguez (nrodriguez@jbox-web.com) MIT License.
+
 Copyright (c) 2011 John Kubiatowicz (kubitron@cs.berkeley.edu) MIT License.
 
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
