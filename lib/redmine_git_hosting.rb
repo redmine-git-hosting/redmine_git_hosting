@@ -62,4 +62,11 @@ apply_patch do
   ## Redmine Git Hosting Hooks
   require_dependency 'redmine_git_hosting/hooks/git_project_show_hook'
   require_dependency 'redmine_git_hosting/hooks/git_repo_url_hook'
+
+  ## Backport lib
+  ## Fix Enumerable::Enumerator for Ruby 1.8.7
+  ## https://github.com/jbox-web/redmine_git_hosting/issues/4
+  if RUBY_VERSION == '1.8.7'
+    require_dependency 'backports'
+  end
 end

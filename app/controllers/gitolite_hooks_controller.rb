@@ -1,7 +1,5 @@
 include ActionView::Helpers::TextHelper
 
-
-
 class GitoliteHooksController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
