@@ -4,12 +4,14 @@
 <%- end %>
 
 <p style="white-space:nowrap;">
-  <%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed==true ? l(:mirror_push_fail) : l(:mirror_push_sucess)) %>
+  <%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed == true ? l(:mirror_push_fail) : l(:mirror_push_sucess)).html_safe %>
 </p>
 
 <span><b><%= l(:mirror_push_output_label) %></b></span>
 
-<pre class="mirror-push<%= @push_failed==true ? " error": "" %>"><%= @shellout %></pre>
+<pre class="mirror-push<%= @push_failed == true ? " error": "" %>">
+  <%= @shellout %>
+</pre>
 
 <% if @is_xhr && @push_failed == false -%>
   <script type="text/javascript">
