@@ -51,8 +51,8 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            GitHosting.logger.debug "[GitHosting] Pushing changes to #{mirror.url} ... "
-            y << "Pushing changes to mirror #{mirror.url} ... "
+            GitHosting.logger.debug "[GitHosting] Pushing changes to '#{mirror.url}' ... "
+            y << "Pushing changes to mirror '#{mirror.url}' ... "
 
             (mirror_err,mirror_message) = mirror.push
 
@@ -143,8 +143,8 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            GitHosting.logger.debug "Pushing changes to #{mirror.url} ... "
-            output.write("Pushing changes to mirror #{mirror.url} ... ")
+            GitHosting.logger.debug "Pushing changes to '#{mirror.url}' ... "
+            output.write("Pushing changes to mirror '#{mirror.url}' ... ")
             output.flush
 
             (mirror_err,mirror_message) = mirror.push
