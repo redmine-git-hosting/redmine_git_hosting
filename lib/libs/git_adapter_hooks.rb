@@ -4,11 +4,17 @@ module GitHosting
 
   class GitAdapterHooks
 
+    def self.check_hooks_installed
+        files_installed = check_hook_files_installed
+        dir_installed = check_hook_dir_installed
+        files_installed && dir_installed
+    end
+
     @@check_hooks_installed_stamp = nil
     @@check_hooks_installed_cached = nil
     @@post_receive_hook_path = nil
-
-    def self.check_hooks_installed
+    
+    def self.check_hook_files_installed
       if not @@check_hooks_installed_cached.nil? and (Time.new - @@check_hooks_installed_stamp <= 0.5)
         return @@check_hooks_installed_cached
       end
@@ -32,7 +38,7 @@ module GitHosting
           @@check_hooks_installed_stamp = Time.new
           @@check_hooks_installed_cached = true
         rescue
-          logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing gitolite!"
+          logger.error "[GitHosting] check_hooks_files_installed(): Problems installing hooks and initializing gitolite!"
         end
         return @@check_hooks_installed_cached
       else
@@ -60,13 +66,54 @@ module GitHosting
               logger.info "[GitHosting] Finished installing hooks in the gitolite install..."
               @@check_hooks_installed_cached = true
             rescue
-              logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing gitolite!"
+              logger.error "[GitHosting] check_hooks_files_installed(): Problems installing hooks and initializing gitolite!"
             end
           end
           @@check_hooks_installed_stamp = Time.new
           return @@check_hooks_installed_cached
         end
       end
+    end
+
+    @@check_hooks_dir_installed_cached = nil
+    @@check_hooks_dir_installed_stamp = nil
+    def self.check_hook_dir_installed
+        if not @@check_hooks_dir_installed_cached.nil? and (Time.new - @@check_hooks_dir_installed_stamp <= 0.5)
+            return @@check_hooks_dir_installed_cached
+        end
+
+        @@post_receive_hook_dir_path ||= File.join(gitolite_hooks_dir, 'post-receive.d')
+        post_receive_dir_exists = (%x[#{GitHosting.git_user_runner} test -r '#{@@post_receive_hook_dir_path}' && echo 'yes' || echo 'no']).match(/yes/)
+
+        if (!post_receive_dir_exists)
+            begin
+                logger.info "[GitHosting] \"post-receive.d\" folder not yet created, installing it..."
+                install_hook_dir("post-receive.d")
+                logger.info "[GitHosting] \"post-receive.d installed"
+                logger.info "[GitHosting] Running \"gl-setup\" on the gitolite install..."
+                GitHosting.shell %[#{GitHosting.git_user_runner} gl-setup]
+                logger.info "[GitHosting] Finished installing global hook directory in the gitolite install..."
+                @@check_hooks_dir_installed_stamp = Time.new
+                @@check_hooks_dir_installed_cached = true
+            rescue
+                logger.error "[GitHosting] check_hook_dir_installed(): Problems installing hooks and initializing gitolite!"
+            end
+            return @@check_hooks_dir_installed_cached
+        else
+            error_msg = "[GitHosting] Global \"post-receive.d\" directory is already present, will not touch it!"
+            logger.warn error_msg
+            @@check_hooks_dir_installed_cached = error_msg
+            begin
+                logger.info "[GitHosting] Running \"gl-setup\" on the gitolite install..."
+                GitHosting.shell %[#{GitHosting.git_user_runner} gl-setup]
+                logger.info "[GitHosting] Finished installing hook directory in the gitolite install..."
+                @@check_hooks_dir_installed_cached = true
+            rescue
+                logger.error "[GitHosting] check_hook_dir_installed(): Problems installing hook directory and initializing gitolite!"
+            end
+            @@check_hooks_dir_installed_stamp = Time.new
+            return @@check_hooks_dir_installed_cached
+        end
     end
 
     def self.setup_hooks(projects=nil)
@@ -144,6 +191,18 @@ module GitHosting
         @@cached_hook_digest = digest
       end
       @@cached_hook_digest
+    end
+
+    def self.install_hook_dir(hooks_dir)
+        begin
+        dest_dir = File.join(gitolite_hooks_dir, hooks_dir)
+        logger.info "[GitHosting] Installing hook directory to #{dest_dir}"
+        GitHosting.shell %[#{GitHosting.git_user_runner} 'mkdir -p #{dest_dir}']
+        GitHosting.shell %[#{GitHosting.git_user_runner} 'chown #{git_user} #{dest_dir}']
+        GitHosting.shell %[#{GitHosting.git_user_runner} 'chmod 700 #{dest_dir}']
+        rescue
+        logger.error "[GitHosting] install_hooks_dir(): Problems installing hook directory to #{dest_dir}"
+        end
     end
 
     def self.install_hook(hook_name)
