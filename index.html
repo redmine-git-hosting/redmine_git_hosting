@@ -45,7 +45,17 @@ Caching functionality is also implemented to speed page-load times for viewing g
 <ul>
 <li><p><strong>Redmine:</strong> This plugin should work with Redmine branches 1.1-Stable through 2.3.0 (latest stable), including sub-versions.</p></li>
 <li><p><strong>ChiliProject:</strong> This plugin should work with ChiliProject 2.0.0 through 3.3.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x, and 3.3.x releases, however some problems have been occasionally reported with newer versions of ChiliProject.  These incompatibilities will get fixed when possible.</p></li>
-</ul><p>This plugin is compatible with most versions of Gitolite including versions 3.x.</p>
+<li><p><strong>Gitolite:</strong> This plugin is compatible with most versions of Gitolite including versions 3.x.</p></li>
+</ul><p>There is a known issue with Gitolite 3 and HTTP access (<a href="https://github.com/gitlabhq/gitlabhq/issues/1495">https://github.com/gitlabhq/gitlabhq/issues/1495</a>)</p>
+
+<p>The trick is to add these lines at the begining of the file <code>/&lt;git user home dir&gt;/.gitolite/hooks/common/update</code></p>
+
+<pre><code>#!/usr/bin/perl
+
+BEGIN {
+    exit 0 if exists $ENV{GL_BYPASS_UPDATE_HOOK};
+}
+</code></pre>
 
 <h2>Configuration Strategy</h2>
 
