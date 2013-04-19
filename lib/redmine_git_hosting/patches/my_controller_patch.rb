@@ -2,6 +2,18 @@ module RedmineGitHosting
   module Patches
     module MyControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+          helper :gitolite_public_keys
+        end
+
+        begin
+          base.send(:alias_method_chain, :account, :public_keys)
+        rescue
+        end
+      end
+
       # Add in values for viewing public keys:
       def account_with_public_keys
         # Previous routine
@@ -19,18 +31,6 @@ module RedmineGitHosting
           else
             @gitolite_public_key = GitolitePublicKey.new
           end
-        end
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-          helper :gitolite_public_keys
-        end
-
-        begin
-          base.send(:alias_method_chain, :account, :public_keys)
-        rescue
         end
       end
 

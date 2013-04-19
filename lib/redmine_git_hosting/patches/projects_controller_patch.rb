@@ -2,6 +2,18 @@ module RedmineGitHosting
   module Patches
     module ProjectsControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+        base.send(:alias_method_chain, :create, :disable_update)
+        base.send(:alias_method_chain, :update, :disable_update)
+        base.send(:alias_method_chain, :destroy, :disable_update)
+        base.send(:alias_method_chain, :archive, :disable_update)
+        base.send(:alias_method_chain, :unarchive, :disable_update)
+        base.send(:alias_method_chain, :settings, :disable_update)
+      end
+
       def git_repo_init
         users = @project.member_principals.map(&:user).compact.uniq
         if users.length == 0
@@ -120,18 +132,6 @@ module RedmineGitHosting
         else
           GitHostingObserver.set_update_active(:archive);
         end
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-        end
-        base.send(:alias_method_chain, :create, :disable_update)
-        base.send(:alias_method_chain, :update, :disable_update)
-        base.send(:alias_method_chain, :destroy, :disable_update)
-        base.send(:alias_method_chain, :archive, :disable_update)
-        base.send(:alias_method_chain, :unarchive, :disable_update)
-        base.send(:alias_method_chain, :settings, :disable_update)
       end
 
     end

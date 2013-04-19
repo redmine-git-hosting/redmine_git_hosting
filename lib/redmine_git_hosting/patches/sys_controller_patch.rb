@@ -2,6 +2,16 @@ module RedmineGitHosting
   module Patches
     module SysControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+        begin
+          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
+        rescue
+        end
+      end
+
       def fetch_changesets_with_disable_update
         # Turn of updates during repository update
         GitHostingObserver.set_update_active(false);
@@ -11,16 +21,6 @@ module RedmineGitHosting
 
         # Perform the updating process on all projects
         GitHostingObserver.set_update_active(:resync_all);
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-        end
-        begin
-          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
-        rescue
-        end
       end
 
     end

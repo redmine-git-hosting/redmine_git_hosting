@@ -35,7 +35,6 @@ apply_patch do
   require_dependency 'libs/gitolite_recycle'
   require_dependency 'libs/git_adapter_hooks'
   require_dependency 'libs/cached_shell_redirector'
-  require_dependency 'redmine/scm/adapters/git_adapter'
 
   ## Redmine Git Hosting Patches
   require_dependency 'redmine_git_hosting/patches/project_patch'

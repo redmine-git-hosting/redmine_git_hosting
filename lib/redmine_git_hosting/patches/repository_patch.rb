@@ -2,6 +2,41 @@ module RedmineGitHosting
   module Patches
     module RepositoryPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+
+          extend(ClassMethods)
+          class << self
+            alias_method_chain :factory, :git_extra_init
+            alias_method_chain :fetch_changesets, :disable_update
+          end
+
+          # initialize association from git repository -> git_extra
+          has_one :git_extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
+
+          # initialize association from git repository -> cia_notifications
+          has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
+
+          # initialize association from repository -> deployment_credentials
+          has_many :deployment_credentials, :dependent => :destroy
+
+          # initialize association from repository -> repository mirrors
+          has_many :repository_mirrors, :dependent => :destroy
+
+          # initialize association from repository -> repository post receive urls
+          has_many :repository_post_receive_urls, :dependent => :destroy
+
+          # Place additional constraints on repository identifiers
+          # Only for Redmine 1.4+
+          if GitHosting.multi_repos?
+            validate :additional_ident_constraints
+          end
+
+          include(InstanceMethods)
+        end
+      end
+
       module ClassMethods
 
         # Repo ident unique (definitely true if Redmine < 1.4)
@@ -184,41 +219,6 @@ module RedmineGitHosting
           end
         end
 
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-
-          extend(ClassMethods)
-          class << self
-            alias_method_chain :factory, :git_extra_init
-            alias_method_chain :fetch_changesets, :disable_update
-          end
-
-          # initialize association from git repository -> git_extra
-          has_one :git_extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
-
-          # initialize association from git repository -> cia_notifications
-          has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
-
-          # initialize association from repository -> deployment_credentials
-          has_many :deployment_credentials, :dependent => :destroy
-
-          # initialize association from repository -> repository mirrors
-          has_many :repository_mirrors, :dependent => :destroy
-
-          # initialize association from repository -> repository post receive urls
-          has_many :repository_post_receive_urls, :dependent => :destroy
-
-          # Place additional constraints on repository identifiers
-          # Only for Redmine 1.4+
-          if GitHosting.multi_repos?
-            validate :additional_ident_constraints
-          end
-
-          include(InstanceMethods)
-        end
       end
 
     end

@@ -2,6 +2,39 @@ module RedmineGitHosting
   module Patches
     module MembersControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+          helper :repositories
+        end
+
+        begin
+          # RESTfull (post-1.4)
+          base.send(:alias_method_chain, :create, :disable_update)
+        rescue
+          # Not RESTfull (pre-1.4)
+          base.send(:alias_method_chain, :new, :disable_update) rescue nil
+        end
+
+        begin
+          # RESTfull (post-1.4)
+          base.send(:alias_method_chain, :update, :disable_update)
+        rescue
+          # Not RESTfull (pre-1.4)
+          base.send(:alias_method_chain, :edit, :disable_update) rescue nil
+        end
+
+        base.send(:alias_method_chain, :destroy, :disable_update) rescue nil
+
+        # This patch only needed when repository settings in same set
+        # if tabs as members (i.e. pre-1.4, single repo)
+        # (Note that patches not stabilized yet, so cannot just call:
+        # Project.multi_repos?
+        if !GitHosting.multi_repos?
+          base.send(:alias_method_chain, :render, :trigger_refresh) rescue nil
+        end
+      end
+
       # pre-1.4 (Non RESTfull)
       def new_with_disable_update
         # Turn of updates during repository update
@@ -75,39 +108,6 @@ module RedmineGitHosting
               page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'
             end
           end
-        end
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-          helper :repositories
-        end
-
-        begin
-          # RESTfull (post-1.4)
-          base.send(:alias_method_chain, :create, :disable_update)
-        rescue
-          # Not RESTfull (pre-1.4)
-          base.send(:alias_method_chain, :new, :disable_update) rescue nil
-        end
-
-        begin
-          # RESTfull (post-1.4)
-          base.send(:alias_method_chain, :update, :disable_update)
-        rescue
-          # Not RESTfull (pre-1.4)
-          base.send(:alias_method_chain, :edit, :disable_update) rescue nil
-        end
-
-        base.send(:alias_method_chain, :destroy, :disable_update) rescue nil
-
-        # This patch only needed when repository settings in same set
-        # if tabs as members (i.e. pre-1.4, single repo)
-        # (Note that patches not stabilized yet, so cannot just call:
-        # Project.multi_repos?
-        if !GitHosting.multi_repos?
-          base.send(:alias_method_chain, :render, :trigger_refresh) rescue nil
         end
       end
 

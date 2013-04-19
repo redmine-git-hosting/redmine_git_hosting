@@ -2,6 +2,13 @@ module RedmineGitHosting
   module Patches
     module RepositoryCiaFilters
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+        base.extend(FilterMethods)
+      end
+
       module FilterMethods
 
         def notified(scmid)
@@ -21,13 +28,6 @@ module RedmineGitHosting
           return !find(:first, :conditions => ["scmid = ?", scmid]).nil?
         end
 
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-        end
-        base.extend(FilterMethods)
       end
 
     end

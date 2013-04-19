@@ -2,6 +2,30 @@ module RedmineGitHosting
   module Patches
     module RolesControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+
+        begin
+          # RESTfull (post-1.4)
+          base.send(:alias_method_chain, :create, :disable_update)
+        rescue
+          # Not RESTfull (pre-1.4)
+          base.send(:alias_method_chain, :new, :disable_update) rescue nil
+        end
+
+        begin
+          # RESTfull (post-1.4)
+          base.send(:alias_method_chain, :update, :disable_update)
+        rescue
+          # Not RESTfull (pre-1.4)
+          base.send(:alias_method_chain, :edit, :disable_update) rescue nil
+        end
+
+        base.send(:alias_method_chain, :destroy, :disable_update) rescue nil
+      end
+
       # Pre-1.4 (Not RESTfull)
       def new_with_disable_update
         # Turn of updates during repository update
@@ -59,30 +83,6 @@ module RedmineGitHosting
 
         # Reenable updates to perform a single update
         GitHostingObserver.set_update_active(true);
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-        end
-
-        begin
-          # RESTfull (post-1.4)
-          base.send(:alias_method_chain, :create, :disable_update)
-        rescue
-          # Not RESTfull (pre-1.4)
-          base.send(:alias_method_chain, :new, :disable_update) rescue nil
-        end
-
-        begin
-          # RESTfull (post-1.4)
-          base.send(:alias_method_chain, :update, :disable_update)
-        rescue
-          # Not RESTfull (pre-1.4)
-          base.send(:alias_method_chain, :edit, :disable_update) rescue nil
-        end
-
-        base.send(:alias_method_chain, :destroy, :disable_update) rescue nil
       end
 
     end

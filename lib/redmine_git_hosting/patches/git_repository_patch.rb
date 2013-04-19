@@ -2,6 +2,20 @@ module RedmineGitHosting
   module Patches
     module GitRepositoryPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+          before_validation :set_git_urls
+        end
+
+        begin
+          base.send(:alias_method_chain, :report_last_commit, :always_true)
+          base.send(:alias_method_chain, :extra_report_last_commit, :always_true)
+          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
+        rescue
+        end
+      end
+
       # Set up git urls for new repositories
       def set_git_urls
         self.url = GitHosting.repository_path(self) if url.blank?
@@ -25,20 +39,6 @@ module RedmineGitHosting
 
         # Reenable updates to perform a single update
         GitHostingObserver.set_update_active(true);
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-          before_validation :set_git_urls
-        end
-
-        begin
-          base.send(:alias_method_chain, :report_last_commit, :always_true)
-          base.send(:alias_method_chain, :extra_report_last_commit, :always_true)
-          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
-        rescue
-        end
       end
 
     end

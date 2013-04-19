@@ -2,6 +2,25 @@ module RedmineGitHosting
   module Patches
     module RepositoriesControllerPatch
 
+      def self.included(base)
+        base.class_eval do
+          unloadable
+        end
+
+        base.send(:alias_method_chain, :show, :git_instructions)
+
+        # RESTful (post-1.4).
+        base.send(:alias_method_chain, :create, :scm_settings) rescue nil
+
+        begin
+          # RESTfull (post-1.4)
+          base.send(:alias_method_chain, :update, :scm_settings)
+        rescue
+          # Not RESTfull (pre-1.4)
+          base.send(:alias_method_chain, :edit, :scm_settings) rescue nil
+        end
+      end
+
       def show_with_git_instructions
         if @repository.is_a?(Repository::Git) and @repository.entries(@path, @rev).blank?
           # Fake list of repos
@@ -90,25 +109,6 @@ module RedmineGitHosting
           GitHostingObserver.set_update_active(@project)
         else
           GitHostingObserver.set_update_active(true)
-        end
-      end
-
-      def self.included(base)
-        base.class_eval do
-          unloadable
-        end
-
-        base.send(:alias_method_chain, :show, :git_instructions)
-
-        # RESTful (post-1.4).
-        base.send(:alias_method_chain, :create, :scm_settings) rescue nil
-
-        begin
-          # RESTfull (post-1.4)
-          base.send(:alias_method_chain, :update, :scm_settings)
-        rescue
-          # Not RESTfull (pre-1.4)
-          base.send(:alias_method_chain, :edit, :scm_settings) rescue nil
         end
       end
 
