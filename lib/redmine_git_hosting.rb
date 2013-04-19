@@ -21,6 +21,7 @@ apply_patch do
   require_dependency 'repositories_controller'
   require_dependency 'user'
   require_dependency 'users_controller'
+  require_dependency 'users_helper'
   require_dependency 'my_controller'
   require_dependency 'groups_controller'
   require_dependency 'roles_controller'
@@ -46,6 +47,7 @@ apply_patch do
 
   require_dependency 'redmine_git_hosting/patches/user_patch'
   require_dependency 'redmine_git_hosting/patches/users_controller_patch'
+  require_dependency 'redmine_git_hosting/patches/users_helper_patch'
 
   require_dependency 'redmine_git_hosting/patches/groups_controller_patch'
   require_dependency 'redmine_git_hosting/patches/members_controller_patch'
