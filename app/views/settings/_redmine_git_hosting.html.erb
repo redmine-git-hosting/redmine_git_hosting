@@ -5,6 +5,7 @@
   gitUser                        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitUser].nil?) ? Setting.plugin_redmine_git_hosting[:gitUser] : 'git'
   gitoliteIdentityFile           = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile] : (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s
   gitoliteIdentityPublicKeyFile  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitoliteIdentityPublicKeyFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitoliteIdentityPublicKeyFile] : (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa.pub").to_s
+  sshServerLocalPort             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:sshServerLocalPort].nil?) ? Setting.plugin_redmine_git_hosting[:sshServerLocalPort] : '22'
 
   gitConfigFile            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitConfigFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitConfigFile] : 'gitolite.conf'
   gitConfigHasAdminKey     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitConfigHasAdminKey].nil?) ? Setting.plugin_redmine_git_hosting[:gitConfigHasAdminKey] : true
@@ -76,6 +77,11 @@
   <p>
     <label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
     <%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", gitoliteIdentityPublicKeyFile, :size => 60) %>
+    <br />
+  </p>
+  <p>
+    <label><%= l(:label_ssh_server_local_port) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
+    <%= text_field_tag("settings[sshServerLocalPort]", sshServerLocalPort, :size => 5) %>
     <br />
   </p>
 
