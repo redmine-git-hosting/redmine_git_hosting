@@ -100,6 +100,10 @@ root directory:
     cd REDMINE_ROOT/vendor/plugins
     git clone https://github.com/jbox-web/redmine_git_hosting.git
     cd ../..
+    
+If you use Redmine 2.x, you can find the plugin folder directly under the REDMINE_ROOT. If it is not existent, create it with
+    cd REDMINE_ROOT && mkdir plugins
+You can then clone the repository in there.
 
 
 * The **gitSciptDir** variable indicates which directory will hold customized scripts.  When *relative*, this variable indicates a directory relative to the
@@ -166,7 +170,7 @@ URLs for accessing projects.
 **(6)** Run the rake db:migrate\_plugins task to update the database.  You will need to do this once for every
 rails environment you have configured (e.g. production, development, testing).  For the production environment, run the following:
 
-    RAILS_ENV=production rake db:migrate_plugins
+    RAILS_ENV=production rake redmine:plugins:migrate
 
 *Note that you should perform a migrate\_plugins operation whenever you update the plugin.*
 
