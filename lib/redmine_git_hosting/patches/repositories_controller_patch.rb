@@ -22,7 +22,8 @@ module RedmineGitHosting
       end
 
       def show_with_git_instructions
-        if @repository.is_a?(Repository::Git) and @repository.entries(@path, @rev).blank?
+
+        if @repository.is_a?(Repository::Git) and @rev.blank?
           # Fake list of repos
           @repositories = @project.all_repos
           render :action => 'git_instructions'
