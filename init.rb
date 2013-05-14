@@ -22,6 +22,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       'gitUser'                       => 'git',
       'gitoliteIdentityFile'          => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s,
       'gitoliteIdentityPublicKeyFile' => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa.pub").to_s,
+      'sshServerLocalPort'            => '22',
 
       'gitConfigFile'                 => 'gitolite.conf',
       'gitConfigHasAdminKey'          => true,

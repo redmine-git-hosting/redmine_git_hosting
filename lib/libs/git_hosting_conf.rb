@@ -11,6 +11,7 @@ module GitHostingConf
   SCRIPT_PARENT                 = 'bin'
   GIT_USER                      = 'git'
   GIT_SERVER                    = 'localhost'
+  SSH_SERVER_LOCAL_PORT         = '22'
   GITOLITE_SSH_PRIVATE_KEY      = (ENV['HOME'] + '/.ssh/redmine_gitolite_admin_id_rsa').to_s
   GITOLITE_SSH_PUBLIC_KEY       = (ENV['HOME'] + '/.ssh/redmine_gitolite_admin_id_rsa.pub').to_s
   ALL_PROJECTS_USE_GIT          = false
@@ -155,6 +156,15 @@ module GitHostingConf
       Setting.plugin_redmine_git_hosting['gitServer']
     else
       GIT_SERVER
+    end
+  end
+
+  # Git server port
+  def self.ssh_server_local_port
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['sshServerLocalPort'].nil?
+      Setting.plugin_redmine_git_hosting['sshServerLocalPort']
+    else
+      SSH_SERVER_LOCAL_PORT
     end
   end
 

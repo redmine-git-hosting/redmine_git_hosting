@@ -547,7 +547,7 @@ module GitHosting
     begin
       logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
+      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost:#{GitHostingConf.ssh_server_local_port}/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}" ]
       # Make sure we have our hooks setup
       GitAdapterHooks.check_hooks_installed
@@ -560,7 +560,7 @@ module GitHosting
         fixup_gitolite_admin
         logger.info "[GitHosting] Recloning gitolite-admin repository to #{repo_dir}"
         shell %[rm -rf "#{repo_dir}"]
-        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@#{GitHostingConf.git_server}/gitolite-admin.git #{repo_dir}]
+        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost:#{GitHostingConf.ssh_server_local_port}/gitolite-admin.git #{repo_dir}]
         shell %[chmod 700 "#{repo_dir}" ]
         # Make sure we have our hooks setup
         GitAdapterHooks.check_hooks_installed

@@ -1,9 +1,10 @@
 en:
-  label_all_git: Automatically Initialize Git Repositories For New Projects 
+  label_all_git: Automatically Initialize Git Repositories For New Projects
   label_delete_git_repositories: Delete Git Repository When Project Deleted<br/>(will be place in Recycle Bin)
-  label_git_server: Gitolite Server Domain
-  label_http_server: HTTP Server Domain (for git http urls)
+  label_git_server: Gitolite Server Domain (for Git SSH urls)
+  label_http_server: HTTP Server Domain (for Git HTTP urls)
   label_git_user: Git Username
+  label_ssh_server_local_port: SSH Server Local Port
   label_gitolite_identity_public_key_file: Gitolite SSH Identity File (Public Key)
   label_gitolite_identity_file: Gitolite SSH Identity File (Private Key)
   label_gitolite_config_file: Gitolite Configuration File<br/>(Relative to conf directory)
@@ -33,7 +34,7 @@ en:
   field_git_daemon: Git Daemon
   field_git_http: Git Smart HTTP
   field_notify_cia: Notify CIA.vc
-  
+
 
   label_git_show_urls: "Show checkout URL's"
   label_enabled: Enabled
@@ -179,6 +180,6 @@ en:
   mirror_push_fail: Failed!
 
   display_access_setup: Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s %{type}repository has the following properties
-  display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements. 
+  display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements.
   display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
   display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.
