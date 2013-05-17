@@ -171,6 +171,15 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         end
       end
 
+      # Validate ssh port > 0 (and exclude non-numbers)
+      if valuehash['sshServerLocalPort']
+        if valuehash['sshServerLocalPort'].to_i > 0 and valuehash['sshServerLocalPort'].to_i < 65537
+          valuehash['sshServerLocalPort'] = "#{valuehash['sshServerLocalPort'].to_i}"
+        else
+          valuehash['sshServerLocalPort'] = @@old_valuehash['sshServerLocalPort']
+        end
+      end
+
       # Save back results
       object.value = valuehash
     end
