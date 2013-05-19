@@ -629,7 +629,7 @@ module GitHosting
     unless GitoliteConfig.has_admin_key?
       raise GitHostingException, "Cannot repair Admin Key: Key not managed by Redmine!"
     end
-    logger.warn "[GitHosting] Attempting to restore repository access key:"
+    logger.warn "[GitHosting] Attempting to restore repository access key"
 
     begin
       repo_dir = File.join(Dir.tmpdir,"fixrepo",git_user,GitHosting::GitoliteConfig::ADMIN_REPO)
@@ -639,9 +639,10 @@ module GitHosting
       tmp_conf_dir = File.join(Dir.tmpdir,"fixconf",git_user)
       tmp_conf_file = File.join(tmp_conf_dir,gitolite_conf)
 
-      logger.warn "[GitHosting] Cloning administrative repo directly as #{git_user} in #{repo_dir}"
-      shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
       admin_repo = "#{GitHostingConf.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
+
+      logger.warn "[GitHosting] Cloning administrative repo '#{admin_repo}' directly as '#{git_user}' in '#{repo_dir}'"
+      shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
       shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
 
       # Load up existing conf file
@@ -706,13 +707,11 @@ module GitHosting
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of gitolite admin key'"]
       begin
-        logger.warn "[GitHosting] Pushing fixes using gl-admin-push"
+        logger.warn "[GitHosting] Pushing fixes using 'gl-admin-push -f'"
         shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gl-admin-push -f"]
-        logger.warn "[GitHosting] Successfully reestablished gitolite admin key!"
       rescue
-        logger.error "[GitHosting] gl-admin-push failed (pre 2.0.3 gitolite?). Trying 'gl-setup #{keydir}/#{new_admin_key_name}.pub'"
-        shell %[#{GitHosting.git_user_runner} "gl-setup #{keydir}/#{new_admin_key_name}.pub"]
-        logger.warn "[GitHosting] Hopefully we have successfully reestablished gitolite admin key."
+        logger.error "[GitHosting] 'gl-admin-push' failed (Gitolite 3?). Trying 'gitolite push -f'"
+        shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gitolite push -f"]
       end
       %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
@@ -812,7 +811,7 @@ module GitHosting
     elsif flags[:delete]
       # When delete, want to recompute users, so need to go through all projects
       logger.info "[GitHosting] Executing DELETE operation (resync keys, remove dead repositories)"
-      projects = Project.active_or_archived.find(:all, :include => reposym)
+      projects = args[0]
     elsif flags[:archive]
       # When archive, want to recompute users, so need to go through all projects
       logger.info "[GitHosting] Executing ARCHIVE operation (remove keys)"
@@ -828,11 +827,19 @@ module GitHosting
     end
 
     # Only take projects that have Git repos.
-    git_projects = projects.uniq.select{|p| p.gl_repos.any?}
-    return if git_projects.empty?
+    if flags[:delete]
+      git_projects = projects
+    else
+      git_projects = projects.uniq.select{|p| p.gl_repos.any?}
+    end
 
-    logger.info ""
-    logger.info "[GitHosting] Got projects, move on!"
+    if git_projects.empty?
+      logger.info "[GitHosting] Got no projects to work on..."
+      return
+    else
+      logger.info ""
+      logger.info "[GitHosting] Got projects, move on!"
+    end
 
     if(defined?(@@recursionCheck))
       if(@@recursionCheck)
