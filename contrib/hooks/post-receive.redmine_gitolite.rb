@@ -77,6 +77,72 @@ def run_query(url_str, params, with_https)
   success
 end
 
+def get_extra_hooks()
+	# Get global extra hooks
+	global_extra_hooks = get_executables("hooks/post-receive.d")
+	if global_extra_hooks.length == 0
+		log("No global extra hooks found", true, true)
+	end
+	# Get local extra hooks
+	local_extra_hooks = get_executables("hooks/post-receive.local.d")
+	if local_extra_hooks.length == 0
+		log("No local extra hooks found", true, true)
+	end
+	# Join both results and return result
+	result = []
+	result.concat(global_extra_hooks)
+	result.concat(local_extra_hooks)
+	result
+end
+
+def get_executables(directory)
+	executables = Array.new
+	if File.directory?(directory)
+		log("Found folder: #{directory}", true, true)
+		Dir.foreach(directory) do |item|
+			next if item == '.' or item == '..'
+			# Use full relative path
+			path = "#{directory}/#{item}"
+			# Test if the file is executable
+			if File.executable?(path)
+				log("Found executable file: #{path}...", true, false)
+				# Remember it, if so
+				executables.push path
+				log("Added", true, true)
+			else
+				log("Found non-executable file: #{item}", true, true)
+			end
+		end
+	else
+		log("\n\nFolder not found: #{directory}", true, true)
+	end
+	executables
+end
+
+def call_extra_hooks(stdin, extra_hooks)
+	success = false
+	# Call each exectuble found with the parameters we got
+	log("Beginning to execute additional hooks", true, true)
+	extra_hooks.each do |extra_hook|
+		log("Executing extra hook '#{extra_hook}'")
+
+		output = ""
+		IO.popen("#{extra_hook}", "w+") do |pipe|
+			begin
+			pipe.puts stdin
+			pipe.close_write
+			rescue Errno::EPIPE
+				log("The hook #{extra_hook} does't expect data on STDIN", true, true)
+			end
+			output = pipe.read
+		end
+		log("#{output}")
+		log("Done", true, true)
+	end
+	success = true
+	success
+end
+
 rgh_vars = {}
 rgh_var_names = [ "hooks.redmine_gitolite.key", "hooks.redmine_gitolite.url", "hooks.redmine_gitolite.projectid", "hooks.redmine_gitolite.repositoryid", "hooks.redmine_gitolite.debug", "hooks.redmine_gitolite.asynch"]
 rgh_var_names.each do |var_name|
@@ -95,11 +161,14 @@ end
 
 $debug = rgh_vars["debug"] == "true"
 
-# Let's read the refs passed to us
+# Let's read the refs passed to us, but also copy stdin
+# for potential use with extra hooks.
 refs = []
-$<.each do |line|
+stdin_copy = ""
+$<.each	do |line|
   r = line.chomp.strip.split
   refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
+    stdin_copy = (stdin_copy == ""? "" : $/) + line
 end
 
 rgh_vars["refs[]"] = refs
@@ -133,5 +202,21 @@ else
 end
 
 log("\n\n", false, true)
+
+extra_hooks = get_extra_hooks()
+if extra_hooks.length > 0
+	log("Calling additional post-receive hooks...", true, true)
+	success = call_extra_hooks(stdin_copy, extra_hooks)
+	if(!success)
+		log("Error calling additional hooks.", false, true)
+	else
+		log("Success", true, true)
+		log("", true, true)
+	end
+	log("\n\n", false, true)
+else
+	log("No extra hooks found that could be run additionally.", true, true)
+	log("\n\n", true, true)
+end
 
 exit

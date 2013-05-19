@@ -341,6 +341,45 @@ credentials create" dialog is actually a convenience dialog in that it allows th
 even suggesting a name for the deployment credential, with the eye to deployments that have a separate deploy key for each repository.  Reusing a deploy key in
 another credential is a simple matter of selecting the key from a drop-down menu.
 
+## Additional Post-Receive Hooks
+
+As of version 0.5.1x, this plugin supports the execution of additional
+post-receive hooks in repositories managed with it. To get updated
+about new data in the repository, the plugin installs a post-receive
+hook. If you want additional post-receive hooks to be run, you have to
+decide whether a hook should be a local or a global one. Local extra
+hooks will only be run for the repository they are installed in.
+Global extra hooks will be run for *every* gitolite repository.
+
+To create local hooks, place them in a directory with the name
+"post-receive.local.d" within the repository's hook directory. If a
+file in this folder is marked as executable, the plugin's hook will
+execute it.
+
+In a standard gitolite install with a repository called "test", this
+will be a valid path of an additional local post-receive hook:
+
+    /home/gitolite/repositories/test.git/hooks/post-receive.local.d/do-something
+
+If the "do-something" file is executable, the plugin will pick it up.
+
+To create global hooks, place an executable in a folder called
+"post-receive.d" that lives in a hook directory of a gitolite
+repository. All these "post-receive.d" directories are actually links
+to one common "post-receive.d" directory within the gitolite
+installation.
+
+In a standard gitolite install with a repository called "test", this
+will be a valid path of an additional global post-receive hook:
+
+    /home/gitolite/repositories/test.git/hooks/post-receive.d/do-something
+
+Again, the "do-something" file needs to be executable, to be picked
+up. All other repositories will have the "do-something" hook as well.
+
+Note that all additional hooks get passed the same STDIN stream as the
+plugin's hook got.
+
 ## Post-Receive URLs
 
 As of version 0.4.6x, this plugin supports the inclusion of GitHub-style Post-Receive URLs.  Once added, a post-receive URL will be notified when new changes
