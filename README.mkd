@@ -18,7 +18,7 @@ As the time of this writing, it should be compatible with the following versions
 
 * **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.3.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x, and 3.3.x releases.
 
-* **Gitolite:** This plugin is compatible with most versions of Gitolite including versions 3.x.
+* **Gitolite:** This plugin is compatible with most versions of Gitolite including versions 3.x. Tested with the last version of Gitolite : v3.5.1-4-g2f48a3e
 
 * **Ruby:** This plugin is compatible with Ruby 1.8.7, 1.9.3 and 2.0
 
