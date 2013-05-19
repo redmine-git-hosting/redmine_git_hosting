@@ -20,19 +20,30 @@ module GitHosting
         post_receive_length_is_zero= "0" == (%x[echo 'wc -c  #{@@post_receive_hook_path}' | #{GitHosting.git_user_runner} "bash" ]).chomp.strip.split(/[\t ]+/)[0]
       end
 
+      if GitHosting.gitolite_version == 2
+        gitolite_command = 'gl-setup'
+      elsif GitHosting.gitolite_version == 3
+        gitolite_command = 'gitolite setup'
+      else
+        logger.error "[GitHosting] Unable to find Gitolite version, cannot install 'post-receive' hook!"
+        @@check_hooks_installed_stamp = Time.new
+        @@check_hooks_installed_cached = false
+        return @@check_hooks_installed_cached
+      end
+
       if (!post_receive_exists) || post_receive_length_is_zero
         begin
-          logger.info "[GitHosting] \"post-receive\" not handled by gitolite, installing it..."
+          logger.info "[GitHosting] 'post-receive' hook not handled by us, installing it..."
           install_hook("post-receive.redmine_gitolite.rb")
-          logger.info "[GitHosting] \"post-receive.redmine_gitolite\ installed"
-          logger.info "[GitHosting] Running \"gl-setup\" on the gitolite install..."
-          GitHosting.shell %[#{GitHosting.git_user_runner} gl-setup]
+          logger.info "[GitHosting] 'post-receive.redmine_gitolite' hook installed"
+          logger.info "[GitHosting] Running '#{gitolite_command}' on the Gitolite install..."
+          GitHosting.shell %[#{GitHosting.git_user_runner} #{gitolite_command}]
           update_global_hook_params
-          logger.info "[GitHosting] Finished installing hooks in the gitolite install..."
+          logger.info "[GitHosting] Finished installing hooks in the Gitolite install..."
           @@check_hooks_installed_stamp = Time.new
           @@check_hooks_installed_cached = true
         rescue
-          logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing gitolite!"
+          logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
         end
         return @@check_hooks_installed_cached
       else
@@ -41,26 +52,26 @@ module GitHosting
 
         logger.debug "[GitHosting] Installed hook digest: #{digest}"
         if rgh_hook_digest == digest
-          logger.info "[GitHosting] Our hook is already installed"
+          logger.info "[GitHosting] Our 'post-receive' hook is already installed"
           @@check_hooks_installed_stamp = Time.new
           @@check_hooks_installed_cached = true
           return @@check_hooks_installed_cached
         else
-          error_msg = "[GitHosting] \"post-receive\" is already present but it's not ours!"
+          error_msg = "[GitHosting] 'post-receive' hook is already present but it's not ours!"
           logger.warn error_msg
           @@check_hooks_installed_cached = error_msg
           if GitHostingConf.git_force_hooks_update?
             begin
-              logger.info "[GitHosting] Restoring \"post-receive\" hook since forceInstallHook == true"
+              logger.info "[GitHosting] Restoring 'post-receive' hook since forceInstallHook == true"
               install_hook("post-receive.redmine_gitolite.rb")
-              logger.info "[GitHosting] \"post-receive.redmine_gitolite\ installed"
-              logger.info "[GitHosting] Running \"gl-setup\" on the gitolite install..."
-              GitHosting.shell %[#{GitHosting.git_user_runner} gl-setup]
+              logger.info "[GitHosting] 'post-receive.redmine_gitolite' hook installed"
+              logger.info "[GitHosting] Running '#{gitolite_command}' on the Gitolite install..."
+              GitHosting.shell %[#{GitHosting.git_user_runner} #{gitolite_command}]
               update_global_hook_params
-              logger.info "[GitHosting] Finished installing hooks in the gitolite install..."
+              logger.info "[GitHosting] Finished installing hooks in the Gitolite install..."
               @@check_hooks_installed_cached = true
             rescue
-              logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing gitolite!"
+              logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
             end
           end
           @@check_hooks_installed_stamp = Time.new
@@ -150,7 +161,7 @@ module GitHosting
       begin
         hook_source_path = File.join(package_hooks_dir, hook_name)
         hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
-        logger.info "[GitHosting] Installing \"#{hook_name}\" from #{hook_source_path} to #{hook_dest_path}"
+        logger.info "[GitHosting] Installing '#{hook_name}' from #{hook_source_path} to #{hook_dest_path}"
         git_user = GitHostingConf.git_user
         GitHosting.shell %[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
         GitHosting.shell %[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
