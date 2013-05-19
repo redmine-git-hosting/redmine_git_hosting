@@ -85,21 +85,21 @@ module RedmineGitHosting
         #
         # We perform caching here to speed this up, since this function gets called
         # many times during the course of a repository lookup.
-        @@cached_path=nil
-        @@cached_id=nil
+        @@cached_path = nil
+        @@cached_id = nil
         def repo_path_to_git_label(repo_path)
           # Return cached value if pesent
-          return @@cached_id if @@cached_path==repo_path
+          return @@cached_id if @@cached_path == repo_path
 
-          repo=Repository.find_by_path(repo_path, :parse_ext=>true)
+          repo = Repository.find_by_path(repo_path, :parse_ext => true)
           if repo
             # Cache translated id path, return id
-            @@cached_path=repo_path
-            @@cached_id=repo.git_label(:assume_unique=>false)
+            @@cached_path = repo_path
+            @@cached_id = repo.git_label(:assume_unique => false)
           else
             # Hm... clear cache, return nil
-            @@cached_path=nil
-            @@cached_id=nil
+            @@cached_path = nil
+            @@cached_id = nil
           end
         end
 
@@ -191,12 +191,12 @@ module RedmineGitHosting
 
           if !identifier.blank? && (new_record? || identifier_changed?)
             if Project.find_by_identifier(identifier)
-              errors.add(:identifier,:ident_cannot_equal_project)
+              errors.add(:identifier, :ident_cannot_equal_project)
             end
 
             # See if a repo for another project has the same identifier (existing validations already check for current project)
-            if self.class.repo_ident_unique? && Repository.find_by_identifier(identifier,:conditions => ["project_id <> ?",project.id])
-              errors.add(:identifier,:ident_not_unique)
+            if self.class.repo_ident_unique? && Repository.find_by_identifier(identifier, :conditions => ["project_id <> ?", project.id])
+              errors.add(:identifier, :ident_not_unique)
             end
           end
 
@@ -206,7 +206,7 @@ module RedmineGitHosting
             # if the identifier was "NULL" but the new identifier is ""
             if (identifier_was.blank? && !identifier.blank? ||
               !identifier_was.blank? && identifier_changed?)
-              errors.add(:identifier,:cannot_change) if identifier_changed?
+              errors.add(:identifier, :cannot_change) if identifier_changed?
             end
           end
 
