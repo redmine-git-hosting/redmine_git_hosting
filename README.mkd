@@ -33,6 +33,8 @@ The trick is to add these lines at the bottom of the file ```/<git user home dir
         exit 0 if exists $ENV{GL_BYPASS_UPDATE_HOOK};
     }
 
+You must do this every time you update Gitolite.
+
 ## Required gems
 
 In order to use this plugin you must have the following gems installed:
