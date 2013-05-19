@@ -18,19 +18,22 @@ As the time of this writing, it should be compatible with the following versions
 
 * **ChiliProject:** This plugin should work with ChiliProject 2.0.0 through 3.3.x. It has been successfully used with at least 2.0.x, 2.5.x, 2.7.x, and 3.0.x, and 3.3.x releases.
 
-* **Gitolite:** This plugin is compatible with most versions of Gitolite including versions 3.x.
+* **Gitolite:** This plugin is compatible with most versions of Gitolite including versions 3.x. Tested with the last version of Gitolite : v3.5.1-4-g2f48a3e
 
 * **Ruby:** This plugin is compatible with Ruby 1.8.7, 1.9.3 and 2.0
 
 There is a known issue with Gitolite 3 and HTTP access (https://github.com/gitlabhq/gitlabhq/issues/1495)
 
-The trick is to add these lines at the begining of the file ```/<git user home dir>/.gitolite/hooks/common/update```
+The trick is to add these lines at the bottom of the file ```/<git user home dir>/bin/lib/Gitolite/Hooks/Update.pm``` in the **__DATA__** section :
 
+    __DATA__
     #!/usr/bin/perl
 
     BEGIN {
         exit 0 if exists $ENV{GL_BYPASS_UPDATE_HOOK};
     }
+
+You must do this every time you update Gitolite.
 
 ## Required gems
 
