@@ -1,5 +1,6 @@
 require 'lockfile'
 require 'net/ssh'
+require 'open3'
 require 'tmpdir'
 require 'tempfile'
 require 'stringio'
@@ -218,7 +219,34 @@ module GitHosting
 
 
   def self.gitolite_version
-    %x[#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost]
+    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost")
+
+    if !stderr.readlines.blank?
+      return -1
+    else
+      version = stdout.readlines
+      version.each do |line|
+        if line.include?('gitolite v2.')
+          return 2
+        elsif line.include?('running gitolite3')
+          return 3
+        else
+          return 0
+        end
+      end
+    end
+  end
+
+
+  def self.gitolite_version_output
+    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost")
+
+    errors = stderr.readlines
+    if !errors.blank?
+      return errors.join("")
+    else
+      return stdout.readlines.join("")
+    end
   end
 
 
@@ -420,11 +448,10 @@ module GitHosting
   ## CREATE EXECUTABLE FILES
   def self.update_git_exec
     logger.info "[GitHosting] Setting up #{get_bin_dir}"
-    gitolite_key = GitHostingConf.gitolite_ssh_private_key
 
     File.open(gitolite_ssh_path(), "w") do |f|
       f.puts "#!/bin/sh"
-      f.puts "exec ssh -o BatchMode=yes -o StrictHostKeyChecking=no -i #{gitolite_key} \"$@\""
+      f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.ssh_server_local_port} -i #{GitHostingConf.gitolite_ssh_private_key} \"$@\""
     end if !File.exists?(gitolite_ssh_path())
 
     ##############################################################################################################################
@@ -547,7 +574,7 @@ module GitHosting
     begin
       logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
       shell %[rm -rf "#{repo_dir}"]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost:#{GitHostingConf.ssh_server_local_port}/gitolite-admin.git #{repo_dir}]
+      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}" ]
       # Make sure we have our hooks setup
       GitAdapterHooks.check_hooks_installed
@@ -560,7 +587,7 @@ module GitHosting
         fixup_gitolite_admin
         logger.info "[GitHosting] Recloning gitolite-admin repository to #{repo_dir}"
         shell %[rm -rf "#{repo_dir}"]
-        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost:#{GitHostingConf.ssh_server_local_port}/gitolite-admin.git #{repo_dir}]
+        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
         shell %[chmod 700 "#{repo_dir}" ]
         # Make sure we have our hooks setup
         GitAdapterHooks.check_hooks_installed

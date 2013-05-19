@@ -266,10 +266,16 @@
   </p>
 
   <p>
-    <label>Gitolite Version</label>
+    <label>Gitolite Version : <%=
+      if GitHosting.gitolite_version <= 0
+        l(:label_unknown_gitolite_version)
+      else
+        GitHosting.gitolite_version
+      end
+    %></label>
     <br/>
 <pre>
-<%= raw GitHosting.gitolite_version %>
+<%= raw GitHosting.gitolite_version_output %>
 </pre>
     <br/>
   </p>

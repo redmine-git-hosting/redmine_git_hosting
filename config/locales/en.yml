@@ -53,7 +53,7 @@ en:
 
   label_copy_to_clipboard: "Copy to clipboard"
 
-
+  label_unknown_gitolite_version: Unknown version
 
 
   label_git_hook_header: Repository Hooks

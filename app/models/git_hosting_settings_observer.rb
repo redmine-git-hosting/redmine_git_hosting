@@ -28,6 +28,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         valuehash['gitUser'] = @@old_valuehash['gitUser']
         valuehash['gitoliteIdentityFile'] = @@old_valuehash['gitoliteIdentityFile']
         valuehash['gitoliteIdentityPublicKeyFile'] = @@old_valuehash['gitoliteIdentityPublicKeyFile']
+        valuehash['sshServerLocalPort'] = @@old_valuehash['sshServerLocalPort']
       elsif valuehash['gitScriptDir'] && (valuehash['gitScriptDir'] != @@old_valuehash['gitScriptDir'])
         # Remove old bin directory and scripts, since about to change directory
         %x[ rm -rf '#{ GitHosting.get_bin_dir }' ]
@@ -45,7 +46,8 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         end
       elsif valuehash['gitUser'] != @@old_valuehash['gitUser'] ||
         valuehash['gitoliteIdentityFile'] != @@old_valuehash['gitoliteIdentityFile'] ||
-        valuehash['gitoliteIdentityPublicKeyFile'] != @@old_valuehash['gitoliteIdentityPublicKeyFile']
+        valuehash['gitoliteIdentityPublicKeyFile'] != @@old_valuehash['gitoliteIdentityPublicKeyFile'] ||
+        valuehash['sshServerLocalPort'] != @@old_valuehash['sshServerLocalPort']
         # Remove old scripts, since about to change content (leave directory alone)
         %x[ rm -f '#{ GitHosting.get_bin_dir }'* ]
       end
@@ -171,7 +173,7 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         end
       end
 
-      # Validate ssh port > 0 (and exclude non-numbers)
+      # Validate ssh port > 0 and < 65537 (and exclude non-numbers)
       if valuehash['sshServerLocalPort']
         if valuehash['sshServerLocalPort'].to_i > 0 and valuehash['sshServerLocalPort'].to_i < 65537
           valuehash['sshServerLocalPort'] = "#{valuehash['sshServerLocalPort'].to_i}"
@@ -203,7 +205,8 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
       if @@old_valuehash['gitScriptDir'] != valuehash['gitScriptDir'] ||
          @@old_valuehash['gitUser'] != valuehash['gitUser'] ||
          @@old_valuehash['gitoliteIdentityFile'] != valuehash['gitoliteIdentityFile'] ||
-         @@old_valuehash['gitoliteIdentityPublicKeyFile'] != valuehash['gitoliteIdentityPublicKeyFile']
+         @@old_valuehash['gitoliteIdentityPublicKeyFile'] != valuehash['gitoliteIdentityPublicKeyFile'] ||
+         @@old_valuehash['sshServerLocalPort'] != valuehash['sshServerLocalPort']
           # Need to update scripts
           GitHosting.update_git_exec
       end
