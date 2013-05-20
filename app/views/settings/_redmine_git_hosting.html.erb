@@ -1,6 +1,6 @@
 <%
   gitLockWaitTime                = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitLockWaitTime].nil?) ? Setting.plugin_redmine_git_hosting[:gitLockWaitTime] : '10'
-  gitTempDataDir                 = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitTempDataDir].nil?) ? Setting.plugin_redmine_git_hosting[:gitTempDataDir] : (ENV['HOME'] + "/tmp/redmine_git_hosting/").to_s,
+  gitTempDataDir                 = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitTempDataDir].nil?) ? Setting.plugin_redmine_git_hosting[:gitTempDataDir] : (ENV['HOME'] + "/tmp/redmine_git_hosting/").to_s
   gitScriptDir                   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitScriptDir].nil?) ? Setting.plugin_redmine_git_hosting[:gitScriptDir] : ''
   gitUser                        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitUser].nil?) ? Setting.plugin_redmine_git_hosting[:gitUser] : 'git'
   gitoliteIdentityFile           = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile].nil?) ? Setting.plugin_redmine_git_hosting[:gitoliteIdentityFile] : (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s
@@ -56,7 +56,7 @@
   </p>
   <p>
     <label><%= l(:label_tmp_data_dir) %></label>
-    <%= text_field_tag("settings[gitTempDataDir]", gitTempDataDir[0], :size => 60) %>
+    <%= text_field_tag("settings[gitTempDataDir]", gitTempDataDir, :size => 60) %>
     <br />
   </p>
   <p>
