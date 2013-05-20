@@ -50,7 +50,6 @@ module GitHosting
         contents = %x[#{GitHosting.git_user_runner} 'cat #{@@post_receive_hook_path}']
         digest = Digest::MD5.hexdigest(contents)
 
-        logger.debug "[GitHosting] Installed hook digest: #{digest}"
         if rgh_hook_digest == digest
           logger.info "[GitHosting] Our 'post-receive' hook is already installed"
           @@check_hooks_installed_stamp = Time.new
@@ -148,10 +147,10 @@ module GitHosting
     @@cached_hook_digest = nil
     def self.rgh_hook_digest(recreate=false)
       if @@cached_hook_digest.nil? || recreate
-        logger.info "[GitHosting] Creating MD5 digests for Redmine Git Hosting hook"
+        logger.info "[GitHosting] Creating MD5 digests for 'post-receive' hook"
         hook_file = "post-receive.redmine_gitolite.rb"
         digest = Digest::MD5.hexdigest(File.read(File.join(package_hooks_dir, hook_file)))
-        logger.info "[GitHosting] Digest for #{hook_file}: #{digest}"
+        logger.info "[GitHosting] Digest for 'post-receive' hook : #{digest}"
         @@cached_hook_digest = digest
       end
       @@cached_hook_digest
@@ -210,15 +209,18 @@ module GitHosting
       value_hash
     end
 
-    def self.setup_hooks_for_repository(repo,value_hash=nil)
+    def self.setup_hooks_for_repository(repo, value_hash=nil)
       # if no value_hash given, go fetch
       value_hash = get_local_config_params(repo) if value_hash.nil?
-      hook_key = repo.extra.key
+      hook_key   = repo.extra.key
+      repo_path  = GitHosting.repository_path(repo)
+      repo_name  = GitHosting.repository_name(repo)
+
       if value_hash["hooks.redmine_gitolite.key"] != hook_key || value_hash["hooks.redmine_gitolite.projectid"] != repo.project.identifier || GitHosting.multi_repos? && (value_hash["hooks.redmine_gitolite.repositoryid"] != (repo.identifier || ""))
         if value_hash["hooks.redmine_gitolite.key"]
-          logger.info "[GitHosting] Repairing hooks for repository '#{GitHosting.repository_name(repo)}' (in gitolite repository at '#{GitHosting.repository_path(repo)}')"
+          logger.info "[GitHosting] Repairing hooks for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         else
-          logger.info "[GitHosting] Setting up hooks for repository '#{GitHosting.repository_name(repo)}' (in gitolite repository at '#{GitHosting.repository_path(repo)}')"
+          logger.info "[GitHosting] Setting up hooks for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         end
 
         begin
@@ -231,7 +233,7 @@ module GitHosting
           logger.info "[GitHosting] Done !"
           logger.info ""
         rescue
-          logger.error "[GitHosting] setup_hooks_for_repository(#{repo.git_label}) failed!"
+          logger.error "setup_hooks_for_repository(#{repo.git_label}) failed!"
           logger.info ""
         end
 
