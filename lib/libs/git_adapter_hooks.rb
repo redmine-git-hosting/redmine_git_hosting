@@ -20,6 +20,9 @@ module GitHosting
         post_receive_length_is_zero= "0" == (%x[echo 'wc -c  #{@@post_receive_hook_path}' | #{GitHosting.git_user_runner} "bash" ]).chomp.strip.split(/[\t ]+/)[0]
       end
 
+      logger.info ""
+      logger.info "[GitHosting] ############ INSTALL HOOKS ############"
+
       if GitHosting.gitolite_version == 2
         gitolite_command = 'gl-setup'
       elsif GitHosting.gitolite_version == 3
@@ -106,6 +109,9 @@ module GitHosting
     @@hook_url = nil
     def self.update_global_hook_params
       cur_values = get_global_config_params
+
+      logger.info "[GitHosting] ############ UPDATE GITOLITE HOOKS CONFIG ############"
+
       begin
         @@hook_url ||= "http://" + File.join(GitHosting.my_root_url,"/githooks/post-receive")
         if cur_values["hooks.redmine_gitolite.url"] != @@hook_url
@@ -218,9 +224,9 @@ module GitHosting
 
       if value_hash["hooks.redmine_gitolite.key"] != hook_key || value_hash["hooks.redmine_gitolite.projectid"] != repo.project.identifier || GitHosting.multi_repos? && (value_hash["hooks.redmine_gitolite.repositoryid"] != (repo.identifier || ""))
         if value_hash["hooks.redmine_gitolite.key"]
-          logger.info "[GitHosting] Repairing hooks for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
+          logger.info "[GitHosting] Repairing hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         else
-          logger.info "[GitHosting] Setting up hooks for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
+          logger.info "[GitHosting] Setting up hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         end
 
         begin
