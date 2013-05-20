@@ -6,7 +6,7 @@ module GitHostingConf
   REDMINE_HIERARCHICAL          = true
   HTTP_SERVER                   = 'localhost'
   HTTP_SERVER_SUBDIR            = ''
-  TEMP_DATA_DIR                 = '/tmp/redmine_git_hosting'
+  TEMP_DATA_DIR                 = (ENV['HOME'] + '/tmp/redmine_git_hosting/').to_s
   SCRIPT_DIR                    = ''
   SCRIPT_PARENT                 = 'bin'
   GIT_USER                      = 'git'

@@ -15,7 +15,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     :partial => 'settings/redmine_git_hosting',
     :default => {
       'gitLockWaitTime'               => '10',
-      'gitTempDataDir'                => '/tmp/redmine_git_hosting/',
+      'gitTempDataDir'                => (ENV['HOME'] + "/tmp/redmine_git_hosting/").to_s,
       'gitScriptDir'                  => '',
       'gitUser'                       => 'git',
       'gitoliteIdentityFile'          => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s,

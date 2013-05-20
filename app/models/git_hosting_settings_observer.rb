@@ -58,13 +58,15 @@ class GitHostingSettingsObserver < ActiveRecord::Observer
         %x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
 
         stripped = valuehash['gitTempDataDir'].lstrip.rstrip
-        normalizedFile = File.expand_path(stripped,"/")  # Get rid of extra path components
+        normalizedFile = File.expand_path(stripped, "/")  # Get rid of extra path components
+
         if (normalizedFile == "/" || stripped[0,1] != "/")
           # Don't allow either root-level (absolute) or relative
-          valuehash['gitTempDataDir'] = "/tmp/redmine_git_hosting/"
+          valuehash['gitTempDataDir'] = GitHosting.get_tmp_dir
         else
           valuehash['gitTempDataDir'] = normalizedFile + "/"     # Add trailing '/'
         end
+
       end
 
       # Server should not include any path components.  Also, ports should be numeric.
