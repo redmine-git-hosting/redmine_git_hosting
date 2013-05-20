@@ -47,25 +47,23 @@ class RepositoryMirror < ActiveRecord::Base
     push_args << "\"#{dequote(url)}\" "
     push_args << "\"#{dequote(explicit_refspec)}\" " unless explicit_refspec.blank?
 
-    #  mycom = %[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args}2>&1' | #{GitHosting.git_user_runner} "bash" ]
-    #  GitHosting.logger.error "Pushing: #{mycom}"
-    shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args}2>&1' | #{GitHosting.git_user_runner} "bash" ].chomp
+    shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args} 2>&1' | #{GitHosting.git_user_runner} "bash" ].chomp
     push_failed = ($?.to_i!=0) ? true : false
 
     if (push_failed)
       GitHosting.logger.error "[ Pushing changes to mirror: #{url} ... Failed!"
-      GitHosting.logger.error "  "+shellout.split("\n").join("\n  ")+" ]"
+      GitHosting.logger.error "  " + shellout.split("\n").join("\n  ") + " ]"
     else
       GitHosting.logger.info "[ Pushing changes to mirror: #{url} ... Succeeded! ]"
     end
-    [push_failed,shellout]
+    [push_failed, shellout]
   end
 
   # If we have an explicit refspec, check it against incoming payloads
   # Special case: if we do not pass in any payloads, return true
   def needs_push(payloads=[])
     return true if payloads.empty?
-    return true if push_mode==PUSHMODE_MIRROR
+    return true if push_mode == PUSHMODE_MIRROR
 
     refspec_parse = explicit_refspec.match(/^\+?([^:]*)(:[^:]*)?$/)
     payloads.each do |payload|
@@ -93,7 +91,7 @@ class RepositoryMirror < ActiveRecord::Base
 
   # Put backquote in front of crucial characters
   def dequote(in_string)
-    in_string.gsub(/[$,"\\\n]/) {|x| "\\"+x}
+    in_string.gsub(/[$,"\\\n]/) {|x| "\\" + x}
   end
 
   def check_refspec
@@ -142,14 +140,14 @@ class RepositoryMirror < ActiveRecord::Base
       if refcomp_parse[1]
         # Should be first class.  If no type component, return fail
         if refcomp_parse[3]
-          {:type=>refcomp_parse[3], :name=>refcomp_parse[4]}
+          {:type => refcomp_parse[3], :name => refcomp_parse[4]}
         else
           nil
         end
       elsif refcomp_parse[3]
-        {:type=>nil, :name=>(refcomp_parse[3]+"/"+refcomp_parse[4])}
+        {:type => nil, :name => (refcomp_parse[3] + "/" + refcomp_parse[4])}
       else
-        {:type=>nil, :name=>refcomp_parse[4]}
+        {:type => nil, :name => refcomp_parse[4]}
       end
     else
       nil
