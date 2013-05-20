@@ -106,6 +106,16 @@ module GitHosting
   end
 
 
+  # Check to see if the given repository exists or not in DB...
+  def self.git_repository_exists_in_db?(repo_name)
+    if !Repository.find_by_path(repository_path(repo_name)).nil?
+      return true
+    else
+      return false
+    end
+  end
+
+
   # Check to see if the given repository exists or not...
   # Need to work a bit, since we have to su to figure it out...
   def self.git_repository_exists?(repo_name)
@@ -425,7 +435,7 @@ module GitHosting
     tmp_dir = GitHostingConf.temp_data_dir
     if (@@previous_git_tmp_dir != tmp_dir)
       @@previous_git_tmp_dir = tmp_dir
-      @@git_hosting_tmp_dir = File.join(tmp_dir,git_user) + "/"
+      @@git_hosting_tmp_dir = File.join(tmp_dir, git_user) + "/"
     end
     if !File.directory?(@@git_hosting_tmp_dir)
       %x[mkdir -p "#{@@git_hosting_tmp_dir}"]
@@ -538,12 +548,12 @@ module GitHosting
   #
   def self.clone_or_pull_gitolite_admin(resync_all_flag)
     # clone/pull from admin repo
-    repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
+    repo_dir = File.join(get_tmp_dir, GitHosting::GitoliteConfig::ADMIN_REPO)
 
     # If preexisting directory exists, try to clone and merge....
     if (File.exists? "#{repo_dir}") && (File.exists? "#{repo_dir}/.git") && (File.exists? "#{repo_dir}/keydir") && (File.exists? "#{repo_dir}/conf")
       begin
-        logger.info "[GitHosting] Fetching changes from gitolite-admin repository to #{repo_dir}"
+        logger.info "[GitHosting] Fetching changes from Gitolite Admin repository to '#{repo_dir}'"
         shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' fetch]
         shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' merge FETCH_HEAD]
 
@@ -551,7 +561,7 @@ module GitHosting
         return_val = %x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' status --short].empty?
 
         if (return_val)
-          shell %[chmod 700 "#{repo_dir}" ]
+          shell %[chmod 700 "#{repo_dir}"]
           # Make sure we have our hooks setup
           GitAdapterHooks.check_hooks_installed
           return return_val
@@ -563,37 +573,44 @@ module GitHosting
           #
           # 04/23/12
           # --KUBI--
-          logger.error "[GitHosting] Seems to be unmerged changes!  Going to delete and reclone for safety."
+          logger.error "[GitHosting] Seems to be unmerged changes! Going to delete and reclone for safety."
           logger.error "[GitHosting] May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
         end
       rescue
-        logger.error "[GitHosting] Repository fetch and merge failed -- trying to delete and reclone repository."
+        logger.error "Repository fetch and merge failed -- trying to delete and reclone Gitolite Admin repository."
       end
     end
 
     begin
-      logger.info "[GitHosting] Cloning gitolite-admin repository to #{repo_dir}"
+      logger.info "[GitHosting] Cloning Gitolite Admin repository to '#{repo_dir}'"
       shell %[rm -rf "#{repo_dir}"]
       shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
-      shell %[chmod 700 "#{repo_dir}" ]
+      shell %[chmod 700 "#{repo_dir}"]
+
       # Make sure we have our hooks setup
       GitAdapterHooks.check_hooks_installed
 
       return true # On master (fresh clone)
-    rescue
+    rescue => e
+      logger.error e.message
+      logger.error "Cannot clone Gitolite Admin repository. Try to fix it!"
 
       begin
         # Try to repair admin access.
         fixup_gitolite_admin
-        logger.info "[GitHosting] Recloning gitolite-admin repository to #{repo_dir}"
+
+        logger.info "[GitHosting] Recloning Gitolite Admin repository to '#{repo_dir}'"
         shell %[rm -rf "#{repo_dir}"]
         shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
-        shell %[chmod 700 "#{repo_dir}" ]
+        shell %[chmod 700 "#{repo_dir}"]
+
         # Make sure we have our hooks setup
         GitAdapterHooks.check_hooks_installed
+
         return true # On master (fresh clone)
-      rescue
-        logger.error "[GitHosting] Cannot clone administrative repository. Requires human intervention !!!"
+      rescue => e
+        logger.error e.message
+        logger.error "Cannot clone Gitolite Admin repository. Requires human intervention !!!"
       end
     end
   end
@@ -627,26 +644,38 @@ module GitHosting
   # Consider this the "nuclear" option....
   def self.fixup_gitolite_admin
     unless GitoliteConfig.has_admin_key?
-      raise GitHostingException, "Cannot repair Admin Key: Key not managed by Redmine!"
+      raise GitHostingException, "Cannot repair Gitolite Admin key : Admin key is not managed by Redmine!"
     end
-    logger.warn "[GitHosting] Attempting to restore repository access key"
+
+    logger.warn "[GitHosting] Attempting to restore Gitolite Admin key :"
 
     begin
-      repo_dir = File.join(Dir.tmpdir,"fixrepo",git_user,GitHosting::GitoliteConfig::ADMIN_REPO)
-      conf_file = File.join(repo_dir,"conf",gitolite_conf)
-      keydir = File.join(repo_dir, 'keydir')
+      if GitHosting.gitolite_version == 2
+        gitolite_command = 'gl-admin-push -f'
+      elsif GitHosting.gitolite_version == 3
+        gitolite_command = 'gitolite push -f'
+      else
+        raise GitHostingException, "Unknown Gitolite Version"
+      end
 
-      tmp_conf_dir = File.join(Dir.tmpdir,"fixconf",git_user)
-      tmp_conf_file = File.join(tmp_conf_dir,gitolite_conf)
+      repo_dir  = File.join(Dir.tmpdir, "fixrepo", git_user, GitHosting::GitoliteConfig::ADMIN_REPO)
+      conf_file = File.join(repo_dir, "conf", gitolite_conf)
+      keydir    = File.join(repo_dir, 'keydir')
+
+      tmp_conf_dir  = File.join(Dir.tmpdir, "fixconf", git_user)
+      tmp_conf_file = File.join(tmp_conf_dir, gitolite_conf)
 
       admin_repo = "#{GitHostingConf.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
 
-      logger.warn "[GitHosting] Cloning administrative repo '#{admin_repo}' directly as '#{git_user}' in '#{repo_dir}'"
+      logger.warn "[GitHosting] Cloning Gitolite Admin repository '#{admin_repo}' directly as '#{git_user}' in '#{repo_dir}'"
+
       shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
       shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
 
       # Load up existing conf file
       shell %[mkdir -p #{tmp_conf_dir}]
+      shell %[mkdir -p #{keydir}]
+
       shell %[#{GitHosting.git_user_runner} 'cat #{conf_file}' | cat > #{tmp_conf_file}]
       conf = GitoliteConfig.new(tmp_conf_file)
 
@@ -684,12 +713,12 @@ module GitHosting
       # Remove extraneous keys from
       extrakeys.each do |keyname|
         unless keyname == new_admin_key_name
-          logger.warn "[GitHosting] Removing orphan administrative key '#{keyname}' from gitolite config file"
+          logger.warn "[GitHosting] Removing orphan administrative key '#{keyname}' from Gitolite config file"
           conf.delete_admin_keys keyname
         end
       end
 
-      logger.warn "[GitHosting] Establishing '#{new_admin_key_name}.pub' as the redmine_git_hosting administrative key"
+      logger.warn "[GitHosting] Establishing '#{new_admin_key_name}.pub' as the Gitolite Admin key"
 
       # Add selected key to front of admin list
       admin_keys = ([new_admin_key_name] + conf.get_admin_keys).uniq
@@ -705,25 +734,22 @@ module GitHosting
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}"]
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
       shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of gitolite admin key'"]
-      begin
-        logger.warn "[GitHosting] Pushing fixes using 'gl-admin-push -f'"
-        shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gl-admin-push -f"]
-      rescue
-        logger.error "[GitHosting] 'gl-admin-push' failed (Gitolite 3?). Trying 'gitolite push -f'"
-        shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; gitolite push -f"]
-      end
+      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of Gitolite Admin key'"]
+
+      logger.warn "[GitHosting] Pushing fixes using '#{gitolite_command}'"
+      shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; #{gitolite_command}"]
+
       %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
       logger.info "[GitHosting] Success!"
     rescue => e
-      logger.error "[GitHosting] Failed to reestablish gitolite admin key."
+      logger.error "Failed to reestablish Gitolite Admin key."
       logger.error e.message
       logger.error e.backtrace.join("\n")
       %x[#{GitHosting.git_user_runner} 'rm -f ~/id_rsa.pub']
-      %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
-      %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
-      raise GitHostingException, "Failure to Repair Gitolite Admin Key"
+      %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir, 'fixrepo')}"']
+      %x[rm -rf "#{File.join(Dir.tmpdir, 'fixconf')}"]
+      raise GitHostingException, "Failure to repair Gitolite Admin key"
     end
   end
 
@@ -740,14 +766,17 @@ module GitHosting
     # create tmp dir, return cleanly if, for some reason, we don't have proper permissions
     repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
 
+    logger.info ""
+    logger.info "[GitHosting] ############ COMMIT CHANGES ############"
+
     # commit / push changes to gitolite admin repo
     begin
       if (!resyncing)
-        logger.info "[GitHosting] Committing changes to gitolite-admin repository"
+        logger.info "[GitHosting] Committing changes to Gitolite Admin repository"
         message = "Updated by Redmine"
       else
-        logger.info "[GitHosting] Committing corrections to gitolite-admin repository"
-        message = "Updated by Redmine: Corrections discovered during RESYNC_ALL"
+        logger.info "[GitHosting] Committing corrections to Gitolite Admin repository"
+        message = "Updated by Redmine : Corrections discovered during RESYNC_ALL"
       end
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*]
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}]
@@ -755,9 +784,11 @@ module GitHosting
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine']
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -a -m '#{message}']
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' push -u origin master]
+      logger.info ""
     rescue
-      logger.error "[GitHosting] Problems committing changes to gitolite-admin repository!! Probably requires human intervention"
-      raise GitHostingException, "Gitlite-admin Commit Failure"
+      logger.error "Problems committing changes to Gitolite Admin repository!! Probably requires human intervention"
+      logger.info ""
+      raise GitHostingException, "Gitolite Admin repository commit failure"
     end
   end
 
@@ -805,8 +836,12 @@ module GitHosting
     flags = {}
     args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
     reposym = (multi_repos? ? :repositories : :repository)
+
+    logger.info ""
+    logger.info "[GitHosting] ############ GRAB PROJECTS TO WORK ON ############"
+
     if flags[:resync_all]
-      logger.info "[GitHosting] Executing RESYNC_ALL operation on gitolite configuration"
+      logger.info "[GitHosting] Executing RESYNC_ALL operation on Gitolite configuration"
       projects = Project.active_or_archived.find(:all, :include => reposym)
     elsif flags[:delete]
       # When delete, want to recompute users, so need to go through all projects
@@ -817,12 +852,14 @@ module GitHosting
       logger.info "[GitHosting] Executing ARCHIVE operation (remove keys)"
       projects = Project.active_or_archived.find(:all, :include => reposym)
     elsif flags[:descendants]
+      logger.info "[GitHosting] Executing RESYNC_ALL operation on Gitolite configuration for projects and descendants"
       if Project.method_defined?(:self_and_descendants)
         projects = (args.flatten.select{|p| p.is_a?(Project)}).collect{|p| p.self_and_descendants}.flatten
       else
         projects = Project.active_or_archived.find(:all, :include => reposym)
       end
     else
+      logger.info "[GitHosting] No flags set, RESYNC_KEYS for projects"
       projects = args.flatten.select{|p| p.is_a?(Project)}
     end
 
@@ -837,7 +874,6 @@ module GitHosting
       logger.info "[GitHosting] Got no projects to work on..."
       return
     else
-      logger.info ""
       logger.info "[GitHosting] Got projects, move on!"
     end
 
@@ -859,15 +895,19 @@ module GitHosting
     end
 
     begin
-      # Make sure we have gitoite-admin cloned.
+      # Make sure we have gitolite-admin cloned.
       # If have uncommitted changes, reflect in "changed" flag.
+      logger.info ""
+      logger.info "[GitHosting] ############ GRAB GITOLITE ADMIN REPO ############"
       changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
 
       # Get directory for the gitolite-admin
-      repo_dir = File.join(get_tmp_dir,"gitolite-admin")
+      repo_dir = File.join(get_tmp_dir, "gitolite-admin")
 
-      logger.debug "[GitHosting] Updating keydirectory for projects: #{git_projects.join ', '}"
-      keydir = File.join(repo_dir,"keydir")
+      logger.info ""
+      logger.info "[GitHosting] ############ UPDATE SSH KEYS ############"
+      logger.info "[GitHosting] Updating key directory for projects : '#{git_projects.join ', '}'"
+      keydir = File.join(repo_dir, "keydir")
       old_keyhash = {}
       Dir.foreach(keydir) do |keyfile|
         user_token = GitolitePublicKey.ident_to_user_token(keyfile)
@@ -913,8 +953,7 @@ module GitHosting
         end
 
         (old_keynames - cur_keynames).each do |keyname|
-          filename = File.join(keydir,"#{keyname}")
-          logger.warn "[GitHosting] Removing gitolite key: #{keyname}"
+          logger.warn "[GitHosting] Removing Redmine key from Gitolite : '#{keyname}'"
           %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
           changed = true
         end
@@ -923,8 +962,8 @@ module GitHosting
         active_keys.each do |key|
           keyname = "#{key.identifier}.pub"
           unless old_keynames.index(keyname)
-            filename = File.join(keydir,"#{keyname}")
-            logger.info "[GitHosting] Adding gitolite key: #{keyname}"
+            filename = File.join(keydir, keyname)
+            logger.info "[GitHosting] Adding Redmine key to Gitolite : '#{keyname}'"
             File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
             changed = true
           end
@@ -935,13 +974,13 @@ module GitHosting
       end
 
       # Remove keys for deleted users
-      orphanString=flags[:resync_all] ? "orphan " : ""
+      orphanString = flags[:resync_all] ? "orphan " : ""
+
       if flags[:resync_all] || flags[:delete] || flags[:archive]
         # All keys left in old_keyhash should be for users nolonger authorized for gitolite repos
         old_keyhash.each_value do |keyset|
           keyset.each do |keyname|
-            filename = File.join(keydir,"#{keyname}")
-            logger.warn "[GitHosting] Removing #{orphanString}gitolite key: #{keyname}"
+            logger.warn "[GitHosting] Removing #{orphanString}Redmine key from Gitolite : '#{keyname}'"
             %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
             changed = true
           end
@@ -975,12 +1014,13 @@ module GitHosting
 
         # First, get project-specific read/write keys
         # fetch users
-        proj_read_user_keys=[]
-        proj_write_user_keys=[]
+        proj_read_user_keys =  []
+        proj_write_user_keys = []
+
         proj.member_principals.map(&:user).compact.uniq.each do |user|
-          if user.allowed_to?( :commit_access, proj )
+          if user.allowed_to?(:commit_access, proj)
             proj_write_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
-          elsif user.allowed_to?( :view_changesets, proj )
+          elsif user.allowed_to?(:view_changesets, proj)
             proj_read_user_keys += user.gitolite_public_keys.active.user_key.map(&:identifier)
           end
         end
@@ -988,29 +1028,34 @@ module GitHosting
         proj.gl_repos.each do |repo|
           repo_name = repository_name(repo)
 
+          logger.info ""
+          logger.info "[GitHosting] ############ UPDATE GITOLITE CONF FOR REPO '#{repo_name}' ############"
+
           # Common case: these are hashes with zero or one one element (except when
           # Repository.repo_ident_unique? is false)
           my_entries = redmine_repos[repo.git_name]
           my_repos = actual_repos[repo.git_name]
 
           # We have one or more gitolite.conf entries with the right base name.  Pick one with
-          # closest name (will pick one with 'repo_name' if it exists.
+          # closest name (will pick one with 'repo_name' if it exists).
           closest_entry = closest_path(my_entries,repo_name,repo)
           if !closest_entry
             # CREATION case.
             if !total_entries[repo_name]
-              logger.warn "[GitHosting] Creating new entry '#{repo_name}' in #{gitolite_conf}"
+              logger.warn "[GitHosting] Creating new entry '#{repo_name}' in '#{gitolite_conf}'"
             else
-              logger.warn "[GitHosting] Utilizing existing non-redmine entry '#{repo_name}' in #{gitolite_conf}"
+              logger.warn "[GitHosting] Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
             end
           elsif closest_entry != repo_name
             # MOVE case.
-            logger.warn "[GitHosting] Moving entry '#{closest_entry}' to '#{repo_name}' in #{gitolite_conf}."
+            logger.warn "[GitHosting] Moving entry '#{closest_entry}' to '#{repo_name}' in '#{gitolite_conf}'."
             conf.rename_repo(closest_entry,repo_name)
           else
             # NORMAL case. Have entry with correct name.
             if !my_repos[repo_name]
-              logger.warn "[GitHosting] Missing or misnamed repository for existing gitolite entry '#{repo_name}'."
+              logger.warn "[GitHosting] Missing or misnamed repository for existing Gitolite entry : '#{repo_name}'."
+            else
+              logger.warn "[GitHosting] Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
             end
           end
           new_projects << proj unless my_repos[closest_entry] # Reinit hooks unless NORMAL or MOVE case
@@ -1022,16 +1067,20 @@ module GitHosting
             # if present.  Else, create new repository.
             if !GitoliteRecycle.recover_repository_if_present repo_name
               force_change = true
-              logger.warn "[GitHosting] Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+              logger.warn "[GitHosting] Let Gitolite create empty repository : '#{repository_path(repo_name)}'"
             end
           elsif my_repos[closest_entry]
             # We have a repository that matches the entry we used above.  Move this one to match if necessary
             # If closest_entry == repo_name, this is a NORMAL case (do nothing!)
             # If closest_entry != repo_name, this is the MOVE case.
-            move_physical_repo(closest_entry,repo_name) if closest_entry != repo_name
+            if closest_entry != repo_name
+              move_physical_repo(closest_entry, repo_name)
+            else
+              logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}'"
+            end
           elsif my_repos[repo_name]
             # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-            logger.warn "[GitHosting] Using existing repository: '#{repository_path(repo_name)}'"
+            logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}'"
           else
             # Of the repos in my_repo with a matching base name, only steal away those not already controlled
             # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
@@ -1041,10 +1090,10 @@ module GitHosting
               # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
               if !GitoliteRecycle.recover_repository_if_present repo_name
                 force_change = true
-                logger.warn "[GitHosting] Letting gitolite create empty repository: '#{repository_path(repo_name)}'"
+                logger.warn "[GitHosting] Let Gitolite create empty repository : '#{repository_path(repo_name)}'"
               end
             else
-              logger.warn "[GitHosting] Claiming orphan repository '#{repository_path(closest_repo)}' in gitolite repository."
+              logger.warn "[GitHosting] Claiming orphan repository '#{repository_path(closest_repo)}' in Gitolite repositories."
               move_physical_repo(closest_repo,repo_name)
             end
           end
@@ -1061,8 +1110,9 @@ module GitHosting
           if proj.active?
             if proj.module_enabled?(:repository)
               # Get deployment keys (could be empty)
-              read_user_keys=[]
-              write_user_keys=[]
+              read_user_keys  = []
+              write_user_keys = []
+
               repo.deployment_credentials.active.select(&:honored?).each do |cred|
                 if cred.allowed_to?(:commit_access)
                   write_user_keys << cred.gitolite_public_key.identifier
@@ -1075,7 +1125,7 @@ module GitHosting
               write_user_keys += proj_write_user_keys
               read_user_keys += proj_read_user_keys
 
-              #git daemon support
+              # Git daemon support
               if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
                 read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
               end
@@ -1108,37 +1158,24 @@ module GitHosting
       # If resyncing or deleting, check for orphan repositories which still have redmine keys...
       # At this point, redmine_repos contains all repositories in original gitolite.conf
       # which have redmine keys but are not part of an active redmine project.
-      # There are three possibilities:
-      #
-      # 1) They have both redmine keys and other (non-redmine) keys => remove redmine keys
-      # 2) They have only redmine keys, but repository delete is not enabled
-      #    => remove redmine keys (will leave redmine_dummy_key when we save)
-      # 3) They have only redmine keys and repository delete is enabled => delete repository
       if flags[:resync_all] || flags[:delete]
-        # if flags[:delete]
-        # # Get rid of all live repos from redmine_repos
-        # proj_ids = git_projects.map{|proj| proj.identifier}
-        # redmine_repos.delete_if{|basename,values| proj_ids.index(basename)}
-        # end
+
         redmine_repos.values.map(&:keys).flatten.each do |repo_name|
+
           # First, check if there are any redmine keys other than the DUMMY or ARCHIVED key
           has_keys = conf.has_actual_redmine_keys? repo_name
 
           # Next, delete redmine keys for this repository
-          conf.delete_redmine_keys repo_name
+          conf.delete_redmine_keys repo_name unless git_repository_exists_in_db? repo_name
+
           if GitHostingConf.delete_git_repositories?
             if conf.repo_has_no_keys? repo_name
-              logger.warn "[GitHosting] Deleting #{orphanString} entry '#{repo_name}' from #{gitolite_conf}"
+              logger.info ""
+              logger.info "[GitHosting] ############ DELETE GITOLITE CONF FOR REPO '#{repo_name}' ############"
+              logger.warn "[GitHosting] Deleting #{orphanString}Gitolite repository '#{repo_name}' from '#{gitolite_conf}'"
               conf.delete_repo repo_name
               GitoliteRecycle.move_repository_to_recycle repo_name
-            elsif has_keys # Something changed when we deleted keys
-              logger.info "[GitHosting] Deleting redmine keys from #{orphanString} entry '#{repo_name}' in #{gitolite_conf}"
-              if git_repository_exists? repo_name
-                logger.info "[GitHosting] Not removing #{repo_name}.git from gitolite repository, because non-redmine keys remain."
-              end
             end
-          elsif has_keys # Something changed when we deleted keys
-            logger.info "[GitHosting] Deleting redmine keys from #{orphanString} entry '#{repo_name}' in #{gitolite_conf}"
           end
         end
 
@@ -1161,11 +1198,11 @@ module GitHosting
       GitAdapterHooks.setup_hooks_params((flags[:resync_all]||flags[:resync_hooks]) ? git_projects : new_projects)
 
     rescue GitHostingException
-      logger.error "[GitHosting] update_repositories() failed"
+      logger.error "update_repositories() failed"
     rescue => e
       logger.error e.message
       logger.error e.backtrace[0..4].join("\n")
-      logger.error "[GitHosting] update_repositories() failed"
+      logger.error "update_repositories() failed"
     end
 
     unlock()
@@ -1199,14 +1236,14 @@ module GitHosting
       if old_prefix
         repo_subpath = File.join(GitHostingConf.repository_base, old_prefix)
         result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
-        result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory: #{dir}"}
+        result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory : #{dir}"}
       end
     rescue GitHostingException
-      logger.error "[GitHosting] move_physical_repo(#{old_name},#{new_name}) failed"
+      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
     rescue => e
       logger.error e.message
       logger.error e.backtrace[0..4].join("\n")
-      logger.error "[GitHosting] move_physical_repo(#{old_name},#{new_name}) failed"
+      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
     end
   end
 
@@ -1319,7 +1356,7 @@ module GitHosting
 
   class MyLogger
     # Prefix to error messages
-    ERROR_PREFIX = "***> "
+    ERROR_PREFIX = "[GitHosting] "
 
     # For errors, add our prefix to all messages
     def error(*progname, &block)
