@@ -381,99 +381,73 @@ Note that the act of changing a project from public to private will set the **Gi
 
 ## Caching Options
 
-This plugin includes code for caching output of the Git command, which is called to display the details of the Git repository. Redmine/ChiliProject by default calls Git directly every time this information is needed.  This can result in relatively long page load times.
+This plugin includes code for caching output of the Git command, which is called to display the details of the Git repository. Redmine/ChiliProject by default calls Git directly every time this information is needed. This can result in relatively long page load times.
 
-This plugin caches the output of Git commands to dramatically improve page load times, roughly a 10x speed increase. 
+This plugin caches the output of Git commands to dramatically improve page load times, roughly a 10x speed increase.
 
-There are three configurable caching parameters in the plugins settings page : Max Cache Elements, Max Cache Element
-Size and Max Cache Time.
+There are three configurable caching parameters in the plugins settings page : Max Cache Elements, Max Cache Element Size and Max Cache Time.
 
-* The **Max Cache Elements** is the maximum number of git commands for which to cache the output.
+* The **Max Cache Elements** is the maximum number of Git commands for which to cache the output.
 
-* The **Max Cache Element Size** is the maximum size of the git output to cache.   Anything above this size won't be cached,
-and git will be called directly every time this command is run.
+* The **Max Cache Element Size** is the maximum size of the Git output to cache. Anything above this size won't be cached, and Git will be called directly every time this command is run.
 
-* The **Max Cache Time** is the maximum amount of time the git command will be cached.  No matter what, the output of git
-commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is
-called.
+* The **Max Cache Time** is the maximum amount of time the Git command will be cached. No matter what, the output of Git commands for a given repository are cleared when new commits are pushed to the server and the post-receive hook is called.
 
-This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible
-with ChiliProject 1.x the caching functionality is not.
+This caching functionality only works in Redmine 1.2.x+ and ChiliProject v2.x+ -- while this plugin is compatible with ChiliProject 1.x the caching functionality is not.
 
-Important note: If using *mysql* for your database, you must make sure that the **max_allowed_packet** size is set (in, e.g., /etc/my.cnf) to be at least as
-large as the value you specify for **Max Cache Element Size** above.  If you do not do this, you are likely to get very strange failures of the web
-server.  Such a setting must be placed in the `[mysqld]` parameter section of this file, for instance:
+Important note : If using *mysql* for your database, you must make sure that the **max_allowed_packet** size is set (in, e.g., /etc/my.cnf) to be at least as
+large as the value you specify for **Max Cache Element Size** above. If you do not do this, you are likely to get very strange failures of the web server. Such a setting must be placed in the `[mysqld]` parameter section of this file, for instance :
 
-<pre>
-[mysqld]
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-user=mysql
-symbolic-links=0
-max_allowed_packet=32M
-</pre>
+    [mysqld]
+    datadir=/var/lib/mysql
+    socket=/var/lib/mysql/mysql.sock
+    user=mysql
+    symbolic-links=0
+    max_allowed_packet=32M
 
 The above example should allow **Max Cache Element Size** == 32M.
 
 ## SELinux Configuration for Redmine
 
-This plugin can be configured to run with SELinux.  We have included a rakefile in tasks/selinux.rake to assist
-with installing with SELinux.  You should start by editing init.rb and migrating as described above.  Then, you
-can execute one of the SELinux rake tasks (from the Redmine root).  For instance, the simplest option installs
-a SELinux configuration for both Redmine and the redmine_git_hosting plugin:
+This plugin can be configured to run with SELinux.  We have included a rakefile in tasks/selinux.rake to assist with installing with SELinux. You should start by migrating as described above. Then, you can execute one of the SELinux rake tasks (from the Redmine root). For instance, the simplest option installs a SELinux configuration for both Redmine and the redmine_git_hosting plugin :
 
     rake selinux:install RAILS_ENV=production
 
-This will generate the redmine_git_hosting binaries in ./bin, install a SELinux policy for these binaries (called
-redmine_git.pp), then install a complete context for Redmine as follows:
+This will generate the redmine_git_hosting binaries in ./bin, install a SELinux policy for these binaries (called redmine_git.pp), then install a complete context for Redmine as follows :
 
-**(1)** Most of Redmine will be marked with "public_content_rw_t".
+**(1)** Most of Redmine will be marked with "public_content_rw_t"
 
 **(2)** The dispatch files in Rails.root/public/dispatch.* will be marked with "httpd_sys_script_exec_t"
 
-**(3)** The redmine_git_hosting binaries in Rails.root/vendor/plugins/redmine_git_hosting/bin will be labeled
-with "httpd_redmine_git_script_exec_t", which has been crafted to allow the sudo behavior required by these
-binaries.
+**(3)** The redmine_git_hosting binaries in Rails.root/vendor/plugins/redmine_git_hosting/bin will be labeled with "httpd_redmine_git_script_exec_t", which has been crafted to allow the sudo behavior required by these binaries.
 
-Note that this rake file has additional options.  For instance, you can specify multiple Redmine roots with regular
-expressions (not globbed expressions!) as follows (notice the use of double quotes):
+Note that this rake file has additional options.  For instance, you can specify multiple Redmine roots with regular expressions (not globbed expressions!) as follows (notice the use of double quotes) :
 
     rake selinux:install RAILS_ENV=production ROOT_PATTERN="/source/.*/redmine"
 
-These additional options are documented in the selinux.rake file.  Under normal operation, you will get one selinux complaint about /bin/touch in
+These additional options are documented in the selinux.rake file. Under normal operation, you will get one SELinux complaint about /bin/touch in
 your log each time that you visit the plugin settings page.
 
-Once this plugin is placed under selinux control, four of the redmine_git_hosting settings can
-not be modified from the settings page.  They are: 'gitScriptDir', 'gitUser', 'gitoliteIdentityFile', and
-'gitoliteIdentityPublicKeyFile'.  The plugin settings page will make this clear.  One way to
-modify these options is to remove the old scripts, refresh the setting page, change options, then reinstall scripts.  Specifically, you can
-remove scripts with:
+Once this plugin is placed under SELinux control, five of the redmine_git_hosting settings can not be modified from the settings page. They are : 'gitScriptDir', 'gitUser', 'gitoliteIdentityFile', and 'gitoliteIdentityPublicKeyFile'. The plugin settings page will make this clear.  One way to modify these options is to remove the old scripts, refresh the setting page, change options, then reinstall scripts. Specifically, you can
+remove scripts with :
 
     rake selinux:redmine_git_hosting:remove_scripts RAILS_ENV=production
 
-Scripts and selinux policy/tags can be reinstalled with:
+Scripts and SELinux policy/tags can be reinstalled with :
 
     rake selinux:redmine_git_hosting:install RAILS_ENV=production
 
-Alternately, you can change the frozen parameters by altering them in the init.rb file and resetting the options to the defaults via:
-
-    rake redmine_git_hosting:restore_defaults RAILS_ENV=production
-
-One final comment: The selinux policy exists in binary form as selinux/redmine_git.pp. Should this policy
-need to be rebuilt, an additional rake task exists which will build the policy from selinux/redmine_git.te:
+One final comment : The SELinux policy exists in binary form as selinux/redmine_git.pp. Should this policy need to be rebuilt, an additional rake task exists which will build the policy from selinux/redmine_git.te :
 
     rake selinux:redmine_git_hosting:build_policy RAILS_ENV=productinon
 
 This task can be followed by the selinux:install task.
 
-The rakefile and SELinux configuration has been primarily tested on Redhat Enterprise Linux version 6.x
-with apache and fcgi. Other configurations may require slight tweaking.
+The rakefile and SELinux configuration has been primarily tested on Redhat Enterprise Linux version 6.x with Apache and fcgi. Other configurations may require slight tweaking.
 
 ## Copyright & License
 
-This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io. Several updates/fixes
-were provided by Github users : untoldwind, tingar and ericpaulbishop. These updates were merged together and
-expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
+This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io. Several updates/fixes were provided by Github users : untoldwind, tingar and ericpaulbishop. These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
 
 Copyright (c) 2013 Nicolas Rodriguez (nrodriguez@jbox-web.com) MIT License.
 
