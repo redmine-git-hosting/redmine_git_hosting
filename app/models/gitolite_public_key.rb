@@ -19,9 +19,10 @@ class GitolitePublicKey < ActiveRecord::Base
   belongs_to :user
   validates_uniqueness_of :title, :scope => :user_id
   validates_uniqueness_of :identifier, :scope => :user_id
-  validates_presence_of :title, :key, :identifier, :key_type
+  validates_presence_of   :title, :key, :identifier, :key_type
 
   has_many :deployment_credentials, :dependent => :destroy
+
   def validate_associated_records_for_deployment_credentials() end
 
   if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
@@ -97,7 +98,7 @@ class GitolitePublicKey < ActiveRecord::Base
   @@myregular = /^redmine_(.*)_\d*_\d*(.pub)?$/
   def self.ident_to_user_token(identifier)
     result = @@myregular.match(identifier)
-    (result!=nil) ? result[1] : nil
+    (result != nil) ? result[1] : nil
   end
 
   def self.user_to_user_token(user)
