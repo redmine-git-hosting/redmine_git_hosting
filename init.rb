@@ -10,7 +10,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
   description 'Enables Redmine / ChiliProject to control hosting of Git repositories through Gitolite'
   version VERSION_NUMBER
-  url 'https://github.com/ericpaulbishop/redmine_git_hosting'
+  url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
   settings({
