@@ -193,12 +193,12 @@ module GitHosting
   def self.lock(retries)
     is_locked = false
     if @@lock_file.nil?
-      @@lock_file=File.new(File.join(get_tmp_dir,'redmine_git_hosting_lock'),File::CREAT|File::RDONLY)
+      @@lock_file = File.new(File.join(get_tmp_dir, 'redmine_git_hosting_lock'), File::CREAT|File::RDONLY)
     end
 
     while retries > 0
       is_locked = @@lock_file.flock(File::LOCK_EX|File::LOCK_NB)
-      retries-=1
+      retries -= 1
       if (!is_locked) && retries > 0
         sleep 1
       end
@@ -741,7 +741,8 @@ module GitHosting
 
       %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
-      logger.info "[GitHosting] Success!"
+      logger.warn "[GitHosting] Success!"
+      logger.warn ""
     rescue => e
       logger.error "Failed to reestablish Gitolite Admin key."
       logger.error e.message
@@ -787,7 +788,7 @@ module GitHosting
       logger.info ""
     rescue
       logger.error "Problems committing changes to Gitolite Admin repository!! Probably requires human intervention"
-      logger.info ""
+      logger.error ""
       raise GitHostingException, "Gitolite Admin repository commit failure"
     end
   end
@@ -872,15 +873,18 @@ module GitHosting
 
     if git_projects.empty?
       logger.info "[GitHosting] Got no projects to work on..."
+      logger.info ""
       return
     else
       logger.info "[GitHosting] Got projects, move on!"
+      logger.info ""
     end
 
     if(defined?(@@recursionCheck))
       if(@@recursionCheck)
         # This shouldn't happen any more -- log as error
         logger.error "[GitHosting] update_repositories() exited with positive recursionCheck flag!"
+        logger.error ""
         return
       end
     end
@@ -890,6 +894,7 @@ module GitHosting
     # Grab actual lock
     if !lock(GitHostingConf.lock_wait_time)
       logger.error "[GitHosting] update_repositories() exited without acquiring lock!"
+      logger.error ""
       @@recursionCheck = false
       return
     end
@@ -897,7 +902,6 @@ module GitHosting
     begin
       # Make sure we have gitolite-admin cloned.
       # If have uncommitted changes, reflect in "changed" flag.
-      logger.info ""
       logger.info "[GitHosting] ############ GRAB GITOLITE ADMIN REPO ############"
       changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
 
@@ -907,8 +911,10 @@ module GitHosting
       logger.info ""
       logger.info "[GitHosting] ############ UPDATE SSH KEYS ############"
       logger.info "[GitHosting] Updating key directory for projects : '#{git_projects.join ', '}'"
+
       keydir = File.join(repo_dir, "keydir")
       old_keyhash = {}
+
       Dir.foreach(keydir) do |keyfile|
         user_token = GitolitePublicKey.ident_to_user_token(keyfile)
         if !user_token.nil?
@@ -919,6 +925,7 @@ module GitHosting
 
       # Collect relevant users into hash with user as key and activity (in some active project) as value
       (git_projects.select{|proj| proj.active? && proj.module_enabled?(:repository)}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
+
         if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
           active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
           cur_token = cur_user
@@ -941,6 +948,7 @@ module GitHosting
         active_keys.each do |key|
           key_id = key.identifier
           key_token = GitolitePublicKey.ident_to_user_token(key_id)
+
           if key_token != cur_token
             # Rare case -- user login changed.  Fix it.
             key_id = key.reset_identifier
@@ -949,10 +957,11 @@ module GitHosting
             old_keynames += (old_keyhash[key_token] || [])
             old_keyhash.delete(key_token)
           end
-          cur_keynames << "#{key_id}.pub"
+          cur_keynames.push "#{key_id}.pub"
         end
 
-        (old_keynames - cur_keynames).each do |keyname|
+        keys_to_delete = (old_keynames - cur_keynames)
+        keys_to_delete.each do |keyname|
           logger.warn "[GitHosting] Removing Redmine key from Gitolite : '#{keyname}'"
           %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
           changed = true
@@ -976,7 +985,7 @@ module GitHosting
       # Remove keys for deleted users
       orphanString = flags[:resync_all] ? "orphan " : ""
 
-      if flags[:resync_all] || flags[:delete] || flags[:archive]
+      if flags[:resync_all] || flags[:archive]
         # All keys left in old_keyhash should be for users nolonger authorized for gitolite repos
         old_keyhash.each_value do |keyset|
           keyset.each do |keyname|
