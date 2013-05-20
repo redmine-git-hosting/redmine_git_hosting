@@ -50,7 +50,8 @@ module GitHosting
        "# Manual changes will be preserved, with limitations.",
        "#",
        "# Last Update: #{Time.now}",
-       "#"]
+       "#",
+       ""]
     end
 
     def add_write_user repo_name, users
