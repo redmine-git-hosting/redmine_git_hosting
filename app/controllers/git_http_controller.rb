@@ -53,9 +53,9 @@ class GitHttpController < ApplicationController
 
     if (@repository = Repository.find_by_path(params[:repo_path],:parse_ext=>true)) && @repository.is_a?(Repository::Git)
       if @project = @repository.project
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?)
+        allow_anonymous_read = @project.is_public
+        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || allow_anonymous_read
           query_valid = true
-          allow_anonymous_read = @project.is_public
           if @is_push || (!allow_anonymous_read)
             authentication_valid = false
             authenticate_or_request_with_http_basic do |login, password|
