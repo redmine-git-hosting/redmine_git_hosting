@@ -20,9 +20,13 @@ class GitHttpController < ApplicationController
     return render_method_not_allowed if command == 'not_allowed'
     return render_not_found if !command
 
+    # strip HTTP prefix
+    @git_repo_path = @git_repo_path.sub(params[:prefix], '')
+
     logger.info "###### AUTHENTICATED ######"
     logger.info "project name   : #{@project.identifier}"
     logger.info "repository dir : #{@repository.url}"
+    logger.info "repository path: #{@git_repo_path}"
     logger.info "is_push        : #{@is_push}"
     if !@user.nil?
       logger.info "user_name      : #{@user.login}"
