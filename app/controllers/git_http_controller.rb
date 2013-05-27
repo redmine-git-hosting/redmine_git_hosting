@@ -41,7 +41,7 @@ class GitHttpController < ApplicationController
   def authenticate
     # fixme: rails3 route blobbing will not convert *other to array
     params[:path] = params[:path].split("/")
-    @is_push = (params[:path][0] == "git-receive-pack")
+    @is_push = (params[:path][0] == "git-receive-pack" || params[:service] == "git-receive-pack")
 
     query_valid = false
     authentication_valid = true
