@@ -56,7 +56,7 @@ class GitHttpController < ApplicationController
         allow_anonymous_read = @project.is_public
         # Push requires HTTP enabled or valid SSL
         # Read is ok over HTTP for public projects
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?)
+        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) \
           || !@is_push && allow_anonymous_read
           query_valid = true
           if @is_push || (!allow_anonymous_read)
