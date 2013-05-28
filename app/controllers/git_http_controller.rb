@@ -52,10 +52,13 @@ class GitHttpController < ApplicationController
     logger.info "############################"
 
     if (@repository = Repository.find_by_path(params[:repo_path],:parse_ext=>true)) && @repository.is_a?(Repository::Git)
-      if @project = @repository.project
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?)
+      if (@project = @repository.project) && @repository.extra[:git_http] != 0
+        allow_anonymous_read = @project.is_public
+        # Push requires HTTP enabled or valid SSL
+        # Read is ok over HTTP for public projects
+        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) \
+          || !@is_push && allow_anonymous_read
           query_valid = true
-          allow_anonymous_read = @project.is_public
           if @is_push || (!allow_anonymous_read)
             authentication_valid = false
             authenticate_or_request_with_http_basic do |login, password|
