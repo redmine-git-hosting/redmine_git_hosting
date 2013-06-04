@@ -69,7 +69,7 @@ module RedmineGitHosting
 
         # Insert cache between shell execution and caller
         # repo_path argument used to identify cache entries
-        CachedShellRedirector.execute(cmd_str,repo_id,options,&block)
+        CachedShellRedirector.execute(cmd_str, repo_id, options, &block)
       end
 
       # Check for latest commit (applied to this repo) and set it as a
@@ -81,14 +81,14 @@ module RedmineGitHosting
         # Ask for latest "commit date" on all branches
         cmd_args = %w|log --all --date=iso --format=%cd -n 1 --date=iso|
         begin
-          git_cmd(cmd_args,:uncached=>true) do |io|
+          git_cmd(cmd_args,:uncached => true) do |io|
             # Register this latest commit time as cache limit time
             limit=Time.parse(io.readline)
-            CachedShellRedirector.limit_cache(root_url||url,limit)
+            CachedShellRedirector.limit_cache(root_url || url, limit)
           end
         rescue
           # Wasn't able to ask git for limit date.  Just disable cache.
-          CachedShellRedirector.clear_cache_for_repository(root_url||url)
+          CachedShellRedirector.clear_cache_for_repository(root_url || url)
         end
       end
 
