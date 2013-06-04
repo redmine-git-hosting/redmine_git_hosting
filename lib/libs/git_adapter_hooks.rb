@@ -110,6 +110,7 @@ module GitHosting
     def self.update_global_hook_params
       cur_values = get_global_config_params
 
+      logger.info ""
       logger.info "[GitHosting] ############ UPDATE GITOLITE HOOKS CONFIG ############"
 
       begin

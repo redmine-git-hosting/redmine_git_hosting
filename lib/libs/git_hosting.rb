@@ -1067,6 +1067,7 @@ module GitHosting
               logger.warn "[GitHosting] Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
             end
           end
+
           new_projects << proj unless my_repos[closest_entry] # Reinit hooks unless NORMAL or MOVE case
           my_entries.delete closest_entry      # Claimed this one => don't need to delete later
 
@@ -1204,7 +1205,7 @@ module GitHosting
 
       # Set post receive hooks for new projects (or check all repositories on :resync_all).
       # We need to do this AFTER push, otherwise necessary repos may not be created yet.
-      GitAdapterHooks.setup_hooks_params((flags[:resync_all]||flags[:resync_hooks]) ? git_projects : new_projects)
+      GitAdapterHooks.setup_hooks_params((flags[:resync_all] || flags[:resync_hooks]) ? git_projects : new_projects)
 
     rescue GitHostingException
       logger.error "update_repositories() failed"
