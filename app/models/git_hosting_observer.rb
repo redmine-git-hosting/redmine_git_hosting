@@ -76,7 +76,7 @@ class GitHostingObserver < ActiveRecord::Observer
 
   protected
 
-  def update_repositories(object,*flags)
+  def update_repositories(object, *flags)
     projects = []
     case object
       when Repository::Git then projects.push(object.project)
