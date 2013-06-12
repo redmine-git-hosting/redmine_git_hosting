@@ -50,13 +50,14 @@ module GitHosting
         # If any empty directories left behind, try to delete them.  Ignore failure.
         old_prefix = repo_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
         if old_prefix
-          repo_subpath = File.join(GitHosting.repository_base, old_prefix)
+          repo_subpath = File.join(GitHostingConf.repository_base, old_prefix)
           result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
           result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory : #{dir}"}
         end
         return true
-      rescue
+      rescue => e
         logger.error "Attempt to move repository '#{repo_name}.git' to recycle bin failed"
+        logger.error e.message
         return false
       end
     end
@@ -71,7 +72,7 @@ module GitHosting
         begin
           prefix = repo_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
           if prefix
-            repo_prefix = File.join(GitHosting.repository_base, prefix)
+            repo_prefix = File.join(GitHostingConf.repository_base, prefix)
             # Has subdirectory.  Must reconstruct directory
             GitHosting.shell %[#{GitHosting.git_user_runner} mkdir -p '#{repo_prefix}']
           end
@@ -81,8 +82,9 @@ module GitHosting
           # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
           %x[#{GitHosting.git_user_runner} rmdir #{GitHostingConf.recycle_bin} 2>/dev/null]
           return true
-        rescue
+        rescue => e
           logger.error "Attempt to recover '#{repo_name}.git' from recycle bin failed"
+          logger.error e.message
           return false
         end
       else

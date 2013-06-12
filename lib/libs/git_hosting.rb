@@ -1053,7 +1053,7 @@ module GitHosting
             if !total_entries[repo_name]
               logger.warn "[GitHosting] Creating new entry '#{repo_name}' in '#{gitolite_conf}'"
             else
-              logger.warn "[GitHosting] Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
+              logger.warn "[GitHosting] Using existing entry '#{repo_name}' in '#{gitolite_conf}' for creation"
             end
           elsif closest_entry != repo_name
             # MOVE case.
@@ -1085,11 +1085,11 @@ module GitHosting
             if closest_entry != repo_name
               move_physical_repo(closest_entry, repo_name)
             else
-              logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}'"
+              logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}' for update (1)"
             end
           elsif my_repos[repo_name]
             # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-            logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}'"
+            logger.warn "[GitHosting] Using existing Gitolite repository : '#{repository_path(repo_name)}' for update (2)"
           else
             # Of the repos in my_repo with a matching base name, only steal away those not already controlled
             # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
