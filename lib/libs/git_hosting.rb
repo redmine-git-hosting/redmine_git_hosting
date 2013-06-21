@@ -229,7 +229,7 @@ module GitHosting
 
 
   def self.gitolite_version
-    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost")
+    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost info")
 
     if !stderr.readlines.blank?
       return -1
@@ -249,7 +249,7 @@ module GitHosting
 
 
   def self.gitolite_version_output
-    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost")
+    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost info")
 
     errors = stderr.readlines
     if !errors.blank?
