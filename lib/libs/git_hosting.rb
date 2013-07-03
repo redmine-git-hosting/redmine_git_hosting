@@ -236,7 +236,7 @@ module GitHosting
     else
       version = stdout.readlines
       version.each do |line|
-        if line.include?('gitolite v2.')
+        if line =~ /gitolite v?2\./
           return 2
         elsif line.include?('running gitolite3')
           return 3
