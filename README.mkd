@@ -45,26 +45,23 @@ In order to use this plugin you must have the following gems installed:
 
 * net-ssh
 
-* backports
+* backports (only if you're using Ruby 1.8.7)
 
 ## Configuration Strategy
 
-This plugin allows Redmine to communicate with Gitolite via **sudo**.
-You must configure your sudoers file to allow your Redmine user to run commands as Git user, and your Git user
-to run commands as the Redmine user. Add these two lines to your sudoers file (run visudo to edit this file) :
+This plugin allows Redmine to communicate with Gitolite via **sudo**. You must configure your sudoers file to allow your Redmine user to run commands as Git user, and your Git user to run commands as the Redmine user.
+Add these two lines to your sudoers file (run visudo to edit this file) :
 
     redmine        ALL=(git)      NOPASSWD:ALL
     git            ALL=(redmine)  NOPASSWD:ALL
 
 This assumes **redmine** is your Redmine user, and **git** is your Git user (the user Gitolite is installed under).
-This will allow **redmine** to execute commands as **git** without prompting for a password and **git** to execute commands
-as **redmine** without prompting for a password.  No other access (e.g. no root access, permissions to run commands
-as other users) are granted by these lines. These lines are only there to facilitate communication between the
+This will allow **redmine** to execute commands as **git** without prompting for a password and **git** to execute commands as **redmine** without prompting for a password.
+No other access (e.g. no root access, permissions to run commands as other users) are granted by these lines. These lines are only there to facilitate communication between the
 Redmine user and the Git user, no other users, keeping the system secure.
 
-Also, the *requiretty* sudo setting can prevent the plugin from working correctly. Several users have reported this
-problem on CentOS. Check the *Defaults* directive in the sudoers file to see if this setting has been set. You address
-the problem by either removing *requiretty* from the *Defaults* directive, or by adding the following
+Also, the *requiretty* sudo setting can prevent the plugin from working correctly. Several users have reported this problem on CentOS.
+Check the *Defaults* directive in the sudoers file to see if this setting has been set. You address the problem by either removing *requiretty* from the *Defaults* directive, or by adding the following
 lines below the original *Defaults* directive to remove this requirement for only the two necessary users :
 
     Defaults:git      !requiretty
@@ -72,28 +69,24 @@ lines below the original *Defaults* directive to remove this requirement for onl
 
 Again, this assumes **redmine** is your Redmine user, and **git** is the user Gitolite is installed under.
 
-This plugin is compatible with running multiple Redmine installations on the same server, each with the same *or* different Gitolite users/repositories. The later configuration (multiple Redmine installations, each with a different
-Gitolite installation) is particularly useful for a web-hosting scenario with independent developers.
+This plugin is compatible with running multiple Redmine installations on the same server, each with the same *or* different Gitolite users/repositories.
+The later configuration (multiple Redmine installations, each with a different Gitolite installation) is particularly useful for a web-hosting scenario with independent developers.
 
 ## Step-By-Step configuration instructions
 
-**(1)** Install Gitolite. If possible, use Gitolite version >= 2.0.3, so that the plugin will be able to
-recover from a variety of failures that mess up administrative access to the Gitolite repository (the plugin will utilize **gl-admin-push**
-to fixup admin access in these circumstances). Note that the plugin will work with earlier versions of Gitolite; however,
-it will not be able to recover from as many faults (it will attempt to use **gl-setup** which doesn't work quite as well).
+**(1)** Install Gitolite. If possible, use Gitolite version >= 2.0.3, so that the plugin will be able to recover from a variety of failures that mess up
+administrative access to the Gitolite repository (the plugin will utilize **gl-admin-push** to fixup admin access in these circumstances).
+Note that the plugin will work with earlier versions of Gitolite; however, it will not be able to recover from as many faults (it will attempt to use **gl-setup** which doesn't work quite as well).
 
-It is important that this key not have a passphrase set.
-*Further, it is very important that this ssh key be unique and not used for anything other than administrative access, i.e. should not be used by
+It is important that this key not have a passphrase set. *Further, it is very important that this ssh key be unique and not used for anything other than administrative access, i.e. should not be used by
 any user as their access key.*
 
-**(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to
-install the git-daemon.  The details of this are beyond the scope of the tutorial as well (and again there
-are lots of available guides out there).  This step is optional -- if you don't want to enable anonymous
-access you can skip it.
+**(2)** If you want to enable anonymous access to your repositories via the git:// protocol you will need to install the git-daemon.
+The details of this are beyond the scope of the tutorial as well (and again there are lots of available guides out there).
+This step is optional -- if you don't want to enable anonymous access you can skip it.
 
-**(3)** Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file,
-listed above. Assuming Redmine is run as **redmine** and Gitolite is installed as **git**, you need to add
-this to your sudoers file:
+**(3)** Run visudo (you will need root permissions to run this) and set the necessary lines in your sudoers file, listed above.
+Assuming Redmine is run as **redmine** and Gitolite is installed as **git**, you need to add this to your sudoers file:
 
     redmine        ALL=(git)      NOPASSWD:ALL
     git            ALL=(redmine)  NOPASSWD:ALL
@@ -107,8 +100,7 @@ lines below the original directive:
 *Note: with at least some versions of Ubuntu, you must place any additions to the sudoers file at the end, otherwise the line starting with "admin ..." ends up
 negating these additions -- probably to your great frustration.*
 
-**(4)** Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject
-root directory:
+**(4)** Clone the redmine_git_hosting plugin into the vendor/plugins subdirectory of your Redmine/ChiliProject root directory:
 
     cd REDMINE_ROOT/vendor/plugins
     git clone https://github.com/jbox-web/redmine_git_hosting.git
@@ -120,45 +112,41 @@ If you use Redmine 2.x, you can find the plugin folder directly under the REDMIN
 
 You can then clone the repository in there.
 
-**(5)** Run the rake db:migrate\_plugins task to update the database. You will need to do this once for every
-rails environment you have configured (e.g. production, development, testing). For the production environment, run the following:
+**(5)** Run the rake db:migrate\_plugins task to update the database. You will need to do this once for every rails environment you have configured (e.g. production, development, testing).
+For the production environment, run the following:
 
     RAILS_ENV=production rake redmine:plugins:migrate
 
 *Note that you should perform a migrate\_plugins operation whenever you update the plugin.*
 
-**(6)** Make a decision about whether or not you want the plugin to be able to modify scripts in the scripts directory on the fly. If you elect to prevent
-the plugin from modifying the scripts directory, you will be unable to modify certain settings from the plugin settings page (as discussed in
-the "Executable Scripts" section, below). You have three options:
+**(6)** Make a decision about whether or not you want the plugin to be able to modify scripts in the scripts directory on the fly. If you elect to prevent the plugin from modifying the scripts directory,
+you will be unable to modify certain settings from the plugin settings page (as discussed in the "Executable Scripts" section, below). You have three options :
 
-* **Script Directory Writeable:** The simplest configuration is to allow the scripts directory to be written by the plugin. Consider this the default
-configuration. In this case, scripts will be regenerated "on-the-fly" by the plugin when certain settings change. For this option, execute the following task
-(assuming that Redmine is executing as **redmine**):
+* **Script Directory Writeable:** The simplest configuration is to allow the scripts directory to be written by the plugin. Consider this the default configuration.
+In this case, scripts will be regenerated "on-the-fly" by the plugin when certain settings change. For this option, execute the following task (assuming that Redmine is executing as **redmine**) :
 
-    rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=redmine
+      rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=redmine
 
-* **Script Directory Read-Only:** Alternatively, you can choose to make the scripts directory read-only. You might choose this option if you wish to keep
-scripts in the default directory (i.e. RAILS\_ROOT/vendor/plugins/redmine\_git\_hosting/bin), but do not want to make this directory writeable by the user running
-Redmine. Be forewarned that you will not be able to change some of the settings on the settings page if scripts directory is not writeable by the user running Redmine.
+* **Script Directory Read-Only:** Alternatively, you can choose to make the scripts directory read-only. You might choose this option if you wish to keep scripts in the default directory
+(i.e. RAILS\_ROOT/vendor/plugins/redmine\_git\_hosting/bin), but do not want to make this directory writeable by the user running Redmine.
+Be forewarned that you will not be able to change some of the settings on the settings page if scripts directory is not writeable by the user running Redmine.
 
-    rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=redmine READ_ONLY=true
+      rake redmine_git_hosting:install_scripts RAILS_ENV=production WEB_USER=redmine READ_ONLY=true
 
-* **SELinux Configuration:** A final option is appropriate if you wish to utilize SELinux to protect your installation. Although more details are given in the "SELinux"
-section, below, the simplest SELinux configuration involves executing the following command (which will also installs the scripts read-only, making some settings unchangeable) :
+* **SELinux Configuration:** A final option is appropriate if you wish to utilize SELinux to protect your installation. Although more details are given in the "SELinux" section, below,
+the simplest SELinux configuration involves executing the following command (which will also installs the scripts read-only, making some settings unchangeable) :
 
-    rake selinux:install RAILS_ENV=production WEB_USER=redmine
+      rake selinux:install RAILS_ENV=production WEB_USER=redmine
 
 Note that your selected rake task must assign the user running Redmine (e.g. "redmine") as the owner of the new scripts directory.
 
-**(7)** Unless you want to access your repositories exclusively via Smart HTTP, users will need to set apublic key to connect via SSH.
+**(7)** Unless you want to access your repositories exclusively via Smart HTTP, users will need to set a public key to connect via SSH.
 To do this, open a browser, login to ChiliProject/Redmine and follow the "My Account" link in the upper right-hand corner of the page.
 The right-hand column contains controls for adding your public key(s).
 
-Keys should be unique, that is, the keys you set in ChiliProject / Redmine should not already exist in the Gitolite repo. In particular,
-**do not re-use** the key you set as the Gitolite admin key.
+Keys should be unique, that is, the keys you set in ChiliProject / Redmine should not already exist in the Gitolite repo. In particular, **do not re-use** the key you set as the Gitolite admin key.
 
-**(8)** The plugin is now configured, but you may now want to set some additional settings on the
-Administration => Plugins => Redmine Git Hosting Plugin page.
+**(8)** The plugin is now configured, but you may now want to set some additional settings on the Administration => Plugins => Redmine Git Hosting Plugin page.
 
 ## Configuration variables
 
@@ -305,20 +293,23 @@ Thanks to user Tronix117 for helping to track down this issue and provide a solu
 
 ## Placement and Modification of Executable Scripts
 
-You may place the executable scripts anywhere in the filesystem.  The default location of the scripts is set with **gitScriptDir**. The default value 'REDMINE_ROOT/vendor/plugins/redmine_git_hosting/bin' is a good location, especially if you have multiple simultaneous Redmine installations on the same host, since scripts are customized to each installation. Thus, we **recommend** that you consider keeping the default placement. In this location, some maintainers may not wish to allow the plugin to re-write the scripts during execution -- hence the options to make scripts read-only, as described in step (8) of the installation instructions, above. Further, when SELinux is installed, the scripts are not writeable by default (because of SELinux tags), since changing them could be construed to be a security hole.
+You may place the executable scripts anywhere in the filesystem.  The default location of the scripts is set with **gitScriptDir**.
+The default value 'REDMINE_ROOT/vendor/plugins/redmine_git_hosting/bin' is a good location, especially if you have multiple simultaneous Redmine installations on the same host,
+since scripts are customized to each installation. Thus, we **recommend** that you consider keeping the default placement.
+In this location, some maintainers may not wish to allow the plugin to re-write the scripts during execution -- hence the options to make scripts read-only, as described in step (8) of the installation instructions,
+above. Further, when SELinux is installed, the scripts are not writeable by default (because of SELinux tags), since changing them could be construed to be a security hole.
 
 When the script directory is not writeable by the user running Redmine, you also cannot alter five of the settings on the settings page (since their
-alteration would require the regeneration of scripts). These values are: *gitScriptDir*, *gitUser*, *gitoliteIdentifyFile*, *gitoliteIdentityPublicKeyFile* and *sshServerLocalPort*. The settings page will make the fact that you cannot alter these values clear by marking that as *[Cannot
-change in current configuration]*.
+alteration would require the regeneration of scripts). These values are: *gitScriptDir*, *gitUser*, *gitoliteIdentifyFile*, *gitoliteIdentityPublicKeyFile* and *sshServerLocalPort*.
+The settings page will make the fact that you cannot alter these values clear by marking that as *[Cannot change in current configuration]*.
 
 In that case, the simplest way to change these values is to
 
 **(1)** remove the old scripts
 
-**(2)** alter the parameters on the settings page (after refreshing the
-settings page)
+**(2)** alter the parameters on the settings page (after refreshing the settings page)
 
-**(3)** then reinstalling scripts as discussed in step (8) of the installation instructions.  
+**(3)** then reinstalling scripts as discussed in step (8) of the installation instructions.
 
 Scripts can be removed with:
 
@@ -369,9 +360,9 @@ Further, if you are proxying requests through a third-party (such as Nginx), you
 
 ## Using the Git Daemon
 
-In order to export repositories via the Git daemon (i.e. with URLs of the form 'git://'), you must first install this daemon and give it access to the Gitolite repositories (outside the scope of this README). Once you do so, then control of *which* repositories are exported depends on two things : 
+In order to export repositories via the Git daemon (i.e. with URLs of the form 'git://'), you must first install this daemon and give it access to the Gitolite repositories (outside the scope of this README). Once you do so, then control of *which* repositories are exported depends on two things :
 
-**(1)** the setting of the **public** flag for the project 
+**(1)** the setting of the **public** flag for the project
 
 **(2)** the setting of the **GitDaemon** parameter in the project's repository settings.
 

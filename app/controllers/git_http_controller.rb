@@ -20,9 +20,13 @@ class GitHttpController < ApplicationController
     return render_method_not_allowed if command == 'not_allowed'
     return render_not_found if !command
 
+    # strip HTTP prefix
+    @git_repo_path = @git_repo_path.sub(params[:prefix], '')
+
     logger.info "###### AUTHENTICATED ######"
     logger.info "project name   : #{@project.identifier}"
     logger.info "repository dir : #{@repository.url}"
+    logger.info "repository path: #{@git_repo_path}"
     logger.info "is_push        : #{@is_push}"
     if !@user.nil?
       logger.info "user_name      : #{@user.login}"
@@ -41,7 +45,7 @@ class GitHttpController < ApplicationController
   def authenticate
     # fixme: rails3 route blobbing will not convert *other to array
     params[:path] = params[:path].split("/")
-    @is_push = (params[:path][0] == "git-receive-pack")
+    @is_push = (params[:path][0] == "git-receive-pack" || params[:service] == "git-receive-pack")
 
     query_valid = false
     authentication_valid = true
@@ -52,10 +56,12 @@ class GitHttpController < ApplicationController
     logger.info "############################"
 
     if (@repository = Repository.find_by_path(params[:repo_path],:parse_ext=>true)) && @repository.is_a?(Repository::Git)
-      if @project = @repository.project
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?)
+      if (@project = @repository.project) && @repository.extra[:git_http] != 0
+        allow_anonymous_read = @project.is_public
+        # Push requires HTTP enabled or valid SSL
+        # Read is ok over HTTP for public projects
+        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !@is_push && allow_anonymous_read
           query_valid = true
-          allow_anonymous_read = @project.is_public
           if @is_push || (!allow_anonymous_read)
             authentication_valid = false
             authenticate_or_request_with_http_basic do |login, password|
