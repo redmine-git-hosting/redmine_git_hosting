@@ -1,8 +1,7 @@
 def install_old_routes
   ActionController::Routing::Routes.draw do |map|
-    # URL for items of type httpServer/XXX.git. Some versions of rails has problems with multiple regex expressions, so avoid...
-    # Note that 'http_server_subdir' is either empty (default case) or ends in '/'.
-    map.connect ":repo_path/*path", :prefix => (GitHostingConf.http_server_subdir rescue ""), :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
+    # SMART HTTP
+    map.connect ":repo_path/*git_params", :prefix => (GitHostingConf.http_server_subdir rescue ""), :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
 
     # Handle the public keys plugin to my/account.
     map.resources :public_keys, :controller => 'gitolite_public_keys', :path_prefix => 'my'
@@ -42,7 +41,8 @@ end
 
 def install_new_routes
   RedmineApp::Application.routes.draw do
-    match ':repo_path/*path', :prefix => (GitHostingConf.http_server_subdir rescue ""), :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
+    # SMART HTTP
+    match ':repo_path/*git_params', :prefix => (GitHostingConf.http_server_subdir rescue ""), :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
 
     # Handle the public keys plugin to my/account.
     scope "/my" do
