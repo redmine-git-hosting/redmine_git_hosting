@@ -15,59 +15,60 @@ class GitHttpController < ApplicationController
 
     @request = Rack::Request.new(request.env)
 
-    command, @git_repo_path, @requested_file, @rpc = match_routing
+    command, @requested_file, @rpc = match_routing(@request)
 
     return render_method_not_allowed if command == 'not_allowed'
     return render_not_found if !command
 
-    # strip HTTP prefix
-    @git_repo_path = @git_repo_path.sub(params[:prefix], '')
-
     logger.info "###### AUTHENTICATED ######"
-    logger.info "project name   : #{@project.identifier}"
-    logger.info "repository dir : #{@repository.url}"
-    logger.info "repository path: #{@git_repo_path}"
-    logger.info "is_push        : #{@is_push}"
+    logger.info "project name    : #{@project.identifier}"
+    logger.info "repository dir  : #{@repository.url}"
+    logger.info "command         : #{command}"
     if !@user.nil?
-      logger.info "user_name      : #{@user.login}"
+      logger.info "user_name       : #{@user.login}"
+      @authenticated = true
     else
-      logger.info "user_name      : anonymous (project is public)"
+      logger.info "user_name       : anonymous (project is public)"
+      @authenticated = false
     end
-    logger.info "command        : #{command}"
+
     logger.info "##########################"
 
     self.method(command).call()
 
   end
 
+
   private
 
+
   def authenticate
-    # fixme: rails3 route blobbing will not convert *other to array
-    params[:path] = params[:path].split("/")
-    @is_push = (params[:path][0] == "git-receive-pack" || params[:service] == "git-receive-pack")
+    git_params = params[:git_params].split('/')
+    repo_path  = params[:repo_path]
+    is_push    = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
 
     query_valid = false
     authentication_valid = true
 
     logger.info "###### AUTHENTICATION ######"
-    logger.info "param   : #{params[:path]}"
-    logger.info "is_push : #{@is_push}"
+    logger.info "git_params : #{git_params}"
+    logger.info "repo_path  : #{repo_path}"
+    logger.info "is_push    : #{is_push}"
     logger.info "############################"
 
-    if (@repository = Repository.find_by_path(params[:repo_path],:parse_ext=>true)) && @repository.is_a?(Repository::Git)
+    if (@repository = Repository.find_by_path(repo_path, :parse_ext => true)) && @repository.is_a?(Repository::Git)
       if (@project = @repository.project) && @repository.extra[:git_http] != 0
         allow_anonymous_read = @project.is_public
         # Push requires HTTP enabled or valid SSL
         # Read is ok over HTTP for public projects
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !@is_push && allow_anonymous_read
+        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !is_push && allow_anonymous_read
           query_valid = true
-          if @is_push || (!allow_anonymous_read)
+          if is_push || (!allow_anonymous_read)
             authentication_valid = false
             authenticate_or_request_with_http_basic do |login, password|
               @user = User.find_by_login(login);
               if @user.is_a?(User)
-                if @user.allowed_to?( :commit_access, @project ) || ((!@is_push) && @user.allowed_to?( :view_changesets, @project ))
+                if @user.allowed_to?( :commit_access, @project ) || ((!is_push) && @user.allowed_to?( :view_changesets, @project ))
                   authentication_valid = @user.check_password?(password)
                 end
               end
@@ -99,14 +100,11 @@ class GitHttpController < ApplicationController
 
 
   def service_rpc
+    return render_no_access if !has_access(@rpc, true)
+
     input = read_body
 
     command = git_command("#{@rpc} --stateless-rpc .")
-
-    logger.info "###### SERVICE RPC ######"
-    logger.info "command    : #{command}"
-    logger.debug "input data : #{input}"
-    logger.info "#########################"
 
     self.response.headers["Content-Type"] = "application/x-git-%s-result" % @rpc
     self.response.status = 200
@@ -145,17 +143,11 @@ class GitHttpController < ApplicationController
   def get_info_refs
     service_name = get_service_type
 
-    if service_name
+    if has_access(service_name)
       command = git_command("#{service_name} --stateless-rpc --advertise-refs .")
       refs = %x[#{command}]
-      content_type = "application/x-git-#{service_name}-advertisement"
 
-      logger.info "###### GET INFO REFS ######"
-      logger.info "command      : #{command}"
-      logger.info "refs         : #{refs}"
-      logger.info "content_type : #{content_type}"
-      logger.info "service_name : #{service_name}"
-      logger.info "###########################"
+      content_type = "application/x-git-#{service_name}-advertisement"
 
       self.response.status = 200
       self.response.headers["Content-Type"] = content_type
@@ -225,6 +217,8 @@ class GitHttpController < ApplicationController
   # logic helping functions
   # ------------------------
 
+  VALID_SERVICE_TYPES = ['upload-pack', 'receive-pack']
+
   SERVICES = [
     ["POST", 'service_rpc',      "/(.*?)/git-upload-pack$",  'upload-pack'],
     ["POST", 'service_rpc',      "/(.*?)/git-receive-pack$", 'receive-pack'],
@@ -240,41 +234,54 @@ class GitHttpController < ApplicationController
     ["GET",  'get_idx_file',     "/(.*?)/objects/pack/pack-[0-9a-f]{40}\\.idx$"],
   ]
 
-  def match_routing
-    cmd = nil
+  def match_routing(request)
+    cmd  = nil
     path = nil
+    file = nil
+
     SERVICES.each do |method, handler, match, rpc|
-      if m = Regexp.new(match).match(@request.path_info)
-        return ['not_allowed'] if method != @request.request_method
+      if m = Regexp.new(match).match(request.path_info)
+        return ['not_allowed'] if method != request.request_method
         cmd = handler
         path = m[1]
-        file = @request.path_info.sub(path + '/', '')
-
-        logger.info "######## ROUTING #########"
-        logger.info "path      : #{path}"
-        logger.info "path info : #{@request.path_info}"
-        logger.info "file      : #{file}"
-        logger.info "rpc       : #{rpc}"
-        logger.info "##########################"
-
-        return [cmd, path, file, rpc]
+        file = request.path_info.sub(path + '/', '')
+        return [cmd, file, rpc]
       end
     end
-    return nil
   end
 
 
-  # some of this borrowed from the Rack::File implementation
-  def internal_send_file(requested_file, content_type)
+  def has_access(rpc, check_content_type = false)
+    if check_content_type
+      if request.content_type != "application/x-git-%s-request" % rpc
+        logger.error "[GitHosting] Invalid content type #{request.content_type}"
+        return false
+      end
+    end
 
-    return render_not_found if !File.exists?(requested_file)
+    if !VALID_SERVICE_TYPES.include? rpc
+      logger.error "[GitHosting] Invalid service type #{rpc}"
+      return false
+    end
+
+    return get_config_setting(rpc)
+  end
+
+
+  def internal_send_file(requested_file, content_type)
+    logger.info "###### SEND FILE ######"
+    logger.info "requested_file : #{requested_file}"
+    logger.info "content_type   : #{content_type}"
+
+    if !File.exists?(requested_file)
+      logger.info "error          : File not found!"
+      logger.info "#######################"
+      return render_not_found
+    end
 
     last_modified = File.mtime(requested_file).httpdate
     file_size = File.size?(requested_file)
 
-    logger.info "###### SEND FILE ######"
-    logger.info "requested_file : #{requested_file}"
-    logger.info "content_type   : #{content_type}"
     logger.info "last_modified  : #{last_modified}"
     logger.info "file_size      : #{file_size}"
     logger.info "#######################"
@@ -284,7 +291,6 @@ class GitHttpController < ApplicationController
       self.response.status = 200
       self.response.headers["Last-Modified"] = last_modified
       self.response.headers["Content-Length"] = file_size.to_s
-      #~ cache_parameter
 
       send_file requested_file, :type => content_type
 
@@ -317,9 +323,15 @@ class GitHttpController < ApplicationController
   end
 
 
-  #note command needs to be terminated with a quote!
+  ## Note: command must be terminated with a quote!
+  def git_command(command)
+    return "#{run_git_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command}'"
+  end
+
+
+  ## Note: command must be started with a quote!
   def run_git_prefix
-    return "#{GitHosting::git_user_runner()} 'cd #{GitHostingConf.repository_base}#{@git_repo_path} ; "
+    return "#{GitHosting.git_user_runner} 'cd #{GitHosting.repository_path(@repository)} ;"
   end
 
 
@@ -330,6 +342,7 @@ class GitHttpController < ApplicationController
 
   def read_body
     enc_header = (request.headers['HTTP_CONTENT_ENCODING']).to_s
+
     if enc_header =~ /gzip/
       input = Zlib::GzipReader.new(request.body).read
     else
@@ -352,7 +365,7 @@ class GitHttpController < ApplicationController
     if service_name == 'uploadpack'
       return setting != 'false'
     else
-      return setting == 'true'
+      return @authenticated
     end
   end
 
@@ -368,10 +381,6 @@ class GitHttpController < ApplicationController
     %x[#{command}]
   end
 
-
-  def git_command(command)
-    return "#{run_git_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command} '"
-  end
 
   # --------------------------------------
   # HTTP error response handling functions
@@ -390,13 +399,16 @@ class GitHttpController < ApplicationController
     return head
   end
 
+
   def render_not_found
     head :not_found
   end
 
+
   def render_no_access
     head :forbidden
   end
+
 
   # ------------------------------
   # packet-line handling functions
@@ -405,6 +417,7 @@ class GitHttpController < ApplicationController
   def pkt_flush
     '0000'
   end
+
 
   def pkt_write(str)
     (str.size + 4).to_s(base=16).rjust(4, '0') + str
@@ -421,12 +434,14 @@ class GitHttpController < ApplicationController
     self.response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
   end
 
+
   def hdr_cache_forever
     now = Time.now().to_i
     self.response.headers["Date"] = now.to_s
     self.response.headers["Expires"] = (now + 31536000).to_s;
     self.response.headers["Cache-Control"] = "public, max-age=31536000";
   end
+
 
   def logger
     Rails.logger
