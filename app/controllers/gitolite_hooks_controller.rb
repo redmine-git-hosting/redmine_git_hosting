@@ -40,7 +40,7 @@ class GitoliteHooksController < ApplicationController
         begin
           @repository.fetch_changesets
         rescue Redmine::Scm::Adapters::CommandFailed => e
-          logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+          GitHosting.logger.error "[GitHosting] error during fetching changesets: #{e.message}"
         end
         y << "Done\n"
 
@@ -131,7 +131,7 @@ class GitoliteHooksController < ApplicationController
         begin
           @repository.fetch_changesets
         rescue Redmine::Scm::Adapters::CommandFailed => e
-          logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+          GitHosting.logger.error "[GitHosting] error during fetching changesets: #{e.message}"
         end
         output.write("Done\n")
         output.flush

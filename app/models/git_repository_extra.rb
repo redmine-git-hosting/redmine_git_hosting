@@ -29,6 +29,7 @@ class GitRepositoryExtra < ActiveRecord::Base
         end
       end
     rescue Exception => e
+      GitHosting.logger.error "[GitHosting] error in validate_encoded_time(): #{e.message}"
     end
     valid
   end
