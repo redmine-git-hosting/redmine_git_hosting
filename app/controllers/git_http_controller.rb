@@ -151,6 +151,7 @@ class GitHttpController < ApplicationController
 
       self.response.status = 200
       self.response.headers["Content-Type"] = content_type
+      self.response.headers["Content-Transfer-Encoding"] = "binary"
       hdr_nocache
 
       if Rails::VERSION::MAJOR >= 3
