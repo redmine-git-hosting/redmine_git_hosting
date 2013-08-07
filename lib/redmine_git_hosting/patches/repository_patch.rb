@@ -13,7 +13,7 @@ module RedmineGitHosting
           end
 
           # initialize association from git repository -> git_extra
-          has_one :git_extra, :foreign_key =>'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
+          has_one :git_extra, :foreign_key => 'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
 
           # initialize association from git repository -> cia_notifications
           has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
@@ -37,6 +37,7 @@ module RedmineGitHosting
         end
       end
 
+
       module ClassMethods
 
         # Repo ident unique (definitely true if Redmine < 1.4)
@@ -44,14 +45,14 @@ module RedmineGitHosting
           !GitHosting.multi_repos? || GitHostingConf.repo_ident_unique?
         end
 
+
         # Parse a path of the form <proj1>/<proj2>/<proj3>/<repo> and return the specified
         # repository.  If either 'repo_ident_unique?' is true or the <repo> is a project
         # identifier, just return the last component.  Otherwise,
         # use the immediate parent (<proj3>) to try to identify the repo.
         #
         # Flags:
-        #    :loose => true    : Try to identify corresponding repo even if
-        #          path is not quite correct
+        #  :loose => true : Try to identify corresponding repo even if path is not quite correct
         #
         # Note that the :loose flag is used when interpreting the contents of the
         # repository.  If switching back and forth between the "repo_ident_unique?"
@@ -60,7 +61,7 @@ module RedmineGitHosting
         #
         # Note about pre Redmine 1.4 -- only look at last component and try to match to a path.
         # If that doesn't work, return nil.
-        def find_by_path(path,flags={})
+        def find_by_path(path, flags={})
           if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
             if proj = Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
               # return default or first repo with blank identifier (or first Git repo--very rare?)
@@ -77,6 +78,7 @@ module RedmineGitHosting
             nil
           end
         end
+
 
         # Translate repository path into a unique ID for use in caching of git commands.
         #
@@ -122,7 +124,7 @@ module RedmineGitHosting
           if new_repo.is_a?(Repository::Git)
             if new_repo.extra.nil?
               # Note that this autoinitializes default values and hook key
-              GitHosting.logger.error "[GitHosting] Automatic initialization of git_repository_extra failed for #{self.project.to_s}"
+              GitHosting.logger.error "Automatic initialization of git_repository_extra failed for #{self.project.to_s}"
             end
           end
           return new_repo
@@ -140,6 +142,7 @@ module RedmineGitHosting
         end
 
       end
+
 
       module InstanceMethods
 
@@ -159,9 +162,11 @@ module RedmineGitHosting
           retval
         end
 
+
         def extra=(new_extra_struct)
           self.git_extra = (new_extra_struct)
         end
+
 
         # If repo identifiers unique, identifier forms unique label
         # Else, use directory notation: <project identifier>/<repo identifier>
@@ -176,6 +181,7 @@ module RedmineGitHosting
             mylabel = "#{project.identifier}/#{identifier}"
           end
         end
+
 
         # This is the (possibly non-unique) basename for the git repository
         def git_name
@@ -212,7 +218,7 @@ module RedmineGitHosting
 
           if project && (is_default? || set_as_default?)
             # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier
-            possibles = Repository.find_all_by_project_id(project.id,:conditions => ["identifier = '' or identifier is null"])
+            possibles = Repository.find_all_by_project_id(project.id, :conditions => ["identifier = '' or identifier is null"])
             if possibles.any? && (new_record? || possibles.detect{|x| x.id != id})
               errors.add(:base, :blank_default_exists)
             end

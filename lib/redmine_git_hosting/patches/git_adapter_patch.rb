@@ -61,16 +61,17 @@ module RedmineGitHosting
         end
         full_args += args
 
-        cmd_str=full_args.map { |e| shell_quote e.to_s }.join(' ')
+        cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
 
         # Compute string from repo_path that should be same as: repo.git_label(:assume_unique=>false)
         # If only we had access to the repo (we don't).
-        repo_id=Repository.repo_path_to_git_label(repo_path)
+        repo_id = Repository.repo_path_to_git_label(repo_path)
 
         # Insert cache between shell execution and caller
         # repo_path argument used to identify cache entries
         CachedShellRedirector.execute(cmd_str, repo_id, options, &block)
       end
+
 
       # Check for latest commit (applied to this repo) and set it as a
       # limit for the oldest cached entries.  This caused cached entries
@@ -81,9 +82,9 @@ module RedmineGitHosting
         # Ask for latest "commit date" on all branches
         cmd_args = %w|log --all --date=iso --format=%cd -n 1 --date=iso|
         begin
-          git_cmd(cmd_args,:uncached => true) do |io|
+          git_cmd(cmd_args, :uncached => true) do |io|
             # Register this latest commit time as cache limit time
-            limit=Time.parse(io.readline)
+            limit = Time.parse(io.readline)
             CachedShellRedirector.limit_cache(root_url || url, limit)
           end
         rescue
