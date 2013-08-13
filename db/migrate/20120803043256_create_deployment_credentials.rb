@@ -1,4 +1,5 @@
 class CreateDeploymentCredentials < ActiveRecord::Migration
+
   def self.up
     begin
       create_table :deployment_credentials do |t|
@@ -17,13 +18,13 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
 
       GitHostingObserver.set_update_active(false)
 
-      manager_role = Role.find_by_name(I18n.t(:default_role_manager))
+      manager_role = Role.find_by_name(I18n.t(:default_role_manager, {:locale => Setting.default_language}))
       manager_role.add_permission! :view_deployment_keys
       manager_role.add_permission! :edit_deployment_keys
       manager_role.add_permission! :create_deployment_keys
       manager_role.save
 
-      developer_role = Role.find_by_name(I18n.t(:default_role_developer))
+      developer_role = Role.find_by_name(I18n.t(:default_role_developer, {:locale => Setting.default_language}))
       developer_role.add_permission! :view_deployment_keys
       developer_role.save
     rescue => e
@@ -38,17 +39,19 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
       remove_column :gitolite_public_keys, :delete_when_unused
 
       GitHostingObserver.set_update_active(false)
-      manager_role = Role.find_by_name(I18n.t(:default_role_manager))
+
+      manager_role = Role.find_by_name(I18n.t(:default_role_manager, {:locale => Setting.default_language}))
       manager_role.remove_permission! :view_deployment_keys
       manager_role.remove_permission! :edit_deployment_keys
       manager_role.remove_permission! :create_deployment_keys
       manager_role.save
 
-      developer_role = Role.find_by_name(I18n.t(:default_role_developer))
+      developer_role = Role.find_by_name(I18n.t(:default_role_developer, {:locale => Setting.default_language}))
       developer_role.remove_permission! :view_deployment_keys
       developer_role.save
     rescue => e
       puts "#{e}"
     end
   end
+
 end
