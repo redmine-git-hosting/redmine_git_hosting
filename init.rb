@@ -53,14 +53,16 @@ Redmine::Plugin.register :redmine_git_hosting do
 
   project_module :repository do
     permission :create_repository_mirrors, :repository_mirrors => :create
-    permission :view_repository_mirrors, :repository_mirrors => :index
-    permission :edit_repository_mirrors, :repository_mirrors => :edit
+    permission :view_repository_mirrors,   :repository_mirrors => :index
+    permission :edit_repository_mirrors,   :repository_mirrors => :edit
+
     permission :create_repository_post_receive_urls, :repository_post_receive_urls => :create
-    permission :view_repository_post_receive_urls, :repository_post_receive_urls => :index
-    permission :edit_repository_post_receive_urls, :repository_post_receive_urls => :edit
+    permission :view_repository_post_receive_urls,   :repository_post_receive_urls => :index
+    permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => :edit
+
     permission :create_deployment_keys, :deployment_credentials => :create_with_key
-    permission :view_deployment_keys, :deployment_credentials => :index
-    permission :edit_deployment_keys, :deployment_credentials => :edit
+    permission :view_deployment_keys,   :deployment_credentials => :index
+    permission :edit_deployment_keys,   :deployment_credentials => :edit
   end
 end
 
