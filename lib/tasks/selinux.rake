@@ -167,6 +167,12 @@ namespace :selinux do
 
     desc "Remove redmine_git_hosting shell scripts."
     task :remove_scripts do
+      if Redmine::VERSION.to_s < '1.4'
+        plugin_dir = 'vendor/plugins'
+      else
+        plugin_dir = 'plugins'
+      end
+
       puts "[Deleting redmine_git_hosting shell scripts:"
       if @@across_roots_values.empty?
         puts "  [Finding script directories:"
@@ -194,14 +200,14 @@ namespace :selinux do
     desc "Install selinux tags and policy for redmine_git_hosting."
     task :install_policy => [:environment] do
       puts "[Installing selinux tags and policy for redmine_git_hosting:"
-      sh "semodule -i #{Rails.root}/vendor/plugins/redmine_git_hosting/selinux/redmine_git.pp"
+      sh "semodule -i #{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.pp"
       puts "DONE.]"
     end
 
     desc "Build and install selinux tags and policy for redmine_git_hosting."
     task :build_policy => [:environment] do
       puts "[Building and installing selinux policy for redmine_git_hosting:"
-      sh "#{Rails.root}/vendor/plugins/redmine_git_hosting/selinux/redmine_git.sh"
+      sh "#{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.sh"
       puts "DONE.]"
     end
 
