@@ -33,9 +33,11 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
 
         #update repo url to match location of gitolite repos
         r = project.repository
-        repo_name= project.parent ? File.join(GitHosting::get_full_parent_path(project, true),project.identifier) : project.identifier
-        r.url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
-        r.root_url = r.url
+        repo_name = project.parent ? File.join(GitHosting::get_full_parent_path(project, true),project.identifier) : project.identifier
+        if !repo.name.nil?
+          r.url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
+          r.root_url = r.url
+        end
         r.extra = e
         r.save
       end
@@ -48,7 +50,8 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
       %x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
       GitHosting.setup_hooks
       GitHostingObserver.set_update_active(false)
-    rescue
+    rescue => e
+      puts "Error : #{e.message}"
     end
 
     # even if git commands above didn't work properly, attempt to
@@ -56,7 +59,8 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
     # residual crap belonging to wrong user
     begin
       %x[ rm -rf '#{ GitHosting.get_tmp_dir }' ]
-    rescue
+    rescue => e
+      puts "Error : #{e.message}"
     end
 
     if self.table_exists?("git_hook_keys")
