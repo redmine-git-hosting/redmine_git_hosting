@@ -34,7 +34,7 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
         #update repo url to match location of gitolite repos
         r = project.repository
         repo_name = project.parent ? File.join(GitHosting::get_full_parent_path(project, true),project.identifier) : project.identifier
-        if !repo.name.nil?
+        if !repo_name.nil?
           r.url = File.join(Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'], "#{repo_name}.git")
           r.root_url = r.url
         end
