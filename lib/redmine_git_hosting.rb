@@ -38,6 +38,7 @@ apply_patch do
   require_dependency 'libs/git_hosting'
   require_dependency 'libs/git_hosting_conf'
   require_dependency 'libs/gitolite_config'
+  require_dependency 'libs/gitolite_logger'
   require_dependency 'libs/gitolite_recycle'
   require_dependency 'libs/git_adapter_hooks'
   require_dependency 'libs/cached_shell_redirector'

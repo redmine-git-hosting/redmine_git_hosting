@@ -27,6 +27,8 @@ module GitHostingConf
   GIT_CACHE_MAX_ELEMENTS        = '100'
   RECYCLE_BIN_IF_UNDEF          = 'recycle_bin/'
   PRESERVE_TIME_IF_UNDEF        = 1440
+  GITOLITE_LOG_SPLIT            = false
+  GITOLITE_LOG_LEVEL            = 'info'
 
 
   # Recycle bin base path (relative to git user home directory)
@@ -285,6 +287,26 @@ module GitHostingConf
       Setting.plugin_redmine_git_hosting['gitCacheMaxElements']
     else
       GIT_CACHE_MAX_ELEMENTS
+    end
+  end
+
+  def self.gitolite_log_split?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteLogSplit'].nil?
+      if Setting.plugin_redmine_git_hosting['gitoliteLogSplit'] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      GITOLITE_LOG_SPLIT
+    end
+  end
+
+  def self.gitolite_log_level
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteLogLevel'].nil?
+      Setting.plugin_redmine_git_hosting['gitoliteLogLevel']
+    else
+      GITOLITE_LOG_LEVEL
     end
   end
 
