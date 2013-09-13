@@ -11,6 +11,7 @@ Caching functionality is also implemented to speed page-load times for viewing G
 Release Notes are available off the wiki: https://github.com/jbox-web/redmine_git_hosting/wiki/Release-Notes.
 
 The new version of this plugin (0.7) with Sidekiq workers is available in BETA here : http://n-rodriguez.github.io/redmine_git_hosting/
+**(Need testers :))**
 
 ## Compatibility
 
