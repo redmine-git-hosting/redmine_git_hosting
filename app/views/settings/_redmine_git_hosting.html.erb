@@ -59,28 +59,30 @@
     <%= text_field_tag("settings[gitTempDataDir]", gitTempDataDir, :size => 60) %>
     <br />
   </p>
+
+  <% bin_dir_writeable = GitHosting.bin_dir_writeable? :reset %>
   <p>
-    <label><%= l(:label_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
+    <label><%= l(:label_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !bin_dir_writeable %></label>
     <%= text_field_tag("settings[gitScriptDir]", reldir_add_dotslash(gitScriptDir), :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_git_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? :reset %></label>
+    <label><%= l(:label_git_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !bin_dir_writeable %></label>
     <%= text_field_tag("settings[gitUser]", gitUser.split(/[\r\n\t ,;]+/).join("\n"), :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_gitolite_identity_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
+    <label><%= l(:label_gitolite_identity_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !bin_dir_writeable %></label>
     <%= text_field_tag("settings[gitoliteIdentityFile]", gitoliteIdentityFile, :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
+    <label><%= l(:label_gitolite_identity_public_key_file) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !bin_dir_writeable %></label>
     <%= text_field_tag("settings[gitoliteIdentityPublicKeyFile]", gitoliteIdentityPublicKeyFile, :size => 60) %>
     <br />
   </p>
   <p>
-    <label><%= l(:label_ssh_server_local_port) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.bin_dir_writeable? %></label>
+    <label><%= l(:label_ssh_server_local_port) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !bin_dir_writeable %></label>
     <%= text_field_tag("settings[sshServerLocalPort]", sshServerLocalPort, :size => 5) %>
     <br />
   </p>
@@ -232,8 +234,9 @@
 
   <p>
     <label><%= l(:label_hook_installed)%></label>
-    <%= image_tag((GitHosting.check_hooks_installed==true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-    <em><%= (GitHosting.check_hooks_installed==true ? '' : GitHosting.check_hooks_installed) %></em>
+    <% hook_installed = GitHosting.check_hooks_installed %>
+    <%= image_tag((hook_installed == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+    <em><%= (hook_installed == true ? '' : hook_installed) %></em>
     <br />
   </p>
 
@@ -244,15 +247,17 @@
   <h3><%= l(:label_permissions_header)%></h3>
   <p>
     <label><%= l(:label_sudo_git_to_web_user)%></label>
-    <%= image_tag((GitHosting.sudo_git_to_web_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-    <em><%= (GitHosting.sudo_git_to_web_user == true ? '' : GitHosting.sudo_git_to_web_user) %></em>
+    <% sudo_git_to_web_user = GitHosting.sudo_git_to_web_user %>
+    <%= image_tag((sudo_git_to_web_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+    <em><%= (sudo_git_to_web_user == true ? '' : sudo_git_to_web_user) %></em>
     <br />
   </p>
 
   <p>
     <label><%= l(:label_sudo_web_to_git_user)%></label>
-    <%= image_tag((GitHosting.sudo_web_to_git_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-    <em><%= (GitHosting.sudo_web_to_git_user == true ? '' : GitHosting.sudo_web_to_git_user) %></em>
+    <% sudo_web_to_git_user = GitHosting.sudo_web_to_git_user %>
+    <%= image_tag((sudo_web_to_git_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+    <em><%= (sudo_web_to_git_user == true ? '' : sudo_web_to_git_user) %></em>
     <br />
   </p>
 
@@ -267,15 +272,16 @@
 
   <p>
     <label>Gitolite Version : <%=
-      if GitHosting.gitolite_version <= 0
+      gitolite_version = GitHosting.gitolite_version
+      if gitolite_version <= 0
         l(:label_unknown_gitolite_version)
       else
-        GitHosting.gitolite_version
+        gitolite_version
       end
     %></label>
     <br/>
 <pre>
-<%= raw GitHosting.gitolite_version_output %>
+<%= raw GitHosting.gitolite_banner %>
 </pre>
     <br/>
   </p>
