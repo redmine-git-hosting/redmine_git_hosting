@@ -57,7 +57,7 @@ module GitHosting
         digest = Digest::MD5.hexdigest(contents)
 
         if rgh_hook_digest == digest
-          logger.info "Our 'post-receive' hook is already installed"
+          logger.debug "Our 'post-receive' hook is already installed"
           @@check_hooks_installed_stamp = Time.new
           @@check_hooks_installed_cached = true
           return @@check_hooks_installed_cached
@@ -125,19 +125,19 @@ module GitHosting
         @@hook_url ||= "http://" + File.join(GitHosting.my_root_url,"/githooks/post-receive")
 
         if cur_values["hooks.redmine_gitolite.url"] != @@hook_url
-          logger.warn "Updating Hook URL: #{@@hook_url}"
+          logger.debug "Updating Hook URL: #{@@hook_url}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{@@hook_url}"]
         end
 
         debug_hook = GitHostingConf.git_hooks_debug?
         if cur_values["hooks.redmine_gitolite.debug"] != debug_hook
-          logger.warn "Updating Debug Hook: #{debug_hook}"
+          logger.debug "Updating Debug Hook: #{debug_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
         end
 
         asynch_hook = GitHostingConf.git_hooks_are_asynchronous?
         if cur_values["hooks.redmine_gitolite.asynch"] != asynch_hook
-          logger.warn "Updating Hooks Are Asynchronous: #{asynch_hook}"
+          logger.debug "Updating Hooks Are Asynchronous: #{asynch_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
         end
 
@@ -265,7 +265,6 @@ module GitHosting
             GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.repositoryid "#{repo.identifier||''}"]
           end
           logger.info "Done !"
-          logger.info ""
         rescue => e
           logger.error "setup_hooks_for_repository(#{repo.git_label}) failed!"
           logger.error e.message

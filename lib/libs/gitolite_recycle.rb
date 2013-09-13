@@ -20,13 +20,14 @@ module GitHosting
 
       result = %x[#{GitHosting.git_user_runner} find '#{GitHostingConf.recycle_bin}' -type d -regex '.*\.git' -cmin +#{GitHostingConf.preserve_time} -prune -print].chomp.split("\n")
       if result.length > 0
-        logger.warn "[GitHosting] Garbage-collecting expired file #{(result.length != 1) ? "s" : ""} from recycle bin:"
+        logger.info "Garbage-collecting expired file #{(result.length != 1) ? "s" : ""} from recycle bin:"
         result.each do |filename|
           begin
             GitHosting.shell %[#{GitHosting.git_user_runner} rm -r #{filename}]
-            logger.warn "[GitHosting] Deleting '#{filename}'"
-          rescue
+            logger.info "Deleting '#{filename}'"
+          rescue => e
             logger.error "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{filename}' !"
+            logger.error e.message
           end
         end
 
@@ -45,14 +46,14 @@ module GitHosting
         GitHosting.shell %[#{GitHosting.git_user_runner} mkdir -p '#{GitHostingConf.recycle_bin}']
         GitHosting.shell %[#{GitHosting.git_user_runner} chmod 770 '#{GitHostingConf.recycle_bin}']
         GitHosting.shell %[#{GitHosting.git_user_runner} mv '#{repo_path}' '#{new_path}']
-        logger.warn "[GitHosting] Moving '#{repo_name}' from Gitolite repositories to '#{new_path}'"
-        logger.warn "[GitHosting] Will remain for at least #{GitHostingConf.preserve_time/60.0} hours"
+        logger.info "Moving '#{repo_name}' from Gitolite repositories to '#{new_path}'"
+        logger.info "Will remain for at least #{GitHostingConf.preserve_time/60.0} hours"
         # If any empty directories left behind, try to delete them.  Ignore failure.
         old_prefix = repo_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
         if old_prefix
           repo_subpath = File.join(GitHostingConf.repository_base, old_prefix)
           result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
-          result.each { |dir| logger.warn "[GitHosting] Removing empty repository subdirectory : #{dir}"}
+          result.each { |dir| logger.info "Removing empty repository subdirectory : #{dir}"}
         end
         return true
       rescue => e
@@ -68,7 +69,7 @@ module GitHosting
       files = %x[#{GitHosting.git_user_runner} find '#{GitHostingConf.recycle_bin}' -type d -regex '#{myregex}' -prune].chomp.split("\n").sort {|x,y| y <=> x }
       if files.length > 0
         # Found something!
-        logger.warn "[GitHosting] Restoring '#{repo_name}.git' from recycle bin '#{files.first}' to Gitolite repositories"
+        logger.info "Restoring '#{repo_name}.git' from recycle bin '#{files.first}' to Gitolite repositories"
         begin
           prefix = repo_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
           if prefix
