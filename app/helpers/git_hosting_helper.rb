@@ -195,4 +195,13 @@ module GitHostingHelper
     end
   end
 
+
+  # Generic helper functions
+  def reldir_add_dotslash(path)
+    # Is this a relative path?
+    stripped = (path || "").lstrip.rstrip
+    norm = File.expand_path(stripped,"/")
+    ((stripped[0,1] != "/")?".":"") + norm + ((norm[-1,1] != "/")?"/":"")
+  end
+
 end
