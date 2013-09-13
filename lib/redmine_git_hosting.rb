@@ -70,5 +70,4 @@ apply_patch do
   ## Redmine Git Hosting Hooks
   require_dependency 'redmine_git_hosting/hooks/git_project_show_hook'
   require_dependency 'redmine_git_hosting/hooks/git_repo_url_hook'
-  #require_dependency 'redmine_git_hosting/hooks/my_account_hook'
 end
