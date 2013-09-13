@@ -13,6 +13,15 @@ module GitHosting
         return @@check_hooks_installed_cached
       end
 
+      gitolite_command = get_gitolite_command
+
+      if gitolite_command.nil?
+        logger.error "Unable to find Gitolite version, cannot install 'post-receive' hook!"
+        @@check_hooks_installed_stamp = Time.new
+        @@check_hooks_installed_cached = false
+        return @@check_hooks_installed_cached
+      end
+
       @@post_receive_hook_path ||= File.join(gitolite_hooks_dir, 'post-receive')
       post_receive_exists = (%x[#{GitHosting.git_user_runner} test -r '#{@@post_receive_hook_path}' && echo 'yes' || echo 'no']).match(/yes/)
       post_receive_length_is_zero = false
@@ -20,65 +29,67 @@ module GitHosting
         post_receive_length_is_zero= "0" == (%x[echo 'wc -c  #{@@post_receive_hook_path}' | #{GitHosting.git_user_runner} "bash" ]).chomp.strip.split(/[\t ]+/)[0]
       end
 
-      logger.info ""
-      logger.info "[GitHosting] ############ INSTALL HOOKS ############"
-
-      if GitHosting.gitolite_version == 2
-        gitolite_command = 'gl-setup'
-      elsif GitHosting.gitolite_version == 3
-        gitolite_command = 'gitolite setup'
-      else
-        logger.error "[GitHosting] Unable to find Gitolite version, cannot install 'post-receive' hook!"
-        @@check_hooks_installed_stamp = Time.new
-        @@check_hooks_installed_cached = false
-        return @@check_hooks_installed_cached
-      end
-
       if (!post_receive_exists) || post_receive_length_is_zero
+
         begin
-          logger.info "[GitHosting] 'post-receive' hook not handled by us, installing it..."
+          logger.info "'post-receive' hook not handled by us, installing it..."
           install_hook("post-receive.redmine_gitolite.rb")
-          logger.info "[GitHosting] 'post-receive.redmine_gitolite' hook installed"
-          logger.info "[GitHosting] Running '#{gitolite_command}' on the Gitolite install..."
+          logger.info "'post-receive.redmine_gitolite' hook installed"
+
+          logger.info "Running '#{gitolite_command}' on the Gitolite install..."
           GitHosting.shell %[#{GitHosting.git_user_runner} #{gitolite_command}]
+
           update_global_hook_params
-          logger.info "[GitHosting] Finished installing hooks in the Gitolite install..."
-          @@check_hooks_installed_stamp = Time.new
+          logger.info "Finished installing hooks in the Gitolite install..."
+
           @@check_hooks_installed_cached = true
-        rescue
-          logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
+        rescue => e
+          logger.error "check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
+          logger.error e.message
+          @@check_hooks_installed_cached = false
         end
+
+        @@check_hooks_installed_stamp = Time.new
         return @@check_hooks_installed_cached
+
       else
         contents = %x[#{GitHosting.git_user_runner} 'cat #{@@post_receive_hook_path}']
         digest = Digest::MD5.hexdigest(contents)
 
         if rgh_hook_digest == digest
-          logger.info "[GitHosting] Our 'post-receive' hook is already installed"
+          logger.info "Our 'post-receive' hook is already installed"
           @@check_hooks_installed_stamp = Time.new
           @@check_hooks_installed_cached = true
           return @@check_hooks_installed_cached
         else
-          error_msg = "[GitHosting] 'post-receive' hook is already present but it's not ours!"
+          error_msg = "'post-receive' hook is already present but it's not ours!"
           logger.warn error_msg
           @@check_hooks_installed_cached = error_msg
+
           if GitHostingConf.git_force_hooks_update?
             begin
-              logger.info "[GitHosting] Restoring 'post-receive' hook since forceInstallHook == true"
+              logger.info "Restoring 'post-receive' hook since forceInstallHook == true"
               install_hook("post-receive.redmine_gitolite.rb")
-              logger.info "[GitHosting] 'post-receive.redmine_gitolite' hook installed"
-              logger.info "[GitHosting] Running '#{gitolite_command}' on the Gitolite install..."
+              logger.info "'post-receive.redmine_gitolite' hook installed"
+
+              logger.info "Running '#{gitolite_command}' on the Gitolite install..."
               GitHosting.shell %[#{GitHosting.git_user_runner} #{gitolite_command}]
+
               update_global_hook_params
-              logger.info "[GitHosting] Finished installing hooks in the Gitolite install..."
+              logger.info "Finished installing hooks in the Gitolite install..."
+
               @@check_hooks_installed_cached = true
-            rescue
-              logger.error "[GitHosting] check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
+            rescue => e
+              logger.error "check_hooks_installed(): Problems installing hooks and initializing Gitolite!"
+              logger.error e.message
+              @@check_hooks_installed_cached = false
             end
           end
+
           @@check_hooks_installed_stamp = Time.new
           return @@check_hooks_installed_cached
         end
+
       end
     end
 
@@ -110,37 +121,53 @@ module GitHosting
     def self.update_global_hook_params
       cur_values = get_global_config_params
 
-      logger.info ""
-      logger.info "[GitHosting] ############ UPDATE GITOLITE HOOKS CONFIG ############"
-
       begin
         @@hook_url ||= "http://" + File.join(GitHosting.my_root_url,"/githooks/post-receive")
+
         if cur_values["hooks.redmine_gitolite.url"] != @@hook_url
-          logger.warn "[GitHosting] Updating Hook URL: #{@@hook_url}"
+          logger.warn "Updating Hook URL: #{@@hook_url}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global hooks.redmine_gitolite.url "#{@@hook_url}"]
         end
 
         debug_hook = GitHostingConf.git_hooks_debug?
         if cur_values["hooks.redmine_gitolite.debug"] != debug_hook
-          logger.warn "[GitHosting] Updating Debug Hook: #{debug_hook}"
+          logger.warn "Updating Debug Hook: #{debug_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
         end
 
         asynch_hook = GitHostingConf.git_hooks_are_asynchronous?
         if cur_values["hooks.redmine_gitolite.asynch"] != asynch_hook
-          logger.warn "[GitHosting] Updating Hooks Are Asynchronous: #{asynch_hook}"
+          logger.warn "Updating Hooks Are Asynchronous: #{asynch_hook}"
           GitHosting.shell %[#{GitHosting.git_exec} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
         end
-      rescue
-        logger.error "[GitHosting] update_global_hook_params(): Problems updating hook parameters!"
+
+      rescue => e
+        logger.error "update_global_hook_params(): Problems updating hook parameters!"
+        logger.error e.message
       end
     end
 
+
     private
 
+
     def self.logger
-      return GitHosting::logger
+      return GitHosting.logger
     end
+
+
+    def self.get_gitolite_command
+      gitolite_version = GitHosting.gitolite_version
+      if gitolite_version == 2
+        gitolite_command = 'gl-setup'
+      elsif gitolite_version == 3
+        gitolite_command = 'gitolite setup'
+      else
+        gitolite_command = nil
+      end
+      return gitolite_command
+    end
+
 
     def self.gitolite_hooks_dir
       return '~/.gitolite/hooks/common'
@@ -152,12 +179,12 @@ module GitHosting
     end
 
     @@cached_hook_digest = nil
-    def self.rgh_hook_digest(recreate=false)
+    def self.rgh_hook_digest(recreate = false)
       if @@cached_hook_digest.nil? || recreate
-        logger.info "[GitHosting] Creating MD5 digests for 'post-receive' hook"
+        logger.debug "Creating MD5 digests for 'post-receive' hook"
         hook_file = "post-receive.redmine_gitolite.rb"
         digest = Digest::MD5.hexdigest(File.read(File.join(package_hooks_dir, hook_file)))
-        logger.info "[GitHosting] Digest for 'post-receive' hook : #{digest}"
+        logger.debug "Digest for 'post-receive' hook : #{digest}"
         @@cached_hook_digest = digest
       end
       @@cached_hook_digest
@@ -167,13 +194,13 @@ module GitHosting
       begin
         hook_source_path = File.join(package_hooks_dir, hook_name)
         hook_dest_path = File.join(gitolite_hooks_dir, hook_name.split('.')[0])
-        logger.info "[GitHosting] Installing '#{hook_name}' from #{hook_source_path} to #{hook_dest_path}"
-        git_user = GitHostingConf.git_user
+        logger.info "Installing '#{hook_name}' from #{hook_source_path} to #{hook_dest_path}"
         GitHosting.shell %[ cat #{hook_source_path} |  #{GitHosting.git_user_runner} 'cat - > #{hook_dest_path}']
-        GitHosting.shell %[#{GitHosting.git_user_runner} 'chown #{git_user} #{hook_dest_path}']
+        GitHosting.shell %[#{GitHosting.git_user_runner} 'chown #{GitHostingConf.git_user} #{hook_dest_path}']
         GitHosting.shell %[#{GitHosting.git_user_runner} 'chmod 700 #{hook_dest_path}']
-      rescue
-        logger.error "[GitHosting] install_hook(): Problems installing hook from #{hook_source_path} to #{hook_dest_path}."
+      rescue => e
+        logger.error "install_hook(): Problems installing hook from #{hook_source_path} to #{hook_dest_path}."
+        logger.error e.message
       end
     end
 
@@ -225,9 +252,9 @@ module GitHosting
 
       if value_hash["hooks.redmine_gitolite.key"] != hook_key || value_hash["hooks.redmine_gitolite.projectid"] != repo.project.identifier || GitHosting.multi_repos? && (value_hash["hooks.redmine_gitolite.repositoryid"] != (repo.identifier || ""))
         if value_hash["hooks.redmine_gitolite.key"]
-          logger.info "[GitHosting] Repairing hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
+          logger.info "Repairing hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         else
-          logger.info "[GitHosting] Setting up hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
+          logger.info "Setting up hooks parameters for repository '#{repo_name}' (in Gitolite repositories at '#{repo_path}')"
         end
 
         begin
@@ -237,11 +264,11 @@ module GitHosting
           if GitHosting.multi_repos?
             GitHosting.shell %[#{GitHosting.git_exec} --git-dir='#{repo_path}' config hooks.redmine_gitolite.repositoryid "#{repo.identifier||''}"]
           end
-          logger.info "[GitHosting] Done !"
+          logger.info "Done !"
           logger.info ""
-        rescue
+        rescue => e
           logger.error "setup_hooks_for_repository(#{repo.git_label}) failed!"
-          logger.info ""
+          logger.error e.message
         end
 
       end
