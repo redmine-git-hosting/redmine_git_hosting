@@ -970,7 +970,7 @@ module GitHosting
         # Add missing keys to the keydir
         active_keys.each do |key|
           keyname = "#{key.identifier}.pub"
-          unless old_keynames.index(keyname)
+          unless old_keynames.include?(keyname)
             filename = File.join(keydir, keyname)
             logger.info "[GitHosting] Adding Redmine key to Gitolite : '#{keyname}'"
             File.open(filename, 'w') {|f| f.write(key.key.gsub(/\n/,'')) }
