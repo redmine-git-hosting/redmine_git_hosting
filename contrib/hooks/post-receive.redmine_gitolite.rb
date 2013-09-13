@@ -56,7 +56,7 @@ def run_query(url_str, params, with_https)
     http.read_timeout = 180
     if with_https
       http.use_ssl = true
-      http.ssl_version = :SSLv3
+      http.ssl_version = :SSLv3 if http.respond_to? :ssl_version
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
     req  = Net::HTTP::Post.new(url.request_uri)
