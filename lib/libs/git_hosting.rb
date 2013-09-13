@@ -168,16 +168,24 @@ module GitHosting
 
 
   def self.get_full_parent_path(repository, is_file_path)
+    return "" if !GitHostingConf.repository_hierarchy
+
     project = repository.project
-    return "" if !project.parent || !GitHostingConf.repository_hierarchy
-    parent_parts = [];
+
+    if repository.is_default?
+      parent_parts = []
+    else
+      parent_parts = [project.identifier.to_s]
+    end
+
     p = project
     while p.parent
       parent_id = p.parent.identifier.to_s
       parent_parts.unshift(parent_id)
       p = p.parent
     end
-    return is_file_path ? File.join(parent_parts) : parent_parts.join("/")
+
+    return parent_parts.join("/")
   end
 
 
@@ -1091,7 +1099,6 @@ module GitHosting
             end
           elsif my_repos[repo_name]
             # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-            # TODO: Fix potentially bug, get here whereas the repository was created 2mn ago...
             logger.info "Using existing Gitolite repository : '#{repository_path(repo_name)}' for update (2)"
           else
             # Of the repos in my_repo with a matching base name, only steal away those not already controlled
@@ -1137,6 +1144,11 @@ module GitHosting
               write_user_keys += proj_write_user_keys
               read_user_keys += proj_read_user_keys
 
+              # If no redmine keys, mark with dummy key before others to keep control on repo
+              if read_user_keys.empty? && write_user_keys.empty?
+                read_user_keys.push GitoliteConfig::DUMMY_REDMINE_KEY
+              end
+
               # Git daemon support
               if (repo.extra.git_daemon == 1 || repo.extra.git_daemon == nil ) && repo.project.is_public
                 read_user_keys.push GitoliteConfig::GIT_DAEMON_KEY
@@ -1147,13 +1159,8 @@ module GitHosting
               # Note -- delete_redmine_keys() will also remove the GIT_DAEMON_KEY for repos with redmine keys
               # (to be put back as above, when appropriate).
               conf.delete_redmine_keys repo_name
-              conf.add_read_user repo_name, read_user_keys.uniq
-              conf.add_write_user repo_name, write_user_keys.uniq
-
-              # If no redmine keys, mark with dummy key
-              if (read_user_keys+write_user_keys).empty?
-                conf.mark_with_dummy_key repo_name
-              end
+              conf.add_read_user repo_name, read_user_keys.uniq.sort
+              conf.add_write_user repo_name, write_user_keys.uniq.sort
             else
               # Must be a project that has repositories disabled. Mark as disabled project.
               conf.delete_redmine_keys repo_name
