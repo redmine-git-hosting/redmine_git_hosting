@@ -1,70 +1,141 @@
-.icon-push
-{
-	background-image: url("../images/icon-divide.png");
+/*
+PLUGIN ICON
+*/
+#admin-menu a.redmine-git-hosting { background-image: url(../images/git_icon.png); }
+
+#sidekiq_link_url { padding: 0 0 10px; }
+
+#sidekiq_iframe {
+  width: 97%;
+  height: 600px;
+
+  padding: 10px;
+
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+
+  -moz-box-shadow: 1px 1px 12px #000000;
+  -webkit-box-shadow: 1px 1px 12px #000000;
+  box-shadow: 1px 1px 12px #000000;
+}
+
+/*
+SHOW PROJECT
+*/
+div.git-hosting h3 { background: url("../images/git_icon.png") no-repeat scroll 0 50% transparent; padding-left: 20px; }
+
+#cboxLoadedContent div.warning { margin-bottom: 0px; }
+
+.icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
+.icon-push { background-image: url("../images/icon-divide.png"); }
+.icon-deployment-credentials { background-image: url("../images/textfield_key.png"); }
+.icon-post-receive-urls { background-image: url("../images/link.png"); }
+.icon-mirrors { background-image: url("../images/table_multiple.png"); }
+.icon-git-daemon { background-image: url("../images/changeset.png"); }
+.icon-git-smarthttp { background-image: url("../images/web.png"); }
+.icon-git-notify { background-image: url("../images/email.png"); }
+
+.icon-git { padding-right: 15px; }
+.icon-git-disabled { opacity: 0.5; }
+
+table.git_mailing_list { width: 100%; margin-top: 15px; }
+table.git_mailing_list th { width: 25%; }
+table.git_mailing_list td { text-align: center; }
+table.git_mailing_list td ul { padding-left: 0px; list-style-type: none; }
+
+.scm_name {
+  text-align: center;
+}
+
+a.add-mirror,
+a.add-post-receive-url,
+a.add-deployment-credential {
+  padding-right: 20px;
+}
+
+h3.git {
+  padding-top: 10px;
+  padding-left: 5px;
 }
 
 pre.mirror-push {
-	margin: 0 1em 1em 0em;
-	padding: 2px;
-	background-color: #fafafa;
-	border: 1px solid #dadada;
-	width:auto;
-	overflow-x: auto;
-	overflow-y: hidden;
+  margin: 0 1em 1em 0em;
+  padding: 2px;
+  background-color: #fafafa;
+  border: 1px solid #dadada;
+  width: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 pre.mirror-push.error {
-	border: 1px solid #D71E1E;
+  border: 1px solid #D71E1E;
 }
 
 .git_hosting_access_box {
-	border: 2px solid; 
-	background-color: #dfffdf; 
-	border-color: #9fcf9f; 
-	color: #005f00; 
-	margin: -6px; 
-	padding: 4px;
+  border: 2px solid;
+  background-color: #dfffdf;
+  border-color: #9fcf9f;
+  color: #005f00;
+  margin: -6px;
+  padding: 4px;
 }
-.git_hosting_access_box p { 
-	padding-left:100px; 
-	margin-top: 8px; 
-	margin-bottom: 8px;
+.git_hosting_access_box p {
+  padding-left:100px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
-.git_hosting_access_box label { margin-left: -100px; width:95px; }
-.git_hosting_access_box em { 
-	font-style: italic; 
-	font-weight: bold; 
-	font-size: 110%; 
-	color: #467AA7;
+.git_hosting_access_box label {
+  margin-left: -100px;
+  width: 95px;
+}
+
+.git_hosting_access_box em {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 110%;
+  color: #467AA7;
 }
 
 .public_key_view {
-background-color: #fff;
-padding:5px;
+  background-color: #fff;
+  padding: 5px;
 }
 
 .public_key_view label {
-font-weight: bold;
-text-align: right;
+  font-weight: bold;
+  text-align: right;
 }
 
 .public_key_view .myhead {
-font-style: italic;
-color: #000;
-size: 140%;
-padding: 10px 10px 0px 0px;
-margin-bottom: 5px; 
-border-bottom: 1px solid #bbbbbb;
+  font-style: italic;
+  color: #000;
+  size: 140%;
+  padding: 10px 10px 0px 0px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #bbbbbb;
 }
 
 .public_key_view p {
-margin-top: 0px;
-margin-bottom: 5px;
-padding-top: 0px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  padding-top: 0px;
 }
 
 .public_key_view legend {
-font-style: italic;
-color: #000;
-size: 130%;
+  font-style: italic;
+  color: #000;
+  size: 130%;
+}
+
+#sidebar li.repository.git {
+  background: url("../images/git_icon.png") no-repeat scroll 0 50% transparent;
+  margin: 10px 10px 10px 0;
+  padding-left: 25px;
+}
+
+#sidebar ul.repository.git {
+  padding-left: 15px;
+  list-style-type: none;
 }
