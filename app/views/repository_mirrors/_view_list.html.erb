@@ -4,6 +4,10 @@
   <%= javascript_include_tag('zero_clipboard_setup', :plugin => 'redmine_git_hosting') %>
 <% end %>
 
+<script type="text/javascript">
+  ZeroClipboard.setDefaults({ moviePath: "<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>" });
+  setZeroClipboardInputSource('mirror_pubkey');
+</script>
 
 <div class="box tabular">
 
@@ -86,28 +90,16 @@
 <div id="dialog-box-mirror-delete"></div>
 
 <script type="text/javascript">
-  ZeroClipboard.setMoviePath('<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>');
-  setZeroClipboardInputSource("mirror_pubkey");
-
-  function test_zc_vis() {
-    var cc = document.getElementById('clipboard_container')
-    if(cc != null) {
-      if (cc.style.fontFamily == 'sans-serif' ) {
-        reset_zero_clipboard();
-      }
-    }
-  }
-
-  function set_up_clipboard() {
-    // tab visiblity javascript screws up zeroclipboard, need to reset when we change
-    // to repo tab where the clipboard is visible
-    // and, for good measure, just reset it every quarter second (handles visibility during repository creation, which is otherwise weird)
-
-    document.getElementById("tab-repository").addEventListener("click", reset_zero_clipboard, false );
-    setInterval(test_zc_vis, 500);
-    test_zc_vis();
-  }
-
+<% if Rails::VERSION::MAJOR >= 3 %>
+  $(document).ready(function() {
+    initModalBox('dialog-box-mirror', false);
+    initModalBox('dialog-box-mirror-delete', true);
+    setUpModalBox('a.add-mirror',    'dialog-box-mirror');
+    setUpModalBox('a.edit-mirror',   'dialog-box-mirror');
+    setUpModalBox('a.delete-mirror', 'dialog-box-mirror-delete');
+    setUpModalBox('a.push-mirror',   'dialog-box-mirror');
+  });
+<% else %>
   function getWidth() {
     var width = 60*document.viewport.getWidth()/100;
     if (width<750) { width=750 };
@@ -177,5 +169,5 @@
     Event.observe(window, 'load', set_up_clipboard);
     Event.observe(window, 'load', set_mirror_modal_box);
   <% end %>
-
+<% end %>
 </script>
