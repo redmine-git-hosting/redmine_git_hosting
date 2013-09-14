@@ -25,10 +25,17 @@ def install_old_routes
         deploy_views.connect 'repositories/:repository_id/deployment-credentials/update/:id', :action => 'update',          :conditions => {:method => :put}
         deploy_views.connect 'repositories/:repository_id/deployment-credentials/delete/:id', :action => 'destroy',         :conditions => {:method => [:get, :delete]}
       end
+
+      repo_mapper.with_options :controller => 'repository_git_notifications' do |git_notify_views|
+        git_notify_views.connect 'repositories/:repository_id/git-notifications/new',        :action => 'create',   :conditions => {:method => [:get, :post]}
+        git_notify_views.connect 'repositories/:repository_id/git-notifications/edit/:id',   :action => 'edit',     :conditions => {:method => :get}
+        git_notify_views.connect 'repositories/:repository_id/git-notifications/update/:id', :action => 'update',   :conditions => {:method => :put}
+        git_notify_views.connect 'repositories/:repository_id/git-notifications/delete/:id', :action => 'destroy',  :conditions => {:method => [:get, :delete]}
+      end
     end
 
     # SMART HTTP
-    map.connect ":repo_path/*git_params", :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http'
+    map.connect ":repo_path/*git_params", :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http', :action => 'index'
 
     # POST RECEIVE
     map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
@@ -60,6 +67,11 @@ def install_new_routes
     match 'repositories/:repository_id/deployment-credentials/edit/:id',   :to => 'repository_deployment_credentials#edit',            :via => [:get]
     match 'repositories/:repository_id/deployment-credentials/update/:id', :to => 'repository_deployment_credentials#update',          :via => [:put]
     match 'repositories/:repository_id/deployment-credentials/delete/:id', :to => 'repository_deployment_credentials#destroy',         :via => [:get, :delete]
+
+    match 'repositories/:repository_id/git-notifications/new',        :to => 'repository_git_notifications#create',  :via => [:get, :post]
+    match 'repositories/:repository_id/git-notifications/edit/:id',   :to => 'repository_git_notifications#edit',    :via => [:get]
+    match 'repositories/:repository_id/git_notifications/update/:id', :to => 'repository_git_notifications#update',  :via => [:put]
+    match 'repositories/:repository_id/git_notifications/delete/:id', :to => 'repository_git_notifications#destroy', :via => [:get, :delete]
 
     # SMART HTTP
     match ':repo_path/*git_params', :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
