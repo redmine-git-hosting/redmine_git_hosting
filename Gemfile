@@ -1,6 +1,12 @@
 source 'https://rubygems.org'
 
-gem "inifile",  "~>0.4.1"
-gem "lockfile",  "~>1.4.3"
-gem "net-ssh",  "~>2.1.4"
+gem 'inifile'
+gem 'lockfile'
+gem 'net-ssh'
 gem "backports", :platforms => [:mri_18, :mingw_18]
+gem 'jbox-gitolite'
+gem 'sidekiq'
+gem 'sidekiq-failures'
+gem 'sidekiq-unique-jobs'
+gem 'slim', '>= 1.3.0'
+gem 'sinatra', '>= 1.3.0', :require => nil
