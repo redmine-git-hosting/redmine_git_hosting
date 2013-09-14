@@ -12,9 +12,15 @@ class RepositoryMirror < ActiveRecord::Base
 
   attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
 
+  ## Only allow SSH format
+  ## git@github.com:user/project.git
+  ## git-test@redmine.example.org:my_user/test.git
+  ## git-test@redmine.example/project1/project2/project3/project4.git
+  validates_format_of     :url, :with => /^([A-Za-z0-9\-]+@)([A-Za-z0-9\.\-]+)(:|\/)([A-Za-z0-9\_\-\/]+)(\.git)?$/i, :allow_blank => false
+
   validates_uniqueness_of :url, :scope => [:repository_id]
-  validates_presence_of :repository_id, :url
-  validates_associated :repository
+  validates_presence_of   :repository_id, :url
+  validates_associated    :repository
 
   validate :check_refspec
 
@@ -41,20 +47,20 @@ class RepositoryMirror < ActiveRecord::Base
     else
       # Not mirroring -- other possible push_args
       push_args << "--force " if push_mode == PUSHMODE_FORCE
-      push_args << "--all " if include_all_branches
-      push_args << "--tags " if include_all_tags
+      push_args << "--all "   if include_all_branches
+      push_args << "--tags "  if include_all_tags
     end
     push_args << "\"#{dequote(url)}\" "
     push_args << "\"#{dequote(explicit_refspec)}\" " unless explicit_refspec.blank?
 
     shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args} 2>&1' | #{GitHosting.git_user_runner} "bash" ].chomp
-    push_failed = ($?.to_i!=0) ? true : false
+    push_failed = ($?.to_i != 0) ? true : false
 
     if (push_failed)
-      GitHosting.logger.error "[ Pushing changes to mirror: #{url} ... Failed!"
-      GitHosting.logger.error "  " + shellout.split("\n").join("\n  ") + " ]"
+      GitoliteLogger.get_logger(:post_receive).error "Pushing changes to mirror '#{url}'... Failed!"
+      GitoliteLogger.get_logger(:post_receive).error "  " + shellout.split("\n").join("\n  ")
     else
-      GitHosting.logger.info "[ Pushing changes to mirror: #{url} ... Succeeded! ]"
+      GitoliteLogger.get_logger(:post_receive).info "Pushing changes to mirror '#{url}'... Succeeded!"
     end
     [push_failed, shellout]
   end

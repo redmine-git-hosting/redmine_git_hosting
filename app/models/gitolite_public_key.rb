@@ -70,14 +70,17 @@ class GitolitePublicKey < ActiveRecord::Base
         end
   end
 
+
   # Key type checking functions
   def user_key?
     key_type == KEY_TYPE_USER
   end
 
+
   def deploy_key?
     key_type == KEY_TYPE_DEPLOY
   end
+
 
   # Make sure that current identifier is consistent with current user login.
   # This method explicitly overrides the static nature of the identifier
@@ -93,7 +96,10 @@ class GitolitePublicKey < ActiveRecord::Base
     self.identifier
   end
 
-  def to_s ; title ; end
+
+  def to_s
+    title
+  end
 
   @@myregular = /^redmine_(.*)_\d*_\d*(.pub)?$/
   def self.ident_to_user_token(identifier)
@@ -117,6 +123,7 @@ class GitolitePublicKey < ActiveRecord::Base
     end
   end
 
+
   # Remove control characters from key
   def remove_control_characters
     # Don't mess with existing keys (since cannot change key text anyway)
@@ -125,15 +132,16 @@ class GitolitePublicKey < ActiveRecord::Base
     # First -- let the first control char or space stand (to divide key type from key)
     # Really, this is catching a special case in which there is a \n between type and key.
     # Most common case turns first space back into space....
-    self.key=key.sub(/[ \r\n\t]/,' ')
+    self.key = key.sub(/[ \r\n\t]/, ' ')
 
     # Next, if comment divided from key by control char, let that one stand as well
-    # We can only tell this if there is an "=" in the key.  So, won't help 1/3 times.
-    self.key=key.sub(/=[ \r\n\t]/,'= ')
+    # We can only tell this if there is an "=" in the key. So, won't help 1/3 times.
+    self.key = key.sub(/=[ \r\n\t]/, '= ')
 
     # Delete any remaining control characters....
-    self.key=key.gsub(/[\a\r\n\t]/,'').strip
+    self.key = key.gsub(/[\a\r\n\t]/, '').strip
   end
+
 
   def has_not_been_changed
     unless new_record?
@@ -155,50 +163,50 @@ class GitolitePublicKey < ActiveRecord::Base
     end
 
     if !(KEY_FORMATS.index(keypieces[1]))
-      errors.add(:key,l(:error_key_bad_type,:types=>wrap_and_join(KEY_FORMATS,l(:word_or))))
+      errors.add(:key,l(:error_key_bad_type, :types => wrap_and_join(KEY_FORMATS, l(:word_or))))
       return
     end
 
     # Make sure that key has proper number of characters (divisible by 4) and no more than 2 '='
     if (keypieces[2].length % 4) != 0 || !(keypieces[2].match(/^[a-zA-Z0-9\+\/]+={0,2}$/))
       Rails.logger.error "Key error: #{keypieces[2].length % 4}"
-      errors.add(:key,l(:error_key_corrupted))
+      errors.add(:key, l(:error_key_corrupted))
       return
     end
 
     deckey = Base64.decode64(keypieces[2])
-    piecearray=[]
+    piecearray = []
     while deckey.length >= 4
       length = 0
       deckey.slice!(0..3).bytes do |byte|
         length = length * 256 + byte
       end
       if deckey.length < length
-        errors.add(:key,l(:error_key_corrupted))
+        errors.add(:key, l(:error_key_corrupted))
         return
       end
       piecearray << deckey.slice!(0..length-1)
     end
 
     if deckey.length != 0
-      errors.add(:key,l(:error_key_corrupted))
+      errors.add(:key, l(:error_key_corrupted))
       return
     end
 
     if piecearray[0] != keypieces[1]
-      errors.add(:key,l(:error_key_type_mismatch,:type1=>keypieces[1],:type2=>piecearray[0]))
+      errors.add(:key, l(:error_key_type_mismatch, :type1 => keypieces[1], :type2 => piecearray[0]))
       return
     end
 
     if piecearray.length != KEY_NUM_COMPONENTS[KEY_FORMATS.index(piecearray[0])]
-      errors.add(:key,l(:error_key_corrupted))
+      errors.add(:key, l(:error_key_corrupted))
       return
     end
 
     # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
-    allkeys = [GitolitePublicKey.new({ :user=>nil, :key=>%x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}'] })]
+    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}'] })]
     # Check all active keys
     allkeys += (GitolitePublicKey.active.all)
 
@@ -208,15 +216,15 @@ class GitolitePublicKey < ActiveRecord::Base
       if existingpieces && (existingpieces[2] == keypieces[2])
         # Hm.... have a duplicate key!
         if existingkey.user == User.current
-          errors.add(:key,l(:error_key_in_use_by_you,:name=>existingkey.title))
+          errors.add(:key, l(:error_key_in_use_by_you, :name => existingkey.title))
         elsif User.current.admin?
           if existingkey.user
-            errors.add(:key,l(:error_key_in_use_by_other,:login=>existingkey.user.login,:name=>existingkey.title))
+            errors.add(:key, l(:error_key_in_use_by_other, :login => existingkey.user.login, :name => existingkey.title))
           else
-            errors.add(:key,l(:error_key_in_use_by_admin))
+            errors.add(:key, l(:error_key_in_use_by_admin))
           end
         else
-          errors.add(:key,l(:error_key_in_use_by_someone))
+          errors.add(:key, l(:error_key_in_use_by_someone))
         end
       end
     end
