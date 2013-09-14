@@ -1,0 +1,129 @@
+class MigrateParameters < ActiveRecord::Migration
+  def self.up
+    new_setting = {}
+    new_setting[:gitolite_log_level] = 'info'
+    new_setting[:gitolite_log_split] = false
+    new_setting[:gitolite_notify_global_include] = []
+    new_setting[:gitolite_notify_global_exclude] = []
+    new_setting[:gitolite_notify_global_sender_address] = Setting.mail_from.to_s.strip.downcase
+    new_setting[:gitolite_resync_all] = false
+
+    Setting[:plugin_redmine_git_hosting].each do |key, value|
+      case key
+
+        # Gitolite SSH Config
+        when 'gitUser' then
+          new_setting[:gitolite_user] = value
+
+        when 'sshServerLocalPort' then
+          new_setting[:gitolite_server_port] = value
+
+        when 'gitoliteIdentityFile' then
+          new_setting[:gitolite_ssh_private_key] = value
+
+        when 'gitoliteIdentityPublicKeyFile' then
+          new_setting[:gitolite_ssh_public_key] = value
+
+
+        # Gitolite Storage Config
+        when 'gitRepositoryBasePath' then
+          new_setting[:gitolite_global_storage_dir] = value
+
+        when 'gitRedmineSubdir' then
+          new_setting[:gitolite_redmine_storage_dir] = value
+
+        when 'gitRecycleBasePath' then
+          new_setting[:gitolite_recycle_bin_dir] = value
+
+
+        # Gitolite Global Config
+        when 'gitTempDataDir' then
+          new_setting[:gitolite_temp_dir] = value
+
+        when 'gitScriptDir' then
+          new_setting[:gitolite_script_dir] = value
+
+        when 'gitConfigFile' then
+          new_setting[:gitolite_config_file] = value
+
+        when 'gitConfigHasAdminKey' then
+          new_setting[:gitolite_config_has_admin_key] = value
+
+        when 'gitRecycleExpireTime' then
+          new_setting[:gitolite_recycle_bin_expiration_time] = value
+
+        when 'gitLockWaitTime' then
+          new_setting[:gitolite_lock_wait_time] = value
+
+
+        # Gitolite Notify
+        when 'gitNotifyCIADefault' then
+          new_setting[:gitolite_notify_cia_by_default] = value
+
+
+        # Gitolite Hooks Config
+        when 'gitHooksAreAsynchronous' then
+          new_setting[:gitolite_hooks_are_asynchronous] = value
+
+        when 'gitForceHooksUpdate' then
+          new_setting[:gitolite_force_hooks_update] = value
+
+        when 'gitHooksDebug' then
+          new_setting[:gitolite_hooks_debug] = value
+
+
+        # Gitolite Cache Config
+        when 'gitCacheMaxTime' then
+          new_setting[:gitolite_cache_max_time] = value
+
+        when 'gitCacheMaxSize' then
+          new_setting[:gitolite_cache_max_size] = value
+
+        when 'gitCacheMaxElements' then
+          new_setting[:gitolite_cache_max_elements] = value
+
+
+        # Gitolite Access Config
+        when 'gitServer' then
+          new_setting[:ssh_server_domain] = value
+
+        when 'httpServer' then
+          new_setting[:http_server_domain] = value
+          new_setting[:https_server_domain] = value
+
+        when 'httpServerSubdir' then
+          new_setting[:http_server_subdir] = value
+
+        when 'gitRepositoriesShowUrl' then
+          new_setting[:show_repositories_url] = value
+
+        when 'gitDaemonDefault' then
+          new_setting[:gitolite_daemon_by_default] = value
+
+        when 'gitHttpDefault' then
+          new_setting[:gitolite_http_by_default] = value
+
+
+        # Redmine Config
+        when 'allProjectsUseGit' then
+          new_setting[:all_projects_use_git] = value
+
+        when 'deleteGitRepositories' then
+          new_setting[:delete_git_repositories] = value
+
+        when 'gitRepositoryHierarchy' then
+          new_setting[:hierarchical_organisation] = value
+
+        when 'gitRepositoryIdentUnique' then
+          new_setting[:unique_repo_identifier] = value
+
+      end
+    end
+
+    puts "Applying configuration update"
+    puts YAML::dump(new_setting)
+
+    Setting[:plugin_redmine_git_hosting] = new_setting
+  end
+
+end
