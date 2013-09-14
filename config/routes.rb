@@ -32,6 +32,9 @@ def install_old_routes
 
     # POST RECEIVE
     map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
+
+    # SIDEKIQ
+    #~ mount Sidekiq::Web, :at => '/sidekiq', :as => 'sidekiq', :constraints => GitHosting::AdminConstraint.new
   end
 end
 
@@ -63,6 +66,9 @@ def install_new_routes
 
     # POST RECEIVE
     match 'githooks/post-receive', :to => 'gitolite_hooks#post_receive'
+
+    # SIDEKIQ
+    #~ mount Sidekiq::Web, :at => '/sidekiq', :as => 'sidekiq', :constraints => GitHosting::AdminConstraint.new
   end
 end
 
