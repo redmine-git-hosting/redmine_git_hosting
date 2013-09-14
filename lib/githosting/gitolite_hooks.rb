@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 module GitHosting
 
   class GitoliteHooks
@@ -151,19 +149,19 @@ module GitHosting
         @@hook_url ||= "http://" + File.join(GitHosting.my_root_url, "/githooks/post-receive")
 
         if cur_values["hooks.redmine_gitolite.url"] != @@hook_url
-          logger.debug "Updating Hook URL: #{@@hook_url}"
+          logger.info "Updating Hook URL: #{@@hook_url}"
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global hooks.redmine_gitolite.url "#{@@hook_url}"]
         end
 
         debug_hook = GitHostingConf.gitolite_hooks_debug?
-        if cur_values["hooks.redmine_gitolite.debug"] != debug_hook
-          logger.debug "Updating Debug Hook: #{debug_hook}"
+        if cur_values["hooks.redmine_gitolite.debug"] != debug_hook.to_s
+          logger.info "Updating Debug Hook: #{debug_hook}"
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global --bool hooks.redmine_gitolite.debug "#{debug_hook}"]
         end
 
         asynch_hook = GitHostingConf.gitolite_hooks_are_asynchronous?
-        if cur_values["hooks.redmine_gitolite.asynch"] != asynch_hook
-          logger.debug "Updating Hooks Are Asynchronous: #{asynch_hook}"
+        if cur_values["hooks.redmine_gitolite.asynch"] != asynch_hook.to_s
+          logger.info "Updating Hooks Are Asynchronous: #{asynch_hook}"
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global --bool hooks.redmine_gitolite.asynch "#{asynch_hook}"]
         end
 
