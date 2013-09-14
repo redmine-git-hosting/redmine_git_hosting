@@ -1,0 +1,10 @@
+---
+:concurrency: 1
+:pidfile: tmp/pids/sidekiq.pid
+:logfile: log/sidekiq.log
+:require: ./
+:verbose: true
+:queues:
+  - [git_hosting, 1]
+:environment: production
+:daemon: true
