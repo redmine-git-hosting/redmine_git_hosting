@@ -3,10 +3,16 @@ require 'redmine'
 
 require 'redmine_git_hosting'
 
+# Adds the app/{workers} directories of the plugin to the autoload path
+#~ Dir.glob File.expand_path(File.join(File.dirname(__FILE__), 'app', '{workers}')) do |dir|
+  #~ ActiveSupport::Dependencies.autoload_paths += [dir]
+  #~ RedmineApp::Application.config.eager_load_paths += [dir]
+#~ end
+
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
-  description 'Enables Redmine / ChiliProject to control hosting of Git repositories through Gitolite'
+  description 'Enables Redmine to control hosting of Git repositories through Gitolite'
   version '0.6.2'
   url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
@@ -14,40 +20,53 @@ Redmine::Plugin.register :redmine_git_hosting do
   settings({
     :partial => 'settings/redmine_git_hosting',
     :default => {
-      'gitLockWaitTime'               => '10',
-      'gitTempDataDir'                => (ENV['HOME'] + "/tmp/redmine_git_hosting/").to_s,
-      'gitScriptDir'                  => '',
+      # Gitolite SSH Config
       'gitUser'                       => 'git',
-      'gitoliteIdentityFile'          => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa").to_s,
-      'gitoliteIdentityPublicKeyFile' => (ENV['HOME'] + "/.ssh/redmine_gitolite_admin_id_rsa.pub").to_s,
       'sshServerLocalPort'            => '22',
+      'gitoliteIdentityFile'          => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s,
+      'gitoliteIdentityPublicKeyFile' => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
-      'gitConfigFile'                 => 'gitolite.conf',
-      'gitConfigHasAdminKey'          => true,
+      # Gitolite Storage Config
       'gitRepositoryBasePath'         => 'repositories/',
       'gitRedmineSubdir'              => '',
-      'gitRepositoryHierarchy'        => false,
-      'gitRepositoryIdentUnique'      => true,
-      'allProjectsUseGit'             => false,
-      'gitDaemonDefault'              => '1',
-      'gitHttpDefault'                => '1',
-      'gitNotifyCIADefault'           => '0',
-      'deleteGitRepositories'         => false,
       'gitRecycleBasePath'            => 'recycle_bin/',
-      'gitRecycleExpireTime'          => '24.0',
 
-      'gitServer'                     => 'localhost',
-      'httpServer'                    => 'localhost',
-      'httpServerSubdir'              => '',
-      'gitRepositoriesShowUrl'        => true,
+      # Gitolite Global Config
+      'gitTempDataDir'                => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
+      'gitScriptDir'                  => '',
+      'gitLockWaitTime'                      => '10',
+      'gitConfigFile'                        => 'gitolite.conf',
+      'gitConfigHasAdminKey'                 => true,
+      'gitRecycleExpireTime'                 => '24.0',
+      'gitoliteLogLevel'                     => 'info',
+      'gitoliteLogSplit'                     => false,
 
-      'gitCacheMaxElements'           => '100',
-      'gitCacheMaxTime'               => '-1',
-      'gitCacheMaxSize'               => '16',
+      # Gitolite Hooks Config
+      'gitHooksAreAsynchronous'         => true,
+      'gitForceHooksUpdate'             => true,
+      'gitHooksDebug'                   => false,
 
-      'gitHooksAreAsynchronous'       => true,
-      'gitHooksDebug'                 => false,
-      'gitForceHooksUpdate'           => true,
+      # Gitolite Cache Config
+      'gitCacheMaxTime'                 => '-1',
+      'gitCacheMaxSize'                 => '16',
+      'gitCacheMaxElements'             => '100',
+
+      # Gitolite Access Config
+      'gitServer'                       => 'localhost',
+      'httpServer'                      => 'localhost',
+
+      'httpServerSubdir'                => '',
+      'gitRepositoriesShowUrl'          => true,
+      'gitDaemonDefault'                => 0,
+      'gitHttpDefault'                  => 1,
+
+      # Redmine Config
+      'allProjectsUseGit'               => false,
+      'deleteGitRepositories'           => false,
+      'gitRepositoryHierarchy'          => false,
+      'gitRepositoryIdentUnique'        => true,
+
+      'gitNotifyCIADefault'             => '0',
     }
   })
 
@@ -63,6 +82,8 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :create_deployment_keys, :deployment_credentials => :create_with_key
     permission :view_deployment_keys,   :deployment_credentials => :index
     permission :edit_deployment_keys,   :deployment_credentials => :edit
+
+    permission :create_gitolite_ssh_key,             :my => :account
   end
 
   Redmine::MenuManager.map :admin_menu do |menu|
