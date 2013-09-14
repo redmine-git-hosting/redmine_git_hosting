@@ -27,7 +27,7 @@ module RedmineGitHosting
             validate :additional_ident_constraints
           end
 
-          before_destroy :clean_cache, prepend: true
+          before_destroy :clean_cache, :prepend => true
         end
       end
 

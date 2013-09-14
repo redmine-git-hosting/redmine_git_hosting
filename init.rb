@@ -123,7 +123,7 @@ end
 
 # initialize observer
 # Don't initialize this while doing migration of primary system (i.e. Redmine/Chiliproject)
-migrating_primary = (File.basename($0) == "rake" && (ARGV.include?("db:migrate") || ARGV.include?("redmine:plugins:migrate")))
+migrating_primary = (File.basename($0) == "rake" && (ARGV.include?("db:migrate_plugins") || ARGV.include?("redmine:plugins:migrate")))
 
 if Rails::VERSION::MAJOR >= 3
   Rails.configuration.after_initialize do
