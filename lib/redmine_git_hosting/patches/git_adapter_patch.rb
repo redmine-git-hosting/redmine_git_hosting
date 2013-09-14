@@ -57,7 +57,7 @@ module RedmineGitHosting
         # Post-1.4 command syntax
         def git_cmd_with_git_hosting(args, options = {}, &block)
           repo_path = root_url || url
-          full_args = [GitHosting::git_cmd_runner, '--git-dir', repo_path]
+          full_args = [GitHosting.git_cmd_runner, '--git-dir', repo_path]
           if self.class.client_version_above?([1, 7, 2])
             full_args << '-c' << 'core.quotepath=false'
             full_args << '-c' << 'log.decorate=no'
