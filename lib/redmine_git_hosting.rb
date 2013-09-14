@@ -30,8 +30,8 @@ apply_patch do
   require_dependency 'principal'
   require_dependency 'repository'
   require_dependency 'repository/git'
-  require_dependency 'redmine/scm/adapters/git_adapter'
   require_dependency 'repositories_controller'
+  require_dependency 'redmine/scm/adapters/git_adapter'
 
   require_dependency 'roles_controller'
 
@@ -58,7 +58,7 @@ apply_patch do
   require_dependency 'redmine_git_hosting/patches/users_helper_patch'
 
   require_dependency 'redmine_git_hosting/patches/repository_patch'
-  require_dependency 'redmine_git_hosting/patches/git_repository_patch'
+  require_dependency 'redmine_git_hosting/patches/repository_git_patch'
   require_dependency 'redmine_git_hosting/patches/repositories_controller_patch'
 
   require_dependency 'redmine_git_hosting/patches/repository_cia_filters'
