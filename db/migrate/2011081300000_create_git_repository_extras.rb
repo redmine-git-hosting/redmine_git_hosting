@@ -7,14 +7,15 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
     create_table :git_repository_extras do |t|
       t.column :repository_id, :integer
       # from repository extra columns
-      t.column :git_daemon, :integer, :default =>1
-      t.column :git_http, :integer, :default=>1
-      t.column :notify_cia, :integer, :default=>0
+      t.column :git_daemon, :integer, :default => 1
+      t.column :git_http,   :integer, :default => 1
+      t.column :notify_cia, :integer, :default => 0
       # from Hooks Keys table
       t.column :key, :string
     end
 
     GitHostingObserver.set_update_active(false)
+
     Project.find(:all).each do |project|
       if project.repository.is_a?(Repository::Git)
 
