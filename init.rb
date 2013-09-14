@@ -1,4 +1,23 @@
 # coding: utf-8
+
+require 'base64'
+require 'digest/md5'
+require 'digest/sha1'
+require 'fileutils'
+#~ require 'gitolite'
+require 'lockfile'
+require 'net/http'
+require 'net/ssh'
+require 'open3'
+#~ require 'sidekiq/web'
+#~ require 'sidekiq-unique-jobs'
+require 'stringio'
+require 'tmpdir'
+require 'uri'
+require 'tmpdir'
+require 'lockfile'
+require 'net/ssh'
+
 require 'redmine'
 
 require 'redmine_git_hosting'
@@ -104,7 +123,7 @@ end
 
 # initialize observer
 # Don't initialize this while doing migration of primary system (i.e. Redmine/Chiliproject)
-migrating_primary = (File.basename($0) == "rake" && ARGV.include?("db:migrate"))
+migrating_primary = (File.basename($0) == "rake" && (ARGV.include?("db:migrate") || ARGV.include?("redmine:plugins:migrate")))
 
 if Rails::VERSION::MAJOR >= 3
   Rails.configuration.after_initialize do
