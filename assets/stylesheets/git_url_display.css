@@ -1,21 +1,18 @@
-#git_url_box
-{
-  height: 75px;
+#git_url_box {
+  height: 25px;
   padding: 10px 0 0;
-  margin:0px;
+  margin: 0px;
 }
 
 #git_url_box ul li,
-.box #git_url_box ul li
-{
+.box #git_url_box ul li {
   list-style-image:none;
   padding:0px;
   margin:0px;
 }
 
 #git_url_box ul li:hover,
-.box #git_url_box ul li:hover
-{
+.box #git_url_box ul li:hover {
   list-style-image:none;
   margin:0px;
   padding:0px;
@@ -23,8 +20,7 @@
 }
 
 
-#git_url_list
-{
+#git_url_list {
   height: 23px;
   float: left;
   margin: 0px;
@@ -32,8 +28,7 @@
   list-style-image:none;
 }
 
-#git_url_list li
-{
+#git_url_list li {
   float: left;
   list-style-type: none;
   margin: 0px;
@@ -41,13 +36,11 @@
   list-style-image:none;
 }
 
-#git_url_list li:hover
-{
+#git_url_list li:hover {
   list-style-image:none;
 }
 
-#git_url_list li:first-child a
-{
+#git_url_list li:first-child a {
   border-left-width: 1px;
 
   /* Standard, Opera 10, IE 9 */
@@ -64,8 +57,7 @@
   /* IE <= 9 not supported */
 }
 
-#git_url_list li a
-{
+#git_url_list li a {
   background-color: #eee;
   background:  url(../images/button.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd)); /* Konquerer */
@@ -91,8 +83,7 @@
 }
 
 #git_url_list li a:hover,
-#git_url_list li a:focus
-{
+#git_url_list li a:focus {
   background-color: #507AAA;
   background:  url(../images/button_focus.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#759fcf), to(#507AAA)); /* Konquerer */
@@ -107,8 +98,7 @@
   border-bottom-color: #507AAA;
 }
 
-#git_url_list li a.selected
-{
+#git_url_list li a.selected {
   background-color: #bbb;
   background:  url(../images/button_selected.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Konquerer */
@@ -122,8 +112,7 @@
   border-color: #bbb;
 }
 
-#git_url_text
-{
+#git_url_text {
   border: 1px solid #bbb;
   border-width: 1px 1px 1px 1px;
   background-color: #fff;
@@ -131,27 +120,24 @@
   font-size: 10px;
   height: 17px;
   padding: 3px 5px 2px;
-  min-width: 239px;
+  width: 60%;
+  max-width: 75%;
   font-family: Monaco,"DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
   margin: 0;
   float: left;
 }
 
-.git_url_text_big
-{
-  width: 82%;
+.git_url_text_big {
+  width: 75%;
 }
 
-#git_url_desc
-{
+#git_url_desc {
   color: #666;
-  line-height: 23px;
+  line-height: 25px;
   font-size: 11px;
-  float: left;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 10px;
 }
 
-#git_url_access
-{
+#git_url_permissions {
   font-weight: bold;
 }
