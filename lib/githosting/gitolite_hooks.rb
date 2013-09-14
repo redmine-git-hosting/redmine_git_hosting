@@ -173,6 +173,32 @@ module GitHosting
     end
 
 
+    def self.setup_hooks(projects = nil)
+      check_hooks_installed
+
+      if projects.nil?
+        projects = Project.visible.all.select{|proj| proj.gitolite_repos.any?}
+      elsif projects.instance_of? Project
+        projects = [projects]
+      end
+      setup_hooks_params(projects)
+    end
+
+
+    def self.setup_hooks_params(projects=[])
+      return if projects.empty?
+
+      update_global_hook_params
+
+      local_config_map = get_local_config_map
+      projects.each do |project|
+        project.gitolite_repos.each do |repo|
+          setup_hooks_for_repository(repo, local_config_map[GitHosting.repository_path(repo)])
+        end
+      end
+    end
+
+
     private
 
 
@@ -244,9 +270,10 @@ module GitHosting
       end
     end
 
+
     # Return a hash with all of the local config parameters for all existing repositories.  We do this with a single sudo call to find.
     def self.get_local_config_map
-      local_config_map=Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
+      local_config_map = Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
 
       lines = %x[#{GitHosting.shell_cmd_runner} 'find #{GitHostingConf.gitolite_global_storage_dir} -type d -name "*.git" -prune -print -exec git config -f {}/config --get-regexp hooks.redmine_gitolite \\;'].chomp.split("\n")
       filesplit = /(\.\/)*(#{GitHostingConf.gitolite_global_storage_dir}.*?[^\/]+\.git)/
@@ -262,6 +289,7 @@ module GitHosting
       local_config_map
     end
 
+
     # Return a hash with local config parameters for a single repository
     def self.get_local_config_params(repo)
       value_hash = {}
@@ -272,6 +300,7 @@ module GitHosting
       end
       value_hash
     end
+
 
     # Return a hash with global config parameters.
     def self.get_global_config_params
@@ -288,7 +317,8 @@ module GitHosting
       end
     end
 
-    def self.setup_hooks_for_repository(repo, value_hash=nil)
+
+    def self.setup_hooks_for_repository(repo, value_hash = nil)
       # if no value_hash given, go fetch
       value_hash = get_local_config_params(repo) if value_hash.nil?
       hook_key   = repo.extra.key
@@ -303,7 +333,6 @@ module GitHosting
         end
 
         begin
-          repo_path = GitHosting.repository_path(repo)
           GitHosting.shell %[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' config hooks.redmine_gitolite.key "#{hook_key}"]
           GitHosting.shell %[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' config hooks.redmine_gitolite.projectid "#{repo.project.identifier}"]
           if GitHosting.multi_repos?
