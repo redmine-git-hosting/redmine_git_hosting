@@ -20,17 +20,24 @@ apply_patch do
   # require project first!
   require_dependency 'project'
   require_dependency 'projects_controller'
+
+  require_dependency 'settings_controller'
+
+  require_dependency 'user'
+  require_dependency 'users_controller'
+  require_dependency 'users_helper'
+
   require_dependency 'principal'
   require_dependency 'repository'
   require_dependency 'repository/git'
   require_dependency 'redmine/scm/adapters/git_adapter'
   require_dependency 'repositories_controller'
-  require_dependency 'user'
-  require_dependency 'users_controller'
-  require_dependency 'users_helper'
+
+  require_dependency 'roles_controller'
+
   require_dependency 'my_controller'
   require_dependency 'groups_controller'
-  require_dependency 'roles_controller'
+
   require_dependency 'members_controller'
   require_dependency 'sys_controller'
 
@@ -47,20 +54,23 @@ apply_patch do
   require_dependency 'redmine_git_hosting/patches/project_patch'
   require_dependency 'redmine_git_hosting/patches/projects_controller_patch'
 
-  require_dependency 'redmine_git_hosting/patches/repository_patch'
-  require_dependency 'redmine_git_hosting/patches/repositories_controller_patch'
-  require_dependency 'redmine_git_hosting/patches/repository_cia_filters'
+  require_dependency 'redmine_git_hosting/patches/settings_controller_patch'
 
   require_dependency 'redmine_git_hosting/patches/user_patch'
   require_dependency 'redmine_git_hosting/patches/users_controller_patch'
   require_dependency 'redmine_git_hosting/patches/users_helper_patch'
 
-  require_dependency 'redmine_git_hosting/patches/groups_controller_patch'
-  require_dependency 'redmine_git_hosting/patches/members_controller_patch'
-  require_dependency 'redmine_git_hosting/patches/my_controller_patch'
+  require_dependency 'redmine_git_hosting/patches/repository_patch'
+  require_dependency 'redmine_git_hosting/patches/repositories_controller_patch'
+  require_dependency 'redmine_git_hosting/patches/repository_cia_filters'
+
   require_dependency 'redmine_git_hosting/patches/roles_controller_patch'
 
-  require_dependency 'redmine_git_hosting/patches/settings_controller_patch'
+  require_dependency 'redmine_git_hosting/patches/my_controller_patch'
+
+  require_dependency 'redmine_git_hosting/patches/groups_controller_patch'
+  require_dependency 'redmine_git_hosting/patches/members_controller_patch'
+
   require_dependency 'redmine_git_hosting/patches/sys_controller_patch'
 
   # Put git_adapter_patch last (make sure that git_cmd stays patched!)
