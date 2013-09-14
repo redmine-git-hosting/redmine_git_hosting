@@ -5,22 +5,24 @@ module RedmineGitHosting
       def self.included(base)
         base.class_eval do
           unloadable
-        end
-        begin
-          base.send(:alias_method_chain, :fetch_changesets, :disable_update)
-        rescue
+
+          alias_method_chain :fetch_changesets, :git_hosting
         end
       end
 
-      def fetch_changesets_with_disable_update
-        # Turn of updates during repository update
-        GitHostingObserver.set_update_active(false);
+      module InstanceMethods
 
-        # Do actual update
-        fetch_changesets_without_disable_update
+        def fetch_changesets_with_git_hosting(&block)
+          # Turn of updates during repository update
+          GitHostingObserver.set_update_active(false)
 
-        # Perform the updating process on all projects
-        GitHostingObserver.set_update_active(:resync_all);
+          # Do actual update
+          fetch_changesets_without_git_hosting(&block)
+
+          # Perform the updating process on all projects
+          GitHostingObserver.set_update_active(:resync_all)
+        end
+
       end
 
     end
