@@ -1,13 +1,12 @@
 <% if not @is_xhr -%>
-  <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
-  <h2><%=l(:button_push_title)%></h2>
+  <h2><%=l(:label_mirror_push_title)%></h2>
 <%- end %>
 
 <p style="white-space:nowrap;">
-  <%= l(:mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed == true ? l(:mirror_push_fail) : l(:mirror_push_sucess)).html_safe %>
+  <%= l(:label_mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed == true ? l(:label_mirror_push_fail) : l(:label_mirror_push_sucess)).html_safe %>
 </p>
 
-<span><b><%= l(:mirror_push_output_label) %></b></span>
+<span><b><%= l(:label_mirror_push_output) %></b></span>
 
 <pre class="mirror-push<%= @push_failed == true ? " error": "" %>">
   <%= @shellout %>

@@ -1,2 +1,6 @@
-$('#validation_messages').replaceWith("<%= escape_javascript(error_messages_for 'mirror') %>");
+$('#validation_messages_mirror').html("<%= escape_javascript(error_messages_for 'mirror') %>");
+<% if Rails::VERSION::MAJOR >= 3 %>
+$('html, body').animate({ scrollTop: $('#dialog-box-mirror').parent().offset().top }, "slow");
+<% else %>
 if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+<% end %>
