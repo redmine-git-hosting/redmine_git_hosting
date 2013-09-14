@@ -13,12 +13,19 @@ require 'stringio'
 # Primary calling sequence is to use the "execute" method which will allocate a new
 # CachedShellRedirector only if required:
 #
-class CachedShellRedirector
+class GitHostingCache
   # Redirector states
-  WAIT_TO_CHECK=0
-  RUNNING_SHELL=1
-  STRING_IO = 2
-  DEAD = 3
+  WAIT_TO_CHECK = 0
+  RUNNING_SHELL = 1
+  STRING_IO     = 2
+  DEAD          = 3
+
+
+  @@logger = nil
+  def self.logger
+    @@logger ||= GitoliteLogger.get_logger(:git_cache)
+  end
+
 
   # Primary interface: execute given command and send IO to block
   # options[:write_stdin] will derive caching key from data that block writes to io stream
@@ -162,8 +169,8 @@ class CachedShellRedirector
     include Enumerable
 
     def initialize(my_enum,my_redirector)
-      @my_enum=my_enum
-      @my_redirector=my_redirector
+      @my_enum = my_enum
+      @my_redirector = my_redirector
     end
 
     def each
@@ -199,33 +206,33 @@ class CachedShellRedirector
   # currently "compiled" into function definitions above in missing_method().  #
   ##############################################################################
   # Class #1 functions (Read functions with block/enumerator behavior)
-  def enumerator_diverter(my_method,*args,&block)
+  def enumerator_diverter(my_method, *args, &block)
     if @state == RUNNING_SHELL
       # Must Divert results into buffer.
       if block_given?
-        @my_read_stream.send(my_method,*args) {|myvalue|
+        @my_read_stream.send(my_method, *args) {|myvalue|
           add_to_buffer(myvalue)
           block.call(myvalue)
         }
       else
-        myvalue = @my_read_stream.send(my_method,*args)
-        EnumerableRedirector.new(myvalue,self)
+        myvalue = @my_read_stream.send(my_method, *args)
+        EnumerableRedirector.new(myvalue, self)
       end
     else
-      @my_read_stream.send(my_method,*args,&block)
+      @my_read_stream.send(my_method, *args, &block)
     end
   end
 
   # Class #2 functions (Return of Array, String, or Integer)
-  def normal_diverter(my_method,*args)
-    myvalue = @my_read_stream.send(my_method,*args)
+  def normal_diverter(my_method, *args)
+    myvalue = @my_read_stream.send(my_method, *args)
     add_to_buffer(myvalue) if @state == RUNNING_SHELL
     myvalue
   end
 
   # Class #3 functions (Everything by read functions)
-  def simple_proxy(my_method,*args,&block)
-    @my_read_stream.send(my_method,*args,&block)
+  def simple_proxy(my_method, *args, &block)
+    @my_read_stream.send(my_method, *args, &block)
   end
 
   ###############################################
@@ -345,11 +352,14 @@ class CachedShellRedirector
     end
   end
 
+
   def self.set_cache(repo_id,out_value,primary_key,secondary_key=nil)
   # Rails.logger.error "Inserting into cache with key: #{compose_key(primary_key,secondary_key)}"
-    gitc = GitCache.create( :command=>compose_key(primary_key,secondary_key),
-        :command_output=>out_value,
-        :repo_identifier=>repo_id )
+    gitc = GitCache.create(
+      :command         => compose_key(primary_key, secondary_key),
+      :command_output  => out_value,
+      :repo_identifier => repo_id
+    )
     gitc.save
     if GitCache.count > max_cache_elements && max_cache_elements >= 0
       oldest = GitCache.find(:last, :order => "created_at DESC")
@@ -357,40 +367,45 @@ class CachedShellRedirector
     end
   end
 
+
   @@time_limits=nil
   def self.limit_cache(repo,date)
-    repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
+    repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
     # Rails.logger.error "EXECUTING LIMIT CACHE: '#{repo_id}' for '#{date}'"
     @@time_limits ||= {}
     @@time_limits[repo_id]=(ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
   end
 
+
   def self.expire_at(repo_id)
     @@time_limits ? @@time_limits[repo_id] : 0
   end
 
+
   # Given repository or repository_path, clear the cache entries
   def self.clear_cache_for_repository(repo)
-    repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique=>false) : Repository.repo_path_to_git_label(repo)
+    repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
 
     # Clear cache
-    old_cached=GitCache.find_all_by_repo_identifier(repo_id)
+    old_cached = GitCache.find_all_by_repo_identifier(repo_id)
     if old_cached != nil
       old_ids = old_cached.collect(&:id)
       GitCache.destroy(old_ids)
+      logger.info "Removed #{old_cached.count} expired cache entries."
     end
   end
+
 
   # After resetting cache timing parameters -- delete entries that no-longer match
   def self.clear_obsolete_cache_entries
     return if max_cache_time < 0  # No expiration needed
 
     target_limit = Time.now - max_cache_time
-    old_cached=GitCache.all(:conditions => ["created_at < ?",target_limit])
+    old_cached = GitCache.all(:conditions => ["created_at < ?", target_limit])
     if old_cached != nil
-      GitHosting.logger.warn "Removing #{old_cached.count} expired cache entries."
       old_ids = old_cached.collect(&:id)
       GitCache.destroy(old_ids)
+      logger.info "Removed #{old_cached.count} expired cache entries."
     end
   end
 
