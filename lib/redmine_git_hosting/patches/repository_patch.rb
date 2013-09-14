@@ -3,29 +3,22 @@ module RedmineGitHosting
     module RepositoryPatch
 
       def self.included(base)
+        base.send(:extend, ClassMethods)
+        base.send(:include, InstanceMethods)
         base.class_eval do
           unloadable
 
-          extend(ClassMethods)
           class << self
-            alias_method_chain :factory, :git_extra_init
-            alias_method_chain :fetch_changesets, :disable_update
+            alias_method_chain :factory,          :git_hosting
+            alias_method_chain :fetch_changesets, :git_hosting
           end
 
-          # initialize association from git repository -> git_extra
-          has_one :git_extra, :foreign_key => 'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
+          has_one :git_extra,        :foreign_key => 'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
 
-          # initialize association from git repository -> cia_notifications
           has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
-
-          # initialize association from repository -> deployment_credentials
-          has_many :deployment_credentials, :dependent => :destroy
-
-          # initialize association from repository -> repository mirrors
-          has_many :repository_mirrors, :dependent => :destroy
-
-          # initialize association from repository -> repository post receive urls
-          has_many :repository_post_receive_urls, :dependent => :destroy
+          has_many :repository_mirrors,                :dependent => :destroy
+          has_many :repository_post_receive_urls,      :dependent => :destroy
+          has_many :deployment_credentials,            :dependent => :destroy
 
           # Place additional constraints on repository identifiers
           # Only for Redmine 1.4+
@@ -33,16 +26,60 @@ module RedmineGitHosting
             validate :additional_ident_constraints
           end
 
-          include(InstanceMethods)
+          before_destroy :clean_cache, prepend: true
         end
       end
 
 
       module ClassMethods
 
-        # Repo ident unique (definitely true if Redmine < 1.4)
-        def repo_ident_unique?
-          !GitHosting.multi_repos? || GitHostingConf.repo_ident_unique?
+        def factory_with_git_hosting(klass_name, *args)
+          new_repo = factory_without_git_hosting(klass_name, *args)
+          if new_repo.is_a?(Repository::Git)
+            if new_repo.extra.nil?
+              # Note that this autoinitializes default values and hook key
+              GitHosting.logger.error "Automatic initialization of RepositoryGitExtra failed for #{self.project.to_s}"
+            end
+          end
+          return new_repo
+        end
+
+
+        def fetch_changesets_with_git_hosting(&block)
+          # Turn of updates during repository update
+          GitHostingObserver.set_update_active(false);
+
+          # Do actual update
+          fetch_changesets_without_git_hosting(&block)
+
+          # Reenable updates to perform a sync of all projects
+          GitHostingObserver.set_update_active(:resync_all);
+        end
+
+
+        # Translate repository path into a unique ID for use in caching of git commands.
+        #
+        # Return value is from repo.git_label(:assume_unique=>false) to be independent
+        # of current value of repo_ident_unique?.
+        #
+        # We perform caching here to speed this up, since this function gets called
+        # many times during the course of a repository lookup.
+        @@cached_path = nil
+        @@cached_id = nil
+        def repo_path_to_git_label(repo_path)
+          # Return cached value if pesent
+          return @@cached_id if @@cached_path == repo_path
+
+          repo = Repository.find_by_path(repo_path, :parse_ext => true)
+          if repo
+            # Cache translated id path, return id
+            @@cached_path = repo_path
+            @@cached_id = repo.git_label(:assume_unique => false)
+          else
+            # Hm... clear cache, return nil
+            @@cached_path = nil
+            @@cached_id = nil
+          end
         end
 
 
@@ -80,30 +117,11 @@ module RedmineGitHosting
         end
 
 
-        # Translate repository path into a unique ID for use in caching of git commands.
-        #
-        # Return value is from repo.git_label(:assume_unique=>false) to be independent
-        # of current value of repo_ident_unique?.
-        #
-        # We perform caching here to speed this up, since this function gets called
-        # many times during the course of a repository lookup.
-        @@cached_path = nil
-        @@cached_id = nil
-        def repo_path_to_git_label(repo_path)
-          # Return cached value if pesent
-          return @@cached_id if @@cached_path == repo_path
-
-          repo = Repository.find_by_path(repo_path, :parse_ext => true)
-          if repo
-            # Cache translated id path, return id
-            @@cached_path = repo_path
-            @@cached_id = repo.git_label(:assume_unique => false)
-          else
-            # Hm... clear cache, return nil
-            @@cached_path = nil
-            @@cached_id = nil
-          end
+        # Repo ident unique (definitely true if Redmine < 1.4)
+        def repo_ident_unique?
+          !GitHosting.multi_repos? || GitHostingConf.repo_ident_unique?
         end
+
 
         def fetch_changesets_for_project(proj_identifier)
           p = Project.find_by_identifier(proj_identifier)
@@ -113,32 +131,10 @@ module RedmineGitHosting
               begin
                 repo.fetch_changesets
               rescue Redmine::Scm::Adapters::CommandFailed => e
-                logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+                logger.error "error during fetching changesets: #{e.message}"
               end
             end
           end
-        end
-
-        def factory_with_git_extra_init(klass_name, *args)
-          new_repo = factory_without_git_extra_init(klass_name, *args)
-          if new_repo.is_a?(Repository::Git)
-            if new_repo.extra.nil?
-              # Note that this autoinitializes default values and hook key
-              GitHosting.logger.error "Automatic initialization of git_repository_extra failed for #{self.project.to_s}"
-            end
-          end
-          return new_repo
-        end
-
-        def fetch_changesets_with_disable_update
-          # Turn of updates during repository update
-          GitHostingObserver.set_update_active(false);
-
-          # Do actual update
-          fetch_changesets_without_disable_update
-
-          # Reenable updates to perform a sync of all projects
-          GitHostingObserver.set_update_active(:resync_all);
         end
 
       end
@@ -172,7 +168,7 @@ module RedmineGitHosting
         # Else, use directory notation: <project identifier>/<repo identifier>
         def git_label(flags=nil)
           isunique = (flags ? flags[:assume_unique] : self.class.repo_ident_unique?)
-          if !GitHosting.multi_repos? || identifier.blank?
+          if identifier.blank?
             # Should only happen with one repo/project (the default)
             project.identifier
           elsif isunique
@@ -187,6 +183,75 @@ module RedmineGitHosting
         def git_name
           (!GitHosting.multi_repos? || identifier.blank?) ? project.identifier : identifier
         end
+
+
+        def available_urls
+          hash = Hash.new
+
+          http_server_domain  = !GitHostingConf.http_server_domain.empty?  ? GitHostingConf.http_server_domain  : '<empty value, contact your Administrator>'
+          https_server_domain = !GitHostingConf.https_server_domain.empty? ? GitHostingConf.https_server_domain : '<empty value, contact your Administrator>'
+          http_access_path    = "#{GitHosting.http_access_url(self)}.git"
+
+          http_user_login     = User.current.anonymous? ? "" : "#{User.current.login}@"
+          ssh_user_login      = GitHostingConf.gitolite_user
+
+          http_url            = "http://#{http_user_login}#{http_server_domain}/#{http_access_path}"
+          https_url           = "https://#{http_user_login}#{http_server_domain}/#{http_access_path}"
+
+          git_ssh_domain      = !GitHostingConf.ssh_server_domain.empty? ? GitHostingConf.ssh_server_domain : '<empty value, contact your Administrator>'
+          git_hosting_path    = "#{GitHosting.git_access_url(self)}.git"
+
+          commiter            = User.current.allowed_to?(:commit_access, project) ? "true" : "false"
+
+          ssh_access = {
+            :url      => "ssh://#{ssh_user_login}@#{git_ssh_domain}/#{git_hosting_path}",
+            :commiter => commiter
+          }
+
+          http_access = {
+            :url      => http_url,
+            :commiter => commiter
+          }
+
+          https_access = {
+            :url      => https_url,
+            :commiter => commiter
+          }
+
+          git_access = {
+            :url      => "git://#{git_ssh_domain}/#{git_hosting_path}",
+            :commiter => false
+          }
+
+          if !User.current.anonymous?
+            if User.current.allowed_to?(:create_gitolite_ssh_key, nil, :global => true)
+              hash[:ssh] = ssh_access
+            end
+          end
+
+          if self.extra[:git_http] == 1
+            hash[:https] = https_access
+          end
+
+          if self.extra[:git_http] == 2
+            hash[:http] = http_access
+            hash[:https] = https_access
+          end
+
+          if self.extra[:git_http] == 3
+            hash[:http] = http_access
+          end
+
+          if self.project.is_public && self.extra[:git_daemon] == 1
+            hash[:git] = git_access
+          end
+
+          return hash
+        end
+
+
+        private
+
 
         # Check several aspects of repository identifier (only for Redmine 1.4+)
         # 1) cannot equal identifier of any project
@@ -222,6 +287,14 @@ module RedmineGitHosting
             if possibles.any? && (new_record? || possibles.detect{|x| x.id != id})
               errors.add(:base, :blank_default_exists)
             end
+          end
+        end
+
+
+        def clean_cache
+          if self.is_a?(Repository::Git)
+            GitoliteLogger.get_logger(:git_cache).info "Clean cache before delete repository '#{GitHosting.repository_name(self)}'"
+            GitHostingCache.clear_cache_for_repository(self)
           end
         end
 
