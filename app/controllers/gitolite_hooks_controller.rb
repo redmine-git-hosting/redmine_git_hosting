@@ -36,7 +36,7 @@ class GitoliteHooksController < ApplicationController
       return
     end
 
-    # Clear existing cache
+    ## Clear existing cache
     GitHostingCache.clear_cache_for_repository(@repository)
 
     if Rails::VERSION::MAJOR >= 3
@@ -344,12 +344,13 @@ class GitoliteHooksController < ApplicationController
     payloads
   end
 
+
   # Locate that actual repository that is in use here.
   # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
   def find_project_and_repository
     @project = Project.find_by_identifier(params[:projectid])
     if @project.nil?
-      render(:text => l(:project_not_found, :identifier => params[:projectid])) if @project.nil?
+      render :text => l(:error_project_not_found, :identifier => params[:projectid]) if @project.nil?
       return
     end
 
