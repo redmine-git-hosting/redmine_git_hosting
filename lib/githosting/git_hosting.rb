@@ -1,10 +1,3 @@
-require 'lockfile'
-require 'net/ssh'
-require 'open3'
-require 'tmpdir'
-require 'tempfile'
-require 'stringio'
-
 module GitHosting
 
   @@logger = nil
@@ -30,7 +23,7 @@ module GitHosting
     # Remove any path from httpServer in case they are leftover from previous installations.
     # No trailing /.
     my_root_path = Redmine::Utils::relative_url_root
-    File.join(GitHostingConf.http_server_domain[/^[^\/]*/],my_root_path,"/")[0..-2]
+    File.join(GitHostingConf.http_server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
   end
 
 
