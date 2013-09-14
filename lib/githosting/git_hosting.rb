@@ -78,14 +78,12 @@ module GitHosting
 
 
   # This is the file portion of the url used when talking through ssh to the repository.
-  def self.git_access_url repository
+  def self.git_access_url(repository)
     return "#{repository_name(repository)}"
   end
 
 
-  # This is the relative portion of the url (below the rails_root) used when talking through httpd to the repository
-  # Note that this differs from the git_access_url in not including 'repository_redmine_subdir' as part of the path.
-  def self.http_access_url repository
+  def self.http_access_url(repository)
     return "#{GitHostingConf.http_server_subdir}#{redmine_name(repository)}"
   end
 
@@ -278,27 +276,29 @@ module GitHosting
 
   def self.check_hooks_installed
     installed = false
-    if lock(5)
-      installed = GitAdapterHooks.check_hooks_installed
-      unlock()
+    if lock
+      installed = GitoliteHooks.check_hooks_installed
+      unlock
     end
     installed
   end
 
 
   def self.update_global_hook_params
-    if lock(5)
-      GitAdapterHooks.update_global_hook_params
-      unlock()
+    if lock
+      updated = GitoliteHooks.update_global_hook_params
+      unlock
     end
+    updated
   end
 
 
-  def self.setup_hooks(projects=nil)
-    if lock(5)
-      GitAdapterHooks.setup_hooks(projects)
-      unlock()
+  def self.setup_hooks(projects = nil)
+    if lock
+      installed = GitoliteHooks.setup_hooks(projects)
+      unlock
     end
+    installed
   end
 
 
@@ -310,8 +310,10 @@ module GitHosting
 
 
   @@lock_file = nil
-  def self.lock(retries)
+  def self.lock
     is_locked = false
+    retries = GitHostingConf.gitolite_lock_wait_time
+
     if @@lock_file.nil?
       @@lock_file = File.new(File.join(temp_dir_path, 'redmine_git_hosting_lock'), File::CREAT|File::RDONLY)
     end
@@ -524,6 +526,7 @@ module GitHosting
       logger.error e.backtrace[0..4].join("\n")
       logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
     end
+
   end
 
 
