@@ -18,7 +18,7 @@ module RedmineGitHosting
           has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
           has_many :repository_mirrors,                :dependent => :destroy
           has_many :repository_post_receive_urls,      :dependent => :destroy
-          has_many :deployment_credentials,            :dependent => :destroy
+          has_many :repository_deployment_credentials, :dependent => :destroy
 
           # Place additional constraints on repository identifiers
           # Only for Redmine 1.4+
