@@ -12,6 +12,12 @@ module GitHosting
     @@logger ||= GitoliteLogger.get_logger(:global)
   end
 
+
+  # Used to register errors when pulling and pushing the conf file
+  class GitHostingException < StandardError
+  end
+
+
   ###############################
   ##                           ##
   ##     VARIOUS ACCESSORS     ##
@@ -19,106 +25,12 @@ module GitHosting
   ###############################
 
 
-  def self.check_hooks_installed
-    installed = false
-    if lock(5)
-      installed = GitAdapterHooks.check_hooks_installed
-      unlock()
-    end
-    installed
-  end
-
-
-  def self.setup_hooks(projects=nil)
-    if lock(5)
-      GitAdapterHooks.setup_hooks(projects)
-      unlock()
-    end
-  end
-
-
-  def self.update_global_hook_params
-    if lock(5)
-      GitAdapterHooks.update_global_hook_params
-      unlock()
-    end
-  end
-
-
-  def self.git_user_runner
-    if !File.exists?(git_user_runner_path())
-      update_git_exec
-    end
-    return git_user_runner_path()
-  end
-
-
-  def self.git_user
-    GitHostingConf.git_user
-  end
-
-
-  def self.git_user_runner_path
-    return File.join(get_bin_dir, "run_as_git_user")
-  end
-
-
-  def self.git_exec_path
-    return File.join(get_bin_dir, "run_git_as_git_user")
-  end
-
-
-  def self.gitolite_ssh_path
-    return File.join(get_bin_dir, "gitolite_admin_ssh")
-  end
-
-
-  def self.gitolite_ssh
-    if !File.exists?(gitolite_ssh_path())
-      update_git_exec
-    end
-    return gitolite_ssh_path()
-  end
-
-
-  def self.git_exec
-    if !File.exists?(git_exec_path())
-      update_git_exec
-    end
-    return git_exec_path()
-  end
-
-
-  def self.redmine_name(repository)
-    return File.expand_path(File.join("./",get_full_parent_path(repository, false),repository.git_label),"/")[1..-1]
-  end
-
-
-  def self.repository_name(repository,flags=nil)
-    return File.expand_path(File.join("./",GitHostingConf.repository_redmine_subdir,get_full_parent_path(repository, false),repository.git_label(flags)),"/")[1..-1]
-  end
-
-
-  def self.repository_path(repositoryID)
-    repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
-    return File.join(GitHostingConf.repository_base, repo_name) + ".git"
-  end
-
-
-  # Check to see if the given repository exists or not in DB...
-  def self.git_repository_exists_in_db?(repo_name)
-    if !Repository.find_by_path(repository_path(repo_name)).nil?
-      return true
-    else
-      return false
-    end
-  end
-
-
-  # Check to see if the given repository exists or not...
-  # Need to work a bit, since we have to su to figure it out...
-  def self.git_repository_exists?(repo_name)
-    file_exists?(repository_path(repo_name))
+  # Server path (minus protocol)
+  def self.my_root_url
+    # Remove any path from httpServer in case they are leftover from previous installations.
+    # No trailing /.
+    my_root_path = Redmine::Utils::relative_url_root
+    File.join(GitHostingConf.http_server_domain[/^[^\/]*/],my_root_path,"/")[0..-2]
   end
 
 
@@ -145,6 +57,26 @@ module GitHosting
   end
 
 
+  # Puts Redmine user in cache as it should not change
+  @@redmine_user = nil
+  def self.redmine_user
+    if @@redmine_user.nil?
+      @@redmine_user = (%x[whoami]).chomp.strip
+    end
+    return @@redmine_user
+  end
+
+
+  def self.redmine_user=(redmine_user)
+    @@redmine_user = redmine_user
+  end
+
+
+  def self.gitolite_user
+    GitHostingConf.gitolite_user
+  end
+
+
   # This is the file portion of the url used when talking through ssh to the repository.
   def self.git_access_url repository
     return "#{repository_name(repository)}"
@@ -158,17 +90,34 @@ module GitHosting
   end
 
 
-  # Server path (minus protocol)
-  def self.my_root_url
-    # Remove any path from httpServer in case they are leftover from previous installations.
-    # No trailing /.
-    my_root_path = Redmine::Utils::relative_url_root
-    File.join(GitHostingConf.http_server[/^[^\/]*/],my_root_path,"/")[0..-2]
+  def self.repository_path(repositoryID)
+    repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
+    return File.join(GitHostingConf.gitolite_global_storage_dir, repo_name) + ".git"
   end
 
 
-  def self.get_full_parent_path(repository, is_file_path)
-    return "" if !GitHostingConf.repository_hierarchy
+  def self.redmine_name(repository)
+    return File.expand_path(File.join("./", get_full_parent_path(repository), repository.git_label), "/")[1..-1]
+  end
+
+
+  def self.repository_name(repository, flags = nil)
+    return File.expand_path(File.join("./", GitHostingConf.gitolite_redmine_storage_dir, get_full_parent_path(repository), repository.git_label(flags)), "/")[1..-1]
+  end
+
+
+  def self.new_repository_name(repository)
+    return repository_name(repository)
+  end
+
+
+  def self.old_repository_name(repository)
+    return "#{repository.url.gsub(GitHostingConf.gitolite_global_storage_dir, '').gsub('.git', '')}"
+  end
+
+
+  def self.get_full_parent_path(repository, is_file_path = false)
+    return "" if !GitHostingConf.hierarchical_organisation?
 
     project = repository.project
 
@@ -189,6 +138,170 @@ module GitHosting
   end
 
 
+  def self.git_repository_exists?(repo_name)
+    file_exists?(repository_path(repo_name))
+  end
+
+
+  ###############################
+  ##                           ##
+  ##       CONFIG CHECKS       ##
+  ##                           ##
+  ###############################
+
+
+  ## TEST SCRIPTS DIRECTORY
+  @@scripts_dir_writeable = nil
+  def self.scripts_dir_writeable?(*option)
+    @@scripts_dir_writeable = nil if option.length > 0 && option[0] == :reset
+    if @@scripts_dir_writeable == nil
+      mybindir = scripts_dir_path
+      mytestfile = "#{mybindir}/writecheck"
+      if (!File.directory?(mybindir))
+        @@scripts_dir_writeable = false
+      else
+        %x[touch "#{mytestfile}"]
+        if (!File.exists?("#{mytestfile}"))
+          @@scripts_dir_writeable = false
+        else
+          %x[rm "#{mytestfile}"]
+          @@scripts_dir_writeable = true
+        end
+      end
+    end
+    @@scripts_dir_writeable
+  end
+
+
+  ## SUDO TEST1
+  @@sudo_gitolite_to_redmine_user_stamp = nil
+  @@sudo_gitolite_to_redmine_user_cached = nil
+  def self.sudo_gitolite_to_redmine_user
+    if not @@sudo_gitolite_to_redmine_user_cached.nil? and (Time.new - @@sudo_gitolite_to_redmine_user_stamp <= 1)
+      return @@sudo_gitolite_to_redmine_user_cached
+    end
+    logger.info "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..."
+
+    if gitolite_user == redmine_user
+      @@sudo_gitolite_to_redmine_user_cached = true
+      @@sudo_gitolite_to_redmine_user_stamp = Time.new
+      logger.info "OK!"
+      return @@sudo_gitolite_to_redmine_user_cached
+    end
+
+    test = %x[#{GitHosting.shell_cmd_runner} sudo -nu #{redmine_user} echo "yes" ]
+    if test.match(/yes/)
+      @@sudo_gitolite_to_redmine_user_cached = true
+      @@sudo_gitolite_to_redmine_user_stamp = Time.new
+      logger.info "OK!"
+      return @@sudo_gitolite_to_redmine_user_cached
+    end
+
+    logger.warn "Error while testing sudo_git_to_redmine_user"
+    @@sudo_gitolite_to_redmine_user_cached = false
+    @@sudo_gitolite_to_redmine_user_stamp = Time.new
+    return @@sudo_gitolite_to_redmine_user_cached
+  end
+
+
+  ## SUDO TEST2
+  @@sudo_redmine_to_gitolite_user_stamp = nil
+  @@sudo_redmine_to_gitolite_user_cached = nil
+  def self.sudo_redmine_to_gitolite_user
+    if not @@sudo_redmine_to_gitolite_user_cached.nil? and (Time.new - @@sudo_redmine_to_gitolite_user_stamp <= 1)
+      return @@sudo_redmine_to_gitolite_user_cached
+    end
+    logger.info "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..."
+
+    if gitolite_user == redmine_user
+      @@sudo_redmine_to_gitolite_user_cached = true
+      @@sudo_redmine_to_gitolite_user_stamp = Time.new
+      logger.info "OK!"
+      return @@sudo_redmine_to_gitolite_user_cached
+    end
+
+    test = %x[#{GitHosting.shell_cmd_runner} echo "yes"]
+    if test.match(/yes/)
+      @@sudo_redmine_to_gitolite_user_cached = true
+      @@sudo_redmine_to_gitolite_user_stamp = Time.new
+      logger.info "OK!"
+      return @@sudo_redmine_to_gitolite_user_cached
+    end
+
+    logger.warn "Error while testing sudo_web_to_gitolite_user"
+    @@sudo_redmine_to_gitolite_user_cached = false
+    @@sudo_redmine_to_gitolite_user_stamp = Time.new
+    return @@sudo_redmine_to_gitolite_user_cached
+  end
+
+
+  ## GET GITOLITE VERSION
+  def self.gitolite_version
+    stdin, stdout, stderr = Open3.popen3("#{gitolite_admin_ssh_runner} #{gitolite_user}@localhost info")
+
+    if !stderr.readlines.blank?
+      return -1
+    else
+      version = stdout.readlines
+      version.each do |line|
+        if line =~ /gitolite[ -]v?2./
+          return 2
+        elsif line.include?('running gitolite3')
+          return 3
+        else
+          return 0
+        end
+      end
+    end
+  end
+
+
+  ## GET GITOLITE BANNER
+  def self.gitolite_banner
+    stdin, stdout, stderr = Open3.popen3("#{gitolite_admin_ssh_runner} #{gitolite_user}@localhost info")
+
+    errors = stderr.readlines
+    if !errors.blank?
+      return errors.join("")
+    else
+      return stdout.readlines.join("")
+    end
+  end
+
+
+  ###############################
+  ##                           ##
+  ##       GLOBAL HOOKS        ##
+  ##                           ##
+  ###############################
+
+
+  def self.check_hooks_installed
+    installed = false
+    if lock(5)
+      installed = GitAdapterHooks.check_hooks_installed
+      unlock()
+    end
+    installed
+  end
+
+
+  def self.update_global_hook_params
+    if lock(5)
+      GitAdapterHooks.update_global_hook_params
+      unlock()
+    end
+  end
+
+
+  def self.setup_hooks(projects=nil)
+    if lock(5)
+      GitAdapterHooks.setup_hooks(projects)
+      unlock()
+    end
+  end
+
+
   ###############################
   ##                           ##
   ##      LOCK FUNCTIONS       ##
@@ -200,7 +313,7 @@ module GitHosting
   def self.lock(retries)
     is_locked = false
     if @@lock_file.nil?
-      @@lock_file = File.new(File.join(get_tmp_dir, 'redmine_git_hosting_lock'), File::CREAT|File::RDONLY)
+      @@lock_file = File.new(File.join(temp_dir_path, 'redmine_git_hosting_lock'), File::CREAT|File::RDONLY)
     end
 
     while retries > 0
@@ -223,120 +336,119 @@ module GitHosting
 
   ###############################
   ##                           ##
+  ##     GITOLITE WRAPPERS     ##
+  ##                           ##
+  ###############################
+
+
+  def self.shell_cmd_runner
+    if !File.exists?(shell_cmd_script_path)
+      update_gitolite_scripts
+    end
+    return shell_cmd_script_path
+  end
+
+
+  def self.git_cmd_runner
+    if !File.exists?(git_cmd_script_path)
+      update_gitolite_scripts
+    end
+    return git_cmd_script_path
+  end
+
+
+  def self.gitolite_admin_ssh_runner
+    if !File.exists?(gitolite_admin_ssh_script_path)
+      update_gitolite_scripts
+    end
+    return gitolite_admin_ssh_script_path
+  end
+
+
+  def self.shell_cmd_script_path
+    return File.join(scripts_dir_path, "run_shell_cmd_as_gitolite_user")
+  end
+
+
+  def self.git_cmd_script_path
+    return File.join(scripts_dir_path, "run_git_cmd_as_gitolite_user")
+  end
+
+
+  def self.gitolite_admin_ssh_script_path
+    return File.join(scripts_dir_path, "gitolite_admin_ssh")
+  end
+
+
+  # Check to see if the given repository exists or not in DB...
+  def self.git_repository_exists_in_db?(repo_name)
+    if !Repository.find_by_path(repository_path(repo_name)).nil?
+      return true
+    else
+      return false
+    end
+  end
+
+
+  ###############################
+  ##                           ##
   ##      SHELL FUNCTIONS      ##
   ##                           ##
   ###############################
 
 
-  # Check to see if the given file exists off the git user's homedirectory.
-  # Need to work a bit, since we have to su to figure it out...
-  def self.file_exists?(filename)
-    (%x[#{GitHosting.git_user_runner} test -r '#{filename}' && echo 'yes' || echo 'no']).match(/yes/) ? true : false
-  end
-
-
-  def self.gitolite_version
-    stdin, stdout, stderr = Open3.popen3("#{GitHosting.gitolite_ssh} #{GitHosting.git_user}@localhost info")
-
-    if !stderr.readlines.blank?
-      return -1
-    else
-      version = stdout.readlines
-      version.each do |line|
-        if line =~ /gitolite[ -]v?2./
-          return 2
-        elsif line.include?('running gitolite3')
-          return 3
-        else
-          return 0
-        end
-      end
-    end
-  end
-
-
-  ## GET GITOLITE BANNER
-  def self.gitolite_banner
-    stdin, stdout, stderr = Open3.popen3("#{gitolite_ssh} #{git_user}@localhost info")
-
-    errors = stderr.readlines
-    if !errors.blank?
-      return errors.join("")
-    else
-      return stdout.readlines.join("")
-    end
-  end
-
-
-  ## GET CURRENT USER
-  @@web_user = nil
-  def self.web_user
-    if @@web_user.nil?
-      @@web_user = (%x[whoami]).chomp.strip
-    end
-    return @@web_user
-  end
-
-
-  def self.web_user=(setuser)
-    @@web_user = setuser
-  end
-
-
   ## GET OR CREATE BIN DIR
-  @@git_hosting_bin_dir = nil
-  @@previous_git_script_dir = nil
-  def self.get_bin_dir
-    script_dir = GitHostingConf.script_dir
-    script_parent = GitHostingConf.script_parent
-    if @@previous_git_script_dir != script_dir
-      @@previous_git_script_dir = script_dir
-      @@git_bin_dir_writeable = nil
+  @@scripts_dir_path = nil
+  @@previous_scripts_dir_path = nil
+  def self.scripts_dir_path
+    script_dir = GitHostingConf.gitolite_scripts_dir
+    script_parent = GitHostingConf.gitolite_scripts_parent_dir
+
+    if @@previous_scripts_dir_path != script_dir
+
+      @@previous_scripts_dir_path = script_dir
+      @@scripts_dir_writeable = nil
 
       # Directory for binaries includes 'SCRIPT_PARENT' at the end.
-      # Further, absolute path adds additional 'git_user' component for multi-gitolite installations.
+      # Further, absolute path adds additional 'gitolite_user' component for multi-gitolite installations.
       if script_dir[0,1] == "/"
-        @@git_hosting_bin_dir = File.join(script_dir, git_user, script_parent) + "/"
-      elsif Rails::VERSION::MAJOR >= 3
-        @@git_hosting_bin_dir = Rails.root.join("plugins/redmine_git_hosting", script_dir, script_parent).to_s + "/"
+        @@scripts_dir_path = File.join(script_dir, gitolite_user, script_parent) + "/"
       else
-        @@git_hosting_bin_dir = Rails.root.join("vendor/plugins/redmine_git_hosting", script_dir, script_parent).to_s + "/"
+        @@scripts_dir_path = Rails.root.join("plugins/redmine_git_hosting", script_dir, script_parent).to_s + "/"
       end
     end
-    if !File.directory?(@@git_hosting_bin_dir)
-      logger.info "Creating bin directory: #{@@git_hosting_bin_dir}, Owner #{web_user}"
-      %x[mkdir -p "#{@@git_hosting_bin_dir}"]
-      %x[chmod 750 "#{@@git_hosting_bin_dir}"]
-      %x[chown #{web_user} "#{@@git_hosting_bin_dir}"]
 
-      if !File.directory?(@@git_hosting_bin_dir)
-        logger.error "Cannot create bin directory: #{@@git_hosting_bin_dir}"
+    if !File.directory?(@@scripts_dir_path)
+      logger.info "############ TEST SCRIPT DIR ############"
+      logger.info "Creating bin directory :'#{@@scripts_dir_path}' with owner : '#{redmine_user}'"
+      begin
+        %x[mkdir -p "#{@@scripts_dir_path}"]
+        %x[chmod 750 "#{@@scripts_dir_path}"]
+        %x[chown #{redmine_user} "#{@@scripts_dir_path}"]
+      rescue => e
+        logger.error "Cannot create bin directory: #{@@scripts_dir_path}"
+        logger.error e.message
       end
     end
-    return @@git_hosting_bin_dir
+    return @@scripts_dir_path
   end
 
 
-  ## TEST DIRECTORY
-  @@git_bin_dir_writeable = nil
-  def self.bin_dir_writeable?(*option)
-    @@git_bin_dir_writeable = nil if option.length > 0 && option[0] == :reset
-    if @@git_bin_dir_writeable == nil
-      mybindir = get_bin_dir
-      mytestfile = "#{mybindir}/writecheck"
-      if (!File.directory?(mybindir))
-        @@git_bin_dir_writeable = false
-      else
-        %x[touch "#{mytestfile}"]
-        if (!File.exists?("#{mytestfile}"))
-          @@git_bin_dir_writeable = false
-        else
-          %x[rm "#{mytestfile}"]
-          @@git_bin_dir_writeable = true
-        end
-      end
+  ## GET OR CREATE TEMP DIR
+  @@temp_dir_path = nil
+  @@previous_temp_dir_path = nil
+  def self.temp_dir_path
+    tmp_dir = GitHostingConf.gitolite_temp_dir
+    if (@@previous_temp_dir_path != tmp_dir)
+      @@previous_temp_dir_path = tmp_dir
+      @@temp_dir_path = File.join(tmp_dir, gitolite_user) + "/"
     end
-    @@git_bin_dir_writeable
+    if !File.directory?(@@temp_dir_path)
+      %x[mkdir -p "#{@@temp_dir_path}"]
+      %x[chmod 700 "#{@@temp_dir_path}"]
+      %x[chown #{redmine_user} "#{@@temp_dir_path}"]
+    end
+    return @@temp_dir_path
   end
 
 
@@ -347,140 +459,82 @@ module GitHosting
       result = %x[#{my_command}].chomp
       code = $?.exitstatus
     rescue Exception => e
-      result=e.message
+      result = e.message
       code = -1
     end
     if code != 0
       logger.error "Command failed (return #{code}): #{command}"
-      message = "  "+result.split("\n").join("\n  ")
+      message = "  " + result.split("\n").join("\n  ")
       logger.error message
       raise GitHostingException, "Shell Error"
     end
   end
 
 
-  ## HANDLE MIRROR KEYS
-  @@mirror_pubkey = nil
-  def self.mirror_push_public_key
-    if @@mirror_pubkey.nil?
-
-      %x[cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa ' ]
-      %x[cat '#{GitHostingConf.gitolite_ssh_public_key}' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
-      %x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
-      %x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
-
-      pubk = ( %x[cat '#{GitHostingConf.gitolite_ssh_public_key}' ]  ).chomp.strip
-      git_user_dir = ( %x[ #{GitHosting.git_user_runner} "cd ~ ; pwd" ] ).chomp.strip
-      %x[ #{GitHosting.git_user_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub ' ]
-      %x[ echo '#!/bin/sh' | #{GitHosting.git_user_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh']
-      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.ssh_server_local_port} -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa        "$@"' | #{GitHosting.git_user_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh"  ]
-      %x[ #{GitHosting.git_user_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
-      %x[ #{GitHosting.git_user_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa']
-      %x[ #{GitHosting.git_user_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh']
-
-      @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
-    end
-    @@mirror_pubkey
+  ## TEST IF FILE EXIST ON GITOLITE SIDE
+  def self.file_exists?(filename)
+    (%x[#{shell_cmd_runner} test -r '#{filename}' && echo 'yes' || echo 'no']).match(/yes/) ? true : false
   end
 
 
-  ## SUDO TEST1
-  @@sudo_git_to_web_user_stamp = nil
-  @@sudo_git_to_web_user_cached = nil
-  def self.sudo_git_to_web_user
-    if not @@sudo_git_to_web_user_cached.nil? and (Time.new - @@sudo_git_to_web_user_stamp <= 1)
-      return @@sudo_git_to_web_user_cached
+  def self.is_repository_empty?(new_path)
+    output = %x[ #{GitHosting.shell_cmd_runner} 'find "#{new_path}"/objects -type f | wc -l' ].chomp.gsub('\n', '')
+    GitoliteLogger.get_logger(:worker).debug "move_repository : counted objects in repository directory '#{new_path}' : '#{output}'"
+    if output.to_i == 0
+      return true
+    else
+      return false
     end
-    logger.debug "Testing if Gitolite user '#{git_user}' can sudo to Redmine user '#{web_user}'..."
-
-    if git_user == web_user
-      @@sudo_git_to_web_user_cached = true
-      @@sudo_git_to_web_user_stamp = Time.new
-      logger.debug "OK!"
-      return @@sudo_git_to_web_user_cached
-    end
-
-    test = %x[#{GitHosting.git_user_runner} sudo -nu #{web_user} echo "yes" ]
-    if test.match(/yes/)
-      @@sudo_git_to_web_user_cached = true
-      @@sudo_git_to_web_user_stamp = Time.new
-      logger.debug "OK!"
-      return @@sudo_git_to_web_user_cached
-    end
-
-    logger.error "Error while testing sudo_git_to_web_user"
-    @@sudo_git_to_web_user_cached = test
-    @@sudo_git_to_web_user_stamp = Time.new
-    return @@sudo_git_to_web_user_cached
   end
 
 
-  ## SUDO TEST2
-  @@sudo_web_to_git_user_stamp = nil
-  @@sudo_web_to_git_user_cached = nil
-  def self.sudo_web_to_git_user
-    if not @@sudo_web_to_git_user_cached.nil? and (Time.new - @@sudo_web_to_git_user_stamp <= 1)
-      return @@sudo_web_to_git_user_cached
+  # This routine moves a repository in the gitolite repository structure.
+  def self.move_physical_repo(old_name,new_name)
+    begin
+      logger.info "Moving gitolite repository from '#{old_name}.git' to '#{new_name}.git'"
+
+      if git_repository_exists? new_name
+        logger.error "Repository already exists at #{new_name}.git!  Moving to recycle bin to avoid overwrite."
+        GitoliteRecycle.move_repository_to_recycle new_name
+      end
+
+      # physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
+      prefix = new_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
+      if prefix
+        # Has subdirectory.  Must construct destination directory
+        repo_prefix = File.join(GitHostingConf.gitolite_global_storage_dir, prefix)
+        shell %[#{shell_cmd_runner} mkdir -p '#{repo_prefix}']
+      end
+      old_path = repository_path(old_name)
+      new_path = repository_path(new_name)
+      shell %[#{shell_cmd_runner} 'mv "#{old_path}" "#{new_path}"']
+
+      # If any empty directories left behind, try to delete them.  Ignore failure.
+      old_prefix = old_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
+      if old_prefix
+        repo_subpath = File.join(GitHostingConf.gitolite_global_storage_dir, old_prefix)
+        result = %x[#{shell_cmd_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
+        result.each { |dir| logger.info "Removing empty repository subdirectory : #{dir}"}
+      end
+    rescue GitHostingException => e
+      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
+      logger.error e.message
+    rescue => e
+      logger.error e.message
+      logger.error e.backtrace[0..4].join("\n")
+      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
     end
-    logger.debug "Testing if Redmine user '#{web_user}' can sudo to Gitolite user '#{git_user}'..."
-
-    if git_user == web_user
-      @@sudo_web_to_git_user_cached = true
-      @@sudo_web_to_git_user_stamp = Time.new
-      logger.debug "OK!"
-      return @@sudo_web_to_git_user_cached
-    end
-
-    test = %x[#{GitHosting.git_user_runner} echo "yes"]
-    if test.match(/yes/)
-      @@sudo_web_to_git_user_cached = true
-      @@sudo_web_to_git_user_stamp = Time.new
-      logger.debug "OK!"
-      return @@sudo_web_to_git_user_cached
-    end
-
-    logger.error "Error while testing sudo_web_to_git_user"
-    @@sudo_web_to_git_user_cached = test
-    @@sudo_web_to_git_user_stamp = Time.new
-    return @@sudo_web_to_git_user_cached
-  end
-
-
-  ## GET OR CREATE TEMP DIR
-  @@git_hosting_tmp_dir = nil
-  @@previous_git_tmp_dir = nil
-  def self.get_tmp_dir
-    tmp_dir = GitHostingConf.temp_data_dir
-    if (@@previous_git_tmp_dir != tmp_dir)
-      @@previous_git_tmp_dir = tmp_dir
-      @@git_hosting_tmp_dir = File.join(tmp_dir, git_user) + "/"
-    end
-    if !File.directory?(@@git_hosting_tmp_dir)
-      %x[mkdir -p "#{@@git_hosting_tmp_dir}"]
-      %x[chmod 700 "#{@@git_hosting_tmp_dir}"]
-      %x[chown #{web_user} "#{@@git_hosting_tmp_dir}"]
-    end
-    return @@git_hosting_tmp_dir
-  end
-
-
-  # Set the history limit for caching on the given repo
-  # We assume that the time stamps on the reference files indicate when the latest update occurred.
-  def self.set_repository_limit_cache(repo)
-    # Find time of newest reference file
-    result = %x[#{GitHosting.git_user_runner} find '#{repository_path(repo)}/refs' '#{repository_path(repo)}/packed-refs' -type f -printf "%c," 2> /dev/null].split(",").compact.map{|x| Time.parse(x)}.max
-    CachedShellRedirector.limit_cache(repo,result)
   end
 
 
   ## CREATE EXECUTABLE FILES
-  def self.update_git_exec
-    logger.info "Setting up #{get_bin_dir}"
+  def self.update_gitolite_scripts
+    logger.info "Setting up '#{scripts_dir_path}' with scripts..."
 
-    File.open(gitolite_ssh_path(), "w") do |f|
+    File.open(gitolite_admin_ssh_script_path(), "w") do |f|
       f.puts "#!/bin/sh"
-      f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.ssh_server_local_port} -i #{GitHostingConf.gitolite_ssh_private_key} \"$@\""
-    end if !File.exists?(gitolite_ssh_path())
+      f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{GitHostingConf.gitolite_ssh_private_key} \"$@\""
+    end if !File.exists?(gitolite_admin_ssh_script_path())
 
     ##############################################################################################################################
     # So... older versions of sudo are completely different than newer versions of sudo
@@ -491,38 +545,38 @@ module GitHosting
     # Note: I don't know whether the switch is at 1.7.3 or 1.7.4, the switch is between ubuntu 10.10 which uses 1.7.2
     # and ubuntu 11.04 which uses 1.7.4.  I have tested that the latest 1.8.1p2 seems to have identical behavior to 1.7.4
     ##############################################################################################################################
-    sudo_version_str=%x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
-    split_version = sudo_version_str.split(/\./)
-    sudo_version = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
+    sudo_version_str    = %x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
+    split_version       = sudo_version_str.split(/\./)
+    sudo_version        = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
     sudo_version_switch = (100*100*1) + (100 * 7) + 3
 
-    File.open(git_exec_path(), "w") do |f|
+    File.open(git_cmd_script_path(), "w") do |f|
       f.puts '#!/bin/sh'
-      f.puts "if [ \"\$(whoami)\" = \"#{git_user}\" ] ; then"
+      f.puts "if [ \"\$(whoami)\" = \"#{gitolite_user}\" ] ; then"
       f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
       f.puts '  cd ~'
       f.puts '  eval "git $cmd"'
       f.puts "else"
       if sudo_version < sudo_version_switch
         f.puts '  cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-        f.puts "  sudo -u #{git_user} -i eval \"git $cmd\""
+        f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
       else
         f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
-        f.puts "  sudo -u #{git_user} -i eval \"git $cmd\""
+        f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
       end
       f.puts 'fi'
-    end if !File.exists?(git_exec_path())
+    end if !File.exists?(git_cmd_script_path())
 
-    # use perl script for git_user_runner so we can
+    # use perl script for shell_cmd_runner so we can
     # escape output more easily
-    File.open(git_user_runner_path(), "w") do |f|
+    File.open(shell_cmd_script_path(), "w") do |f|
       f.puts '#!/usr/bin/perl'
       f.puts ''
       f.puts 'my $command = join(" ", @ARGV);'
       f.puts ''
       f.puts 'my $user = `whoami`;'
       f.puts 'chomp $user;'
-      f.puts 'if ($user eq "' + git_user + '")'
+      f.puts 'if ($user eq "' + gitolite_user + '")'
       f.puts '{'
       f.puts '  exec("cd ~ ; $command");'
       f.puts '}'
@@ -536,14 +590,40 @@ module GitHosting
         f.puts "  $command =~ s/'/\\\\\\\\'/g;"
       end
       f.puts '  $command =~ s/"/\\\\"/g;'
-      f.puts '  exec("sudo -u ' + git_user + ' -i eval \"$command\"");'
+      f.puts '  exec("sudo -u ' + gitolite_user + ' -i eval \"$command\"");'
       f.puts '}'
-    end if !File.exists?(git_user_runner_path())
+    end if !File.exists?(shell_cmd_script_path())
 
-    File.chmod(0550, git_exec_path())
-    File.chmod(0550, gitolite_ssh_path())
-    File.chmod(0550, git_user_runner_path())
-    %x[chown #{web_user} -R "#{get_bin_dir}"]
+    File.chmod(0550, git_cmd_script_path())
+    File.chmod(0550, shell_cmd_script_path())
+    File.chmod(0550, gitolite_admin_ssh_script_path())
+    %x[chown #{redmine_user} -R "#{scripts_dir_path}"]
+  end
+
+
+  ## HANDLE MIRROR KEYS
+  @@mirror_pubkey = nil
+  def self.mirror_push_public_key
+    if @@mirror_pubkey.nil?
+
+      %x[ cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa' ]
+      %x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
+
+      pubk = (%x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' ]).chomp.strip
+      git_user_dir = ( %x[ #{GitHosting.shell_cmd_runner} "cd ~ ; pwd" ] ).chomp.strip
+
+      %x[ #{GitHosting.shell_cmd_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub' ]
+      %x[ echo '#!/bin/sh' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh' ]
+      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa "$@"' | #{GitHosting.shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh' ]
+
+      @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
+    end
+    @@mirror_pubkey
   end
 
 
@@ -566,17 +646,18 @@ module GitHosting
   #
   def self.clone_or_pull_gitolite_admin(resync_all_flag)
     # clone/pull from admin repo
-    repo_dir = File.join(get_tmp_dir, GitHosting::GitoliteConfig::ADMIN_REPO)
+    repo_dir = File.join(temp_dir_path, GitHosting::GitoliteConfig::ADMIN_REPO)
 
     # If preexisting directory exists, try to clone and merge....
     if (File.exists? "#{repo_dir}") && (File.exists? "#{repo_dir}/.git") && (File.exists? "#{repo_dir}/keydir") && (File.exists? "#{repo_dir}/conf")
+      logger.debug "Fetching changes from Gitolite Admin repository to '#{repo_dir}'"
+
       begin
-        logger.debug "Fetching changes from Gitolite Admin repository to '#{repo_dir}'"
-        shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' fetch]
-        shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' merge FETCH_HEAD]
+        shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' fetch]
+        shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' merge FETCH_HEAD]
 
         # unmerged changes=> non-empty return
-        return_val = %x[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' status --short].empty?
+        return_val = %x[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' status --short].empty?
 
         if (return_val)
           shell %[chmod 700 "#{repo_dir}"]
@@ -594,15 +675,16 @@ module GitHosting
           logger.error "Seems to be unmerged changes! Going to delete and reclone for safety."
           logger.error "May need to execute RESYNC_ALL to fix whatever caused pending changes." unless resync_all_flag
         end
-      rescue
+      rescue => e
         logger.error "Repository fetch and merge failed -- trying to delete and reclone Gitolite Admin repository."
+        logger.error e.message
       end
     end
 
+    logger.info "Cloning Gitolite Admin repository to '#{repo_dir}'"
     begin
-      logger.info "Cloning Gitolite Admin repository to '#{repo_dir}'"
       shell %[rm -rf "#{repo_dir}"]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git clone ssh://#{gitolite_user}@localhost/gitolite-admin.git #{repo_dir}]
       shell %[chmod 700 "#{repo_dir}"]
 
       # Make sure we have our hooks setup
@@ -619,7 +701,7 @@ module GitHosting
 
         logger.info "Recloning Gitolite Admin repository to '#{repo_dir}'"
         shell %[rm -rf "#{repo_dir}"]
-        shell %[env GIT_SSH=#{gitolite_ssh()} git clone ssh://#{git_user}@localhost/gitolite-admin.git #{repo_dir}]
+        shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git clone ssh://#{gitolite_user}@localhost/gitolite-admin.git #{repo_dir}]
         shell %[chmod 700 "#{repo_dir}"]
 
         # Make sure we have our hooks setup
@@ -676,35 +758,35 @@ module GitHosting
         raise GitHostingException, "Unknown Gitolite Version"
       end
 
-      repo_dir  = File.join(Dir.tmpdir, "fixrepo", git_user, GitHosting::GitoliteConfig::ADMIN_REPO)
+      repo_dir  = File.join(Dir.tmpdir, "fixrepo", gitolite_user, GitHosting::GitoliteConfig::ADMIN_REPO)
       conf_file = File.join(repo_dir, "conf", gitolite_conf)
       keydir    = File.join(repo_dir, 'keydir')
 
-      tmp_conf_dir  = File.join(Dir.tmpdir, "fixconf", git_user)
+      tmp_conf_dir  = File.join(Dir.tmpdir, "fixconf", gitolite_user)
       tmp_conf_file = File.join(tmp_conf_dir, gitolite_conf)
 
-      admin_repo = "#{GitHostingConf.repository_base}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
+      admin_repo = "#{GitHostingConf.gitolite_global_storage_dir}/#{GitHosting::GitoliteConfig::ADMIN_REPO}"
 
-      logger.warn "Cloning Gitolite Admin repository '#{admin_repo}' directly as '#{git_user}' in '#{repo_dir}'"
+      logger.warn "Cloning Gitolite Admin repository '#{admin_repo}' directly as '#{gitolite_user}' in '#{repo_dir}'"
 
       shell %[rm -rf "#{repo_dir}"] if File.exists?(repo_dir)
-      shell %[#{GitHosting.git_user_runner} git clone #{admin_repo} #{repo_dir}]
+      shell %[#{shell_cmd_runner} git clone #{admin_repo} #{repo_dir}]
 
       # Load up existing conf file
       shell %[mkdir -p #{tmp_conf_dir}]
       shell %[mkdir -p #{keydir}]
 
-      shell %[#{GitHosting.git_user_runner} 'cat #{conf_file}' | cat > #{tmp_conf_file}]
+      shell %[#{shell_cmd_runner} 'cat #{conf_file}' | cat > #{tmp_conf_file}]
       conf = GitoliteConfig.new(tmp_conf_file)
 
       # copy key into home directory...
-      shell %[cat #{GitHostingConf.gitolite_ssh_public_key} | #{GitHosting.git_user_runner} 'cat > ~/id_rsa.pub']
+      shell %[cat #{GitHostingConf.gitolite_ssh_public_key} | #{shell_cmd_runner} 'cat > ~/id_rsa.pub']
 
       # Locate any keys that match redmine_git_hosting key
-      raw_admin_key_matches = %x[#{GitHosting.git_user_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n")
+      raw_admin_key_matches = %x[#{shell_cmd_runner} 'find #{keydir} -type f -exec cmp -s ~/id_rsa.pub {} \\; -print'].chomp.split("\n")
 
       # Reorder them by putting preferred keys first
-      preferred = ["#{GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME}","id_rsa.pub"]
+      preferred = ["#{GitHosting::GitoliteConfig::DEFAULT_ADMIN_KEY_NAME}", "id_rsa.pub"]
       raw_admin_key_matches = promote_array(raw_admin_key_matches, preferred)
 
       # Remove all but first one
@@ -714,7 +796,7 @@ module GitHosting
         working_basename = /^(.*\/)?([^\/]*?)(\.pub)*$/.match(name)[2]
         if first_match || ("#{working_basename}.pub" != File.basename(name))
           logger.warn "Removing duplicate administrative key '#{File.basename(name)}' from keydir"
-          shell %[#{GitHosting.git_user_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm #{name}]
+          shell %[#{shell_cmd_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm #{name}]
         end
         # First name will match this
         first_match ||= working_basename
@@ -746,18 +828,18 @@ module GitHosting
       conf.set_admin_keys admin_keys
       conf.save
 
-      shell %[cat #{tmp_conf_file} | #{GitHosting.git_user_runner} 'cat > #{conf_file}']
-      shell %[#{GitHosting.git_user_runner} 'mv ~/id_rsa.pub #{keydir}/#{new_admin_key_name}.pub']
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*"]
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}"]
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
-      shell %[#{GitHosting.git_user_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of Gitolite Admin key'"]
+      shell %[cat #{tmp_conf_file} | #{shell_cmd_runner} 'cat > #{conf_file}']
+      shell %[#{shell_cmd_runner} 'mv ~/id_rsa.pub #{keydir}/#{new_admin_key_name}.pub']
+      shell %[#{shell_cmd_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*"]
+      shell %[#{shell_cmd_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}"]
+      shell %[#{shell_cmd_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}'"]
+      shell %[#{shell_cmd_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine'"]
+      shell %[#{shell_cmd_runner} "git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -m 'Updated by Redmine: Emergency repair of Gitolite Admin key'"]
 
       logger.warn "Pushing fixes using '#{gitolite_command}'"
-      shell %[#{GitHosting.git_user_runner} "cd #{repo_dir}; #{gitolite_command}"]
+      shell %[#{shell_cmd_runner} "cd #{repo_dir}; #{gitolite_command}"]
 
-      %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
+      %x[#{shell_cmd_runner} 'rm -rf "#{File.join(Dir.tmpdir,'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir,'fixconf')}"]
       logger.warn "Success!"
       logger.warn ""
@@ -765,8 +847,8 @@ module GitHosting
       logger.error "Failed to reestablish Gitolite Admin key."
       logger.error e.message
       logger.error e.backtrace.join("\n")
-      %x[#{GitHosting.git_user_runner} 'rm -f ~/id_rsa.pub']
-      %x[#{GitHosting.git_user_runner} 'rm -rf "#{File.join(Dir.tmpdir, 'fixrepo')}"']
+      %x[#{shell_cmd_runner} 'rm -f ~/id_rsa.pub']
+      %x[#{shell_cmd_runner} 'rm -rf "#{File.join(Dir.tmpdir, 'fixrepo')}"']
       %x[rm -rf "#{File.join(Dir.tmpdir, 'fixconf')}"]
       raise GitHostingException, "Failure to repair Gitolite Admin key"
     end
@@ -783,7 +865,7 @@ module GitHosting
     resyncing = args && args.first
 
     # create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-    repo_dir = File.join(get_tmp_dir, GitHosting::GitoliteConfig::ADMIN_REPO)
+    repo_dir = File.join(temp_dir_path, GitHosting::GitoliteConfig::ADMIN_REPO)
 
     if (!resyncing)
       logger.info "Committing changes to Gitolite Admin repository"
@@ -795,12 +877,12 @@ module GitHosting
 
     # commit / push changes to gitolite admin repo
     begin
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}]
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}']
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine']
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -a -m '#{message}']
-      shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' push -u origin master]
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*]
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}]
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}']
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.name 'Redmine']
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' commit -a -m '#{message}']
+      shell %[env GIT_SSH=#{gitolite_admin_ssh_runner} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' push -u origin master]
     rescue => e
       logger.error "Problems committing changes to Gitolite Admin repository!! Probably requires human intervention"
       logger.error e.message
@@ -898,7 +980,7 @@ module GitHosting
     @@recursionCheck = true
 
     # Grab actual lock
-    if !lock(GitHostingConf.lock_wait_time)
+    if !lock(GitHostingConf.gitolite_lock_wait_time)
       logger.error "update_repositories() exited without acquiring lock!"
       @@recursionCheck = false
       return
@@ -910,7 +992,7 @@ module GitHosting
       changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
 
       # Get directory for the gitolite-admin
-      repo_dir = File.join(get_tmp_dir, "gitolite-admin")
+      repo_dir = File.join(temp_dir_path, "gitolite-admin")
 
       logger.info "Updating key directory for projects : '#{git_projects.join ', '}'"
 
@@ -1094,7 +1176,7 @@ module GitHosting
             # Of the repos in my_repo with a matching base name, only steal away those not already controlled
             # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed
             # in gitolite.conf but the repo didn't get moved.
-            closest_repo = closest_path(hash_set_diff(my_repos,total_entries),repo_name,repo)
+            closest_repo = closest_path(hash_set_diff(my_repos, total_entries), repo_name, repo)
             if !closest_repo
               # Attempt to recover repository from recycle_bin, if present.  Else, create new repository.
               if !GitoliteRecycle.recover_repository_if_present repo_name
@@ -1218,45 +1300,6 @@ module GitHosting
   end
 
 
-  # This routine moves a repository in the gitolite repository structure.
-  def self.move_physical_repo(old_name,new_name)
-    begin
-      logger.info "Moving gitolite repository from '#{old_name}.git' to '#{new_name}.git'"
-
-      if git_repository_exists? new_name
-        logger.error "Repository already exists at #{new_name}.git!  Moving to recycle bin to avoid overwrite."
-        GitoliteRecycle.move_repository_to_recycle new_name
-      end
-
-      # physicaly move the repo BEFORE committing/pushing conf changes to gitolite admin repo
-      prefix = new_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
-      if prefix
-        # Has subdirectory.  Must construct destination directory
-        repo_prefix = File.join(GitHostingConf.repository_base, prefix)
-        GitHosting.shell %[#{git_user_runner} mkdir -p '#{repo_prefix}']
-      end
-      old_path = repository_path(old_name)
-      new_path = repository_path(new_name)
-      shell %[#{git_user_runner} 'mv "#{old_path}" "#{new_path}"']
-
-      # If any empty directories left behind, try to delete them.  Ignore failure.
-      old_prefix = old_name[/.*?(?=\/)/] # Top-level old directory without trailing '/'
-      if old_prefix
-        repo_subpath = File.join(GitHostingConf.repository_base, old_prefix)
-        result = %x[#{GitHosting.git_user_runner} find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print].chomp.split("\n")
-        result.each { |dir| logger.info "Removing empty repository subdirectory : #{dir}"}
-      end
-    rescue GitHostingException => e
-      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
-      logger.error e.message
-    rescue => e
-      logger.error e.message
-      logger.error e.backtrace[0..4].join("\n")
-      logger.error "move_physical_repo(#{old_name},#{new_name}) failed"
-    end
-  end
-
-
   # Takes a presence hash of path names and a path name and attempts to find the item in the list that matches
   # in the most components.  Assume at least one element in list
   #
@@ -1267,17 +1310,17 @@ module GitHosting
   # 2) proj1/proj2/parent-proj/repo_ident    : Used when repo identifiers may not be unique
   #
   # Note that all the complexity of dealing with multi-repo path formats is handled here
-  def self.closest_path(path_list,repo_name,repo)
+  def self.closest_path(path_list,repo_name, repo)
     # most common case: have exact matching path
     return repo_name if path_list[repo_name]
 
     # Special handling if repository name could change with Repository.repo_ident_unique?
     if GitHosting.multi_repos? && !repo.identifier.blank?
       # See if we find match by merely changing value of Repository.repo_ident_unique?
-      repo_name_alt = repository_name(repo,:assume_unique => !Repository.repo_ident_unique?)
+      repo_name_alt = repository_name(repo, :assume_unique => !Repository.repo_ident_unique?)
       if path_list[repo_name_alt]
         # Make sure that this doesn't belong to another repo
-        owner_repo = Repository.find_by_path(repo_name_alt,:loose => true)
+        owner_repo = Repository.find_by_path(repo_name_alt, :loose => true)
         if !owner_repo || owner_repo == repo
           return repo_name_alt
         end
@@ -1291,13 +1334,13 @@ module GitHosting
     #
     # Make sure that we don't choose a path that belongs to another repo.
     matchname = repo.git_label(:assume_unique => false)
-    path_list.sort_by do |path,last_comps|
-      matchord = longest_match_ordinal(path,repo_name)
+    path_list.sort_by do |path, last_comps|
+      matchord = longest_match_ordinal(path, repo_name)
       preference = (last_comps == matchname) ? (1 << 24) : 0
       # Sort in reverse order
       - (matchord + preference)
-    end.each do |path,last_comps|
-      owner_repo = Repository.find_by_path(path,:loose => true)
+    end.each do |path, last_comps|
+      owner_repo = Repository.find_by_path(path, :loose => true)
       if !owner_repo || owner_repo == repo
         return path
       end
@@ -1312,7 +1355,7 @@ module GitHosting
   # of first character in str1 that doesn't match.  This is bit naive for Ruby 1.8,
   # and works properly for 1.9 with multi-byte characters (but doesn't deal with
   # codepoints more than 16 bits....
-  def self.longest_match_ordinal(str1,str2)
+  def self.longest_match_ordinal(str1, str2)
     for result in 0..str1.length-1
       # note that str2[result]=nil if beyond end of string, which works fine!
       if str1[result] != str2[result]
@@ -1333,9 +1376,9 @@ module GitHosting
 
 
   # Compute the set difference of keys between two hashes.
-  def self.hash_set_diff(first_hash,second_hash)
-    first_hash.inject({}) { |hash, (key,value)|
-      hash[key]=value unless second_hash[key]
+  def self.hash_set_diff(first_hash, second_hash)
+    first_hash.inject({}) { |hash, (key, value)|
+      hash[key] = value unless second_hash[key]
       hash
     }
   end
@@ -1348,19 +1391,7 @@ module GitHosting
 
 
   def self.print_out_hash(inhash)
-    inhash.each {|path,common| Rails.logger.error "#{path} => #{common}"}
-  end
-
-
-  ###############################
-  ##                           ##
-  ##   ADDITIONAL CLASSES      ##
-  ##                           ##
-  ###############################
-
-
-  # Used to register errors when pulling and pushing the conf file
-  class GitHostingException < StandardError
+    inhash.each{ |path,common| Rails.logger.error "#{path} => #{common}" }
   end
 
 end
