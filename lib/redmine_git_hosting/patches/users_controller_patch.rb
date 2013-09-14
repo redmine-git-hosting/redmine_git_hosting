@@ -90,7 +90,6 @@ module RedmineGitHosting
               @gitolite_public_key = GitolitePublicKey.new
             end
           end
-
         end
 
       end

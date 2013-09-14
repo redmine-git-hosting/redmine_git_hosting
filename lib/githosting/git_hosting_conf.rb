@@ -366,11 +366,22 @@ module GitHostingConf
   ##                           ##
   ###############################
 
+
+  GITOLITE_NOTIFY_CIA_BY_DEFAULT         = 0
   GITOLITE_NOTIFY_BY_DEFAULT             = 1
   GITOLITE_NOTIFY_GLOBAL_PREFIX          = '[REDMINE]'
   GITOLITE_NOTIFY_GLOBAL_SENDER_ADDRESS  = Setting.mail_from.to_s.strip.downcase
   GITOLITE_NOTIFY_GLOBAL_INCLUDE         = []
   GITOLITE_NOTIFY_GLOBAL_EXCLUDE         = []
+
+
+  def self.gitolite_notify_cia_by_default
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_cia_by_default].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_cia_by_default]
+    else
+      GITOLITE_NOTIFY_CIA_BY_DEFAULT
+    end
+  end
 
 
   def self.gitolite_notify_by_default
