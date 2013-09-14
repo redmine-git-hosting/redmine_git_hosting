@@ -21,11 +21,11 @@ module RedmineGitHosting
           end
 
           begin
-            alias_method_chain, :git_cmd, :git_hosting
+            alias_method_chain :git_cmd, :git_hosting
           rescue
             # Hm... might be pre-1.4, where :git_cmd => :scm_cmd
-            alias_method_chain, :scm_cmd, :git_hosting rescue nil
-            alias_method, :git_cmd, :git_cmd_with_git_hosting
+            alias_method_chain :scm_cmd, :git_hosting rescue nil
+            alias_method :git_cmd, :git_cmd_with_git_hosting
           end
         end
 
