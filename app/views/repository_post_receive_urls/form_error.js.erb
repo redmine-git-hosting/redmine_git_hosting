@@ -1,2 +1,6 @@
-$('#validation_messages').replaceWith("<%= escape_javascript(error_messages_for 'prurl') %>");
+$('#validation_messages_post_receive_url').html("<%= escape_javascript(error_messages_for 'prurl') %>");
+<% if Rails::VERSION::MAJOR >= 3 %>
+$('html, body').animate({ scrollTop: $('#dialog-box-post-receive-url').parent().offset().top }, "slow");
+<% else %>
 if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+<% end %>

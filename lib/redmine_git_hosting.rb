@@ -35,13 +35,13 @@ apply_patch do
   require_dependency 'sys_controller'
 
   ## Redmine Git Hosting Libs
-  require_dependency 'libs/git_hosting'
-  require_dependency 'libs/git_hosting_conf'
-  require_dependency 'libs/gitolite_config'
-  require_dependency 'libs/gitolite_logger'
-  require_dependency 'libs/gitolite_recycle'
-  require_dependency 'libs/git_adapter_hooks'
-  require_dependency 'libs/cached_shell_redirector'
+  require_dependency 'githosting/git_hosting'
+  require_dependency 'githosting/git_hosting_conf'
+  require_dependency 'githosting/gitolite_config'
+  require_dependency 'githosting/gitolite_logger'
+  require_dependency 'githosting/gitolite_recycle'
+  require_dependency 'githosting/git_adapter_hooks'
+  require_dependency 'githosting/cached_shell_redirector'
 
   ## Redmine Git Hosting Patches
   require_dependency 'redmine_git_hosting/patches/project_patch'
@@ -70,5 +70,5 @@ apply_patch do
   ## Redmine Git Hosting Hooks
   require_dependency 'redmine_git_hosting/hooks/git_project_show_hook'
   require_dependency 'redmine_git_hosting/hooks/git_repo_url_hook'
-  #require_dependency 'redmine_git_hosting/hooks/my_account_hook'
+  require_dependency 'redmine_git_hosting/hooks/add_plugin_icon'
 end

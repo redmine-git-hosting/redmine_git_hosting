@@ -1,70 +1,32 @@
-#clipboard_button
-{
-	background-color: #eee;
-	background:  url('../images/button.svg') 0 0 no-repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
-	background: -khtml-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd)); /* Konquerer */
-	background: -moz-linear-gradient(top,  #f8f8f8,  #ddd); /* Gecko (Firefox, ...) */
-	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#ddd));   /* Webkit (Chrome, Safari, ...) */
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 5.5 - 7 */
-	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f8f8', endColorstr='#dddddd'); /* IE 8 */
-
-	border-color: #bbb;
-	border-style: solid;
-	border-width: 1px 1px 1px 0;
-
-	color: #333;
-	display: block;
-	font-size: 11px;
-	font-weight: bold;
-	line-height: 21px;
-	margin: 0;
-	padding: 0 10px 0 11px;
-	text-decoration: none;
-	text-shadow: 1px 1px 0 #fff;
-	position: relative; /* to please IE */
+#clipboard_button {
+  position: relative; /* to please IE */
+  padding: 0;
+  text-align: center;
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 23px;
 }
 
-#clipboard_button.active
-{
-	background-color: #bbb;
-	background:  url('../images/button_selected.svg') 0 0 no-repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
-	background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Konquerer */
-	background: -moz-linear-gradient(top,  #ccc,  #aaa); /* Gecko (Firefox, ...) */
-	background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));  /* Webkit (Chrome, Safari, ...) */
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 5.5 - IE 7 */
-	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#aaaaaa'); /* IE 8 */
-
-	color: #000;
-	text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
-	border-color: #bbb;
+#clipboard_button img {
+  padding-top: 3px;
+  padding-left: 2px;
 }
 
-
-
-
-#clipboard_container
-{
-	position: relative;
-	float: left;
-	margin-left: 5px;
+#clipboard_container {
+  position: relative;
+  float: left;
+  margin-left: 5px;
 }
 
-#clipboard_button
-{
-	height: 21px;
-	width: 23px;
-	padding: 0;
-	border-width: 1px;
-	text-align: center;
-
-	border-radius: 5px; /* Standard, Opera 10, IE 9 */
-	-khtml-border-radius: 3px; /* Konquerer */
-	-moz-border-radius: 3px ; /* Gecko (Firefox, ...) */
-	-webkit-border-radius: 3px; /* Webkit (Chrome, Safari, ...) */
-	/* IE <= 9 not supported */
-}
-
-#clipboard_button img
-{
-	padding-top: 2px;
+#clipboard_button.zeroclipboard-is-hover {
+  background-color: #aaa;
+  background-image:  url('../images/button_selected.svg') 0 0 no-repeat;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#aaa));
+  background-image: -moz-linear-gradient(top, #ccc, #aaa);
+  background-image: -webkit-linear-gradient(top, #ccc, #aaa);
+  background-image: -ms-linear-gradient(top, #ccc, #aaa);
+  background-image: -o-linear-gradient(top, #ccc, #aaa);
+  background-image: linear-gradient(to bottom, #ccc, #aaa);
 }
