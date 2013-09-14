@@ -44,11 +44,11 @@ apply_patch do
   ## Redmine Git Hosting Libs
   require_dependency 'githosting/git_hosting'
   require_dependency 'githosting/git_hosting_conf'
+  require_dependency 'githosting/git_hosting_cache'
   require_dependency 'githosting/gitolite_config'
   require_dependency 'githosting/gitolite_logger'
   require_dependency 'githosting/gitolite_recycle'
   require_dependency 'githosting/git_adapter_hooks'
-  require_dependency 'githosting/cached_shell_redirector'
 
   ## Redmine Git Hosting Patches
   require_dependency 'redmine_git_hosting/patches/project_patch'
