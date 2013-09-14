@@ -3,8 +3,8 @@
 <% end %>
 
 <% form = labelled_form_for :repository_post_receive_urls, @prurl,
-                      :url  => { :controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @project, :id => @prurl.id },
-                      :html => { :method => :delete, :remote => true } do |f| %>
+                            :url  => { :controller => 'repository_post_receive_urls', :action => 'destroy', :project_id => @project, :id => @prurl.id },
+                            :html => { :method => :delete, :remote => true } do |f| %>
 
   <div class="warning" style="margin: 0; padding: 5px 15px;">
     <p>

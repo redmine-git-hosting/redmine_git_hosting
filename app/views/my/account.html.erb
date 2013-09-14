@@ -9,8 +9,8 @@
 
 <div class="splitcontentleft">
   <% form = labelled_form_for :user, @user,
-               :url => { :action => "account" },
-               :html => { :id => 'my_account_form', :method => :post } do |f| %>
+                              :url => { :action => "account" },
+                              :html => { :id => 'my_account_form', :method => :post } do |f| %>
 
     <fieldset class="box tabular">
       <legend><%=l(:label_information_plural)%></legend>
