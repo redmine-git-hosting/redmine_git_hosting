@@ -68,6 +68,11 @@ Redmine::Plugin.register :redmine_git_hosting do
 
       # Git Mailing List Config
       :gitolite_notify_cia_by_default        => '0',
+      :gitolite_notify_by_default            => 1,
+      :gitolite_notify_global_prefix         => '[REDMINE]',
+      :gitolite_notify_global_sender_address => 'redmine@example.com',
+      :gitolite_notify_global_include        => [],
+      :gitolite_notify_global_exclude        => [],
     }
   })
 
@@ -80,9 +85,14 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_repository_post_receive_urls,   :repository_post_receive_urls => :index
     permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => :edit
 
-    permission :create_deployment_keys, :deployment_credentials => :create_with_key
-    permission :view_deployment_keys,   :deployment_credentials => :index
-    permission :edit_deployment_keys,   :deployment_credentials => :edit
+    permission :create_deployment_keys, :repository_deployment_credentials => :create_with_key
+    permission :view_deployment_keys,   :repository_deployment_credentials => :index
+    permission :edit_deployment_keys,   :repository_deployment_credentials => :edit
+
+    permission :create_repository_git_notifications, :repository_git_notifications => :create
+    permission :view_repository_git_notifications,   :repository_git_notifications => :index
+    permission :edit_repository_git_notifications,   :repository_git_notifications => :edit
+    permission :receive_git_notifications,           :gitolite_hooks => :post_receive
 
     permission :create_gitolite_ssh_key,             :my => :account
   end

@@ -60,6 +60,78 @@ module GitHostingHelper
   end
 
 
+  ## GIT MAILING LIST PERMISSIONS
+  def self.can_create_git_notifications(project)
+    return User.current.allowed_to?(:create_repository_git_notifications, project)
+  end
+
+  def self.can_view_git_notifications(project)
+    return User.current.allowed_to?(:view_repository_git_notifications, project)
+  end
+
+  def self.can_edit_git_notifications(project)
+    return User.current.allowed_to?(:edit_repository_git_notifications, project)
+  end
+
+  def self.mailing_list_default_users(repository)
+    default_users = repository.project.member_principals.map(&:user).compact.uniq
+    default_users = default_users.select{|user| user.allowed_to?(:receive_git_notifications, repository.project)}.map(&:mail)
+    return default_users.uniq.sort
+  end
+
+  def self.mailing_list_effective(repository)
+    mailing_list = {}
+
+    # First collect all project users
+    default_users = mailing_list_default_users(repository)
+    if !default_users.empty?
+      default_users.each do |mail|
+        mailing_list[mail] = :project
+      end
+    end
+
+    # Then add global include list
+    if !GitHostingConf.gitolite_notify_global_include.empty?
+      GitHostingConf.gitolite_notify_global_include.sort.each do |mail|
+        mailing_list[mail] = :global
+      end
+    end
+
+    # Then filter
+    mailing_list = filter_list(mailing_list, repository)
+
+    # Then add local include list
+    if !repository.git_notification.nil? && !repository.git_notification.include_list.empty?
+      repository.git_notification.include_list.sort.each do |mail|
+        mailing_list[mail] = :local
+      end
+    end
+
+    return mailing_list
+  end
+
+  def self.filter_list(mail_list, repository)
+    mailing_list = {}
+    exclude_list = []
+
+    # Build exclusion list
+    if !GitHostingConf.gitolite_notify_global_exclude.empty?
+      exclude_list = exclude_list + GitHostingConf.gitolite_notify_global_exclude
+    end
+
+    if !repository.git_notification.nil? && !repository.git_notification.exclude_list.empty?
+      exclude_list = exclude_list + repository.git_notification.exclude_list
+    end
+
+    exclude_list = exclude_list.uniq.sort
+
+    mail_list.each do |mail, from|
+      mailing_list[mail] = from unless exclude_list.include?(mail)
+    end
+
+    return mailing_list
+  end
+
   ## GIT DAEMON ENABLED?
   def self.git_daemon_enabled(repository, value)
     gd = 1

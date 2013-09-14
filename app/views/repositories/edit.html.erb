@@ -99,6 +99,11 @@
 <%= form if Rails::VERSION::MAJOR >= 3 %>
 
 <% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
+
+  <% if GitHostingHelper.can_view_git_notifications(@repository.project) %>
+    <%= render :partial => 'repository_git_notifications/view_list' %>
+  <% end %>
+
   <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>
     <%= render :partial => 'repository_deployment_credentials/view_list' %>
   <% end %>

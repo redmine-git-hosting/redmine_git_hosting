@@ -135,6 +135,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
         @cred.destroy
         if @will_delete_key && key.repository_deployment_credentials.empty?
           # Key no longer used -- delete it!
+          #delete_ssh_key(key)
           key.destroy
           flash[:notice] = l(:notice_deployment_credential_deleted_with_key, :title => keylabel(@key), :perm => @cred[:perm])
         else
@@ -152,6 +153,15 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   end
 
   protected
+
+  def delete_ssh_key(key)
+    repo_key = Hash.new
+    repo_key[:title]    = key.identifier
+    repo_key[:key]      = key.key
+    repo_key[:location] = key.location
+    repo_key[:owner]    = key.owner
+    GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
+  end
 
   # This is a success URL to return to basic listing
   def success_url

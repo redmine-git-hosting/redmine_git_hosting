@@ -13,17 +13,33 @@ class GitolitePublicKeysController < ApplicationController
   helper :gitolite_public_keys
   include GitolitePublicKeysHelper
 
-  def edit
-    redirect_to url_for(:controller=>'my', :action=>'account', :public_key_id => @gitolite_public_key[:id])
+  def create
+    GitHostingObserver.set_update_active(false)
+    @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
+    if params[:create_button]
+      if @gitolite_public_key.save
+        flash[:notice] = l(:notice_public_key_added, :title => keylabel(@gitolite_public_key))
+
+        respond_to do |format|
+          format.html { redirect_to @redirect_url }
+        end
+      else
+        flash[:error] = @gitolite_public_key.errors.full_messages.to_sentence
+
+        respond_to do |format|
+          format.html { redirect_to @redirect_url }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to @redirect_url }
+      end
+    end
+    GitHostingObserver.set_update_active(true)
   end
 
-  def destroy
-    GitHostingObserver.set_update_active(false)
-    if !request.get?
-      destroy_key
-    end
-    redirect_to @redirect_url
-    GitHostingObserver.set_update_active(true)
+  def edit
+    redirect_to url_for(:controller => 'my', :action => 'account', :public_key_id => @gitolite_public_key[:id])
   end
 
   def update
@@ -31,22 +47,16 @@ class GitolitePublicKeysController < ApplicationController
     if !request.get?
       if params[:save_button]
         if @gitolite_public_key.update_attributes(params[:gitolite_public_key])
-          flash[:notice] = l(:notice_public_key_updated, :title=>keylabel(@gitolite_public_key))
+          flash[:notice] = l(:notice_public_key_updated, :title => keylabel(@gitolite_public_key))
 
           respond_to do |format|
             format.html { redirect_to @redirect_url }
-            format.js
           end
         else
+          flash[:error] = @gitolite_public_key.errors.full_messages.to_sentence
+
           respond_to do |format|
-            format.html {
-              flash[:error] = l(:error_public_key_create_failed)
-              # This doesn't give back validation errors (messy!)
-              redirect_to @redirect_url
-            }
-            format.js {
-              render :action => "form_error"
-            }
+            format.html { redirect_to @redirect_url }
           end
         end
       else
@@ -54,42 +64,18 @@ class GitolitePublicKeysController < ApplicationController
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
-          format.js
         end
       end
     end
     GitHostingObserver.set_update_active(true)
   end
 
-  def create
+  def destroy
     GitHostingObserver.set_update_active(false)
-    @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
-    if params[:create_button]
-      if @gitolite_public_key.save
-        flash[:notice] = l(:notice_public_key_added, :title=>keylabel(@gitolite_public_key))
-
-        respond_to do |format|
-          format.html { redirect_to @redirect_url }
-          format.js
-        end
-      else
-        respond_to do |format|
-          format.html {
-            flash[:error] = l(:error_public_key_create_failed)
-            # This doesn't give back validation errors (messy!)
-            redirect_to @redirect_url
-          }
-          format.js {
-            render :action => "form_error"
-          }
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to @redirect_url }
-        format.js { render :update }
-      end
+    if request.delete?
+      destroy_key
     end
+    redirect_to @redirect_url
     GitHostingObserver.set_update_active(true)
   end
 
@@ -131,8 +117,32 @@ class GitolitePublicKeysController < ApplicationController
 
     # Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
     @gitolite_public_key.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
+    destroy_ssh_key
 
-    flash[:notice] = l(:notice_public_key_deleted, :title=>keylabel(@gitolite_public_key))
+    flash[:notice] = l(:notice_public_key_deleted, :title => keylabel(@gitolite_public_key))
+  end
+
+  def destroy_ssh_key
+    GitHosting.logger.info "User '#{User.current.login}' has deleted a SSH key"
+    repo_key = Hash.new
+    repo_key[:title]    = @gitolite_public_key.identifier
+    repo_key[:key]      = @gitolite_public_key.key
+    repo_key[:location] = @gitolite_public_key.location
+    repo_key[:owner]    = @gitolite_public_key.owner
+    GitHosting.logger.info "Delete SSH key #{@gitolite_public_key.identifier}"
+    GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
+
+    project_list = Array.new
+    @gitolite_public_key.user.projects_by_role.each do |role|
+      role[1].each do |project|
+        project_list.push(project.id)
+      end
+    end
+
+    if project_list.length > 0
+      GitHosting.logger.info "Update project to remove SSH access : #{project_list.uniq}"
+      GithostingShellWorker.perform_async({ :command => :update_projects, :object => project_list.uniq })
+    end
   end
 
 end

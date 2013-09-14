@@ -46,6 +46,8 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :strip_whitespace
   before_validation :remove_control_characters
 
+  #after_commit      :add_ssh_key, :on => :create
+
   def set_identifier
     self.identifier ||=
       begin
@@ -124,6 +126,26 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   protected
+
+
+  def add_ssh_key
+    GitHosting.logger.info "User '#{User.current.login}' has added a SSH key"
+    GithostingShellWorker.perform_async({ :command => :add_ssh_key, :object => self.user.id })
+
+    if user_key?
+      project_list = Array.new
+      self.user.projects_by_role.each do |role|
+        role[1].each do |project|
+          project_list.push(project.id)
+        end
+      end
+
+      if project_list.length > 0
+        GitHosting.logger.info "Update project to add SSH access : #{project_list.uniq}"
+        GithostingShellWorker.perform_async({ :command => :update_projects, :object => project_list.uniq })
+      end
+    end
+  end
 
 
   # Strip leading and trailing whitespace
