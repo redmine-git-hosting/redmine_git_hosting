@@ -1,12 +1,5 @@
 <%= error_messages_for 'repository' %>
 
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
-  <%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-  <%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
-  <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
-<% end %>
-
 <div class="box tabular">
 
   <% if @repository && @repository.is_a?(Repository::Git) && (GitHostingHelper.can_view_deployment_keys(@repository.project) || GitHostingHelper.can_view_post_receive_urls(@repository.project) || GitHostingHelper.can_view_mirrors(@repository.project)) %>
@@ -50,6 +43,7 @@
       <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
       <%= select_tag "extra[git_http]", options_for_select([
                                                               [l(:label_disabled), "0"],
+                                                              [l(:label_http_only), "3"],
                                                               [l(:label_https_only), "1"],
                                                               [l(:label_https_and_http), "2"]
                                                             ], :selected => @repository.extra[:git_http].to_s) %>

@@ -100,7 +100,7 @@
 
 <% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
   <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>
-    <%= render :partial => 'deployment_credentials/view_list' %>
+    <%= render :partial => 'repository_deployment_credentials/view_list' %>
   <% end %>
 
   <% if GitHostingHelper.can_view_post_receive_urls(@repository.project) %>

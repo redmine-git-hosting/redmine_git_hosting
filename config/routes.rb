@@ -19,7 +19,7 @@ def install_old_routes
         post_receive_views.connect 'repositories/:repository_id/post-receive-urls/delete/:id', :action => 'destroy', :conditions => {:method => [:get, :delete]}
       end
 
-      repo_mapper.with_options :controller => 'deployment_credentials' do |deploy_views|
+      repo_mapper.with_options :controller => 'repository_deployment_credentials' do |deploy_views|
         deploy_views.connect 'repositories/:repository_id/deployment-credentials/new',        :action => 'create_with_key', :conditions => {:method => [:get, :post]}
         deploy_views.connect 'repositories/:repository_id/deployment-credentials/edit/:id',   :action => 'edit',            :conditions => {:method => :get}
         deploy_views.connect 'repositories/:repository_id/deployment-credentials/update/:id', :action => 'update',          :conditions => {:method => :put}
@@ -56,10 +56,10 @@ def install_new_routes
     match 'repositories/:repository_id/post-receive-urls/update/:id', :to => 'repository_post_receive_urls#update',  :via => [:put]
     match 'repositories/:repository_id/post-receive-urls/delete/:id', :to => 'repository_post_receive_urls#destroy', :via => [:get, :delete]
 
-    match 'repositories/:repository_id/deployment-credentials/new',        :to => 'deployment_credentials#create_with_key', :via => [:get, :post]
-    match 'repositories/:repository_id/deployment-credentials/edit/:id',   :to => 'deployment_credentials#edit',            :via => [:get]
-    match 'repositories/:repository_id/deployment-credentials/update/:id', :to => 'deployment_credentials#update',          :via => [:put]
-    match 'repositories/:repository_id/deployment-credentials/delete/:id', :to => 'deployment_credentials#destroy',         :via => [:get, :delete]
+    match 'repositories/:repository_id/deployment-credentials/new',        :to => 'repository_deployment_credentials#create_with_key', :via => [:get, :post]
+    match 'repositories/:repository_id/deployment-credentials/edit/:id',   :to => 'repository_deployment_credentials#edit',            :via => [:get]
+    match 'repositories/:repository_id/deployment-credentials/update/:id', :to => 'repository_deployment_credentials#update',          :via => [:put]
+    match 'repositories/:repository_id/deployment-credentials/delete/:id', :to => 'repository_deployment_credentials#destroy',         :via => [:get, :delete]
 
     # SMART HTTP
     match ':repo_path/*git_params', :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
@@ -77,4 +77,3 @@ if Rails::VERSION::MAJOR >= 3
 else
   install_old_routes
 end
-

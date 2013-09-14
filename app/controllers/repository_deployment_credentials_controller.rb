@@ -1,4 +1,4 @@
-class DeploymentCredentialsController < ApplicationController
+class RepositoryDeploymentCredentialsController < ApplicationController
   unloadable
 
   before_filter :require_login
@@ -27,7 +27,7 @@ class DeploymentCredentialsController < ApplicationController
   end
 
   def create_with_key
-    @cred = DeploymentCredential.new(params[:deployment_credentials])
+    @cred = RepositoryDeploymentCredential.new(params[:repository_deployment_credentials])
     @key = nil
     if params[:gitolite_public_key] && params[:gitolite_public_key][:id]
       @key = GitolitePublicKey.find_by_id(params[:gitolite_public_key][:id])
@@ -44,10 +44,10 @@ class DeploymentCredentialsController < ApplicationController
       @other_keys = []
       if User.current.admin?
         # Admin can use other's deploy keys as well
-        deploy_users = @project.users.find(:all, :order =>"login ASC").select {|x| x != User.current && x.allowed_to?(:create_deployment_keys,@project)}
+        deploy_users = @project.users.find(:all, :order => "login ASC").select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
         @other_keys = deploy_users.map {|user| user.gitolite_public_keys.active.deploy_key.find(:all, :order => "title ASC")}.flatten
       end
-      @disabled_keys = @repository.deployment_credentials.active.map(&:gitolite_public_key)
+      @disabled_keys = @repository.repository_deployment_credentials.active.map(&:gitolite_public_key)
       if @key.new_record?
         @key.title = suggested_title
       end
@@ -71,17 +71,15 @@ class DeploymentCredentialsController < ApplicationController
       # Make sure that cred will validate even if key is new.
       @cred.gitolite_public_key = @key
 
-      GitHostingObserver.set_update_active(false);
+      GitHostingObserver.set_update_active(false)
+
       @key.valid?  # set error messages on key (in case cred is invalid)
       if @cred.valid? && @key.save && @cred.save
-        flash[:notice] = l(:notice_deployment_credential_added, :title=>keylabel(@key), :perm=>@cred[:perm])
+        flash[:notice] = l(:notice_deployment_credential_added, :title => keylabel(@key), :perm => @cred[:perm])
 
-        redirect_url = success_url
         respond_to do |format|
-          format.html {
-            redirect_to redirect_url
-          }
-          format.js { render :update }
+          format.html { redirect_to success_url }
+          format.js { render "update", :layout => false }
         end
       else
         respond_to do |format|
@@ -89,12 +87,11 @@ class DeploymentCredentialsController < ApplicationController
             flash[:error] = l(:error_deployment_credential_create_failed)
             render :action => "create_with_key"
           }
-          format.js {
-            render :action => "form_error"
-          }
+          format.js { render "form_error", :layout => false }
         end
       end
-      GitHostingObserver.set_update_active(@project);
+
+      GitHostingObserver.set_update_active(@project)
     end
   end
 
@@ -103,18 +100,15 @@ class DeploymentCredentialsController < ApplicationController
   end
 
   def update
-    GitHostingObserver.set_update_active(false);
+    GitHostingObserver.set_update_active(false)
 
     # Can only alter the permissions
-    if @cred.update_attributes(params[:deployment_credentials])
-      flash[:notice] = l(:notice_deployment_credential_updated, :title=>keylabel(@key), :perm=>@cred[:perm])
+    if @cred.update_attributes(params[:repository_deployment_credentials])
+      flash[:notice] = l(:notice_deployment_credential_updated, :title => keylabel(@key), :perm => @cred[:perm])
 
-      redirect_url = success_url
       respond_to do |format|
-        format.html {
-          redirect_to redirect_url
-        }
-        format.js
+        format.html { redirect_to success_url }
+        format.js { render "update", :layout => false }
       end
     else
       respond_to do |format|
@@ -122,41 +116,39 @@ class DeploymentCredentialsController < ApplicationController
           flash[:error] = l(:error_deployment_credential_update_failed)
           render :action => "edit"
         }
-        format.js {
-          render :action => "form_error"
-        }
+        format.js { render "form_error", :layout => false }
       end
     end
-    GitHostingObserver.set_update_active(@project);
+
+    GitHostingObserver.set_update_active(@project)
   end
 
   def destroy
     key = @cred.gitolite_public_key
-    @will_delete_key = key.deploy_key? && key.delete_when_unused && key.deployment_credentials.count == 1
+    @will_delete_key = key.deploy_key? && key.delete_when_unused && key.repository_deployment_credentials.count == 1
     if request.get?
       # display confirmation view
     else
-      GitHostingObserver.set_update_active(false);
+      GitHostingObserver.set_update_active(false)
       if params[:confirm]
         key = @cred.gitolite_public_key
         @cred.destroy
-        if @will_delete_key && key.deployment_credentials.empty?
+        if @will_delete_key && key.repository_deployment_credentials.empty?
           # Key no longer used -- delete it!
           key.destroy
-          flash[:notice] = l(:notice_deployment_credential_deleted_with_key, :title=>keylabel(@key), :perm=>@cred[:perm])
+          flash[:notice] = l(:notice_deployment_credential_deleted_with_key, :title => keylabel(@key), :perm => @cred[:perm])
         else
-          flash[:notice] = l(:notice_deployment_credential_deleted, :title=>keylabel(@key), :perm=>@cred[:perm])
+          flash[:notice] = l(:notice_deployment_credential_deleted, :title => keylabel(@key), :perm => @cred[:perm])
         end
       end
-      redirect_url = success_url
-      respond_to do |format|
-        format.html {redirect_to(redirect_url)}
-      end
-      GitHostingObserver.set_update_active(@project);
-    end
-  end
 
-  def settings
+      respond_to do |format|
+        format.html { redirect_to success_url }
+        format.js { render "destroy", :layout => false }
+      end
+
+      GitHostingObserver.set_update_active(@project)
+    end
   end
 
   protected
@@ -201,7 +193,7 @@ class DeploymentCredentialsController < ApplicationController
   end
 
   def find_deployment_credential
-    cred = DeploymentCredential.find_by_id(params[:id])
+    cred = RepositoryDeploymentCredential.find_by_id(params[:id])
     if cred && cred.user && cred.repository && (User.current.admin? || cred.user == User.current)
       @cred = cred
     elsif cred
@@ -228,17 +220,17 @@ class DeploymentCredentialsController < ApplicationController
     default_title = "#{@project.name} Deploy Key"
 
     # Find number of keys or max default deploy key that matches
-    maxnum = @repository.deployment_credentials.map(&:gitolite_public_key).uniq.count
-    @repository.deployment_credentials.each do |cred|
+    maxnum = @repository.repository_deployment_credentials.map(&:gitolite_public_key).uniq.count
+    @repository.repository_deployment_credentials.each do |cred|
       if matches = cred.gitolite_public_key.title.match(/#{default_title} (\d+)$/)
-        maxnum = [maxnum,matches[1].to_i].max
+        maxnum = [maxnum, matches[1].to_i].max
       end
     end
 
     # Also, check for uniqueness for current user
     @user.gitolite_public_keys.each do |key|
       if matches = key.title.match(/#{default_title} (\d+)$/)
-        maxnum = [maxnum,matches[1].to_i].max
+        maxnum = [maxnum, matches[1].to_i].max
       end
     end
 
