@@ -983,7 +983,7 @@ module GitHosting
     @@recursionCheck = true
 
     # Grab actual lock
-    if !lock(GitHostingConf.gitolite_lock_wait_time)
+    if !lock
       logger.error "update_repositories() exited without acquiring lock!"
       @@recursionCheck = false
       return
