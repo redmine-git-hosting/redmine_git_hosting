@@ -1200,7 +1200,7 @@ module GitHosting
               read_user_keys  = []
               write_user_keys = []
 
-              repo.deployment_credentials.active.select(&:honored?).each do |cred|
+              repo.repository_deployment_credentials.active.select(&:honored?).each do |cred|
                 if cred.allowed_to?(:commit_access)
                   write_user_keys << cred.gitolite_public_key.identifier
                 elsif cred.allowed_to?(:view_changesets)
