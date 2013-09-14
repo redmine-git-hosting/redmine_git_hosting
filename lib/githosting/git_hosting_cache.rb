@@ -310,15 +310,15 @@ class GitHostingCache
   ###############################################
 
   def self.max_cache_time
-    GitHostingConf.git_cache_max_time.to_i          # in seconds, default = 60
+    GitHostingConf.gitolite_cache_max_time.to_i          # in seconds, default = 60
   end
 
   def self.max_cache_elements
-    GitHostingConf.git_cache_max_elements.to_i      # default = 100
+    GitHostingConf.gitolite_cache_max_elements.to_i      # default = 100
   end
 
   def self.max_cache_size
-    GitHostingConf.git_cache_max_size.to_i*1024*1024   # In MB, default = 16MB, converted to bytes
+    GitHostingConf.gitolite_cache_max_size.to_i*1024*1024   # In MB, default = 16MB, converted to bytes
   end
 
   def self.compose_key(key1,key2)
