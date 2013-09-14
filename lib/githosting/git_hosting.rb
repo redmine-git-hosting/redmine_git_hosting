@@ -665,7 +665,7 @@ module GitHosting
         if (return_val)
           shell %[chmod 700 "#{repo_dir}"]
           # Make sure we have our hooks setup
-          GitAdapterHooks.check_hooks_installed
+          GitoliteHooks.check_hooks_installed
           return return_val
         else
           # The attempt to merge can cause a weird failure mode when interacting with cron jobs that clean out old
@@ -691,7 +691,7 @@ module GitHosting
       shell %[chmod 700 "#{repo_dir}"]
 
       # Make sure we have our hooks setup
-      GitAdapterHooks.check_hooks_installed
+      GitoliteHooks.check_hooks_installed
 
       return true # On master (fresh clone)
     rescue => e
@@ -708,7 +708,7 @@ module GitHosting
         shell %[chmod 700 "#{repo_dir}"]
 
         # Make sure we have our hooks setup
-        GitAdapterHooks.check_hooks_installed
+        GitoliteHooks.check_hooks_installed
 
         return true # On master (fresh clone)
       rescue => e
@@ -1287,7 +1287,7 @@ module GitHosting
 
       # Set post receive hooks for new projects (or check all repositories on :resync_all).
       # We need to do this AFTER push, otherwise necessary repos may not be created yet.
-      GitAdapterHooks.setup_hooks_params((flags[:resync_all] || flags[:resync_hooks]) ? git_projects : new_projects)
+      GitoliteHooks.setup_hooks_params((flags[:resync_all] || flags[:resync_hooks]) ? git_projects : new_projects)
 
     rescue GitHostingException => e
       logger.error "update_repositories() failed"
