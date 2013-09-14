@@ -42,25 +42,28 @@
 
 </div>
 
-<script type="text/javascript">
-  Event.observe(window, 'load', load_form_actions);
-  function load_form_actions() {
-    key_mode_change($('gitolite_public_key_id'))
-    Event.observe('gitolite_public_key_id', 'change', function(event) {
-      key_mode_change(this);
-    });
-  }
-
-  function key_mode_change(elem) {
-    if (!elem) return;
-    var idx = elem.selectedIndex;
-    if (idx == 0) {
-      $('new_key_window').show();
-    } else {
-      $('new_key_window').hide();
+<% if Rails::VERSION::MAJOR >= 3 %>
+<% else %>
+  <script type="text/javascript">
+    Event.observe(window, 'load', load_form_actions);
+    function load_form_actions() {
+      key_mode_change($('gitolite_public_key_id'))
+      Event.observe('gitolite_public_key_id', 'change', function(event) {
+        key_mode_change(this);
+      });
     }
-    if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
-  }
 
-  load_form_actions();
-</script>
+    function key_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('new_key_window').show();
+      } else {
+        $('new_key_window').hide();
+      }
+      if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+    }
+
+    load_form_actions();
+  </script>
+<% end %>

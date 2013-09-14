@@ -1,3 +1,19 @@
+<% content_for :header_tags do %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        initJqueryModalBox('dialog-box-post-receive-url', false);
+        initJqueryModalBox('dialog-box-post-receive-url-delete', true);
+
+        setUpJqueryModalBox('a.add-post-receive-url',    'dialog-box-post-receive-url');
+        setUpJqueryModalBox('a.edit-post-receive-url',   'dialog-box-post-receive-url');
+        setUpJqueryModalBox('a.delete-post-receive-url', 'dialog-box-post-receive-url-delete');
+      });
+    </script>
+  <% else %>
+  <% end %>
+<% end %>
+
 <div class="box tabular">
 
   <% if GitHostingHelper.can_create_post_receive_urls(@repository.project) %>
@@ -52,71 +68,59 @@
 
 </div>
 
-<div id="dialog-box-post-receive-url"></div>
-<div id="dialog-box-post-receive-url-delete"></div>
-
-<script type="text/javascript">
 <% if Rails::VERSION::MAJOR >= 3 %>
-  $(document).ready(function() {
-    initModalBox('dialog-box-post-receive-url', false);
-    initModalBox('dialog-box-post-receive-url-delete', true);
-    setUpModalBox('a.add-post-receive-url',    'dialog-box-post-receive-url');
-    setUpModalBox('a.edit-post-receive-url',   'dialog-box-post-receive-url');
-    setUpModalBox('a.delete-post-receive-url', 'dialog-box-post-receive-url-delete');
-  });
+  <div id="dialog-box-post-receive-url"></div>
+  <div id="dialog-box-post-receive-url-delete"></div>
 <% else %>
-  function getWidth() {
-    var width = 60*document.viewport.getWidth()/100;
-    if (width<750) { width=750 };
-    return width;
-  }
+  <script type="text/javascript">
 
-  function set_post_receive_modal_box() {
-    $$(".add-post-receive-url").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_post_receive_url_create)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
+    function set_post_receive_modal_box() {
+      $$(".add-post-receive-url").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_post_receive_url_create)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
 
-    $$(".edit-post-receive-url").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_post_receive_url_edit)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
+      $$(".edit-post-receive-url").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_post_receive_url_edit)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
 
-    $$(".delete-post-receive-url").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_post_receive_url_delete)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
-  }
+      $$(".delete-post-receive-url").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_post_receive_url_delete)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
+    }
 
-  // If loaded via ajax, load immediately, else observe events
-  <% if request.xhr? %>
-    set_post_receive_modal_box();
-  <% else %>
-    Event.observe(window, 'load', set_post_receive_modal_box);
-  <% end %>
+    // If loaded via ajax, load immediately, else observe events
+    <% if request.xhr? %>
+      set_post_receive_modal_box();
+    <% else %>
+      Event.observe(window, 'load', set_post_receive_modal_box);
+    <% end %>
+
+  </script>
 <% end %>
-</script>

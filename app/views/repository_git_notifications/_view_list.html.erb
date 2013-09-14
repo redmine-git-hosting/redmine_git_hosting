@@ -1,3 +1,19 @@
+<% content_for :header_tags do %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        initJqueryModalBox('dialog-box-git-notification', false);
+        initJqueryModalBox('dialog-box-git-notification-delete', true);
+
+        setUpJqueryModalBox('a.add-git-notification',    'dialog-box-git-notification');
+        setUpJqueryModalBox('a.edit-git-notification',   'dialog-box-git-notification');
+        setUpJqueryModalBox('a.delete-git-notification', 'dialog-box-git-notification-delete');
+      });
+    </script>
+  <% else %>
+  <% end %>
+<% end %>
+
 <div class="box tabular" style="overflow: auto;">
 
   <% if @repository.extra[:git_notify] == 1 %>
@@ -112,18 +128,13 @@
       <thead><tr><th style="text-align:center;">No Mailing List Defined</td></th></thead>
     </table>
   <% end %>
+
 </div>
 
-<div id="dialog-box-git-notification"></div>
-<div id="dialog-box-git-notification-delete"></div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    initModalBox('dialog-box-git-notification', false);
-    initModalBox('dialog-box-git-notification-delete', true);
-
-    setUpModalBox('a.add-git-notification',    'dialog-box-git-notification');
-    setUpModalBox('a.edit-git-notification',   'dialog-box-git-notification');
-    setUpModalBox('a.delete-git-notification', 'dialog-box-git-notification-delete');
-  });
-</script>
+<% if Rails::VERSION::MAJOR >= 3 %>
+  <div id="dialog-box-git-notification"></div>
+  <div id="dialog-box-git-notification-delete"></div>
+<% else %>
+  <script type="text/javascript">
+  </script>
+<% end %>

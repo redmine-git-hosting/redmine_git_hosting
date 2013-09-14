@@ -1,3 +1,19 @@
+<% content_for :header_tags do %>
+  <% if Rails::VERSION::MAJOR >= 3 %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        initJqueryModalBox('dialog-box-deployment-credential', false);
+        initJqueryModalBox('dialog-box-deployment-credential-delete', true);
+
+        setUpJqueryModalBox('a.add-deployment-credential',    'dialog-box-deployment-credential');
+        setUpJqueryModalBox('a.edit-deployment-credential',   'dialog-box-deployment-credential');
+        setUpJqueryModalBox('a.delete-deployment-credential', 'dialog-box-deployment-credential-delete');
+      });
+    </script>
+  <% else %>
+  <% end %>
+<% end %>
+
 <div class="box tabular">
 
   <% if GitHostingHelper.can_create_deployment_keys(@repository.project) %>
@@ -62,71 +78,59 @@
 
 </div>
 
-<div id="dialog-box-deployment-credential"></div>
-<div id="dialog-box-deployment-credential-delete"></div>
-
-<script type="text/javascript">
 <% if Rails::VERSION::MAJOR >= 3 %>
-  $(document).ready(function() {
-    initModalBox('dialog-box-deployment-credential', false);
-    initModalBox('dialog-box-deployment-credential-delete', true);
-    setUpModalBox('a.add-deployment-credential',    'dialog-box-deployment-credential');
-    setUpModalBox('a.edit-deployment-credential',   'dialog-box-deployment-credential');
-    setUpModalBox('a.delete-deployment-credential', 'dialog-box-deployment-credential-delete');
-  });
+  <div id="dialog-box-deployment-credential"></div>
+  <div id="dialog-box-deployment-credential-delete"></div>
 <% else %>
-  function getWidth() {
-    var width = 60*document.viewport.getWidth()/100;
-    if (width<750) { width=750 };
-    return width;
-  }
+  <script type="text/javascript">
 
-  function set_deployment_credential_modal_box() {
-    $$(".add-deployment-credential").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_deployment_credential_create)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
+    function set_deployment_credential_modal_box() {
+      $$(".add-deployment-credential").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_deployment_credential_create)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
 
-    $$(".edit-deployment-credential").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_deployment_credential_edit)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
+      $$(".edit-deployment-credential").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_deployment_credential_edit)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
 
-    $$(".delete-deployment-credential").each(function(elem) {
-      Event.observe(elem, 'click', function(event) {
-        Event.stop(event);
-        Modalbox.show(
-          elem.href, {
-            title: "<%=l(:label_deployment_credential_delete)%>",
-            width: getWidth()
-          }
-        )
-        return false;
-      })
-    });
-  }
+      $$(".delete-deployment-credential").each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: "<%=l(:label_deployment_credential_delete)%>",
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
+    }
 
-  // If loaded via ajax, load immediately, else observe events
-  <% if request.xhr? %>
-    set_deployment_credential_modal_box();
-  <% else %>
-    Event.observe(window, 'load', set_deployment_credential_modal_box);
-  <% end %>
+    // If loaded via ajax, load immediately, else observe events
+    <% if request.xhr? %>
+      set_deployment_credential_modal_box();
+    <% else %>
+      Event.observe(window, 'load', set_deployment_credential_modal_box);
+    <% end %>
+
+  </script>
 <% end %>
-</script>
