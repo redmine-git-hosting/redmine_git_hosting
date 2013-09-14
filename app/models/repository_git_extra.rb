@@ -1,20 +1,13 @@
-require 'digest/sha1'
-
-class GitRepositoryExtra < ActiveRecord::Base
+class RepositoryGitExtra < ActiveRecord::Base
   unloadable
 
   belongs_to :repository, :class_name => 'Repository', :foreign_key => 'repository_id'
+
   validates_associated :repository
   attr_accessible :id, :repository_id, :key, :git_http, :git_daemon, :notify_cia
 
   after_initialize :set_values
 
-  def set_values
-    if self.repository.nil?
-      generate
-      setup_defaults
-    end
-  end
 
   def validate_encoded_time(clear_time, encoded_time)
     valid = false
@@ -29,10 +22,11 @@ class GitRepositoryExtra < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      GitHosting.logger.error "[GitHosting] error in validate_encoded_time(): #{e.message}"
+      GitHosting.logger.error "Error in validate_encoded_time(): #{e.message}"
     end
     valid
   end
+
 
   def generate
     if self.key.nil?
@@ -40,10 +34,21 @@ class GitRepositoryExtra < ActiveRecord::Base
     end
   end
 
+
+  private
+
+
+  def set_values
+    if self.repository.nil?
+      generate
+      setup_defaults
+    end
+  end
+
   def setup_defaults
-    write_attribute(:git_http,   Setting.plugin_redmine_git_hosting['gitHttpDefault']) if Setting.plugin_redmine_git_hosting['gitHttpDefault']
-    write_attribute(:git_daemon, Setting.plugin_redmine_git_hosting['gitDaemonDefault']) if Setting.plugin_redmine_git_hosting['gitDaemonDefault']
-    write_attribute(:notify_cia, Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']) if Setting.plugin_redmine_git_hosting['gitNotifyCIADefault']
+    write_attribute(:git_http,   GitHostingConf.gitolite_http_by_default)       if GitHostingConf.gitolite_http_by_default
+    write_attribute(:git_daemon, GitHostingConf.gitolite_daemon_by_default)     if GitHostingConf.gitolite_daemon_by_default
+    write_attribute(:notify_cia, GitHostingConf.gitolite_notify_cia_by_default) if GitHostingConf.gitolite_notify_cia_by_default
   end
 
 end

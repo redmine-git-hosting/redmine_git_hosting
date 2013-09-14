@@ -13,7 +13,7 @@ module RedmineGitHosting
             alias_method_chain :fetch_changesets, :git_hosting
           end
 
-          has_one :git_extra,        :foreign_key => 'repository_id', :class_name => 'GitRepositoryExtra', :dependent => :destroy
+          has_one  :git_extra,        :foreign_key => 'repository_id', :class_name => 'RepositoryGitExtra', :dependent => :destroy
 
           has_many :cia_notifications, :foreign_key =>'repository_id', :class_name => 'GitCiaNotification', :dependent => :destroy, :extend => RedmineGitHosting::Patches::RepositoryCiaFilters::FilterMethods
           has_many :repository_mirrors,                :dependent => :destroy
@@ -147,9 +147,9 @@ module RedmineGitHosting
           retval = self.git_extra
           if retval.nil?
             # Construct new extra structure, followed by updating hooks (if necessary)
-            GitHostingObserver.set_update_active(false);
+            GitHostingObserver.set_update_active(false)
 
-            retval = GitRepositoryExtra.new()
+            retval = RepositoryGitExtra.new()
             self.git_extra = retval  # Should save object...
 
             # If self.project != nil, trigger repair of hooks
