@@ -53,7 +53,7 @@ class RepositoryMirror < ActiveRecord::Base
     push_args << "\"#{dequote(url)}\" "
     push_args << "\"#{dequote(explicit_refspec)}\" " unless explicit_refspec.blank?
 
-    shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args} 2>&1' | #{GitHosting.git_user_runner} "bash" ].chomp
+    shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args} 2>&1' | #{GitHosting.shell_cmd_runner} "bash" ].chomp
     push_failed = ($?.to_i != 0) ? true : false
 
     if (push_failed)

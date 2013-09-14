@@ -29,7 +29,7 @@ class GitHostingObserver < ActiveRecord::Observer
       # If about to transition to zero and have something to run, do it
       if @@updating_active_stack == 1 && (@@cached_project_updates.length > 0 || !@@updating_active_flags.empty?)
         @@cached_project_updates = @@cached_project_updates.flatten.uniq.compact
-        GitHosting::update_repositories(@@cached_project_updates, @@updating_active_flags)
+        GitHosting.update_repositories(@@cached_project_updates, @@updating_active_flags)
         @@cached_project_updates = []
         @@updating_active_flags = {}
       end
@@ -68,7 +68,7 @@ class GitHostingObserver < ActiveRecord::Observer
   def after_destroy(object)
     if object.is_a?(Repository::Git)
       update_repositories(object, :delete => true)
-      CachedShellRedirector::clear_cache_for_repository(object)
+      GitHostingCache.clear_cache_for_repository(object)
     else
       update_repositories(object)
     end
@@ -88,7 +88,7 @@ class GitHostingObserver < ActiveRecord::Observer
 
     if (projects.length > 0)
       if (@@updating_active)
-        GitHosting::update_repositories(projects,*flags)
+        GitHosting.update_repositories(projects,*flags)
       else
         @@cached_project_updates.concat(projects)
         @@updating_active_flags.merge!(*flags) unless flags.empty?

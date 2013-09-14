@@ -119,7 +119,7 @@ module RedmineGitHosting
 
         # Repo ident unique (definitely true if Redmine < 1.4)
         def repo_ident_unique?
-          !GitHosting.multi_repos? || GitHostingConf.repo_ident_unique?
+          !GitHosting.multi_repos? || GitHostingConf.unique_repo_identifier?
         end
 
 

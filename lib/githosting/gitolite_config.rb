@@ -188,8 +188,8 @@ module GitHosting
     # See all_repos() for description of why the value is what it is.
     def self.gitolite_repository_map
       gitolite_repos = Hash.new{|hash, key| hash[key] = {}}  # default -- empty hash
-      myfiles = %x[#{GitHosting.git_user_runner} 'find #{GitHostingConf.repository_base} -type d -name "*.git" -prune -print'].chomp.split("\n")
-      filesplit = /^(\.\/)*#{GitHostingConf.repository_base}(.*?([^\/]+\/)?([^\/]+))\.git$/
+      myfiles = %x[#{GitHosting.shell_cmd_runner} 'find #{GitHostingConf.gitolite_global_storage_dir} -type d -name "*.git" -prune -print'].chomp.split("\n")
+      filesplit = /^(\.\/)*#{GitHostingConf.gitolite_global_storage_dir}(.*?([^\/]+\/)?([^\/]+))\.git$/
       myfiles.each do |nextfile|
         if filesplit =~ nextfile
           gitolite_repos[$4][$2] = "#{$3}#{$4}"
