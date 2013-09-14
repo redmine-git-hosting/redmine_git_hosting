@@ -102,7 +102,7 @@ module RedmineGitHosting
           if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
             if proj = Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
               # return default or first repo with blank identifier (or first Git repo--very rare?)
-              proj && (proj.repository || proj.repo_blank_ident || proj.gl_repos.first)
+              proj && (proj.repository || proj.repo_blank_ident || proj.gitolite_repos.first)
             elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
               find_by_identifier(parseit[3])
             elsif parseit[2] && proj = Project.find_by_identifier(parseit[2])

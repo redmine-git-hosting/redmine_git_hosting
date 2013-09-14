@@ -97,7 +97,7 @@ module GitHosting
       check_hooks_installed
 
       if projects.nil?
-        projects = Project.visible.all.select{|proj| proj.gl_repos.any?}
+        projects = Project.visible.all.select{|proj| proj.gitolite_repos.any?}
       elsif projects.instance_of? Project
         projects = [projects]
       end
@@ -111,7 +111,7 @@ module GitHosting
 
       local_config_map = get_local_config_map
       projects.each do |project|
-        project.gl_repos.each do |repo|
+        project.gitolite_repos.each do |repo|
           setup_hooks_for_repository(repo, local_config_map[GitHosting.repository_path(repo)])
         end
       end

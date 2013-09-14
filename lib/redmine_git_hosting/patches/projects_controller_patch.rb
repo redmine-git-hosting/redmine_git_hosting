@@ -38,7 +38,7 @@ module RedmineGitHosting
 
       def disable_git_daemon_if_not_public
         # Go through all gitolite repos and diable git_daemon if necessary
-        @project.gl_repos.each do |repo|
+        @project.gitolite_repos.each do |repo|
           if repo.extra.git_daemon == 1 && (not @project.is_public )
             repo.extra.git_daemon = 0;
             repo.extra.save
@@ -77,7 +77,7 @@ module RedmineGitHosting
         # Adjust daemon status
         disable_git_daemon_if_not_public
 
-        if @project.gl_repos.detect {|repo| repo.url != GitHosting.repository_path(repo) || repo.url != repo.root_url}
+        if @project.gitolite_repos.detect {|repo| repo.url != GitHosting.repository_path(repo) || repo.url != repo.root_url}
           # Hm... something about parent hierarchy changed.  Update us and our children
           GitHostingObserver.set_update_active(@project, :descendants)
         else

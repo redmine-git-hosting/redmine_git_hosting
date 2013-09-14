@@ -882,7 +882,7 @@ module GitHosting
     if flags[:delete]
       git_projects = projects
     else
-      git_projects = projects.uniq.select{|p| p.gl_repos.any?}
+      git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}
     end
 
     return if git_projects.empty?
@@ -1036,7 +1036,7 @@ module GitHosting
           end
         end
 
-        proj.gl_repos.each do |repo|
+        proj.gitolite_repos.each do |repo|
           repo_name = repository_name(repo)
 
           # Common case: these are hashes with zero or one one element (except when

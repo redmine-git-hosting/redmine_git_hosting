@@ -5,8 +5,10 @@ module RedmineGitHosting
 
       def self.included(base)
         base.class_eval do
-          helper :application_ext
-          include ApplicationExtHelper
+          unloadable
+
+          helper :git_hosting
+          include GitHostingHelper
         end
       end
 
