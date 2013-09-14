@@ -1,5 +1,3 @@
-require 'stringio'
-
 # Rewritten version of caching functionality to accommodate Redmine 1.4+
 # When the shell is called with options[:write_stdin], then part of the
 # argument on which caching is based is written to the input stream of the shell.
