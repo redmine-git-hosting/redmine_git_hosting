@@ -4,11 +4,13 @@
   <%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting') %>
   <%= stylesheet_link_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
   <%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+  <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
 <% end %>
 
 <div class="box tabular">
+
   <% if @repository && @repository.is_a?(Repository::Git) && (GitHostingHelper.can_view_deployment_keys(@repository.project) || GitHostingHelper.can_view_post_receive_urls(@repository.project) || GitHostingHelper.can_view_mirrors(@repository.project)) %>
-    <h3>Repository Options</h3>
+    <h3 class="git">Repository Options</h3>
   <% end %>
 
   <p>
@@ -31,14 +33,31 @@
   <% end %>
 
   <% if @repository && @repository.is_a?(Repository::Git) %>
+    <%
+      selected = "0"
+      if @repository.extra[:git_daemon] == 1
+        selected = "1"
+      elsif @project.is_public && GitHostingConf.gitolite_daemon_by_default == 1
+        selected = "1"
+      end
+    %>
     <p>
-      <%= label_tag  "extra[git_daemon]", l(:field_git_daemon) %>
-      <%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected=>(@project.is_public ? @repository.extra[:git_daemon].to_s : "0")), :disabled => !@project.is_public %>
+      <%= label_tag  "extra[git_daemon]", l(:label_enable_git_daemon) %>
+      <%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected => selected), :disabled => !@project.is_public %>
     </p>
 
     <p>
-      <%= label_tag  "extra[git_http]", l(:field_git_http) %>
-      <%= select_tag "extra[git_http]", options_for_select([ [l(:label_disabled), "0"], [l(:label_https_only), "1"], [l(:label_https_and_http), "2"] ], :selected => @repository.extra[:git_http].to_s) %>
+      <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
+      <%= select_tag "extra[git_http]", options_for_select([
+                                                              [l(:label_disabled), "0"],
+                                                              [l(:label_https_only), "1"],
+                                                              [l(:label_https_and_http), "2"]
+                                                            ], :selected => @repository.extra[:git_http].to_s) %>
+    </p>
+
+    <p>
+      <%= label_tag  "extra[git_notify]", l(:label_enable_git_notify) %>
+      <%= select_tag "extra[git_notify]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected => @repository.extra[:git_notify].to_s) %>
     </p>
 
     <p>
@@ -50,8 +69,6 @@
       <% end %>
     </p>
 
-    <%= javascript_include_tag('notify_cia_test', :plugin => 'redmine_git_hosting') %>
-
     <br/>
 
   <% else %>
@@ -60,4 +77,5 @@
 
   <%= submit_tag(@repository.new_record? ? l(:button_create) : l(:button_save), :disabled => button_disabled) %>
   <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+
 </div>
