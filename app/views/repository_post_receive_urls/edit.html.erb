@@ -3,13 +3,14 @@
 <% end %>
 
 <% form = labelled_form_for :repository_post_receive_urls, @prurl,
-                            :url => { :controller => 'repository_post_receive_urls', :action => 'update', :project_id => @project, :id => @prurl.id },
-                            :html => {:method => :post, :class => 'tabular'} do |f| %>
+                            :url  => { :controller => 'repository_post_receive_urls', :action => 'update', :project_id => @project, :id => @prurl.id },
+                            :html => { :method => :put, :class => 'tabular', :remote => true } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>
-  <%= submit_tag l(:button_save) %>
-  <% if Rails::VERSION::MAJOR >= 3 %>
-    <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
+
+  <% if not @is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
   <% end %>
 <% end %>
 <%= form if Rails::VERSION::MAJOR >= 3 %>
