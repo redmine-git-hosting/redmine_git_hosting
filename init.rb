@@ -21,52 +21,53 @@ Redmine::Plugin.register :redmine_git_hosting do
     :partial => 'settings/redmine_git_hosting',
     :default => {
       # Gitolite SSH Config
-      'gitUser'                       => 'git',
-      'sshServerLocalPort'            => '22',
-      'gitoliteIdentityFile'          => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s,
-      'gitoliteIdentityPublicKeyFile' => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s,
+      :gitolite_user                  => 'git',
+      :gitolite_server_port           => '22',
+      :gitolite_ssh_private_key       => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s,
+      :gitolite_ssh_public_key        => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
       # Gitolite Storage Config
-      'gitRepositoryBasePath'         => 'repositories/',
-      'gitRedmineSubdir'              => '',
-      'gitRecycleBasePath'            => 'recycle_bin/',
+      :gitolite_global_storage_dir    => 'repositories/',
+      :gitolite_redmine_storage_dir   => '',
+      :gitolite_recycle_bin_dir       => 'recycle_bin/',
 
       # Gitolite Global Config
-      'gitTempDataDir'                => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
-      'gitScriptDir'                  => '',
-      'gitLockWaitTime'                      => '10',
-      'gitConfigFile'                        => 'gitolite.conf',
-      'gitConfigHasAdminKey'                 => true,
-      'gitRecycleExpireTime'                 => '24.0',
-      'gitoliteLogLevel'                     => 'info',
-      'gitoliteLogSplit'                     => false,
+      :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_script_dir                   => '',
+      :gitolite_lock_wait_time               => 10,
+      :gitolite_config_file                  => 'gitolite.conf',
+      :gitolite_config_has_admin_key         => true,
+      :gitolite_recycle_bin_expiration_time  => '24.0',
+      :gitolite_log_level                    => 'info',
+      :gitolite_log_split                    => false,
 
       # Gitolite Hooks Config
-      'gitHooksAreAsynchronous'         => true,
-      'gitForceHooksUpdate'             => true,
-      'gitHooksDebug'                   => false,
+      :gitolite_hooks_are_asynchronous  => true,
+      :gitolite_force_hooks_update      => true,
+      :gitolite_hooks_debug             => false,
 
       # Gitolite Cache Config
-      'gitCacheMaxTime'                 => '-1',
-      'gitCacheMaxSize'                 => '16',
-      'gitCacheMaxElements'             => '100',
+      :gitolite_cache_max_time          => '-1',
+      :gitolite_cache_max_size          => '16',
+      :gitolite_cache_max_elements      => '100',
 
       # Gitolite Access Config
-      'gitServer'                       => 'localhost',
-      'httpServer'                      => 'localhost',
-
-      'httpServerSubdir'                => '',
-      'gitRepositoriesShowUrl'          => true,
-      'gitDaemonDefault'                => 0,
-      'gitHttpDefault'                  => 1,
+      :ssh_server_domain                => 'localhost',
+      :http_server_domain               => 'localhost',
+      :https_server_domain              => '',
+      :http_server_subdir               => '',
+      :show_repositories_url            => true,
+      :gitolite_daemon_by_default       => 0,
+      :gitolite_http_by_default         => 1,
 
       # Redmine Config
-      'allProjectsUseGit'               => false,
-      'deleteGitRepositories'           => false,
-      'gitRepositoryHierarchy'          => false,
-      'gitRepositoryIdentUnique'        => true,
+      :all_projects_use_git             => false,
+      :delete_git_repositories          => false,
+      :hierarchical_organisation        => false,
+      :unique_repo_identifier           => true,
 
-      'gitNotifyCIADefault'             => '0',
+      # Git Mailing List Config
+      :gitolite_notify_cia_by_default   => '0',
     }
   })
 

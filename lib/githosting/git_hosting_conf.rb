@@ -1,214 +1,156 @@
 module GitHostingConf
 
-  LOCK_WAIT_IF_UNDEF            = 10
-  REPOSITORY_IF_UNDEF           = 'repositories/'
-  REDMINE_SUBDIR                = ''
-  REDMINE_HIERARCHICAL          = true
-  HTTP_SERVER                   = 'localhost'
-  HTTP_SERVER_SUBDIR            = ''
-  TEMP_DATA_DIR                 = (ENV['HOME'] + '/tmp/redmine_git_hosting/').to_s
-  SCRIPT_DIR                    = ''
-  SCRIPT_PARENT                 = 'bin'
-  GIT_USER                      = 'git'
-  GIT_SERVER                    = 'localhost'
-  SSH_SERVER_LOCAL_PORT         = '22'
-  GITOLITE_SSH_PRIVATE_KEY      = (ENV['HOME'] + '/.ssh/redmine_gitolite_admin_id_rsa').to_s
-  GITOLITE_SSH_PUBLIC_KEY       = (ENV['HOME'] + '/.ssh/redmine_gitolite_admin_id_rsa.pub').to_s
-  ALL_PROJECTS_USE_GIT          = false
-  REPO_IDENT_UNIQUE             = true
-  GITOLITE_CONFIG_FILE          = 'gitolite.conf'
-  GITOLITE_CONFIG_HAS_ADMIN_KEY = true
-  DELETE_GIT_REPOSITORIES       = false
-  GIT_FORCE_HOOK_UPDATE         = true
-  GIT_HOOKS_DEBUG               = false
-  GIT_HOOKS_ARE_ASYNCHRONOUS    = true
-  GIT_CACHE_MAX_TIME            = '-1'
-  GIT_CACHE_MAX_SIZE            = '16'
-  GIT_CACHE_MAX_ELEMENTS        = '100'
-  RECYCLE_BIN_IF_UNDEF          = 'recycle_bin/'
-  PRESERVE_TIME_IF_UNDEF        = 1440
-  GITOLITE_LOG_SPLIT            = false
-  GITOLITE_LOG_LEVEL            = 'info'
+  ###############################
+  ##                           ##
+  ##       GITOLITE SSH        ##
+  ##                           ##
+  ###############################
+
+  GITOLITE_USER                 = 'git'
+  GITOLITE_SERVER_PORT          = '22'
+  GITOLITE_SSH_PRIVATE_KEY      = File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s
+  GITOLITE_SSH_PUBLIC_KEY       = File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s
+  GITOLITE_ADMIN_REPO           = 'gitolite-admin.git'
 
 
-  # Recycle bin base path (relative to git user home directory)
-  def self.recycle_bin
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRecycleBasePath'].nil?
-      Setting.plugin_redmine_git_hosting['gitRecycleBasePath']
+  def self.gitolite_user
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_user].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_user]
     else
-      RECYCLE_BIN_IF_UNDEF
+      GITOLITE_USER
     end
   end
 
-  # Recycle preservation time (in minutes)
-  def self.preserve_time
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRecycleExpireTime'].nil?
-      (Setting.plugin_redmine_git_hosting['gitRecycleExpireTime'].to_f * 60).to_i
+
+  def self.gitolite_server_port
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_server_port].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_server_port]
     else
-      PRESERVE_TIME_IF_UNDEF
+      GITOLITE_SERVER_PORT
     end
   end
 
-  # Time in seconds to wait before giving up on acquiring the lock
-  def self.lock_wait_time
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitLockWaitTime'].nil?
-      Setting.plugin_redmine_git_hosting['gitLockWaitTime'].to_i
-    else
-      LOCK_WAIT_IF_UNDEF
-    end
-  end
 
-  # Repository base path (relative to git user home directory)
-  def self.repository_base
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRepositoryBasePath'].nil?
-      Setting.plugin_redmine_git_hosting['gitRepositoryBasePath']
-    else
-      REPOSITORY_IF_UNDEF
-    end
-  end
-
-  # Redmine subdirectory path (relative to Repository base path
-  def self.repository_redmine_subdir
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRedmineSubdir'].nil?
-      Setting.plugin_redmine_git_hosting['gitRedmineSubdir']
-    else
-      REDMINE_SUBDIR
-    end
-  end
-
-  # Redmine repositories in hierarchy
-  def self.repository_hierarchy
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRepositoryHierarchy'].nil?
-      if Setting.plugin_redmine_git_hosting['gitRepositoryHierarchy'] == 'true'
-        return true
-      else
-        return false
-      end
-    else
-      REDMINE_HIERARCHICAL
-    end
-  end
-
-  def self.http_server
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['httpServer'].nil?
-      Setting.plugin_redmine_git_hosting['httpServer']
-    else
-      HTTP_SERVER
-    end
-  end
-
-  def self.http_server_subdir
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['httpServerSubdir'].nil?
-      Setting.plugin_redmine_git_hosting['httpServerSubdir']
-    else
-      HTTP_SERVER_SUBDIR
-    end
-  end
-
-  def self.temp_data_dir
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitTempDataDir'].nil?
-      Setting.plugin_redmine_git_hosting['gitTempDataDir']
-    else
-      TEMP_DATA_DIR
-    end
-  end
-
-  def self.script_dir
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitScriptDir'].nil?
-      Setting.plugin_redmine_git_hosting['gitScriptDir']
-    else
-      SCRIPT_DIR
-    end
-  end
-
-  def self.script_parent
-    SCRIPT_PARENT
-  end
-
-  # Gitolite SSH Private Key
   def self.gitolite_ssh_private_key
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteIdentityFile'].nil?
-      Setting.plugin_redmine_git_hosting['gitoliteIdentityFile']
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key]
     else
       GITOLITE_SSH_PRIVATE_KEY
     end
   end
 
-  # Gitolite SSH Public Key
+
   def self.gitolite_ssh_public_key
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile'].nil?
-      Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key]
     else
       GITOLITE_SSH_PUBLIC_KEY
     end
   end
 
-  # Git user
-  def self.git_user
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitUser'].nil?
-      Setting.plugin_redmine_git_hosting['gitUser']
+
+  # Full Gitolite URL
+  def self.gitolite_admin_url
+    return "#{gitolite_user}@localhost/#{GITOLITE_ADMIN_REPO}"
+  end
+
+
+  ###############################
+  ##                           ##
+  ##       GITOLITE DIR        ##
+  ##                           ##
+  ###############################
+
+  GITOLITE_TEMP_DIR             = File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
+  GITOLITE_SCRIPTS_DIR          = ''
+  GITOLITE_SCRIPTS_PARENT_DIR   = 'bin'
+
+  GITOLITE_GLOBAL_STORAGE_DIR   = 'repositories/'
+  GITOLITE_REDMINE_STORAGE_DIR  = ''
+  GITOLITE_RECYCLE_BIN_DIR      = 'recycle_bin/'
+
+
+  def self.gitolite_temp_dir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_temp_dir].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_temp_dir]
     else
-      GIT_USER
+      GITOLITE_TEMP_DIR
     end
   end
 
-  # Git server
-  def self.git_server
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitServer'].nil?
-      Setting.plugin_redmine_git_hosting['gitServer']
+
+  def self.gitolite_scripts_dir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_scripts_dir].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_scripts_dir]
     else
-      GIT_SERVER
+      GITOLITE_SCRIPTS_DIR
     end
   end
 
-  # Git server port
-  def self.ssh_server_local_port
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['sshServerLocalPort'].nil?
-      Setting.plugin_redmine_git_hosting['sshServerLocalPort']
+
+  def self.gitolite_scripts_parent_dir
+    GITOLITE_SCRIPTS_PARENT_DIR
+  end
+
+
+  # Repository base path (relative to Gitolite user home directory)
+  def self.gitolite_global_storage_dir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_global_storage_dir].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_global_storage_dir]
     else
-      SSH_SERVER_LOCAL_PORT
+      GITOLITE_GLOBAL_STORAGE_DIR
     end
   end
 
-  # All projects use Git?
-  def self.all_projects_use_git?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['allProjectsUseGit'].nil?
-      if Setting.plugin_redmine_git_hosting['allProjectsUseGit'] == 'true'
-        return true
-      else
-        return false
-      end
+
+  # Redmine subdirectory path (relative to GITOLITE_GLOBAL_STORAGE_DIR)
+  def self.gitolite_redmine_storage_dir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir]
     else
-      ALL_PROJECTS_USE_GIT
+      GITOLITE_REDMINE_STORAGE_DIR
     end
   end
 
-  # Unique identifier for repo?
-  def self.repo_ident_unique?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitRepositoryIdentUnique'].nil?
-      if Setting.plugin_redmine_git_hosting['gitRepositoryIdentUnique'] == 'true'
-        return true
-      else
-        return false
-      end
+
+  def self.gitolite_recycle_bin_dir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_dir].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_dir]
     else
-      REPO_IDENT_UNIQUE
+      GITOLITE_RECYCLE_BIN_DIR
     end
   end
 
-  # Gitolite config file
+
+  ###############################
+  ##                           ##
+  ##      GITOLITE CONFIG      ##
+  ##                           ##
+  ###############################
+
+  GITOLITE_CONFIG_FILE                 = 'gitolite.conf'
+  GITOLITE_CONFIG_HAS_ADMIN_KEY        = true
+  GITOLITE_RECYCLE_BIN_EXPIRATION_TIME = 1440
+  GITOLITE_LOCK_WAIT_TIME              = 10
+  GITOLITE_HOOKS_ARE_ASYNCHRONOUS      = true
+  GITOLITE_FORCE_HOOK_UPDATE           = true
+  GITOLITE_HOOKS_DEBUG                 = true
+  GITOLITE_LOG_LEVEL                   = 'info'
+  GITOLITE_LOG_SPLIT                   = false
+
+
   def self.gitolite_config_file
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitConfigFile'].nil?
-      Setting.plugin_redmine_git_hosting['gitConfigFile']
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_file].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_config_file]
     else
       GITOLITE_CONFIG_FILE
     end
   end
 
-  # Gitolite config has admin key
+
   def self.gitolite_config_has_admin_key?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitConfigHasAdminKey'].nil?
-      if Setting.plugin_redmine_git_hosting['gitConfigHasAdminKey'] == 'true'
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key].nil?
+      if Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key] == 'true'
         return true
       else
         return false
@@ -218,81 +160,76 @@ module GitHostingConf
     end
   end
 
-  def self.delete_git_repositories?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['deleteGitRepositories'].nil?
-      if Setting.plugin_redmine_git_hosting['deleteGitRepositories'] == 'true'
+
+  def self.gitolite_recycle_bin_expiration_time
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time].nil?
+      (Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time].to_f * 60).to_i
+    else
+      GITOLITE_RECYCLE_BIN_EXPIRATION_TIME
+    end
+  end
+
+
+  def self.gitolite_lock_wait_time
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_lock_wait_time].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_lock_wait_time].to_i
+    else
+      GITOLITE_LOCK_WAIT_TIME
+    end
+  end
+
+
+  def self.gitolite_hooks_are_asynchronous?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous].nil?
+      if Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous] == 'true'
         return true
       else
         return false
       end
     else
-      DELETE_GIT_REPOSITORIES
+      GITOLITE_HOOKS_ARE_ASYNCHRONOUS
     end
   end
 
-  def self.git_hooks_are_asynchronous?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous'].nil?
-      if Setting.plugin_redmine_git_hosting['gitHooksAreAsynchronous'] == 'true'
+
+  def self.gitolite_force_hooks_update?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update].nil?
+      if Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update] == 'true'
         return true
       else
         return false
       end
     else
-      GIT_HOOKS_ARE_ASYNCHRONOUS
+      GITOLITE_FORCE_HOOK_UPDATE
     end
   end
 
-  def self.git_force_hooks_update?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitForceHooksUpdate'].nil?
-      if Setting.plugin_redmine_git_hosting['gitForceHooksUpdate'] == 'true'
+
+  def self.gitolite_hooks_debug?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug].nil?
+      if Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug] == 'true'
         return true
       else
         return false
       end
     else
-      GIT_FORCE_HOOK_UPDATE
+      GITOLITE_HOOKS_DEBUG
     end
   end
 
-  def self.git_hooks_debug?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitHooksDebug'].nil?
-      if Setting.plugin_redmine_git_hosting['gitHooksDebug'] == 'true'
-        return true
-      else
-        return false
-      end
+
+  def self.gitolite_log_level
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_level].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_log_level]
     else
-      GIT_HOOKS_DEBUG
+      GITOLITE_LOG_LEVEL
     end
   end
 
-  def self.git_cache_max_time
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitCacheMaxTime'].nil?
-      Setting.plugin_redmine_git_hosting['gitCacheMaxTime']
-    else
-      GIT_CACHE_MAX_TIME
-    end
-  end
-
-  def self.git_cache_max_size
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitCacheMaxSize'].nil?
-      Setting.plugin_redmine_git_hosting['gitCacheMaxSize']
-    else
-      GIT_CACHE_MAX_SIZE
-    end
-  end
-
-  def self.git_cache_max_elements
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitCacheMaxElements'].nil?
-      Setting.plugin_redmine_git_hosting['gitCacheMaxElements']
-    else
-      GIT_CACHE_MAX_ELEMENTS
-    end
-  end
 
   def self.gitolite_log_split?
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteLogSplit'].nil?
-      if Setting.plugin_redmine_git_hosting['gitoliteLogSplit'] == 'true'
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_split].nil?
+      if Setting.plugin_redmine_git_hosting[:gitolite_log_split] == 'true'
         return true
       else
         return false
@@ -302,11 +239,245 @@ module GitHostingConf
     end
   end
 
-  def self.gitolite_log_level
-    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting['gitoliteLogLevel'].nil?
-      Setting.plugin_redmine_git_hosting['gitoliteLogLevel']
+
+  ###############################
+  ##                           ##
+  ##      GITOLITE CACHE       ##
+  ##                           ##
+  ###############################
+
+  GITOLITE_CACHE_MAX_TIME            = '-1'
+  GITOLITE_CACHE_MAX_SIZE            = '16'
+  GITOLITE_CACHE_MAX_ELEMENTS        = '100'
+
+
+  def self.gitolite_cache_max_time
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_time].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_cache_max_time]
     else
-      GITOLITE_LOG_LEVEL
+      GITOLITE_CACHE_MAX_TIME
+    end
+  end
+
+
+  def self.gitolite_cache_max_size
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_size].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_cache_max_size]
+    else
+      GITOLITE_CACHE_MAX_SIZE
+    end
+  end
+
+
+  def self.gitolite_cache_max_elements
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_elements].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_cache_max_elements]
+    else
+      GITOLITE_CACHE_MAX_ELEMENTS
+    end
+  end
+
+
+  ###############################
+  ##                           ##
+  ##     GITOLITE ACCESS       ##
+  ##                           ##
+  ###############################
+
+  SSH_SERVER_DOMAIN             = 'localhost'
+  HTTP_SERVER_DOMAIN            = 'localhost'
+  HTTPS_SERVER_DOMAIN           = ''
+  HTTP_SERVER_SUBDIR            = ''
+  GITOLITE_DAEMON_BY_DEFAULT    = 0
+  GITOLITE_HTTP_BY_DEFAULT      = 1
+  SHOW_REPOSITORIES_URL         = true
+
+
+  def self.ssh_server_domain
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:ssh_server_domain].nil?
+      Setting.plugin_redmine_git_hosting[:ssh_server_domain]
+    else
+      SSH_SERVER_DOMAIN
+    end
+  end
+
+
+  def self.http_server_domain
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:http_server_domain].nil?
+      Setting.plugin_redmine_git_hosting[:http_server_domain]
+    else
+      HTTP_SERVER_DOMAIN
+    end
+  end
+
+
+  def self.https_server_domain
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:https_server_domain].nil?
+      Setting.plugin_redmine_git_hosting[:https_server_domain]
+    else
+      HTTPS_SERVER_DOMAIN
+    end
+  end
+
+
+  def self.http_server_subdir
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:http_server_subdir].nil?
+      Setting.plugin_redmine_git_hosting[:http_server_subdir]
+    else
+      HTTP_SERVER_SUBDIR
+    end
+  end
+
+
+  def self.gitolite_daemon_by_default
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default]
+    else
+      GITOLITE_DAEMON_BY_DEFAULT
+    end
+  end
+
+
+  def self.gitolite_http_by_default
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_http_by_default].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_http_by_default]
+    else
+      GITOLITE_HTTP_BY_DEFAULT
+    end
+  end
+
+
+  def self.show_repositories_url?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:show_repositories_url].nil?
+      if Setting.plugin_redmine_git_hosting[:show_repositories_url] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      SHOW_REPOSITORIES_URL
+    end
+  end
+
+
+  ###############################
+  ##                           ##
+  ##     GIT NOTIFICATIONS     ##
+  ##                           ##
+  ###############################
+
+  GITOLITE_NOTIFY_BY_DEFAULT             = 1
+  GITOLITE_NOTIFY_GLOBAL_PREFIX          = '[REDMINE]'
+  GITOLITE_NOTIFY_GLOBAL_SENDER_ADDRESS  = Setting.mail_from.to_s.strip.downcase
+  GITOLITE_NOTIFY_GLOBAL_INCLUDE         = []
+  GITOLITE_NOTIFY_GLOBAL_EXCLUDE         = []
+
+
+  def self.gitolite_notify_by_default
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default]
+    else
+      GITOLITE_NOTIFY_BY_DEFAULT
+    end
+  end
+
+
+  def self.gitolite_notify_global_prefix
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix]
+    else
+      GITOLITE_NOTIFY_GLOBAL_PREFIX
+    end
+  end
+
+
+  def self.gitolite_notify_global_sender_address
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address]
+    else
+      GITOLITE_NOTIFY_GLOBAL_SENDER_ADDRESS
+    end
+  end
+
+
+  def self.gitolite_notify_global_include
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include]
+    else
+      GITOLITE_NOTIFY_GLOBAL_INCLUDE
+    end
+  end
+
+
+  def self.gitolite_notify_global_exclude
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude].nil?
+      Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude]
+    else
+      GITOLITE_NOTIFY_GLOBAL_EXCLUDE
+    end
+  end
+
+
+  ###############################
+  ##                           ##
+  ##         REDMINE           ##
+  ##                           ##
+  ###############################
+
+  ALL_PROJECTS_USE_GIT          = false
+  DELETE_GIT_REPOSITORIES       = true
+  HIERARCHICAL_ORGANISATION     = true
+  UNIQUE_REPO_IDENTIFIER        = false
+
+
+  def self.all_projects_use_git?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:all_projects_use_git].nil?
+      if Setting.plugin_redmine_git_hosting[:all_projects_use_git] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      ALL_PROJECTS_USE_GIT
+    end
+  end
+
+
+  def self.delete_git_repositories?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:delete_git_repositories].nil?
+      if Setting.plugin_redmine_git_hosting[:delete_git_repositories] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      DELETE_GIT_REPOSITORIES
+    end
+  end
+
+
+  def self.hierarchical_organisation?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:hierarchical_organisation].nil?
+      if Setting.plugin_redmine_git_hosting[:hierarchical_organisation] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      HIERARCHICAL_ORGANISATION
+    end
+  end
+
+
+  def self.unique_repo_identifier?
+    if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:unique_repo_identifier].nil?
+      if Setting.plugin_redmine_git_hosting[:unique_repo_identifier] == 'true'
+        return true
+      else
+        return false
+      end
+    else
+      UNIQUE_REPO_IDENTIFIER
     end
   end
 
