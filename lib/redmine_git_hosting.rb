@@ -41,7 +41,7 @@ apply_patch do
   require_dependency 'githosting/git_hosting'
   require_dependency 'githosting/git_hosting_conf'
   require_dependency 'githosting/git_hosting_cache'
-  require_dependency 'githosting/git_adapter_hooks'
+  require_dependency 'githosting/gitolite_hooks'
   require_dependency 'githosting/gitolite_recycle'
   require_dependency 'githosting/gitolite_logger'
 
@@ -87,20 +87,20 @@ apply_patch do
 
   ## Sidekiq mode
   # Redmine dependencies
-  require_dependency 'setting'
-  require_dependency 'member'
-  require_dependency 'my_controller'
+  #require_dependency 'setting'
+  #require_dependency 'member'
+  #require_dependency 'my_controller'
 
   # Redmine Git Hosting Libs
-  require_dependency 'githosting/gitolite_redmine'
-  require_dependency 'githosting/shell_adapter'
-  require_dependency 'githosting/shell'
-  require_dependency 'githosting/routing_constraints'
+  #require_dependency 'githosting/gitolite_redmine'
+  #require_dependency 'githosting/shell_adapter'
+  #require_dependency 'githosting/shell'
+  #require_dependency 'githosting/routing_constraints'
 
   # Redmine Git Hosting Patches
-  require_dependency 'redmine_git_hosting/patches/setting_patch'
-  require_dependency 'redmine_git_hosting/patches/member_patch'
-  require_dependency 'redmine_git_hosting/patches/my_controller_patch'
+  #require_dependency 'redmine_git_hosting/patches/setting_patch'
+  #require_dependency 'redmine_git_hosting/patches/member_patch'
+  #require_dependency 'redmine_git_hosting/patches/my_controller_patch'
 
   #----------------------------------------------------------------------
 
