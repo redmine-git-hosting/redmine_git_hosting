@@ -152,7 +152,7 @@ namespace :selinux do
       %x[rm -rf "#{bin_path}"]
       puts "Success!"
       print "Writing customized scripts to script directory..."
-      GitHosting.update_git_exec
+      GitHosting.update_gitolite_scripts
       puts "Success!"
       if (ENV['READ_ONLY']||"true").downcase != "false"
         print "Making scripts READ_ONLY..."
