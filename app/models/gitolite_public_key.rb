@@ -1,4 +1,3 @@
-require 'base64'
 include GitolitePublicKeysHelper
 
 class GitolitePublicKey < ActiveRecord::Base
@@ -23,7 +22,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
   has_many :deployment_credentials, :dependent => :destroy
 
-  def validate_associated_records_for_deployment_credentials() end
+  validates_associated :repository_deployment_credentials
 
   if Rails::VERSION::MAJOR >= 3 && Rails::VERSION::MINOR >= 1
     scope :active, {:conditions => {:active => GitolitePublicKey::STATUS_ACTIVE}}
@@ -101,17 +100,31 @@ class GitolitePublicKey < ActiveRecord::Base
     title
   end
 
+
   @@myregular = /^redmine_(.*)_\d*_\d*(.pub)?$/
   def self.ident_to_user_token(identifier)
     result = @@myregular.match(identifier)
     (result != nil) ? result[1] : nil
   end
 
+
   def self.user_to_user_token(user)
     user.login.underscore.gsub(/[^0-9a-zA-Z\-]/,'_')
   end
 
+
+  def owner
+    self.identifier.split('@')[0]
+  end
+
+
+  def location
+    self.identifier.split('@')[1]
+  end
+
+
   protected
+
 
   # Strip leading and trailing whitespace
   def strip_whitespace
@@ -206,7 +219,7 @@ class GitolitePublicKey < ActiveRecord::Base
     # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
-    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{Setting.plugin_redmine_git_hosting['gitoliteIdentityPublicKeyFile']}'] })]
+    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{GitHostingConf.gitolite_ssh_public_key}'] })]
     # Check all active keys
     allkeys += (GitolitePublicKey.active.all)
 
