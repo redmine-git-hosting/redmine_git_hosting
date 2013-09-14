@@ -67,7 +67,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :unique_repo_identifier           => true,
 
       # Git Mailing List Config
-      :gitolite_notify_cia_by_default   => '0',
+      :gitolite_notify_cia_by_default        => '0',
     }
   })
 
