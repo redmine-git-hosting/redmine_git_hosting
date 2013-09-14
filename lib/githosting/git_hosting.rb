@@ -783,19 +783,18 @@ module GitHosting
     resyncing = args && args.first
 
     # create tmp dir, return cleanly if, for some reason, we don't have proper permissions
-    repo_dir = File.join(get_tmp_dir,GitHosting::GitoliteConfig::ADMIN_REPO)
+    repo_dir = File.join(get_tmp_dir, GitHosting::GitoliteConfig::ADMIN_REPO)
 
-    logger.debug "############ COMMIT CHANGES ############"
+    if (!resyncing)
+      logger.info "Committing changes to Gitolite Admin repository"
+      message = "Updated by Redmine"
+    else
+      logger.warn "Committing corrections to Gitolite Admin repository"
+      message = "Updated by Redmine : Corrections discovered during RESYNC_ALL"
+    end
 
     # commit / push changes to gitolite admin repo
     begin
-      if (!resyncing)
-        logger.debug "Committing changes to Gitolite Admin repository"
-        message = "Updated by Redmine"
-      else
-        logger.warn "Committing corrections to Gitolite Admin repository"
-        message = "Updated by Redmine : Corrections discovered during RESYNC_ALL"
-      end
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add keydir/*]
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' add conf/#{gitolite_conf}]
       shell %[env GIT_SSH=#{gitolite_ssh()} git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' config user.email '#{Setting.mail_from}']
@@ -854,8 +853,6 @@ module GitHosting
     args.each {|arg| flags.merge!(arg) if arg.is_a?(Hash)}
     reposym = (multi_repos? ? :repositories : :repository)
 
-    logger.info "############ GRAB PROJECTS TO WORK ON ############"
-
     if flags[:resync_all]
       logger.info "Executing RESYNC_ALL operation on Gitolite configuration"
       projects = Project.active_or_archived.find(:all, :include => reposym)
@@ -875,8 +872,10 @@ module GitHosting
         projects = Project.active_or_archived.find(:all, :include => reposym)
       end
     else
-      logger.info "No flags set, RESYNC_KEYS for projects"
       projects = args.flatten.select{|p| p.is_a?(Project)}
+      if projects.length > 0
+        logger.info "No flags set, RESYNC_KEYS for projects (number: '#{projects.length}')"
+      end
     end
 
     # Only take projects that have Git repos.
@@ -886,12 +885,7 @@ module GitHosting
       git_projects = projects.uniq.select{|p| p.gl_repos.any?}
     end
 
-    if git_projects.empty?
-      logger.info "Got no projects to work on..."
-      return
-    else
-      logger.info "Got projects, move on!"
-    end
+    return if git_projects.empty?
 
     if(defined?(@@recursionCheck))
       if(@@recursionCheck)
@@ -913,13 +907,11 @@ module GitHosting
     begin
       # Make sure we have gitolite-admin cloned.
       # If have uncommitted changes, reflect in "changed" flag.
-      logger.debug "############ GRAB GITOLITE ADMIN REPO ############"
       changed = !clone_or_pull_gitolite_admin(flags[:resync_all])
 
       # Get directory for the gitolite-admin
       repo_dir = File.join(get_tmp_dir, "gitolite-admin")
 
-      logger.info "############ UPDATE SSH KEYS ############"
       logger.info "Updating key directory for projects : '#{git_projects.join ', '}'"
 
       keydir = File.join(repo_dir, "keydir")
@@ -972,7 +964,7 @@ module GitHosting
 
         keys_to_delete = (old_keynames - cur_keynames)
         keys_to_delete.each do |keyname|
-          logger.warn "Removing Redmine key from Gitolite : '#{keyname}'"
+          logger.info "Removing Redmine key from Gitolite : '#{keyname}'"
           %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
           changed = true
         end
@@ -999,7 +991,7 @@ module GitHosting
         # All keys left in old_keyhash should be for users nolonger authorized for gitolite repos
         old_keyhash.each_value do |keyset|
           keyset.each do |keyname|
-            logger.warn "Removing #{orphanString}Redmine key from Gitolite : '#{keyname}'"
+            logger.info "Removing #{orphanString}Redmine key from Gitolite : '#{keyname}'"
             %x[git --git-dir='#{repo_dir}/.git' --work-tree='#{repo_dir}' rm keydir/#{keyname}]
             changed = true
           end
@@ -1046,8 +1038,6 @@ module GitHosting
 
         proj.gl_repos.each do |repo|
           repo_name = repository_name(repo)
-
-          logger.info "############ UPDATE GITOLITE CONF FOR REPO '#{repo_name}' ############"
 
           # Common case: these are hashes with zero or one one element (except when
           # Repository.repo_ident_unique? is false)
@@ -1189,7 +1179,6 @@ module GitHosting
 
           if GitHostingConf.delete_git_repositories?
             if conf.repo_has_no_keys? repo_name
-              logger.info "############ DELETE GITOLITE CONF FOR REPO '#{repo_name}' ############"
               logger.info "Deleting #{orphanString}Gitolite repository '#{repo_name}' from '#{gitolite_conf}'"
               conf.delete_repo repo_name
               GitoliteRecycle.move_repository_to_recycle repo_name
