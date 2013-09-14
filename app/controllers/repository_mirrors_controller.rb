@@ -9,8 +9,6 @@ class RepositoryMirrorsController < ApplicationController
   before_filter :check_xhr_request
   before_filter :find_repository_mirror, :except => [:index, :create]
 
-  menu_item :settings, :only => :settings
-
   layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
   def index
@@ -26,24 +24,19 @@ class RepositoryMirrorsController < ApplicationController
       @mirror.repository = @repository
 
       if @mirror.save
-        flash[:notice] = l(:mirror_notice_created)
+        flash[:notice] = l(:notice_mirror_created)
 
-        redirect_url = success_url
         respond_to do |format|
-          format.html {
-            redirect_to redirect_url
-          }
-          format.js { render :update }
+          format.html { redirect_to success_url }
+          format.js { render "update", :layout => false }
         end
       else
         respond_to do |format|
           format.html {
-            flash[:error] = l(:mirror_notice_create_failed)
+            flash[:error] = l(:notice_mirror_create_failed)
             render :action => "create"
           }
-          format.js {
-            render :action => "form_error"
-          }
+          format.js { render "form_error", :layout => false }
         end
       end
     end
@@ -54,24 +47,19 @@ class RepositoryMirrorsController < ApplicationController
 
   def update
     if @mirror.update_attributes(params[:repository_mirrors])
-      flash[:notice] = l(:mirror_notice_updated)
+      flash[:notice] = l(:notice_mirror_updated)
 
-      redirect_url = success_url
       respond_to do |format|
-        format.html {
-          redirect_to redirect_url
-        }
-        format.js
+        format.html { redirect_to success_url }
+        format.js { render "update", :layout => false }
       end
     else
       respond_to do |format|
         format.html {
-          flash[:error] = l(:mirror_notice_update_failed)
+          flash[:error] = l(:notice_mirror_update_failed)
           render :action => "edit"
         }
-        format.js {
-          render :action => "form_error"
-        }
+        format.js { render "form_error", :layout => false }
       end
     end
   end
@@ -82,26 +70,19 @@ class RepositoryMirrorsController < ApplicationController
     else
       if params[:confirm]
         @mirror.destroy
-        flash[:notice] = l(:mirror_notice_deleted)
+        flash[:notice] = l(:notice_mirror_deleted)
       end
 
-      redirect_url = success_url
       respond_to do |format|
-        format.html {
-          redirect_to(redirect_url)
-        }
+        format.html { redirect_to success_url }
+        format.js { render "destroy", :layout => false }
       end
     end
   end
 
-  def settings
-  end
-
   def push
     respond_to do |format|
-      format.html {
-        (@push_failed,@shellout) = @mirror.push
-      }
+      format.html { (@push_failed, @shellout) = @mirror.push }
     end
   end
 
@@ -150,6 +131,7 @@ class RepositoryMirrorsController < ApplicationController
     if not @project.module_enabled?(:repository)
       render_403
     end
+    return true if @user.admin?
     not_enough_perms = true
     @user.roles_for_project(@project).each{|role|
       if role.allowed_to? :manage_repository

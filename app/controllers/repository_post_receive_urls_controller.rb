@@ -9,8 +9,6 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   before_filter :check_xhr_request
   before_filter :find_repository_post_receive_url, :except => [:index, :create]
 
-  menu_item :settings, :only => :settings
-
   layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
   def index
@@ -26,24 +24,19 @@ class RepositoryPostReceiveUrlsController < ApplicationController
       @prurl.repository = @repository
 
       if @prurl.save
-        flash[:notice] = l(:post_receive_url_notice_created)
+        flash[:notice] = l(:notice_post_receive_url_created)
 
-        redirect_url = success_url
         respond_to do |format|
-          format.html {
-            redirect_to redirect_url
-          }
-          format.js { render :update }
+          format.html { redirect_to success_url }
+          format.js { render "update", :layout => false }
         end
       else
         respond_to do |format|
           format.html {
-            flash[:error] = l(:post_receive_url_notice_create_failed)
+            flash[:error] = l(:notice_post_receive_url_create_failed)
             render :action => "create"
           }
-          format.js {
-            render :action => "form_error"
-          }
+          format.js { render "form_error", :layout => false }
         end
       end
     end
@@ -54,24 +47,19 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
   def update
     if @prurl.update_attributes(params[:repository_post_receive_urls])
-      flash[:notice] = l(:post_receive_url_notice_updated)
+      flash[:notice] = l(:notice_post_receive_url_updated)
 
-      redirect_url = success_url
       respond_to do |format|
-        format.html {
-          redirect_to redirect_url
-        }
-        format.js
+        format.html { redirect_to success_url }
+        format.js { render "update", :layout => false }
       end
     else
       respond_to do |format|
         format.html {
-          flash[:error] = l(:post_receive_url_notice_update_failed)
+          flash[:error] = l(:notice_post_receive_url_update_failed)
           render :action => "edit"
         }
-        format.js {
-          render :action => "form_error"
-        }
+        format.js { render "form_error", :layout => false }
       end
     end
   end
@@ -82,19 +70,14 @@ class RepositoryPostReceiveUrlsController < ApplicationController
     else
       if params[:confirm]
         @prurl.destroy
-        flash[:notice] = l(:post_receive_url_notice_deleted)
+        flash[:notice] = l(:notice_post_receive_url_deleted)
       end
 
-      redirect_url = success_url
       respond_to do |format|
-        format.html {
-          redirect_to(redirect_url)
-        }
+        format.html { redirect_to success_url }
+        format.js { render "destroy", :layout => false }
       end
     end
-  end
-
-  def settings
   end
 
   protected
@@ -142,6 +125,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
     if not @project.module_enabled?(:repository)
       render_403
     end
+    return true if @user.admin?
     not_enough_perms = true
     @user.roles_for_project(@project).each{|role|
       if role.allowed_to? :manage_repository
