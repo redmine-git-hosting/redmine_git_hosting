@@ -1,4 +1,4 @@
-class DeploymentCredential < ActiveRecord::Base
+class RepositoryDeploymentCredential < ActiveRecord::Base
   unloadable
 
   STATUS_ACTIVE = 1
@@ -8,7 +8,7 @@ class DeploymentCredential < ActiveRecord::Base
   belongs_to :gitolite_public_key
   belongs_to :user
 
-  attr_accessible :perm
+  attr_accessible :perm, :active
   validates_presence_of :perm, :user, :repository
   validates_presence_of :gitolite_public_key
   validate :correct_key_type, :correct_perm_type, :no_duplicate_creds
@@ -22,6 +22,8 @@ class DeploymentCredential < ActiveRecord::Base
     named_scope :inactive, {:conditions => {:active => STATUS_INACTIVE}}
   end
 
+  #after_commit      :update_permissions
+
   def perm= (value)
     write_attribute(:perm, (value.upcase rescue nil))
   end
@@ -31,7 +33,7 @@ class DeploymentCredential < ActiveRecord::Base
   @@equivalence = nil
   def allowed_to?( cred )
     @@equivalence ||= {
-      :view_changesets => ["R","RW+"],
+      :view_changesets => ["R", "RW+"],
       :commit_access => ["RW+"]
     }
     return false unless honored?
@@ -43,7 +45,7 @@ class DeploymentCredential < ActiveRecord::Base
 
   # Deployment Credentials ignored unless created by someone who still has permission to create them
   def honored?
-    user.admin? || user.allowed_to?(:create_deployment_keys,repository.project)
+    user.admin? || user.allowed_to?(:create_deployment_keys, repository.project)
   end
 
   def self.valid_perms
@@ -59,6 +61,11 @@ class DeploymentCredential < ActiveRecord::Base
   end
 
   protected
+
+  def update_permissions
+    GitHosting.logger.info "Update deploy keys for repository : '#{GitHosting.repository_name(repository)}'"
+    GithostingShellWorker.perform_async({ :command => :update_repository, :object => repository.id })
+  end
 
   def correct_key_type
     if gitolite_public_key && gitolite_public_key.key_type != GitolitePublicKey::KEY_TYPE_DEPLOY
@@ -81,7 +88,7 @@ class DeploymentCredential < ActiveRecord::Base
 
   def no_duplicate_creds
     return if !new_record? || repository.nil? || gitolite_public_key.nil?
-    repository.deployment_credentials.each do |cred|
+    repository.repository_deployment_credentials.each do |cred|
       if cred.gitolite_public_key == gitolite_public_key
         errors.add(:base, "This Public Key has already been used in a Deployment Credential for this repository.")
       end

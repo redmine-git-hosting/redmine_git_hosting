@@ -20,7 +20,7 @@ class GitolitePublicKey < ActiveRecord::Base
   validates_uniqueness_of :identifier, :scope => :user_id
   validates_presence_of   :title, :key, :identifier, :key_type
 
-  has_many :deployment_credentials, :dependent => :destroy
+  has_many :repository_deployment_credentials, :dependent => :destroy
 
   validates_associated :repository_deployment_credentials
 
