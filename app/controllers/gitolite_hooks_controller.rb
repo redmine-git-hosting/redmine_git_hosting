@@ -8,10 +8,18 @@ class GitoliteHooksController < ApplicationController
   helper :git_hosting
   include GitHostingHelper
 
+
   def stub
     # Stub method simply to generate correct urls, just return a 404 to any user requesting this
     render(:code => 404)
   end
+
+
+  @@logger = nil
+  def self.logger
+    @@logger ||= GitoliteLogger.get_logger(:post_receive)
+  end
+
 
   def get_enumerator
     if RUBY_VERSION == '1.8.7'
@@ -20,6 +28,7 @@ class GitoliteHooksController < ApplicationController
       Enumerator
     end
   end
+
 
   def post_receive
     if not @repository.extra.validate_encoded_time(params[:clear_time], params[:encoded_time])
