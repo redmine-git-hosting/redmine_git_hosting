@@ -1007,11 +1007,11 @@ module GitHosting
       (git_projects.select{|proj| proj.active? && proj.module_enabled?(:repository)}.map{|proj| proj.member_principals.map(&:user).compact}.flatten.uniq << GitolitePublicKey::DEPLOY_PSEUDO_USER).each do |cur_user|
 
         if cur_user == GitolitePublicKey::DEPLOY_PSEUDO_USER
-          active_keys = DeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
+          active_keys = RepositoryDeploymentCredential.active.select(&:honored?).map(&:gitolite_public_key).uniq
           cur_token = cur_user
 
           # Remove inactive Deployment Credentials
-          DeploymentCredential.inactive.each {|cred| DeploymentCredential.destroy(cred.id)}
+          RepositoryDeploymentCredential.inactive.each {|cred| RepositoryDeploymentCredential.destroy(cred.id)}
         else
           active_keys = cur_user.gitolite_public_keys.active.user_key || []
           cur_token = GitolitePublicKey.user_to_user_token(cur_user)
