@@ -64,6 +64,10 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_deployment_keys,   :deployment_credentials => :index
     permission :edit_deployment_keys,   :deployment_credentials => :edit
   end
+
+  Redmine::MenuManager.map :admin_menu do |menu|
+    menu.push :redmine_git_hosting, { :controller => 'settings', :action => 'plugin', :id => 'redmine_git_hosting' }, :caption => :module_name
+  end
 end
 
 # initialize observer
