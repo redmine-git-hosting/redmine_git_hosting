@@ -332,7 +332,7 @@ class GitHttpController < ApplicationController
 
   ## Note: command must be started with a quote!
   def run_git_prefix
-    return "#{GitHosting.git_user_runner} 'cd #{GitHosting.repository_path(@repository)} ;"
+    return "#{GitHosting.shell_cmd_runner} 'cd #{GitHosting.repository_path(@repository)} ;"
   end
 
 

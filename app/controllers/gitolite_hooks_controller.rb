@@ -37,7 +37,7 @@ class GitoliteHooksController < ApplicationController
     end
 
     # Clear existing cache
-    CachedShellRedirector.clear_cache_for_repository(@repository)
+    GitHostingCache.clear_cache_for_repository(@repository)
 
     if Rails::VERSION::MAJOR >= 3
       self.response.headers["Content-Type"] = "text/plain;"
@@ -245,7 +245,7 @@ class GitoliteHooksController < ApplicationController
     # Get the last revision we have on the database for this project
     revision = @repository.changesets.find(:first)
     # Find out to which branch this commit belongs to
-    branch = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
+    branch = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
     GitHosting.logger.debug "Revision #{revision.scmid} found on branch #{branch}"
 
     # Send the test notification
@@ -281,7 +281,7 @@ class GitoliteHooksController < ApplicationController
 
       # Grab the repository path
       repo_path = GitHosting.repository_path(@repository)
-      revisions_in_range = %x[#{GitHosting.git_exec} --git-dir='#{repo_path}' rev-list --reverse #{range}]
+      revisions_in_range = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' rev-list --reverse #{range}]
       #GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
 
       commits = []
