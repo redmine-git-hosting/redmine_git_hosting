@@ -42,9 +42,11 @@
   <%= form if Rails::VERSION::MAJOR >= 3 %>
 </div>
 
+<% if User.current.allowed_to?(:create_gitolite_ssh_key, nil, :global => true) %>
 <div class="splitcontentright">
   <%= render :partial => 'gitolite_public_keys/view' %>
 </div>
+<% end %>
 
 <% content_for :sidebar do %>
   <%= render :partial => 'my/sidebar' %>
