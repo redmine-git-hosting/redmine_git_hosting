@@ -16,7 +16,7 @@ module RedmineGitHosting
               # Hm.... Might be Redmine version < 1.2 (i.e. 1.1).  Try redefining GIT_BIN.
               GitHosting.logger.warn "Seems to be early version of Redmine(1.1?), try redefining GIT_BIN."
               GitHosting.logger.warn e.message
-              Redmine::Scm::Adapters::GitAdapter::GIT_BIN = GitHosting.git_exec
+              Redmine::Scm::Adapters::GitAdapter::GIT_BIN = GitHosting.git_cmd_runner
             end
           end
 
@@ -35,11 +35,11 @@ module RedmineGitHosting
       module ClassMethods
 
         def sq_bin_with_git_hosting
-          return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting.git_exec)
+          return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting.git_cmd_runner)
         end
 
         def client_command_with_git_hosting
-          return GitHosting.git_exec
+          return GitHosting.git_cmd_runner
         end
 
       end
@@ -57,7 +57,7 @@ module RedmineGitHosting
         # Post-1.4 command syntax
         def git_cmd_with_git_hosting(args, options = {}, &block)
           repo_path = root_url || url
-          full_args = [GitHosting::git_exec(), '--git-dir', repo_path]
+          full_args = [GitHosting::git_cmd_runner, '--git-dir', repo_path]
           if self.class.client_version_above?([1, 7, 2])
             full_args << '-c' << 'core.quotepath=false'
             full_args << '-c' << 'log.decorate=no'
@@ -72,7 +72,7 @@ module RedmineGitHosting
 
           # Insert cache between shell execution and caller
           # repo_path argument used to identify cache entries
-          CachedShellRedirector.execute(cmd_str, repo_id, options, &block)
+          GitHostingCache.execute(cmd_str, repo_id, options, &block)
         end
 
       end
