@@ -1,6 +1,3 @@
-require 'uri'
-require 'net/http'
-
 module GitHostingHelper
 
   include Redmine::I18n
@@ -84,6 +81,7 @@ module GitHostingHelper
   end
 
 
+  ## NOTIFY CIA ENABLED?
   def self.git_notify_cia(repository, value)
     nc = 0
     if repository && !repository.extra.nil?
