@@ -1,0 +1,34 @@
+<%
+  # Gitolite Cache Config
+  gitolite_cache_max_time     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_time].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_cache_max_time] : '16'
+  gitolite_cache_max_size     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_size].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_cache_max_size] : '-1'
+  gitolite_cache_max_elements = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_cache_max_elements].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_cache_max_elements] : '100'
+%>
+
+<h3><%= l(:label_gitolite_cache_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_cache_max_time) %></label>
+  <%= select_tag("settings[gitolite_cache_max_time]",options_for_select(
+    [
+      ["Cache Disabled", "0"],
+      ["Until next commit", "-1"],
+      ["1 Minute or until next commit", "60"],
+      ["15 Minutes or until next commit", "900"],
+      ["1 Hour or until next commit", "3600"],
+      ["1 Day or until next commit", "86400"]
+    ], gitolite_cache_max_time )) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_cache_max_size) %></label>
+  <%= text_field_tag("settings[gitolite_cache_max_size]", gitolite_cache_max_size, :size => 20) %><em> MB</em>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_cache_max_elements) %></label>
+  <%= text_field_tag("settings[gitolite_cache_max_elements]", gitolite_cache_max_elements, :size => 20) %>
+  <br />
+</p>

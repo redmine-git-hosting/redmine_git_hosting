@@ -1,0 +1,8 @@
+<%
+  gitolite_resync_all = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_resync_all].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_resync_all] : false
+%>
+
+<p>
+  <label><%= l(:label_tab_gitolite_rescue_resync_all_projects) %></label>
+  <%= check_box_tag "settings[gitolite_resync_all]", true, gitolite_resync_all %>
+</p>

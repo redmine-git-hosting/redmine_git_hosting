@@ -1,0 +1,34 @@
+<%
+  # Gitolite Hooks Config
+  gitolite_hooks_are_asynchronous = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous] : true
+  gitolite_force_hooks_update     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update] : true
+  gitolite_hooks_debug            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug] : false
+%>
+
+<h3><%= l(:label_gitolite_hooks_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_hooks_are_asynchronous) %></label>
+  <%= select_tag("settings[gitolite_hooks_are_asynchronous]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_hooks_are_asynchronous)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_force_hooks_update) %></label>
+  <%= select_tag("settings[gitolite_force_hooks_update]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_force_hooks_update)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_hooks_debug) %></label>
+  <%= select_tag("settings[gitolite_hooks_debug]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_hooks_debug)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_hooks_installed) %></label>
+  <% hook_installed = GitHosting.check_hooks_installed %>
+  <%= image_tag((hook_installed == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+  <em><%= (hook_installed == true ? '' : hook_installed) %></em>
+  <br />
+</p>

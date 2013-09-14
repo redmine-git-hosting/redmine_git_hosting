@@ -1,0 +1,29 @@
+<%
+  # Gitolite Storage Config
+  gitolite_global_storage_dir  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_global_storage_dir].nil?)  ? Setting.plugin_redmine_git_hosting[:gitolite_global_storage_dir] : 'repositories/'
+  gitolite_redmine_storage_dir = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] : ''
+  gitolite_recycle_bin_dir     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_dir].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_dir] : 'recycle_bin/'
+%>
+
+<h3><%= l(:label_gitolite_storage_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_global_storage_dir) %></label>
+  <%= text_field_tag("settings[gitolite_global_storage_dir]", "./#{gitolite_global_storage_dir}", :size => 60) %>
+  <br>
+  <em><%= l(:label_gitolite_global_storage_dir_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_recycle_bin_dir) %></label>
+  <%= text_field_tag("settings[gitolite_recycle_bin_dir]", "./#{gitolite_recycle_bin_dir}", :size => 60) %>
+  <br />
+  <em><%= l(:label_gitolite_recycle_bin_dir_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_redmine_storage_dir) %></label>
+  <%= text_field_tag("settings[gitolite_redmine_storage_dir]", "./#{gitolite_redmine_storage_dir}", :size => 60) %>
+  <br />
+  <em><%= l(:label_gitolite_redmine_storage_dir_desc) %></em>
+</p>
