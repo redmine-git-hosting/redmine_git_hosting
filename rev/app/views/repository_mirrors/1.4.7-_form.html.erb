@@ -1,0 +1,26 @@
+<div id="validation_messages_mirror"><%= error_messages_for 'mirror' %></div>
+
+<div class="box">
+
+  <p><%= f.text_field :url, :required => true, :size => 65, :label => :label_mirror_url %></p>
+  <em><p>
+    <%= l(:label_mirror_url_accepted_format) %> :<br/>
+     - git@github.com:user/project.git<br/>
+     - git-test@redmine.example.org:my_user/test.git<br/>
+     - git-test@redmine.example/project1/project2/project3/project4.git<br/>
+  </p></em>
+
+  <p><%= f.select :push_mode, options_for_select([
+        [l(:label_mirror_full_mirror), 0],
+        [l(:label_mirror_forced_update), 1],
+        [l(:label_mirror_fast_forward), 2]], @mirror.push_mode), { :label => :label_mirror_push_mode }, :onchange => "push_mode_change(this); return false;" %></p>
+
+  <div id="ref_spec_options" style="display:none;">
+    <p><%= f.check_box  :include_all_branches, :label => :label_mirror_include_all_branches %></p>
+    <p><%= f.check_box  :include_all_tags,     :label => :label_mirror_include_all_tags %> </p>
+    <p><%= f.text_field :explicit_refspec,     :label => :label_mirror_explicit_refspec, :size => 65 %></p>
+  </div>
+
+  <p><%= f.check_box :active %></p>
+
+</div>

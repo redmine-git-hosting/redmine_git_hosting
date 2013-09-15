@@ -1,0 +1,29 @@
+<div id="validation_messages_git_notification"><%= error_messages_for 'git_notification' %></div>
+
+<div class="box tabular">
+
+  <p><%= f.text_field :prefix, :label => :label_gitolite_notify_prefix %></p>
+  <p><%= f.text_field :sender_address, :label => :label_gitolite_notify_sender_address %></p>
+
+  <input type="hidden" name="repository_git_notifications[include_list][]" value="" style="display:none;">
+  <input type="hidden" name="repository_git_notifications[exclude_list][]" value="" style="display:none;">
+
+  <p><label for="repository_git_notifications[include_list]"><%= l(:label_git_notification_include_list) %> :</label></p>
+  <ul id="include_list">
+    <% if !@repository.git_notification.nil? && @repository.git_notification.include_list.any? %>
+      <% @repository.git_notification.include_list.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+  <p><label for="repository_git_notifications[exclude_list]"><%= l(:label_git_notification_exclude_list) %> :</label></p>
+  <ul id="exclude_list">
+    <% if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any? %>
+      <% @repository.git_notification.exclude_list.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+</div>

@@ -1,0 +1,22 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_git_notifications_create)%></h2>
+<% end %>
+
+<%= labelled_form_for :repository_git_notifications, @git_notification,
+                      :url  => { :controller => 'repository_git_notifications', :action => 'create', :project_id => @project, :id => @git_notification.id },
+                      :html => { :method => :post, :class => 'tabular', :remote => true } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <% if not @is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    loadTagIt('include_list', false);
+    loadTagIt('exclude_list', true);
+  });
+</script>

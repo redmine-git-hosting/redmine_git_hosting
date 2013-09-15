@@ -1,0 +1,23 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_git_notifications_edit)%></h2>
+<% end %>
+
+<% labelled_remote_form_for :repository_git_notifications, @git_notification,
+                            :url  => { :controller => 'repository_git_notifications', :action => 'update', :project_id => @project, :id => @git_notification.id },
+                            :html => { :method => :put, :class => 'tabular' } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+
+  <% if not @is_xhr %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    loadTagIt('include_list', false);
+    loadTagIt('exclude_list', true);
+  });
+</script>

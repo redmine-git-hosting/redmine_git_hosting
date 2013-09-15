@@ -1,0 +1,21 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_git_notifications_delete)%></h2>
+<% end %>
+
+<% labelled_remote_form_for :repository_git_notifications, @prurl,
+                            :url  => { :controller => 'repository_git_notifications', :action => 'destroy', :project_id => @project, :id => @git_notification.id },
+                            :html => { :method => :delete } do |f| %>
+
+  <div class="warning" style="margin: 0; padding: 5px 15px;">
+    <p>
+      Are you sure you want to delete the mailing list?
+    </p>
+
+    <p>
+      <label><%= check_box_tag 'confirm', 1 %> <%= l(:general_text_Yes) %></label>
+    </p>
+  </div>
+
+  <%= submit_tag l(:button_delete), :disable_with => l(:label_delete_in_progress) %>
+
+<% end %>

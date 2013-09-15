@@ -1,0 +1,16 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_mirror_create)%></h2>
+<% end %>
+
+<% labelled_remote_form_for :repository_mirrors, @mirror,
+                            :url  => { :controller => 'repository_mirrors', :action => 'create', :project_id => @project, :id => @mirror.id },
+                            :html => { :method => :post, :class => 'tabular' } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+
+  <% if not @is_xhr %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>

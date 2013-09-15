@@ -1,0 +1,81 @@
+<% content_for :header_tags do %>
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      initJqueryModalBox('dialog-box-deployment-credential', false);
+      initJqueryModalBox('dialog-box-deployment-credential-delete', true);
+
+      setUpJqueryModalBox('a.add-deployment-credential',    'dialog-box-deployment-credential');
+      setUpJqueryModalBox('a.edit-deployment-credential',   'dialog-box-deployment-credential');
+      setUpJqueryModalBox('a.delete-deployment-credential', 'dialog-box-deployment-credential-delete');
+    });
+
+  </script>
+<% end %>
+
+<div class="box tabular">
+
+  <% if GitHostingHelper.can_create_deployment_keys(@repository.project) %>
+    <div class="contextual">
+      <%= link_to(l(:label_deployment_credential_add), url_for(:controller => 'repository_deployment_credentials', :action => 'create_with_key', :repository_id => @repository.id),
+                                                       :class => 'icon icon-add add-deployment-credential') %>
+    </div>
+  <% end %>
+
+  <h3 class="git"><%= l(:label_deployment_credentials) %></h3>
+
+  <% if @repository.repository_deployment_credentials.any? %>
+    <div class="autoscroll">
+      <table class="list" style="margin: 1px 2px; width: 99%">
+        <thead>
+          <tr>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_owner) %></th>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_public_key_name) %></th>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_public_key_file) %></th>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_permissions) %></th>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_honored) %></th>
+            <th style="text-align:center;"><%= l(:label_deployment_credential_active) %></th>
+            <th style="text-align:center;">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @repository.repository_deployment_credentials.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |cred| %>
+            <tr class="<%= cycle('odd', 'even') %>">
+              <td class="center name" style="vertical-align:middle;"> <%= cred.user.login %> </td>
+              <td class="center name" style="vertical-align:middle;">
+                <% if cred.user == User.current %>
+                  <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'my', :action => 'account', :public_key_id => cred.gitolite_public_key.id)) %>
+                <% elsif User.current.admin? %>
+                  <%= link_to(cred.gitolite_public_key.title, url_for(:controller => 'users', :action => 'edit', :id => cred.gitolite_public_key.user.id, :public_key_id => cred.gitolite_public_key.id, :tab => 'keys')) %>
+                <% else %>
+                  <%= cred.gitolite_public_key.title %>
+                <% end %>
+              </td>
+              <td class="center" style="text-align:center; vertical-align:middle;"><%= "keydir/#{cred.gitolite_public_key.identifier}.pub" %></td>
+              <td class="center" style="vertical-align:middle;"><%= cred.perm %></td>
+              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.checked_image2 cred.honored? %></td>
+              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.checked_image2 cred.active? %></td>
+              <td class="buttons" width="20%" style="vertical-align:middle; text-align:right; ">
+                <% if GitHostingHelper.can_edit_deployment_keys(@repository.project) && (User.current.admin?|| User.current == cred.user)  %>
+                  <%= link_to(l(:button_edit), url_for(:controller => 'repository_deployment_credentials', :action => 'edit', :repository_id => @repository.id, :id => cred.id),
+                                               :class => 'icon icon-edit edit-deployment-credential') %>
+
+                  <%= link_to(l(:button_delete), url_for(:controller => 'repository_deployment_credentials', :action => 'destroy', :repository_id => @repository.id, :id => cred.id),
+                                                 :class => 'icon icon-del delete-deployment-credential') %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <table class="list" style="margin:1px 2px; width:99%">
+      <thead><tr><th style="text-align:center;">No Deployment Credentials Defined</td></th></thead>
+    </table>
+  <% end %>
+
+</div>
+
+<div id="dialog-box-deployment-credential"></div>
+<div id="dialog-box-deployment-credential-delete"></div>

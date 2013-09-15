@@ -1,0 +1,7 @@
+<div id="validation_messages_post_receive_url"><%= error_messages_for 'prurl' %></div>
+
+<div class="box">
+  <p><%= f.text_field :url, :required => true, :size => 65 %></p>
+  <p><%= f.select :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
+  <p><%= f.check_box :active %></p>
+</div>

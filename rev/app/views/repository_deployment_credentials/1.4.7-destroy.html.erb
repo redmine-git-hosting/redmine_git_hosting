@@ -1,0 +1,25 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_deployment_credential_delete)%></h2>
+<% end %>
+
+<% labelled_remote_form_for :repository_deployment_credentials, @cred,
+                            :url  => { :controller => 'repository_deployment_credentials', :action => 'destroy', :project_id => @project, :id => @cred.id },
+                            :html => { :method => :delete } do |f| %>
+
+  <div class="warning" style="margin: 0; padding: 5px 15px;">
+    <p>
+      <strong><%= "#{keylabel(@cred.gitolite_public_key)} => #{@cred.perm}".html_safe %></strong><br />
+      Are you sure you want to delete this deployment credential?
+      <% if @will_delete_key %>
+        <br />(Will delete corresponding key: <%= "#{keylabel(@cred.gitolite_public_key)}".html_safe %>)
+      <% end %>
+    </p>
+
+    <p>
+      <label><%= check_box_tag 'confirm', 1 %> <%= l(:general_text_Yes) %></label>
+    </p>
+  </div>
+
+  <%= submit_tag l(:button_delete), :disable_with => l(:label_delete_in_progress) %>
+
+<% end %>

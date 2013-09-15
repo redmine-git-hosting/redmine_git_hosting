@@ -1,0 +1,50 @@
+<div id="validation_messages_deployment_credential"><%= error_messages_for 'cred' %></div>
+
+<div class="box">
+
+  <% labelled_fields_for :gitolite_public_key, @key do |k| %>
+
+    <div class="box tabular">
+      <% if !@user_keys.nil? && !@other_keys.nil? %>
+        <% if !@user_keys.empty? || !@other_keys.empty? %>
+          <% option_array = [[l(:select_create_new_key),-1]] %>
+          <% option_array += (@user_keys.map {|key| [keylabel_text(key),key.id]}) %>
+          <% if !@other_keys.empty? %>
+            <% option_array2 = (@other_keys.map {|key| [keylabel_text(key), key.id]}) %>
+            <% maxlen = (option_array+option_array2).map{|x|x.first.length}.max %>
+            <% extra = ([maxlen - l(:select_other_keys).length - 2,6].max)/2 %>
+            <% option_array += [[("-"*extra)+" "+l(:select_other_keys)+" "+"-"*extra, -2]] %>
+            <% option_array += option_array2 %>
+          <% end %>
+          <p><%= k.select :id, options_for_select(option_array, :selected => -1, :disabled => [-2]+@disabled_keys.map(&:id)), :required => true, :label => :label_deployment_credential_which_deploy_key %></p>
+        <% end %>
+      <% end %>
+      <p><%= f.select :perm, options_for_select(RepositoryDeploymentCredential::valid_perms, RepositoryDeploymentCredential::default_perm), :required => true, :label => :label_deployment_credential_permissions %></p>
+    </div>
+
+    <div id="new_key_window">
+      <fieldset class="public_key_view"><legend><%= l(:label_public_key_new) %></legend>
+        <p>
+          <%= k.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width:95%;' %>
+          <br /><em><%= l(:label_identifier_can_be_arbitrary_desc)%></em>
+        </p>
+        <p><%= k.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %></p>
+        <p><%= k.text_area :key, :required => true, :label => :label_cut_and_paste,
+              :style => "width:95%; height:125px; overflow:auto;",
+              :cols => nil, :rows => nil %>
+            <br /><em><%= l(:label_cut_and_paste_desc)%></em>
+        </p>
+      </fieldset>
+    </div>
+
+  <% end %>
+
+</div>
+
+<script type="text/javascript">
+  Event.observe(window, 'load', load_form_actions);
+
+  function load_form_actions() {
+    key_mode_change($('gitolite_public_key_id'));
+  }
+</script>

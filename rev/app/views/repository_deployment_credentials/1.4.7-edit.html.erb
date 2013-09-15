@@ -1,0 +1,20 @@
+<% if not @is_xhr %>
+  <h2><%=l(:label_deployment_credential_edit)%></h2>
+<% end %>
+
+<% labelled_remote_form_for :repository_deployment_credentials, @cred,
+                            :url  => { :controller => 'repository_deployment_credentials', :action => 'update', :project_id => @project, :id => @cred.id },
+                            :html => { :method => :put, :class => 'tabular' } do |f| %>
+
+  <div class="box">
+    <p><strong><%= "#{keylabel(@key)}".html_safe %></strong></p>
+    <p><%= f.select :perm, options_for_select(RepositoryDeploymentCredential::valid_perms, @cred.perm), :required => true %></p>
+    <p><%= f.check_box :active %></p>
+  </div>
+
+  <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+
+  <% if not @is_xhr %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>
