@@ -18,13 +18,16 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
   layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
+
   def index
     render_404
   end
 
+
   def create
     render_404
   end
+
 
   def create_with_key
     @cred = RepositoryDeploymentCredential.new(params[:repository_deployment_credentials])
@@ -95,9 +98,11 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     end
   end
 
+
   def edit
     # Credential should already be set.
   end
+
 
   def update
     GitHostingObserver.set_update_active(false)
@@ -122,6 +127,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
     GitHostingObserver.set_update_active(@project)
   end
+
 
   def destroy
     key = @cred.gitolite_public_key
@@ -152,7 +158,9 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     end
   end
 
+
   protected
+
 
   def delete_ssh_key(key)
     repo_key = Hash.new
@@ -163,6 +171,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
   end
 
+
   # This is a success URL to return to basic listing
   def success_url
     if GitHosting.multi_repos?
@@ -172,21 +181,26 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     end
   end
 
+
   def can_view_credentials
     render_403 unless GitHostingHelper.can_view_deployment_keys(@project)
   end
+
 
   def can_create_credentials
     render_403 unless GitHostingHelper.can_create_deployment_keys(@project)
   end
 
+
   def can_edit_credentials
     render_403 unless GitHostingHelper.can_edit_deployment_keys(@project)
   end
 
+
   def set_user_variable
     @user = User.current
   end
+
 
   def set_repository_variable
     @repository = Repository.find_by_id(params[:repository_id])
@@ -195,12 +209,14 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     end
   end
 
+
   def set_project_variable
     @project = @repository.project
     if !@project
       render_404
     end
   end
+
 
   def find_deployment_credential
     cred = RepositoryDeploymentCredential.find_by_id(params[:id])
@@ -213,6 +229,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     end
   end
 
+
   def find_key
     key = @cred.gitolite_public_key
     if key && key.user && (User.current.admin? || key.user == User.current)
@@ -223,6 +240,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
       render_404
     end
   end
+
 
   # Suggest title for new one-of deployment key
   def suggested_title
@@ -246,6 +264,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
     "#{default_title} #{maxnum+1}"
   end
+
 
   def check_xhr_request
     @is_xhr ||= request.xhr?
