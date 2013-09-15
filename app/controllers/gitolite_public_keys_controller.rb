@@ -13,6 +13,7 @@ class GitolitePublicKeysController < ApplicationController
   helper :gitolite_public_keys
   include GitolitePublicKeysHelper
 
+
   def create
     GitHostingObserver.set_update_active(false)
     @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
@@ -38,9 +39,11 @@ class GitolitePublicKeysController < ApplicationController
     GitHostingObserver.set_update_active(true)
   end
 
+
   def edit
     redirect_to url_for(:controller => 'my', :action => 'account', :public_key_id => @gitolite_public_key[:id])
   end
+
 
   def update
     GitHostingObserver.set_update_active(false)
@@ -70,6 +73,7 @@ class GitolitePublicKeysController < ApplicationController
     GitHostingObserver.set_update_active(true)
   end
 
+
   def destroy
     GitHostingObserver.set_update_active(false)
     if request.delete?
@@ -79,7 +83,9 @@ class GitolitePublicKeysController < ApplicationController
     GitHostingObserver.set_update_active(true)
   end
 
+
   protected
+
 
   def set_user_variable
     if params[:user_id]
@@ -95,11 +101,13 @@ class GitolitePublicKeysController < ApplicationController
     end
   end
 
+
   def set_users_keys
     @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all, :order => 'title ASC, created_at ASC')
     @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all, :order => 'title ASC, created_at ASC')
     @gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
   end
+
 
   def find_gitolite_public_key
     key = GitolitePublicKey.find_by_id(params[:id])
@@ -112,15 +120,17 @@ class GitolitePublicKeysController < ApplicationController
     end
   end
 
+
   def destroy_key
     @gitolite_public_key[:active] = 0
 
     # Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
     @gitolite_public_key.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
-    destroy_ssh_key
+    #destroy_ssh_key
 
     flash[:notice] = l(:notice_public_key_deleted, :title => keylabel(@gitolite_public_key))
   end
+
 
   def destroy_ssh_key
     GitHosting.logger.info "User '#{User.current.login}' has deleted a SSH key"
