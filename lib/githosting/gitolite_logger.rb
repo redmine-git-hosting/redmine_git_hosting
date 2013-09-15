@@ -11,7 +11,7 @@ module GitoliteLogger
   def self.get_logger(type)
     file   = File.join(Rails.root, 'log', 'git_hosting.log').to_s
 
-    if GitHostingConf.gitolite_log_split? && !Dir.exists?(File.join(Rails.root, 'log', 'git_hosting').to_s)
+    if GitHostingConf.gitolite_log_split? && !File.directory?(File.join(Rails.root, 'log', 'git_hosting').to_s)
       FileUtils.mkdir_p(File.join(Rails.root, 'log', 'git_hosting').to_s)
     end
 
