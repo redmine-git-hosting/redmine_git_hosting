@@ -1,8 +1,10 @@
-<%= stylesheet_link_tag('application',     :plugin => 'redmine_git_hosting') %>
-<%= stylesheet_link_tag :jquery_tagit,     :plugin => 'redmine_git_hosting' %>
-<%= stylesheet_link_tag :tagit_ui_zendesk, :plugin => 'redmine_git_hosting' %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag :application,      :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag :jquery_tagit,     :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag :tagit_ui_zendesk, :plugin => 'redmine_git_hosting' %>
 
-<%= javascript_include_tag :tag_it,        :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag :tag_it,        :plugin => 'redmine_git_hosting' %>
+<% end %>
 
 <% settings_tabs = [
                     {:name => 'gitolite_config_ssh',        :partial => 'settings/gitolite_config_ssh',     :label => :label_tab_ssh},
