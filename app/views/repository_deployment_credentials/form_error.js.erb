@@ -1,6 +1,0 @@
-$('#validation_messages_deployment_credential').html("<%= escape_javascript(error_messages_for 'key') + ' ' + escape_javascript(error_messages_for 'cred')%>");
-<% if Rails::VERSION::MAJOR >= 3 %>
-$('html, body').animate({ scrollTop: $('#dialog-box-deployment-credential').parent().offset().top }, "slow");
-<% else %>
-if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
-<% end %>
