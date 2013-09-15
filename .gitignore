@@ -1,3 +1,8 @@
 .*.swp
 /bin
 /selinux/tmp
+
+/app/views/repository_post_receive_urls
+/app/views/repository_mirrors
+/app/views/repository_git_notifications
+/app/views/repository_deployment_credentials
