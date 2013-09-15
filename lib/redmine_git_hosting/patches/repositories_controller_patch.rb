@@ -37,7 +37,7 @@ module RedmineGitHosting
         GitHosting.logger.debug "On edit_with_scm_settings"
 
         # Turn off updates during repository update
-        GitHostingObserver.set_update_active(false);
+        GitHostingObserver.set_update_active(false)
         params[:repository] ||= {}
 
         if params[:repository_scm] == "Git" && @project.repository
@@ -75,7 +75,7 @@ module RedmineGitHosting
           edit_without_scm_settings
         end
 
-        GitHostingObserver.set_update_active(true);
+        GitHostingObserver.set_update_active(true)
       end
 
       # Post-1.4, all creation is done by create (rather than edit)
