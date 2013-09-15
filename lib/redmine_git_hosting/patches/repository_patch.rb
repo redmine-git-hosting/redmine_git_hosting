@@ -48,13 +48,13 @@ module RedmineGitHosting
 
         def fetch_changesets_with_git_hosting(&block)
           # Turn of updates during repository update
-          GitHostingObserver.set_update_active(false);
+          GitHostingObserver.set_update_active(false)
 
           # Do actual update
           fetch_changesets_without_git_hosting(&block)
 
           # Reenable updates to perform a sync of all projects
-          GitHostingObserver.set_update_active(:resync_all);
+          GitHostingObserver.set_update_active(:resync_all)
         end
 
 
