@@ -75,7 +75,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to success_url }
-        format.js { render "destroy", :layout => false }
+        format.js { render "destroy_done", :layout => false }
       end
     end
   end
