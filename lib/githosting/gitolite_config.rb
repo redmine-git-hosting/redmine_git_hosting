@@ -39,7 +39,7 @@ module GitHosting
         end
         @original_content = content
       rescue => e
-        GitHosting.logger.error "[GitHosting] Error trying to write config file: #{e.to_s}"
+        GitHosting.logger.error "Error trying to write config file: #{e.to_s}"
       end
     end
 
@@ -227,7 +227,7 @@ module GitHosting
 
         @original_content = @original_content.join
       rescue => e
-        GitHosting.logger.error "[GitHosting] Error trying to read config file: #{e.to_s}"
+        GitHosting.logger.error "Error trying to read config file: #{e.to_s}"
       end
     end
 
@@ -273,6 +273,7 @@ module GitHosting
           content << ""
         end
       end
+
       return content.join("\n")
     end
 
