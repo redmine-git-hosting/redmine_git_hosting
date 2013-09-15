@@ -1,6 +1,8 @@
 class AddSettingsToPlugin3 < ActiveRecord::Migration
   def self.up
     begin
+      GitHostingObserver.set_update_active(false)
+
       # Add some new settings to settings page, if they don't exist
       valuehash = (Setting.plugin_redmine_git_hosting).clone
       valuehash['gitDaemonDefault'] ||= '1'
@@ -17,12 +19,14 @@ class AddSettingsToPlugin3 < ActiveRecord::Migration
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      # ignore problems if plugin settings don't exist yet
+      puts e.message
     end
   end
 
   def self.down
     begin
+      GitHostingObserver.set_update_active(false)
+
       # Remove above settings from plugin page
       valuehash = (Setting.plugin_redmine_git_hosting).clone
       valuehash.delete('gitDaemonDefault')
@@ -36,7 +40,7 @@ class AddSettingsToPlugin3 < ActiveRecord::Migration
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      # ignore problems if table doesn't exist yet....
+      puts e.message
     end
   end
 end
