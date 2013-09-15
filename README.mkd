@@ -15,7 +15,7 @@ Everything is in the wiki : https://github.com/jbox-web/redmine_git_hosting/wiki
 
 ## Copyright & License
 
-Copyright (c) 2013 Nicolas Rodriguez (nrodriguez@jbox-web.com) MIT License.
+Copyright (c) 2013 Nicolas Rodriguez (nrodriguez@jbox-web.com), JBox Web (http://www.jbox-web.com) MIT License.
 
 Copyright (c) 2011 John Kubiatowicz (kubitron@cs.berkeley.edu) MIT License.
 
