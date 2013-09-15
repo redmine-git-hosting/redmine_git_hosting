@@ -1,0 +1,42 @@
+<% if repository && repository.is_a?(Repository::Git) && GitHostingConf.show_repositories_url? %>
+
+  <% content_for :header_tags do %>
+
+    <%= stylesheet_link_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
+    <%= stylesheet_link_tag('zero_clipboard',  :plugin => 'redmine_git_hosting') %>
+
+    <%= javascript_include_tag('zero_clipboard_min',   :plugin => 'redmine_git_hosting') %>
+
+    <%= javascript_include_tag('set_zero_clipboard_jquery',   :plugin => 'redmine_git_hosting') %>
+    <%= javascript_include_tag('set_git_url_display_jquery',  :plugin => 'redmine_git_hosting') %>
+
+    <script type="text/javascript">
+      var urls = [];
+
+    <% repository.available_urls.each do |key, value| -%>
+      urls["git_url_<%= key %>"] = ["<%= value[:url] %>", <%= value[:commiter] %> ];
+    <% end %>
+
+      ZeroClipboard.setDefaults({ moviePath: "<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>" });
+    </script>
+  <% end %>
+
+  <div class="box">
+    <div id="git_url_box">
+      <h3>Repository Access Links:</h3>
+      <div id="clipboard_container" style="display: none;">
+        <div id="clipboard_button" title="<%= l(:label_copy_to_clipboard) %>"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
+      </div>
+      <ul id="git_url_list">
+        <% repository.available_urls.each do |key, value| %>
+          <li><a id="git_url_<%= key %>" href="javascript:void(0)"><%= key.upcase %></a></li>
+        <% end %>
+      </ul>
+      <input id="git_url_text" name="git_url_text" readonly="readonly" value="" class="git_url_text_big" />
+    </div>
+    <br />
+    <br />
+    <span id="git_url_desc">This URL has <span id="git_url_permissions">Read-Only</span> access.</span>
+  </div>
+
+<% end %>

@@ -1,0 +1,31 @@
+<h2><%= l(:label_repository) %></h2>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'application', :plugin => 'redmine_git_hosting' %>
+<% end %>
+
+<%= render :partial => 'repositories/javascript_headers' %>
+
+<%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put} do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f} %>
+<% end %>
+
+<% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
+
+  <% if GitHostingHelper.can_view_git_notifications(@repository.project) %>
+    <%= render :partial => 'repository_git_notifications/view_list' %>
+  <% end %>
+
+  <% if GitHostingHelper.can_view_deployment_keys(@repository.project) %>
+    <%= render :partial => 'repository_deployment_credentials/view_list' %>
+  <% end %>
+
+  <% if GitHostingHelper.can_view_post_receive_urls(@repository.project) %>
+    <%= render :partial => 'repository_post_receive_urls/view_list' %>
+  <% end %>
+
+  <% if GitHostingHelper.can_view_mirrors(@repository.project) %>
+    <%= render :partial => 'repository_mirrors/view_list' %>
+  <% end %>
+
+<% end %>

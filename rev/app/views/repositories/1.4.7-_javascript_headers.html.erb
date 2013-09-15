@@ -1,0 +1,51 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag('modalbox/modalbox',    :plugin => 'redmine_git_hosting') %>
+  <%= javascript_include_tag('modalbox/modalbox', :plugin => 'redmine_git_hosting') %>
+
+  <script type="text/javascript">
+    function getWidth() {
+      var width = 60*document.viewport.getWidth()/100;
+      if (width<750) { width=750 };
+      return width;
+    }
+
+    function push_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('ref_spec_options').hide();
+      } else {
+        $('ref_spec_options').show();
+      }
+
+      if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+    }
+
+    function key_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('new_key_window').show();
+      } else {
+        $('new_key_window').hide();
+      }
+
+      if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+    }
+
+    function setUpPrototypeModalBox(target, title) {
+      $$(target).each(function(elem) {
+        Event.observe(elem, 'click', function(event) {
+          Event.stop(event);
+          Modalbox.show(
+            elem.href, {
+              title: title,
+              width: getWidth()
+            }
+          )
+          return false;
+        })
+      });
+    }
+  </script>
+<% end %>
