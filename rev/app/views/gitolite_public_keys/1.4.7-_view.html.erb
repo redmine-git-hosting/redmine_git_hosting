@@ -1,0 +1,142 @@
+<%= stylesheet_link_tag('application', :plugin => 'redmine_git_hosting')%>
+
+<fieldset class="box">
+  <legend><%=l(:label_public_keys)%></legend>
+
+  <% if !@gitolite_user_keys.empty? || @gitolite_deploy_keys.empty? %>
+    <fieldset class="public_key_view">
+      <legend><%= @gitolite_deploy_keys.empty? ? l(:label_current_public_keys) : l(:label_current_user_keys) %></legend>
+      <table class="list">
+        <% if @gitolite_user_keys.empty? %>
+          <tr><td><label><%=l(:label_no_public_keys)%></label></td></tr>
+        <%end %>
+        <% @gitolite_user_keys.each do |key| %>
+          <tr class="<%= curcycle=cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
+            <td style="text-align:left;"><%= h(key) %></td>
+            <% if params[:id] %>
+              <td style="width:60%; text-align:center"><%= "keydir/#{key.identifier}.pub" %></td>
+            <% end %>
+            <td style="width:10%;" class="buttons">
+              <%= link_to(l(:button_edit), { :public_key_id => key.id, :tab => params[:id]&&'keys'}, :class => 'icon icon-edit') %>
+              <%= link_to(l(:button_delete), public_key_path(key, :user_id => params[:id]), :method => 'delete', :class => 'icon icon-del', :confirm => l(:text_gitolite_key_destroy_confirmation, :title => keylabel(key))) %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </fieldset><br/>
+  <% end %>
+
+  <% if !@gitolite_deploy_keys.empty? %>
+    <fieldset class="public_key_view">
+      <legend><%= l(:label_current_deploy_keys)%></legend>
+      <table class="list">
+        <% if @gitolite_deploy_keys.empty? %>
+          <tr><td><label><%=l(:label_no_public_keys)%></label></td></tr>
+        <%end %>
+        <% @gitolite_deploy_keys.each do |key| %>
+          <tr class="<%= curcycle=cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
+            <td style="text-align:left;"><%= h(key) %></td>
+            <% if params[:id] %>
+              <td style="width:60%; text-align:center"><%= "keydir/#{key.identifier}.pub" %></td>
+            <% end %>
+            <td style="width:10%;" class="buttons">
+              <%= link_to(l(:button_edit), { :public_key_id => key.id, :tab => params[:id]&&'keys'}, :class => 'icon icon-edit') %>
+              <%= link_to(l(:button_delete), public_key_path(key, :user_id => params[:id]), :method => 'delete', :class => 'icon icon-del', :confirm => l(:text_gitolite_key_destroy_confirmation, :title => keylabel(key))) %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </fieldset><br/>
+  <% end %>
+
+  <% @new_key = @gitolite_public_key.new_record? %>
+
+  <fieldset class="public_key_view">
+    <legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
+    <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
+    <% labelled_form_for @gitolite_public_key,
+        :as   => :gitolite_public_key,
+        :url  => {:controller => 'gitolite_public_keys', :action => @new_key ? 'create' : 'update', :id => @gitolite_public_key.id, :user_id => params[:id], :tab => params[:id]&&'keys'},
+        :html => {:method => (@new_key ? :post : :put)} do |f| %>
+
+      <p><%= f.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width:99%;' %></p>
+
+      <% if @gitolite_public_key.key_type==1 || GitHostingHelper.can_create_deployment_keys_for_some_project(@user) %>
+        <div class="tabular">
+          <p>
+            <%= f.select :key_type, options_for_select([[l(:label_user_key),0],[l(:label_deploy_key),1]], :selected => @gitolite_public_key.key_type, :disabled => (@new_key ? [] : [0,1])), :required => true, :label => :label_key_type %>
+          </p>
+          <div id="key_type_options" style="display:none">
+            <p>
+              <%= f.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+
+      <p><%= f.text_area :key, :label => (@new_key? :label_cut_and_paste : :label_public_key), :required => true, :disabled => !@new_key,
+              :style => "width:99%;height:200px;overflow:auto;",
+              :cols => nil, :rows => nil %>
+
+      <%= hidden_field_tag :button_submit_field, "true" %>
+
+      <% if !@new_key %>
+        <em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em>
+        </p>
+        <%= submit_tag l(:button_save),   :name=>'save_button' %>
+        <%= submit_tag l(:button_delete), :name=>'delete_button', :confirm => l(:text_gitolite_key_destroy_confirmation, :title => (@gitolite_public_key[:title].blank? ? l(:text_this_key) : keylabel(@gitolite_public_key))) %>
+        <%= submit_tag l(:button_cancel), :name=>'cancel_button' %>
+      <% else %>
+        </p>
+        <%= submit_tag l(:button_create), :name=>'create_button' %>
+        <% mystyle = (@gitolite_public_key.errors.any? ? '' : 'style="display:none;"') %>
+        <span id="cancel_button_div" <%= mystyle %> >
+          <%= submit_tag l(:button_cancel), :name=>'cancel_button' %>
+        </span>
+      <% end %>
+    <% end %>
+
+  </fieldset>
+</fieldset>
+
+
+<script type="text/javascript">
+  Event.observe(window, 'load', load_form_actions);
+
+  function load_form_actions() {
+    key_type_change($('gitolite_public_key_key_type'));
+
+    Event.observe('gitolite_public_key_key_type', 'change', function(event) {
+      key_type_change(this);
+    });
+
+    $$('input[type="submit"]').each(function(item) {
+      if (item.name.indexOf("__") != 0) {
+        myname = item.name;
+        item.name = "__" + item.name;
+        set_submit_change(item, myname);
+      }
+    });
+  }
+
+  function key_type_change(elem) {
+    if (!elem) return;
+
+    var idx = elem.selectedIndex;
+    if (idx == 0) {
+      $('key_type_options').hide();
+      $('gitolite_public_key_delete_when_unused').checked = 'checked';
+    } else {
+      $('key_type_options').show();
+    }
+    if (typeof(Modalbox) != 'undefined' ) { Modalbox.resizeToContent(); }
+  }
+
+  function set_submit_change(item, myname) {
+    Event.observe(item, 'click', function() {
+      $('button_submit_field').name = myname;
+    });
+  }
+
+  load_form_actions();
+</script>
