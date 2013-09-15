@@ -35,11 +35,11 @@ module GitHosting
 
       result = %x[#{GitHosting.shell_cmd_runner} find '#{GitHostingConf.gitolite_recycle_bin_dir}' -type d -regex '.*\.git' -cmin +#{GitHostingConf.gitolite_recycle_bin_expiration_time} -prune -print].chomp.split("\n")
       if result.length > 0
-        logger.info "Garbage-collecting expired file #{(result.length != 1) ? "s" : ""} from Recycle Bin :"
+        logger.info "Garbage-collecting expired '#{result.length}' file#{(result.length != 1) ? "s" : ""} from Recycle Bin :"
         result.each do |filename|
+          logger.info "Deleting '#{filename}'"
           begin
-            GitHosting.shell %[#{GitHosting.shell_cmd_runner} rm -r #{filename}]
-            logger.info "Deleting '#{filename}'"
+            GitHosting.shell %[#{GitHosting.shell_cmd_runner} rm -rf #{filename}]
           rescue => e
             logger.error "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{filename}' !"
             logger.error e.message
