@@ -6,3 +6,7 @@
 /app/views/repository_mirrors
 /app/views/repository_git_notifications
 /app/views/repository_deployment_credentials
+/app/views/repositories/edit.html.erb
+/app/views/repositories/_git_urls.html.erb
+/app/views/repositories/_javascript_headers.html.erb
+/app/views/projects/settings/_repositories.html.erb
