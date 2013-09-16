@@ -601,22 +601,20 @@ module GitHosting
   @@mirror_pubkey = nil
   def self.mirror_push_public_key
     if @@mirror_pubkey.nil?
+      logger.info "Install Redmine Gitolite mirroring SSH key"
 
-      %x[ cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa' ]
-      %x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/gitolite_admin_id_rsa.pub' ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
+      %x[ cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
+      %x[ cat '#{GitHostingConf.gitolite_ssh_public_key}'  | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
+      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
 
-      pubk = (%x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' ]).chomp.strip
       git_user_dir = ( %x[ #{GitHosting.shell_cmd_runner} "cd ~ ; pwd" ] ).chomp.strip
 
-      %x[ #{GitHosting.shell_cmd_runner} 'echo "#{pubk}"  > ~/.ssh/gitolite_admin_id_rsa.pub' ]
       %x[ echo '#!/bin/sh' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh' ]
-      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{git_user_dir}/.ssh/gitolite_admin_id_rsa "$@"' | #{GitHosting.shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/gitolite_admin_id_rsa.pub' ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/gitolite_admin_id_rsa' ]
+      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{git_user_dir}/.ssh/redmine_gitolite_admin_id_rsa_mirroring "$@"' | #{GitHosting.shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
       %x[ #{GitHosting.shell_cmd_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh' ]
 
+      pubk = (%x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' ]).chomp.strip
       @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
     end
     @@mirror_pubkey
