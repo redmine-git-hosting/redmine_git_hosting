@@ -55,10 +55,10 @@
     </p>
 
     <p>
-      <%= label_tag  "extra[notify_cia]", l(:field_notify_cia) %>
+      <%= label_tag  "extra[notify_cia]", l(:label_enable_notify_cia) %>
       <%= select_tag "extra[notify_cia]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected => @repository.extra[:notify_cia].to_s) %>
       <% if @repository.extra[:notify_cia].to_s == "1" %>
-        <a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "test", :projectid => @repository.project.identifier) %>"><%= l(:field_notify_cia_test) %></a>
+        <a id="notify_cia_test" href="<%= url_for(:controller => "gitolite_hooks", :action => "notify_cia_test", :projectid => @repository.project.identifier) %>"><%= l(:label_enable_notify_cia_test) %></a>
         <em><b><span id="notify_cia_result"></span></b></em>
       <% end %>
     </p>
