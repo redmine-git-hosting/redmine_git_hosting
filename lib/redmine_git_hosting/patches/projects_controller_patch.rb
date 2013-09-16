@@ -134,18 +134,22 @@ module RedmineGitHosting
             else
               @project.repository = repo
             end
+            #GitHosting.logger.info "User '#{User.current.login}' created a new repository '#{GitHosting.repository_name(repository)}'"
+            #GithostingShellWorker.perform_async({ :command => :add_repository, :object => repository.id })
           end
         end
 
+
         def disable_git_daemon_if_not_public
-          # Go through all gitolite repos and diable git_daemon if necessary
-          @project.gitolite_repos.each do |repo|
-            if repo.extra.git_daemon == 1 && (!@project.is_public)
-              repo.extra.git_daemon = 0
-              repo.extra.save
-              repo.save # Trigger update_repositories
+          # Go through all gitolite repos and diable Git daemon if necessary
+          @project.gitolite_repos.each do |repository|
+            if repository.extra.git_daemon == 1 && !@project.is_public
+              repository.extra.git_daemon = 0
+              repository.extra.save
             end
           end
+          #GitHosting.logger.info "Set Git daemon for repositories of project : '#{@project}'"
+          #GithostingShellWorker.perform_async({ :command => :update_project, :object => @project.id })
         end
 
       end
