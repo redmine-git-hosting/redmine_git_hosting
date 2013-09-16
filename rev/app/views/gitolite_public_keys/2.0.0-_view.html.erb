@@ -54,7 +54,7 @@
   <fieldset class="public_key_view">
     <legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
     <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
-    <% labelled_form_for @gitolite_public_key,
+    <%= labelled_form_for @gitolite_public_key,
         :as   => :gitolite_public_key,
         :url  => {:controller => 'gitolite_public_keys', :action => @new_key ? 'create' : 'update', :id => @gitolite_public_key.id, :user_id => params[:id], :tab => params[:id]&&'keys'},
         :html => {:method => (@new_key ? :post : :put)} do |f| %>
@@ -66,7 +66,7 @@
           <p>
             <%= f.select :key_type, options_for_select([[l(:label_user_key),0],[l(:label_deploy_key),1]], :selected => @gitolite_public_key.key_type, :disabled => (@new_key ? [] : [0,1])), :required => true, :label => :label_key_type %>
           </p>
-          <div id="key_type_options" style="display:none">
+          <div id="key_type_options" style="display: none;">
             <p>
               <%= f.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %>
             </p>
@@ -101,11 +101,12 @@
 
 
 <script type="text/javascript">
+  $(window).load(load_form_actions);
 
   function load_form_actions() {
-    key_type_change($('#gitolite_public_key_key_type'));
-
-    $('#gitolite_public_key_key_type').bind('change', function() { key_type_change(this) });
+    $('#gitolite_public_key_key_type').bind('change', function() {
+      key_type_change(this)
+    });
 
     $('input[type="submit"]').each(function() {
       if (this.name.indexOf("__") != 0) {
@@ -116,16 +117,18 @@
     });
   }
 
-  function key_type_change(elem) {
-    if (!elem.length) return;
+  function key_type_change(element) {
+    if (!element) return;
 
-    var idx = elem.selectedIndex;
+    var idx = element.selectedIndex;
+    console.log(idx);
     if (idx == 0) {
       $('#key_type_options').hide();
       $('#gitolite_public_key_delete_when_unused').prop("checked", true);
     } else {
       $('#key_type_options').show();
     }
+
   }
 
   function set_submit_change(item, myname) {
@@ -134,5 +137,5 @@
     });
   }
 
-  $(window).load(load_form_actions);
+  load_form_actions();
 </script>
