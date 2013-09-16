@@ -10,6 +10,14 @@ class RepositoryGitExtra < ActiveRecord::Base
   after_initialize :set_values
 
 
+  def after_initialize
+    if self.repository.nil?
+      generate
+      setup_defaults
+    end
+  end
+
+
   def validate_encoded_time(clear_time, encoded_time)
     valid = false
     begin
@@ -29,13 +37,6 @@ class RepositoryGitExtra < ActiveRecord::Base
   end
 
 
-  def generate
-    if self.key.nil?
-      write_attribute(:key, (0...64+rand(64) ).map{65.+(rand(25)).chr}.join )
-    end
-  end
-
-
   private
 
 
@@ -45,6 +46,14 @@ class RepositoryGitExtra < ActiveRecord::Base
       setup_defaults
     end
   end
+
+
+  def generate
+    if self.key.nil?
+      write_attribute(:key, (0...64+rand(64) ).map{65.+(rand(25)).chr}.join)
+    end
+  end
+
 
   def setup_defaults
     write_attribute(:git_http,   GitHostingConf.gitolite_http_by_default)       if GitHostingConf.gitolite_http_by_default
