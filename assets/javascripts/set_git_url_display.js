@@ -16,9 +16,9 @@ function updateGitUrl(element) {
   var setup_box = document.getElementById('repository_setup');
   if (setup_box){
     if (selected_id == 'git_url_git') {
-      setup_box.hide();
+      setup_box.style.display = "none";
     } else {
-      setup_box.show();
+      setup_box.style.display = "";
     }
   }
 
@@ -49,5 +49,3 @@ function setGitUrl() {
   }
   updateGitUrl(first_element);
 }
-
-document.observe("dom:loaded", function(){ setGitUrl(); });

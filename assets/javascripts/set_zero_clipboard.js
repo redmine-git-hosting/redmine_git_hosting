@@ -11,7 +11,7 @@ var clipboard   = null;
 function setUpClipboard() {
   var clip_container = document.getElementById('clipboard_container');
   if (clip_container) {
-    clip_container.show();
+    clip_container.style.display = "";
     var button      = document.getElementById('clipboard_button');
     var clipboard   = new ZeroClipboard(button);
 
@@ -21,5 +21,3 @@ function setUpClipboard() {
     });
   }
 }
-
-document.observe("dom:loaded", function(){ setUpClipboard(); });
