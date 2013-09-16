@@ -3,18 +3,26 @@ var all_git_url_ids = ["git_url_ssh", "git_url_http", "git_url_https", "git_url_
 function updateGitUrl(element) {
   var selected_id = element.id;
 
-  $('#git_url_text').val(urls[selected_id][0]);
-  $('#git_url_permissions').html(urls[selected_id][1] ? "Read+Write" : "Read-Only");
-  $('.git_url_access').html(urls[selected_id][0]);
+  document.getElementById("git_url_text").value = urls[selected_id][0];
+  document.getElementById("git_url_permissions").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only";
 
-  if (selected_id == 'git_url_git') {
-    $('#repository_setup').hide();
-  } else {
-    $('#repository_setup').show();
+  var git_url_access = document.getElementsByClassName("git_url_access");
+  if (git_url_access){
+    for (var i = 0; i < git_url_access.length; i++) {
+      git_url_access[i].innerHTML = urls[selected_id][0];
+    }
   }
 
-  var i = 0;
-  for(i = 0; i < all_git_url_ids.length; i++) {
+  var setup_box = document.getElementById('repository_setup');
+  if (setup_box){
+    if (selected_id == 'git_url_git') {
+      setup_box.hide();
+    } else {
+      setup_box.show();
+    }
+  }
+
+  for(var i = 0; i < all_git_url_ids.length; i++) {
     var test_id = all_git_url_ids[i];
     var test_el = document.getElementById(test_id);
     if (test_el != null) {
@@ -42,6 +50,4 @@ function setGitUrl() {
   updateGitUrl(first_element);
 }
 
-$(document).ready(function() {
-  setGitUrl();
-});
+document.observe("dom:loaded", function() { setGitUrl(); } )
