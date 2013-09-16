@@ -4,7 +4,7 @@ require 'rack/response'
 require 'rack/utils'
 require 'time'
 
-class GitHttpController < ApplicationController
+class SmartHttpController < ApplicationController
 
   # prevents login action to be filtered by check_if_login_required application scope filter
   skip_before_filter :check_if_login_required, :verify_authenticity_token
@@ -18,7 +18,20 @@ class GitHttpController < ApplicationController
     command, @requested_file, @rpc = match_routing(@request)
 
     return render_method_not_allowed if command == 'not_allowed'
-    return render_not_found if !command
+
+    if !command
+      logger.error "###### AUTHENTICATED ######"
+      logger.error "project name    : #{@project.identifier}"
+      logger.error "repository dir  : #{@repository.url}"
+      if !@user.nil?
+        logger.info "user_name       : #{@user.login}"
+      else
+        logger.info "user_name       : anonymous (project is public)"
+      end
+      logger.error "command not found, exiting !"
+      logger.error "##########################"
+      return render_not_found
+    end
 
     logger.info "###### AUTHENTICATED ######"
     logger.info "project name    : #{@project.identifier}"
@@ -54,7 +67,6 @@ class GitHttpController < ApplicationController
     logger.info "git_params : #{git_params}"
     logger.info "repo_path  : #{repo_path}"
     logger.info "is_push    : #{is_push}"
-    logger.info "############################"
 
     if (@repository = Repository.find_by_path(repo_path, :parse_ext => true)) && @repository.is_a?(Repository::Git)
       if (@project = @repository.project) && @repository.extra[:git_http] != 0
@@ -83,8 +95,12 @@ class GitHttpController < ApplicationController
     #so, just render case where user queried a project
     #that's nonexistant or for which smart http isn't active
     if !query_valid
-      render_not_found
+      logger.error "invalid query, exiting !"
+      logger.error "############################"
+      return render_not_found
     end
+
+    logger.info "############################"
 
     return query_valid && authentication_valid
   end
@@ -255,13 +271,13 @@ class GitHttpController < ApplicationController
   def has_access(rpc, check_content_type = false)
     if check_content_type
       if request.content_type != "application/x-git-%s-request" % rpc
-        logger.error "[GitHosting] Invalid content type #{request.content_type}"
+        logger.error "Invalid content type #{request.content_type}"
         return false
       end
     end
 
     if !VALID_SERVICE_TYPES.include? rpc
-      logger.error "[GitHosting] Invalid service type #{rpc}"
+      logger.error "Invalid service type #{rpc}"
       return false
     end
 
@@ -275,8 +291,8 @@ class GitHttpController < ApplicationController
     logger.info "content_type   : #{content_type}"
 
     if !File.exists?(requested_file)
-      logger.info "error          : File not found!"
-      logger.info "#######################"
+      logger.error "error          : File not found!"
+      logger.error "#######################"
       return render_not_found
     end
 
@@ -388,15 +404,15 @@ class GitHttpController < ApplicationController
   # --------------------------------------
 
   def render_method_not_allowed
-    logger.info "###### HTTP ERRORS ######"
+    logger.error "###### HTTP ERRORS ######"
     if request.env['SERVER_PROTOCOL'] == "HTTP/1.1"
-      logger.info "method : not allowed"
+      logger.error "method : not allowed"
       head :method_not_allowed
     else
-      logger.info "method : bad request"
+      logger.error "method : bad request"
       head :bad_request
     end
-    logger.info "#########################"
+    logger.error "#########################"
     return head
   end
 
@@ -445,7 +461,7 @@ class GitHttpController < ApplicationController
 
 
   def logger
-    Rails.logger
+    GitoliteLogger.get_logger(:smart_http)
   end
 
 end
