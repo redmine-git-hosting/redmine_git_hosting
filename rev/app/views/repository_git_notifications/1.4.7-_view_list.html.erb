@@ -1,18 +1,11 @@
 <% content_for :header_tags do %>
   <script type="text/javascript">
 
-    function set_git_notification_modal_box(){
+    Event.observe(window, 'load', function(event){
       setUpPrototypeModalBox('a.add-git-notification',    "<%=l(:label_git_notifications_add)%>");
       setUpPrototypeModalBox('a.edit-git-notification',   "<%=l(:label_git_notifications_edit)%>");
       setUpPrototypeModalBox('a.delete-git-notification', "<%=l(:label_git_notifications_delete)%>");
-    }
-
-    // If loaded via ajax, load immediately, else observe events
-    <% if request.xhr? %>
-      set_git_notification_modal_box();
-    <% else %>
-      Event.observe(window, 'load', set_git_notification_modal_box);
-    <% end %>
+    });
 
   </script>
 <% end %>

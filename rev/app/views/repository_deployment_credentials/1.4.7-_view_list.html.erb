@@ -1,18 +1,11 @@
 <% content_for :header_tags do %>
   <script type="text/javascript">
 
-    function set_deployment_credential_modal_box(){
+    Event.observe(window, 'load', function(event){
       setUpPrototypeModalBox('a.add-deployment-credential',    "<%=l(:label_deployment_credential_create)%>");
       setUpPrototypeModalBox('a.edit-deployment-credential',   "<%=l(:label_deployment_credential_edit)%>");
       setUpPrototypeModalBox('a.delete-deployment-credential', "<%=l(:label_deployment_credential_delete)%>");
-    }
-
-    // If loaded via ajax, load immediately, else observe events
-    <% if request.xhr? %>
-      set_deployment_credential_modal_box();
-    <% else %>
-      Event.observe(window, 'load', set_deployment_credential_modal_box);
-    <% end %>
+    });
 
   </script>
 <% end %>

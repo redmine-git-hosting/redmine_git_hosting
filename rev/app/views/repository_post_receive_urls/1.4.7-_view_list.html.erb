@@ -1,18 +1,11 @@
 <% content_for :header_tags do %>
   <script type="text/javascript">
 
-    function set_post_receive_modal_box(){
+    Event.observe(window, 'load', function(event){
       setUpPrototypeModalBox('a.add-post-receive-url',    "<%=l(:label_post_receive_url_create)%>");
       setUpPrototypeModalBox('a.edit-post-receive-url',   "<%=l(:label_post_receive_url_edit)%>");
       setUpPrototypeModalBox('a.delete-post-receive-url', "<%=l(:label_post_receive_url_delete)%>");
-    }
-
-    // If loaded via ajax, load immediately, else observe events
-    <% if request.xhr? %>
-      set_post_receive_modal_box();
-    <% else %>
-      Event.observe(window, 'load', set_post_receive_modal_box);
-    <% end %>
+    });
 
   </script>
 <% end %>
