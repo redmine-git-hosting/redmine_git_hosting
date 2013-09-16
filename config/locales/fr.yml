@@ -11,6 +11,10 @@ fr:
         ident_cannot_equal_project: "cannot match identifier of existing project"
         blank_default_exists: "Cannot make repository the default because current default has blank identifier."
 
+  # Global
+  label_get_help: Get Help
+  label_redmine_git_hosting_wiki: Redmine Git Hosting Wiki
+
   # Gitolite SSH Config
   label_tab_ssh: SSH
   label_gitolite_ssh_config: Gitolite SSH Configuration
