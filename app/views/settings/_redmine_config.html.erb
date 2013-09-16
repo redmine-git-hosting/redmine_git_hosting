@@ -31,3 +31,8 @@
   <%= select_tag("settings[unique_repo_identifier]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], unique_repo_identifier)) %>
   <br />
 </p>
+
+<br/>
+<br/>
+
+<%= render :partial => "gitolite_display_access" %>
