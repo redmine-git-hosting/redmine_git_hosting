@@ -1,33 +1,14 @@
 <% content_for :header_tags do %>
   <script type="text/javascript">
 
-    <% if Rails::VERSION::MAJOR >= 3 %>
+    $(document).ready(function() {
+      initJqueryModalBox('dialog-box-post-receive-url', false);
+      initJqueryModalBox('dialog-box-post-receive-url-delete', true);
 
-      $(document).ready(function() {
-        initJqueryModalBox('dialog-box-post-receive-url', false);
-        initJqueryModalBox('dialog-box-post-receive-url-delete', true);
-
-        setUpJqueryModalBox('a.add-post-receive-url',    'dialog-box-post-receive-url');
-        setUpJqueryModalBox('a.edit-post-receive-url',   'dialog-box-post-receive-url');
-        setUpJqueryModalBox('a.delete-post-receive-url', 'dialog-box-post-receive-url-delete');
-      });
-
-    <% else %>
-
-      function set_post_receive_modal_box(){
-        setUpPrototypeModalBox('a.add-post-receive-url',    "<%=l(:label_post_receive_url_create)%>");
-        setUpPrototypeModalBox('a.edit-post-receive-url',   "<%=l(:label_post_receive_url_edit)%>");
-        setUpPrototypeModalBox('a.delete-post-receive-url', "<%=l(:label_post_receive_url_delete)%>");
-      }
-
-      // If loaded via ajax, load immediately, else observe events
-      <% if request.xhr? %>
-        set_post_receive_modal_box();
-      <% else %>
-        Event.observe(window, 'load', set_post_receive_modal_box);
-      <% end %>
-
-    <% end %>
+      setUpJqueryModalBox('a.add-post-receive-url',    'dialog-box-post-receive-url');
+      setUpJqueryModalBox('a.edit-post-receive-url',   'dialog-box-post-receive-url');
+      setUpJqueryModalBox('a.delete-post-receive-url', 'dialog-box-post-receive-url-delete');
+    });
 
   </script>
 <% end %>
@@ -86,7 +67,5 @@
 
 </div>
 
-<% if Rails::VERSION::MAJOR >= 3 %>
-  <div id="dialog-box-post-receive-url"></div>
-  <div id="dialog-box-post-receive-url-delete"></div>
-<% end %>
+<div id="dialog-box-post-receive-url"></div>
+<div id="dialog-box-post-receive-url-delete"></div>
