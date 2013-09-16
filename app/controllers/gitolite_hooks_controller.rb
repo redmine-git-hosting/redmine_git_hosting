@@ -2,7 +2,7 @@ include ActionView::Helpers::TextHelper
 
 class GitoliteHooksController < ApplicationController
 
-  skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :test
+  skip_before_filter :verify_authenticity_token, :check_if_login_required, :except => :notify_cia_test
   before_filter  :find_project_and_repository
 
   helper :git_hosting
@@ -12,12 +12,6 @@ class GitoliteHooksController < ApplicationController
   def stub
     # Stub method simply to generate correct urls, just return a 404 to any user requesting this
     render(:code => 404)
-  end
-
-
-  @@logger = nil
-  def self.logger
-    @@logger ||= GitoliteLogger.get_logger(:post_receive)
   end
 
 
@@ -44,12 +38,12 @@ class GitoliteHooksController < ApplicationController
 
       self.response_body = get_enumerator.new do |y|
         # Fetch commits from the repository
-        GitHosting.logger.info "[GitHosting] Fetching changesets for '#{@project.identifier}' repository"
+        logger.info "Fetching changesets for '#{@project.identifier}' repository"
         y << "Fetching changesets for '#{@project.identifier}' repository ... "
         begin
           @repository.fetch_changesets
         rescue Redmine::Scm::Adapters::CommandFailed => e
-          GitHosting.logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+          logger.error "Error during fetching changesets: #{e.message}"
         end
         y << "Done\n"
 
@@ -60,7 +54,7 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            GitHosting.logger.debug "[GitHosting] Pushing changes to '#{mirror.url}' ... "
+            logger.debug "Pushing changes to '#{mirror.url}' ... "
             y << "Pushing changes to mirror '#{mirror.url}' ... "
 
             (mirror_err,mirror_message) = mirror.push
@@ -102,17 +96,17 @@ class GitoliteHooksController < ApplicationController
 
           if errmsg
             y << "[failure] done\n"
-            GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
+            logger.error "#{msg}Failed!\n  #{errmsg}"
           else
             y << "[success] done\n"
-            GitHosting.logger.info "[ #{msg}Succeeded! ]"
+            logger.info "#{msg}Succeeded!"
           end
         } if @repository.repository_post_receive_urls.any?
 
         # Notify CIA
         #Thread.abort_on_exception = true
         Thread.new(@repository, payloads) {|repository, payloads|
-          GitHosting.logger.debug "Notifying CIA"
+          logger.info "Notifying CIA"
           y << "Notifying CIA\n"
 
           payloads.each do |payload|
@@ -134,13 +128,13 @@ class GitoliteHooksController < ApplicationController
         response.headers["Content-Type"] = "text/plain;"
 
         # Fetch commits from the repository
-        GitHosting.logger.debug "Fetching changesets for #{@project.name}'s repository"
+        logger.info "Fetching changesets for #{@project.name}'s repository"
         output.write("Fetching changesets for #{@project.name}'s repository ... ")
         output.flush
         begin
           @repository.fetch_changesets
         rescue Redmine::Scm::Adapters::CommandFailed => e
-          GitHosting.logger.error "[GitHosting] error during fetching changesets: #{e.message}"
+          logger.error "Error during fetching changesets: #{e.message}"
         end
         output.write("Done\n")
         output.flush
@@ -152,7 +146,7 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            GitHosting.logger.debug "Pushing changes to '#{mirror.url}' ... "
+            logger.info "Pushing changes to '#{mirror.url}' ... "
             output.write("Pushing changes to mirror '#{mirror.url}' ... ")
             output.flush
 
@@ -197,10 +191,10 @@ class GitoliteHooksController < ApplicationController
 
           if errmsg
             output.write "[failure] done\n"
-            GitHosting.logger.error "[ #{msg}Failed!\n  #{errmsg} ]"
+            logger.error "#{msg}Failed!\n  #{errmsg}"
           else
             output.write "[success] done\n"
-            GitHosting.logger.info "[ #{msg}Succeeded! ]"
+            logger.info "#{msg}Succeeded!s"
           end
           output.flush
         } if @repository.repository_post_receive_urls.any?
@@ -208,7 +202,7 @@ class GitoliteHooksController < ApplicationController
         # Notify CIA
         #Thread.abort_on_exception = true
         Thread.new(@repository, payloads) {|repository, payloads|
-          GitHosting.logger.debug "Notifying CIA"
+          logger.info "Notifying CIA"
           output.write("Notifying CIA\n")
           output.flush
 
@@ -217,7 +211,7 @@ class GitoliteHooksController < ApplicationController
             payload[:commits].each do |commit|
               revision = repository.find_changeset_by_name(commit["id"])
               next if repository.cia_notifications.notified?(revision)  # Already notified about this commit
-              GitHosting.logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
+              logger.info "Notifying CIA: Branch => #{branch} REVISION => #{revision.revision}"
               CiaNotificationMailer.deliver_notification(revision, branch)
               repository.cia_notifications.notified(revision)
             end
@@ -229,8 +223,8 @@ class GitoliteHooksController < ApplicationController
     end
   end
 
-  def test
-    # Deny access if the curreent user is not allowed to manage the project's repositoy
+  def notify_cia_test
+    # Deny access if the current user is not allowed to manage the project's repositoy
     not_enough_perms = true
     User.current.roles_for_project(@project).each{|role|
       if role.allowed_to? :manage_repository
@@ -238,23 +232,36 @@ class GitoliteHooksController < ApplicationController
         break
       end
     }
+
+    not_enough_perms = false if User.current.admin?
     return render(:text => l(:cia_not_enough_permissions), :status => 403) if not_enough_perms
 
     # Grab the repository path
     repo_path = GitHosting.repository_path(@repository)
+
     # Get the last revision we have on the database for this project
     revision = @repository.changesets.find(:first)
-    # Find out to which branch this commit belongs to
-    branch = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
-    GitHosting.logger.debug "Revision #{revision.scmid} found on branch #{branch}"
 
-    # Send the test notification
-    GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
-    CiaNotificationMailer.deliver_notification(revision, branch)
-    render(:text => l(:cia_notification_ok))
+    if !revision.nil?
+      # Find out to which branch this commit belongs to
+      branch = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
+      GitHosting.logger.info "Revision #{revision.scmid} found on branch #{branch}"
+
+      # Send the test notification
+      GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
+      CiaNotificationMailer.deliver_notification(revision, branch)
+      return render(:text => l(:text_cia_notification_ok))
+    else
+      return render(:text => l(:text_cia_notification_nok))
+    end
   end
 
   protected
+
+  @@logger = nil
+  def logger
+    @@logger ||= GitoliteLogger.get_logger(:post_receive)
+  end
 
   # Returns an array of GitHub post-receive hook style hashes
   # http://help.github.com/post-receive-hooks/
