@@ -119,10 +119,10 @@
     });
   }
 
-  function key_type_change(elem) {
-    if (!elem) return;
+  function key_type_change(element) {
+    if (!element) return;
 
-    var idx = elem.selectedIndex;
+    var idx = element.selectedIndex;
     if (idx == 0) {
       $('key_type_options').hide();
       $('gitolite_public_key_delete_when_unused').checked = 'checked';
