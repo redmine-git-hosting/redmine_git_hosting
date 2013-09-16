@@ -41,8 +41,12 @@ class SmartHttpController < ApplicationController
       logger.info "user_name       : #{@user.login}"
       @authenticated = true
     else
-      logger.info "user_name       : anonymous (project is public)"
-      @authenticated = false
+      if @project.is_public
+        logger.info "user_name       : anonymous (project is public)"
+        @authenticated = true
+      else
+        @authenticated = false
+      end
     end
 
     logger.info "##########################"
@@ -64,7 +68,7 @@ class SmartHttpController < ApplicationController
     authentication_valid = true
 
     logger.info "###### AUTHENTICATION ######"
-    logger.info "git_params : #{git_params}"
+    logger.info "git_params : #{git_params.join(', ')}"
     logger.info "repo_path  : #{repo_path}"
     logger.info "is_push    : #{is_push}"
 
@@ -73,7 +77,7 @@ class SmartHttpController < ApplicationController
         allow_anonymous_read = @project.is_public
         # Push requires HTTP enabled or valid SSL
         # Read is ok over HTTP for public projects
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !is_push && allow_anonymous_read
+        if (@repository.extra[:git_http] == 3 && !is_push) || @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !is_push && allow_anonymous_read
           query_valid = true
           if is_push || (!allow_anonymous_read)
             authentication_valid = false
@@ -95,9 +99,10 @@ class SmartHttpController < ApplicationController
     #so, just render case where user queried a project
     #that's nonexistant or for which smart http isn't active
     if !query_valid
-      logger.error "invalid query, exiting !"
+      logger.error "Invalid query, exiting !"
+      logger.error "Your may are trying to push data without SSL!"
       logger.error "############################"
-      return render_not_found
+      return render_no_access
     end
 
     logger.info "############################"
