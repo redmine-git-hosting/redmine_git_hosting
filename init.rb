@@ -4,19 +4,20 @@ require 'base64'
 require 'digest/md5'
 require 'digest/sha1'
 require 'fileutils'
-#~ require 'gitolite'
 require 'lockfile'
 require 'net/http'
 require 'net/ssh'
 require 'open3'
-#~ require 'sidekiq/web'
-#~ require 'sidekiq-unique-jobs'
 require 'stringio'
 require 'tmpdir'
 require 'uri'
 require 'tmpdir'
 require 'lockfile'
 require 'net/ssh'
+
+#~ require 'gitolite'
+#~ require 'sidekiq/web'
+#~ require 'sidekiq-unique-jobs'
 
 require 'redmine'
 
@@ -27,6 +28,9 @@ require 'redmine_git_hosting'
   #~ ActiveSupport::Dependencies.autoload_paths += [dir]
   #~ RedmineApp::Application.config.eager_load_paths += [dir]
 #~ end
+
+REDMINE_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
+REDMINE_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
 
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'

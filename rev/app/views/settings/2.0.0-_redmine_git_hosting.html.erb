@@ -20,6 +20,12 @@
                     {:name => 'gitolite_rescue',            :partial => 'settings/gitolite_rescue',         :label => :label_tab_gitolite_rescue},
                    ] %>
 
+<span><%= l(:label_need_help) %> : <%= link_to l(:label_redmine_git_hosting_wiki), REDMINE_WIKI, :target => '_blank' %></span>
+<br />
+<span><%= l(:label_open_issue) %> : <%= link_to l(:label_redmine_git_hosting_issue), REDMINE_ISSUE, :target => '_blank' %></span>
+<br />
+<br />
+
 <div class="tabular settings">
   <%= render_tabs settings_tabs %>
 </div>
