@@ -152,6 +152,12 @@ fr:
   label_enable_git_notify: Git Mailing List
   label_enable_git_daemon: Git Daemon
   label_enable_smart_http: Git Smart HTTP
+  label_enable_notify_cia: Notify CIA
+  label_enable_notify_cia_test: Notify CIA Test
+
+  # CIA.vc Notifications
+  text_cia_notification_ok: Notification to CIA.vc sent
+  text_cia_notification_nok: Notification to CIA.vc not sent (repository has no revision)
 
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities
