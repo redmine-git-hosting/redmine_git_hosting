@@ -296,7 +296,7 @@ module RedmineGitHosting
                 if projects.length > 0
                   GitHosting.logger.info "Gitolite configuration has been modified : repositories hierarchy"
                   GitHosting.logger.info "Resync all projects (root projects : '#{projects.length}')..."
-                  GithostingShellWorker.perform_async({ :command => :move_repositories_tree, :object => projects.length, :option => :flush_cache })
+                  #~ GithostingShellWorker.perform_async({ :command => :move_repositories_tree, :object => projects.length, :option => :flush_cache })
                 end
             end
 
@@ -312,7 +312,7 @@ module RedmineGitHosting
                 projects = Project.active_or_archived.find(:all, :include => :repositories)
                 if projects.length > 0
                   GitHosting.logger.info "Gitolite configuration has been modified, resync all projects..."
-                  GithostingShellWorker.perform_async({ :command => :update_all_projects, :object => projects.length })
+                  #~ GithostingShellWorker.perform_async({ :command => :update_all_projects, :object => projects.length })
                 end
             end
 
@@ -327,7 +327,7 @@ module RedmineGitHosting
               projects = Project.active_or_archived.find(:all, :include => :repositories)
               if projects.length > 0
                 GitHosting.logger.info "Forced resync of all projects..."
-                GithostingShellWorker.perform_async({ :command => :update_all_projects_forced, :object => projects.length })
+                #~ GithostingShellWorker.perform_async({ :command => :update_all_projects_forced, :object => projects.length })
               end
 
               @@resync = false
