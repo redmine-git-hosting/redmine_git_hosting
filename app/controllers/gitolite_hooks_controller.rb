@@ -54,7 +54,7 @@ class GitoliteHooksController < ApplicationController
 
         @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each {|mirror|
           if mirror.needs_push payloads
-            logger.debug "Pushing changes to '#{mirror.url}' ... "
+            logger.info "Pushing changes to '#{mirror.url}' ... "
             y << "Pushing changes to mirror '#{mirror.url}' ... "
 
             (mirror_err,mirror_message) = mirror.push
@@ -245,10 +245,10 @@ class GitoliteHooksController < ApplicationController
     if !revision.nil?
       # Find out to which branch this commit belongs to
       branch = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' branch --contains  #{revision.scmid}].split('\n')[0].strip.gsub(/\* /, '')
-      GitHosting.logger.info "Revision #{revision.scmid} found on branch #{branch}"
+      logger.info "Revision #{revision.scmid} found on branch #{branch}"
 
       # Send the test notification
-      GitHosting.logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
+      logger.info "Sending Test Notification to CIA: Branch => #{branch} RANGE => #{revision.revision}"
       CiaNotificationMailer.deliver_notification(revision, branch)
       return render(:text => l(:text_cia_notification_ok))
     else
@@ -260,7 +260,7 @@ class GitoliteHooksController < ApplicationController
 
   @@logger = nil
   def logger
-    @@logger ||= GitoliteLogger.get_logger(:post_receive)
+    @@logger ||= GitoliteLogger.get_logger(:git_hooks)
   end
 
   # Returns an array of GitHub post-receive hook style hashes
@@ -276,11 +276,11 @@ class GitoliteHooksController < ApplicationController
 
       if newhead.match(/^0{40}$/)
         # Deleting a branch
-        GitHosting.logger.debug "Deleting branch \"#{branch}\""
+        logger.info "Deleting branch \"#{branch}\""
         next
       elsif oldhead.match(/^0{40}$/)
         # Creating a branch
-        GitHosting.logger.debug "Creating branch \"#{branch}\""
+        logger.info "Creating branch \"#{branch}\""
         range = newhead
       else
         range = "#{oldhead}..#{newhead}"
@@ -289,7 +289,7 @@ class GitoliteHooksController < ApplicationController
       # Grab the repository path
       repo_path = GitHosting.repository_path(@repository)
       revisions_in_range = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' rev-list --reverse #{range}]
-      #GitHosting.logger.debug "Revisions in Range: #{revisions.split().join(' ')}"
+      logger.info "Revisions in Range: #{revisions.split().join(' ')}"
 
       commits = []
       revisions_in_range.split().each do |rev|

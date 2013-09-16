@@ -5,7 +5,7 @@ module GitoliteLogger
   @@logger_recycle_bin  = nil
   @@logger_git_cache    = nil
   @@logger_smart_http   = nil
-  @@logger_post_receive = nil
+  @@logger_git_hooks    = nil
 
 
   def self.get_logger(type)
@@ -41,10 +41,10 @@ module GitoliteLogger
         prefix = '[GitSmartHttp]'
         @@logger_smart_http ||= LoggerGlobal.new(file, prefix)
 
-      when :post_receive then
-        file   = File.join(Rails.root, 'log', 'git_hosting', 'git_post_receive.log').to_s if GitHostingConf.gitolite_log_split?
-        prefix = '[GitPostReceive]'
-        @@logger_post_receive ||= LoggerGlobal.new(file, prefix)
+      when :git_hooks then
+        file   = File.join(Rails.root, 'log', 'git_hosting', 'git_hooks.log').to_s if GitHostingConf.gitolite_log_split?
+        prefix = '[GitHooks]'
+        @@logger_git_hooks ||= LoggerGlobal.new(file, prefix)
 
     end
   end
@@ -126,6 +126,10 @@ module GitoliteLogger
 
 
   class CustomLogger < Logger
+    def flush
+      return true
+    end
+
     def format_message(severity, timestamp, progname, msg)
       "#{timestamp} #{severity} #{msg}\n"
     end

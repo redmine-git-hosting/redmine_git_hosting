@@ -57,10 +57,10 @@ class RepositoryMirror < ActiveRecord::Base
     push_failed = ($?.to_i != 0) ? true : false
 
     if (push_failed)
-      GitoliteLogger.get_logger(:post_receive).error "Pushing changes to mirror '#{url}'... Failed!"
-      GitoliteLogger.get_logger(:post_receive).error "  " + shellout.split("\n").join("\n  ")
+      logger.error "Pushing changes to mirror '#{url}'... Failed!"
+      logger.error "  " + shellout.split("\n").join("\n  ")
     else
-      GitoliteLogger.get_logger(:post_receive).info "Pushing changes to mirror '#{url}'... Succeeded!"
+      logger.info "Pushing changes to mirror '#{url}'... Succeeded!"
     end
     [push_failed, shellout]
   end
@@ -88,6 +88,11 @@ class RepositoryMirror < ActiveRecord::Base
   end
 
   protected
+
+  @@logger = nil
+  def logger
+    @@logger ||= GitoliteLogger.get_logger(:git_hooks)
+  end
 
   # Strip leading and trailing whitespace
   def strip_whitespace
