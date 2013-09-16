@@ -39,7 +39,7 @@ def install_old_routes
     map.connect 'githooks/notify-cia-test', :controller => 'gitolite_hooks', :action => 'notify_cia_test', :conditions => {:method => :post}
 
     # SMART HTTP
-    map.connect ":repo_path/*git_params", :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http', :action => 'index'
+    map.connect ":repo_path/*git_params", :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'smart_http', :action => 'index'
 
     # POST RECEIVE
     map.connect 'githooks/post-receive', :controller => 'gitolite_hooks', :action => 'post_receive'
@@ -82,7 +82,7 @@ def install_new_routes
     match 'githooks/notify-cia-test', :to => 'gitolite_hooks#notify_cia_test', :via => [:post]
 
     # SMART HTTP
-    match ':repo_path/*git_params', :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
+    match ':repo_path/*git_params', :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'smart_http#index'
 
     # POST RECEIVE
     match 'githooks/post-receive', :to => 'gitolite_hooks#post_receive'
