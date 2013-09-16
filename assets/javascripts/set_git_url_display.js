@@ -50,4 +50,4 @@ function setGitUrl() {
   updateGitUrl(first_element);
 }
 
-document.observe("dom:loaded", function() { setGitUrl(); } )
+document.observe("dom:loaded", function(){ setGitUrl(); });
