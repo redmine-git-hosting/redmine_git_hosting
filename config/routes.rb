@@ -34,6 +34,10 @@ def install_old_routes
       end
     end
 
+    # NOTIFY CIA
+    map.connect 'githooks',                 :controller => 'gitolite_hooks', :action => 'stub'
+    map.connect 'githooks/notify-cia-test', :controller => 'gitolite_hooks', :action => 'notify_cia_test', :conditions => {:method => :post}
+
     # SMART HTTP
     map.connect ":repo_path/*git_params", :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :controller => 'git_http', :action => 'index'
 
@@ -72,6 +76,10 @@ def install_new_routes
     match 'repositories/:repository_id/git-notifications/edit/:id',   :to => 'repository_git_notifications#edit',    :via => [:get]
     match 'repositories/:repository_id/git_notifications/update/:id', :to => 'repository_git_notifications#update',  :via => [:put]
     match 'repositories/:repository_id/git_notifications/delete/:id', :to => 'repository_git_notifications#destroy', :via => [:get, :delete]
+
+    # NOTIFY CIA
+    match 'githooks',                 :to => 'gitolite_hooks#stub'
+    match 'githooks/notify-cia-test', :to => 'gitolite_hooks#notify_cia_test', :via => [:post]
 
     # SMART HTTP
     match ':repo_path/*git_params', :prefix => GitHostingConf.http_server_subdir, :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'git_http#index'
