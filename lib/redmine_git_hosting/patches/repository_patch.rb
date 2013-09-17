@@ -27,7 +27,6 @@ module RedmineGitHosting
             validate :additional_ident_constraints
           end
 
-          before_destroy :clean_cache, :prepend => true
         end
       end
 
@@ -124,15 +123,15 @@ module RedmineGitHosting
         end
 
 
-        def fetch_changesets_for_project(proj_identifier)
-          p = Project.find_by_identifier(proj_identifier)
-          if p
+        def fetch_changesets_for_project(project_id)
+          project = Project.find_by_identifier(project_id)
+          if project
             # Fetch changesets for all repos for project (works for 1.4)
-            Repository.find_all_by_project_id(p.id).each do |repo|
+            Repository.find_all_by_project_id(project.id).each do |repository|
               begin
-                repo.fetch_changesets
+                repository.fetch_changesets
               rescue Redmine::Scm::Adapters::CommandFailed => e
-                logger.error "error during fetching changesets: #{e.message}"
+                GitHosting.logger.error "Error during fetching changesets : #{e.message}"
               end
             end
           end
@@ -288,14 +287,6 @@ module RedmineGitHosting
             if possibles.any? && (new_record? || possibles.detect{|x| x.id != id})
               errors.add(:base, :blank_default_exists)
             end
-          end
-        end
-
-
-        def clean_cache
-          if self.is_a?(Repository::Git)
-            GitoliteLogger.get_logger(:git_cache).info "Clean cache before delete repository '#{GitHosting.repository_name(self)}'"
-            GitHostingCache.clear_cache_for_repository(self)
           end
         end
 
