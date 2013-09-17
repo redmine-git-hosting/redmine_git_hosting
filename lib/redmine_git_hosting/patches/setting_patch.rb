@@ -198,6 +198,15 @@ module RedmineGitHosting
               end
             end
 
+            # Validate wait time > 0 (and exclude non-numbers)
+            if valuehash[:gitolite_lock_wait_time]
+              if valuehash[:gitolite_lock_wait_time].to_i > 0
+                valuehash[:gitolite_lock_wait_time] = "#{valuehash[:gitolite_lock_wait_time].to_i}"
+              else
+                valuehash[:gitolite_lock_wait_time] = @@old_valuehash[:gitolite_lock_wait_time]
+              end
+            end
+
             # Validate ssh port > 0 and < 65537 (and exclude non-numbers)
             if valuehash[:gitolite_server_port]
               if valuehash[:gitolite_server_port].to_i > 0 and valuehash[:gitolite_server_port].to_i < 65537
