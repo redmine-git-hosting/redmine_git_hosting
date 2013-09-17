@@ -171,7 +171,7 @@ module GitHosting
       return @@sudo_gitolite_to_redmine_user_cached
     end
 
-    test = %x[#{GitHosting.shell_cmd_runner} sudo -nu #{redmine_user} echo "yes" ]
+    test = %x[#{shell_cmd_runner} sudo -nu #{redmine_user} echo "yes" ]
     if test.match(/yes/)
       @@sudo_gitolite_to_redmine_user_cached = true
       @@sudo_gitolite_to_redmine_user_stamp = Time.new
@@ -202,7 +202,7 @@ module GitHosting
       return @@sudo_redmine_to_gitolite_user_cached
     end
 
-    test = %x[#{GitHosting.shell_cmd_runner} echo "yes"]
+    test = %x[#{shell_cmd_runner} echo "yes"]
     if test.match(/yes/)
       @@sudo_redmine_to_gitolite_user_cached = true
       @@sudo_redmine_to_gitolite_user_stamp = Time.new
@@ -405,7 +405,6 @@ module GitHosting
     end
 
     if !File.directory?(@@scripts_dir_path)
-      logger.info "############ TEST SCRIPT DIR ############"
       logger.info "Creating bin directory :'#{@@scripts_dir_path}' with owner : '#{redmine_user}'"
       begin
         %x[mkdir -p "#{@@scripts_dir_path}"]
@@ -464,7 +463,7 @@ module GitHosting
 
 
   def self.is_repository_empty?(new_path)
-    output = %x[ #{GitHosting.shell_cmd_runner} 'find "#{new_path}"/objects -type f | wc -l' ].chomp.gsub('\n', '')
+    output = %x[ #{shell_cmd_runner} 'find "#{new_path}"/objects -type f | wc -l' ].chomp.gsub('\n', '')
     GitoliteLogger.get_logger(:worker).debug "move_repository : counted objects in repository directory '#{new_path}' : '#{output}'"
     if output.to_i == 0
       return true
@@ -594,16 +593,16 @@ module GitHosting
     if @@mirror_pubkey.nil?
       logger.info "Install Redmine Gitolite mirroring SSH key"
 
-      %x[ cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
-      %x[ cat '#{GitHostingConf.gitolite_ssh_public_key}'  | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 600 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 644 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
+      %x[ cat '#{GitHostingConf.gitolite_ssh_private_key}' | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
+      %x[ cat '#{GitHostingConf.gitolite_ssh_public_key}'  | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
+      %x[ #{shell_cmd_runner} 'chmod 600 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
+      %x[ #{shell_cmd_runner} 'chmod 644 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
 
-      git_user_dir = ( %x[ #{GitHosting.shell_cmd_runner} "cd ~ ; pwd" ] ).chomp.strip
+      git_user_dir = ( %x[ #{shell_cmd_runner} "cd ~ ; pwd" ] ).chomp.strip
 
-      %x[ echo '#!/bin/sh' | #{GitHosting.shell_cmd_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh' ]
-      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{git_user_dir}/.ssh/redmine_gitolite_admin_id_rsa_mirroring "$@"' | #{GitHosting.shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
-      %x[ #{GitHosting.shell_cmd_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh' ]
+      %x[ echo '#!/bin/sh' | #{shell_cmd_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh' ]
+      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{GitHostingConf.gitolite_server_port} -i #{git_user_dir}/.ssh/redmine_gitolite_admin_id_rsa_mirroring "$@"' | #{shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
+      %x[ #{shell_cmd_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh' ]
 
       pubk = (%x[ cat '#{GitHostingConf.gitolite_ssh_public_key}' ]).chomp.strip
       @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
@@ -735,9 +734,9 @@ module GitHosting
     logger.warn "Attempting to restore Gitolite Admin key :"
 
     begin
-      if GitHosting.gitolite_version == 2
+      if gitolite_version == 2
         gitolite_command = 'gl-admin-push -f'
-      elsif GitHosting.gitolite_version == 3
+      elsif gitolite_version == 3
         gitolite_command = 'gitolite push -f'
       else
         raise GitHostingException, "Unknown Gitolite Version"
@@ -941,7 +940,7 @@ module GitHosting
     else
       projects = args.flatten.select{|p| p.is_a?(Project)}
       if projects.length > 0
-        logger.info "No flags set, RESYNC_KEYS for projects (number: '#{projects.length}')"
+        logger.debug "No flags set, RESYNC_KEYS for projects (number: '#{projects.length}')"
       end
     end
 
@@ -1300,7 +1299,7 @@ module GitHosting
     return repo_name if path_list[repo_name]
 
     # Special handling if repository name could change with Repository.repo_ident_unique?
-    if GitHosting.multi_repos? && !repo.identifier.blank?
+    if multi_repos? && !repo.identifier.blank?
       # See if we find match by merely changing value of Repository.repo_ident_unique?
       repo_name_alt = repository_name(repo, :assume_unique => !Repository.repo_ident_unique?)
       if path_list[repo_name_alt]
