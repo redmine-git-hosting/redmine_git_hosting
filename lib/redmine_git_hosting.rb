@@ -87,7 +87,6 @@ apply_patch do
 
   ## Sidekiq mode
   # Redmine dependencies
-  #require_dependency 'setting'
   #require_dependency 'member'
   #require_dependency 'my_controller'
 
@@ -98,7 +97,6 @@ apply_patch do
   #require_dependency 'githosting/routing_constraints'
 
   # Redmine Git Hosting Patches
-  #require_dependency 'redmine_git_hosting/patches/setting_patch'
   #require_dependency 'redmine_git_hosting/patches/member_patch'
   #require_dependency 'redmine_git_hosting/patches/my_controller_patch'
 
