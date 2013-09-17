@@ -1,6 +1,7 @@
 module GitHosting
 
   class GitoliteConfig
+
     DUMMY_REDMINE_KEY      = "redmine_dummy_key"
     ARCHIVED_REDMINE_KEY   = "redmine_archived_project"
     DISABLED_REDMINE_KEY   = "redmine_disabled_project"
@@ -25,10 +26,6 @@ module GitHosting
     def initialize file_path
       @path = file_path
       load
-    end
-
-    def logger
-      return GitHosting.logger
     end
 
     def save
