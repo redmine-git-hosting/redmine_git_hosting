@@ -1,15 +1,15 @@
 module GitHosting
 
-  # This class implements a basic recycle bit for repositories deleted from the gitolite repository
-  #
-  # Whenever repositories are deleted, we rename them and place them in the recycle_bin.
-  # Assuming that GitoliteRecycle.delete_expired_files is called regularly, files in the recycle_bin
-  # older than 'preserve_time' will be deleted.  Both the path for the recycle_bin and the preserve_time
-  # are settable as settings.
-  #
-  # John Kubiatowicz, 11/21/11
-
   class GitoliteRecycle
+
+    # This class implements a basic recycle bit for repositories deleted from the gitolite repository
+    #
+    # Whenever repositories are deleted, we rename them and place them in the recycle_bin.
+    # Assuming that GitoliteRecycle.delete_expired_files is called regularly, files in the recycle_bin
+    # older than 'preserve_time' will be deleted.  Both the path for the recycle_bin and the preserve_time
+    # are settable as settings.
+    #
+    # John Kubiatowicz, 11/21/11
 
     # Separator character(s) used to replace '/' in name
     TRASH_DIR_SEP = "__"
