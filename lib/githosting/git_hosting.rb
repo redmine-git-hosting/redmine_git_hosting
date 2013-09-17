@@ -1116,9 +1116,9 @@ module GitHosting
           if !closest_entry
             # CREATION case.
             if !total_entries[repo_name]
-              logger.info "Creating new entry '#{repo_name}' in '#{gitolite_conf}'"
+              logger.info "Creating new entry in '#{gitolite_conf}' for '#{repo_name}'"
             else
-              logger.info "Using existing entry '#{repo_name}' in '#{gitolite_conf}' for creation"
+              logger.info "Restoring existing entry in '#{gitolite_conf}' for '#{repo_name}'"
             end
           elsif closest_entry != repo_name
             # MOVE case.
@@ -1129,7 +1129,7 @@ module GitHosting
             if !my_repos[repo_name]
               logger.info "Missing or misnamed repository for existing Gitolite entry : '#{repo_name}'."
             else
-              logger.info "Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
+              logger.debug "Using existing entry '#{repo_name}' in '#{gitolite_conf}'"
             end
           end
 
@@ -1151,11 +1151,11 @@ module GitHosting
             if closest_entry != repo_name
               move_physical_repo(closest_entry, repo_name)
             else
-              logger.info "Using existing Gitolite repository : '#{repository_path(repo_name)}' for update (1)"
+              logger.info "Using existing Gitolite repository : '#{repository_path(repo_name)}' for update"
             end
           elsif my_repos[repo_name]
             # Existing repo with right name.  We know that there wasn't a corresponding gitolite.conf entry....
-            logger.info "Using existing Gitolite repository : '#{repository_path(repo_name)}' for update (2)"
+            logger.info "Restoring existing Gitolite repository : '#{repository_path(repo_name)}' for update"
           else
             # Of the repos in my_repo with a matching base name, only steal away those not already controlled
             # by gitolite.conf.  The one reasonable case here is if (for some reason) a move was properly executed

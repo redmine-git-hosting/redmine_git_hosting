@@ -97,7 +97,7 @@ module GitHosting
       files = %x[#{GitHosting.shell_cmd_runner} find '#{GitHostingConf.gitolite_recycle_bin_dir}' -type d -regex '#{myregex}' -prune].chomp.split("\n").sort {|x,y| y <=> x }
       if files.length > 0
         # Found something!
-        logger.info "Restoring '#{repo_name}.git' from recycle bin '#{files.first}' to Gitolite repositories"
+        logger.info "Restoring '#{repo_name}.git' from Recycle Bin '#{files.first}'"
         begin
           prefix = repo_name[/.*(?=\/)/] # Complete directory path (if exists) without trailing '/'
           if prefix
