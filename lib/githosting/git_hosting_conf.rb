@@ -360,6 +360,15 @@ module GitHostingConf
   end
 
 
+  # Server path (minus protocol)
+  def self.my_root_url
+    # Remove any path from httpServer in case they are leftover from previous installations.
+    # No trailing /.
+    my_root_path = Redmine::Utils::relative_url_root
+    File.join(http_server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
+  end
+
+
   ###############################
   ##                           ##
   ##     GIT NOTIFICATIONS     ##

@@ -18,15 +18,6 @@ module GitHosting
   ###############################
 
 
-  # Server path (minus protocol)
-  def self.my_root_url
-    # Remove any path from httpServer in case they are leftover from previous installations.
-    # No trailing /.
-    my_root_path = Redmine::Utils::relative_url_root
-    File.join(GitHostingConf.http_server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
-  end
-
-
   # Are we in the multiple-repositories-per-project version of Redmine?
   @@multi_repos = nil
   def self.multi_repos?
@@ -1186,7 +1177,7 @@ module GitHosting
           # Update repository url and root_url if necessary
           target_url = repository_path(repo_name)
           if repo.url != target_url || repo.root_url != target_url
-            # logger.warn "  Updating internal access path to '#{target_url}'."
+            logger.warn "Updating internal access path to '#{target_url}'."
             repo.url = repo.root_url = target_url
             repo.save
           end
