@@ -35,7 +35,7 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration
       valuehash.delete('gitRepositoryHierarchy')
 
       # Restore redmine root directory to httpServer (remove trailing '/')
-      valuehash['httpServer'] = GitHosting.my_root_url
+      valuehash['httpServer'] = GitHostingConf.my_root_url
 
       if (Setting.plugin_redmine_git_hosting != valuehash)
         say "Removed redmine_git_hosting settings: 'httpServerSubdir', 'gitRedmineSubdir', 'gitRepositoryHierarchy'"

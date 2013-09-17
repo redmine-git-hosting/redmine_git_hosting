@@ -28,8 +28,8 @@ class MigrateParameters < ActiveRecord::Migration
     new_setting[:gitolite_cache_max_size] = '16'
     new_setting[:gitolite_cache_max_elements] = '2000'
 
-    new_setting[:ssh_server_domain]     = GitHosting.my_root_url
-    new_setting[:http_server_domain]    = GitHosting.my_root_url
+    new_setting[:ssh_server_domain]     = GitHostingConf.my_root_url
+    new_setting[:http_server_domain]    = GitHostingConf.my_root_url
     new_setting[:https_server_domain]   = ''
     new_setting[:http_server_subdir]    = ''
     new_setting[:show_repositories_url] = true

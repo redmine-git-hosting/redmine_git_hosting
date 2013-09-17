@@ -23,7 +23,7 @@
     %>
     <br/>
     <label><%= l(:label_http_access) %>:</label>
-    <%= raw "http://<em>redmine-user</em>@#{GitHosting.my_root_url}/#{GitHostingConf.http_server_subdir}<em>#{(GitHostingConf.hierarchical_organisation?)?'project1/project2/':''}project3.git</em>"
+    <%= raw "http://<em>redmine-user</em>@#{GitHostingConf.my_root_url}/#{GitHostingConf.http_server_subdir}<em>#{(GitHostingConf.hierarchical_organisation?)?'project1/project2/':''}project3.git</em>"
     %>
   </p>
   <%= raw l(:display_access_emphasis) %>

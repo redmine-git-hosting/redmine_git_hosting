@@ -146,7 +146,7 @@ module GitHosting
       cur_values = get_global_config_params
 
       begin
-        @@hook_url ||= "http://" + File.join(GitHosting.my_root_url, "/githooks/post-receive")
+        @@hook_url ||= "http://" + File.join(GitHostingConf.my_root_url, "/githooks/post-receive")
 
         if cur_values["hooks.redmine_gitolite.url"] != @@hook_url
           logger.info "Updating Hook URL: #{@@hook_url}"
