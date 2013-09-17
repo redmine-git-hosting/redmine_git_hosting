@@ -64,7 +64,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      # ignore problems if plugin settings don't exist yet
+      say "Error: #{e.message}"
     end
 
   end
@@ -124,7 +124,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      # ignore problems if table doesn't exist yet....
+      say "Error: #{e.message}"
     end
 
   end
