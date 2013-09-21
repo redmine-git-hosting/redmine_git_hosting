@@ -5,13 +5,14 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-      initJqueryModalBox('dialog-box-mirror', false);
-      initJqueryModalBox('dialog-box-mirror-delete', true);
+      initJqueryModalBox('dialog-box-mirror',        'add');
+      initJqueryModalBox('dialog-box-mirror-delete', 'delete');
+      initJqueryModalBox('dialog-box-mirror-push',   'close_only');
 
       setUpJqueryModalBox('a.add-mirror',    'dialog-box-mirror');
       setUpJqueryModalBox('a.edit-mirror',   'dialog-box-mirror');
       setUpJqueryModalBox('a.delete-mirror', 'dialog-box-mirror-delete');
-      setUpJqueryModalBox('a.push-mirror',   'dialog-box-mirror');
+      setUpJqueryModalBox('a.push-mirror',   'dialog-box-mirror-push');
     });
 
     ZeroClipboard.setDefaults({ moviePath: "<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>" });
@@ -98,3 +99,4 @@
 
 <div id="dialog-box-mirror"></div>
 <div id="dialog-box-mirror-delete"></div>
+<div id="dialog-box-mirror-push"></div>

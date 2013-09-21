@@ -2,8 +2,8 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
-      initJqueryModalBox('dialog-box-deployment-credential', false);
-      initJqueryModalBox('dialog-box-deployment-credential-delete', true);
+      initJqueryModalBox('dialog-box-deployment-credential',        'add');
+      initJqueryModalBox('dialog-box-deployment-credential-delete', 'delete');
 
       setUpJqueryModalBox('a.add-deployment-credential',    'dialog-box-deployment-credential');
       setUpJqueryModalBox('a.edit-deployment-credential',   'dialog-box-deployment-credential');
@@ -53,8 +53,8 @@
               </td>
               <td class="center" style="text-align:center; vertical-align:middle;"><%= "keydir/#{cred.gitolite_public_key.identifier}.pub" %></td>
               <td class="center" style="vertical-align:middle;"><%= cred.perm %></td>
-              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.checked_image2 cred.honored? %></td>
-              <td class="center" style="vertical-align:middle;"><%= GitHostingHelper.checked_image2 cred.active? %></td>
+              <td class="center" style="vertical-align:middle;"><%= checked_image cred.honored? %></td>
+              <td class="center" style="vertical-align:middle;"><%= checked_image cred.active? %></td>
               <td class="buttons" width="20%" style="vertical-align:middle; text-align:right; ">
                 <% if GitHostingHelper.can_edit_deployment_keys(@repository.project) && (User.current.admin?|| User.current == cred.user)  %>
                   <%= link_to(l(:button_edit), url_for(:controller => 'repository_deployment_credentials', :action => 'edit', :repository_id => @repository.id, :id => cred.id),

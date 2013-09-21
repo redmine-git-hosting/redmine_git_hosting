@@ -30,16 +30,18 @@
     }
 
     // Init dialog box in closed mode, a click will open it
-    function initJqueryModalBox(target, delete_elem){
+    function initJqueryModalBox(target, type){
       var buttons_list = {};
 
-      if (delete_elem == true){
+      if (type == 'delete') {
         buttons_list['<%= l(:button_delete) %>'] = function(){$('#' + target + ' > form').submit();};
-      } else {
+        buttons_list['<%= l(:button_cancel) %>'] = function(){$(this).dialog('close');};
+      } else if (type == 'add') {
         buttons_list['<%= l(:button_save) %>'] = function(){$('#' + target + ' > form').submit();};
+        buttons_list['<%= l(:button_cancel) %>'] = function(){$(this).dialog('close');};
+      } else if (type == 'close_only') {
+        buttons_list['<%= l(:button_close) %>'] = function(){$(this).dialog('close');};
       }
-
-      buttons_list['<%= l(:button_cancel) %>'] = function(){$(this).dialog('close');};
 
       $('#' + target).dialog({
         resizable: false,
