@@ -200,31 +200,40 @@ module GitHosting
     def load
       @original_content = []
       @repositories = ActiveSupport::OrderedHash.new
-      begin
-        cur_repo_name = nil
-        File.open(@path).each_line do |raw_line|
-          /^(.*?)(\s*#.*)?\n?$/.match(raw_line)
-          next if $2 && ($1 == "")  # Remove comment-only lines entirely.
-          line = $1+"\n"    # Remove comments from other lines
-          @original_content << line
-          tokens = line.strip.split
-          if tokens.first == 'repo'
-            cur_repo_name = tokens.last
-            @repositories[cur_repo_name] = GitoliteAccessRights.new
-            next
+      if (File.exists? @path)
+        begin
+          cur_repo_name = nil
+          File.open(@path).each_line do |raw_line|
+            /^(.*?)(\s*#.*)?\n?$/.match(raw_line)
+            next if $2 && ($1 == "")  # Remove comment-only lines entirely.
+            line = $1+"\n"    # Remove comments from other lines
+            @original_content << line
+            tokens = line.strip.split
+            if tokens.first == 'repo'
+              cur_repo_name = tokens.last
+              @repositories[cur_repo_name] = GitoliteAccessRights.new
+              next
+            end
+            cur_repo_right = @repositories[cur_repo_name]
+            if cur_repo_right and tokens[1] == '='
+              cur_repo_right.add tokens.first, tokens[2..-1]
+            end
           end
-          cur_repo_right = @repositories[cur_repo_name]
-          if cur_repo_right and tokens[1] == '='
-            cur_repo_right.add tokens.first, tokens[2..-1]
-          end
+
+          # If no admin key in repo, delete any residual
+          @repositories.delete(ADMIN_REPO) unless self.class.has_admin_key?
+
+          @original_content = @original_content.join
+        rescue => e
+          GitHosting.logger.error "Error trying to read config file: #{e.to_s}"
         end
-
-        # If no admin key in repo, delete any residual
-        @repositories.delete(ADMIN_REPO) unless self.class.has_admin_key?
-
-        @original_content = @original_content.join
-      rescue => e
-        GitHosting.logger.error "Error trying to read config file: #{e.to_s}"
+      else
+        GitHosting.logger.info "Gitolite config file '#{@path}' does not exist, create it..."
+        begin
+          GitHosting.shell %x[ touch #{@path} ]
+        rescue => e
+          GitHosting.logger.error "Error trying to read config file: #{e.to_s}"
+        end
       end
     end
 
@@ -247,7 +256,7 @@ module GitHosting
           if users.length > 0
             content << "\t#{perm}\t=\t#{users.join(' ')}"
           end
-        end
+        end unless @repositories[ADMIN_REPO].nil?
         content << ""
       end
 
