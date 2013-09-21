@@ -15,7 +15,7 @@
     <tr class="<%= cycle 'odd', 'even' %>">
       <td align="center"><%= repository.identifier.present? ? repository.identifier : '' %></td>
       <td align="center"><%= checked_image repository.is_default? %></td>
-      <td class="scm_name"><span class="icon icon-git-logo"></span><%=h repository.scm_name %></td>
+      <td class="scm_name2"><span class="icon icon-git-logo"></span><%=h repository.scm_name %></td>
       <td><%=link_to h(repository.url),
             {:controller => 'repositories', :action => 'show',:id => @project, :repository_id => repository.identifier_param} %>
       </td>
