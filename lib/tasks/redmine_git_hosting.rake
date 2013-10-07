@@ -34,62 +34,52 @@ namespace :redmine_git_hosting do
 
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
   task :restore_defaults => [:environment] do
+    puts "Reloading defaults from init.rb..."
+    GitHosting.logger.warn "Reloading defaults from init.rb from command line"
 
-    if defined?(Rails) && Rails.logger
-      Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
-      Rails.logger.warn "\n\nReinitializing settings from init.rb (via rake at #{my_date})"
-    end
-
-    puts "[Reloading defaults from init.rb:"
     default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
 
     if default_hash.nil? || default_hash.empty?
-      puts "  No defaults specified in init.rb!"
+      puts "No defaults specified in init.rb!"
     else
       changes = 0
       valuehash = (Setting.plugin_redmine_git_hosting).clone
       default_hash.each do |key,value|
         if valuehash[key] != value
-          print "  Changing '#{key}': '#{valuehash[key]}' => '#{value}'\n"
+          puts "Changing '#{key}': '#{valuehash[key]}' => '#{value}'\n"
           valuehash[key] = value
           changes += 1
         end
       end
       if changes == 0
-        print "  No changes necessary.\n"
+        puts "No changes necessary.\n"
       else
-        print "  Committing changes ... "
+        puts "Committing changes ... "
         begin
           Setting.plugin_redmine_git_hosting = valuehash
-          print "Success!\n"
-        rescue
-          print "Failure.\n"
+          puts "Success!\n"
+        rescue => e
+          puts "Failure.\n"
         end
       end
     end
-    puts "DONE.]"
+    puts "Done!"
   end
 
-  desc "Update/repair gitolite configuration"
+  desc "Update/repair Gitolite configuration"
   task :update_repositories => [:environment] do
-    puts "[Performing manual update_repositories operation..."
-    if defined?(Rails) && Rails.logger
-      Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
-      Rails.logger.warn "\n\nPerforming manual UpdateRepositories from command line (via rake at #{my_date})"
-    end
+    puts "Performing manual update_repositories operation..."
+    GitHosting.logger.warn "Performing manual update_repositories operation from command line"
     GitHosting.update_repositories(:resync_all => true)
-    puts "DONE.]"
+    puts "Done!"
   end
 
   desc "Fetch commits from gitolite repositories/update gitolite configuration"
   task :fetch_changesets => [:environment] do
-    puts "[Performing manual fetch_changesets operation..."
-    if defined?(Rails) && Rails.logger
-      Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
-      Rails.logger.warn "\n\nPerforming manual FetchChangesets from command line (via rake at #{my_date})"
-    end
+    puts "Performing manual fetch_changesets operation..."
+    GitHosting.logger.warn "Performing manual fetch_changesets operation from command line"
     Repository.fetch_changesets
-    puts "DONE.]"
+    puts "Done!"
   end
 
   desc "Install redmine_git_hosting scripts"
