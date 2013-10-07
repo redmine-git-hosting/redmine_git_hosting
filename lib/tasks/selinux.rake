@@ -143,10 +143,10 @@ namespace :selinux do
       end
       web_program = ENV['HTTPD'] || 'httpd'
       web_user = ENV['WEB_USER'] || %x[ps aux | grep #{web_program} | sed "s/ .*$//" | sort -u | grep -v `whoami`].split("\n")[0]
-      GitHosting.web_user = web_user
+      GitHosting.redmine_user = web_user
 
       # Helper only executed in local environment
-      bin_path = GitHosting.get_bin_dir
+      bin_path = GitHosting.scripts_dir_path
       puts "Populating script dir: #{bin_path}"
       print "Clearing out script directory..."
       %x[rm -rf "#{bin_path}"]
@@ -191,7 +191,7 @@ namespace :selinux do
     desc "Helper function for removing redmine_git_hosting shell scripts."
     task :remove_scripts_helper => [:environment] do
       # Helper only executed in local environment
-      bin_path = GitHosting.get_bin_dir
+      bin_path = GitHosting.scripts_dir_path
       print "Clearing out #{bin_path} directory..."
       %x[rm -rf "#{bin_path}"]
       puts "Success!"
@@ -262,7 +262,7 @@ namespace :selinux do
 
     desc "Helper function to retrieve binary directory for redmine_git_hosting plugin"
     task :get_script_directory => [:environment] do
-      puts "    Script directory: #{GitHosting.get_bin_dir}"
+      puts "    Script directory: #{GitHosting.scripts_dir_path}"
     end
 
   end
