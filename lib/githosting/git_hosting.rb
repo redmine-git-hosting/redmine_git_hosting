@@ -171,7 +171,7 @@ module GitHosting
       return @@sudo_gitolite_to_redmine_user_cached
     end
 
-    test = %x[#{shell_cmd_runner} sudo -nu #{redmine_user} echo "yes" ]
+    test = %x[#{shell_cmd_runner} sudo -inu #{redmine_user} echo "yes" ]
     if test.match(/yes/)
       @@sudo_gitolite_to_redmine_user_cached = true
       @@sudo_gitolite_to_redmine_user_stamp = Time.new
