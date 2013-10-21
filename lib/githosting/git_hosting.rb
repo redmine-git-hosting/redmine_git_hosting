@@ -171,8 +171,8 @@ module GitHosting
       return @@sudo_gitolite_to_redmine_user_cached
     end
 
-    test = %x[#{shell_cmd_runner} sudo -inu #{redmine_user} echo "yes" ]
-    if test.match(/yes/)
+    test = %x[#{shell_cmd_runner} sudo -inu #{redmine_user} whoami]
+    if test.match(/#{redmine_user}/)
       @@sudo_gitolite_to_redmine_user_cached = true
       @@sudo_gitolite_to_redmine_user_stamp = Time.new
       logger.info "OK!"
@@ -202,8 +202,8 @@ module GitHosting
       return @@sudo_redmine_to_gitolite_user_cached
     end
 
-    test = %x[#{shell_cmd_runner} echo "yes"]
-    if test.match(/yes/)
+    test = %x[#{shell_cmd_runner} whoami]
+    if test.match(/#{gitolite_user}/)
       @@sudo_redmine_to_gitolite_user_cached = true
       @@sudo_redmine_to_gitolite_user_stamp = Time.new
       logger.info "OK!"
