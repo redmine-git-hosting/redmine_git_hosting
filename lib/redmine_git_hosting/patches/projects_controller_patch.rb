@@ -12,7 +12,6 @@ module RedmineGitHosting
           alias_method_chain :destroy,   :git_hosting
           alias_method_chain :archive,   :git_hosting
           alias_method_chain :unarchive, :git_hosting
-          alias_method_chain :settings,  :git_hosting
         end
       end
 
@@ -20,7 +19,7 @@ module RedmineGitHosting
       module InstanceMethods
 
         def create_with_git_hosting(&block)
-          # Turn of updates during repository update
+          # Turn off updates during repository update
           GitHostingObserver.set_update_active(false)
 
           # Do actual creation
@@ -41,7 +40,7 @@ module RedmineGitHosting
 
 
         def update_with_git_hosting(&block)
-          # Turn of updates during repository update
+          # Turn off updates during repository update
           GitHostingObserver.set_update_active(false)
 
           # Do actual update
@@ -61,7 +60,7 @@ module RedmineGitHosting
 
 
         def destroy_with_git_hosting(&block)
-          # Turn of updates during repository update
+          # Turn off updates during repository update
           GitHostingObserver.set_update_active(false)
 
           # Do actual update
@@ -73,7 +72,7 @@ module RedmineGitHosting
 
 
         def archive_with_git_hosting(&block)
-          # Turn of updates during repository update
+          # Turn off updates during repository update
           GitHostingObserver.set_update_active(false)
 
           # Do actual update
@@ -85,7 +84,7 @@ module RedmineGitHosting
 
 
         def unarchive_with_git_hosting(&block)
-          # Turn of updates during repository update
+          # Turn off updates during repository update
           GitHostingObserver.set_update_active(false)
 
           # Do actual update
@@ -93,22 +92,6 @@ module RedmineGitHosting
 
           # Reenable updates to perform a single update
           GitHostingObserver.set_update_active(@project)
-        end
-
-
-        def settings_with_git_hosting(&block)
-          # Turn of updates during repository update
-          GitHostingObserver.set_update_active(false)
-
-          # Do actual update
-          settings_without_git_hosting(&block)
-
-          # Reenable updates to perform a single update
-          if @project.module_enabled?(:repository)
-            GitHostingObserver.set_update_active(@project)
-          else
-            GitHostingObserver.set_update_active(:archive)
-          end
         end
 
 
