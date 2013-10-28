@@ -10,8 +10,8 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   validates_format_of :sender_address, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :allow_blank => true
 
-  after_update  :update_repository
-  after_destroy :update_repository
+  #after_update  :update_repository
+  #after_destroy :update_repository
 
   private
 
