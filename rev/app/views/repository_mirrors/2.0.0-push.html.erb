@@ -11,21 +11,3 @@
 <pre class="mirror-push<%= @push_failed == true ? " error": "" %>">
   <%= @shellout %>
 </pre>
-
-<% if @is_xhr && @push_failed == false -%>
-  <script type="text/javascript">
-    var waitingToClose = 5;
-    var title = $("MB_caption").innerHTML;
-    function waitingTimer() {
-      if (waitingToClose==0) {
-        $("MB_caption").update(title + "  (" + waitingToClose + ")");
-        Modalbox.hide();
-      } else {
-        $("MB_caption").update(title + "  (" + waitingToClose + ")");
-        waitingToClose--;
-        window.setTimeout(waitingTimer, 1000);
-      }
-    }
-    waitingTimer();
-  </script>
-<%- end %>
