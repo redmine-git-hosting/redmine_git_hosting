@@ -211,6 +211,7 @@ fr:
 
   # Repositories URL (labels)
   label_copy_to_clipboard: Copy to clipboard
+  label_repository_access_not_configured: Repository access not configured, please contact your administrator.
   label_help_git_setup: Git Setup
   label_help_repository_setup_new: Setup New Repository
   label_help_repository_setup_existing: Setup Existing Repository

@@ -1,7 +1,11 @@
 var all_git_url_ids = ["git_url_ssh", "git_url_http", "git_url_https", "git_url_git"];
 
 function updateGitUrl(element) {
-  var selected_id = element.id;
+  if (element != null) {
+    var selected_id = element.id;
+  } else {
+    return false;
+  }
 
   document.getElementById("git_url_text").value = urls[selected_id][0];
   document.getElementById("git_url_permissions").innerHTML = urls[selected_id][1] ? "Read+Write" : "Read-Only";

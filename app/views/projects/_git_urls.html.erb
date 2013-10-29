@@ -37,19 +37,28 @@
         <% else %>
           <h3>Git Repository</h3>
         <% end %>
-        <div id="git_url_box">
-          <div id="clipboard_container" style="display: none;">
-            <div id="clipboard_button" title="<%= l(:label_copy_to_clipboard) %>"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
+
+        <% if !project.repository.available_urls.empty? %>
+          <div id="git_url_box">
+            <div id="clipboard_container" style="display: none;">
+              <div id="clipboard_button" title="<%= l(:label_copy_to_clipboard) %>"><%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %></div>
+            </div>
+            <ul id="git_url_list" >
+              <% project.repository.available_urls.each do |key, value| %>
+                <li><a id="git_url_<%= key %>" href="javascript:void(0)"><%= key.upcase %></a></li>
+              <% end %>
+            </ul>
+            <input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
           </div>
-          <ul id="git_url_list" >
-            <% project.repository.available_urls.each do |key, value| %>
-              <li><a id="git_url_<%= key %>" href="javascript:void(0)"><%= key.upcase %></a></li>
-            <% end %>
-          </ul>
-          <input id="git_url_text" name="git_url_text" readonly="readonly" value="" />
-        </div>
-        <span  id="git_url_desc">This URL has <span id="git_url_permissions">Read-Only</span> access.</span>
+          <span  id="git_url_desc">This URL has <span id="git_url_permissions">Read-Only</span> access.</span>
+        <% else %>
+          <div id="git_url_box">
+            <%= raw l(:label_repository_access_not_configured) %>
+          </div>
+        <% end %>
+
       </div>
     <% end %>
+
   <% end %>
 <% end %>

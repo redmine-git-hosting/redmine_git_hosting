@@ -289,7 +289,7 @@ class GitoliteHooksController < ApplicationController
       # Grab the repository path
       repo_path = GitHosting.repository_path(@repository)
       revisions_in_range = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' rev-list --reverse #{range}]
-      logger.info "Revisions in Range: #{revisions.split().join(' ')}"
+      logger.info "Revisions in Range: #{revisions_in_range.split().join(' ')}"
 
       commits = []
       revisions_in_range.split().each do |rev|
