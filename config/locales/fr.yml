@@ -56,9 +56,9 @@ fr:
 
   label_gitolite_log_level: Niveau de journalisation Gitolite
   label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers?
-  label_gitolite_log_split_desc: (Redémarez Redmine et Sidekiq après les changemente)
-  label_gitolite_log_split_on: (Seront stoqués dans 'rails root/logs/git_hosting/git_*.log')
-  label_gitolite_log_split_off: (Seront stoqués dans 'rails root/logs/git_hosting.log')
+  label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
+  label_gitolite_log_split_on: (Seront stockés dans 'rails root/logs/git_hosting/git_*.log')
+  label_gitolite_log_split_off: (Seront stockés dans 'rails root/logs/git_hosting.log')
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement
@@ -85,7 +85,7 @@ fr:
   label_tab_notify: Notifications
   label_gitolite_notify_config: Configuration des listes de diffusions de git
 
-  label_gitolite_notify_global_prefix: Préfix global des notifications de git
+  label_gitolite_notify_global_prefix: Préfixe global des notifications de git
   label_gitolite_notify_global_sender_address: Adresse de l'expéditeur des notifications git
   label_gitolite_notify_global_include: Liste d'inclusion globale des notifications git
   label_gitolite_notify_global_exclude: Liste d'exclusion globale des notifications git
@@ -98,8 +98,8 @@ fr:
   label_ssh_server_domain_desc: (pour les URLs SSH)
   label_http_server_domain: Nom de domaine du serveur HTTP
   label_http_server_domain_desc: (pour les URLs HTTP)
-  label_https_server_domain: Nom de domaine du serveur HTTPs
-  label_https_server_domain_desc: "(pour les URLs HTTPS, lessez vide si vous n'utilisez pas HTTPS)"
+  label_https_server_domain: Nom de domaine du serveur HTTPS
+  label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
   label_http_server_subdir: Sous-répertoire pour l'accès HTTP
   label_http_server_subdir_desc: (Relatif à la racine de Redmine)
   label_show_repositories_url: Afficher l'URL des dépôts?
@@ -261,7 +261,7 @@ fr:
   label_mirror_fast_forward: Avance rapide (non forcé)
 
   label_mirror_inactive: Inactif
-  label_mirror_help: Le miroir doit donner les droits d'écriture è la clé publique suivante
+  label_mirror_help: Le miroir doit donner les droits d'écriture à la clé publique suivante
 
   label_mirror_push_title: Envoyer au miroir
   label_mirror_push_info_html: "Envoie des changements au miroir <b>%{mirror_url}</b> ... %{status}"
@@ -286,9 +286,9 @@ fr:
   button_mirror_push: Envoyer
 
   # Mirrors (notices)
-  notice_mirror_created: Mirroir crée avec succès.
-  notice_mirror_updated: Mirroir modifié avec succès.
-  notice_mirror_deleted: Mirroir effacé avec succès.
+  notice_mirror_created: Miroir crée avec succès.
+  notice_mirror_updated: Miroir modifié avec succès.
+  notice_mirror_deleted: Miroir effacé avec succès.
   notice_mirror_create_failed: Échec de création du miroir.
   notice_mirror_update_failed: Échec de modification du miroir.
 
