@@ -57,8 +57,8 @@ fr:
   label_gitolite_log_level: Niveau de journalisation Gitolite
   label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers?
   label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
-  label_gitolite_log_split_on: (Seront stockés dans 'rails root/logs/git_hosting/git_*.log')
-  label_gitolite_log_split_off: (Seront stockés dans 'rails root/logs/git_hosting.log')
+  label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
+  label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement
@@ -112,7 +112,7 @@ fr:
   label_delete_git_repositories: Effacer les dépôts git d'un projet quand celui-ci est effacé?<br/>(Va être mis dans la corbeille)
   label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
   label_unique_repo_identifier: Les identifiants de dépôts sont unique
-  label_gitolite_notify_by_default: Activer le hook "Notifications Git" pour les nouveaux dépôts par défaut
+  label_gitolite_notify_by_default: Activer le hook « Notifications Git » pour les nouveaux dépôts par défaut
 
   label_flat: Plat
   label_hierarchical: Hiérarchique
@@ -198,8 +198,8 @@ fr:
   error_key_needs_two_components: "a besoin d'au moins deux composantes: [type-de-clé] et [valeur-de-la-clé]."
   error_key_bad_type: 'a type invalide. Les types valides sont %{types}.'
   error_key_type_mismatch: le type (%{type1}) ne correspond pas au type dans le corps de la clé (%{type2}).
-  error_key_in_use_by_you: 'est déjà utilisé par vous comme "%{name}".'
-  error_key_in_use_by_other: est déjà utilisé par l'usager "%{login}" comme "%{name}".
+  error_key_in_use_by_you: 'est déjà utilisé par vous comme « %{name} ».'
+  error_key_in_use_by_other: est déjà utilisé par l'usager « %{login} » comme « %{name} ».
   error_key_in_use_by_admin: est déjà utilisé comme clé d'administration Gitolite.
   error_key_in_use_by_someone: est déjà utilisé. Elle appartient à une autre usager (demandez à vôtre administrateur pour les détails).
   word_or: ou
@@ -332,7 +332,7 @@ fr:
   notice_git_notifications_update_failed: Échec de modification de la liste de distribution
 
   # Gitolite Hooks
-  error_project_not_found: Aucun projet avec l'identifiant "%{identifier}" a été trouvé.
+  error_project_not_found: Aucun projet avec l'identifiant « %{identifier} » a été trouvé.
 
   ## Permissions
   permission_create_repository_mirrors: Créer des miroirs de dépôts
