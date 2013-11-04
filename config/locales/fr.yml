@@ -5,351 +5,351 @@ fr:
   activerecord:
     errors:
       messages:
-        'may not be changed': 'may not be changed'
-        cannot_change: "cannot be changed"
-        ident_not_unique: "matches existing repository identifier"
-        ident_cannot_equal_project: "cannot match identifier of existing project"
-        blank_default_exists: "Cannot make repository the default because current default has blank identifier."
+        'may not be changed': 'ne peut pas être changé'
+        cannot_change: "ne peut pas changer"
+        ident_not_unique: "correspond à un identifiant de dépôt existant"
+        ident_cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
+        blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
 
   # Global
-  label_need_help: Need Help?
-  label_open_issue: Open Issue
+  label_need_help: Besoin d'aide?
+  label_open_issue: Ouvrir une demande
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
-  label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Ouvrir une demande 
 
   # Gitolite SSH Config
   label_tab_ssh: SSH
-  label_gitolite_ssh_config: Gitolite SSH Configuration
+  label_gitolite_ssh_config: Configuration SSH de Gitolite 
 
-  label_gitolite_user: Gitolite username
-  label_gitolite_server_port: SSH local server port
-  label_gitolite_ssh_private_key: Gitolite SSH private key
-  label_gitolite_ssh_public_key: Gitolite SSH public key
+  label_gitolite_user: Nom d'usager Gitolite
+  label_gitolite_server_port: Port du serveur SSH local
+  label_gitolite_ssh_private_key: Clé privée SSH de Gitolite
+  label_gitolite_ssh_public_key: Clé publique SSH de Gitolite
 
   # Gitolite Storage Config
-  label_tab_storage: Storage
-  label_gitolite_storage_config: Gitolite Storage Configuration
+  label_tab_storage: Stockage
+  label_gitolite_storage_config: Configuration de stockage de Gitolite
 
-  label_gitolite_global_storage_dir: Gitolite repositories base path
-  label_gitolite_global_storage_dir_desc: (Relative to Gitolite user home)
-  label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
-  label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
-  label_gitolite_recycle_bin_dir: Gitolite recycle bin base path
-  label_gitolite_recycle_bin_dir_desc: (Relative to Gitolite user home)
+  label_gitolite_global_storage_dir: Chemin de base des dépôts Gitolite
+  label_gitolite_global_storage_dir_desc: (Relatif au répertoire personnel de l'usager Gitolite)
+  label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
+  label_gitolite_redmine_storage_dir_desc: (Relatif au répertoire personnel de l'usager Gitolite)
+  label_gitolite_recycle_bin_dir: Chemin de la corbeille Gitolite
+  label_gitolite_recycle_bin_dir_desc: (Relatif au répertoire personnel de l'usager Gitolite)
 
   # Gitolite Global Config
   label_tab_global: Global
-  label_gitolite_global_config: Gitolite Global Configuration
+  label_gitolite_global_config: Configuration de Gitolite globale
 
-  label_gitolite_temp_dir: Temporary dir for lock file and data
-  label_gitolite_temp_dir_desc: (Must be absolute)
-  label_gitolite_script_dir: Scripts dir
-  label_gitolite_script_dir_desc: (Can be absolute or relative to Redmine root)
+  label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
+  label_gitolite_temp_dir_desc: (Doit être absolu)
+  label_gitolite_script_dir: Répertoire des scripts
+  label_gitolite_script_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
 
-  label_gitolite_config_file: Gitolite configuration file
-  label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
-  label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
-  label_gitolite_recycle_bin_expiration_time_desc: (In hours)
+  label_gitolite_config_file: Fichier de configuration de Gitolite
+  label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.
+  label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
+  label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
-  label_gitolite_daemon_by_default: Enable Git Daemon mode for new repositories by default?
-  label_gitolite_http_by_default: Enable Smart HTTP mode for new repositories by default?
+  label_gitolite_daemon_by_default: Activer le mode Service Git pour les nouveaux dépôts par défaut
+  label_gitolite_http_by_default: Activer le mode Smart HTTP pour les nouveaux dépôts par défaut
 
-  label_gitolite_log_level: Gitolite log level
-  label_gitolite_log_split: Split logs into multiple files?
-  label_gitolite_log_split_desc: (Need to restart both Redmine and Sidekiq after change)
-  label_gitolite_log_split_on: (Will be store in 'rails root/logs/git_hosting/git_*.log')
-  label_gitolite_log_split_off: (Will be store in 'rails root/logs/git_hosting.log')
-  label_debug: Debug
+  label_gitolite_log_level: Niveau de journalisation Gitolite
+  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers
+  label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
+  label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
+  label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
+  label_debug: Débogue
   label_info: Info
-  label_warn: Warning
-  label_error: Error
+  label_warn: Avertissement
+  label_error: Erreur
 
   # Gitolite Hooks Config
   label_tab_hooks: Hooks
-  label_gitolite_hooks_config: Gitolite Hooks Configuration
+  label_gitolite_hooks_config: Configuration des hooks de Gitolite
 
-  label_gitolite_hooks_are_asynchronous: Run hooks asynchronously
-  label_gitolite_force_hooks_update: Force hooks to be updated
-  label_gitolite_hooks_debug: Run hooks in Debug mode
-  label_gitolite_hooks_installed: Hooks installed
+  label_gitolite_hooks_are_asynchronous: Rouler les hooks de manière asynchrone
+  label_gitolite_force_hooks_update: Forcer la mise à jour des hooks
+  label_gitolite_hooks_debug: Rouler les hooks en mode débogue
+  label_gitolite_hooks_installed: Hooks installés
 
   # Gitolite Cache Config
   label_tab_cache: Cache
-  label_gitolite_cache_config: Gitolite Cache Configuration
+  label_gitolite_cache_config: Configuration de la cache de Gitolite
 
-  label_gitolite_cache_max_time: Max cache time
-  label_gitolite_cache_max_size: Max cache element size
-  label_gitolite_cache_max_elements: Max cache elements
+  label_gitolite_cache_max_time: Temps maximal de la cache
+  label_gitolite_cache_max_size: Taille maximale d'un élément de la cache
+  label_gitolite_cache_max_elements: Nombre maximal d'éléments dans la cache
 
   # Gitolite Notifications
   label_tab_notify: Notifications
-  label_gitolite_notify_config: Git Mailing List Configuration
+  label_gitolite_notify_config: Configuration des listes de diffusions de git
 
-  label_gitolite_notify_global_prefix: Git notification global prefix
-  label_gitolite_notify_global_sender_address: Git notification global sender address
-  label_gitolite_notify_global_include: Git notification global include list
-  label_gitolite_notify_global_exclude: Git notification global exclude list
+  label_gitolite_notify_global_prefix: Préfixe global des notifications de git
+  label_gitolite_notify_global_sender_address: Adresse de l'expéditeur des notifications git
+  label_gitolite_notify_global_include: Liste d'inclusion globale des notifications git
+  label_gitolite_notify_global_exclude: Liste d'exclusion globale des notifications git
 
   # Gitolite Access Config
-  label_tab_access: Access
-  label_gitolite_access_config: Gitolite Access Configuration
+  label_tab_access: Accès
+  label_gitolite_access_config: Configuration des accès Gitolite
 
-  label_ssh_server_domain: Gitolite server domain
-  label_ssh_server_domain_desc: (For Git SSH urls)
-  label_http_server_domain: HTTP server domain
-  label_http_server_domain_desc: (For Git HTTP urls)
-  label_https_server_domain: HTTPs server domain
-  label_https_server_domain_desc: "(For Git HTTPs urls, don't set it if you don't use it)"
-  label_http_server_subdir: Subdirectory for HTTP access
-  label_http_server_subdir_desc: (Relative to Redmine root url)
-  label_show_repositories_url: Show checkout URL's?
+  label_ssh_server_domain: Nom de domaine du serveur Gitolite
+  label_ssh_server_domain_desc: (pour les URLs SSH)
+  label_http_server_domain: Nom de domaine du serveur HTTP
+  label_http_server_domain_desc: (pour les URLs HTTP)
+  label_https_server_domain: Nom de domaine du serveur HTTPS
+  label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
+  label_http_server_subdir: Sous-répertoire pour l'accès HTTP
+  label_http_server_subdir_desc: (Relatif à la racine de Redmine)
+  label_show_repositories_url: Afficher les URL des dépôts
 
   # Redmine Config
   label_tab_redmine: Redmine
-  label_redmine_config: Redmine Configuration
+  label_redmine_config: Configuration de Redmine
 
-  label_all_projects_use_git: Automatically initialize Git repositories for new projects?
-  label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
-  label_hierarchical_organisation: Directory and URL structure for<br/>Redmine-managed repositories
-  label_unique_repo_identifier: Repository identifiers are globally unique?
-  label_gitolite_notify_by_default: "Enable 'Git Notifications' hook for new repositories by default?"
+  label_all_projects_use_git: Initialiser automatiquement des dépôts git pour les nouveaux projets
+  label_delete_git_repositories: Effacer les dépôts git d'un projet quand celui-ci est effacé?<br/>(Va être mis dans la corbeille)
+  label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
+  label_unique_repo_identifier: Les identifiants de dépôts sont unique
+  label_gitolite_notify_by_default: Activer le hook « Notifications Git » pour les nouveaux dépôts par défaut
 
-  label_flat: Flat
-  label_hierarchical: Hierarchical
-  label_http_only: HTTP Only
-  label_https_only: HTTPS Only
-  label_https_and_http: HTTPS and HTTP
+  label_flat: Plat
+  label_hierarchical: Hiérarchique
+  label_http_only: HTTP seulement
+  label_https_only: HTTPS seulement
+  label_https_and_http: HTTPS et HTTP
 
   # Gitolite Rescue
-  label_tab_gitolite_rescue: Rescue
-  label_gitolite_rescue: Gitolite Rescue
+  label_tab_gitolite_rescue: Sauvetage
+  label_gitolite_rescue: Sauvetage de Gitolite
 
-  label_tab_gitolite_rescue_resync_all_projects: Resync all projects ?
+  label_tab_gitolite_rescue_resync_all_projects: Resynchroniser tous les projets
 
   # Config Help
-  label_tab_config_test: Config Test
-  label_current_access_patterns: Current Repository Access Patterns
-  label_storage_directory: Storage directory
-  label_ssh_access: SSH access
-  label_http_access: HTTP access
+  label_tab_config_test: Test de la Configuration
+  label_current_access_patterns: Modèles d'accès courant pour les dépôts
+  label_storage_directory: Répertoire de stockage
+  label_ssh_access: Accès SSH
+  label_http_access: Accès HTTPS
 
-  display_access_setup: Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s %{type}repository has the following properties
-  display_access_emphasis: In the above patterns, <em>emphasized</em> components represent context-dependent elements.
-  display_access_hierarchical: Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode.
-  display_access_flat: Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode.
+  display_access_setup: Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>. Avec la configuration courante, le dépôt %{type} de <em>project3</em> a les propriétés suivantes.
+  display_access_emphasis: Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte.
+  display_access_hierarchical: Les projets parents sont inclus dans l'URL, car le dépôt est en mode <em>Hiérarchique</em>.
+  display_access_flat: Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>.
 
   # Config Check
-  label_permissions_header: Required Permissions
-  label_sudo_redmine_to_gitolite_user: Redmine user is able to sudo to Git user?
-  label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
-  label_unknown_gitolite_version: Unknown version
+  label_permissions_header: Permissions requises
+  label_sudo_redmine_to_gitolite_user: L'usager Redmine peut sudo vers l'utilisateur Git?
+  label_sudo_gitolite_to_redmine_user: L'usager Git peut sudo vers l'utilisateur Redmine?
+  label_unknown_gitolite_version: Version inconnue
 
   label_tab_sidekiq_interface: Sidekiq
 
   # Miscelanous
-  label_enabled: Enabled
-  label_disabled: Disabled
-  label_true: True
-  label_false: False
-  label_backup_in_progress: Saving...
-  label_delete_in_progress: Deleting...
+  label_enabled: Activé
+  label_disabled: Désactivé
+  label_true: Vrai
+  label_false: Faux
+  label_backup_in_progress: Enregistrement...
+  label_delete_in_progress: Effacement...
 
   # Create Repository
-  label_enable_git_notify: Git Mailing List
-  label_enable_git_daemon: Git Daemon
-  label_enable_smart_http: Git Smart HTTP
-  label_enable_notify_cia: Notify CIA
-  label_enable_notify_cia_test: Notify CIA Test
+  label_enable_git_notify: Activer la liste de diffusion git
+  label_enable_git_daemon: Activer le service git
+  label_enable_smart_http: Activer le mode Smart HTTP de git
+  label_enable_notify_cia: Activer les notifications CIA
+  label_enable_notify_cia_test: Activer les test de notifications CIA
 
   # CIA.vc Notifications
-  text_cia_notification_ok: Notification to CIA.vc sent
-  text_cia_notification_nok: Notification to CIA.vc not sent (repository has no revision)
+  text_cia_notification_ok: Notification vers CIA.vc a été envoyée
+  text_cia_notification_nok: Notification vers CIA.vc n'a pas été envoyée (Dépôt n'a pas de révisions)
 
   # Repository list view
-  label_repository_enabled_capabilities: Repository Enabled Capabilities
+  label_repository_enabled_capabilities: Fonctionnalité activées du dépôt
 
   # User SSH keys (labels)
-  label_public_keys: Public keys
-  label_public_key: Public key
-  label_public_key_edit: Edit existing public key
-  label_current_public_keys: Current public keys
-  label_current_user_keys: Current user keys
-  label_current_deploy_keys: Current deployment keys
-  label_no_public_keys: No public keys defined
-  label_public_key_new: Enter new public key
-  label_identifier_can_be_arbitrary: Identifier
-  label_identifier_can_be_arbitrary_desc: (Can be any meaningful string)
-  label_key_type: Public key type
-  label_user_key: User key
-  label_deploy_key: Deploy key
-  label_cut_and_paste: Key
-  label_cut_and_paste_desc: (Cut and paste entire .pub file)
-  label_identifier_cannot_be_changed: Identifier<br/><em>(Cannot be changed)</em>
-  label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
+  label_public_keys: Clés publiques
+  label_public_key: Clé publique
+  label_public_key_edit: Modifier une clé publique existante
+  label_current_public_keys: Clés publiques courantes
+  label_current_user_keys: Clés de l'usager courant
+  label_current_deploy_keys: Clés de déploiement courantes
+  label_no_public_keys: Aucune clé publique définie
+  label_public_key_new: Entrez une nouvelle clé publique
+  label_identifier_can_be_arbitrary: Identifiant
+  label_identifier_can_be_arbitrary_desc: (Peut être significative)
+  label_key_type: Type de clé publique
+  label_user_key: Clé d'usager
+  label_deploy_key: Clé de déploiement
+  label_cut_and_paste: Clé
+  label_cut_and_paste_desc: (Copier coller le contenu du fichier .pub au complet)
+  label_identifier_cannot_be_changed: Identifiant<br/><em>(Ne peut pas être changé)</em>
+  label_key_cannot_be_changed_please_create_new_key: La clé ne peut plus être modifié. Vous pouvez l'effacer et en créer une nouvelle.
 
   # User SSH keys (confirmation)
-  text_gitolite_key_destroy_confirmation: Are you sure you want to destroy %{title}?
-  text_this_key: this key
+  text_gitolite_key_destroy_confirmation: Êtes-vous sûr que vous voulez détruire %{title}?
+  text_this_key: cette clé
 
   # User SSH keys (errors)
-  error_public_key_create_failed: Failed to create public key.
-  error_public_key_update_failed: Failed to update public key.
-  error_key_corrupted: seems to be corrupted.
-  error_key_needs_two_components: 'needs at least two components: [key-type] and [key-value].'
-  error_key_bad_type: 'has a bad type.  Valid types are %{types}.'
-  error_key_type_mismatch: type (%{type1}) does not match type within body of key (%{type2}).
-  error_key_in_use_by_you: 'is already in use by you as "%{name}".'
-  error_key_in_use_by_other: 'is already in use by user "%{login}" as "%{name}".'
-  error_key_in_use_by_admin: is already in use as the Gitolite administrator key.
-  error_key_in_use_by_someone: is already in use. It belongs to another user (ask administrator for details).
-  word_or: or
+  error_public_key_create_failed: Échec de création de clé publique.
+  error_public_key_update_failed: Échec de modification de clé publique.
+  error_key_corrupted: semble être corrompue.
+  error_key_needs_two_components: "a besoin d'au moins deux composantes: [type-de-clé] et [valeur-de-la-clé]."
+  error_key_bad_type: 'a type invalide. Les types valides sont %{types}.'
+  error_key_type_mismatch: le type (%{type1}) ne correspond pas au type dans le corps de la clé (%{type2}).
+  error_key_in_use_by_you: 'est déjà utilisé par vous comme « %{name} ».'
+  error_key_in_use_by_other: est déjà utilisé par l'usager « %{login} » comme « %{name} ».
+  error_key_in_use_by_admin: est déjà utilisé comme clé d'administration Gitolite.
+  error_key_in_use_by_someone: est déjà utilisé. Elle appartient à une autre usager (demandez à vôtre administrateur pour les détails).
+  word_or: ou
 
   # User SSH keys (notices)
-  notice_public_key_added: Public key <strong>%{title}</strong> was successfully added.
-  notice_public_key_updated: Public key <strong>%{title}</strong> was successfully updated.
-  notice_public_key_deleted: Public key <strong>%{title}</strong> was successfully deleted.
+  notice_public_key_added: Clé publique <strong>%{title}</strong> a été ajoutée avec succès.
+  notice_public_key_updated: Clé publique <strong>%{title}</strong> a été modifiée avec succès.
+  notice_public_key_deleted: Clé publique <strong>%{title}</strong> a été effacée avec succès.
 
   # Repositories URL (labels)
-  label_copy_to_clipboard: Copy to clipboard
-  label_repository_access_not_configured: Repository access not configured, please contact your administrator.
-  label_help_git_setup: Git Setup
-  label_help_repository_setup_new: Setup New Repository
-  label_help_repository_setup_existing: Setup Existing Repository
-  label_help_repository_clone: Clone Repository
+  label_copy_to_clipboard: Copier dans le presse papier
+  label_repository_access_not_configured: Les accès au dépôt n'ont pas été configurés, veuillez contacter vôtre administrateur.
+  label_help_git_setup: Configuration git
+  label_help_repository_setup_new: Configurer un nouveau dépôt
+  label_help_repository_setup_existing: Configurer un dépôt existant
+  label_help_repository_clone: Cloner un dépôt
 
   # Deployment Credentials (labels)
-  label_deployment_credentials: Deployment Credentials
-  label_deployment_credential_add: Add Deployment Credential
-  label_deployment_credential_create: Create New Deployment Credential
-  label_deployment_credential_edit: Edit Deployment Credential
-  label_deployment_credential_delete: Delete Deployment Credential
-  label_deployment_credential_permissions: Access Permissions
-  label_deployment_credential_delete_when_unused: Delete key when unused?
-  label_deployment_credential_which_deploy_key: Select Deployment Key
+  label_deployment_credentials: Pièces d'identités de déploiement
+  label_deployment_credential_add: Ajouter une pièce d'identité de déploiement
+  label_deployment_credential_create: Créer une nouvelle pièce d'identité de déploiement
+  label_deployment_credential_edit: Modifier la pièce d'identité de déploiement
+  label_deployment_credential_delete: Effacer la pièce d'identité de déploiement
+  label_deployment_credential_permissions: Permissions d'accès
+  label_deployment_credential_delete_when_unused: Effacer la clé quand elle n'est plus utilisée
+  label_deployment_credential_which_deploy_key: Choisir une clé de déploiement
 
-  label_deployment_credential_owner: Owner
-  label_deployment_credential_public_key_name: Public key name
-  label_deployment_credential_public_key_file: Public key file
+  label_deployment_credential_owner: Propriétaire
+  label_deployment_credential_public_key_name: Nom de la clé publique
+  label_deployment_credential_public_key_file: Fichier de la clé publique
   label_deployment_credential_permissions: Permissions
-  label_deployment_credential_honored: Honored?
-  label_deployment_credential_active: Active?
+  label_deployment_credential_honored: Honorée?
+  label_deployment_credential_active: Activée?
 
-  select_create_new_key: Create new key (below)
-  select_other_keys: Other keys
-  field_perm: Access Permissions
+  select_create_new_key: Créer une nouvelle clé (plus bas)
+  select_other_keys: Autres clés
+  field_perm: Permissions d'accès
 
   # Deployment Credentials (notices)
-  notice_deployment_credential_updated: Deployment Credential <strong>%{title} => %{perm}</strong> was successfully updated.
-  notice_deployment_credential_added: Deployment Credential <strong>%{title} => %{perm}</strong> was successfully added.
-  notice_deployment_credential_deleted: Deployment Credential <strong>%{title} =>%{perm}</strong> was successfully deleted.
-  notice_deployment_credential_deleted_with_key: Both Deployment Credential <strong>%{title} => %{perm}</strong> and Key <strong>%{title}</strong> were successfully deleted.
+  notice_deployment_credential_updated: La pièce d'identité de déploiement <strong>%{title} => %{perm}</strong> a été modifiée avec succès.
+  notice_deployment_credential_added: La pièce d'identité de déploiement <strong>%{title} => %{perm}</strong> a été créée avec succès.
+  notice_deployment_credential_deleted: La pièce d'identité de déploiement <strong>%{title} =>%{perm}</strong> a été effacée avec succès.
+  notice_deployment_credential_deleted_with_key: La pièce d'identité de déploiement <strong>%{title} => %{perm}</strong> et la clé <strong>%{title}</strong> ont été effacées avec succès.
 
   # Deployment Credentials (errors)
-  error_deployment_credential_create_failed: Failed to create deployment credential
-  error_deployment_credential_update_failed: Failed to update deployment credential
+  error_deployment_credential_create_failed: Échec de création de la pièce d'identité de déploiement
+  error_deployment_credential_update_failed: Échec de modification de la pièce d'identité de déploiement
 
   # Mirrors (labels)
-  label_repository_mirrors: Repository Mirrors
-  label_mirror_add: Add Repository Mirror
-  label_mirror_create: Create Repository Mirror
-  label_mirror_delete: Delete Repository Mirror
-  label_mirror_edit: Edit Repository Mirror
+  label_repository_mirrors: Miroirs du dépôt
+  label_mirror_add: Ajouter un miroir de dépôt
+  label_mirror_create: Créer un miroir de dépôt
+  label_mirror_delete: Effacer un miroir de dépôt
+  label_mirror_edit: Modifier un miroir de dépôt
 
-  label_mirror_push_mode: Mirror update mode
-  label_mirror_full_mirror: Complete Mirroring
-  label_mirror_forced_update: Force Update Remote
-  label_mirror_fast_forward: Fast Forward (Unforced)
+  label_mirror_push_mode: Mode de mise à jour du miroir
+  label_mirror_full_mirror: Miroir complet
+  label_mirror_forced_update: Forcer la mise à jour du miroir
+  label_mirror_fast_forward: Avance rapide (non forcé)
 
-  label_mirror_inactive: Inactive
-  label_mirror_help: Mirrors must grant write access to the following public key
+  label_mirror_inactive: Inactif
+  label_mirror_help: Le miroir doit donner les droits d'écriture à la clé publique suivante
 
-  label_mirror_push_title: Push to mirror
-  label_mirror_push_info_html: "Pushing changes to mirror <b>%{mirror_url}</b> ... %{status}"
-  label_mirror_push_output: 'Output:'
-  label_mirror_push_sucess: Success.
-  label_mirror_push_fail: Failed!
+  label_mirror_push_title: Envoyer au miroir
+  label_mirror_push_info_html: "Envoie des changements au miroir <b>%{mirror_url}</b> ... %{status}"
+  label_mirror_push_output: 'Sortie:'
+  label_mirror_push_sucess: Succès.
+  label_mirror_push_fail: Échec!
 
-  label_mirror: Mirror
+  label_mirror: Miroir
   label_mirror_url: URL
   label_mirror_refspec: Refspec
   label_mirror_mode: Mode
-  label_mirror_include_all_branches: Push all Branches
-  label_mirror_include_all_tags: Push all Tags
-  label_mirror_explicit_refspec: Explicit Reference Spec
-  label_mirror_url_accepted_format: Accepted URL format
+  label_mirror_include_all_branches: Envoyer toutes les branches
+  label_mirror_include_all_tags: Envoyer toutes les étiquettes
+  label_mirror_explicit_refspec: Spécification de références explicites
+  label_mirror_url_accepted_format: Formats d'URL acceptés
 
-  all_references: All&nbsp;Refs
-  all_branches: All&nbsp;Branches
-  all_tags: All&nbsp;Tags
+  all_references: Toutes&nbsp;les&nbsp;références
+  all_branches: Toutes&nbsp;les&nbsp;branches
+  all_tags: Toutes&nbsp;les&nbsp;étiquettes
 
   # Mirrors (buttons)
-  button_mirror_push: Push
+  button_mirror_push: Envoyer
 
   # Mirrors (notices)
-  notice_mirror_created: Mirror was successfully created.
-  notice_mirror_updated: Mirror was successfully updated.
-  notice_mirror_deleted: Mirror was successfully deleted.
-  notice_mirror_create_failed: Failed to create mirror.
-  notice_mirror_update_failed: Failed to update mirror.
+  notice_mirror_created: Miroir crée avec succès.
+  notice_mirror_updated: Miroir modifié avec succès.
+  notice_mirror_deleted: Miroir effacé avec succès.
+  notice_mirror_create_failed: Échec de création du miroir.
+  notice_mirror_update_failed: Échec de modification du miroir.
 
   # Post Receive URL (labels)
-  label_post_receive_urls: Post Receive URLs
-  label_post_receive_url_add: Add Post Receive URL
-  label_post_receive_url_create: Create Repository Post-receive URL
-  label_post_receive_url_delete: Delete Repository Post-receive URL
-  label_post_receive_url_edit: Edit Repository Post-receive URL
+  label_post_receive_urls: URL après réception
+  label_post_receive_url_add: Ajouter un URL après réception
+  label_post_receive_url_create: Créer un URL après réception
+  label_post_receive_url_delete: Effacer l'URL après réception
+  label_post_receive_url_edit: Modifier l'URL après réception
 
   field_mode: Mode
-  label_github_post: GitHub&nbsp;POST
-  label_empty_get: Empty&nbsp;GET
+  label_github_post: POST&nbsp;GitHub
+  label_empty_get: GET&nbsp;vide
 
   # Post Receive URL (notices)
-  notice_post_receive_url_created: Post-receive URL was successfully created.
-  notice_post_receive_url_updated: Post-receive URL was successfully updated.
-  notice_post_receive_url_deleted: Post-receive URL was successfully deleted.
-  notice_post_receive_url_create_failed: Failed to create post-receive URL.
-  notice_post_receive_url_update_failed: Failed to update post-receive URL.
+  notice_post_receive_url_created: L'URL après réception a été créé avec succès.
+  notice_post_receive_url_updated: L'URL après réception a été modifié avec succès.
+  notice_post_receive_url_deleted: L'URL après réception a été effacé avec succès.
+  notice_post_receive_url_create_failed: Échec de création de l'URL après réception.
+  notice_post_receive_url_update_failed: Échec de modification de l'URL après réception.
 
   # Git Notifications (labels)
-  label_git_notifications: Git Mailing List
-  label_git_notifications_add: Add Git Mailing List
-  label_git_notifications_create: Create Git Mailing List
-  label_git_notifications_delete: Delete Git Mailing List
-  label_git_notifications_edit: Edit Git Mailing List
+  label_git_notifications: Liste de distribution git
+  label_git_notifications_add: Ajouter une liste de distribution git
+  label_git_notifications_create: Créer une liste de distribution git
+  label_git_notifications_delete: Effacer la liste de distribution git
+  label_git_notifications_edit: Modifier la liste de distribution git
 
-  label_git_notification_include_list: Include list
-  label_git_notification_exclude_list: Exclude list
-  label_git_notification_default_list: Default list
-  label_git_notification_effective_list: Effective list
+  label_git_notification_include_list: Liste d'inclusion
+  label_git_notification_exclude_list: Liste d'exclusion
+  label_git_notification_default_list: Liste par défaut
+  label_git_notification_effective_list: Liste effective
 
-  label_gitolite_notify_prefix: Git Mailing List prefix
-  label_gitolite_notify_sender_address: Git Mailing List sender address
+  label_gitolite_notify_prefix: Préfixe de la liste de distribution git
+  label_gitolite_notify_sender_address: Adresse de l'expéditeur de la liste de distribution git
 
   # Git Notifications (notices)
-  notice_git_notifications_created: Mailing list was successfully created
-  notice_git_notifications_deleted: Mailing list was successfully deleted
-  notice_git_notifications_updated: Mailing list was successfully updated
-  notice_git_notifications_update_failed: Failed to update mailing list
+  notice_git_notifications_created: Liste de distribution créée avec succès
+  notice_git_notifications_deleted: Liste de distribution effacée avec succès
+  notice_git_notifications_updated: Liste de distribution modifiée avec succès
+  notice_git_notifications_update_failed: Échec de modification de la liste de distribution
 
   # Gitolite Hooks
-  error_project_not_found: No project was found with the identifier "%{identifier}"
+  error_project_not_found: Aucun projet avec l'identifiant « %{identifier} » a été trouvé.
 
   ## Permissions
-  permission_create_repository_mirrors: Create repository mirrors
-  permission_view_repository_mirrors: View repository mirrors
-  permission_edit_repository_mirrors: Edit repository mirrors
+  permission_create_repository_mirrors: Créer des miroirs de dépôts
+  permission_view_repository_mirrors: Voir des miroirs de dépôts
+  permission_edit_repository_mirrors: Modifier des miroirs de dépôts
 
-  permission_create_repository_post_receive_urls: Create post-receive URLs
-  permission_view_repository_post_receive_urls: View post-receive URLs
-  permission_edit_repository_post_receive_urls: Edit post-receive URLs
+  permission_create_repository_post_receive_urls: Créer des URL après réception
+  permission_view_repository_post_receive_urls: Voir les URL après réception
+  permission_edit_repository_post_receive_urls: Modifier les URL après réception
 
-  permission_create_deployment_keys: Create deployment keys
-  permission_view_deployment_keys: View deployment keys
-  permission_edit_deployment_keys: Edit deployment keys
+  permission_create_deployment_keys: Créer des clés de déploiement
+  permission_view_deployment_keys: Voir des clés de déploiement
+  permission_edit_deployment_keys: Modifier des clés de déploiement
 
-  permission_create_repository_git_notifications: Create Git mailing list
-  permission_view_repository_git_notifications: View Git mailing list
-  permission_edit_repository_git_notifications: Edit Git mailing list
-  permission_receive_git_notifications: Receive Git notifications on commit
+  permission_create_repository_git_notifications: Créer des listes de distributions git
+  permission_view_repository_git_notifications: Voir les listes de distribution git
+  permission_edit_repository_git_notifications: Modifier les listes de distribution git
+  permission_receive_git_notifications: Recevoir des notifications à chaque commit git
 
-  permission_create_gitolite_ssh_key: Create SSH keys
+  permission_create_gitolite_ssh_key: Créer des clés SSH
