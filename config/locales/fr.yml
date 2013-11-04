@@ -39,7 +39,7 @@ fr:
 
   # Gitolite Global Config
   label_tab_global: Global
-  label_gitolite_global_config: Configuration Gitolite globale
+  label_gitolite_global_config: Configuration de Gitolite globale
 
   label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
   label_gitolite_temp_dir_desc: (Doit être absolu)
@@ -47,9 +47,9 @@ fr:
   label_gitolite_script_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
 
   label_gitolite_config_file: Fichier de configuration de Gitolite
-  label_gitolite_config_has_admin_key: Fichier de configuration de Gitolite contient la clé d'administration.
+  label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.
   label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
-  label_gitolite_recycle_bin_expiration_time_desc: (en heures)
+  label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
   label_gitolite_daemon_by_default: Activer le mode Service Git pour les nouveaux dépôts par défaut?
   label_gitolite_http_by_default: Activer le mode Smart HTTP pour les nouveaux dépôts par défaut?
@@ -102,17 +102,17 @@ fr:
   label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
   label_http_server_subdir: Sous-répertoire pour l'accès HTTP
   label_http_server_subdir_desc: (Relatif à la racine de Redmine)
-  label_show_repositories_url: Afficher l'URL des dépôts?
+  label_show_repositories_url: Afficher les URL des dépôts?
 
   # Redmine Config
   label_tab_redmine: Redmine
   label_redmine_config: Configuration de Redmine
 
   label_all_projects_use_git: Initialiser automatiquement des dépôts git pour les nouveaux projets?
-  label_delete_git_repositories: Effacer les dépôts git d'un projet quand celui-ci est effacé?<br/>(va être mis dans la corbeille)
+  label_delete_git_repositories: Effacer les dépôts git d'un projet quand celui-ci est effacé?<br/>(Va être mis dans la corbeille)
   label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
-  label_unique_repo_identifier: Les identifiants de dépôts sont unique?
-  label_gitolite_notify_by_default: "Activer le hook 'Notifications Git' pour les nouveaux dépôts par défaut"
+  label_unique_repo_identifier: Les identifiants de dépôts sont unique
+  label_gitolite_notify_by_default: Activer le hook "Notifications Git" pour les nouveaux dépôts par défaut
 
   label_flat: Plat
   label_hierarchical: Hiérarchique
@@ -127,7 +127,7 @@ fr:
   label_tab_gitolite_rescue_resync_all_projects: Resynchroniser tous les projets?
 
   # Config Help
-  label_tab_config_test: Test de Configuration
+  label_tab_config_test: Test de la Configuration
   label_current_access_patterns: Modèles d'accès courant pour les dépôts
   label_storage_directory: Répertoire de stockage
   label_ssh_access: Accès SSH
@@ -135,14 +135,14 @@ fr:
 
   display_access_setup: Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>. Avec la configuration courante, le dépôt %{type} de <em>project3</em> a les propriétés suivantes.
   display_access_emphasis: Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte.
-  display_access_hierarchical: Les projets parents sont inclus dans les URLs, car le dépôt est en mode <em>Hiérarchique</em>.
-  display_access_flat: Les projets parents ne sont pas inclus dans les URL, car le dépôt est en mode <em>Plat</em>.
+  display_access_hierarchical: Les projets parents sont inclus dans l'URL, car le dépôt est en mode <em>Hiérarchique</em>.
+  display_access_flat: Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>.
 
   # Config Check
   label_permissions_header: Permissions requises
   label_sudo_redmine_to_gitolite_user: L'usager Redmine peut sudo vers l'utilisateur Git?
   label_sudo_gitolite_to_redmine_user: L'usager Git peut sudo vers l'utilisateur Redmine?
-  label_unknown_gitolite_version: Version Inconnue
+  label_unknown_gitolite_version: Version inconnue
 
   label_tab_sidekiq_interface: Sidekiq
 
@@ -156,7 +156,7 @@ fr:
 
   # Create Repository
   label_enable_git_notify: Activer la liste de diffusion git
-  label_enable_git_daemon: Activer le service Git
+  label_enable_git_daemon: Activer le service git
   label_enable_smart_http: Activer le mode Smart HTTP de git
   label_enable_notify_cia: Activer les notifications CIA
   label_enable_notify_cia_test: Activer les test de notifications CIA
@@ -172,7 +172,7 @@ fr:
   label_public_keys: Clés publiques
   label_public_key: Clé publique
   label_public_key_edit: Modifier une clé publique existante
-  label_current_public_keys: Modifier des clés publiques existantes
+  label_current_public_keys: Clés publiques courantes
   label_current_user_keys: Clés de l'usager courant
   label_current_deploy_keys: Clés de déploiement courantes
   label_no_public_keys: Aucune clé publique définie
@@ -184,7 +184,7 @@ fr:
   label_deploy_key: Clé de déploiement
   label_cut_and_paste: Clé
   label_cut_and_paste_desc: (Copier coller le contenu du fichier .pub au complet)
-  label_identifier_cannot_be_changed: Idantifiant<br/><em>(Ne peut pas être changé)</em>
+  label_identifier_cannot_be_changed: Identifiant<br/><em>(Ne peut pas être changé)</em>
   label_key_cannot_be_changed_please_create_new_key: La clé ne peut plus être modifié. Vous pouvez l'effacer et en créer une nouvelle.
 
   # User SSH keys (confirmation)
@@ -195,8 +195,8 @@ fr:
   error_public_key_create_failed: Échec de création de clé publique.
   error_public_key_update_failed: Échec de modification de clé publique.
   error_key_corrupted: semble être corrompue.
-  error_key_needs_two_components: "a besoin d'au mois deux composantes: [clé-type] et [clé-valeur]."
-  error_key_bad_type: 'a un mauvais type. Les types valides sont %{types}.'
+  error_key_needs_two_components: "a besoin d'au moins deux composantes: [type-de-clé] et [valeur-de-la-clé]."
+  error_key_bad_type: 'a type invalide. Les types valides sont %{types}.'
   error_key_type_mismatch: le type (%{type1}) ne correspond pas au type dans le corps de la clé (%{type2}).
   error_key_in_use_by_you: 'est déjà utilisé par vous comme "%{name}".'
   error_key_in_use_by_other: est déjà utilisé par l'usager "%{login}" comme "%{name}".
@@ -221,8 +221,8 @@ fr:
   label_deployment_credentials: Pièces d'identités de déploiement
   label_deployment_credential_add: Ajouter une pièce d'identité de déploiement
   label_deployment_credential_create: Créer une nouvelle pièce d'identité de déploiement
-  label_deployment_credential_edit: Modifier une pièce d'identité de déploiement
-  label_deployment_credential_delete: Effacer une pièce d'identité de déploiement
+  label_deployment_credential_edit: Modifier la pièce d'identité de déploiement
+  label_deployment_credential_delete: Effacer la pièce d'identité de déploiement
   label_deployment_credential_permissions: Permissions d'accès
   label_deployment_credential_delete_when_unused: Effacer la clé quand elle n'est plus utilisée
   label_deployment_credential_which_deploy_key: Choisir une clé de déploiement
@@ -322,7 +322,7 @@ fr:
   label_git_notification_default_list: Liste par défaut
   label_git_notification_effective_list: Liste effective
 
-  label_gitolite_notify_prefix: Préfix de la liste de distribution git
+  label_gitolite_notify_prefix: Préfixe de la liste de distribution git
   label_gitolite_notify_sender_address: Adresse de l'expéditeur de la liste de distribution git
 
   # Git Notifications (notices)
