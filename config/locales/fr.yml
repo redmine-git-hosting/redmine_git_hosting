@@ -51,11 +51,11 @@ fr:
   label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
-  label_gitolite_daemon_by_default: Activer le mode Service Git pour les nouveaux dépôts par défaut?
-  label_gitolite_http_by_default: Activer le mode Smart HTTP pour les nouveaux dépôts par défaut?
+  label_gitolite_daemon_by_default: Activer le mode Service Git pour les nouveaux dépôts par défaut
+  label_gitolite_http_by_default: Activer le mode Smart HTTP pour les nouveaux dépôts par défaut
 
   label_gitolite_log_level: Niveau de journalisation Gitolite
-  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers?
+  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers
   label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
   label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
   label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
@@ -102,13 +102,13 @@ fr:
   label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
   label_http_server_subdir: Sous-répertoire pour l'accès HTTP
   label_http_server_subdir_desc: (Relatif à la racine de Redmine)
-  label_show_repositories_url: Afficher les URL des dépôts?
+  label_show_repositories_url: Afficher les URL des dépôts
 
   # Redmine Config
   label_tab_redmine: Redmine
   label_redmine_config: Configuration de Redmine
 
-  label_all_projects_use_git: Initialiser automatiquement des dépôts git pour les nouveaux projets?
+  label_all_projects_use_git: Initialiser automatiquement des dépôts git pour les nouveaux projets
   label_delete_git_repositories: Effacer les dépôts git d'un projet quand celui-ci est effacé?<br/>(Va être mis dans la corbeille)
   label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
   label_unique_repo_identifier: Les identifiants de dépôts sont unique
@@ -124,7 +124,7 @@ fr:
   label_tab_gitolite_rescue: Sauvetage
   label_gitolite_rescue: Sauvetage de Gitolite
 
-  label_tab_gitolite_rescue_resync_all_projects: Resynchroniser tous les projets?
+  label_tab_gitolite_rescue_resync_all_projects: Resynchroniser tous les projets
 
   # Config Help
   label_tab_config_test: Test de la Configuration
