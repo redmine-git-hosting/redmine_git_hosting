@@ -216,6 +216,7 @@ fr:
   label_help_repository_setup_new: Configurer un nouveau dépôt
   label_help_repository_setup_existing: Configurer un dépôt existant
   label_help_repository_clone: Cloner un dépôt
+  label_help_no_repo_rights: Désolé, vous n'avez pas accès à ce dépôt. Vous ne pouvez rien faire.
 
   # Deployment Credentials (labels)
   label_deployment_credentials: Pièces d'identités de déploiement

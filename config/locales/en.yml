@@ -215,6 +215,7 @@ en:
   label_help_repository_setup_new: Setup New Repository
   label_help_repository_setup_existing: Setup Existing Repository
   label_help_repository_clone: Clone Repository
+  label_help_no_repo_rights: Sorry, you don't have access to this repository. There's nothing you can do.
 
   # Deployment Credentials (labels)
   label_deployment_credentials: Deployment Credentials
