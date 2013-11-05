@@ -74,7 +74,7 @@ class SmartHttpController < ApplicationController
 
     if (@repository = Repository.find_by_path(repo_path, :parse_ext => true)) && @repository.is_a?(Repository::Git)
       if (@project = @repository.project) && @repository.extra[:git_http] != 0
-        allow_anonymous_read = @project.is_public
+        allow_anonymous_read = User.anonymous.allowed_to?(:view_changesets, @project)
         # Push requires HTTP enabled or valid SSL
         # Read is ok over HTTP for public projects
         if (@repository.extra[:git_http] == 3 && !is_push) || @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !is_push && allow_anonymous_read
