@@ -1,4 +1,4 @@
-<% if repository && repository.is_a?(Repository::Git) && GitHostingConf.show_repositories_url? %>
+<% if repository && repository.is_a?(Repository::Git) && GitHostingConf.show_repositories_url? && User.current.allowed_to?(:view_changesets, repository.project) %>
 
   <% content_for :header_tags do %>
 
