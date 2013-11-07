@@ -23,7 +23,7 @@
         var urls = [];
 
       <% project.repository.available_urls.each do |key, value| %>
-        urls["git_url_<%= key %>"] = ["<%= value[:url] %>", <%= value[:commiter] %> ];
+        urls["git_url_<%= key %>"] = ["<%= j value[:url] %>", <%= j value[:commiter] %> ];
       <% end %>
 
         ZeroClipboard.setDefaults({ moviePath: "<%= GitHostingHelper.plugin_asset_link('ZeroClipboard.swf') %>" });
