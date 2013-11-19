@@ -66,7 +66,7 @@
           <p>
             <%= f.select :key_type, options_for_select([[l(:label_user_key),0],[l(:label_deploy_key),1]], :selected => @gitolite_public_key.key_type, :disabled => (@new_key ? [] : [0,1])), :required => true, :label => :label_key_type %>
           </p>
-          <div id="key_type_options" style="display:none">
+          <div id="key_type_options" style="display: none;">
             <p>
               <%= f.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %>
             </p>
