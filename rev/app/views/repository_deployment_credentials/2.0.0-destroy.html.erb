@@ -4,7 +4,7 @@
 
 <%= labelled_form_for :repository_deployment_credentials, @cred,
                       :url  => { :controller => 'repository_deployment_credentials', :action => 'destroy', :project_id => @project, :id => @cred.id },
-                      :html => { :method => :delete,  } do |f| %>
+                      :html => { :method => :delete, :remote => @is_xhr } do |f| %>
 
   <div class="warning" style="margin: 0; padding: 5px 15px;">
     <p>
@@ -22,6 +22,7 @@
 
   <% if !@is_xhr %>
     <%= submit_tag l(:button_delete), :disable_with => l(:label_delete_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
   <% end %>
 
 <% end %>

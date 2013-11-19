@@ -2,9 +2,9 @@
   <h2><%=l(:label_mirror_delete)%></h2>
 <% end %>
 
-<% form = labelled_form_for :repository_mirrors, @mirror,
-                            :url  => { :controller => 'repository_mirrors', :action => 'destroy', :project_id => @project, :id => @mirror.id },
-                            :html => { :method => :delete, :remote => true } do |f| %>
+<%= labelled_form_for :repository_mirrors, @mirror,
+                      :url  => { :controller => 'repository_mirrors', :action => 'destroy', :project_id => @project, :id => @mirror.id },
+                      :html => { :method => :delete, :remote => @is_xhr } do |f| %>
 
   <div class="warning" style="margin: 0; padding: 5px 15px;">
     <p>
@@ -17,9 +17,9 @@
     </p>
   </div>
 
-  <% if !@is_xhr || (Rails::VERSION::MAJOR < 3) %>
+  <% if !@is_xhr %>
     <%= submit_tag l(:button_delete), :disable_with => l(:label_delete_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
   <% end %>
 
 <% end %>
-<%= form if Rails::VERSION::MAJOR >= 3 %>

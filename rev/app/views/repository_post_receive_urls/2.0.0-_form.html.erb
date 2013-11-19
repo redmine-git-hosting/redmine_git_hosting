@@ -2,6 +2,6 @@
 
 <div class="box">
   <p><%= f.text_field :url, :required => true, :size => 65 %></p>
-  <p><%= f.select :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
-  <p><%= f.check_box :active %></p>
+  <p><%= f.select     :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
+  <p><%= f.check_box  :active %></p>
 </div>
