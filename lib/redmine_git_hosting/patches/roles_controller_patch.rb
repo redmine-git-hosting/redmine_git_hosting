@@ -59,15 +59,17 @@ module RedmineGitHosting
           GitHostingObserver.set_update_active(true)
         end
 
+
         def permissions_with_git_hosting(&block)
           GitHostingObserver.set_update_active(false)
           permissions_without_git_hosting(&block)
           GitHostingObserver.set_update_active(true)
 
           #if request.post?
-          #  resync
+          #  resync_gitolite('modified')
           #end
         end
+
 
         def destroy_with_git_hosting(&block)
           GitHostingObserver.set_update_active(false)
@@ -75,13 +77,15 @@ module RedmineGitHosting
           GitHostingObserver.set_update_active(true)
         end
 
+
         private
 
-        def resync
+
+        def resync_gitolite(message)
           projects = Project.active_or_archived.find(:all, :include => :repositories)
           if projects.length > 0
-            GitHosting.logger.info "Role has been modified, resync all projects..."
-            GithostingShellWorker.perform_async({ :command => :update_all_projects, :object => projects.length })
+            GitHosting.logger.info "Role has been #{message}, resync all projects..."
+            GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
           end
         end
 

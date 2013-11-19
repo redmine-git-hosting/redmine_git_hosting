@@ -168,7 +168,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     repo_key[:key]      = key.key
     repo_key[:location] = key.location
     repo_key[:owner]    = key.owner
-    GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
+    GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
   end
 
 

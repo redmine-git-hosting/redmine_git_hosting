@@ -369,7 +369,8 @@ class GitoliteHooksController < ApplicationController
         @repository = @project.repository || @project.repo_blank_ident
       end
     else
-      @repository = @project.repository  # Only repository if redmine < 1.4
+      # Only repository if redmine < 1.4
+      @repository = @project.repository
     end
 
     if @repository.nil?

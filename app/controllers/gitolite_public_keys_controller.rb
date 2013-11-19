@@ -140,7 +140,7 @@ class GitolitePublicKeysController < ApplicationController
     repo_key[:location] = @gitolite_public_key.location
     repo_key[:owner]    = @gitolite_public_key.owner
     GitHosting.logger.info "Delete SSH key #{@gitolite_public_key.identifier}"
-    GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
+    GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
 
     project_list = Array.new
     @gitolite_public_key.user.projects_by_role.each do |role|
@@ -151,7 +151,7 @@ class GitolitePublicKeysController < ApplicationController
 
     if project_list.length > 0
       GitHosting.logger.info "Update project to remove SSH access : #{project_list.uniq}"
-      GithostingShellWorker.perform_async({ :command => :update_projects, :object => project_list.uniq })
+      GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
     end
   end
 
