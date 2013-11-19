@@ -64,7 +64,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   def update_permissions
     GitHosting.logger.info "Update deploy keys for repository : '#{GitHosting.repository_name(repository)}'"
-    GithostingShellWorker.perform_async({ :command => :update_repository, :object => repository.id })
+    GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
   end
 
   def correct_key_type

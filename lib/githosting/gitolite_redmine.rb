@@ -353,8 +353,8 @@ module GitoliteRedmine
 
 
     def handle_repository_delete(repository_data)
-      repo_name = repository_data["repo_name"]
-      repo_path = repository_data["repo_path"]
+      repo_name = repository_data['repo_name']
+      repo_path = repository_data['repo_path']
       repo_conf = @gitolite_config.repos[repo_name]
 
       if !repo_conf

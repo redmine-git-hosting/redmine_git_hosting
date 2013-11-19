@@ -130,7 +130,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def add_ssh_key
     GitHosting.logger.info "User '#{User.current.login}' has added a SSH key"
-    GithostingShellWorker.perform_async({ :command => :add_ssh_key, :object => self.user.id })
+    GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
 
     if user_key?
       project_list = Array.new
@@ -142,7 +142,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
       if project_list.length > 0
         GitHosting.logger.info "Update project to add SSH access : #{project_list.uniq}"
-        GithostingShellWorker.perform_async({ :command => :update_projects, :object => project_list.uniq })
+        GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
       end
     end
   end
