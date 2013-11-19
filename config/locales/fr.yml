@@ -15,11 +15,11 @@ fr:
   label_need_help: Besoin d'aide?
   label_open_issue: Ouvrir une demande
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
-  label_redmine_git_hosting_issue: Redmine Git Hosting - Ouvrir une demande 
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Ouvrir une demande
 
   # Gitolite SSH Config
   label_tab_ssh: SSH
-  label_gitolite_ssh_config: Configuration SSH de Gitolite 
+  label_gitolite_ssh_config: Configuration SSH de Gitolite
 
   label_gitolite_user: Nom d'usager Gitolite
   label_gitolite_server_port: Port du serveur SSH local
@@ -294,8 +294,8 @@ fr:
 
   # Post Receive URL (labels)
   label_post_receive_urls: URL après réception
-  label_post_receive_url_add: Ajouter un URL après réception
-  label_post_receive_url_create: Créer un URL après réception
+  label_post_receive_url_add: Ajouter une URL après réception
+  label_post_receive_url_create: Créer une URL après réception
   label_post_receive_url_delete: Effacer l'URL après réception
   label_post_receive_url_edit: Modifier l'URL après réception
 
