@@ -20,7 +20,7 @@ module RedmineGitHosting
 
         def update_ssh_keys
           GitHosting.logger.info "Rebuild SSH keys for user : '#{self.login}'"
-          GithostingShellWorker.perform_async({ :command => :update_ssh_keys, :object => self.id })
+          GitHosting.resync_gitolite({ :command => :update_ssh_keys, :object => self.id })
 
           project_list = Array.new
           self.projects_by_role.each do |role|
@@ -31,7 +31,7 @@ module RedmineGitHosting
 
           if project_list.length > 0
             GitHosting.logger.info "Update projects to add SSH access : '#{project_list.uniq}'"
-            GithostingShellWorker.perform_async({ :command => :update_projects, :object => project_list.uniq })
+            GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
           end
         end
 
@@ -46,7 +46,7 @@ module RedmineGitHosting
             repo_key[:location] = ssh_key.location
             repo_key[:owner]    = ssh_key.owner
             GitHosting.logger.info "Delete SSH key #{ssh_key.identifier}"
-            GithostingShellWorker.perform_async({ :command => :delete_ssh_key, :object => repo_key })
+            GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
           end
         end
 

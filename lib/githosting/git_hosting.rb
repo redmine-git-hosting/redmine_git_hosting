@@ -366,6 +366,17 @@ module GitHosting
   end
 
 
+  def self.resync_gitolite(data_hash)
+    sidekiq_mode = false
+    if sidekiq_mode == true
+      GithostingShellWorker.perform_async(data_hash)
+    else
+      githosting_shell = Githosting::Shell.new
+      githosting_shell.handle_command(data_hash[:command], data_hash[:object])
+    end
+  end
+
+
   # Check to see if the given repository exists or not in DB...
   def self.git_repository_exists_in_db?(repo_name)
     if !Repository.find_by_path(repository_path(repo_name)).nil?
@@ -405,6 +416,7 @@ module GitHosting
     end
 
     if !File.directory?(@@scripts_dir_path)
+      logger.info "############ TEST SCRIPT DIR ############"
       logger.info "Creating bin directory :'#{@@scripts_dir_path}' with owner : '#{redmine_user}'"
       begin
         %x[mkdir -p "#{@@scripts_dir_path}"]

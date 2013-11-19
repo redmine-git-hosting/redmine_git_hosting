@@ -32,7 +32,7 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   def update_repository
     GitHosting.logger.info "Rebuild mailing list for respository : '#{GitHosting.repository_name(self.repository)}'"
-    GithostingShellWorker.perform_async({ :command => :update_repository, :object => self.repository.id })
+    GitHosting.resync_gitolite({ :command => :update_repository, :object => self.repository.id })
   end
 
 end

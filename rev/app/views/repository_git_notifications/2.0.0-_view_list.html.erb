@@ -26,7 +26,11 @@
                                                           :class => 'icon icon-del delete-git-notification') %>
         </div>
 
-
+        <% content_for :header_tags do %>
+          <%= javascript_tag do %>
+            var mailing_list_default_users = <%= raw GitHostingHelper.mailing_list_default_users(@repository).to_json %>;
+          <% end %>
+        <% end %>
 
       <% end %>
     <% else %>
@@ -36,7 +40,11 @@
                                                        :class => 'icon icon-add add-git-notification') %>
         </div>
 
-
+        <% content_for :header_tags do %>
+          <%= javascript_tag do %>
+            var mailing_list_default_users = <%= raw GitHostingHelper.mailing_list_default_users(@repository).to_json %>;
+          <% end %>
+        <% end %>
 
       <% end %>
     <% end %>
