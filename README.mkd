@@ -1,5 +1,32 @@
 # Redmine Git Hosting Plugin (v0.7)
 
-This plugin should not be use anymore, will be deleted soon...
+A ChiliProject / Redmine plugin which makes configuring your own Git hosting easy.
 
-Please refer to main stable plugin : https://github.com/jbox-web/redmine_git_hosting
+This plugin allows straightforward management of Gitolite and associated public keys, the Git daemon, and integrates code from Scott Schacon's "grack" utility
+to provide Git Smart HTTP access. 
+
+Git repositories are automatically created in Gitolite when the repository is created in Redmine.
+
+There is also an option to automatically create a Git repository for a project, when the project is created.
+
+Caching functionality is also implemented to speed up page-load time when viewing Git repositories.
+
+Follow announcements here : https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements
+
+## Installation
+
+Everything is in the wiki : https://github.com/jbox-web/redmine_git_hosting/wiki
+
+
+## Copyright & License
+
+Copyright (c) 2014 Nicolas Rodriguez (nrodriguez@jbox-web.com), JBox Web (http://www.jbox-web.com) MIT License.
+
+Copyright (c) 2011 John Kubiatowicz (kubitron@cs.berkeley.edu) MIT License.
+
+Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
+
+Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.
+
+This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io. Several updates/fixes were provided by Github users : untoldwind, tingar and ericpaulbishop.
+These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
