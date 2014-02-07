@@ -15,8 +15,6 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     add_column :gitolite_public_keys, :key_type, :integer, :default => GitolitePublicKey::KEY_TYPE_USER
     add_column :gitolite_public_keys, :delete_when_unused, :boolean, :default => true
 
-    GitHostingObserver.set_update_active(false)
-
     manager_role_name = I18n.t(:default_role_manager, {:locale => Setting.default_language})
     puts "Updating role : '#{manager_role_name}'..."
     manager_role = Role.find_by_name(manager_role_name)
@@ -46,8 +44,6 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     drop_table :deployment_credentials
     remove_column :gitolite_public_keys, :key_type
     remove_column :gitolite_public_keys, :delete_when_unused
-
-    GitHostingObserver.set_update_active(false)
 
     manager_role_name = I18n.t(:default_role_manager, {:locale => Setting.default_language})
     puts "Updating role : '#{manager_role_name}'..."

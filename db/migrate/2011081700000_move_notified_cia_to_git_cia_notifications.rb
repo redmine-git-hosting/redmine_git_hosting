@@ -1,6 +1,5 @@
 class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration
   def self.up
-
     drop_table :git_cia_notifications if self.table_exists?("git_cia_notifications")
 
     create_table :git_cia_notifications do |t|

@@ -1,7 +1,6 @@
 class CreateGitRepositoryExtras < ActiveRecord::Migration
 
   def self.up
-
     drop_table :git_repository_extras if self.table_exists?("git_repository_extras")
 
     create_table :git_repository_extras do |t|

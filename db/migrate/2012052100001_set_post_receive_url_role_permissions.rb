@@ -1,8 +1,6 @@
 class SetPostReceiveUrlRolePermissions < ActiveRecord::Migration
 
   def self.up
-    GitHostingObserver.set_update_active(false)
-
     manager_role_name = I18n.t(:default_role_manager, {:locale => Setting.default_language})
     puts "Updating role : '#{manager_role_name}'..."
     manager_role = Role.find_by_name(manager_role_name)
@@ -29,8 +27,6 @@ class SetPostReceiveUrlRolePermissions < ActiveRecord::Migration
   end
 
   def self.down
-    GitHostingObserver.set_update_active(false)
-
     manager_role_name = I18n.t(:default_role_manager, {:locale => Setting.default_language})
     puts "Updating role : '#{manager_role_name}'..."
     manager_role = Role.find_by_name(manager_role_name)
