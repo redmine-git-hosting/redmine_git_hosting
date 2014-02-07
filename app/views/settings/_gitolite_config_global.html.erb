@@ -1,0 +1,72 @@
+<%
+  # Gitolite Global Config
+  gitolite_config_file                 = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_file].nil?)                 ? Setting.plugin_redmine_git_hosting[:gitolite_config_file] : 'gitolite.conf'
+  gitolite_config_has_admin_key        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key] : true
+  gitolite_recycle_bin_expiration_time = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time] : '24.0'
+
+  gitolite_temp_dir              = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_temp_dir].nil?)   ? Setting.plugin_redmine_git_hosting[:gitolite_temp_dir] : File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
+  gitolite_script_dir            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_script_dir].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_script_dir] : ''
+  gitolite_log_level             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_level].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_log_level] : 'info'
+  gitolite_log_split             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_split].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_log_split] : false
+%>
+
+<h3><%= l(:label_gitolite_global_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_temp_dir) %></label>
+  <%= text_field_tag("settings[gitolite_temp_dir]", gitolite_temp_dir, :size => 60) %>
+  <br />
+  <em><%= l(:label_gitolite_temp_dir_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable? :reset %></label>
+  <%= text_field_tag("settings[gitolite_script_dir]", reldir_add_dotslash(gitolite_script_dir), :size => 60) %>
+  <br />
+  <em><%= l(:label_gitolite_script_dir_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_config_file) %></label>
+  <%= text_field_tag("settings[gitolite_config_file]", "./#{gitolite_config_file}", :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_config_has_admin_key) %></label>
+  <%= select_tag("settings[gitolite_config_has_admin_key]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_config_has_admin_key)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_recycle_bin_expiration_time) %></label>
+  <%= text_field_tag("settings[gitolite_recycle_bin_expiration_time]", gitolite_recycle_bin_expiration_time, :size => 10) %>
+  <br />
+  <em><%= l(:label_gitolite_recycle_bin_expiration_time_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_log_level) %></label>
+  <%= select_tag("settings[gitolite_log_level]", options_for_select(
+    [
+      [l(:label_debug), 'debug'],
+      [l(:label_info), 'info'],
+      [l(:label_warn), 'warn'],
+      [l(:label_error), 'error']
+    ], gitolite_log_level)) %>
+  <br />
+  <em><%= l(:label_gitolite_log_split_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_log_split) %></label>
+  <%= select_tag("settings[gitolite_log_split]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_log_split)) %>
+  <br />
+  <em><%= l(:label_gitolite_log_split_desc) %></em>
+  <br />
+  <% if gitolite_log_split == 'true' %>
+    <em><%= l(:label_gitolite_log_split_on) %></em>
+  <% else %>
+    <em><%= l(:label_gitolite_log_split_off) %></em>
+  <% end %>
+</p>

@@ -1,0 +1,20 @@
+<% if !@is_xhr %>
+  <h2><%=l(:label_deployment_credential_edit)%></h2>
+<% end %>
+
+<%= labelled_form_for :repository_deployment_credentials, @credential,
+                      :url  => repository_deployment_credential_path(@repository, @credential),
+                      :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
+
+  <div id="validation_messages_deployment_credential"><%= error_messages_for 'credential' %></div>
+
+  <div class="box">
+    <p><%= f.select :perm, options_for_select(RepositoryDeploymentCredential::valid_perms, @credential.perm), :required => true %></p>
+    <p><%= f.check_box :active %></p>
+  </div>
+
+  <% if !@is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>

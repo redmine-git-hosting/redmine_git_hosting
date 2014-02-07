@@ -1,0 +1,5 @@
+# Redmine Git Hosting Plugin (v0.7)
+
+This plugin should not be use anymore, will be deleted soon...
+
+Please refer to main stable plugin : https://github.com/jbox-web/redmine_git_hosting

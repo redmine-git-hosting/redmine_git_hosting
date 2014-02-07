@@ -1,0 +1,141 @@
+en:
+
+  # Global
+  label_need_help: Need Help?
+  label_open_issue: Open Issue
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
+
+  # Gitolite SSH Config
+  label_tab_ssh: SSH
+  label_gitolite_ssh_config: Gitolite SSH Configuration
+
+  label_gitolite_user: Gitolite username
+  label_gitolite_server_port: SSH local server port
+  label_gitolite_ssh_private_key: Gitolite SSH private key
+  label_gitolite_ssh_public_key: Gitolite SSH public key
+
+  # Gitolite Storage Config
+  label_tab_storage: Storage
+  label_gitolite_storage_config: Gitolite Storage Configuration
+
+  label_gitolite_global_storage_dir: Gitolite repositories base path
+  label_gitolite_global_storage_dir_desc: (Relative to Gitolite user home)
+  label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
+  label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
+  label_gitolite_recycle_bin_dir: Gitolite recycle bin base path
+  label_gitolite_recycle_bin_dir_desc: (Relative to Gitolite user home)
+
+  # Gitolite Global Config
+  label_tab_global: Global
+  label_gitolite_global_config: Gitolite Global Configuration
+
+  label_gitolite_temp_dir: Temporary dir for lock file and data
+  label_gitolite_temp_dir_desc: (Must be absolute)
+  label_gitolite_script_dir: Scripts dir
+  label_gitolite_script_dir_desc: (Can be absolute or relative to Redmine root)
+
+  label_gitolite_config_file: Gitolite configuration file
+  label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
+  label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
+  label_gitolite_recycle_bin_expiration_time_desc: (In hours)
+
+  label_gitolite_log_level: Gitolite log level
+  label_gitolite_log_split: Split logs into multiple files?
+  label_gitolite_log_split_desc: (Need to restart both Redmine and Sidekiq after change)
+  label_gitolite_log_split_on: (Will be store in 'rails root/logs/git_hosting/git_*.log')
+  label_gitolite_log_split_off: (Will be store in 'rails root/logs/git_hosting.log')
+
+  label_debug: Debug
+  label_info: Info
+  label_warn: Warning
+  label_error: Error
+
+  # Gitolite Access Config
+  label_tab_access: Access
+  label_gitolite_access_config: Gitolite Access Configuration
+
+  label_ssh_server_domain: Gitolite server domain
+  label_ssh_server_domain_desc: (For Git SSH urls)
+  label_http_server_domain: HTTP server domain
+  label_http_server_domain_desc: (For Git HTTP urls)
+  label_https_server_domain: HTTPs server domain
+  label_https_server_domain_desc: "(For Git HTTPs urls, don't set it if you don't use it)"
+  label_http_server_subdir: Subdirectory for HTTP access
+  label_http_server_subdir_desc: (Relative to Redmine root url)
+  label_show_repositories_url: Show checkout URL's?
+
+  label_gitolite_daemon_by_default: Enable Git Daemon mode for new repositories by default?
+  label_gitolite_http_by_default: Enable Smart HTTP mode for new repositories by default?
+
+  label_http_only: HTTP Only
+  label_https_only: HTTPS Only
+  label_https_and_http: HTTPS and HTTP
+
+  # Gitolite Hooks Config
+  label_tab_hooks: Hooks
+  label_gitolite_hooks_config: Gitolite Hooks Configuration
+
+  label_gitolite_hooks_are_asynchronous: Run hooks asynchronously
+  label_gitolite_force_hooks_update: Force hooks to be updated
+  label_gitolite_hooks_debug: Run hooks in Debug mode
+  label_gitolite_hooks_installed: Hooks installed
+
+  # Gitolite Cache Config
+  label_tab_cache: Cache
+  label_gitolite_cache_config: Gitolite Cache Configuration
+
+  label_gitolite_cache_max_time: Max cache time
+  label_gitolite_cache_max_size: Max cache element size
+  label_gitolite_cache_max_elements: Max cache elements
+
+  # Gitolite Notifications
+  label_tab_notify: Notifications
+  label_gitolite_notify_config: Git Mailing List Configuration
+
+  label_gitolite_notify_by_default: "Enable 'Git Notifications' hook for new repositories by default?"
+  label_gitolite_notify_global_prefix: Git mailing list global prefix
+  label_gitolite_notify_global_sender_address: Git mailing list global sender address
+  label_gitolite_notify_global_include: Git mailing list global include list
+  label_gitolite_notify_global_exclude: Git mailing list global exclude list
+
+  # Redmine Config
+  label_tab_redmine: Redmine
+  label_redmine_config: Redmine Configuration
+
+  label_all_projects_use_git: Automatically initialize Git repositories for new projects?
+  label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
+  label_hierarchical_organisation: Directory and URL structure for<br/>Redmine-managed repositories
+  label_unique_repo_identifier: Repository identifiers are globally unique?
+
+  label_current_access_patterns: Current Repository Access Patterns
+  label_storage_directory: Storage directory
+  label_ssh_access: SSH access
+  label_http_access: HTTP access
+
+  display_access_setup: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s %{type}repository has the following properties"
+  display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
+  display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
+  display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
+
+  label_flat: Flat
+  label_hierarchical: Hierarchical
+
+  # Sidekiq Config
+  label_gitolite_use_sidekiq: Use Sidekiq to launch async jobs
+
+  # Config Check
+  label_tab_config_test: Config Test
+  label_permissions_header: Required Permissions
+  label_sudo_redmine_to_gitolite_user: Redmine user is able to sudo to Git user?
+  label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
+  label_unknown_gitolite_version: Unknown version
+
+  label_tab_sidekiq_interface: Sidekiq
+
+  # Gitolite Rescue
+  label_tab_gitolite_rescue: Rescue
+  label_gitolite_rescue: Gitolite Rescue
+
+  label_resync_all_projects: Resync all projects ?
+  label_resync_all_ssh_keys: Resync all SSH keys ?

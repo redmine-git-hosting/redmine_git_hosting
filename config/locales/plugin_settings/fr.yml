@@ -1,0 +1,141 @@
+fr:
+
+  # Global
+  label_need_help: Besoin d'aide?
+  label_open_issue: Ouvrir une demande
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Ouvrir une demande
+
+  # Gitolite SSH Config
+  label_tab_ssh: SSH
+  label_gitolite_ssh_config: Configuration SSH de Gitolite
+
+  label_gitolite_user: Nom d'utilisateur Gitolite
+  label_gitolite_ssh_private_key: Clé privée SSH de Gitolite
+  label_gitolite_ssh_public_key: Clé publique SSH de Gitolite
+  label_gitolite_server_port: Port du serveur SSH local
+
+  # Gitolite Storage Config
+  label_tab_storage: Stockage
+  label_gitolite_storage_config: Configuration du stockage dans Gitolite
+
+  label_gitolite_global_storage_dir: Chemin de base des dépôts Gitolite
+  label_gitolite_global_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_recycle_bin_dir: Chemin de la corbeille Gitolite
+  label_gitolite_recycle_bin_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
+  label_gitolite_redmine_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+
+  # Gitolite Global Config
+  label_tab_global: Global
+  label_gitolite_global_config: Configuration globale du plugin
+
+  label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
+  label_gitolite_temp_dir_desc: (Doit être absolu)
+  label_gitolite_script_dir: Répertoire des scripts
+  label_gitolite_script_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
+
+  label_gitolite_config_file: Fichier de configuration de Gitolite
+  label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.
+  label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
+  label_gitolite_recycle_bin_expiration_time_desc: (En heures)
+
+  label_gitolite_log_level: Niveau de journalisation
+  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers
+  label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
+  label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
+  label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
+
+  label_debug: Débogue
+  label_info: Info
+  label_warn: Avertissement
+  label_error: Erreur
+
+  # Gitolite Access Config
+  label_tab_access: Accès
+  label_gitolite_access_config: Configuration des accès Gitolite
+
+  label_ssh_server_domain: Nom de domaine du serveur Gitolite
+  label_ssh_server_domain_desc: (pour les URLs SSH)
+  label_http_server_domain: Nom de domaine du serveur HTTP
+  label_http_server_domain_desc: (pour les URLs HTTP)
+  label_https_server_domain: Nom de domaine du serveur HTTPS
+  label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
+  label_http_server_subdir: Sous-répertoire pour l'accès HTTP
+  label_http_server_subdir_desc: (Relatif à la racine de Redmine)
+  label_show_repositories_url: Afficher les URL des dépôts
+
+  label_gitolite_daemon_by_default: Activer le daemon Git pour les nouveaux dépôts par défaut
+  label_gitolite_http_by_default: Activer le mode Smart HTTP pour les nouveaux dépôts par défaut
+
+  label_http_only: HTTP seulement
+  label_https_only: HTTPS seulement
+  label_https_and_http: HTTPS et HTTP
+
+  # Gitolite Hooks Config
+  label_tab_hooks: Hooks
+  label_gitolite_hooks_config: Configuration des hooks de Gitolite
+
+  label_gitolite_hooks_are_asynchronous: Lancer les hooks de manière asynchrone
+  label_gitolite_force_hooks_update: Forcer la mise à jour des hooks
+  label_gitolite_hooks_debug: Lancer les hooks en mode débogue
+  label_gitolite_hooks_installed: Hooks installés
+
+  # Gitolite Cache Config
+  label_tab_cache: Cache
+  label_gitolite_cache_config: Configuration du cache de Gitolite
+
+  label_gitolite_cache_max_time: Temps maximal du cache
+  label_gitolite_cache_max_size: Taille maximale d'un élément du cache
+  label_gitolite_cache_max_elements: Nombre maximal d'éléments dans le cache
+
+  # Gitolite Notifications
+  label_tab_notify: Notifications
+  label_gitolite_notify_config: Configuration des listes de diffusions de Git
+
+  label_gitolite_notify_by_default: Activer le hook « Notifications Git » pour les nouveaux dépôts par défaut
+  label_gitolite_notify_global_prefix: Préfixe global des notifications
+  label_gitolite_notify_global_sender_address: Adresse de l'expéditeur des notifications
+  label_gitolite_notify_global_include: Liste d'inclusion globale des notifications
+  label_gitolite_notify_global_exclude: Liste d'exclusion globale des notifications
+
+  # Redmine Config
+  label_tab_redmine: Redmine
+  label_redmine_config: Configuration de Redmine
+
+  label_all_projects_use_git: Créer automatiquement un dépôt Git pour les nouveaux projets
+  label_delete_git_repositories: Effacer les dépôts Git d'un projet quand celui-ci est effacé?<br/>(sera mis dans la corbeille)
+  label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
+  label_unique_repo_identifier: Les identifiants de dépôts sont unique
+
+  label_current_access_patterns: Modèles d'accès courant pour les dépôts
+  label_storage_directory: Répertoire de stockage
+  label_ssh_access: Accès SSH
+  label_http_access: Accès HTTPS
+
+  display_access_setup: "Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>. Avec la configuration courante, le dépôt <em>project3</em> a les propriétés suivantes :"
+  display_access_emphasis: "Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte."
+  display_access_hierarchical: "Les projets parents sont inclus dans l'URL, car le dépôt est en mode <em>Hiérarchique</em>."
+  display_access_flat: "Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>."
+
+  label_flat: Plat
+  label_hierarchical: Hiérarchique
+
+  # Sidekiq Config
+  label_gitolite_use_sidekiq: Utiliser Sidekiq pour lancer les taches en mode asynchrone
+
+  # Config Check
+  label_tab_config_test: Test de la Configuration
+  label_permissions_header: Permissions requises
+  label_sudo_redmine_to_gitolite_user: L'utilisateur Redmine peut sudo vers l'utilisateur Git?
+  label_sudo_gitolite_to_redmine_user: L'utilisateur Git peut sudo vers l'utilisateur Redmine?
+  label_unknown_gitolite_version: Version inconnue
+
+  label_tab_sidekiq_interface: Sidekiq
+
+  # Gitolite Rescue
+  label_tab_gitolite_rescue: Sauvetage
+  label_gitolite_rescue: Sauvetage de Gitolite
+
+  label_resync_all_projects: Resynchroniser tous les projets
+  label_resync_all_ssh_keys: Resynchroniser toutes les clés SSH

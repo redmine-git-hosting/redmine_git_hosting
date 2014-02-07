@@ -1,0 +1,12 @@
+en:
+
+  module_name: Redmine Git Hosting
+
+  activerecord:
+    errors:
+      messages:
+        'may not be changed': 'may not be changed'
+        cannot_change: "cannot be changed"
+        ident_not_unique: "matches existing repository identifier"
+        ident_cannot_equal_project: "cannot match identifier of existing project"
+        blank_default_exists: "Cannot make repository the default because current default has blank identifier."

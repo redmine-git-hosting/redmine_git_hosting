@@ -1,0 +1,111 @@
+/*
+PLUGIN ICONS
+*/
+#admin-menu a.redmine-git-hosting { background-image: url(../images/git_icon.png); }
+
+.icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
+.icon-push { background-image: url("../images/icon-divide.png"); }
+.icon-deployment-credentials { background-image: url("../images/textfield_key.png"); }
+.icon-post-receive-urls { background-image: url("../images/link.png"); }
+.icon-mirrors { background-image: url("../images/table_multiple.png"); }
+.icon-git-daemon { background-image: url("../images/changeset.png"); }
+.icon-git-smarthttp { background-image: url("../images/web.png"); }
+.icon-git-notify { background-image: url("../images/email.png"); }
+
+.icon-git { padding-right: 15px; }
+.icon-git-disabled { opacity: 0.5; }
+
+table.git_mailing_list { width: 100%; margin-top: 15px; }
+table.git_mailing_list th { width: 25%; }
+table.git_mailing_list td { text-align: center; }
+table.git_mailing_list td ul { padding-left: 0px; list-style-type: none; }
+
+
+/*
+PLUGIN SETTINGS
+*/
+.git_hosting_access_box {
+  border: 2px solid;
+  background-color: #dfffdf;
+  border-color: #9fcf9f;
+  color: #005f00;
+  margin: -6px;
+  padding: 4px;
+}
+.git_hosting_access_box p {
+  padding-left:100px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.git_hosting_access_box label {
+  margin-left: -100px;
+  width: 95px;
+}
+
+.git_hosting_access_box em {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 110%;
+  color: #467AA7;
+}
+
+
+/*
+REPOSITORY VIEW
+*/
+#sidebar li.repository.git {
+  background: url("../images/git_icon.png") no-repeat scroll 0 50% transparent;
+  margin: 10px 10px 10px 0;
+  padding-left: 25px;
+}
+
+#sidebar ul.repository.git {
+  padding-left: 15px;
+  list-style-type: none;
+}
+
+
+/*
+PUBLIC KEY
+*/
+.public_key_view {
+  background-color: #fff;
+  padding: 5px;
+}
+
+.public_key_view label {
+  font-weight: bold;
+  text-align: right;
+}
+
+.public_key_view .myhead {
+  font-style: italic;
+  color: #000;
+  size: 140%;
+  padding: 10px 10px 0px 0px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+.public_key_view p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  padding-top: 0px;
+}
+
+.public_key_view legend {
+  font-style: italic;
+  color: #000;
+  size: 130%;
+}
+
+
+/*
+MISC
+*/
+.spacer { display: block; height: 10px; clear: both; }
+
+td.buttons { width: 20%; }
+
+
+#key_type_options label { padding-left: 7px; }

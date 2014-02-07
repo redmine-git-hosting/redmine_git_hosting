@@ -1,0 +1,112 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'smoothness/jquery-ui.min.css',   :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'smoothness/jquery.ui.theme.css', :plugin => 'redmine_git_hosting' %>
+
+  <%= stylesheet_link_tag :jquery_tagit,     :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag :tagit_ui_zendesk, :plugin => 'redmine_git_hosting' %>
+
+  <%= javascript_include_tag :tag_it,        :plugin => 'redmine_git_hosting' %>
+
+  <script type="text/javascript">
+
+    function push_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('#ref_spec_options').hide();
+      } else {
+        $('#ref_spec_options').show();
+      }
+    }
+
+    function key_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('#new_key_window').show();
+      } else {
+        $('#new_key_window').hide();
+      }
+    }
+
+    // Init dialog box in closed mode, a click will open it
+    function initJqueryModalBox(target, type){
+      var buttons_list = {};
+
+      if (type == 'delete') {
+        buttons_list['<%= l(:button_delete) %>'] = function(){$('#' + target + ' > form').submit();};
+        buttons_list['<%= l(:button_cancel) %>'] = function(){$(this).dialog('close');};
+      } else if (type == 'add') {
+        buttons_list['<%= l(:button_save) %>'] = function(){$('#' + target + ' > form').submit();};
+        buttons_list['<%= l(:button_cancel) %>'] = function(){$(this).dialog('close');};
+      } else if (type == 'close_only') {
+        buttons_list['<%= l(:button_close) %>'] = function(){$(this).dialog('close');};
+      }
+
+      $('#' + target).dialog({
+        resizable: false,
+        autoOpen: false,
+        height: 'auto',
+        width: 'auto',
+        position: ['center', 'center'],
+        modal: true,
+        buttons: buttons_list,
+      });
+    }
+
+    // Bind links on Dialog box
+    function setUpJqueryModalBox(source, target) {
+      $(source).each(function() {
+        $(this).on('click', function() {
+          var title = $(this).html();
+          $.get($(this).attr('href'), function(data){
+            $('#' + target).html(data);
+            $('#' + target).dialog('option', 'title', title);
+            $('#' + target).dialog('open');
+          });
+          return false;
+        });
+      });
+    }
+
+    // Bind list to TagIt
+    function loadTagIt(target, autocomplete){
+      if (autocomplete == true){
+        $('#' + target).gtagit({
+          autocomplete: {source: function(request, resolve) {
+              // fetch new values with request.resolve
+              resolve(mailing_list_default_users);
+            }
+          },
+          afterTagAdded: function(event, ui) {
+            var value = ui.tag.children('input:hidden').val();
+            mailing_list_default_users = mailing_list_default_users.filter(function(v) { return v != value;});
+            $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+          },
+          afterTagRemoved: function(event, ui) {
+            var value = ui.tag.children('input:hidden').val();
+            mailing_list_default_users.push(value);
+            $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+          },
+          showAutocompleteOnFocus: true,
+          placeholderText: '+ add email',
+          allowDuplicates: false,
+          caseSensitive: false,
+          fieldName: 'repository_git_notifications[' + target + '][]',
+        });
+      } else {
+        $('#' + target).gtagit({
+          placeholderText: '+ add email',
+          allowDuplicates: false,
+          caseSensitive: false,
+          fieldName: 'repository_git_notifications[' + target + '][]',
+        });
+      }
+    }
+
+    $(window).resize(function() {
+      $(".ui-dialog-content").dialog("option", "position", ['center', 'center']);
+    });
+  </script>
+
+<% end %>

@@ -1,0 +1,14 @@
+<%
+  gitolite_resync_all_projects = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_resync_all_projects].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_resync_all_projects] : false
+  gitolite_resync_all_ssh_keys = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_resync_all_ssh_keys].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_resync_all_ssh_keys] : false
+%>
+
+<p>
+  <label><%= l(:label_resync_all_projects) %></label>
+  <%= check_box_tag "settings[gitolite_resync_all_projects]", true, gitolite_resync_all_projects %>
+</p>
+
+<p>
+  <label><%= l(:label_resync_all_ssh_keys) %></label>
+  <%= check_box_tag "settings[gitolite_resync_all_ssh_keys]", true, gitolite_resync_all_ssh_keys %>
+</p>

@@ -1,0 +1,15 @@
+<% if !@is_xhr %>
+  <h2><%=l(:label_post_receive_url_edit)%></h2>
+<% end %>
+
+<%= labelled_form_for :repository_post_receive_urls, @post_receive_url,
+                      :url  => repository_post_receive_url_path(@repository, @post_receive_url),
+                      :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <% if !@is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>

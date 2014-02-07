@@ -1,0 +1,42 @@
+<h3><%= l(:label_permissions_header) %></h3>
+
+<p>
+  <label><%= l(:label_sudo_gitolite_to_redmine_user) %></label>
+  <% sudo_gitolite_to_redmine_user = GitHosting.sudo_gitolite_to_redmine_user %>
+  <%= image_tag((sudo_gitolite_to_redmine_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+  <em><%= (sudo_gitolite_to_redmine_user == true ? '' : sudo_gitolite_to_redmine_user) %></em>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_sudo_redmine_to_gitolite_user) %></label>
+  <% sudo_redmine_to_gitolite_user = GitHosting.sudo_redmine_to_gitolite_user %>
+  <%= image_tag((sudo_redmine_to_gitolite_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+  <em><%= (sudo_redmine_to_gitolite_user == true ? '' : sudo_redmine_to_gitolite_user) %></em>
+  <br />
+</p>
+
+<p>
+  <label>PATH Directories</label>
+  <br/>
+<pre>
+<%= raw (ENV['PATH']).gsub(/:/, "<br/>") %>
+</pre>
+  <br/>
+</p>
+
+<p>
+  <label>Gitolite Version : <%=
+    gitolite_version = GitHosting.gitolite_version
+    if gitolite_version <= 0
+      l(:label_unknown_gitolite_version)
+    else
+      gitolite_version
+    end
+  %></label>
+  <br/>
+<pre>
+<%= raw GitHosting.gitolite_banner %>
+</pre>
+  <br/>
+</p>

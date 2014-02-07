@@ -1,0 +1,72 @@
+<div id="validation_messages_git_notification"><%= error_messages_for 'git_notification' %></div>
+
+<div class="box tabular">
+
+  <p><%= f.text_field :prefix, :label => :label_gitolite_notify_prefix %></p>
+  <p><%= f.text_field :sender_address, :label => :label_gitolite_notify_sender_address %></p>
+
+  <input type="hidden" name="repository_git_notifications[include_list][]" value="" style="display:none;">
+  <input type="hidden" name="repository_git_notifications[exclude_list][]" value="" style="display:none;">
+
+  <p><label for="repository_git_notifications[include_list]"><%= l(:label_git_notification_include_list) %> :</label></p>
+  <ul id="include_list">
+    <% if !@repository.git_notification.nil? && @repository.git_notification.include_list.any? %>
+      <% @repository.git_notification.include_list.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+  <p><label for="repository_git_notifications[exclude_list]"><%= l(:label_git_notification_exclude_list) %> :</label></p>
+  <ul id="exclude_list">
+    <% if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any? %>
+      <% @repository.git_notification.exclude_list.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+</div>
+
+<%= javascript_tag do %>
+  var mailing_list_default_users = <%= raw @repository.mailing_list_default_users.to_json %>;
+
+  function loadTagIt(target, autocomplete){
+    if (autocomplete == true){
+      $('#' + target).gtagit({
+        autocomplete: {source: function(request, resolve) {
+            // fetch new values with request.resolve
+            resolve(mailing_list_default_users);
+          }
+        },
+        afterTagAdded: function(event, ui) {
+          var value = ui.tag.children('input:hidden').val();
+          mailing_list_default_users = mailing_list_default_users.filter(function(v) { return v != value;});
+          $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+        },
+        afterTagRemoved: function(event, ui) {
+          var value = ui.tag.children('input:hidden').val();
+          mailing_list_default_users.push(value);
+          $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+        },
+        showAutocompleteOnFocus: true,
+        placeholderText: '+ add email',
+        allowDuplicates: false,
+        caseSensitive: false,
+        fieldName: 'repository_git_notifications[' + target + '][]',
+      });
+    } else {
+      $('#' + target).gtagit({
+        placeholderText: '+ add email',
+        allowDuplicates: false,
+        caseSensitive: false,
+        fieldName: 'repository_git_notifications[' + target + '][]',
+      });
+    }
+  }
+
+  $(document).ready(function() {
+    loadTagIt('include_list', false);
+    loadTagIt('exclude_list', true);
+  });
+<% end %>

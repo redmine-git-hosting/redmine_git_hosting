@@ -1,0 +1,9 @@
+# We do not install contexts as part of the policy, since it is likely
+# to be overridden by the local policy for parent directories.  The rakefile
+# ( ../tasks/selinux.rake) will install file contexts "manually".
+# 
+# If you really want to install a file context, uncomment the following
+# and rerun the install script or rake task
+#
+# /.*/redmine/vendor/plugins/redmine_git_hosting/bin(/.*)?  httpd_redmine_git_script_exec_t
+

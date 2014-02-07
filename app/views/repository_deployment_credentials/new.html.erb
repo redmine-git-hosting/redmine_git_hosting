@@ -1,0 +1,15 @@
+<% if !@is_xhr %>
+  <h2><%=l(:label_deployment_credential_create)%></h2>
+<% end %>
+
+<%= labelled_form_for :repository_deployment_credentials, @credential,
+                      :url  => { :controller => 'repository_deployment_credentials', :action => 'create', :repository_id => @repository.id, :id => @credential.id },
+                      :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <% if !@is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>

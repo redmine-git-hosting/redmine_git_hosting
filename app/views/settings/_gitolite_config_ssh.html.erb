@@ -1,0 +1,34 @@
+<%
+  # Gitolite SSH Config
+  gitolite_user            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_user].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_user] : 'git'
+  gitolite_server_port     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_server_port].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_server_port] : '22'
+  gitolite_ssh_private_key = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key] : File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s
+  gitolite_ssh_public_key  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key].nil?)  ? Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key] : File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s
+  scripts_dir_writeable    = GitHosting.scripts_dir_writeable?(:reset)
+%>
+
+<h3><%= l(:label_gitolite_ssh_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_user) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !scripts_dir_writeable %></label>
+  <%= text_field_tag("settings[gitolite_user]", gitolite_user, :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_ssh_private_key) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !scripts_dir_writeable %></label>
+  <%= text_field_tag("settings[gitolite_ssh_private_key]", gitolite_ssh_private_key, :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_ssh_public_key) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !scripts_dir_writeable %></label>
+  <%= text_field_tag("settings[gitolite_ssh_public_key]", gitolite_ssh_public_key, :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_server_port) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !scripts_dir_writeable %></label>
+  <%= text_field_tag("settings[gitolite_server_port]", gitolite_server_port, :size => 5) %>
+  <br />
+</p>

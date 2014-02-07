@@ -1,0 +1,144 @@
+fr:
+
+
+  ########### MIRRORS ###########
+  # Basics labels
+  label_repository_mirrors: Miroirs du dépôt
+  label_mirror_add: Ajouter un miroir de dépôt
+  label_mirror_create: Créer un miroir de dépôt
+  label_mirror_edit: Modifier un miroir de dépôt
+  label_mirror_delete: Supprimer un miroir de dépôt
+
+  # Basics notices
+  notice_mirror_created: Miroir crée avec succès.
+  notice_mirror_updated: Miroir modifié avec succès.
+  notice_mirror_deleted: Miroir supprimé avec succès.
+  notice_mirror_create_failed: Échec de création du miroir.
+  notice_mirror_update_failed: Échec de modification du miroir.
+
+  # Misc
+  label_mirror_push_mode: Mode de mise à jour du miroir
+  label_mirror_full_mirror: Miroir complet
+  label_mirror_forced_update: Forcer la mise à jour du miroir
+  label_mirror_fast_forward: Avance rapide (non forcé)
+
+  label_mirror_inactive: Inactif
+  label_mirror_help: Le miroir doit donner les droits d'écriture à la clé publique suivante
+
+  label_mirror_push_title: Envoyer au miroir
+  label_mirror_push_info_html: "Envoie des changements au miroir <b>%{mirror_url}</b> ... %{status}"
+  label_mirror_push_output: 'Sortie:'
+  label_mirror_push_sucess: Succès.
+  label_mirror_push_fail: Échec!
+
+  label_mirror: Miroir
+  label_mirror_push: Envoyer
+  label_mirror_refspec: Refspec
+  label_mirror_include_all_branches: Envoyer toutes les branches
+  label_mirror_include_all_tags: Envoyer toutes les étiquettes
+  label_mirror_explicit_refspec: Spécification de références explicites
+  label_mirror_url_accepted_format: Formats d'URL acceptés
+
+  all_references: "Toutes&nbsp;les&nbsp;références"
+  all_branches: "Toutes&nbsp;les&nbsp;branches"
+  all_tags: "Toutes&nbsp;les&nbsp;étiquettes"
+
+
+  ########### DEPLOYMENT CREDENTIALS ###########
+  # Basics labels
+  label_deployment_credentials: Pièces d'identités de déploiement
+  label_deployment_credential_add: Ajouter une pièce d'identité de déploiement
+  label_deployment_credential_create: Créer une nouvelle pièce d'identité de déploiement
+  label_deployment_credential_edit: Modifier la pièce d'identité de déploiement
+  label_deployment_credential_delete: Supprimer la pièce d'identité de déploiement
+
+  # Basics notices
+  notice_deployment_credential_created: La pièce d'identité de déploiement a été créée avec succès.
+  notice_deployment_credential_updated: La pièce d'identité de déploiement a été modifiée avec succès.
+  notice_deployment_credential_deleted: La pièce d'identité de déploiement a été supprimée avec succès.
+  notice_deployment_credential_deleted_with_key: La pièce d'identité de déploiement et la clé associée ont été supprimées avec succès.
+  notice_deployment_credential_create_failed: Échec de création de la pièce d'identité de déploiement
+  notice_deployment_credential_update_failed: Échec de modification de la pièce d'identité de déploiement
+
+  # Basics fields
+  field_perm: Permissions d'accès
+
+  # Misc
+  label_deployment_credential_create_key_first: Aucune clé de déploiement n'a été détectée. Vous devriez commencer par en créer une.
+  label_deployment_credential_permissions: Permissions d'accès
+  label_deployment_credential_delete_when_unused: Effacer la clé quand elle n'est plus utilisée
+  label_deployment_credential_select_deploy_key: Sélectionnez une clé de déploiement
+
+  label_deployment_credential_owner: Propriétaire
+  label_deployment_credential_public_key_name: Nom de la clé publique
+  label_deployment_credential_public_key_file: Fichier de la clé publique
+  label_deployment_credential_permissions: Permissions
+  label_deployment_credential_honored: Honorée?
+  label_deployment_credential_active: Activée?
+
+  select_other_keys: Autres clés
+
+
+  ########### GIT NOTIFICATIONS ###########
+  # Basics labels
+  label_git_notifications: Liste de distribution git
+  label_git_notifications_add: Ajouter une liste de distribution git
+  label_git_notifications_create: Créer une liste de distribution git
+  label_git_notifications_edit: Modifier la liste de distribution git
+  label_git_notifications_delete: Effacer la liste de distribution git
+
+  # Basics notices
+  notice_git_notifications_created: Liste de distribution créée avec succès
+  notice_git_notifications_updated: Liste de distribution modifiée avec succès
+  notice_git_notifications_deleted: Liste de distribution effacée avec succès
+  notice_git_notifications_create_failed: Échec de création de la liste de distribution
+  notice_git_notifications_update_failed: Échec de modification de la liste de distribution
+
+  # Misc
+  label_git_notification_include_list: Liste d'inclusion
+  label_git_notification_exclude_list: Liste d'exclusion
+  label_git_notification_default_list: Liste par défaut
+  label_git_notification_effective_list: Liste effective
+
+  label_gitolite_notify_prefix: Préfixe de la liste de distribution git
+  label_gitolite_notify_sender_address: Adresse de l'expéditeur de la liste de distribution git
+
+  # Gitolite Hooks
+  error_project_not_found: "Aucun projet avec l'identifiant « %{identifier} » n'a été trouvé."
+
+
+  ########### POST RECEIVE URL ###########
+  # Basics labels
+  label_post_receive_urls: URL après réception
+  label_post_receive_url_add: Ajouter une URL après réception
+  label_post_receive_url_create: Créer une URL après réception
+  label_post_receive_url_edit: Modifier l'URL après réception
+  label_post_receive_url_delete: Supprimer l'URL après réception
+
+  # Basics notices
+  notice_post_receive_url_created: L'URL après réception a été créé avec succès.
+  notice_post_receive_url_updated: L'URL après réception a été modifié avec succès.
+  notice_post_receive_url_deleted: L'URL après réception a été supprimée avec succès.
+  notice_post_receive_url_create_failed: Échec de création de l'URL après réception.
+  notice_post_receive_url_update_failed: Échec de modification de l'URL après réception.
+
+  # Basics fields
+  field_mode: Mode
+
+  # Misc
+  label_github_post: "POST&nbsp;GitHub"
+  label_empty_get: "GET&nbsp;vide"
+
+
+  ########### MISCELANOUS ###########
+  label_enabled: Activé
+  label_disabled: Désactivé
+  label_true: Vrai
+  label_false: Faux
+  label_yes: Oui
+  label_no: Non
+  label_backup_in_progress: Enregistrement...
+  label_delete_in_progress: Effacement...
+  label_url: URL
+  label_mode: Mode
+  button_ok: OK

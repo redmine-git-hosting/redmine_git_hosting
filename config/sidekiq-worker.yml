@@ -1,0 +1,10 @@
+---
+:environment: production
+:daemon: true
+:concurrency: 1
+:pidfile: tmp/pids/worker_redmine_git_hosting.pid
+:logfile: log/worker_redmine_git_hosting.log
+:require: ./
+:verbose: true
+:queues:
+  - [git_hosting, 1]

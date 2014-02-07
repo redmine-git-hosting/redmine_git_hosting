@@ -1,0 +1,80 @@
+<div>
+
+  <% if can_create_deployment_keys(@project) %>
+    <div class="contextual">
+      <%
+        if !@user_keys.empty? || !@other_keys.empty?
+          css_class = 'modal-box'
+        else
+          css_class = 'modal-box-close-only'
+        end
+      %>
+
+      <%= link_to(l(:label_deployment_credential_add), new_repository_deployment_credential_path(@repository),
+                                                       :class => "icon icon-add #{css_class}") %>
+    </div>
+  <% end %>
+
+  <h3><%= l(:label_deployment_credentials) %></h3>
+
+  <% if @repository_deployment_credentials.any? %>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><%= l(:label_deployment_credential_owner) %></th>
+          <th><%= l(:label_deployment_credential_public_key_name) %></th>
+          <th><%= l(:label_deployment_credential_public_key_file) %></th>
+          <th><%= l(:label_deployment_credential_permissions) %></th>
+          <th><%= l(:label_deployment_credential_honored) %></th>
+          <th><%= l(:label_deployment_credential_active) %></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @repository_deployment_credentials.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |credential| %>
+          <tr>
+            <td> <%= credential.user.login %> </td>
+            <td>
+              <% if credential.user == User.current %>
+                <%= link_to(credential.gitolite_public_key.title, url_for(:controller => 'my', :action => 'account', :public_key_id => credential.gitolite_public_key.id)) %>
+              <% elsif User.current.admin? %>
+                <%= link_to(credential.gitolite_public_key.title, url_for(:controller => 'users', :action => 'edit', :id => credential.gitolite_public_key.user.id, :public_key_id => credential.gitolite_public_key.id, :tab => 'keys')) %>
+              <% else %>
+                <%= credential.gitolite_public_key.title %>
+              <% end %>
+            </td>
+            <td><%= "keydir/#{credential.gitolite_public_key.identifier}.pub" %></td>
+            <td><%= credential.perm %></td>
+            <td><%= checked_image credential.honored? %></td>
+            <td><%= checked_image credential.active? %></td>
+            <td class="buttons">
+              <% if can_edit_deployment_keys(@project) && (User.current.admin? || User.current == credential.user) %>
+
+                <%= link_to l(:button_edit), edit_repository_deployment_credential_path(@repository, credential),
+                                             :class => 'icon icon-edit modal-box' %>
+
+                <%= link_to l(:button_delete), repository_deployment_credential_path(@repository, credential),
+                                               :remote  => true,
+                                               :method  => :delete,
+                                               :confirm => l(:text_are_you_sure),
+                                               :class   => 'icon icon-del' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+    <p class="nodata"><%=l(:label_no_data)%></p>
+  <% end %>
+
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    initModalBoxes(modals);
+  });
+<% end %>

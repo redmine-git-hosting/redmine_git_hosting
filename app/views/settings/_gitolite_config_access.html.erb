@@ -1,0 +1,63 @@
+<%
+  # Gitolite Access Config
+  ssh_server_domain     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:ssh_server_domain].nil?)     ? Setting.plugin_redmine_git_hosting[:ssh_server_domain] : 'localhost'
+  http_server_domain    = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:http_server_domain].nil?)    ? Setting.plugin_redmine_git_hosting[:http_server_domain] : 'localhost'
+  https_server_domain   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:https_server_domain].nil?)   ? Setting.plugin_redmine_git_hosting[:https_server_domain] : ''
+  http_server_subdir    = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:http_server_subdir].nil?)    ? Setting.plugin_redmine_git_hosting[:http_server_subdir] : ''
+  show_repositories_url = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:show_repositories_url].nil?) ? Setting.plugin_redmine_git_hosting[:show_repositories_url] : true
+
+  gitolite_daemon_by_default = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default] : 0
+  gitolite_http_by_default   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_http_by_default].nil?)   ? Setting.plugin_redmine_git_hosting[:gitolite_http_by_default] : 1
+%>
+
+<h3><%= l(:label_gitolite_access_config) %></h3>
+
+<p>
+  <label><%= l(:label_ssh_server_domain) %></label>
+  <%= text_field_tag("settings[ssh_server_domain]", ssh_server_domain, :size => 60) %>
+  <br />
+  <em><%= l(:label_ssh_server_domain_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_http_server_domain) %></label>
+  <%= text_field_tag("settings[http_server_domain]", http_server_domain, :size => 60) %>
+  <br />
+  <em><%= l(:label_http_server_domain_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_https_server_domain) %></label>
+  <%= text_field_tag("settings[https_server_domain]", https_server_domain, :size => 60) %>
+  <br />
+  <em><%= l(:label_https_server_domain_desc) %></em>
+</p>
+
+<p>
+  <label><%= raw l(:label_http_server_subdir) %></label>
+  <%= text_field_tag("settings[http_server_subdir]", "./#{http_server_subdir}", :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_show_repositories_url) %></label>
+  <%= select_tag("settings[show_repositories_url]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], show_repositories_url)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_daemon_by_default) %></label>
+  <%= select_tag("settings[gitolite_daemon_by_default]", options_for_select([ [l(:label_true), '1'], [l(:label_false), '0']], gitolite_daemon_by_default)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_http_by_default) %></label>
+  <%= select_tag("settings[gitolite_http_by_default]", options_for_select([
+                                                                            [l(:label_disabled), "0"],
+                                                                            [l(:label_http_only), "3"],
+                                                                            [l(:label_https_only), "1"],
+                                                                            [l(:label_https_and_http), "2"]
+                                                                          ], gitolite_http_by_default)) %>
+  <br />
+</p>

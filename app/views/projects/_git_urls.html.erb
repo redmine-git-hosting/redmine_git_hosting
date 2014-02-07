@@ -1,0 +1,78 @@
+<% if project.repository && project.repository.is_a?(Repository::Git) %>
+  <% if User.current.allowed_to?(:browse_repository, project) %>
+
+    <% if (project.module_enabled?(:repository) && RedmineGitolite::Config.show_repositories_url?) && ((!User.current.anonymous?) || project.repository.extra[:git_http] != 0 || (project.is_public && project.repository.extra[:git_daemon] != 0 )) %>
+      <div class="git-hosting box">
+        <% if project.repositories.count > 1 %>
+          <h3>Default Git Repository</h3>
+        <% else %>
+          <h3>Git Repository</h3>
+        <% end %>
+
+        <% if !project.repository.available_urls.empty? %>
+          <div id="git_url_box">
+
+            <div id="clipboard_container">
+              <div id="clipboard_button" data-clipboard-target="git_url_text" title="<%= l(:label_copy_to_clipboard) %>">
+                <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
+              </div>
+            </div>
+
+            <ul id="git_url_list" >
+              <% project.repository.available_urls.each do |key, value| %>
+                <li id="git_url_<%= key %>" >
+                  <a href="javascript:void(0)"><%= key.upcase %></a>
+                </li>
+              <% end %>
+            </ul>
+
+            <input id="git_url_text" readonly="readonly" />
+          </div>
+
+          <span  id="git_url_desc">This URL has <span id="git_url_permissions">Read-Only</span> access.</span>
+        <% else %>
+          <div id="git_url_box">
+            <%= raw l(:label_repository_access_not_configured) %>
+          </div>
+        <% end %>
+
+      </div>
+    <% end %>
+
+  <% end %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag    'git_urls',                   :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'plugins/zero_clipboard_min', :plugin => 'redmine_git_hosting' %>
+
+  <%= javascript_tag do %>
+    var urls = [];
+
+    <% project.repository.available_urls.each do |key, value| %>
+    urls["git_url_<%= key %>"] = [encodeURI("<%= j value[:url] %>"), <%= j value[:commiter] %> ];
+    <% end %>
+
+    $(document).ready(function() {
+      ZeroClipboard.config({ moviePath: "<%= plugin_asset_link('ZeroClipboard.swf') %>" });
+      var client = new ZeroClipboard($('#clipboard_button'));
+
+      $('#git_url_list li').first().addClass('selected');
+      var key = $('#git_url_list li').first().attr('id');
+      var text = urls[key];
+
+      $('#git_url_text').val(text[0]);
+      $("#git_url_permissions").html(text[1] ? "Read+Write" : "Read-Only");
+
+      $('#git_url_list li').on('click', function(){
+        var key  = $(this).attr('id');
+        var text = urls[key];
+
+        $('#git_url_list li').removeClass('selected');
+        $(this).addClass('selected');
+        $('#git_url_text').val(text[0]);
+        $("#git_url_permissions").html(text[1] ? "Read+Write" : "Read-Only");
+      });
+    });
+  <% end %>
+<% end %>

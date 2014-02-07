@@ -1,0 +1,72 @@
+<%
+  # Gitolite Notifications Config
+  gitolite_notify_by_default            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default] : 1
+  gitolite_notify_global_prefix         = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix].nil?)         ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix] : '[REDMINE]'
+  gitolite_notify_global_sender_address = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address] : Setting.mail_from.to_s.strip.downcase
+  gitolite_notify_global_include        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include] : []
+  gitolite_notify_global_exclude        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude] : []
+%>
+
+<h3><%= l(:label_gitolite_notify_config) %></h3>
+
+<p>
+  <label><%= l(:label_gitolite_notify_by_default) %></label>
+  <%= select_tag("settings[gitolite_notify_by_default]", options_for_select([ [l(:label_true), '1'], [l(:label_false), '0']], gitolite_notify_by_default)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_notify_global_prefix) %></label>
+  <%= text_field_tag("settings[gitolite_notify_global_prefix]", gitolite_notify_global_prefix, :size => 60) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_notify_global_sender_address) %></label>
+  <%= text_field_tag("settings[gitolite_notify_global_sender_address]", gitolite_notify_global_sender_address, :size => 60) %>
+  <br />
+</p>
+
+<input type="hidden" name="settings[gitolite_notify_global_include][]" value="" style="display:none;">
+<input type="hidden" name="settings[gitolite_notify_global_exclude][]" value="" style="display:none;">
+
+<p>
+  <label><%= l(:label_gitolite_notify_global_include) %></label>
+  <ul id="gitolite_notify_global_include">
+    <% if gitolite_notify_global_include.any? %>
+      <% gitolite_notify_global_include.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_notify_global_exclude) %></label>
+  <ul id="gitolite_notify_global_exclude">
+    <% if gitolite_notify_global_exclude.any? %>
+      <% gitolite_notify_global_exclude.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+  <br />
+</p>
+
+<script type="text/javascript">
+
+  function loadTagIt(target){
+    $('#' + target).gtagit({
+      placeholderText: '+ add email',
+      allowDuplicates: false,
+      caseSensitive: false,
+      fieldName: 'settings[' + target + '][]',
+    });
+  }
+
+  $(document).ready(function() {
+    loadTagIt('gitolite_notify_global_include');
+    loadTagIt('gitolite_notify_global_exclude');
+  });
+</script>

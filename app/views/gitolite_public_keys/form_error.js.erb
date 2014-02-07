@@ -1,0 +1,3 @@
+$('#validation_messages').replaceWith("<%= escape_javascript(error_messages_for 'gitolite_public_key') %>");
+$('div.notice').each(function() { $(this).hide(); });
+$('#cancel_button_div').show();

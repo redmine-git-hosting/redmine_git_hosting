@@ -1,0 +1,38 @@
+<%
+  # Redmine Config
+  all_projects_use_git        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:all_projects_use_git].nil?)       ? Setting.plugin_redmine_git_hosting[:all_projects_use_git] : false
+  delete_git_repositories     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:delete_git_repositories].nil?)    ? Setting.plugin_redmine_git_hosting[:delete_git_repositories] : true
+  hierarchical_organisation   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:hierarchical_organisation].nil?)  ? Setting.plugin_redmine_git_hosting[:hierarchical_organisation] : true
+  unique_repo_identifier      = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:unique_repo_identifier].nil?)     ? Setting.plugin_redmine_git_hosting[:unique_repo_identifier] : false
+%>
+
+<h3><%= l(:label_redmine_config) %></h3>
+
+<p>
+  <label><%= l(:label_all_projects_use_git) %></label>
+  <%= select_tag("settings[all_projects_use_git]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], all_projects_use_git)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= raw l(:label_delete_git_repositories) %></label>
+  <%= select_tag("settings[delete_git_repositories]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], delete_git_repositories)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= raw l(:label_hierarchical_organisation) %></label>
+  <%= select_tag("settings[hierarchical_organisation]", options_for_select([[l(:label_hierarchical), 'true'], [l(:label_flat), 'false']], hierarchical_organisation)) %>
+  <br />
+</p>
+
+<p>
+  <label><%= l(:label_unique_repo_identifier) %></label>
+  <%= select_tag("settings[unique_repo_identifier]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], unique_repo_identifier)) %>
+  <br />
+</p>
+
+<br/>
+<br/>
+
+<%= render :partial => "gitolite_display_access" %>

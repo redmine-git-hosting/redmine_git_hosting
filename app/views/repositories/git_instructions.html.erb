@@ -1,0 +1,61 @@
+<%# This is used to display basic git setup instructions, like on github... %>
+<% flash.now[:warning] = "Repository is empty. Get started by following the instructions below." %>
+
+<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository, :project => @project} %>
+
+<div class="box">
+
+  <br />
+
+  <h2><%= l(:label_help_git_setup) %> :</h2>
+  <pre>
+    <a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
+    git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
+    git config --global user.email <%= User.current.mail ? User.current.mail : "mail@example.com" %>
+    <% if !User.current.anonymous? && User.current.gitolite_public_keys.active.length == 0 %>
+    <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'} %>
+    <% end %>
+  </pre>
+
+  <% if User.current.allowed_to?(:commit_access, @project) %>
+  <div id="repository_setup">
+  <h2><%= l(:label_help_repository_setup_new) %> :</h2>
+  <pre>
+    mkdir <%= @repository.git_name %>
+    cd <%= @repository.git_name %>
+    git init
+    touch readme.txt
+    git add readme.txt
+    git commit -m 'Initializing <%= @repository.git_label %> repository'
+    git remote add origin <span class="git_url_access"></span>
+    git push -u origin master
+  </pre>
+
+  <h2><%= l(:label_help_repository_setup_existing) %> :</h2>
+  <pre>
+    cd existing_git_repo
+    git remote add origin <span class="git_url_access"></span>
+    git push -u origin master
+  </pre>
+  </div>
+  <% end %>
+
+  <h2><%= l(:label_help_repository_clone) %> :</h2>
+  <pre>
+    git clone <span class="git_url_access"></span>
+  </pre>
+
+</div>
+
+<% if @repositories.size > 1 %>
+  <% content_for :sidebar do %>
+    <h3><%= l(:label_repository_plural) %></h3>
+    <ul class="repository git">
+      <% @repositories.sort.each do |repo| %>
+          <li class="repository git"><%= link_to h(repo.name), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
+                                        :class => 'repository git' + (repo == @repository ? ' selected' : '') %>
+          </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

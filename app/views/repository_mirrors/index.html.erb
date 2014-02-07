@@ -1,0 +1,96 @@
+<div>
+
+  <% if can_create_mirrors(@project) %>
+    <div class="contextual">
+      <%= link_to l(:label_mirror_add), new_repository_mirror_path(@repository),
+                                        :class => 'icon icon-add modal-box' %>
+    </div>
+  <% end %>
+
+  <h3><%= l(:label_repository_mirrors) %></h3>
+
+  <% if @repository_mirrors.any? %>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><%= l(:label_url) %></th>
+          <th><%= l(:label_mirror_refspec) %></th>
+          <th><%= l(:label_mode) %></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @repository_mirrors.each do |mirror| %>
+          <tr>
+            <td><%= mirror.url %></td>
+
+            <td><%= refspec(mirror, 64).html_safe %></td>
+
+            <td>
+              <%= mirror_mode(mirror).html_safe %><br/>
+              <%= checked_image mirror.active? %>
+            </td>
+
+            <td class="buttons">
+              <% if can_edit_mirrors(@project) %>
+
+                <% if mirror.active == 1 -%>
+                  <%= link_to l(:label_mirror_push), push_to_mirror_path(@repository, mirror),
+                                                     :title => l(:label_mirror_push_title),
+                                                     :alt   => l(:label_mirror_push_title),
+                                                     :class => 'icon icon-push modal-box-close-only' %>
+                <% end %>
+
+                <%= link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror),
+                                             :class => 'icon icon-edit modal-box' %>
+
+                <%= link_to l(:button_delete), repository_mirror_path(@repository, mirror),
+                                               :remote  => true,
+                                               :method  => :delete,
+                                               :confirm => l(:text_are_you_sure),
+                                               :class   => 'icon icon-del' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+    <p class="nodata"><%=l(:label_no_data)%></p>
+  <% end %>
+
+  <div class="spacer"></div>
+
+  <% mirror_pubkey = GitHosting.mirror_push_public_key %>
+
+  <div style="margin: 2px 3px; width: 99%;">
+
+    <div id="clipboard_container">
+      <div id="clipboard_button" data-clipboard-target="mirror_pubkey" title="<%= l(:label_copy_to_clipboard) %>" style="float: left;">
+        <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
+      </div>
+
+      <span style="margin-left: 10px;" ><%= l(:label_mirror_help) %> :</span>
+    </div>
+
+    <div class="spacer"></div>
+
+    <textarea id="mirror_pubkey" readonly="readonly" style="height: 100px; width: 99%; font-family: sans-serif;"><%= mirror_pubkey %></textarea>
+
+  </div>
+
+  <div class="spacer"></div>
+
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    initModalBoxes(modals);
+
+    ZeroClipboard.config({ moviePath: "<%= plugin_asset_link('ZeroClipboard.swf') %>" });
+    var client = new ZeroClipboard($('#clipboard_button'));
+  });
+<% end %>

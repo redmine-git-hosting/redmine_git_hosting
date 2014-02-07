@@ -1,0 +1,90 @@
+<h2><%= l(:label_repository) %></h2>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'git_urls',                         :plugin => 'redmine_git_hosting' %>
+
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_switch',       :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_git_hosting' %>
+
+  <%= stylesheet_link_tag 'tag_it/jquery_tagit',              :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'tag_it/tagit_ui_zendesk',          :plugin => 'redmine_git_hosting' %>
+
+  <%= javascript_include_tag 'plugins/bootstrap_switch',      :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'plugins/bootstrap_transitions', :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'plugins/tag_it',                :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'plugins/zero_clipboard_min',    :plugin => 'redmine_git_hosting' %>
+
+  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_git_hosting' %>
+<% end %>
+
+
+<%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put} do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f} %>
+<% end %>
+
+
+<% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
+
+  <div id="repository-tabs">
+    <ul>
+      <% if can_view_git_notifications(@repository.project) %>
+        <li><a href="<%= repository_deployment_credentials_path(@repository) %>"><%= l(:label_deployment_credentials) %></a></li>
+      <% end %>
+
+      <% if can_view_deployment_keys(@repository.project) %>
+        <li><a href="<%= repository_git_notifications_path(@repository) %>"><%= l(:label_git_notifications) %></a></li>
+      <% end %>
+
+      <% if can_view_post_receive_urls(@repository.project) %>
+        <li><a href="<%= repository_mirrors_path(@repository) %>"><%= l(:label_repository_mirrors) %></a></li>
+      <% end %>
+
+      <% if can_view_mirrors(@repository.project) %>
+        <li><a href="<%= repository_post_receive_urls_path(@repository) %>"><%= l(:label_post_receive_urls) %></a></li>
+      <% end %>
+    </ul>
+  </div>
+
+<% end %>
+
+
+<div id="modal-box"></div>
+<div id="modal-box-close-only"></div>
+
+
+<%= javascript_tag do %>
+  function push_mode_change(elem) {
+    if (!elem) return;
+    var idx = elem.selectedIndex;
+    if (idx == 0) {
+      $('#ref_spec_options').hide();
+    } else {
+      $('#ref_spec_options').show();
+    }
+  }
+
+  function key_mode_change(elem) {
+    if (!elem) return;
+    var idx = elem.selectedIndex;
+    if (idx == 0) {
+      $('#new_key_window').show();
+    } else {
+      $('#new_key_window').hide();
+    }
+  }
+
+  var modals           = Object();
+  modals.label_save    = '<%= l(:button_save) %>';
+  modals.label_cancel  = '<%= l(:button_cancel) %>';
+  modals.label_ok      = '<%= l(:button_ok) %>';
+  modals.modal_list    = [];
+  modals.modal_list[0] = {'source': '.modal-box', 'target': '#modal-box', 'mode': 'standard'};
+  modals.modal_list[1] = {'source': '.modal-box-close-only', 'target': '#modal-box-close-only', 'mode': 'close-only'};
+
+  $(document).ready(function() {
+    $("#repository-tabs").tabs();
+  });
+<% end %>

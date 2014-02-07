@@ -1,0 +1,62 @@
+<div>
+
+  <% if can_create_post_receive_urls(@project) %>
+    <div class="contextual">
+      <%= link_to(l(:label_post_receive_url_add), new_repository_post_receive_url_path(@repository),
+                                                  :class => 'icon icon-add modal-box') %>
+
+    </div>
+  <% end %>
+
+  <h3><%= l(:label_post_receive_urls) %></h3>
+
+  <% if @repository_post_receive_urls.any? %>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><%= l(:label_url) %></th>
+          <th><%= l(:label_mode) %></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @repository_post_receive_urls.each do |post_receive_url| %>
+          <tr>
+            <td><%= post_receive_url.url %></td>
+
+            <td>
+              <%= post_receive_mode(post_receive_url).html_safe %><br />
+              <%= checked_image post_receive_url.active? %>
+            </td>
+
+            <td class="buttons">
+              <% if can_edit_post_receive_urls(@project) %>
+
+                <%= link_to l(:button_edit), edit_repository_post_receive_url_path(@repository, post_receive_url),
+                                             :class => 'icon icon-edit modal-box' %>
+
+                <%= link_to l(:button_delete), repository_post_receive_url_path(@repository, post_receive_url),
+                                               :remote  => true,
+                                               :method  => :delete,
+                                               :confirm => l(:text_are_you_sure),
+                                               :class   => 'icon icon-del' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% end %>
+
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    initModalBoxes(modals);
+  });
+<% end %>
