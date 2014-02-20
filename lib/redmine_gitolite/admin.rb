@@ -16,6 +16,14 @@ module RedmineGitolite
 
         gitolite_admin_repo_commit("#{action} : #{GitHosting.repository_name(repository)}")
 
+        recycle = RedmineGitolite::Recycle.new
+
+        if !recycle.recover_repository_if_present(repository)
+          logger.info "Let Gitolite create empty repository : '#{GitHosting.repository_path(repository)}'"
+        else
+          logger.info "Restored existing Gitolite repository : '#{GitHosting.repository_path(repository)}' for update"
+        end
+
         gitolite_admin_repo_push(action)
 
         logger.info "#{action} : done !"
@@ -45,7 +53,8 @@ module RedmineGitolite
         repositories_array.each do |repository_data|
           handle_repository_delete(repository_data)
 
-          RedmineGitolite::Recycle::move_repository_to_recycle(repository_data) if RedmineGitolite::Config.delete_git_repositories?
+          recycle = RedmineGitolite::Recycle.new
+          recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.delete_git_repositories?
 
           gitolite_admin_repo_commit("#{action} : #{repository_data['repo_name']}")
         end
@@ -176,6 +185,13 @@ module RedmineGitolite
 
         logger.info "#{action} : done !"
       end
+    end
+
+
+    def purge_recycle_bin(repositories_array, action)
+      recycle = RedmineGitolite::Recycle.new
+      recycle.delete_expired_files(repositories_array)
+      logger.info "#{action} : done !"
     end
 
 

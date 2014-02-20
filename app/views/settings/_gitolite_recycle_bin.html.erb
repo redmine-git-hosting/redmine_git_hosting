@@ -1,0 +1,52 @@
+<%
+  recycle_bin = RedmineGitolite::Recycle.new
+%>
+
+<h3><%= l(:label_empty_recycle_bin) %></h3>
+
+<% if !recycle_bin.content.empty? %>
+  <table class="table table-hover">
+    <th><%= l(:label_recycle_bin_content) %></th>
+    <th><%= l(:label_delete_from_recyle_bin) %> (<%= link_to l(:label_select_all), 'javascript:void(0);', :id => 'select_all' %>)</th>
+
+    <% recycle_bin.content.sort.each do |repo_trash| %>
+      <tr>
+        <td><%= repo_trash %></td>
+        <td><%= check_box_tag "settings[gitolite_purge_repos][#{repo_trash}]", true, false, :class => 'empty_trash' %></td>
+      </tr>
+    <% end %>
+
+  </table>
+
+  <div id="delete_warning" class="alert alert-error" style="display: none;">
+    <%= l(:label_delete_warning) %>
+  </div>
+<% else %>
+  <p class="nodata" style="padding: 5px 0 0;"><%=l(:label_no_data)%></p>
+<% end %>
+
+<%= javascript_tag do %>
+  function displayWarning(){
+    var checked_list = $(".empty_trash:checked");
+    if(checked_list.length === 0){
+      $('#delete_warning').hide();
+    } else {
+      $('#delete_warning').show();
+    }
+  }
+
+  $(document).ready(function() {
+
+    $("#select_all").on('click', function(){
+      $('.empty_trash').each(function(){
+        $(this).attr('checked', !$(this).attr('checked'));
+        displayWarning();
+      });
+    });
+
+    $(".empty_trash").on('change', function(){
+      displayWarning();
+    });
+
+  });
+<% end %>

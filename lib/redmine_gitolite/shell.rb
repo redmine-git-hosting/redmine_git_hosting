@@ -106,6 +106,13 @@ module RedmineGitolite
               method = :update_projects
             end
           end
+
+        when :purge_recycle_bin then
+          if !object_id.empty?
+            object = object_id
+            method = :purge_recycle_bin
+          end
+
       end
 
       if !object.nil?

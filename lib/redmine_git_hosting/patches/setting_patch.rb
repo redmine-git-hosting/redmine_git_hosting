@@ -19,6 +19,7 @@ module RedmineGitHosting
         @@old_valuehash = ((Setting.plugin_redmine_git_hosting).clone rescue {})
         @@resync_projects = false
         @@resync_ssh_keys = false
+        @@delete_trash_repo = []
 
         def save_git_hosting_values
           # Only validate settings for our plugin
@@ -65,6 +66,7 @@ module RedmineGitHosting
               %x[ rm -f '#{ GitHosting.scripts_dir_path }'* ]
             end
 
+
             # Temp directory must be absolute and not-empty
             if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != @@old_valuehash[:gitolite_temp_dir])
               # Remove old tmp directory, since about to change
@@ -85,6 +87,7 @@ module RedmineGitHosting
 
             end
 
+
             # SSH server should not include any path components. Also, ports should be numeric.
             if valuehash[:ssh_server_domain]
               normalizedServer = valuehash[:ssh_server_domain].lstrip.rstrip.split('/').first
@@ -95,6 +98,7 @@ module RedmineGitHosting
               end
             end
 
+
             # HTTP server should not include any path components. Also, ports should be numeric.
             if valuehash[:http_server_domain]
               normalizedServer = valuehash[:http_server_domain].lstrip.rstrip.split('/').first
@@ -104,6 +108,7 @@ module RedmineGitHosting
                 valuehash[:http_server_domain] = normalizedServer
               end
             end
+
 
             # HTTPS server should not include any path components. Also, ports should be numeric.
             if valuehash[:https_server_domain]
@@ -117,6 +122,7 @@ module RedmineGitHosting
               end
             end
 
+
             # Normalize http repository subdirectory path, should be either empty or relative and end in '/'
             if valuehash[:http_server_subdir]
               normalizedFile  = File.expand_path(valuehash[:http_server_subdir].lstrip.rstrip, "/")
@@ -127,6 +133,7 @@ module RedmineGitHosting
                 valuehash[:http_server_subdir] = ''
               end
             end
+
 
             # Normalize Config File
             if valuehash[:gitolite_config_file]
@@ -145,6 +152,7 @@ module RedmineGitHosting
               end
             end
 
+
             # Normalize Repository path, should be relative and end in '/'
             if valuehash[:gitolite_global_storage_dir]
               normalizedFile  = File.expand_path(valuehash[:gitolite_global_storage_dir].lstrip.rstrip, "/")
@@ -155,6 +163,7 @@ module RedmineGitHosting
                 valuehash[:gitolite_global_storage_dir] = @@old_valuehash[:gitolite_global_storage_dir]
               end
             end
+
 
             # Normalize Redmine Subdirectory path, should be either empty or relative and end in '/'
             if valuehash[:gitolite_redmine_storage_dir]
@@ -167,6 +176,7 @@ module RedmineGitHosting
               end
             end
 
+
             # Normalize Recycle bin path, should be relative and end in '/'
             if valuehash[:gitolite_recycle_bin_dir]
               normalizedFile  = File.expand_path(valuehash[:gitolite_recycle_bin_dir].lstrip.rstrip, "/")
@@ -177,6 +187,7 @@ module RedmineGitHosting
                 valuehash[:gitolite_recycle_bin_dir] = @@old_valuehash[:gitolite_recycle_bin_dir]
               end
             end
+
 
             # Check to see if we are trying to claim all repository identifiers are unique
             if valuehash[:unique_repo_identifier] == 'true'
@@ -190,6 +201,7 @@ module RedmineGitHosting
               end
             end
 
+
             # Exclude bad expire times (and exclude non-numbers)
             if valuehash[:gitolite_recycle_bin_expiration_time]
               if valuehash[:gitolite_recycle_bin_expiration_time].to_f > 0
@@ -200,11 +212,6 @@ module RedmineGitHosting
             end
 
 
-
-
-
-
-
             # Validate ssh port > 0 and < 65537 (and exclude non-numbers)
             if valuehash[:gitolite_server_port]
               if valuehash[:gitolite_server_port].to_i > 0 and valuehash[:gitolite_server_port].to_i < 65537
@@ -213,6 +220,7 @@ module RedmineGitHosting
                 valuehash[:gitolite_server_port] = @@old_valuehash[:gitolite_server_port]
               end
             end
+
 
             # Validate gitolite_notify_global_include list of mails
             if !valuehash[:gitolite_notify_global_include].empty?
@@ -228,6 +236,7 @@ module RedmineGitHosting
               end
             end
 
+
             # Validate gitolite_notify_global_exclude list of mails
             if !valuehash[:gitolite_notify_global_exclude].empty?
               valuehash[:gitolite_notify_global_exclude] = valuehash[:gitolite_notify_global_exclude].select{|mail| !mail.blank?}
@@ -242,12 +251,14 @@ module RedmineGitHosting
               end
             end
 
+
             # Validate intersection of global_include/global_exclude
             intersection = valuehash[:gitolite_notify_global_include] & valuehash[:gitolite_notify_global_exclude]
             if intersection.length.to_i > 0
               valuehash[:gitolite_notify_global_include] = @@old_valuehash[:gitolite_notify_global_include]
               valuehash[:gitolite_notify_global_exclude] = @@old_valuehash[:gitolite_notify_global_exclude]
             end
+
 
             # Validate global sender address
             if valuehash[:gitolite_notify_global_sender_address].blank?
@@ -258,17 +269,31 @@ module RedmineGitHosting
               end
             end
 
+
             ## This a force update
             if valuehash[:gitolite_resync_all_projects] == 'true'
               @@resync_projects = true
               valuehash[:gitolite_resync_all_projects] = false
             end
 
+
             ## This a force update
             if valuehash[:gitolite_resync_all_ssh_keys] == 'true'
               @@resync_ssh_keys = true
               valuehash[:gitolite_resync_all_ssh_keys] = false
             end
+
+
+            if valuehash.has_key?(:gitolite_purge_repos) && !valuehash[:gitolite_purge_repos].empty?
+              valuehash[:gitolite_purge_repos].each do |trash_repo, value|
+                if value == 'true'
+                  @@delete_trash_repo.push(trash_repo)
+                end
+              end
+
+              valuehash[:gitolite_purge_repos] = {}
+            end
+
 
             # Save back results
             self.value = valuehash
@@ -291,6 +316,7 @@ module RedmineGitHosting
               Setting.check_cache
             end
 
+
             ## SSH infos has changed, update scripts!
             if @@old_valuehash[:gitolite_script_dir] != valuehash[:gitolite_script_dir] ||
                @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user] ||
@@ -300,6 +326,7 @@ module RedmineGitHosting
                 # Need to update scripts
                 GitHosting.update_gitolite_scripts
             end
+
 
             ## Storage infos has changed, move repositories!
             if @@old_valuehash[:gitolite_global_storage_dir] != valuehash[:gitolite_global_storage_dir] ||
@@ -313,6 +340,7 @@ module RedmineGitHosting
                   GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :option => :flush_cache })
                 end
             end
+
 
             ## Gitolite config file has changed, create a new one!
             if @@old_valuehash[:gitolite_config_file] != valuehash[:gitolite_config_file] ||
@@ -330,10 +358,12 @@ module RedmineGitHosting
                 end
             end
 
+
             ## Gitolite user has changed, check if this new one has our hooks!
             if @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user]
               GitHosting.check_hooks_installed
             end
+
 
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_projects == true
@@ -347,6 +377,7 @@ module RedmineGitHosting
               @@resync_projects = false
             end
 
+
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_ssh_keys == true
               # Need to update everyone!
@@ -359,6 +390,7 @@ module RedmineGitHosting
               @@resync_ssh_keys = false
             end
 
+
             ## Gitolite hooks config has changed, update our .gitconfig!
             if @@old_valuehash[:http_server_domain] !=  valuehash[:http_server_domain] ||
                @@old_valuehash[:https_server_domain] !=  valuehash[:https_server_domain] ||
@@ -369,10 +401,18 @@ module RedmineGitHosting
                 GitHosting.update_global_hook_params
             end
 
+
             ## Gitolite cache has changed, clear cache entries!
             if @@old_valuehash[:gitolite_cache_max_time] != valuehash[:gitolite_cache_max_time]
               RedmineGitolite::Cache.clear_obsolete_cache_entries
             end
+
+
+            if !@@delete_trash_repo.empty?
+              GitHosting.resync_gitolite({ :command => :purge_recycle_bin, :object => @@delete_trash_repo })
+              @@delete_trash_repo = []
+            end
+
 
             @@old_valuehash = valuehash.clone
           end
