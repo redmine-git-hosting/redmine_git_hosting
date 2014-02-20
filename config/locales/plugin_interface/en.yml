@@ -184,9 +184,12 @@ en:
   word_or: or
 
   # Create Repository
-  label_enable_git_notify: Git Mailing List
-  label_enable_git_daemon: Git Daemon
-  label_enable_smart_http: Git Smart HTTP
+  label_enable_git_notify: Enable Git Mailing List
+  label_enable_git_daemon: Enable Git Daemon
+  label_enable_smart_http: Enable Git Smart HTTP
+  label_git_daemon: Git Daemon
+  label_smart_http: Smart HTTP
+  label_git_notify: Git Notifications
 
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities

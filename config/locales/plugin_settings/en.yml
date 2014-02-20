@@ -113,15 +113,20 @@ en:
   label_ssh_access: SSH access
   label_http_access: HTTP access
 
-  display_access_setup: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>. Given the current configuration, <em>project3</em>'s %{type}repository has the following properties"
+  display_access_setup1: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
+  display_access_setup2: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
+  display_access_setup3: "Given the current configuration, project <em>project3</em> has the following properties :"
   display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
 
   label_flat: Flat
   label_hierarchical: Hierarchical
+  label_default_repository: Default repository
+  label_example_repository: Example repository
 
   # Sidekiq Config
+  label_tab_sidekiq_interface: Sidekiq
   label_gitolite_use_sidekiq: Use Sidekiq to launch async jobs
 
   # Config Check
@@ -131,7 +136,12 @@ en:
   label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
   label_unknown_gitolite_version: Unknown version
 
-  label_tab_sidekiq_interface: Sidekiq
+  # Recycle Bin
+  label_tab_gitolite_recycle_bin: Recycle Bin
+  label_empty_recycle_bin: Empty recycle bin
+  label_recycle_bin_content: Recycle bin content
+  label_delete_from_recyle_bin: Delete from recycle bin
+  label_delete_warning: Warning! Deletion is forever!
 
   # Gitolite Rescue
   label_tab_gitolite_rescue: Rescue
@@ -139,3 +149,6 @@ en:
 
   label_resync_all_projects: Resync all projects ?
   label_resync_all_ssh_keys: Resync all SSH keys ?
+
+  # Misc
+  label_select_all: Select all

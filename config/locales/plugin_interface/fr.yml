@@ -187,6 +187,9 @@ fr:
   label_enable_git_notify: Activer la liste de diffusion
   label_enable_git_daemon: Activer le daemon Git
   label_enable_smart_http: Activer le mode Smart HTTP
+  label_git_daemon: Daemon Git
+  label_smart_http: Smart HTTP
+  label_git_notify: Notifications Git
 
   # Repository list view
   label_repository_enabled_capabilities: Fonctionnalité activées du dépôt
