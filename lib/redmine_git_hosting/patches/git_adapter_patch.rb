@@ -9,7 +9,8 @@ module RedmineGitHosting
           unloadable
 
           class << self
-            alias_method_chain :sq_bin, :git_hosting
+            alias_method_chain :sq_bin,         :git_hosting
+            alias_method_chain :client_command, :git_hosting
           end
 
           alias_method_chain :git_cmd, :git_hosting
@@ -22,6 +23,10 @@ module RedmineGitHosting
 
         def sq_bin_with_git_hosting
           return Redmine::Scm::Adapters::GitAdapter::shell_quote(GitHosting.git_cmd_runner)
+        end
+
+        def client_command_with_git_hosting
+          return GitHosting.git_cmd_runner
         end
 
       end
