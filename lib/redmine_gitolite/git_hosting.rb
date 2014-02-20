@@ -24,14 +24,6 @@ module GitHosting
   ###############################
 
 
-  # Are we in RAILS 3 mode?
-  @@rails_3 = nil
-  def self.rails_3?
-    # Grab major mode from version string....
-    @@rails_3 ||= (Rails::VERSION::STRING.split('.')[0].to_i > 2)
-  end
-
-
   # Configuration file (relative to git conf directory)
   def self.gitolite_conf
     GitoliteConfig.gitolite_conf
