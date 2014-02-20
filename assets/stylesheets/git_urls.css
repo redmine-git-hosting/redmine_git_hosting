@@ -29,9 +29,9 @@ GIT_URL_BOX
 
 #git_url_text {
   background-color: #FFFFFF;
-  border-color: #BBBBBB #BBBBBB #BBBBBB #FFFFFF;
-  border-style: solid solid solid none;
-  border-width: 1px 1px 1px 0;
+  border-color: #BBBBBB;
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
   color: #000000;
   float: left;
   font-family: "DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
@@ -55,7 +55,7 @@ GIT_URL_BOX
   -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#DDDDDD'); /* IE 8 */
 
   border-style: solid;
-  border-width: 1px 1px 1px 0;
+  border-width: 1px 0 1px 1px;
 
   display: block;
   font-size: 11px;
@@ -101,4 +101,10 @@ GIT_URL_BOX
   color: #000;
   text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
   border-color: #BBBBBB;
+}
+
+
+.git_hosting h3 {
+  background: url("../images/git_icon.png") no-repeat scroll 0 50% rgba(0, 0, 0, 0);
+  padding-left: 20px;
 }
