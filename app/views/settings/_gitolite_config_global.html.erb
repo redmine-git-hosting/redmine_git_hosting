@@ -20,7 +20,7 @@
 </p>
 
 <p>
-  <label><%= l(:label_gitolite_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable? :reset %></label>
+  <label><%= l(:label_gitolite_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable?(:reset) %></label>
   <%= text_field_tag("settings[gitolite_script_dir]", reldir_add_dotslash(gitolite_script_dir), :size => 60) %>
   <br />
   <em><%= l(:label_gitolite_script_dir_desc) %></em>
