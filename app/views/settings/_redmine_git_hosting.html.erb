@@ -1,6 +1,5 @@
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag :application,      :plugin => 'redmine_git_hosting' %>
-
+  <%= stylesheet_link_tag 'application',             :plugin => 'redmine_git_hosting' %>
   <%= stylesheet_link_tag 'tag_it/jquery_tagit',     :plugin => 'redmine_git_hosting' %>
   <%= stylesheet_link_tag 'tag_it/tagit_ui_zendesk', :plugin => 'redmine_git_hosting' %>
 
@@ -27,11 +26,9 @@
 <br />
 <br />
 
-<div class="tabular settings">
-  <%= render_tabs settings_tabs %>
-</div>
+<%= render_tabs settings_tabs %>
 
-<script type="text/javascript">
+<%= javascript_tag do %>
   groups = $('[id^=tab-gitolite_]');
 
   $.each(groups, function(key, elem) {
@@ -41,4 +38,4 @@
       }
     });
   });
-</script>
+<% end %>
