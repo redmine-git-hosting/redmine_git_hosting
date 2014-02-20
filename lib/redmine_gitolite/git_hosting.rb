@@ -126,9 +126,8 @@ module GitHosting
   def self.scripts_dir_writeable?(*option)
     @@scripts_dir_writeable = nil if option.length > 0 && option[0] == :reset
     if @@scripts_dir_writeable == nil
-      mybindir = scripts_dir_path
-      mytestfile = "#{mybindir}/writecheck"
-      if (!File.directory?(mybindir))
+      mytestfile = "#{scripts_dir_path}/writecheck"
+      if (!File.directory?(scripts_dir_path))
         @@scripts_dir_writeable = false
       else
         %x[touch "#{mytestfile}"]
