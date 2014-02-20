@@ -24,15 +24,6 @@ module GitHosting
   ###############################
 
 
-  # Are we in the multiple-repositories-per-project version of Redmine?
-  @@multi_repos = nil
-  def self.multi_repos?
-    # Simple -- if Project.repositories exists, it will be an array. Otherwise
-    # will throw an exception.
-    @@multi_repos ||= Project.new.repositories.is_a?(Array) rescue false
-  end
-
-
   # Are we in RAILS 3 mode?
   @@rails_3 = nil
   def self.rails_3?

@@ -364,16 +364,11 @@ class GitoliteHooksController < ApplicationController
       return
     end
 
-    if GitHosting.multi_repos?
-      if params[:repositoryid] && !params[:repositoryid].blank?
-        @repository = @project.repositories.find_by_identifier(params[:repositoryid])
-      else
-        # return default or first repo with blank identifier
-        @repository = @project.repository || @project.repo_blank_ident
-      end
+    if params[:repositoryid] && !params[:repositoryid].blank?
+      @repository = @project.repositories.find_by_identifier(params[:repositoryid])
     else
-      # Only repository if redmine < 1.4
-      @repository = @project.repository
+      # return default or first repo with blank identifier
+      @repository = @project.repository || @project.repo_blank_ident
     end
 
     if @repository.nil?

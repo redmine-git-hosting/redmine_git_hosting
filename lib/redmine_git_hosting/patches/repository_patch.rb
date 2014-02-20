@@ -92,7 +92,7 @@ module RedmineGitHosting
         # If that doesn't work, return nil.
         def find_by_path(path, flags={})
           if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
-            if proj = Project.find_by_identifier(parseit[3]) || !GitHosting.multi_repos?
+            if proj = Project.find_by_identifier(parseit[3])
               # return default or first repo with blank identifier (or first Git repo--very rare?)
               proj && (proj.repository || proj.repo_blank_ident || proj.gitolite_repos.first)
             elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
