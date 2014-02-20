@@ -1,32 +1,40 @@
-# Redmine Git Hosting Plugin (v0.7)
+## Redmine Git Hosting Plugin
 
-A ChiliProject / Redmine plugin which makes configuring your own Git hosting easy.
+### A Redmine plugin which makes configuring your own Git hosting easy :)
 
-This plugin allows straightforward management of Gitolite and associated public keys, the Git daemon, and integrates code from Scott Schacon's "grack" utility
-to provide Git Smart HTTP access. 
+This plugin allows straightforward management of Gitolite within Redmine.
 
-Git repositories are automatically created in Gitolite when the repository is created in Redmine.
+It provides these functionalities :
 
-There is also an option to automatically create a Git repository for a project, when the project is created.
+* [SSH Public Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-ssh-public-keys-management)
+* [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
+* [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
+* [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
+* [Git Smart HTTP](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
+* [Git Daemon](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-daemon)
+* [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
+* [Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
+* [Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
 
-Caching functionality is also implemented to speed up page-load time when viewing Git repositories.
+You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
-Follow announcements here : https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements
+
+## Code status
+
+* [![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
 
 ## Installation
 
-Everything is in the wiki : https://github.com/jbox-web/redmine_git_hosting/wiki
+Read the documentation and more in the [Wiki](https://github.com/jbox-web/redmine_git_hosting/wiki).
 
 
-## Copyright & License
+## Copyrights & License
+Redmine Git Hosting is completely free and open source and released under the [MIT License](https://github.com/jbox-web/redmine_git_hosting/blob/v0.7/LICENSE).
 
-Copyright (c) 2014 Nicolas Rodriguez (nrodriguez@jbox-web.com), JBox Web (http://www.jbox-web.com) MIT License.
+Copyright (c) 2013-2014 Nicolas Rodriguez (nrodriguez@jbox-web.com), JBox Web (http://www.jbox-web.com)
 
-Copyright (c) 2011 John Kubiatowicz (kubitron@cs.berkeley.edu) MIT License.
+Copyright (c) 2011-2013 John Kubiatowicz (kubitron@cs.berkeley.edu)
 
-Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com) MIT License.
+Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com)
 
-Copyright (c) 2009-2010 Jan Schulz-Hofen, ROCKET RENTALS GmbH (http://www.rocket-rentals.de). MIT License.
-
-This plugin is based largely on the Gitosis plugin by Jan Schulz-Hofen for http://plan.io. Several updates/fixes were provided by Github users : untoldwind, tingar and ericpaulbishop.
-These updates were merged together and expanded upon by Eric Bishop to create this more comprehensive Git Hosting plugin.
+Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket-rentals.de)
