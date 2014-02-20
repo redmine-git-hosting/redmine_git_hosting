@@ -4,7 +4,7 @@
 <%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository, :project => @project} %>
 
 <div class="box">
-
+  <% if User.current.allowed_to?(:view_changesets, @project) %>
   <br />
 
   <h2><%= l(:label_help_git_setup) %> :</h2>
@@ -44,6 +44,10 @@
   <pre>
     git clone <span class="git_url_access"></span>
   </pre>
+  <% else %>
+  <pre>
+    <%= l(:label_help_no_repo_rights) %></pre>
+  <% end %>
 
 </div>
 

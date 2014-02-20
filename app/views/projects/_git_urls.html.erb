@@ -1,5 +1,5 @@
 <% if project.repository && project.repository.is_a?(Repository::Git) %>
-  <% if User.current.allowed_to?(:browse_repository, project) %>
+  <% if User.current.allowed_to?(:view_changesets, project) %>
     <% content_for :header_tags do %>
 
       <%= stylesheet_link_tag('git_url_display', :plugin => 'redmine_git_hosting') %>
