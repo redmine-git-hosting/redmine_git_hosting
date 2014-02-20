@@ -1,6 +1,6 @@
-<% if project.repository && project.repository.is_a?(Repository::Git) %>
-  <% if User.current.allowed_to?(:browse_repository, project) %>
-    <% if (project.module_enabled?(:repository) && RedmineGitolite::Config.show_repositories_url?) && ((!User.current.anonymous?) || project.repository.extra[:git_http] != 0 || (project.is_public && project.repository.extra[:git_daemon] != 0 )) %>
+<% if project.module_enabled?(:repository) %>
+  <% if project.repository && project.repository.is_a?(Repository::Git) %>
+    <% if RedmineGitolite::Config.show_repositories_url? && User.current.allowed_to?(:browse_repository, project) %>
 
       <div class="git_hosting box">
         <% if project.repositories.count > 1 %>
@@ -36,7 +36,6 @@
             <%= raw l(:label_repository_access_not_configured) %>
           </div>
         <% end %>
-
       </div>
 
       <% content_for :header_tags do %>
