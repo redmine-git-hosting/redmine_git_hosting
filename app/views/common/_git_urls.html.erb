@@ -19,7 +19,7 @@
 
   </div>
 
-  <span  id="git_url_desc">This URL has <span id="git_url_permissions">Read-Only</span> access.</span>
+  <span id="git_url_desc"><%= l(:label_this_urls_has_permissions, :span_id => 'git_url_permissions').html_safe %></span>
 <% else %>
   <div id="git_url_box">
     <%= raw l(:label_repository_access_not_configured) %>
@@ -46,7 +46,7 @@
       var access = access_list[key];
 
       $('#git_url_text').val(access.url);
-      $("#git_url_permissions").html(access.commiter == true ? "Read+Write" : "Read-Only");
+      $("#git_url_permissions").html(access.commiter == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
 
       $('#git_url_list li').on('click', function(){
         var key    = $(this).attr('id');
@@ -55,7 +55,7 @@
         $('#git_url_list li').removeClass('selected');
         $(this).addClass('selected');
         $('#git_url_text').val(access.url);
-        $("#git_url_permissions").html(access.commiter == true ? "Read+Write" : "Read-Only");
+        $("#git_url_permissions").html(access.commiter == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
       });
     });
   <% end %>
