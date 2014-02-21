@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 class RepositoryGitExtra < ActiveRecord::Base
   unloadable
 

@@ -1,8 +1,6 @@
 # coding: utf-8
 
 require 'base64'
-require 'digest/md5'
-require 'digest/sha1'
 require 'fileutils'
 require 'lockfile'
 require 'net/http'
