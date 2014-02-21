@@ -206,15 +206,10 @@ module RedmineGitHosting
         def available_urls
           hash = {}
 
-          commiter = User.current.allowed_to?(:commit_access, project) ? "true" : "false"
+          commiter = User.current.allowed_to?(:commit_access, project) ? 'true' : 'false'
 
           ssh_access = {
             :url      => self.ssh_url,
-            :commiter => commiter
-          }
-
-          http_access = {
-            :url      => self.http_url,
             :commiter => commiter
           }
 
@@ -223,9 +218,15 @@ module RedmineGitHosting
             :commiter => commiter
           }
 
+          ## Unsecure channel (clear password), commit is disabled
+          http_access = {
+            :url      => self.http_url,
+            :commiter => 'false'
+          }
+
           git_access = {
             :url      => self.git_url,
-            :commiter => false
+            :commiter => 'false'
           }
 
           if !User.current.anonymous?
@@ -239,8 +240,8 @@ module RedmineGitHosting
           end
 
           if self.extra[:git_http] == 2
-            hash[:http] = http_access
             hash[:https] = https_access
+            hash[:http] = http_access
           end
 
           if self.extra[:git_http] == 3

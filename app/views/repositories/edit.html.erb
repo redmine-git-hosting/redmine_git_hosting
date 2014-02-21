@@ -1,5 +1,3 @@
-<h2><%= l(:label_repository) %></h2>
-
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_git_hosting' %>
   <%= stylesheet_link_tag 'git_urls',                         :plugin => 'redmine_git_hosting' %>
@@ -20,6 +18,7 @@
   <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_git_hosting' %>
 <% end %>
 
+<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository} %>
 
 <%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put} do |f| %>
   <%= render :partial => 'form', :locals => {:f => f} %>
