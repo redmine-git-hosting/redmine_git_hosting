@@ -38,27 +38,23 @@ class RepositoryMirror < ActiveRecord::Base
     repo_path = GitHosting.repository_path(repository)
 
     push_args = ""
+
     if push_mode == PUSHMODE_MIRROR
-      push_args << "--mirror "
+      push_args << " --mirror"
     else
       # Not mirroring -- other possible push_args
-      push_args << "--force " if push_mode == PUSHMODE_FORCE
-      push_args << "--all "   if include_all_branches
-      push_args << "--tags "  if include_all_tags
+      push_args << " --force" if push_mode == PUSHMODE_FORCE
+      push_args << " --all"   if include_all_branches
+      push_args << " --tags"  if include_all_tags
     end
-    push_args << "\"#{dequote(url)}\" "
-    push_args << "\"#{dequote(explicit_refspec)}\" " unless explicit_refspec.blank?
 
-    shellout = %x[ echo 'cd "#{repo_path}" ; env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args} 2>&1' | #{GitHosting.shell_cmd_runner} "bash" ].chomp
+    push_args << " \"#{dequote(url)}\""
+    push_args << " \"#{dequote(explicit_refspec)}\"" unless explicit_refspec.blank?
+
+    push_message = %x[ echo 'export GIT_SSH=~/.ssh/run_gitolite_admin_ssh ; cd "#{repo_path}" && git push #{push_args} 2>&1' | #{GitHosting.shell_cmd_runner} "bash" ].chomp
     push_failed = ($?.to_i != 0) ? true : false
 
-    if (push_failed)
-      logger.error "Pushing changes to mirror '#{url}'... Failed!"
-      logger.error "  " + shellout.split("\n").join("\n  ")
-    else
-      logger.info "Pushing changes to mirror '#{url}'... Succeeded!"
-    end
-    [push_failed, shellout]
+    return push_failed, push_message
   end
 
 
@@ -89,12 +85,6 @@ class RepositoryMirror < ActiveRecord::Base
   protected
 
 
-  @@logger = nil
-  def logger
-    @@logger ||= RedmineGitolite::Log.get_logger(:git_hooks)
-  end
-
-
   # Strip leading and trailing whitespace
   def strip_whitespace
     self.url = url.strip
@@ -114,8 +104,8 @@ class RepositoryMirror < ActiveRecord::Base
     if push_mode == PUSHMODE_MIRROR
       # clear out all extra parameters.. (we use javascript to hide them anyway)
       self.include_all_branches = false
-      self.include_all_tags = false
-      self.explicit_refspec = ""
+      self.include_all_tags     = false
+      self.explicit_refspec     = ""
 
     elsif include_all_branches && include_all_tags
       errors.add(:base, "Cannot #{l(:field_include_all_branches)} and #{l(:field_include_all_tags)} at the same time.")
@@ -127,7 +117,7 @@ class RepositoryMirror < ActiveRecord::Base
       # Check format of refspec
       if !(refspec_parse = explicit_refspec.match(/^\+?([^:]*)(:([^:]*))?$/)) || !refcomp_valid(refspec_parse[1]) || !refcomp_valid(refspec_parse[3])
         errors.add(:explicit_refspec, "is badly formatted.")
-      elsif !refspec_parse[1] || refspec_parse[1]==""
+      elsif !refspec_parse[1] || refspec_parse[1] == ""
         errors.add(:explicit_refspec, "cannot have null first component (will delete remote branch(s))")
       end
 
