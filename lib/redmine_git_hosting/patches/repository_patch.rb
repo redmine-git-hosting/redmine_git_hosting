@@ -295,6 +295,32 @@ module RedmineGitHosting
         end
 
 
+        def mailing_list_params
+          if !self.git_notification.nil? && !self.git_notification.prefix.empty?
+            email_prefix = self.git_notification.prefix
+          else
+            email_prefix = RedmineGitolite::Config.gitolite_notify_global_prefix
+          end
+
+          if !self.git_notification.nil? && !self.git_notification.sender_address.empty?
+            sender_address = self.git_notification.sender_address
+          else
+            sender_address = RedmineGitolite::Config.gitolite_notify_global_sender_address
+          end
+
+          params = {
+            :mailing_list   => mailing_list_effective,
+            :email_prefix   => email_prefix,
+            :sender_address => sender_address,
+          }
+
+          return params
+        end
+
+
+        private
+
+
         def filter_list(mail_list)
           mailing_list = {}
           exclude_list = []
@@ -316,9 +342,6 @@ module RedmineGitHosting
 
           return mailing_list
         end
-
-
-        private
 
 
         # Check several aspects of repository identifier (only for Redmine 1.4+)
