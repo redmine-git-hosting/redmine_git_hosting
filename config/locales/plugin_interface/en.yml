@@ -80,11 +80,11 @@ en:
 
   ########### GIT NOTIFICATIONS ###########
   # Basics labels
-  label_git_notifications: Git Mailing List
-  label_git_notifications_add: Add Git Mailing List
-  label_git_notifications_create: Create Git Mailing List
-  label_git_notifications_edit: Edit Git Mailing List
-  label_git_notifications_delete: Delete Git Mailing List
+  label_git_notifications: Mailing list
+  label_git_notifications_add: Add mailing list
+  label_git_notifications_create: Create mailing list
+  label_git_notifications_edit: Edit mailing list
+  label_git_notifications_delete: Delete mailing list
 
   # Basics notices
   notice_git_notifications_created: Mailing list was successfully created
@@ -99,8 +99,8 @@ en:
   label_git_notification_default_list: Default list
   label_git_notification_effective_list: Effective list
 
-  label_gitolite_notify_prefix: Git Mailing List prefix
-  label_gitolite_notify_sender_address: Git Mailing List sender address
+  label_gitolite_notify_prefix: Mailing list prefix
+  label_gitolite_notify_sender_address: Mailing list sender address
 
 
   ########### POST RECEIVE URL ###########
@@ -184,9 +184,10 @@ en:
   word_or: or
 
   # Create Repository
-  label_enable_git_notify: Enable Git Mailing List
+  label_repository_options: Repository options
+  label_enable_git_notify: Enable Mailing list
   label_enable_git_daemon: Enable Git Daemon
-  label_enable_smart_http: Enable Git Smart HTTP
+  label_enable_smart_http: Smart HTTP Mode
   label_git_daemon: Git Daemon
   label_smart_http: Smart HTTP
   label_git_notify: Git Notifications
@@ -196,11 +197,18 @@ en:
 
   # Repositories URL (labels)
   label_copy_to_clipboard: Copy to clipboard
+  label_download_and_install_git: Download and install Git
   label_repository_access_not_configured: Repository access not configured, please contact your adminstrator.
+  label_repository_access_url: Repository access links
+  label_main_git_repository: Main Git Repository
+  label_see_other_repositories: See other repositories
   label_help_git_setup: Git Setup
   label_help_repository_setup_new: Setup New Repository
   label_help_repository_setup_existing: Setup Existing Repository
   label_help_repository_clone: Clone Repository
 
+  notice_empty_repository: Repository is empty. Get started by following the instructions below.
+
   # Gitolite Hooks
   error_project_not_found: No project was found with the identifier "%{identifier}"
+

@@ -66,6 +66,15 @@ REPOSITORY VIEW
 
 
 /*
+REPOSITORY SETTINGS
+*/
+#git_hosting_settings label {
+  padding-right: 10px;
+  width: 190px;
+}
+
+
+/*
 PUBLIC KEY
 */
 .public_key_view {

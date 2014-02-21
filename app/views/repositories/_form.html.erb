@@ -1,13 +1,8 @@
 <%= error_messages_for 'repository' %>
 
-<div class="box tabular" style="display: block; height: 196px;">
+<div id="git_hosting_settings" class="box tabular">
 
   <div style="display: block; float: left; width: 40%;">
-
-    <% if @repository && @repository.is_a?(Repository::Git) && (can_view_deployment_keys(@repository.project) || can_view_post_receive_urls(@repository.project) || can_view_mirrors(@repository.project)) %>
-      <h3>Repository Options</h3>
-    <% end %>
-
     <p>
       <%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
       <% if @repository && ! @repository.class.scm_available %>
@@ -23,13 +18,15 @@
     <% end %>
   </div>
 
-  <div style="display: block; float: left;">
+  <div style="display: block; float: left; width: 40%;">
     <% button_disabled = true %>
     <% if @repository %>
-      <% button_disabled = ! @repository.class.scm_available %>
+      <% button_disabled = !@repository.class.scm_available %>
     <% end %>
 
     <% if @repository && @repository.is_a?(Repository::Git) %>
+      <h3><%= l(:label_repository_options) %></h3>
+
       <%
         selected = "0"
         if @repository.extra[:git_daemon] == 1
@@ -38,10 +35,18 @@
           selected = "1"
         end
       %>
+
       <p>
         <%= label_tag  "extra[git_daemon]", l(:label_enable_git_daemon) %>
-        <%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected => selected), :disabled => !@project.is_public %>
+        <%= select_tag "extra[git_daemon]", options_for_select([ [l(:label_no), "0"], [l(:label_yes), "1"]], :selected => selected), :disabled => !@project.is_public %>
       </p>
+
+      <% if can_create_git_notifications(@repository.project) %>
+        <p>
+          <%= label_tag  "extra[git_notify]", l(:label_enable_git_notify) %>
+          <%= select_tag "extra[git_notify]", options_for_select([ [l(:label_no), "0"], [l(:label_yes), "1"]], :selected => @repository.extra[:git_notify].to_s) %>
+        </p>
+      <% end %>
 
       <p>
         <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
@@ -53,12 +58,7 @@
                                                               ], :selected => @repository.extra[:git_http].to_s) %>
       </p>
 
-      <% if can_create_git_notifications(@repository.project) %>
-        <p>
-          <%= label_tag  "extra[git_notify]", l(:label_enable_git_notify) %>
-          <%= select_tag "extra[git_notify]", options_for_select([ [l(:label_disabled), "0"], [l(:label_enabled), "1"]], :selected => @repository.extra[:git_notify].to_s) %>
-        </p>
-      <% end %>
+
 
     <% else %>
       <%= repository_field_tags(f, @repository) if @repository %>
@@ -66,7 +66,7 @@
 
   </div>
 
-  <div style="display:block;height:30px;clear:both;"></div>
+  <div style="display: block; clear: both;"></div>
 
   <%= submit_tag(@repository.new_record? ? l(:button_create) : l(:button_save), :disabled => button_disabled) %>
   <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>

@@ -1,7 +1,7 @@
 <%# This is used to display basic git setup instructions, like on github... %>
-<% flash.now[:warning] = "Repository is empty. Get started by following the instructions below." %>
+<% flash.now[:warning] = l(:notice_empty_repository) %>
 
-<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository, :project => @project} %>
+<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository} %>
 
 <div class="box">
 
@@ -9,7 +9,7 @@
 
   <h2><%= l(:label_help_git_setup) %> :</h2>
   <pre>
-    <a href="http://git-scm.com/download" target="_blank">Download and Install Git</a>
+    <a href="http://git-scm.com/download" target="_blank"><%= l(:label_download_and_install_git) %></a>
     git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
     git config --global user.email <%= User.current.mail ? User.current.mail : "mail@example.com" %>
     <% if !User.current.anonymous? && User.current.gitolite_public_keys.active.length == 0 %>
@@ -57,5 +57,29 @@
           </li>
       <% end %>
     </ul>
+  <% end %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= javascript_tag do %>
+    $(document).ready(function() {
+      var key = $('#git_url_list li').first().attr('id');
+      var access = access_list[key];
+
+      $('.git_url_access').html(access.url);
+
+      $('#git_url_list li').on('click', function(){
+        var key  = $(this).attr('id');
+        var access = access_list[key];
+
+        $('.git_url_access').html(access.url);
+
+        if (access.commiter == true) {
+          $('#repository_setup').show();
+        } else {
+          $('#repository_setup').hide();
+        }
+      });
+    });
   <% end %>
 <% end %>
