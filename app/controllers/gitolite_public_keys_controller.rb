@@ -83,7 +83,7 @@ class GitolitePublicKeysController < ApplicationController
 
   def set_user_variable
     if params[:user_id]
-      @user = (params[:user_id]=='current') ? User.current : User.find_by_id(params[:user_id])
+      @user = (params[:user_id] == 'current') ? User.current : User.find_by_id(params[:user_id])
       if @user
         @redirect_url = url_for(:controller => 'users', :action => 'edit', :id => params[:user_id], :tab => 'keys')
       else
