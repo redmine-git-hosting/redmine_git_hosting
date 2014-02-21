@@ -55,11 +55,11 @@ class GitoliteHooksController < ApplicationController
           logger.info message
           y << message
 
-          (mirror_error, mirror_message) = mirror.push
+          push_failed, push_message = mirror.push
 
-          if mirror_error
+          if push_failed
             logger.error "Failed!"
-            logger.error "#{mirror_message}"
+            logger.error "#{push_message}"
             y << "[failure]\n"
           else
             logger.info "Succeeded!"
