@@ -323,16 +323,17 @@ module RedmineGitolite
       repo_conf.set_git_config("hooks.redmine_gitolite.repositoryid", "#{repository.identifier || ''}")
       repo_conf.set_git_config("hooks.redmine_gitolite.key", repository.extra.key)
 
-      # Set SMTP server for mail-notifications hook
-      #~ repo_conf.set_git_config("hooks.redmine_gitolite.smtpserver", ActionMailer::Base.smtp_settings[:address])
-
       # Set mail-notifications hook params
       if repository.extra.git_notify == 1
         mailing_list = repository.mailing_list_effective
         if !mailing_list.empty?
-          repo_conf.set_git_config("hooks.mailinglist", mailing_list.keys.join(", "))
-          repo_conf.set_git_config("hooks.senderemail", RedmineGitolite::Config.gitolite_notify_global_sender_address)
-          repo_conf.set_git_config("hooks.emailprefix", RedmineGitolite::Config.gitolite_notify_global_prefix)
+          repo_conf.set_git_config("hooks.multimailhook.environment", "gitolite")
+          repo_conf.set_git_config("hooks.multimailhook.mailinglist", mailing_list.keys.join(", "))
+          repo_conf.set_git_config("hooks.multimailhook.from", RedmineGitolite::Config.gitolite_notify_global_sender_address)
+          repo_conf.set_git_config("hooks.multimailhook.emailPrefix", RedmineGitolite::Config.gitolite_notify_global_prefix)
+
+          # Set SMTP server for mail-notifications hook
+          #~ repo_conf.set_git_config("hooks.multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
         end
       end
 
@@ -365,16 +366,17 @@ module RedmineGitolite
       repo_conf.set_git_config("hooks.redmine_gitolite.repositoryid", "#{repository.identifier || ''}")
       repo_conf.set_git_config("hooks.redmine_gitolite.key", repository.extra.key)
 
-      # Set SMTP server for mail-notifications hook
-      #~ repo_conf.set_git_config("hooks.redmine_gitolite.smtpserver", ActionMailer::Base.smtp_settings[:address])
-
       # Set mail-notifications hook params
       if repository.extra.git_notify == 1
         mailing_list = repository.mailing_list_effective
         if !mailing_list.empty?
-          repo_conf.set_git_config("hooks.mailinglist", mailing_list.keys.join(", "))
-          repo_conf.set_git_config("hooks.senderemail", RedmineGitolite::Config.gitolite_notify_global_sender_address)
-          repo_conf.set_git_config("hooks.emailprefix", RedmineGitolite::Config.gitolite_notify_global_prefix)
+          repo_conf.set_git_config("hooks.multimailhook.environment", "gitolite")
+          repo_conf.set_git_config("hooks.multimailhook.mailinglist", mailing_list.keys.join(", "))
+          repo_conf.set_git_config("hooks.multimailhook.from", RedmineGitolite::Config.gitolite_notify_global_sender_address)
+          repo_conf.set_git_config("hooks.multimailhook.emailPrefix", RedmineGitolite::Config.gitolite_notify_global_prefix)
+
+          # Set SMTP server for mail-notifications hook
+          #~ repo_conf.set_git_config("hooks.multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
         end
       end
 
