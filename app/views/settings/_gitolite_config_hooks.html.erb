@@ -27,8 +27,11 @@
 
 <p>
   <label><%= l(:label_gitolite_hooks_installed) %></label>
-  <% hook_installed = GitHosting.check_hooks_installed %>
-  <%= image_tag((hook_installed == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-  <em><%= (hook_installed == true ? '' : hook_installed) %></em>
-  <br />
+  <% hooks = RedmineGitolite::Hooks.new %>
+  <% hooks_installed = hooks.check_install %>
+  <% hooks_installed.each do |hook, installed| %>
+    <%= image_tag((installed == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
+    <em><%= hook %></em>
+    <br />
+  <% end %>
 </p>

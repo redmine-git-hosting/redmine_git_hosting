@@ -241,23 +241,6 @@ module GitHosting
 
   ###############################
   ##                           ##
-  ##       GLOBAL HOOKS        ##
-  ##                           ##
-  ###############################
-
-
-  def self.check_hooks_installed
-    RedmineGitolite::Hooks.check_hooks_installed
-  end
-
-
-  def self.update_global_hook_params
-    RedmineGitolite::Hooks.update_global_hook_params
-  end
-
-
-  ###############################
-  ##                           ##
   ##      LOCK FUNCTIONS       ##
   ##                           ##
   ###############################

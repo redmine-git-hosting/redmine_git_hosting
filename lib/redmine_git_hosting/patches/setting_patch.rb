@@ -361,7 +361,8 @@ module RedmineGitHosting
 
             ## Gitolite user has changed, check if this new one has our hooks!
             if @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user]
-              GitHosting.check_hooks_installed
+              hooks = RedmineGitolite::Hooks.new
+              hooks.check_install
             end
 
 
@@ -398,7 +399,8 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_force_hooks_update] != valuehash[:gitolite_force_hooks_update] ||
                @@old_valuehash[:gitolite_hooks_are_asynchronous] != valuehash[:gitolite_hooks_are_asynchronous]
                 # Need to update our .gitconfig
-                GitHosting.update_global_hook_params
+                hooks = RedmineGitolite::Hooks.new
+                hooks.update_global_hook_params
             end
 
 
