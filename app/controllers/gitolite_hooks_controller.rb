@@ -29,17 +29,19 @@ class GitoliteHooksController < ApplicationController
     self.response_body = Enumerator.new do |y|
 
       ## Fetch commits from the repository
-      message = "Fetching changesets for '#{@project.identifier}' repository"
+      message = "  - Fetching changesets for '#{@project.identifier}' repository ... "
       logger.info message
       y << message
 
       begin
         @repository.fetch_changesets
+        logger.info "Succeeded!"
+        y << " [success]\n"
       rescue Redmine::Scm::Adapters::CommandFailed => e
+        logger.error "Failed!"
         logger.error "Error during fetching changesets: #{e.message}"
+        y << " [failure]\n"
       end
-
-      y << "Done\n"
 
       payloads = []
 
@@ -50,7 +52,7 @@ class GitoliteHooksController < ApplicationController
       ## Push to each mirror
       @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each do |mirror|
         if mirror.needs_push(payloads)
-          message = "Pushing changes to #{mirror.url} ..."
+          message = "  - Pushing changes to #{mirror.url} ... "
 
           logger.info message
           y << message
@@ -60,10 +62,10 @@ class GitoliteHooksController < ApplicationController
           if push_failed
             logger.error "Failed!"
             logger.error "#{push_message}"
-            y << "[failure]\n"
+            y << " [failure]\n"
           else
             logger.info "Succeeded!"
-            y << "[success]\n"
+            y << " [success]\n"
           end
         end
       end if @repository.repository_mirrors.any?
@@ -72,9 +74,9 @@ class GitoliteHooksController < ApplicationController
       ## Post to each post-receive URL
       @repository.repository_post_receive_urls.all(:order => "active DESC, created_at ASC", :conditions => "active=1").each do |prurl|
         if prurl.mode == :github
-          message = "Sending #{pluralize(payloads.length, 'notification')} to #{prurl.url} ..."
+          message = "  - Sending #{pluralize(payloads.length, 'notification')} to #{prurl.url} ... "
         else
-          message = "Notifying #{prurl.url} ..."
+          message = "  - Notifying #{prurl.url} ... "
         end
 
         y << message
@@ -106,10 +108,10 @@ class GitoliteHooksController < ApplicationController
         if error_message
           logger.error "#{message} Failed!"
           logger.error "#{error_message}"
-          y << "[failure]\n"
+          y << " [failure]\n"
         else
           logger.info "#{message} Succeeded!"
-          y << "[success]\n"
+          y << " [success]\n"
 
         end
       end if @repository.repository_post_receive_urls.any?

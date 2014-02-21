@@ -82,15 +82,19 @@ end
 
 def get_extra_hooks()
   # Get global extra hooks
+  log("Looking for additional global post-receive hooks...", false, true)
   global_extra_hooks = get_executables("hooks/post-receive.d")
   if global_extra_hooks.length == 0
-    log("No global hooks found", true, true)
+    log("  - No global hooks found", true, true)
   end
 
+  log("", false, true)
+
   # Get local extra hooks
+  log("Looking for additional local post-receive hooks...", false, true)
   local_extra_hooks = get_executables("hooks/post-receive.local.d")
   if local_extra_hooks.length == 0
-    log("No local hooks found", true, true)
+    log("  - No local hooks found", true, true)
   end
 
   # Join both results and return result
@@ -103,23 +107,21 @@ end
 def get_executables(directory)
   executables = Array.new
   if File.directory?(directory)
-    log("Found folder: #{directory}", true, true)
+    log("  - Found folder: #{directory}", true, true)
     Dir.foreach(directory) do |item|
       next if item == '.' or item == '..'
       # Use full relative path
       path = "#{directory}/#{item}"
       # Test if the file is executable
       if File.executable?(path)
-        log("Found executable file: #{path}...", true, false)
+        log("  - Found executable file: #{path} ...", true, false)
         # Remember it, if so
         executables.push path
-        log("Added", true, true)
-      else
-        log("Found non-executable file: #{item}", true, true)
+        log(" [added]", true, true)
       end
     end
   else
-    log("\nFolder not found: #{directory}", true, true)
+    log("  - Folder not found: #{directory}", true, true)
   end
   executables
 end
@@ -127,10 +129,9 @@ end
 def call_extra_hooks(stdin, extra_hooks)
   success = false
   # Call each exectuble found with the parameters we got
-  log("Beginning to execute additional hooks", true, true)
   extra_hooks.each do |extra_hook|
     log("", false, true)
-    log("Executing extra hook '#{extra_hook}'")
+    log("  - Executing extra hook '#{extra_hook}'")
 
     output = ""
     IO.popen("#{extra_hook}", "w+") do |pipe|
@@ -143,7 +144,6 @@ def call_extra_hooks(stdin, extra_hooks)
       output = pipe.read
     end
     log("#{output}")
-    log("Done", true, true)
   end
   success = true
   success
@@ -201,7 +201,7 @@ if rgh_vars["asynch"] == "true"
 end
 
 log("", false, true)
-log("Notifying ChiliProject/Redmine project '#{rgh_vars['projectid']}' about changes to this repo...", false, true)
+log("Notifying Redmine project '#{rgh_vars['projectid']}' about changes to this repo...", false, true)
 
 success = run_query(rgh_vars["url"], get_http_params(rgh_vars), true)
 if !success
@@ -209,9 +209,7 @@ if !success
 end
 
 if !success
-  log("Error contacting ChiliProject/Redmine about changes to this repo.", false, true)
-else
-  log("Success", false, true)
+  log("Error contacting Redmine about changes to this repo.", false, true)
 end
 
 log("", false, true)
@@ -223,8 +221,6 @@ if extra_hooks.length > 0
   success = call_extra_hooks(stdin_copy, extra_hooks)
   if(!success)
     log("Error calling additional hooks.", false, true)
-  else
-    log("Success", false, true)
   end
   log("", false, true)
 else
@@ -233,4 +229,4 @@ else
   log("", false, true)
 end
 
-exit
+exit 0

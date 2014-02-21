@@ -2196,7 +2196,7 @@ class Push(object):
                     % (change.refname, change.old.sha1, change.new.sha1,)
                     )
             else:
-                sys.stderr.write('Sending notification emails to: %s\n' % (change.recipients,))
+                sys.stderr.write('    Sending notification emails to: %s\n' % (change.recipients,))
                 mailer.send(change.generate_email(self, body_filter), change.recipients)
 
             sha1s = []

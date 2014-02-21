@@ -3,7 +3,17 @@
 <%- end %>
 
 <p style="white-space:nowrap;">
-  <%= l(:label_mirror_push_info_html, :mirror_url => @mirror.url, :status => @push_failed == true ? l(:label_mirror_push_fail) : l(:label_mirror_push_sucess)).html_safe %>
+  <%
+    if @push_failed == true
+      status = l(:label_mirror_push_fail)
+      status_css = 'important'
+    else
+      status = l(:label_mirror_push_sucess)
+      status_css = 'success'
+    end
+  %>
+
+  <%= l(:label_mirror_push_info_html, :mirror_url => @mirror.url, :status => status, :status_css => status_css).html_safe %>
 </p>
 
 <span><b><%= l(:label_mirror_push_output) %></b></span>
