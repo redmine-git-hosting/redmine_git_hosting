@@ -26,9 +26,9 @@ en:
 
   label_mirror_push_title: Push to mirror
   label_mirror_push_info_html: "Pushing changes to mirror <b>%{mirror_url}</b> : <span class=\"label label-%{status_css}\">%{status}</span>"
-  label_mirror_push_output: 'Output:'
-  label_mirror_push_sucess: Success.
-  label_mirror_push_fail: Failed!
+  label_mirror_push_output: Output
+  label_mirror_push_sucess: Success
+  label_mirror_push_fail: Failed
 
   label_mirror: Mirror
   label_mirror_push: Push

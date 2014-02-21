@@ -25,8 +25,8 @@ fr:
   label_mirror_help: Le miroir doit donner les droits d'écriture à la clé publique suivante
 
   label_mirror_push_title: Envoyer au miroir
-  label_mirror_push_info_html: "Envoie des changements au miroir <b>%{mirror_url}</b> : <span class=\"label label-%{status_css}\">%{status}</span>"
-  label_mirror_push_output: 'Sortie:'
+  label_mirror_push_info_html: "Envoi des changements au miroir <b>%{mirror_url}</b> : <span class=\"label label-%{status_css}\">%{status}</span>"
+  label_mirror_push_output: Sortie
   label_mirror_push_sucess: Succès
   label_mirror_push_fail: Échec
 
