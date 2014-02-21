@@ -2,7 +2,6 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   unloadable
 
   before_filter :require_login
-  before_filter :set_user_variable
   before_filter :set_repository_variable
   before_filter :set_project_variable
   before_filter :check_required_permissions
@@ -99,11 +98,6 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   end
 
 
-  def set_user_variable
-    @user = User.current
-  end
-
-
   def set_repository_variable
     @repository = Repository.find_by_id(params[:repository_id])
     if @repository.nil?
@@ -139,11 +133,11 @@ class RepositoryPostReceiveUrlsController < ApplicationController
       render_403
     end
 
-    return true if @user.admin?
+    return true if User.current.admin?
 
     not_enough_perms = true
 
-    @user.roles_for_project(@project).each do |role|
+    User.current.roles_for_project(@project).each do |role|
       if role.allowed_to?(:manage_repository)
         not_enough_perms = false
         break

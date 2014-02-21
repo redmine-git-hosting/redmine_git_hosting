@@ -2,7 +2,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   unloadable
 
   before_filter :require_login
-  before_filter :set_user_variable
   before_filter :set_repository_variable
   before_filter :set_project_variable
   before_filter :check_xhr_request
@@ -147,11 +146,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
   def can_edit_credentials
     render_403 unless can_edit_deployment_keys(@project)
-  end
-
-
-  def set_user_variable
-    @user = User.current
   end
 
 
