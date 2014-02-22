@@ -10,7 +10,6 @@ module RedmineGitHosting
 
           class << self
             alias_method_chain :factory,          :git_hosting
-            alias_method_chain :fetch_changesets, :git_hosting
           end
 
           has_one  :git_extra,        :foreign_key => 'repository_id', :class_name => 'RepositoryGitExtra', :dependent => :destroy
@@ -40,12 +39,6 @@ module RedmineGitHosting
             end
           end
           return new_repo
-        end
-
-
-        def fetch_changesets_with_git_hosting(&block)
-          # Do actual update
-          fetch_changesets_without_git_hosting(&block)
         end
 
 
@@ -112,21 +105,6 @@ module RedmineGitHosting
         # Repo ident unique
         def repo_ident_unique?
           RedmineGitolite::Config.unique_repo_identifier?
-        end
-
-
-        def fetch_changesets_for_project(project_id)
-          project = Project.find_by_identifier(project_id)
-          if project
-            # Fetch changesets for all repos for project (works for 1.4)
-            Repository.find_all_by_project_id(project.id).each do |repository|
-              begin
-                repository.fetch_changesets
-              rescue Redmine::Scm::Adapters::CommandFailed => e
-                GitHosting.logger.error "Error during fetching changesets : #{e.message}"
-              end
-            end
-          end
         end
 
       end
