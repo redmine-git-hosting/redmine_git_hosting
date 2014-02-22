@@ -1,11 +1,12 @@
 include ActionView::Helpers::TextHelper
 
 class GitoliteHooksController < ApplicationController
+  unloadable
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required
   before_filter      :find_project_and_repository
 
-  helper :git_hosting
+  helper  :git_hosting
   include GitHostingHelper
 
 
@@ -29,9 +30,8 @@ class GitoliteHooksController < ApplicationController
     self.response_body = Enumerator.new do |y|
 
       ## Fetch commits from the repository
-      message = "  - Fetching changesets for '#{@project.identifier}' repository ... "
-      logger.info message
-      y << message
+      logger.info "Fetching changesets for '#{@project.identifier}' repository ... "
+      y << "  - Fetching changesets for '#{@project.identifier}' repository ... "
 
       begin
         @repository.fetch_changesets
@@ -52,10 +52,8 @@ class GitoliteHooksController < ApplicationController
       ## Push to each mirror
       @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each do |mirror|
         if mirror.needs_push(payloads)
-          message = "  - Pushing changes to #{mirror.url} ... "
-
-          logger.info message
-          y << message
+          logger.info "Pushing changes to #{mirror.url} ... "
+          y << "  - Pushing changes to #{mirror.url} ... "
 
           push_failed, push_message = mirror.push
 
@@ -158,12 +156,12 @@ class GitoliteHooksController < ApplicationController
       # Grab the repository path
       repo_path = GitHosting.repository_path(@repository)
       revisions_in_range = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' rev-list --reverse #{range}]
-      logger.info "Revisions in Range : #{revisions_in_range.split().join(' ')}"
+      logger.debug "Revisions in range : #{revisions_in_range.split().join(' ')}"
 
       commits = []
 
       revisions_in_range.split().each do |rev|
-        logger.info "Revision : '#{rev.strip}'"
+        logger.debug "Revision : '#{rev.strip}'"
         revision = @repository.find_changeset_by_name(rev.strip)
         next if revision.nil?
 
@@ -221,21 +219,21 @@ class GitoliteHooksController < ApplicationController
       }
     end
 
-    payloads
+    return payloads
   end
 
 
   # Locate that actual repository that is in use here.
   # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
   def find_project_and_repository
-    @project = Project.find_by_identifier(params[:projectid])
+    @project = Project.find_by_identifier(params[:projectId])
     if @project.nil?
-      render :text => l(:error_project_not_found, :identifier => params[:projectid]) if @project.nil?
+      render :text => l(:error_project_not_found, :identifier => params[:projectId]) if @project.nil?
       return
     end
 
-    if params[:repositoryid] && !params[:repositoryid].blank?
-      @repository = @project.repositories.find_by_identifier(params[:repositoryid])
+    if params[:repositoryId] && !params[:repositoryId].blank?
+      @repository = @project.repositories.find_by_identifier(params[:repositoryId])
     else
       # return default or first repo with blank identifier
       @repository = @project.repository || @project.repo_blank_ident
