@@ -5,6 +5,7 @@ require 'rack/utils'
 require 'time'
 
 class SmartHttpController < ApplicationController
+  unloadable
 
   # prevents login action to be filtered by check_if_login_required application scope filter
   skip_before_filter :check_if_login_required, :verify_authenticity_token
@@ -53,7 +54,6 @@ class SmartHttpController < ApplicationController
     logger.info "##########################"
 
     self.method(command).call()
-
   end
 
 
@@ -119,15 +119,15 @@ class SmartHttpController < ApplicationController
 
     command = git_command("#{@rpc} --stateless-rpc .")
 
-    self.response.headers["Content-Type"] = "application/x-git-%s-result" % @rpc
     self.response.status = 200
+    self.response.headers["Content-Type"]  = "application/x-git-%s-result" % @rpc
+    self.response.headers["Last-Modified"] = Time.now.to_s
 
     IO.popen(command, File::RDWR) do |pipe|
       pipe.write(input)
       while !pipe.eof?
-        block = pipe.read()
         self.response_body = Enumerator.new do |y|
-          y << block.to_s
+          y << pipe.read(8192)
         end
       end
     end
@@ -285,23 +285,15 @@ class SmartHttpController < ApplicationController
   end
 
 
-  def file_exists(requested_file)
-    command = "#{run_git_prefix()} if [ -e \"#{requested_file}\" ] ; then echo found ; else echo bad ; fi ' "
-    is_found = %x[#{command}]
-    is_found.chomp!
-    return is_found == "found"
-  end
-
-
   ## Note: command must be terminated with a quote!
   def git_command(command)
-    return "#{run_git_prefix()} env GL_BYPASS_UPDATE_HOOK=true git #{command}'"
+    return "#{run_git_prefix()} && export GL_BYPASS_UPDATE_HOOK=true && git #{command}'"
   end
 
 
   ## Note: command must be started with a quote!
   def run_git_prefix
-    return "#{GitHosting.shell_cmd_runner} 'cd #{GitHosting.repository_path(@repository)} ;"
+    return "#{GitHosting.shell_cmd_runner} 'cd #{GitHosting.repository_path(@repository)}"
   end
 
 
