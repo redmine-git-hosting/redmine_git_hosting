@@ -1,6 +1,6 @@
 ## Redmine Git Hosting Plugin
 
-### A Redmine plugin which makes configuring your own Git hosting easy :)
+### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
 This plugin allows straightforward management of Gitolite within Redmine.
 
