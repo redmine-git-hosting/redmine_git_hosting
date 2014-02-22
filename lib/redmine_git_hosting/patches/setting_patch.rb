@@ -87,25 +87,19 @@ module RedmineGitHosting
 
             end
 
-
-            # SSH server should not include any path components. Also, ports should be numeric.
-            if valuehash[:ssh_server_domain]
-              normalizedServer = valuehash[:ssh_server_domain].lstrip.rstrip.split('/').first
-              if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
-                valuehash[:ssh_server_domain] = @@old_valuehash[:ssh_server_domain]
-              else
-                valuehash[:ssh_server_domain] = normalizedServer
-              end
-            end
-
-
-            # HTTP server should not include any path components. Also, ports should be numeric.
-            if valuehash[:http_server_domain]
-              normalizedServer = valuehash[:http_server_domain].lstrip.rstrip.split('/').first
-              if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
-                valuehash[:http_server_domain] = @@old_valuehash[:http_server_domain]
-              else
-                valuehash[:http_server_domain] = normalizedServer
+            # Server domain should not include any path components. Also, ports should be numeric.
+            [ :ssh_server_domain, :http_server_domain ].each do |setting|
+              if valuehash[setting]
+                if valuehash[setting] != ''
+                  normalizedServer = valuehash[setting].lstrip.rstrip.split('/').first
+                  if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
+                    valuehash[setting] = @@old_valuehash[setting]
+                  else
+                    valuehash[setting] = normalizedServer
+                  end
+                else
+                  valuehash[setting] = @@old_valuehash[setting]
+                end
               end
             end
 
@@ -153,14 +147,16 @@ module RedmineGitHosting
             end
 
 
-            # Normalize Repository path, should be relative and end in '/'
-            if valuehash[:gitolite_global_storage_dir]
-              normalizedFile  = File.expand_path(valuehash[:gitolite_global_storage_dir].lstrip.rstrip, "/")
-              if (normalizedFile != "/")
-                # Clobber leading '/' add trailing '/'
-                valuehash[:gitolite_global_storage_dir] = normalizedFile[1..-1] + "/"
-              else
-                valuehash[:gitolite_global_storage_dir] = @@old_valuehash[:gitolite_global_storage_dir]
+            # Normalize paths, should be relative and end in '/'
+            [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir ].each do |setting|
+              if valuehash[setting]
+                normalizedFile  = File.expand_path(valuehash[setting].lstrip.rstrip, "/")
+                if (normalizedFile != "/")
+                  # Clobber leading '/' add trailing '/'
+                  valuehash[setting] = normalizedFile[1..-1] + "/"
+                else
+                  valuehash[setting] = @@old_valuehash[setting]
+                end
               end
             end
 
@@ -176,17 +172,6 @@ module RedmineGitHosting
               end
             end
 
-
-            # Normalize Recycle bin path, should be relative and end in '/'
-            if valuehash[:gitolite_recycle_bin_dir]
-              normalizedFile  = File.expand_path(valuehash[:gitolite_recycle_bin_dir].lstrip.rstrip, "/")
-              if (normalizedFile != "/")
-                # Clobber leading '/' add trailing '/'
-                valuehash[:gitolite_recycle_bin_dir] = normalizedFile[1..-1] + "/"
-              else
-                valuehash[:gitolite_recycle_bin_dir] = @@old_valuehash[:gitolite_recycle_bin_dir]
-              end
-            end
 
 
             # Check to see if we are trying to claim all repository identifiers are unique
@@ -222,32 +207,19 @@ module RedmineGitHosting
             end
 
 
-            # Validate gitolite_notify_global_include list of mails
-            if !valuehash[:gitolite_notify_global_include].empty?
-              valuehash[:gitolite_notify_global_include] = valuehash[:gitolite_notify_global_include].select{|mail| !mail.blank?}
-              has_error = 0
+            # Validate gitolite_notify mail list
+            [ :gitolite_notify_global_include, :gitolite_notify_global_exclude ].each do |setting|
+              if !valuehash[setting].empty?
+                valuehash[setting] = valuehash[setting].select{|mail| !mail.blank?}
+                has_error = 0
 
-              valuehash[:gitolite_notify_global_include].each do |item|
-                has_error += 1 unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-              end unless valuehash[:gitolite_notify_global_include].empty?
+                valuehash[setting].each do |item|
+                  has_error += 1 unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+                end unless valuehash[setting].empty?
 
-              if has_error > 0
-                valuehash[:gitolite_notify_global_include] = @@old_valuehash[:gitolite_notify_global_include]
-              end
-            end
-
-
-            # Validate gitolite_notify_global_exclude list of mails
-            if !valuehash[:gitolite_notify_global_exclude].empty?
-              valuehash[:gitolite_notify_global_exclude] = valuehash[:gitolite_notify_global_exclude].select{|mail| !mail.blank?}
-              has_error = 0
-
-              valuehash[:gitolite_notify_global_exclude].each do |item|
-                has_error += 1 unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-              end unless valuehash[:gitolite_notify_global_exclude].empty?
-
-              if has_error > 0
-                valuehash[:gitolite_notify_global_exclude] = @@old_valuehash[:gitolite_notify_global_exclude]
+                if has_error > 0
+                  valuehash[setting] = @@old_valuehash[setting]
+                end
               end
             end
 
