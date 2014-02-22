@@ -38,3 +38,12 @@ Copyright (c) 2011-2013 John Kubiatowicz (kubitron@cs.berkeley.edu)
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com)
 
 Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket-rentals.de)
+
+## Donate
+<script src="https://github.com/paypal/JavaScriptButtons/blob/master/src/paypal-button.js" type="text/javascript"></script>
+<script 
+    data-currency="EUR" 
+    data-amount="5.00" 
+    data-name="Redmine Git Hosting" 
+    data-button="donate" src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=HPXQHD5SFCZWW"
+></script>
