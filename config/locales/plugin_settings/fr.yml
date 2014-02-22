@@ -55,12 +55,11 @@ fr:
   label_tab_access: Accès
   label_gitolite_access_config: Configuration des accès Gitolite
 
-  label_ssh_server_domain: Nom de domaine du serveur Gitolite
-  label_ssh_server_domain_desc: (pour les URLs SSH)
+  label_ssh_server_domain: Nom de domaine du serveur SSH
   label_http_server_domain: Nom de domaine du serveur HTTP
-  label_http_server_domain_desc: (pour les URLs HTTP)
   label_https_server_domain: Nom de domaine du serveur HTTPS
-  label_https_server_domain_desc: "(pour les URLs HTTPS, laissez vide si vous n'utilisez pas HTTPS)"
+  label_https_server_domain_desc: "(laissez vide si vous n'utilisez pas HTTPS)"
+  label_default_domain_name: Nom de domaine par défaut
   label_http_server_subdir: Sous-répertoire pour l'accès HTTP
   label_http_server_subdir_desc: (Relatif à la racine de Redmine)
   label_show_repositories_url: Afficher les URL des dépôts
@@ -78,7 +77,7 @@ fr:
 
   label_gitolite_hooks_are_asynchronous: Lancer les hooks de manière asynchrone
   label_gitolite_force_hooks_update: Forcer la mise à jour des hooks
-  label_gitolite_hooks_debug: Lancer les hooks en mode débogue
+  label_gitolite_hooks_debug: Lancer les hooks en mode debug
   label_gitolite_hooks_installed: Hooks installés
 
   # Gitolite Cache Config
@@ -111,7 +110,8 @@ fr:
   label_current_access_patterns: Modèles d'accès courant pour les dépôts
   label_storage_directory: Répertoire de stockage
   label_ssh_access: Accès SSH
-  label_http_access: Accès HTTPS
+  label_http_access: Accès HTTP
+  label_https_access: Accès HTTPS
 
   display_access_setup1: "Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>."
   display_access_setup2: "Assumez aussi que le projet <em>project3</em> a 2 dépôts : le dépôt par <em>défaut</em> et un dépôt <em>example</em>."
@@ -152,3 +152,4 @@ fr:
 
   # Misc
   label_select_all: Tout sélectionner
+  label_etcetera: etc

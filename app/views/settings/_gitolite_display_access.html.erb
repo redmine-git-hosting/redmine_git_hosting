@@ -35,7 +35,12 @@
     <br/>
 
     <label><%= l(:label_http_access) %> :</label>
-    <%= raw "http://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/' : ''}project3.git</em>" %>
+    <%= raw "http://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url(false)}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/' : ''}project3.git</em>" %>
+
+    <br/>
+
+    <label><%= l(:label_https_access) %> :</label>
+    <%= raw "https://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url(true)}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/' : ''}project3.git</em>" %>
   </p>
 
   <p>
@@ -54,7 +59,17 @@
     <br/>
 
     <label><%= l(:label_http_access) %> :</label>
-    <%= raw "http://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/project3/' : ''}example.git</em>" %>
+    <%= raw "http://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url(false)}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/project3/' : ''}example.git</em>" %>
+
+    <br/>
+
+    <label><%= l(:label_https_access) %> :</label>
+    <%= raw "https://<em>redmine-user</em>@#{RedmineGitolite::Config.my_root_url(true)}/#{RedmineGitolite::Config.http_server_subdir}<em>#{(RedmineGitolite::Config.hierarchical_organisation?) ? 'project1/project2/project3/' : ''}example.git</em>" %>
+
+    <br/>
+    <br/>
+
+    <label><%= l(:label_etcetera) %>...</label>
   </p>
 
   <%= raw l(:display_access_emphasis) %>

@@ -55,12 +55,11 @@ en:
   label_tab_access: Access
   label_gitolite_access_config: Gitolite Access Configuration
 
-  label_ssh_server_domain: Gitolite server domain
-  label_ssh_server_domain_desc: (For Git SSH urls)
+  label_ssh_server_domain: SSH server domain
   label_http_server_domain: HTTP server domain
-  label_http_server_domain_desc: (For Git HTTP urls)
-  label_https_server_domain: HTTPs server domain
-  label_https_server_domain_desc: "(For Git HTTPs urls, don't set it if you don't use it)"
+  label_https_server_domain: HTTPS server domain
+  label_https_server_domain_desc: "(don't set it if you don't use it)"
+  label_default_domain_name: Default domain name
   label_http_server_subdir: Subdirectory for HTTP access
   label_http_server_subdir_desc: (Relative to Redmine root url)
   label_show_repositories_url: Show checkout URL's?
@@ -112,6 +111,7 @@ en:
   label_storage_directory: Storage directory
   label_ssh_access: SSH access
   label_http_access: HTTP access
+  label_https_access: HTTPS access
 
   display_access_setup1: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
   display_access_setup2: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
@@ -152,3 +152,4 @@ en:
 
   # Misc
   label_select_all: Select all
+  label_etcetera: etc

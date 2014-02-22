@@ -10,29 +10,52 @@
 
 <p>
   <label><%= l(:label_all_projects_use_git) %></label>
-  <%= select_tag("settings[all_projects_use_git]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], all_projects_use_git)) %>
-  <br />
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[all_projects_use_git]", "false" %>
+    <% if all_projects_use_git == 'true' %>
+      <%= check_box_tag "settings[all_projects_use_git]", all_projects_use_git, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[all_projects_use_git]", all_projects_use_git %>
+    <% end %>
+  </span>
 </p>
 
 <p>
-  <label><%= raw l(:label_delete_git_repositories) %></label>
-  <%= select_tag("settings[delete_git_repositories]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], delete_git_repositories)) %>
-  <br />
+  <label><%= l(:label_delete_git_repositories).html_safe %></label>
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[delete_git_repositories]", "false" %>
+    <% if delete_git_repositories == 'true' %>
+      <%= check_box_tag "settings[delete_git_repositories]", delete_git_repositories, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[delete_git_repositories]", delete_git_repositories %>
+    <% end %>
+  </span>
 </p>
 
 <p>
-  <label><%= raw l(:label_hierarchical_organisation) %></label>
-  <%= select_tag("settings[hierarchical_organisation]", options_for_select([[l(:label_hierarchical), 'true'], [l(:label_flat), 'false']], hierarchical_organisation)) %>
-  <br />
+  <label><%= l(:label_hierarchical_organisation) %></label>
+  <span class="bootstrap-switch switch-small switch-extended" data-on="primary" data-off="default" data-on-label="<%= l(:label_hierarchical) %>" data-off-label="<%= l(:label_flat) %>">
+    <%= hidden_field_tag "settings[hierarchical_organisation]", "false" %>
+    <% if hierarchical_organisation == 'true' %>
+      <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation %>
+    <% end %>
+  </span>
 </p>
 
 <p>
   <label><%= l(:label_unique_repo_identifier) %></label>
-  <%= select_tag("settings[unique_repo_identifier]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], unique_repo_identifier)) %>
-  <br />
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[unique_repo_identifier]", "false" %>
+    <% if unique_repo_identifier == 'true' %>
+      <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier %>
+    <% end %>
+  </span>
 </p>
 
-<br/>
-<br/>
+<br />
 
 <%= render :partial => "gitolite_display_access" %>

@@ -44,17 +44,17 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite Global Config
       :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
       :gitolite_script_dir                   => '',
-      :gitolite_lock_wait_time               => 10,
+      :gitolite_lock_wait_time               => '10',
       :gitolite_config_file                  => 'gitolite.conf',
-      :gitolite_config_has_admin_key         => true,
+      :gitolite_config_has_admin_key         => 'true',
       :gitolite_recycle_bin_expiration_time  => '24.0',
       :gitolite_log_level                    => 'info',
-      :gitolite_log_split                    => false,
+      :gitolite_log_split                    => 'false',
 
       # Gitolite Hooks Config
-      :gitolite_hooks_are_asynchronous  => true,
-      :gitolite_force_hooks_update      => true,
-      :gitolite_hooks_debug             => false,
+      :gitolite_hooks_are_asynchronous  => 'true',
+      :gitolite_force_hooks_update      => 'true',
+      :gitolite_hooks_debug             => 'false',
 
       # Gitolite Cache Config
       :gitolite_cache_max_time          => '-1',
@@ -66,26 +66,25 @@ Redmine::Plugin.register :redmine_git_hosting do
       :http_server_domain               => 'localhost',
       :https_server_domain              => '',
       :http_server_subdir               => '',
-      :show_repositories_url            => true,
-      :gitolite_daemon_by_default       => 0,
+      :show_repositories_url            => 'true',
+      :gitolite_daemon_by_default       => 'false',
       :gitolite_http_by_default         => 1,
 
       # Redmine Config
-      :all_projects_use_git             => false,
-      :delete_git_repositories          => false,
-      :hierarchical_organisation        => false,
-      :unique_repo_identifier           => true,
+      :all_projects_use_git             => 'false',
+      :delete_git_repositories          => 'false',
+      :hierarchical_organisation        => 'false',
+      :unique_repo_identifier           => 'true',
 
       # Git Mailing List Config
-      :gitolite_notify_cia_by_default        => '0',
-      :gitolite_notify_by_default            => 1,
+      :gitolite_notify_by_default            => 'true',
       :gitolite_notify_global_prefix         => '[REDMINE]',
       :gitolite_notify_global_sender_address => 'redmine@example.com',
       :gitolite_notify_global_include        => [],
       :gitolite_notify_global_exclude        => [],
 
       # Sidekiq Config
-      :gitolite_use_sidekiq                  => false,
+      :gitolite_use_sidekiq                  => 'false',
     }
   })
 

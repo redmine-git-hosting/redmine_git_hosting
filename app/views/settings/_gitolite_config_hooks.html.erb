@@ -9,20 +9,38 @@
 
 <p>
   <label><%= l(:label_gitolite_hooks_are_asynchronous) %></label>
-  <%= select_tag("settings[gitolite_hooks_are_asynchronous]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_hooks_are_asynchronous)) %>
-  <br />
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[gitolite_hooks_are_asynchronous]", "false" %>
+    <% if gitolite_hooks_are_asynchronous == 'true' %>
+      <%= check_box_tag "settings[gitolite_hooks_are_asynchronous]", gitolite_hooks_are_asynchronous, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[gitolite_hooks_are_asynchronous]", gitolite_hooks_are_asynchronous %>
+    <% end %>
+  </span>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_force_hooks_update) %></label>
-  <%= select_tag("settings[gitolite_force_hooks_update]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_force_hooks_update)) %>
-  <br />
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[gitolite_force_hooks_update]", "false" %>
+    <% if gitolite_force_hooks_update == 'true' %>
+      <%= check_box_tag "settings[gitolite_force_hooks_update]", gitolite_force_hooks_update, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[gitolite_force_hooks_update]", gitolite_force_hooks_update %>
+    <% end %>
+  </span>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_hooks_debug) %></label>
-  <%= select_tag("settings[gitolite_hooks_debug]", options_for_select([[l(:label_true), 'true'], [l(:label_false), 'false']], gitolite_hooks_debug)) %>
-  <br />
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[gitolite_hooks_debug]", "false" %>
+    <% if gitolite_hooks_debug == 'true' %>
+      <%= check_box_tag "settings[gitolite_hooks_debug]", gitolite_hooks_debug, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[gitolite_hooks_debug]", gitolite_hooks_debug %>
+    <% end %>
+  </span>
 </p>
 
 <p>

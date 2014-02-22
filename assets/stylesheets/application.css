@@ -49,6 +49,19 @@ PLUGIN SETTINGS
   color: #467AA7;
 }
 
+.bootstrap-switch {
+  margin-left: 10px;
+}
+
+#tab-content-gitolite_redmine_config .switch-extended {
+  min-width: 175px;
+}
+
+#settings p {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
 
 /*
 REPOSITORY VIEW
