@@ -1,6 +1,6 @@
 ## Redmine Git Hosting Plugin
 
-### A Redmine plugin which makes configuring your own Git hosting easy :)
+### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
 This plugin allows straightforward management of Gitolite within Redmine.
 
@@ -18,6 +18,7 @@ It provides these functionalities :
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU)
 
 ## Code status
 
@@ -38,3 +39,4 @@ Copyright (c) 2011-2013 John Kubiatowicz (kubitron@cs.berkeley.edu)
 Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com)
 
 Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket-rentals.de)
+
