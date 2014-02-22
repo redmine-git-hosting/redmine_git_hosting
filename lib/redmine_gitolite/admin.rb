@@ -319,9 +319,9 @@ module RedmineGitolite
       repo_conf = Gitolite::Config::Repo.new(repo_name)
 
       # Set post-receive hook params
-      repo_conf.set_git_config("hooks.redmine_gitolite.projectid", repository.project.identifier.to_s)
-      repo_conf.set_git_config("hooks.redmine_gitolite.repositoryid", "#{repository.identifier || ''}")
-      repo_conf.set_git_config("hooks.redmine_gitolite.key", repository.extra.key)
+      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
+      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
+      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
 
       # Set mail-notifications hook params
       if repository.extra.git_notify == 1
@@ -336,7 +336,7 @@ module RedmineGitolite
           repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
 
           # Set SMTP server for mail-notifications hook
-          #~ repo_conf.set_git_config("hooks.multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
+          #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
         end
       end
 
@@ -365,9 +365,9 @@ module RedmineGitolite
       repo_conf = Gitolite::Config::Repo.new(repo_name)
 
       # Set post-receive hook params
-      repo_conf.set_git_config("hooks.redmine_gitolite.projectid", repository.project.identifier.to_s)
-      repo_conf.set_git_config("hooks.redmine_gitolite.repositoryid", "#{repository.identifier || ''}")
-      repo_conf.set_git_config("hooks.redmine_gitolite.key", repository.extra.key)
+      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
+      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
+      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
 
       # Set mail-notifications hook params
       if repository.extra.git_notify == 1
@@ -382,7 +382,7 @@ module RedmineGitolite
           repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
 
           # Set SMTP server for mail-notifications hook
-          #~ repo_conf.set_git_config("hooks.multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
+          #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
         end
       end
 
