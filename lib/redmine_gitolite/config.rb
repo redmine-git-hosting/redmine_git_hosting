@@ -220,6 +220,19 @@ module RedmineGitolite
     end
 
 
+    def self.gitolite_hooks_url
+      if https_server_domain != '' && https_server_domain.split(':')[0] != 'localhost'
+        scheme = "https://"
+        server_domain = RedmineGitolite::Config.my_root_url(true)
+       else
+        scheme = "http://"
+        server_domain = RedmineGitolite::Config.my_root_url(false)
+       end
+
+      return File.join(scheme, server_domain, "/githooks/post-receive")
+     end
+
+
     def self.gitolite_log_level
       if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_level].nil?
         Setting.plugin_redmine_git_hosting[:gitolite_log_level]
@@ -362,12 +375,20 @@ module RedmineGitolite
     end
 
 
-    # Server path (minus protocol)
-    def self.my_root_url
+    def self.my_root_url(ssl = false)
       # Remove any path from httpServer in case they are leftover from previous installations.
       # No trailing /.
       my_root_path = Redmine::Utils::relative_url_root
-      File.join(http_server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
+
+      if ssl && https_server_domain != ''
+        server_domain = https_server_domain
+      else
+        server_domain = http_server_domain
+      end
+
+      my_root_url = File.join(server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
+
+      return my_root_url
     end
 
 
@@ -378,21 +399,11 @@ module RedmineGitolite
     ###############################
 
 
-    GITOLITE_NOTIFY_CIA_BY_DEFAULT         = 0
     GITOLITE_NOTIFY_BY_DEFAULT             = 1
     GITOLITE_NOTIFY_GLOBAL_PREFIX          = '[REDMINE]'
     GITOLITE_NOTIFY_GLOBAL_SENDER_ADDRESS  = Setting.mail_from.to_s.strip.downcase
     GITOLITE_NOTIFY_GLOBAL_INCLUDE         = []
     GITOLITE_NOTIFY_GLOBAL_EXCLUDE         = []
-
-
-    def self.gitolite_notify_cia_by_default
-      if !Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_cia_by_default].nil?
-        Setting.plugin_redmine_git_hosting[:gitolite_notify_cia_by_default]
-      else
-        GITOLITE_NOTIFY_CIA_BY_DEFAULT
-      end
-    end
 
 
     def self.gitolite_notify_by_default
