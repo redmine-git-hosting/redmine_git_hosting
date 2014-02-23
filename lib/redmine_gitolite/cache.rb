@@ -1,3 +1,5 @@
+require 'stringio'
+
 module RedmineGitolite
 
   class Cache

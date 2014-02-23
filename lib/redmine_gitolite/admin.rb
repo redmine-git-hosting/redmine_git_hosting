@@ -1,3 +1,5 @@
+require 'gitolite'
+
 module RedmineGitolite
 
   class Admin

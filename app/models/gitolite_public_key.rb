@@ -1,3 +1,5 @@
+require 'base64'
+
 include GitolitePublicKeysHelper
 
 class GitolitePublicKey < ActiveRecord::Base

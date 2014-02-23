@@ -1,3 +1,6 @@
+require 'lockfile'
+require 'open3'
+
 module GitHosting
 
   @@logger = nil

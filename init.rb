@@ -1,17 +1,5 @@
 # coding: utf-8
 
-require 'base64'
-require 'fileutils'
-require 'lockfile'
-require 'net/http'
-require 'net/ssh'
-require 'open3'
-require 'stringio'
-require 'tmpdir'
-require 'uri'
-
-require 'gitolite'
-
 require 'redmine'
 
 require 'redmine_git_hosting'

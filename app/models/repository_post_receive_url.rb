@@ -1,3 +1,5 @@
+require 'uri'
+
 class RepositoryPostReceiveUrl < ActiveRecord::Base
   unloadable
 
