@@ -125,6 +125,14 @@ fr:
   label_default_repository: Dépôt par défaut
   label_example_repository: Dépôt example
 
+  # Download Revision Config
+  label_tab_gitolite_download_revision: Téléchargement des révisions
+  label_gitolite_download_revision_timeout: Timeout d'archivage
+  label_gitolite_download_revision_timeout_desc: (en secondes)
+  label_gitolite_download_revision_max_size: Taille maximale de l'archive
+  label_gitolite_download_revision_max_size_desc: (en Mo)
+  label_gitolite_download_revision_gzip: Utiliser la compression Gzip
+
   # Sidekiq Config
   label_tab_sidekiq_interface: Sidekiq
   label_gitolite_use_sidekiq: Utiliser Sidekiq pour lancer les taches en mode asynchrone

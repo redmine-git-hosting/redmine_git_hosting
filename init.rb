@@ -76,6 +76,11 @@ Redmine::Plugin.register :redmine_git_hosting do
       :hierarchical_organisation        => 'false',
       :unique_repo_identifier           => 'true',
 
+      # Download Revision Config
+      :download_revision_timeout        => '60',
+      :download_revision_max_size       => '512',
+      :download_revision_gzip           => 'true',
+
       # Git Mailing List Config
       :gitolite_notify_by_default            => 'true',
       :gitolite_notify_global_prefix         => '[REDMINE]',
