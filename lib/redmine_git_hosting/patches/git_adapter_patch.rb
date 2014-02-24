@@ -47,6 +47,8 @@ module RedmineGitHosting
 
           cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
 
+          GitHosting.logger.debug "Send GitCommand : #{cmd_str}"
+
           # Compute string from repo_path that should be same as: repo.git_label(:assume_unique=>false)
           # If only we had access to the repo (we don't).
           repo_id = Repository.repo_path_to_git_label(repo_path)

@@ -32,7 +32,7 @@ module RedmineGitolite
 
     # Primary interface: execute given command and send IO to block
     # options[:write_stdin] will derive caching key from data that block writes to io stream
-    def self.execute(cmd_str, repo_id, options={}, &block)
+    def self.execute(cmd_str, repo_id, options = {}, &block)
       if max_cache_time == 0 || repo_id.nil? || options[:uncached]
         # Disabled cache, simply launch shell, don't redirect
         # Rails.logger.error "Cache disabled: repo_id(#{repo_id}), cmd_str: #{cmd_str}"
@@ -48,14 +48,16 @@ module RedmineGitolite
         # Create redirector stream and call block
         redirector = self.new(cmd_str, repo_id, options)
         block.call(redirector)
-        (retio,status) = redirector.exit_shell
+        (retio, status) = redirector.exit_shell
       end
 
       if status && status.exitstatus != 0
-        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "git exited with non-zero status: #{$?.exitstatus}"
+        logger.error "Git exited with non-zero status : #{$?.exitstatus}"
+        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{$?.exitstatus}"
       end
-      retio
+      return retio
     end
+
 
     ###############################################
     # Duck-typing of an IO interface              #
@@ -86,7 +88,7 @@ module RedmineGitolite
 
     def close_write
       # Ok -- now have all the extra args...  Check cache
-      out = self.class.check_cache(@my_cmd_str,@my_extra_args)
+      out = self.class.check_cache(@my_cmd_str, @my_extra_args)
       if out
         # Match in the cache!
         @state = STRING_IO
@@ -120,8 +122,10 @@ module RedmineGitolite
 
       if @my_read_stream.nil?
         # Shouldn't happen, but might be problem
-        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "call to #{my_method.to_s} before IO-handlers wrapped."
+        logger.error "Call to #{my_method.to_s} before IO-handlers wrapped."
+        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
       end
+
 
       # Buffer up results from read operations. Proxy everything else directly to IO stream.
       my_name = my_method.to_s
@@ -141,7 +145,7 @@ module RedmineGitolite
               EnumerableRedirector.new(myvalue,self)
             end
           else
-            @my_read_stream.#{my_method}(*args,&block)
+            @my_read_stream.#{my_method}(*args, &block)
           end
         end
         EOF
@@ -158,13 +162,14 @@ module RedmineGitolite
         # Handle every thing else by simply forwarding (Class #3)
         self.class.class_eval <<-EOF, __FILE__, __LINE__
         def #{my_method}(*args, &block)
-          @my_read_stream.#{my_method}(*args,&block)
+          @my_read_stream.#{my_method}(*args, &block)
         end
         EOF
       end
       # Call new function once
       self.send(my_method,*args,&block)
     end
+
 
     # This class wraps a given enumerator and produces another one
     # that logs all read data into the buffer.
@@ -186,6 +191,7 @@ module RedmineGitolite
       end
     end
 
+
     def add_to_buffer(invalue)
       return if @my_buffer_overfull
       if invalue.is_a?(Array)
@@ -195,6 +201,7 @@ module RedmineGitolite
       end
     end
 
+
     def push_to_buffer(invalue)
       nextchunk = invalue.is_a?(Integer) ? invalue.chr : invalue
       if @my_buffer.length + nextchunk.length <= self.class.max_cache_size
@@ -203,6 +210,7 @@ module RedmineGitolite
         @my_buffer_overfull = true
       end
     end
+
 
     ##############################################################################
     # The following three functions are the generic versions of what is          #
@@ -226,6 +234,7 @@ module RedmineGitolite
       end
     end
 
+
     # Class #2 functions (Return of Array, String, or Integer)
     def normal_diverter(my_method, *args)
       myvalue = @my_read_stream.send(my_method, *args)
@@ -233,16 +242,18 @@ module RedmineGitolite
       myvalue
     end
 
+
     # Class #3 functions (Everything by read functions)
     def simple_proxy(my_method, *args, &block)
       @my_read_stream.send(my_method, *args, &block)
     end
 
+
     ###############################################
     # Basic redirector methods                    #
     ###############################################
 
-    def initialize(cmd_str, repo_id, options={})
+    def initialize(cmd_str, repo_id, options = {})
       @my_cmd_str = cmd_str
       @my_repo_id = repo_id
       @my_options = options
@@ -258,12 +269,13 @@ module RedmineGitolite
       end
     end
 
+
     def startup_shell
       Thread.abort_on_exception = true
       proxy_started = false
-      @wrap_thread = Thread.new(@my_cmd_str,@my_options) {|cmd_str,options|
+      @wrap_thread = Thread.new(@my_cmd_str, @my_options) {|cmd_str, options|
         if options[:write_stdin]
-          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str,options) {|io|
+          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) {|io|
             io.binmode
             io.puts(@my_extra_args)
             io.close_write
@@ -294,6 +306,7 @@ module RedmineGitolite
       @state = RUNNING_SHELL
     end
 
+
     def exit_shell
       # If shell was running, kill off wrapper thread
       if @state == RUNNING_SHELL
@@ -301,12 +314,13 @@ module RedmineGitolite
         @wrap_thread.join
         @state = DEAD
         if !@my_buffer_overfull
-          self.class.set_cache(@my_repo_id,@my_buffer,@my_cmd_str,@my_extra_args)
           # Insert result into cache
+          self.class.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
         end
       end
-      [@retio,@status]
+      return [@retio, @status]
     end
+
 
     ###############################################
     # Caching interface functions                 #
@@ -316,13 +330,16 @@ module RedmineGitolite
       RedmineGitolite::Config.gitolite_cache_max_time.to_i          # in seconds, default = 60
     end
 
+
     def self.max_cache_elements
       RedmineGitolite::Config.gitolite_cache_max_elements.to_i      # default = 100
     end
 
+
     def self.max_cache_size
       RedmineGitolite::Config.gitolite_cache_max_size.to_i*1024*1024   # In MB, default = 16MB, converted to bytes
     end
+
 
     def self.compose_key(key1,key2)
       if key2 && !key2.blank?
@@ -332,10 +349,14 @@ module RedmineGitolite
       end
     end
 
-    def self.check_cache(primary_key,secondary_key=nil)
-      # Rails.logger.error "Probing cache with key: #{compose_key(primary_key,secondary_key)}"
-      out=nil
-      cached = GitCache.find_by_command(compose_key(primary_key,secondary_key))
+
+    def self.check_cache(primary_key, secondary_key = nil)
+      logger.debug "Probing cache entry"
+      logger.debug compose_key(primary_key, secondary_key)
+
+      out = nil
+      cached = GitCache.find_by_command(compose_key(primary_key, secondary_key))
+
       if cached
         cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
         if (cached.created_at.to_i >= expire_at(cached.repo_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
@@ -347,23 +368,25 @@ module RedmineGitolite
       end
       if out
         # Return result as a string stream
-        # Rails.logger.error "********* Matched ***********\n#{out.to_s}"
         StringIO.new(out)
       else
-        # Rails.logger.error "********* Failed ************\n"
         nil
       end
     end
 
 
-    def self.set_cache(repo_id,out_value,primary_key,secondary_key=nil)
-    # Rails.logger.error "Inserting into cache with key: #{compose_key(primary_key,secondary_key)}"
+    def self.set_cache(repo_id, out_value, primary_key, secondary_key = nil)
+      logger.debug "Inserting cache entry for repository '#{repo_id}'"
+      logger.debug compose_key(primary_key, secondary_key)
+
       gitc = GitCache.create(
         :command         => compose_key(primary_key, secondary_key),
         :command_output  => out_value,
         :repo_identifier => repo_id
       )
+
       gitc.save
+
       if GitCache.count > max_cache_elements && max_cache_elements >= 0
         oldest = GitCache.find(:last, :order => "created_at DESC")
         GitCache.destroy(oldest.id)
@@ -373,8 +396,8 @@ module RedmineGitolite
 
     @@time_limits=nil
     def self.limit_cache(repo,date)
-      repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
-      # Rails.logger.error "EXECUTING LIMIT CACHE: '#{repo_id}' for '#{date}'"
+      repo_id = repo.is_a?(Repository::Git) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
+      logger.info "Executing limit cache : '#{repo_id}' for '#{date}'"
       @@time_limits ||= {}
       @@time_limits[repo_id]=(ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
     end
@@ -387,14 +410,14 @@ module RedmineGitolite
 
     # Given repository or repository_path, clear the cache entries
     def self.clear_cache_for_repository(repo)
-      repo_id = repo.is_a?(Repository) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
+      repo_id = repo.is_a?(Repository::Git) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
 
       # Clear cache
       old_cached = GitCache.find_all_by_repo_identifier(repo_id)
       if old_cached != nil
         old_ids = old_cached.collect(&:id)
         GitCache.destroy(old_ids)
-        logger.info "Removed #{old_cached.count} expired cache entries."
+        logger.info "Removed '#{old_cached.count}' expired cache entries for repository '#{repo_id}'"
       end
     end
 
@@ -408,7 +431,7 @@ module RedmineGitolite
       if old_cached != nil
         old_ids = old_cached.collect(&:id)
         GitCache.destroy(old_ids)
-        logger.info "Removed #{old_cached.count} expired cache entries."
+        logger.info "Removed '#{old_cached.count}' expired cache entries among all repositories"
       end
     end
 
