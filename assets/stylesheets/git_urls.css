@@ -21,12 +21,19 @@ ZERO CLIPBOARD
   background-image: linear-gradient(to bottom, #CCCCCC, #AAAAAA);
 }
 
+#clipboard_button.zeroclipboard-is-active,
+#mirror_clipboard_button.zeroclipboard-is-active {
+  background-color: #DCDCDC;
+  background-image: none;
+  border-color: #B5B5B5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset;
+}
 
 /*
 GIT_URL_BOX
 */
 #git_url_box         { height: 25px; padding: 10px 0 0; margin: 0px; }
-#git_url_desc        { color: #666666; display: block; font-size: 11px; line-height: 25px; padding-top: 5px; }
+#git_url_desc        { color: #666666; display: block; font-size: 11px; line-height: 25px; padding-top: 5px; float: left; }
 #git_url_permissions { font-weight: bold; }
 
 #git_url_list    { float: left; height: 23px; list-style-type: none; margin: 0px; padding: 0px; }
@@ -43,12 +50,10 @@ GIT_URL_BOX
   font-size: 10px;
   height: 18px;
   margin: 0;
-  max-width: 75%;
+  min-width: 45%;
   padding: 3px 5px 2px;
-  width: 60%;
+  width: auto;
 }
-
-.git_url_text_big { width: 75%; }
 
 #git_url_list li a {
   background-color: #EEEEEE;

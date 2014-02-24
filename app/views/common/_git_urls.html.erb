@@ -1,9 +1,9 @@
 <% if !repository.available_urls.empty? %>
   <div id="git_url_box">
 
-    <ul id="git_url_list" >
+    <ul id="git_url_list">
       <% repository.available_urls.each do |key, value| %>
-        <li id="git_url_<%= key %>" >
+        <li id="git_url_<%= key %>" class="git_url">
           <a href="javascript:void(0)"><%= key.upcase %></a>
         </li>
       <% end %>
@@ -12,7 +12,7 @@
     <input id="git_url_text" readonly="readonly" />
 
     <div id="clipboard_container">
-      <div id="clipboard_button" data-clipboard-target="git_url_text" title="<%= l(:label_copy_to_clipboard) %>">
+      <div id="clipboard_button" data-clipboard-target="git_url_text">
         <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
       </div>
     </div>
@@ -27,7 +27,10 @@
 <% end %>
 
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag    'git_urls',                   :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag    'git_urls',                    :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag    'bootstrap/bootstrap_tooltip', :plugin => 'redmine_git_hosting' %>
+
+  <%= javascript_include_tag 'plugins/bootstrap_tooltip',  :plugin => 'redmine_git_hosting' %>
   <%= javascript_include_tag 'plugins/zero_clipboard_min', :plugin => 'redmine_git_hosting' %>
 
   <%= javascript_tag do %>
@@ -40,6 +43,19 @@
     $(document).ready(function() {
       ZeroClipboard.config({ moviePath: "<%= plugin_asset_link('ZeroClipboard.swf') %>" });
       var client = new ZeroClipboard($('#clipboard_button'));
+
+      $('#global-zeroclipboard-html-bridge').tooltip({
+        title:     '<%= l(:label_copy_to_clipboard) %>',
+        placement: 'right'
+      });
+
+      client.on('mouseover', function() {
+        $('#global-zeroclipboard-html-bridge').tooltip('show');
+      });
+
+      client.on('complete', function() {
+        $('.tooltip .tooltip-inner').text('<%= l(:label_copied_to_clipboard) %>');
+      });
 
       $('#git_url_list li').first().addClass('selected');
       var key    = $('#git_url_list li').first().attr('id');

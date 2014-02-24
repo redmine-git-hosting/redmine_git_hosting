@@ -1,30 +1,17 @@
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'git_urls',                         :plugin => 'redmine_git_hosting' %>
-
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_switch',       :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_git_hosting' %>
-
-  <%= stylesheet_link_tag 'tag_it/jquery_tagit',              :plugin => 'redmine_git_hosting' %>
-
-  <%= javascript_include_tag 'plugins/bootstrap_switch',      :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/bootstrap_transitions', :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/tag_it',                :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/zero_clipboard_min',    :plugin => 'redmine_git_hosting' %>
-
-  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_git_hosting' %>
+<% if @repository && @repository.is_a?(Repository::Git) %>
+  <div class="git_hosting box">
+    <h3><%= l(:label_repository_access_url) %></h3>
+    <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>
+  </div>
 <% end %>
 
-<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository} %>
 
 <%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put} do |f| %>
   <%= render :partial => 'form', :locals => {:f => f} %>
 <% end %>
 
 
-<% if @repository && @repository.is_a?(Repository::Git) && !(@repository.nil? || @repository.new_record?) %>
+<% if @repository && @repository.is_a?(Repository::Git) %>
 
   <div id="repository-tabs">
     <ul>
@@ -46,43 +33,43 @@
     </ul>
   </div>
 
-<% end %>
+  <div id="modal-box"></div>
+  <div id="modal-box-close-only"></div>
 
+  <% content_for :header_tags do %>
+    <%= javascript_tag do %>
+      function push_mode_change(elem) {
+        if (!elem) return;
+        var idx = elem.selectedIndex;
+        if (idx == 0) {
+          $('#ref_spec_options').hide();
+        } else {
+          $('#ref_spec_options').show();
+        }
+      }
 
-<div id="modal-box"></div>
-<div id="modal-box-close-only"></div>
+      function key_mode_change(elem) {
+        if (!elem) return;
+        var idx = elem.selectedIndex;
+        if (idx == 0) {
+          $('#new_key_window').show();
+        } else {
+          $('#new_key_window').hide();
+        }
+      }
 
+      var modals           = Object();
+      modals.label_save    = '<%= l(:button_save) %>';
+      modals.label_cancel  = '<%= l(:button_cancel) %>';
+      modals.label_ok      = '<%= l(:button_ok) %>';
+      modals.modal_list    = [];
+      modals.modal_list[0] = {'source': '.modal-box', 'target': '#modal-box', 'mode': 'standard'};
+      modals.modal_list[1] = {'source': '.modal-box-close-only', 'target': '#modal-box-close-only', 'mode': 'close-only'};
 
-<%= javascript_tag do %>
-  function push_mode_change(elem) {
-    if (!elem) return;
-    var idx = elem.selectedIndex;
-    if (idx == 0) {
-      $('#ref_spec_options').hide();
-    } else {
-      $('#ref_spec_options').show();
-    }
-  }
+      $(document).ready(function() {
+        $("#repository-tabs").tabs();
+      });
+    <% end %>
+  <% end %>
 
-  function key_mode_change(elem) {
-    if (!elem) return;
-    var idx = elem.selectedIndex;
-    if (idx == 0) {
-      $('#new_key_window').show();
-    } else {
-      $('#new_key_window').hide();
-    }
-  }
-
-  var modals           = Object();
-  modals.label_save    = '<%= l(:button_save) %>';
-  modals.label_cancel  = '<%= l(:button_cancel) %>';
-  modals.label_ok      = '<%= l(:button_ok) %>';
-  modals.modal_list    = [];
-  modals.modal_list[0] = {'source': '.modal-box', 'target': '#modal-box', 'mode': 'standard'};
-  modals.modal_list[1] = {'source': '.modal-box-close-only', 'target': '#modal-box-close-only', 'mode': 'close-only'};
-
-  $(document).ready(function() {
-    $("#repository-tabs").tabs();
-  });
 <% end %>

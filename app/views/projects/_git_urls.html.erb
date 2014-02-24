@@ -6,6 +6,7 @@
         <h3><%= l(:label_main_git_repository) %></h3>
         <%= render :partial => 'common/git_urls', :locals => {:repository => project.repository} %>
 
+        <br />
         <% if project.repositories.count > 1 %>
           <p>
             <%= link_to l(:label_see_other_repositories), { :controller    => "/repositories",

@@ -4,19 +4,22 @@
     <div id="git_hosting_download_buttons">
       <ul>
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'tar'), :html => {:method => :post} do |f| %>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
+            <%= hidden_field_tag "download_format", "tar" %>
             <%= submit_tag l(:label_download_format, :archive_format => '.tar') %>
           <% end %>
         </li>
 
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'tar.gz'), :html => {:method => :post} do |f| %>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
+            <%= hidden_field_tag "download_format", "tar.gz" %>
             <%= submit_tag l(:label_download_format, :archive_format => '.tar.gz') %>
           <% end %>
         </li>
 
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'zip'), :html => {:method => :post} do |f| %>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
+            <%= hidden_field_tag "download_format", "zip" %>
             <%= submit_tag l(:label_download_format, :archive_format => '.zip') %>
           <% end %>
         </li>

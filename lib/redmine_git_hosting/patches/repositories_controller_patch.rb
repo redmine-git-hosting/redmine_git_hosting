@@ -35,11 +35,20 @@ module RedmineGitHosting
 
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
-              # Update repository extras
-              if request.post? && @repository && !params[:extra].nil?
-                @repository.extra.update_attributes(params[:extra])
+
+              if params[:extra][:git_daemon] == 'true'
+                params[:extra][:git_daemon] = 1
+              else
+                params[:extra][:git_daemon] = 0
               end
 
+              if params[:extra][:git_notify] == 'true'
+                params[:extra][:git_notify] = 1
+              else
+                params[:extra][:git_notify] = 0
+              end
+
+              @repository.extra.update_attributes(params[:extra])
               GitHosting.logger.info "User '#{User.current.login}' created a new repository '#{GitHosting.repository_name(@repository)}'"
               GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id })
             end
@@ -52,11 +61,20 @@ module RedmineGitHosting
 
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
-              # Update repository extras
-              if request.put? && @repository && !params[:extra].nil?
-                @repository.extra.update_attributes(params[:extra])
+
+              if params[:extra][:git_daemon] == 'true'
+                params[:extra][:git_daemon] = 1
+              else
+                params[:extra][:git_daemon] = 0
               end
 
+              if params[:extra][:git_notify] == 'true'
+                params[:extra][:git_notify] = 1
+              else
+                params[:extra][:git_notify] = 0
+              end
+
+              @repository.extra.update_attributes(params[:extra])
               GitHosting.logger.info "User '#{User.current.login}' has modified repository '#{GitHosting.repository_name(@repository)}'"
               GitHosting.resync_gitolite({ :command => :update_repository, :object => @repository.id })
             end

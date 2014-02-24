@@ -1,13 +1,9 @@
 <%# This is used to display basic git setup instructions, like on github... %>
 <% flash.now[:warning] = l(:notice_empty_repository) %>
 
-<%= render :partial => 'repositories/git_urls', :locals => {:repository => @repository} %>
-
 <div class="box">
-
-  <br />
-
   <h2><%= l(:label_help_git_setup) %> :</h2>
+
   <pre>
     <a href="http://git-scm.com/download" target="_blank"><%= l(:label_download_and_install_git) %></a>
     git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
@@ -53,10 +49,17 @@
     <ul class="repository git">
       <% @repositories.sort.each do |repo| %>
           <li class="repository git"><%= link_to h(repo.name), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                                        :class => 'repository git' + (repo == @repository ? ' selected' : '') %>
+                                        :class => 'repository' + (@repository.is_a?(Repository::Git) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
           </li>
       <% end %>
     </ul>
+
+    <% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.show_repositories_url? %>
+      <div class="git_hosting_urls">
+        <h3><%= l(:label_repository_access_url) %></h3>
+        <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
 

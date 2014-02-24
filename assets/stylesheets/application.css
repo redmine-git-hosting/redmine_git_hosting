@@ -86,13 +86,29 @@ REPOSITORY VIEW
   margin-bottom: 5px;
 }
 
+#sidebar li.git_url {
+  margin: 0;
+}
+
+.git_hosting_urls {
+  display: block;
+  height: 90px;
+  margin-bottom: 20px;
+}
+
 
 /*
 REPOSITORY SETTINGS
 */
 #git_hosting_settings label {
+  margin-left: -190px;
+  padding-left: 5px;
   padding-right: 10px;
   width: 190px;
+}
+
+.git_hosting {
+  height: 80px;
 }
 
 

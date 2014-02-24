@@ -1,6 +1,0 @@
-<% if repository && repository.is_a?(Repository::Git) && RedmineGitolite::Config.show_repositories_url? %>
-  <div class="git_hosting box">
-    <h3><%= l(:label_repository_access_url) %></h3>
-    <%= render :partial => 'common/git_urls', :locals => {:repository => repository} %>
-  </div>
-<% end %>
