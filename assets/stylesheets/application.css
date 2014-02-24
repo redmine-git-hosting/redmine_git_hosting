@@ -32,11 +32,13 @@ PLUGIN SETTINGS
   margin: -6px;
   padding: 4px;
 }
+
 .git_hosting_access_box p {
   padding-left:100px;
   margin-top: 8px;
   margin-bottom: 8px;
 }
+
 .git_hosting_access_box label {
   margin-left: -100px;
   width: 95px;
@@ -60,6 +62,14 @@ PLUGIN SETTINGS
 #settings p {
   margin-bottom: 15px;
   margin-top: 15px;
+}
+
+
+/*
+REPOSITORY EDIT
+*/
+#repository-tabs i {
+  padding-right: 10px;
 }
 
 
@@ -96,6 +106,32 @@ REPOSITORY VIEW
   margin-bottom: 20px;
 }
 
+#git_hosting_download_buttons i {
+  color: #FFFFFF;
+  padding-right: 10px;
+}
+
+#git_hosting_download_buttons .button {
+  background: none repeat scroll 0 0 #2996CC;
+  border: 1px solid #E0E2E3;
+  border-color: rgba(0, 0, 0, 0);
+  border-radius: 4px;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  height: 32px;
+  line-height: 30px;
+  margin-bottom: 1px;
+  margin-top: 1px;
+  -moz-appearance: none;
+  padding: 0 14px;
+  vertical-align: middle;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+}
+
 
 /*
 REPOSITORY SETTINGS
@@ -108,7 +144,8 @@ REPOSITORY SETTINGS
 }
 
 .git_hosting {
-  height: 80px;
+  height: auto;
+  min-height: 80px;
 }
 
 
@@ -153,6 +190,5 @@ MISC
 .spacer { display: block; height: 10px; clear: both; }
 
 td.buttons { width: 20%; }
-
 
 #key_type_options label { padding-left: 7px; }

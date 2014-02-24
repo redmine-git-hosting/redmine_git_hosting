@@ -1,30 +1,33 @@
 <% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.download_revision_enabled? %>
   <% if User.current.allowed_to?(:download_git_revision, @project) %>
 
+    <div style="clear: both;"></div>
+
     <div id="git_hosting_download_buttons">
       <ul>
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
-            <%= hidden_field_tag "download_format", "tar" %>
-            <%= submit_tag l(:label_download_format, :archive_format => '.tar') %>
-          <% end %>
+          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar'),
+                      download_git_revision_path(@repository.id, @rev, :download_format => 'tar'),
+                      :class => 'button' %>
         </li>
 
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
-            <%= hidden_field_tag "download_format", "tar.gz" %>
-            <%= submit_tag l(:label_download_format, :archive_format => '.tar.gz') %>
-          <% end %>
+          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar.gz'),
+                      download_git_revision_path(@repository.id, @rev, :download_format => 'tar.gz'),
+                      :class => 'button' %>
         </li>
 
         <li>
-          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev), :html => {:method => :post} do |f| %>
-            <%= hidden_field_tag "download_format", "zip" %>
-            <%= submit_tag l(:label_download_format, :archive_format => '.zip') %>
-          <% end %>
+          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.zip'),
+                      download_git_revision_path(@repository.id, @rev, :download_format => 'zip'),
+                      :class => 'button' %>
         </li>
       </ul>
     </div>
+
+    <% content_for :header_tags do %>
+      <%= stylesheet_link_tag 'font_awesome', :plugin => 'redmine_git_hosting' %>
+    <% end %>
 
   <% end %>
 <% end %>
