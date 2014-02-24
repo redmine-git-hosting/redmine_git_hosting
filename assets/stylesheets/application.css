@@ -77,6 +77,15 @@ REPOSITORY VIEW
   list-style-type: none;
 }
 
+#git_hosting_download_buttons {
+  margin-top: 20px;
+}
+
+#git_hosting_download_buttons ul li {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 
 /*
 REPOSITORY SETTINGS

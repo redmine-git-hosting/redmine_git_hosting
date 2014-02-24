@@ -6,6 +6,10 @@ RedmineApp::Application.routes.draw do
 
   match 'repositories/:repository_id/mirrors/:id/push', :to => 'repository_mirrors#push', :via => [:get], :as => 'push_to_mirror'
 
+  match 'repositories/:repository_id/download_revision/:rev', :to  => 'download_git_revision#index',
+                                                              :via => [:post],
+                                                              :as  => 'download_git_revision'
+
   resources :repositories do
     constraints(repository_id: /\d+/, id: /\d+/) do
       resources :mirrors,                controller: 'repository_mirrors'

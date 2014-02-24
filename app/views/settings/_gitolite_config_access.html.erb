@@ -8,6 +8,7 @@
 
   gitolite_daemon_by_default = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_daemon_by_default] : 'false'
   gitolite_http_by_default   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_http_by_default].nil?)   ? Setting.plugin_redmine_git_hosting[:gitolite_http_by_default] : 1
+  download_revision_enabled  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:download_revision_enabled].nil?)  ? Setting.plugin_redmine_git_hosting[:download_revision_enabled] : 'true'
 %>
 
 <h3><%= l(:label_gitolite_access_config) %></h3>
@@ -68,6 +69,18 @@
       <%= check_box_tag "settings[gitolite_daemon_by_default]", gitolite_daemon_by_default, {:checked => "checked"} %>
     <% else %>
       <%= check_box_tag "settings[gitolite_daemon_by_default]", gitolite_daemon_by_default %>
+    <% end %>
+  </span>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_download_revision_enabled) %></label>
+  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+    <%= hidden_field_tag "settings[download_revision_enabled]", "false" %>
+    <% if download_revision_enabled == 'true' %>
+      <%= check_box_tag "settings[download_revision_enabled]", download_revision_enabled, {:checked => "checked"} %>
+    <% else %>
+      <%= check_box_tag "settings[download_revision_enabled]", download_revision_enabled %>
     <% end %>
   </span>
 </p>

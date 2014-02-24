@@ -19,3 +19,5 @@ en:
   permission_receive_git_notifications: Receive Git notifications on commit
 
   permission_create_gitolite_ssh_key: Create SSH keys
+
+  permission_download_git_revision: Download Git Revision Archive

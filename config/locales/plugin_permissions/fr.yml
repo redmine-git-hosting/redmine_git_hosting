@@ -19,3 +19,5 @@ fr:
   permission_receive_git_notifications: Recevoir des notifications à chaque commit git
 
   permission_create_gitolite_ssh_key: Créer des clés SSH
+
+  permission_download_git_revision: Télécharger les révisions Git sous forme d'archive

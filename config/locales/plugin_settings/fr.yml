@@ -71,6 +71,8 @@ fr:
   label_https_only: HTTPS seulement
   label_https_and_http: HTTPS et HTTP
 
+  label_gitolite_download_revision_enabled: Activer le téléchargement des révisions Git
+
   # Gitolite Hooks Config
   label_tab_hooks: Hooks
   label_gitolite_hooks_config: Configuration des hooks de Gitolite
@@ -124,14 +126,6 @@ fr:
   label_hierarchical: Hiérarchique
   label_default_repository: Dépôt par défaut
   label_example_repository: Dépôt example
-
-  # Download Revision Config
-  label_tab_gitolite_download_revision: Téléchargement des révisions
-  label_gitolite_download_revision_timeout: Timeout d'archivage
-  label_gitolite_download_revision_timeout_desc: (en secondes)
-  label_gitolite_download_revision_max_size: Taille maximale de l'archive
-  label_gitolite_download_revision_max_size_desc: (en Mo)
-  label_gitolite_download_revision_gzip: Utiliser la compression Gzip
 
   # Sidekiq Config
   label_tab_sidekiq_interface: Sidekiq

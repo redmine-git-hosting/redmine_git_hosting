@@ -62,10 +62,12 @@
     <ul class="repository git">
       <% @repositories.sort.each do |repo| %>
           <li class="repository git"><%= link_to h(repo.name), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                                        :class => 'repository git' + (repo == @repository ? ' selected' : '') %>
+                                        :class => 'repository' + (@repository.is_a?(Repository::Git) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
           </li>
       <% end %>
     </ul>
+
+    <%= render :partial => 'repositories/download_revision' %>
   <% end %>
 <% end %>
 

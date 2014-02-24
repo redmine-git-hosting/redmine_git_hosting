@@ -126,20 +126,6 @@ fr:
   label_empty_get: "GET&nbsp;vide"
 
 
-  ########### MISCELANOUS ###########
-  label_enabled: Activé
-  label_disabled: Désactivé
-  label_true: Vrai
-  label_false: Faux
-  label_yes: Oui
-  label_no: Non
-  label_backup_in_progress: Enregistrement...
-  label_delete_in_progress: Effacement...
-  label_url: URL
-  label_mode: Mode
-  button_ok: OK
-
-
   ########### SSH KEYS ###########
 
   # User SSH keys (notices)
@@ -183,6 +169,9 @@ fr:
   error_key_in_use_by_someone: est déjà utilisé. Elle appartient à une autre utilisateur (demandez à vôtre administrateur pour les détails).
   word_or: ou
 
+
+  ########### REPOSITORIES ###########
+
   # Create Repository
   label_repository_options: Options du dépôt
   label_enable_git_notify: Activer la liste de diffusion
@@ -195,8 +184,13 @@ fr:
   # Repository list view
   label_repository_enabled_capabilities: Fonctionnalité activées du dépôt
 
+  # Repository code browser
+  label_download_format: Télécharger au format %{archive_format}
+  error_download_revision_no_such_commit: "Le commit %{commit} n'a pas été trouvé"
+
   # Repositories URL (labels)
   label_copy_to_clipboard: Copier dans le presse papier
+  label_copied_to_clipboard: Copié!
   label_download_and_install_git: Téléchargez et installez Git
   label_repository_access_not_configured: Les accès au dépôt n'ont pas été configurés, veuillez contacter vôtre administrateur.
   label_repository_access_url: URL d'accès au dépôt
@@ -214,3 +208,18 @@ fr:
 
   # Gitolite Hooks
   error_project_not_found: "Aucun projet avec l'identifiant « %{identifier} » n'a été trouvé."
+
+
+  ########### MISCELANOUS ###########
+
+  label_enabled: Activé
+  label_disabled: Désactivé
+  label_true: Vrai
+  label_false: Faux
+  label_yes: Oui
+  label_no: Non
+  label_backup_in_progress: Enregistrement...
+  label_delete_in_progress: Effacement...
+  label_url: URL
+  label_mode: Mode
+  button_ok: OK

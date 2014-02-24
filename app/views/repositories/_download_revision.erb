@@ -1,0 +1,27 @@
+<% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.download_revision_enabled? %>
+  <% if User.current.allowed_to?(:download_git_revision, @project) %>
+
+    <div id="git_hosting_download_buttons">
+      <ul>
+        <li>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'tar'), :html => {:method => :post} do |f| %>
+            <%= submit_tag l(:label_download_format, :archive_format => '.tar') %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'tar.gz'), :html => {:method => :post} do |f| %>
+            <%= submit_tag l(:label_download_format, :archive_format => '.tar.gz') %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= form_for @repository, :url => download_git_revision_path(@repository.id, @rev, :format => 'zip'), :html => {:method => :post} do |f| %>
+            <%= submit_tag l(:label_download_format, :archive_format => '.zip') %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+
+  <% end %>
+<% end %>

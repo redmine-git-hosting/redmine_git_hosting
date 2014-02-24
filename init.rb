@@ -65,9 +65,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :unique_repo_identifier           => 'true',
 
       # Download Revision Config
-      :download_revision_timeout        => '60',
-      :download_revision_max_size       => '512',
-      :download_revision_gzip           => 'true',
+      :download_revision_enabled        => 'true',
 
       # Git Mailing List Config
       :gitolite_notify_by_default            => 'true',
@@ -100,6 +98,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :receive_git_notifications,           :gitolite_hooks => :post_receive
 
     permission :create_gitolite_ssh_key,             :my => :account
+    permission :download_git_revision,               :download_git_revision => :index
   end
 
   Redmine::MenuManager.map :admin_menu do |menu|
