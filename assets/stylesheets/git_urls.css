@@ -111,5 +111,6 @@ GIT_URL_BOX
 
 .git_hosting h3 {
   background: url("../images/git_icon.png") no-repeat scroll 0 50% rgba(0, 0, 0, 0);
+  margin-bottom: 0;
   padding-left: 20px;
 }
