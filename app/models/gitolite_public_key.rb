@@ -240,7 +240,7 @@ class GitolitePublicKey < ActiveRecord::Base
     # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
-    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{RedmineGitolite::Config.gitolite_ssh_public_key}'] })]
+    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)}'] })]
 
     # Check all active keys
     allkeys += (GitolitePublicKey.active.all)

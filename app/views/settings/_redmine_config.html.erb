@@ -1,9 +1,9 @@
 <%
   # Redmine Config
-  all_projects_use_git        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:all_projects_use_git].nil?)       ? Setting.plugin_redmine_git_hosting[:all_projects_use_git] : false
-  delete_git_repositories     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:delete_git_repositories].nil?)    ? Setting.plugin_redmine_git_hosting[:delete_git_repositories] : true
-  hierarchical_organisation   = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:hierarchical_organisation].nil?)  ? Setting.plugin_redmine_git_hosting[:hierarchical_organisation] : true
-  unique_repo_identifier      = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:unique_repo_identifier].nil?)     ? Setting.plugin_redmine_git_hosting[:unique_repo_identifier] : false
+  all_projects_use_git      = RedmineGitolite::Config.get_setting(:all_projects_use_git, true)
+  delete_git_repositories   = RedmineGitolite::Config.get_setting(:delete_git_repositories, true)
+  hierarchical_organisation = RedmineGitolite::Config.get_setting(:hierarchical_organisation, true)
+  unique_repo_identifier    = RedmineGitolite::Config.get_setting(:unique_repo_identifier, true)
 %>
 
 <h3><%= l(:label_redmine_config) %></h3>
@@ -12,11 +12,7 @@
   <label><%= l(:label_all_projects_use_git) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[all_projects_use_git]", "false" %>
-    <% if all_projects_use_git == 'true' %>
-      <%= check_box_tag "settings[all_projects_use_git]", all_projects_use_git, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[all_projects_use_git]", all_projects_use_git %>
-    <% end %>
+    <%= check_box_tag "settings[all_projects_use_git]", all_projects_use_git, all_projects_use_git %>
   </span>
 </p>
 
@@ -24,11 +20,7 @@
   <label><%= l(:label_delete_git_repositories).html_safe %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[delete_git_repositories]", "false" %>
-    <% if delete_git_repositories == 'true' %>
-      <%= check_box_tag "settings[delete_git_repositories]", delete_git_repositories, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[delete_git_repositories]", delete_git_repositories %>
-    <% end %>
+    <%= check_box_tag "settings[delete_git_repositories]", delete_git_repositories, delete_git_repositories %>
   </span>
 </p>
 
@@ -36,11 +28,7 @@
   <label><%= l(:label_hierarchical_organisation) %></label>
   <span class="bootstrap-switch switch-small switch-extended" data-on="primary" data-off="default" data-on-label="<%= l(:label_hierarchical) %>" data-off-label="<%= l(:label_flat) %>">
     <%= hidden_field_tag "settings[hierarchical_organisation]", "false" %>
-    <% if hierarchical_organisation == 'true' %>
-      <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation %>
-    <% end %>
+    <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation, hierarchical_organisation %>
   </span>
 </p>
 
@@ -48,11 +36,7 @@
   <label><%= l(:label_unique_repo_identifier) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[unique_repo_identifier]", "false" %>
-    <% if unique_repo_identifier == 'true' %>
-      <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier %>
-    <% end %>
+    <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier, unique_repo_identifier %>
   </span>
 </p>
 

@@ -16,10 +16,10 @@ module RedmineGitolite
 
 
     def initialize
-      @recycle_bin_dir     = RedmineGitolite::Config.gitolite_recycle_bin_dir
-      @global_storage_dir  = RedmineGitolite::Config.gitolite_global_storage_dir
-      @redmine_storage_dir = RedmineGitolite::Config.gitolite_redmine_storage_dir
-      @recycle_bin_expiration_time = RedmineGitolite::Config.gitolite_recycle_bin_expiration_time
+      @recycle_bin_dir     = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_dir)
+      @global_storage_dir  = RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir)
+      @redmine_storage_dir = RedmineGitolite::Config.get_setting(:gitolite_redmine_storage_dir)
+      @recycle_bin_expiration_time = (RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time) * 60).to_i
     end
 
 

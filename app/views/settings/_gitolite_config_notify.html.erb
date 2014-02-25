@@ -1,10 +1,10 @@
 <%
   # Gitolite Notifications Config
-  gitolite_notify_by_default            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_notify_by_default] : 'true'
-  gitolite_notify_global_prefix         = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix].nil?)         ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_prefix] : '[REDMINE]'
-  gitolite_notify_global_sender_address = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_sender_address] : Setting.mail_from.to_s.strip.downcase
-  gitolite_notify_global_include        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_include] : []
-  gitolite_notify_global_exclude        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_notify_global_exclude] : []
+  gitolite_notify_by_default            = RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true)
+  gitolite_notify_global_prefix         = RedmineGitolite::Config.get_setting(:gitolite_notify_global_prefix)
+  gitolite_notify_global_sender_address = RedmineGitolite::Config.get_setting(:gitolite_notify_global_sender_address)
+  gitolite_notify_global_include        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_include)
+  gitolite_notify_global_exclude        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude)
 %>
 
 <h3><%= l(:label_gitolite_notify_config) %></h3>
@@ -13,11 +13,7 @@
   <label><%= l(:label_gitolite_notify_by_default) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_notify_by_default]", "false" %>
-    <% if gitolite_notify_by_default == 'true' %>
-      <%= check_box_tag "settings[gitolite_notify_by_default]", gitolite_notify_by_default, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_notify_by_default]", gitolite_notify_by_default %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_notify_by_default]", gitolite_notify_by_default, gitolite_notify_by_default %>
   </span>
 </p>
 

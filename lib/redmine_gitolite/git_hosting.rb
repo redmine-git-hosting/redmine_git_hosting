@@ -27,12 +27,6 @@ module GitHosting
   ###############################
 
 
-  # Configuration file (relative to git conf directory)
-  def self.gitolite_conf
-    GitoliteConfig.gitolite_conf
-  end
-
-
   # Puts Redmine user in cache as it should not change
   @@redmine_user = nil
   def self.redmine_user
@@ -49,7 +43,7 @@ module GitHosting
 
 
   def self.gitolite_user
-    RedmineGitolite::Config.gitolite_user
+    RedmineGitolite::Config.get_setting(:gitolite_user)
   end
 
 
@@ -60,13 +54,13 @@ module GitHosting
 
 
   def self.http_access_url(repository)
-    return "#{RedmineGitolite::Config.http_server_subdir}#{redmine_name(repository)}"
+    return "#{RedmineGitolite::Config.get_setting(:http_server_subdir)}#{redmine_name(repository)}"
   end
 
 
   def self.repository_path(repositoryID)
     repo_name = repositoryID.is_a?(String) ? repositoryID : repository_name(repositoryID)
-    return File.join(RedmineGitolite::Config.gitolite_global_storage_dir, repo_name) + ".git"
+    return File.join(RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir), repo_name) + ".git"
   end
 
 
@@ -76,7 +70,7 @@ module GitHosting
 
 
   def self.repository_name(repository, flags = nil)
-    return File.expand_path(File.join("./", RedmineGitolite::Config.gitolite_redmine_storage_dir, get_full_parent_path(repository), repository.git_label(flags)), "/")[1..-1]
+    return File.expand_path(File.join("./", RedmineGitolite::Config.get_setting(:gitolite_redmine_storage_dir), get_full_parent_path(repository), repository.git_label(flags)), "/")[1..-1]
   end
 
 
@@ -86,12 +80,12 @@ module GitHosting
 
 
   def self.old_repository_name(repository)
-    return "#{repository.url.gsub(RedmineGitolite::Config.gitolite_global_storage_dir, '').gsub('.git', '')}"
+    return "#{repository.url.gsub(RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir), '').gsub('.git', '')}"
   end
 
 
   def self.get_full_parent_path(repository)
-    return "" if !RedmineGitolite::Config.hierarchical_organisation?
+    return "" if !RedmineGitolite::Config.get_setting(:hierarchical_organisation, true)
 
     project = repository.project
 
@@ -150,7 +144,7 @@ module GitHosting
   @@sudo_gitolite_to_redmine_user_stamp = nil
   @@sudo_gitolite_to_redmine_user_cached = nil
   def self.sudo_gitolite_to_redmine_user
-    if not @@sudo_gitolite_to_redmine_user_cached.nil? and (Time.new - @@sudo_gitolite_to_redmine_user_stamp <= 1)
+    if !@@sudo_gitolite_to_redmine_user_cached.nil? && (Time.new - @@sudo_gitolite_to_redmine_user_stamp <= 1)
       return @@sudo_gitolite_to_redmine_user_cached
     end
     logger.info "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..."
@@ -181,7 +175,7 @@ module GitHosting
   @@sudo_redmine_to_gitolite_user_stamp = nil
   @@sudo_redmine_to_gitolite_user_cached = nil
   def self.sudo_redmine_to_gitolite_user
-    if not @@sudo_redmine_to_gitolite_user_cached.nil? and (Time.new - @@sudo_redmine_to_gitolite_user_stamp <= 1)
+    if !@@sudo_redmine_to_gitolite_user_cached.nil? && (Time.new - @@sudo_redmine_to_gitolite_user_stamp <= 1)
       return @@sudo_redmine_to_gitolite_user_cached
     end
     logger.info "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..."
@@ -319,7 +313,7 @@ module GitHosting
 
 
   def self.resync_gitolite(data_hash)
-    if RedmineGitolite::Config.gitolite_use_sidekiq?
+    if RedmineGitolite::Config.get_setting(:gitolite_use_sidekiq, true)
       GithostingShellWorker.perform_async(data_hash)
     else
       githosting_shell = RedmineGitolite::Shell.new
@@ -349,8 +343,8 @@ module GitHosting
   @@scripts_dir_path = nil
   @@previous_scripts_dir_path = nil
   def self.scripts_dir_path
-    script_dir = RedmineGitolite::Config.gitolite_scripts_dir
-    script_parent = RedmineGitolite::Config.gitolite_scripts_parent_dir
+    script_dir = RedmineGitolite::Config.get_setting(:gitolite_scripts_dir)
+    script_parent = RedmineGitolite::Config::GITOLITE_SCRIPTS_PARENT_DIR
 
     if @@previous_scripts_dir_path != script_dir
 
@@ -386,7 +380,7 @@ module GitHosting
   @@temp_dir_path = nil
   @@previous_temp_dir_path = nil
   def self.temp_dir_path
-    tmp_dir = RedmineGitolite::Config.gitolite_temp_dir
+    tmp_dir = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
     if (@@previous_temp_dir_path != tmp_dir)
       @@previous_temp_dir_path = tmp_dir
       @@temp_dir_path = File.join(tmp_dir, gitolite_user) + "/"
@@ -454,7 +448,7 @@ module GitHosting
       if is_repository_empty?(new_path)
         logger_worker.warn "move_repository : target repository '#{new_path}' already exists and is empty, remove it..."
         begin
-          GitHosting.shell %[#{shell_cmd_runner} 'rm -rf "#{new_path}"']
+          shell %[#{shell_cmd_runner} 'rm -rf "#{new_path}"']
         rescue => e
           logger_worker.error "move_repository : removing existing target repository failed, exit !"
           return false
@@ -462,7 +456,7 @@ module GitHosting
       else
         logger_worker.warn "move_repository : target repository '#{new_path}' exists and is not empty, considered as already moved, remove the old_path"
         begin
-          GitHosting.shell %[#{shell_cmd_runner} 'rm -rf "#{old_path}"']
+          shell %[#{shell_cmd_runner} 'rm -rf "#{old_path}"']
           return true
         rescue => e
           logger_worker.error "move_repository : removing source repository directory failed, exit !"
@@ -475,7 +469,7 @@ module GitHosting
 
     if !file_exists? new_parent_path
       begin
-        GitHosting.shell %[#{shell_cmd_runner} 'mkdir -p "#{new_parent_path}"']
+        shell %[#{shell_cmd_runner} 'mkdir -p "#{new_parent_path}"']
       rescue GitHostingException
         logger_worker.error "move_repository : creation of parent path '#{new_parent_path}' failed, exit !"
         return false
@@ -483,7 +477,7 @@ module GitHosting
     end
 
     begin
-      GitHosting.shell %[#{shell_cmd_runner} 'mv "#{old_path}" "#{new_path}"']
+      shell %[#{shell_cmd_runner} 'mv "#{old_path}" "#{new_path}"']
       logger_worker.info "move_repository : done !"
       return true
     rescue GitHostingException => e
@@ -506,7 +500,7 @@ module GitHosting
 
     File.open(gitolite_admin_ssh_script_path(), "w") do |f|
       f.puts "#!/bin/sh"
-      f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{RedmineGitolite::Config.gitolite_server_port} -i #{RedmineGitolite::Config.gitolite_ssh_private_key} \"$@\""
+      f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{RedmineGitolite::Config.get_setting(:gitolite_server_port)} -i #{RedmineGitolite::Config.get_setting(:gitolite_ssh_private_key)} \"$@\""
     end if !File.exists?(gitolite_admin_ssh_script_path())
 
     ##############################################################################################################################
@@ -580,18 +574,18 @@ module GitHosting
     if @@mirror_pubkey.nil?
       logger.info "Install Redmine Gitolite mirroring SSH key"
 
-      %x[ cat '#{RedmineGitolite::Config.gitolite_ssh_private_key}' | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
-      %x[ cat '#{RedmineGitolite::Config.gitolite_ssh_public_key}'  | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
+      %x[ cat '#{RedmineGitolite::Config.get_setting(:gitolite_ssh_private_key)}' | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
+      %x[ cat '#{RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)}'  | #{shell_cmd_runner} 'cat > ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
       %x[ #{shell_cmd_runner} 'chmod 600 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring' ]
       %x[ #{shell_cmd_runner} 'chmod 644 ~/.ssh/redmine_gitolite_admin_id_rsa_mirroring.pub' ]
 
       git_user_dir = ( %x[ #{shell_cmd_runner} "cd ~ ; pwd" ] ).chomp.strip
 
       %x[ echo '#!/bin/sh' | #{shell_cmd_runner} 'cat > ~/.ssh/run_gitolite_admin_ssh' ]
-      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{RedmineGitolite::Config.gitolite_server_port} -i #{git_user_dir}/.ssh/redmine_gitolite_admin_id_rsa_mirroring "$@"' | #{shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
+      %x[ echo 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{RedmineGitolite::Config.get_setting(:gitolite_server_port)} -i #{git_user_dir}/.ssh/redmine_gitolite_admin_id_rsa_mirroring "$@"' | #{shell_cmd_runner} "cat >> ~/.ssh/run_gitolite_admin_ssh" ]
       %x[ #{shell_cmd_runner} 'chmod 700 ~/.ssh/run_gitolite_admin_ssh' ]
 
-      pubk = (%x[ cat '#{RedmineGitolite::Config.gitolite_ssh_public_key}' ]).chomp.strip
+      pubk = (%x[ cat '#{RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)}' ]).chomp.strip
       @@mirror_pubkey = pubk.split(/[\t ]+/)[0].to_s + " " + pubk.split(/[\t ]+/)[1].to_s
     end
     @@mirror_pubkey

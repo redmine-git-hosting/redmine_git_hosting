@@ -32,8 +32,8 @@ en:
 
   label_gitolite_temp_dir: Temporary dir for lock file and data
   label_gitolite_temp_dir_desc: (Must be absolute)
-  label_gitolite_script_dir: Scripts dir
-  label_gitolite_script_dir_desc: (Can be absolute or relative to Redmine root)
+  label_gitolite_scripts_dir: Scripts dir
+  label_gitolite_scripts_dir_desc: (Can be absolute or relative to Redmine root)
 
   label_gitolite_config_file: Gitolite configuration file
   label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?

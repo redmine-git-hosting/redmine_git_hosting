@@ -1,8 +1,8 @@
 <%
   # Gitolite Hooks Config
-  gitolite_hooks_are_asynchronous = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_hooks_are_asynchronous] : true
-  gitolite_force_hooks_update     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_force_hooks_update] : true
-  gitolite_hooks_debug            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_hooks_debug] : false
+  gitolite_hooks_are_asynchronous = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
+  gitolite_force_hooks_update     = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update, true)
+  gitolite_hooks_debug            = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug, true)
 %>
 
 <h3><%= l(:label_gitolite_hooks_config) %></h3>
@@ -11,11 +11,7 @@
   <label><%= l(:label_gitolite_hooks_are_asynchronous) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_hooks_are_asynchronous]", "false" %>
-    <% if gitolite_hooks_are_asynchronous == 'true' %>
-      <%= check_box_tag "settings[gitolite_hooks_are_asynchronous]", gitolite_hooks_are_asynchronous, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_hooks_are_asynchronous]", gitolite_hooks_are_asynchronous %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_hooks_are_asynchronous]", gitolite_hooks_are_asynchronous, gitolite_hooks_are_asynchronous %>
   </span>
 </p>
 
@@ -23,11 +19,7 @@
   <label><%= l(:label_gitolite_force_hooks_update) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_force_hooks_update]", "false" %>
-    <% if gitolite_force_hooks_update == 'true' %>
-      <%= check_box_tag "settings[gitolite_force_hooks_update]", gitolite_force_hooks_update, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_force_hooks_update]", gitolite_force_hooks_update %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_force_hooks_update]", gitolite_force_hooks_update, gitolite_force_hooks_update %>
   </span>
 </p>
 
@@ -35,11 +27,7 @@
   <label><%= l(:label_gitolite_hooks_debug) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_hooks_debug]", "false" %>
-    <% if gitolite_hooks_debug == 'true' %>
-      <%= check_box_tag "settings[gitolite_hooks_debug]", gitolite_hooks_debug, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_hooks_debug]", gitolite_hooks_debug %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_hooks_debug]", gitolite_hooks_debug, gitolite_hooks_debug %>
   </span>
 </p>
 

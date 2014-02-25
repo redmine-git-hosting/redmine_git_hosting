@@ -32,8 +32,8 @@ fr:
 
   label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
   label_gitolite_temp_dir_desc: (Doit être absolu)
-  label_gitolite_script_dir: Répertoire des scripts
-  label_gitolite_script_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
+  label_gitolite_scripts_dir: Répertoire des scripts
+  label_gitolite_scripts_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
 
   label_gitolite_config_file: Fichier de configuration de Gitolite
   label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.

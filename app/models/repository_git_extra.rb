@@ -58,9 +58,9 @@ class RepositoryGitExtra < ActiveRecord::Base
 
 
   def setup_defaults
-    write_attribute(:git_http,   RedmineGitolite::Config.gitolite_http_by_default)
-    write_attribute(:git_daemon, RedmineGitolite::Config.gitolite_daemon_by_default ? 1 : 0)
-    write_attribute(:git_notify, RedmineGitolite::Config.gitolite_notify_by_default ? 1 : 0)
+    write_attribute(:git_http,   RedmineGitolite::Config.get_setting(:gitolite_http_by_default))
+    write_attribute(:git_daemon, RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true) ? 1 : 0)
+    write_attribute(:git_notify, RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true) ? 1 : 0)
   end
 
 end

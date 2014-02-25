@@ -1,17 +1,12 @@
 <%
   # Gitolite Sidekiq Config
-  gitolite_use_sidekiq = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_use_sidekiq].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_use_sidekiq] : 'false'
+  gitolite_use_sidekiq = RedmineGitolite::Config.get_setting(:gitolite_use_sidekiq, true)
 %>
 
 <p>
   <label><%= l(:label_gitolite_use_sidekiq) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_use_sidekiq]", "false" %>
-    <% if gitolite_use_sidekiq == 'true' %>
-      <%= check_box_tag "settings[gitolite_use_sidekiq]", gitolite_use_sidekiq, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_use_sidekiq]", gitolite_use_sidekiq %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_use_sidekiq]", gitolite_use_sidekiq, gitolite_use_sidekiq %>
   </span>
 </p>
-

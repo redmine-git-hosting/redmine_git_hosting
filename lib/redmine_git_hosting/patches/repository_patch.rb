@@ -104,7 +104,7 @@ module RedmineGitHosting
 
         # Repo ident unique
         def repo_ident_unique?
-          RedmineGitolite::Config.unique_repo_identifier?
+          RedmineGitolite::Config.get_setting(:unique_repo_identifier, true)
         end
 
       end
@@ -151,15 +151,15 @@ module RedmineGitHosting
 
 
         def ssh_url
-          ssh_user_login   = RedmineGitolite::Config.gitolite_user
-          git_ssh_domain   = !RedmineGitolite::Config.ssh_server_domain.empty? ? RedmineGitolite::Config.ssh_server_domain : '<empty value, contact your Administrator>'
+          ssh_user_login   = RedmineGitolite::Config.get_setting(:gitolite_user)
+          git_ssh_domain   = RedmineGitolite::Config.get_setting(:ssh_server_domain)
           git_hosting_path = "#{GitHosting.git_access_url(self)}.git"
           return "ssh://#{ssh_user_login}@#{git_ssh_domain}/#{git_hosting_path}"
         end
 
 
         def http_url
-          http_server_domain  = !RedmineGitolite::Config.http_server_domain.empty?  ? RedmineGitolite::Config.http_server_domain  : '<empty value, contact your Administrator>'
+          http_server_domain  = RedmineGitolite::Config.get_setting(:http_server_domain)
           http_access_path    = "#{GitHosting.http_access_url(self)}.git"
           http_user_login     = User.current.anonymous? ? "" : "#{User.current.login}@"
           return "http://#{http_user_login}#{http_server_domain}/#{http_access_path}"
@@ -167,7 +167,7 @@ module RedmineGitHosting
 
 
         def https_url
-          https_server_domain = !RedmineGitolite::Config.https_server_domain.empty? ? RedmineGitolite::Config.https_server_domain : '<empty value, contact your Administrator>'
+          https_server_domain = RedmineGitolite::Config.get_setting(:https_server_domain)
           http_access_path    = "#{GitHosting.http_access_url(self)}.git"
           http_user_login     = User.current.anonymous? ? "" : "#{User.current.login}@"
           return "https://#{http_user_login}#{https_server_domain}/#{http_access_path}"
@@ -175,7 +175,7 @@ module RedmineGitHosting
 
 
         def git_url
-          git_ssh_domain   = !RedmineGitolite::Config.ssh_server_domain.empty? ? RedmineGitolite::Config.ssh_server_domain : '<empty value, contact your Administrator>'
+          git_ssh_domain   = RedmineGitolite::Config.get_setting(:ssh_server_domain)
           git_hosting_path = "#{GitHosting.git_access_url(self)}.git"
           return "git://#{git_ssh_domain}/#{git_hosting_path}"
         end
@@ -253,8 +253,8 @@ module RedmineGitHosting
           end
 
           # Then add global include list
-          if !RedmineGitolite::Config.gitolite_notify_global_include.empty?
-            RedmineGitolite::Config.gitolite_notify_global_include.sort.each do |mail|
+          if !RedmineGitolite::Config.get_setting(:gitolite_notify_global_include).empty?
+            RedmineGitolite::Config.get_setting(:gitolite_notify_global_include).sort.each do |mail|
               mailing_list[mail] = :global
             end
           end
@@ -277,13 +277,13 @@ module RedmineGitHosting
           if !self.git_notification.nil? && !self.git_notification.prefix.empty?
             email_prefix = self.git_notification.prefix
           else
-            email_prefix = RedmineGitolite::Config.gitolite_notify_global_prefix
+            email_prefix = RedmineGitolite::Config.get_setting(:gitolite_notify_global_prefix)
           end
 
           if !self.git_notification.nil? && !self.git_notification.sender_address.empty?
             sender_address = self.git_notification.sender_address
           else
-            sender_address = RedmineGitolite::Config.gitolite_notify_global_sender_address
+            sender_address = RedmineGitolite::Config.get_setting(:gitolite_notify_global_sender_address)
           end
 
           params = {
@@ -304,8 +304,8 @@ module RedmineGitHosting
           exclude_list = []
 
           # Build exclusion list
-          if !RedmineGitolite::Config.gitolite_notify_global_exclude.empty?
-            exclude_list = exclude_list + RedmineGitolite::Config.gitolite_notify_global_exclude
+          if !RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude).empty?
+            exclude_list = exclude_list + RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude)
           end
 
           if !self.git_notification.nil? && !self.git_notification.exclude_list.empty?

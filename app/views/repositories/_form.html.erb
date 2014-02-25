@@ -37,8 +37,8 @@
         <%= label_tag('repository_scm', l(:label_scm)) %><span class="label label-info"><%= @repository.class.to_s.split('::')[1] %></span>
       <% end %>
 
-      <% if @repository && ! @repository.class.scm_available %>
-        <em class="info error"><%= l(:text_scm_command_not_available) %></em>
+      <% if @repository && !@repository.class.scm_available %>
+        <em class="info error"><%= l(:text_scm_command_not_available_git_hosting) %></em>
       <% end %>
     </p>
 
@@ -87,7 +87,7 @@
         selected = "false"
         if @repository.extra[:git_daemon] == 1
           selected = "true"
-        elsif @project.is_public && RedmineGitolite::Config.gitolite_daemon_by_default == 1
+        elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true)
           selected = "true"
         end
       %>

@@ -106,7 +106,7 @@ module RedmineGitHosting
 
 
         def git_repo_init
-          if @project.module_enabled?('repository') && RedmineGitolite::Config.all_projects_use_git?
+          if @project.module_enabled?('repository') && RedmineGitolite::Config.get_setting(:all_projects_use_git, true)
             # Create new repository
             repository = Repository.factory("Git")
             repository.is_default = true

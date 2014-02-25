@@ -1,13 +1,13 @@
 <%
   # Gitolite Global Config
-  gitolite_config_file                 = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_file].nil?)                 ? Setting.plugin_redmine_git_hosting[:gitolite_config_file] : 'gitolite.conf'
-  gitolite_config_has_admin_key        = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key].nil?)        ? Setting.plugin_redmine_git_hosting[:gitolite_config_has_admin_key] : 'true'
-  gitolite_recycle_bin_expiration_time = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_recycle_bin_expiration_time] : '24.0'
+  gitolite_config_file                 = RedmineGitolite::Config.get_setting(:gitolite_config_file)
+  gitolite_config_has_admin_key        = RedmineGitolite::Config.get_setting(:gitolite_config_has_admin_key, true)
+  gitolite_recycle_bin_expiration_time = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time)
 
-  gitolite_temp_dir              = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_temp_dir].nil?)   ? Setting.plugin_redmine_git_hosting[:gitolite_temp_dir] : File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
-  gitolite_script_dir            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_script_dir].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_script_dir] : ''
-  gitolite_log_level             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_level].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_log_level] : 'info'
-  gitolite_log_split             = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_log_split].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_log_split] : 'false'
+  gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
+  gitolite_scripts_dir = RedmineGitolite::Config.get_setting(:gitolite_scripts_dir)
+  gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
+  gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split, true)
 %>
 
 <h3><%= l(:label_gitolite_global_config) %></h3>
@@ -20,10 +20,10 @@
 </p>
 
 <p>
-  <label><%= l(:label_gitolite_script_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable?(:reset) %></label>
-  <%= text_field_tag("settings[gitolite_script_dir]", reldir_add_dotslash(gitolite_script_dir), :size => 60) %>
+  <label><%= l(:label_gitolite_scripts_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable?(:reset) %></label>
+  <%= text_field_tag("settings[gitolite_scripts_dir]", reldir_add_dotslash(gitolite_scripts_dir), :size => 60) %>
   <br />
-  <em><%= l(:label_gitolite_script_dir_desc) %></em>
+  <em><%= l(:label_gitolite_scripts_dir_desc) %></em>
 </p>
 
 <p>
@@ -35,11 +35,7 @@
   <label><%= l(:label_gitolite_config_has_admin_key) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_config_has_admin_key]", "false" %>
-    <% if gitolite_config_has_admin_key == 'true' %>
-      <%= check_box_tag "settings[gitolite_config_has_admin_key]", gitolite_config_has_admin_key, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_config_has_admin_key]", gitolite_config_has_admin_key %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_config_has_admin_key]", gitolite_config_has_admin_key, gitolite_config_has_admin_key %>
   </span>
 </p>
 
@@ -67,16 +63,12 @@
   <label><%= l(:label_gitolite_log_split) %></label>
   <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
     <%= hidden_field_tag "settings[gitolite_log_split]", "false" %>
-    <% if gitolite_log_split == 'true' %>
-      <%= check_box_tag "settings[gitolite_log_split]", gitolite_log_split, {:checked => "checked"} %>
-    <% else %>
-      <%= check_box_tag "settings[gitolite_log_split]", gitolite_log_split %>
-    <% end %>
+    <%= check_box_tag "settings[gitolite_log_split]", gitolite_log_split, gitolite_log_split %>
   </span>
   <br />
   <em><%= l(:label_gitolite_log_split_desc) %></em>
   <br />
-  <% if gitolite_log_split == 'true' %>
+  <% if gitolite_log_split %>
     <em><%= l(:label_gitolite_log_split_on) %></em>
   <% else %>
     <em><%= l(:label_gitolite_log_split_off) %></em>

@@ -29,32 +29,32 @@ module RedmineGitHosting
             if !GitHosting.scripts_dir_writeable?
               # If bin directory not alterable, don't allow changes to
               # Script directory, Git Username, or Gitolite public or private keys
-              valuehash[:gitolite_script_dir] = @@old_valuehash[:gitolite_script_dir]
+              valuehash[:gitolite_scripts_dir] = @@old_valuehash[:gitolite_scripts_dir]
               valuehash[:gitolite_user] = @@old_valuehash[:gitolite_user]
               valuehash[:gitolite_ssh_private_key] = @@old_valuehash[:gitolite_ssh_private_key]
               valuehash[:gitolite_ssh_public_key] = @@old_valuehash[:gitolite_ssh_public_key]
               valuehash[:gitolite_server_port] = @@old_valuehash[:gitolite_server_port]
 
-            elsif valuehash[:gitolite_script_dir] && (valuehash[:gitolite_script_dir] != @@old_valuehash[:gitolite_script_dir])
+            elsif valuehash[:gitolite_scripts_dir] && (valuehash[:gitolite_scripts_dir] != @@old_valuehash[:gitolite_scripts_dir])
 
               # Remove old bin directory and scripts, since about to change directory
               %x[ rm -rf '#{ GitHosting.scripts_dir_path }' ]
 
               # Script directory either absolute or relative to redmine root
-              stripped = valuehash[:gitolite_script_dir].lstrip.rstrip
+              stripped = valuehash[:gitolite_scripts_dir].lstrip.rstrip
 
               # Get rid of extra path components
               normalizedFile = File.expand_path(stripped, "/")
 
               if (normalizedFile == "/")
                 # Assume that we are relative bin directory ("/" and "" => "")
-                valuehash[:gitolite_script_dir] = "./"
+                valuehash[:gitolite_scripts_dir] = "./"
               elsif (stripped[0,1] != "/")
                 # Clobber leading '/' add trailing '/'
-                valuehash[:gitolite_script_dir] = normalizedFile[1..-1] + "/"
+                valuehash[:gitolite_scripts_dir] = normalizedFile[1..-1] + "/"
               else
                 # Add trailing '/'
-                valuehash[:gitolite_script_dir] = normalizedFile + "/"
+                valuehash[:gitolite_scripts_dir] = normalizedFile + "/"
               end
 
             elsif valuehash[:gitolite_user] != @@old_valuehash[:gitolite_user] ||
@@ -137,11 +137,11 @@ module RedmineGitHosting
                 # Clobber leading '/'
                 valuehash[:gitolite_config_file] = normalizedFile[1..-1]
               else
-                valuehash[:gitolite_config_file] = RedmineGitolite::Config::GITOLITE_CONFIG_FILE
+                valuehash[:gitolite_config_file] = RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
               end
 
               # Repair key must be true if default path
-              if valuehash[:gitolite_config_file] == RedmineGitolite::Config::GITOLITE_CONFIG_FILE
+              if valuehash[:gitolite_config_file] == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
                 valuehash[:gitolite_config_has_admin_key] = 'true'
               end
             end
@@ -171,7 +171,6 @@ module RedmineGitHosting
                 valuehash[:gitolite_redmine_storage_dir] = ''
               end
             end
-
 
 
             # Check to see if we are trying to claim all repository identifiers are unique
@@ -266,7 +265,6 @@ module RedmineGitHosting
               valuehash[:gitolite_purge_repos] = {}
             end
 
-
             # Save back results
             self.value = valuehash
           end
@@ -290,7 +288,7 @@ module RedmineGitHosting
 
 
             ## SSH infos has changed, update scripts!
-            if @@old_valuehash[:gitolite_script_dir] != valuehash[:gitolite_script_dir] ||
+            if @@old_valuehash[:gitolite_scripts_dir] != valuehash[:gitolite_scripts_dir] ||
                @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user] ||
                @@old_valuehash[:gitolite_ssh_private_key] != valuehash[:gitolite_ssh_private_key] ||
                @@old_valuehash[:gitolite_ssh_public_key] != valuehash[:gitolite_ssh_public_key] ||

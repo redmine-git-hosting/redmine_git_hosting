@@ -56,7 +56,7 @@ module RedmineGitolite
           handle_repository_delete(repository_data)
 
           recycle = RedmineGitolite::Recycle.new
-          recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.delete_git_repositories?
+          recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories, true)
 
           gitolite_admin_repo_commit("#{action} : #{repository_data['repo_name']}")
         end
@@ -227,7 +227,7 @@ module RedmineGitolite
         @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       else
         begin
-          logger.info "Clone Gitolite Admin Repo : #{RedmineGitolite::Config.gitolite_admin_url} (port : #{RedmineGitolite::Config.gitolite_server_port}) to #{@gitolite_admin_dir}"
+          logger.info "Clone Gitolite Admin Repo : #{RedmineGitolite::Config.gitolite_admin_url} (port : #{RedmineGitolite::Config.get_setting(:gitolite_server_port)}) to #{@gitolite_admin_dir}"
 
           GitHosting.shell %[rm -rf "#{@gitolite_admin_dir}"]
           GitHosting.shell %[env GIT_SSH=#{GitHosting.gitolite_admin_ssh_runner} git clone ssh://#{RedmineGitolite::Config.gitolite_admin_url} #{@gitolite_admin_dir}]
@@ -241,8 +241,8 @@ module RedmineGitolite
         end
       end
 
-      if RedmineGitolite::Config.gitolite_config_file != RedmineGitolite::Config::GITOLITE_CONFIG_FILE
-        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config.gitolite_config_file}"
+      if RedmineGitolite::Config.get_setting(:gitolite_config_file) != RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config.get_setting(:gitolite_config_file)}"
         if !File.exists?(config_file)
           begin
             GitHosting.shell %[touch "#{config_file}"]
@@ -253,7 +253,7 @@ module RedmineGitolite
           end
         end
       else
-        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config::GITOLITE_CONFIG_FILE}"
+        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE}"
         if !File.exists?(config_file)
           logger.error "Gitolite configuration file does not exist '#{config_file}' !!"
           logger.error "Please check your Gitolite installation"

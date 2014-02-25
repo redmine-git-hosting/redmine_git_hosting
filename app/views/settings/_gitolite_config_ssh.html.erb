@@ -1,9 +1,9 @@
 <%
   # Gitolite SSH Config
-  gitolite_user            = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_user].nil?)            ? Setting.plugin_redmine_git_hosting[:gitolite_user] : 'git'
-  gitolite_server_port     = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_server_port].nil?)     ? Setting.plugin_redmine_git_hosting[:gitolite_server_port] : '22'
-  gitolite_ssh_private_key = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key].nil?) ? Setting.plugin_redmine_git_hosting[:gitolite_ssh_private_key] : File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s
-  gitolite_ssh_public_key  = (!Setting.plugin_redmine_git_hosting.nil? and !Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key].nil?)  ? Setting.plugin_redmine_git_hosting[:gitolite_ssh_public_key] : File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s
+  gitolite_user            = RedmineGitolite::Config.get_setting(:gitolite_user)
+  gitolite_server_port     = RedmineGitolite::Config.get_setting(:gitolite_server_port)
+  gitolite_ssh_private_key = RedmineGitolite::Config.get_setting(:gitolite_ssh_private_key)
+  gitolite_ssh_public_key  = RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)
   scripts_dir_writeable    = GitHosting.scripts_dir_writeable?(:reset)
 %>
 

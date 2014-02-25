@@ -172,6 +172,8 @@ fr:
 
   ########### REPOSITORIES ###########
 
+  text_scm_command_not_available_git_hosting: Ce SCM n'est pas disponible. Vérifier les paramètres dans la section administration du plugin Redmine Git Hosting.
+
   # Create Repository
   label_repository_options: Options du dépôt
   label_enable_git_notify: Activer la liste de diffusion

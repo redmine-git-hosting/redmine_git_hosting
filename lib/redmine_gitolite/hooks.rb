@@ -38,13 +38,13 @@ module RedmineGitolite
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global redmineGitolite.redmineUrl "#{redmine_url}"]
         end
 
-        debug_hook = RedmineGitolite::Config.gitolite_hooks_debug?
+        debug_hook = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug, true)
         if cur_values["redmineGitolite.debugMode"] != debug_hook.to_s
           logger.info "Update Git hooks global parameter : debugMode (#{debug_hook})"
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global --bool redmineGitolite.debugMode "#{debug_hook}"]
         end
 
-        async_hook = RedmineGitolite::Config.gitolite_hooks_are_asynchronous?
+        async_hook = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
         if cur_values["redmineGitolite.asyncMode"] != async_hook.to_s
           logger.info "Update Git hooks global parameter : asyncMode (#{async_hook})"
           GitHosting.shell %[#{GitHosting.git_cmd_runner} config --global --bool redmineGitolite.asyncMode "#{async_hook}"]
@@ -134,7 +134,6 @@ module RedmineGitolite
 
       begin
         GitHosting.shell %[#{GitHosting.shell_cmd_runner} 'mkdir -p #{dest_dir}']
-        GitHosting.shell %[#{GitHosting.shell_cmd_runner} 'chown -R #{RedmineGitolite::Config.gitolite_user}.#{RedmineGitolite::Config.gitolite_user} #{dest_dir}']
         GitHosting.shell %[#{GitHosting.shell_cmd_runner} 'chmod 755 #{dest_dir}']
       rescue => e
         logger.error "install_hooks_dir(): Problems installing hooks directory in #{dest_dir}"
@@ -217,7 +216,7 @@ module RedmineGitolite
           logger.warn error_msg
           @@check_hooks_installed_cached[hook_name] = error_msg
 
-          if RedmineGitolite::Config.gitolite_force_hooks_update?
+          if RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update, true)
             logger.info "Restoring '#{hook_name}' hook since forceInstallHook == true"
 
             begin
@@ -257,7 +256,6 @@ module RedmineGitolite
 
       begin
         GitHosting.shell %[ cat #{source_path} | #{GitHosting.shell_cmd_runner} 'cat - > #{destination_path}']
-        GitHosting.shell %[#{GitHosting.shell_cmd_runner} 'chown #{RedmineGitolite::Config.gitolite_user}.#{RedmineGitolite::Config.gitolite_user} #{destination_path}']
         GitHosting.shell %[#{GitHosting.shell_cmd_runner} 'chmod #{filemode} #{destination_path}']
       rescue => e
         logger.error "install_hook_file(): Problems installing hook from '#{source_path}' in '#{destination_path}'"
