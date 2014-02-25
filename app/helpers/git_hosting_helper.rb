@@ -1,4 +1,5 @@
 module GitHostingHelper
+  unloadable
 
   include Redmine::I18n
 
