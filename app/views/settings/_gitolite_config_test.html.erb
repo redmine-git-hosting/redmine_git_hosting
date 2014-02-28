@@ -1,42 +1,92 @@
 <h3><%= l(:label_permissions_header) %></h3>
 
 <p>
-  <label><%= l(:label_sudo_gitolite_to_redmine_user) %></label>
-  <% sudo_gitolite_to_redmine_user = GitHosting.sudo_gitolite_to_redmine_user %>
-  <%= image_tag((sudo_gitolite_to_redmine_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-  <em><%= (sudo_gitolite_to_redmine_user == true ? '' : sudo_gitolite_to_redmine_user) %></em>
-  <br />
+  <%= label_tag  "", l(:label_scripts_dir_writeable) %>
+  <% state = RedmineGitolite::Config.scripts_dir_writeable?(:reset => true) %>
+  <span class="label label-<%= state ? 'success' : 'warning' %>"><%= RedmineGitolite::Config.get_scripts_dir_path %></span>
 </p>
 
 <p>
-  <label><%= l(:label_sudo_redmine_to_gitolite_user) %></label>
-  <% sudo_redmine_to_gitolite_user = GitHosting.sudo_redmine_to_gitolite_user %>
-  <%= image_tag((sudo_redmine_to_gitolite_user == true ? 'true.png' : 'exclamation.png'), :style => "vertical-align:bottom;") %>
-  <em><%= (sudo_redmine_to_gitolite_user == true ? '' : sudo_redmine_to_gitolite_user) %></em>
-  <br />
+  <%= label_tag  "", l(:label_temp_dir_writeable) %>
+  <% state = RedmineGitolite::Config.temp_dir_writeable?(:reset => true) %>
+  <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Config.get_temp_dir_path %></span>
 </p>
 
 <p>
-  <label>PATH Directories</label>
-  <br/>
+  <%= label_tag  "", l(:label_gitolite_admin_ssh_script_installed) %>
+  <% state = RedmineGitolite::Config.script_is_installed?(:gitolite_admin_ssh) %>
+  <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Config.gitolite_admin_ssh_script_path %></span>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_git_cmd_script_installed) %>
+  <% state = RedmineGitolite::Config.script_is_installed?(:git_cmd) %>
+  <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Config.git_cmd_script_path %></span>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_shell_cmd_script_installed) %>
+  <% state = RedmineGitolite::Config.script_is_installed?(:shell_cmd) %>
+  <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Config.shell_cmd_script_path %></span>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_sudo_gitolite_to_redmine_user) %>
+  <%= image_tag (RedmineGitolite::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_sudo_redmine_to_gitolite_user) %>
+  <%= image_tag (RedmineGitolite::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png') %>
+</p>
+
+<% hooks_manager = RedmineGitolite::Hooks.new %>
+
+<p>
+  <label><%= l(:label_gitolite_hooks_params_installed) %></label>
+  <% params_installed = hooks_manager.hook_params_installed? %>
+  <% params_installed.each do |param, installed| %>
+    <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+    <em><%= param %></em>
+    <br />
+  <% end %>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_hooks_installed) %></label>
+  <% hooks_installed  = hooks_manager.hooks_installed? %>
+  <% hooks_installed.each do |hook, installed| %>
+    <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+    <em><%= hook %></em>
+    <br />
+  <% end %>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_mirroring_keys_installed) %>
+  <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png') %>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_version) %></label>
+  <% gitolite_version = RedmineGitolite::Config.gitolite_version %>
+  <span class="label label-<%= gitolite_version <= 0 ? 'important' : 'success' %>">
+    <%= gitolite_version <= 0 ? l(:label_unknown_gitolite_version) : gitolite_version %>
+  </span>
+</p>
+
+<div class="box">
+<pre>
+<%= raw RedmineGitolite::Config.gitolite_banner %>
+</pre>
+</div>
+
+<p>
+  <label><%= l(:label_path_directories) %></label>
+</p>
+
+<div class="box">
 <pre>
 <%= raw (ENV['PATH']).gsub(/:/, "<br/>") %>
 </pre>
-  <br/>
-</p>
-
-<p>
-  <label>Gitolite Version : <%=
-    gitolite_version = GitHosting.gitolite_version
-    if gitolite_version <= 0
-      l(:label_unknown_gitolite_version)
-    else
-      gitolite_version
-    end
-  %></label>
-  <br/>
-<pre>
-<%= raw GitHosting.gitolite_banner %>
-</pre>
-  <br/>
-</p>
+</div>

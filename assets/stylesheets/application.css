@@ -132,6 +132,10 @@ REPOSITORY VIEW
   transition: background-color 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
 }
 
+div.flash.warning, .conflict {
+  background: url("../images/warning.png") no-repeat scroll 8px 18px #FFEBC1;
+}
+
 
 /*
 REPOSITORY SETTINGS

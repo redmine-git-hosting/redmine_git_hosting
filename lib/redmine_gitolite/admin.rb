@@ -1,29 +1,36 @@
 require 'gitolite'
+require 'lockfile'
 
 module RedmineGitolite
 
   class Admin
 
-    @@logger = nil
-    def logger
-      @@logger ||= RedmineGitolite::Log.get_logger(:worker)
+    def initialize
+      @gitolite_admin_dir = RedmineGitolite::Config.gitolite_admin_dir
+      @gitolite_config_file = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
+      @gitolite_config_file_path = File.join(@gitolite_admin_dir, 'conf', @gitolite_config_file)
+      @delete_git_repositories = RedmineGitolite::ConfigRedmine.get_setting(:delete_git_repositories, true)
+      @gitolite_server_port = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_server_port)
+      @gitolite_admin_url = RedmineGitolite::Config.gitolite_admin_url
+      @gitolite_admin_ssh_script_path = RedmineGitolite::Config.gitolite_admin_ssh_script_path
+      @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
     end
 
 
     def add_repository(repository, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         handle_repository_add(repository, 'add_repository')
 
-        gitolite_admin_repo_commit("#{action} : #{GitHosting.repository_name(repository)}")
+        gitolite_admin_repo_commit("#{action} : #{repository.gitolite_repository_name}")
 
         recycle = RedmineGitolite::Recycle.new
 
-        if !recycle.recover_repository_if_present(repository)
-          logger.info "Let Gitolite create empty repository : '#{GitHosting.repository_path(repository)}'"
+        if !recycle.recover_repository_if_present?(repository)
+          logger.info "Let Gitolite create empty repository : '#{repository.gitolite_repository_path}'"
         else
-          logger.info "Restored existing Gitolite repository : '#{GitHosting.repository_path(repository)}' for update"
+          logger.info "Restored existing Gitolite repository : '#{repository.gitolite_repository_path}' for update"
         end
 
         gitolite_admin_repo_push(action)
@@ -34,12 +41,12 @@ module RedmineGitolite
 
 
     def update_repository(repository, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         handle_repository_update(repository, action)
 
-        gitolite_admin_repo_commit("#{action} : #{GitHosting.repository_name(repository)}")
+        gitolite_admin_repo_commit("#{action} : #{repository.gitolite_repository_name}")
 
         gitolite_admin_repo_push(action)
 
@@ -49,14 +56,14 @@ module RedmineGitolite
 
 
     def delete_repositories(repositories_array, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         repositories_array.each do |repository_data|
           handle_repository_delete(repository_data)
 
           recycle = RedmineGitolite::Recycle.new
-          recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories, true)
+          recycle.move_repository_to_recycle(repository_data) if @delete_git_repositories
 
           gitolite_admin_repo_commit("#{action} : #{repository_data['repo_name']}")
         end
@@ -69,7 +76,7 @@ module RedmineGitolite
 
 
     def move_repositories(project, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         @delete_parent_path = []
@@ -86,7 +93,7 @@ module RedmineGitolite
 
 
     def move_repositories_tree(projects, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         @delete_parent_path = []
@@ -108,7 +115,7 @@ module RedmineGitolite
       projects = (projects.is_a?(Array) ? projects : [projects])
 
       if projects.detect{|p| p.repositories.detect{|r| r.is_a?(Repository::Git)}}
-        GitHosting.lock(action) do
+        get_lock(action) do
           gitolite_admin_repo_clone
 
           projects.each do |project|
@@ -128,7 +135,7 @@ module RedmineGitolite
       projects = (projects.is_a?(Array) ? projects : [projects])
 
       if projects.detect{|p| p.repositories.detect{|r| r.is_a?(Repository::Git)}}
-        GitHosting.lock(action) do
+        get_lock(action) do
           gitolite_admin_repo_clone
 
           projects.each do |project|
@@ -145,7 +152,7 @@ module RedmineGitolite
 
 
     def update_ssh_keys_forced(users, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         users.each do |user|
@@ -161,7 +168,7 @@ module RedmineGitolite
 
 
     def update_user(user, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         handle_user_update(user)
@@ -176,7 +183,7 @@ module RedmineGitolite
 
 
     def delete_ssh_key(ssh_key, action)
-      GitHosting.lock(action) do
+      get_lock(action) do
         gitolite_admin_repo_clone
 
         handle_ssh_key_delete(ssh_key)
@@ -200,9 +207,48 @@ module RedmineGitolite
     private
 
 
-    @gitolite_admin_dir = nil
-    def gitolite_admin_dir
-      @gitolite_admin_dir ||= File.join(GitHosting.temp_dir_path, RedmineGitolite::Config::GITOLITE_ADMIN_REPO)
+    def logger
+      RedmineGitolite::Log.get_logger(:worker)
+    end
+
+
+    ###############################
+    ##                           ##
+    ##      LOCK FUNCTIONS       ##
+    ##                           ##
+    ###############################
+
+
+    @@lock_file = nil
+
+    def get_lock_file
+      begin
+        lock_file ||= File.new(@lock_file_path, File::CREAT|File::RDONLY)
+      rescue Exception => e
+        lock_file = nil
+      end
+
+      @@lock_file = lock_file
+    end
+
+
+    def get_lock(action)
+      lock_file = get_lock_file
+
+      if !lock_file.nil? && File.exist?(lock_file)
+        File.open(lock_file) do |file|
+          file.sync = true
+          file.flock(File::LOCK_EX)
+          logger.debug "#{action} : get lock !"
+
+          yield
+
+          file.flock(File::LOCK_UN)
+          logger.debug "#{action} : lock released !"
+        end
+      else
+        logger.error "#{action} : cannot get lock, file does not exist #{lock_file} !"
+      end
     end
 
 
@@ -221,17 +267,16 @@ module RedmineGitolite
     end
 
 
-    @@gitolite_admin_conf = nil
     def gitolite_admin_repo_clone
-      if (File.exists? "#{gitolite_admin_dir}") && (File.exists? "#{gitolite_admin_dir}/.git") && (File.exists? "#{gitolite_admin_dir}/keydir") && (File.exists? "#{gitolite_admin_dir}/conf")
+      if (File.exists? "#{@gitolite_admin_dir}") && (File.exists? "#{@gitolite_admin_dir}/.git") && (File.exists? "#{@gitolite_admin_dir}/keydir") && (File.exists? "#{@gitolite_admin_dir}/conf")
         @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       else
         begin
-          logger.info "Clone Gitolite Admin Repo : #{RedmineGitolite::Config.gitolite_admin_url} (port : #{RedmineGitolite::Config.get_setting(:gitolite_server_port)}) to #{@gitolite_admin_dir}"
+          logger.info "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}"
 
-          GitHosting.shell %[rm -rf "#{@gitolite_admin_dir}"]
-          GitHosting.shell %[env GIT_SSH=#{GitHosting.gitolite_admin_ssh_runner} git clone ssh://#{RedmineGitolite::Config.gitolite_admin_url} #{@gitolite_admin_dir}]
-          GitHosting.shell %[chmod 700 "#{@gitolite_admin_dir}"]
+          RedmineGitolite::GitHosting.shell %[rm -rf "#{@gitolite_admin_dir}"]
+          RedmineGitolite::GitHosting.shell %[env GIT_SSH=#{@gitolite_admin_ssh_script_path} git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}]
+          RedmineGitolite::GitHosting.shell %[chmod 700 "#{@gitolite_admin_dir}"]
 
           @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
         rescue => e
@@ -241,28 +286,26 @@ module RedmineGitolite
         end
       end
 
-      if RedmineGitolite::Config.get_setting(:gitolite_config_file) != RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
-        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config.get_setting(:gitolite_config_file)}"
-        if !File.exists?(config_file)
+      if @gitolite_config_file != RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+        if !File.exists?(@gitolite_config_file_path)
           begin
-            GitHosting.shell %[touch "#{config_file}"]
+            RedmineGitolite::GitHosting.shell %[touch "#{@gitolite_config_file_path}"]
           rescue => e
             logger.error e.message
-            logger.error "Cannot create Gitolite configuration file '#{config_file}' !!"
+            logger.error "Cannot create Gitolite configuration file '#{@gitolite_config_file_path}' !!"
             return false
           end
         end
       else
-        config_file = "#{@gitolite_admin_dir}/conf/#{RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE}"
-        if !File.exists?(config_file)
-          logger.error "Gitolite configuration file does not exist '#{config_file}' !!"
+        if !File.exists?(@gitolite_config_file_path)
+          logger.error "Gitolite configuration file does not exist '#{@gitolite_config_file_path}' !!"
           logger.error "Please check your Gitolite installation"
           return false
         end
       end
 
-      logger.info "Using Gitolite configuration file : '#{config_file}'"
-      @gitolite_admin.config = @gitolite_config = Gitolite::Config.new(config_file)
+      logger.info "Using Gitolite configuration file : '#{@gitolite_config_file_path}'"
+      @gitolite_admin.config = @gitolite_config = Gitolite::Config.new(@gitolite_config_file_path)
     end
 
 
@@ -288,7 +331,7 @@ module RedmineGitolite
         repo_list = []
 
         project.gitolite_repos.reverse.each do |repository|
-          repo_list.push(GitHosting.repository_name(repository))
+          repo_list.push(repository.gitolite_repository_name)
           do_move_repositories(repository)
         end
 
@@ -298,8 +341,8 @@ module RedmineGitolite
 
 
     def handle_repository_add(repository, action, force = false)
-      repo_name = GitHosting.repository_name(repository)
-      repo_path = GitHosting.repository_path(repository)
+      repo_name = repository.gitolite_repository_name
+      repo_path = repository.gitolite_repository_path
       repo_conf = @gitolite_config.repos[repo_name]
 
       if !repo_conf
@@ -349,8 +392,8 @@ module RedmineGitolite
 
 
     def handle_repository_update(repository, action)
-      repo_name = GitHosting.repository_name(repository)
-      repo_path = GitHosting.repository_path(repository)
+      repo_name = repository.gitolite_repository_name
+      repo_path = repository.gitolite_repository_path
       repo_conf = @gitolite_config.repos[repo_name]
 
       if repo_conf
@@ -438,7 +481,7 @@ module RedmineGitolite
       new_repo_name = "#{GitHosting.new_repository_name(repository)}"
 
       old_relative_path  = "#{repository.url}"
-      new_relative_path  = "#{GitHosting.repository_path(repository)}"
+      new_relative_path  = "#{repository.gitolite_repository_path}"
 
       old_relative_parent_path = old_relative_path.gsub(repo_id + '.git', '')
       new_relative_parent_path = new_relative_path.gsub(repo_id + '.git', '')
@@ -457,7 +500,7 @@ module RedmineGitolite
         logger.error "move_repositories : repository '#{repo_name}' does not exist in Gitolite, exit !"
         return false
       else
-        if GitHosting.move_physical_repo(old_relative_path, new_relative_path, new_relative_parent_path)
+        if move_physical_repo(old_relative_path, new_relative_path, new_relative_parent_path)
           @delete_parent_path.push(old_relative_parent_path)
 
           repository.update_column(:url, new_relative_path)
@@ -579,6 +622,85 @@ module RedmineGitolite
       permissions["R"] = {"" => read.uniq.sort} unless read.empty?
 
       [permissions]
+    end
+
+
+    def is_repository_empty?(new_path)
+      empty_repo = false
+
+      begin
+        output = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{new_path}/objects' -type f | wc -l").chomp.gsub('\n', '')
+        logger.debug "move_repository : counted objects in repository directory '#{new_path}' : '#{output}'"
+
+        if output.to_i == 0
+          empty_repo = true
+        else
+          empty_repo = false
+        end
+      rescue Exception => e
+        empty_repo = false
+      end
+
+      return empty_repo
+    end
+
+
+    def move_physical_repo(old_path, new_path, new_parent_path)
+      ## CASE 1
+      if old_path == new_path
+        logger.info "move_repository : old repository and new repository are identical '#{old_path}', nothing to do, exit !"
+        return true
+      end
+
+      ## CASE 2
+      if !RedmineGitolite::GitHosting.file_exists? old_path
+        logger.error "move_repository : old repository '#{old_path}' does not exist, cannot move it, exit !"
+        return false
+      end
+
+      ## CASE 3
+      if RedmineGitolite::GitHosting.file_exists? new_path
+        if is_repository_empty?(new_path)
+          logger.warn "move_repository : target repository '#{new_path}' already exists and is empty, remove it..."
+          begin
+            RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{new_path}'")
+          rescue => e
+            logger.error "move_repository : removing existing target repository failed, exit !"
+            return false
+          end
+        else
+          logger.warn "move_repository : target repository '#{new_path}' exists and is not empty, considered as already moved, remove the old_path"
+          begin
+            RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{old_path}'")
+            return true
+          rescue => e
+            logger.error "move_repository : removing source repository directory failed, exit !"
+            return false
+          end
+        end
+      end
+
+      logger.debug "move_repository : moving Gitolite repository from '#{old_path}' to '#{new_path}'"
+
+      if !RedmineGitolite::GitHosting.file_exists? new_parent_path
+        begin
+          RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{new_parent_path}'")
+        rescue => e
+          logger.error "move_repository : creation of parent path '#{new_parent_path}' failed, exit !"
+          return false
+        end
+      end
+
+      begin
+        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{old_path}' '#{new_path}'")
+        logger.info "move_repository : done !"
+        return true
+      rescue => e
+        logger.error "move_physical_repo(#{old_path}, #{new_path}) failed"
+        logger.error e.message
+        return false
+      end
+
     end
 
   end

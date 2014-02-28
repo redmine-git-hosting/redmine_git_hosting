@@ -18,4 +18,3 @@ end
 unless SettingsController.included_modules.include?(RedmineGitHosting::Patches::SettingsControllerPatch)
   SettingsController.send(:include, RedmineGitHosting::Patches::SettingsControllerPatch)
 end
-

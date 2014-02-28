@@ -124,7 +124,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
     repo_key[:key]      = @key.key
     repo_key[:location] = @key.location
     repo_key[:owner]    = @key.owner
-    GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
   end
 
 

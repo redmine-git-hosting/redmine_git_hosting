@@ -121,9 +121,11 @@ module RedmineGitolite
           gr.send(method, object, action)
         else
           logger.error "method is nil"
+          return false
         end
       else
         logger.error "object is nil"
+        return false
       end
     end
 

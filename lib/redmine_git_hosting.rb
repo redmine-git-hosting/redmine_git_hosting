@@ -30,6 +30,7 @@ apply_patch do
   require_dependency 'redmine_gitolite/git_hosting'
   require_dependency 'redmine_gitolite/admin'
   require_dependency 'redmine_gitolite/config'
+  require_dependency 'redmine_gitolite/config_redmine'
   require_dependency 'redmine_gitolite/cache'
   require_dependency 'redmine_gitolite/hooks'
   require_dependency 'redmine_gitolite/recycle'

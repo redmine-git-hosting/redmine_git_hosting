@@ -11,9 +11,11 @@ en:
   label_gitolite_ssh_config: Gitolite SSH Configuration
 
   label_gitolite_user: Gitolite username
-  label_gitolite_server_port: SSH local server port
   label_gitolite_ssh_private_key: Gitolite SSH private key
   label_gitolite_ssh_public_key: Gitolite SSH public key
+  label_gitolite_server_port: SSH local server port
+
+  label_cannot_change_selinux: Cannot change in current configuration
 
   # Gitolite Storage Config
   label_tab_storage: Storage
@@ -21,10 +23,10 @@ en:
 
   label_gitolite_global_storage_dir: Gitolite repositories base path
   label_gitolite_global_storage_dir_desc: (Relative to Gitolite user home)
-  label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
-  label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
   label_gitolite_recycle_bin_dir: Gitolite recycle bin base path
   label_gitolite_recycle_bin_dir_desc: (Relative to Gitolite user home)
+  label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
+  label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
 
   # Gitolite Global Config
   label_tab_global: Global
@@ -80,7 +82,8 @@ en:
   label_gitolite_hooks_are_asynchronous: Run hooks asynchronously
   label_gitolite_force_hooks_update: Force hooks to be updated
   label_gitolite_hooks_debug: Run hooks in Debug mode
-  label_gitolite_hooks_installed: Hooks installed
+  label_gitolite_hooks_url: Hooks URL
+  label_gitolite_hooks_namespace: Hooks Git namespace
 
   # Gitolite Cache Config
   label_tab_cache: Cache
@@ -137,6 +140,17 @@ en:
   label_sudo_redmine_to_gitolite_user: Redmine user is able to sudo to Git user?
   label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
   label_unknown_gitolite_version: Unknown version
+  label_scripts_dir_writeable: Scripts directory writeable?
+  label_temp_dir_writeable: Temp directory writeable?
+  label_gitolite_admin_ssh_script_installed: Script for Gitolite Admin command installed?
+  label_git_cmd_script_installed: Script for Git command installed?
+  label_shell_cmd_script_installed: Script for Shell command installed?
+  label_mirroring_keys_installed: Mirrors keys installed?
+  label_gitolite_version: Gitolite version
+  label_gitolite_banner: Gitolite banner
+  label_path_directories: PATH directories
+  label_gitolite_hooks_params_installed: Hooks parameters installed?
+  label_gitolite_hooks_installed: Hooks installed?
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin

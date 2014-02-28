@@ -125,8 +125,8 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def add_ssh_key
-    GitHosting.logger.info "User '#{User.current.login}' has added a SSH key"
-    GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
+    RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' has added a SSH key"
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
 
     if user_key?
       project_list = []
@@ -137,8 +137,8 @@ class GitolitePublicKey < ActiveRecord::Base
       end
 
       if project_list.length > 0
-        GitHosting.logger.info "Update project to add SSH access : #{project_list.uniq}"
-        GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
+        RedmineGitolite::GitHosting.logger.info "Update project to add SSH access : #{project_list.uniq}"
+        RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
       end
     end
   end
@@ -240,7 +240,7 @@ class GitolitePublicKey < ActiveRecord::Base
     # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
-    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)}'] })]
+    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{RedmineGitolite::ConfigRedmine.get_setting(:gitolite_ssh_public_key)}'] })]
 
     # Check all active keys
     allkeys += (GitolitePublicKey.active.all)

@@ -26,10 +26,10 @@ class DownloadGitRevisionController < ApplicationController
 
     # is the revision a tag?
     if commit.nil?
-      tags = %x[#{GitHosting.git_cmd_runner} --git-dir='#{@gitolite_repo_path}' tag].split
+      tags = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' tag").split
       tags.each do |x|
         if x == rev
-          commit = %x[#{GitHosting.git_cmd_runner} --git-dir='#{@gitolite_repo_path}' rev-list #{rev}].split[0]
+          commit = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-list #{rev}").split[0]
           break
         end
       end
@@ -40,7 +40,7 @@ class DownloadGitRevisionController < ApplicationController
       commit = rev
     end
 
-    valid_commit = %x[#{GitHosting.git_cmd_runner} --git-dir='#{@gitolite_repo_path}' rev-parse --quiet --verify #{commit}]
+    valid_commit = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-parse --quiet --verify #{commit}")
 
     if valid_commit == ''
       flash.now[:error] = l(:error_download_revision_no_such_commit, :commit => commit)
@@ -74,7 +74,7 @@ class DownloadGitRevisionController < ApplicationController
     end
 
     begin
-      content = %x[#{GitHosting.git_cmd_runner} --git-dir='#{@gitolite_repo_path}' archive #{cmd_args} #{valid_commit}]
+      content = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' archive #{cmd_args} #{valid_commit}")
     rescue => e
       flash.now[:error] = l(:git_archive_timeout, :timeout => e.message)
       render_404
@@ -92,8 +92,6 @@ class DownloadGitRevisionController < ApplicationController
     @repository = Repository.find_by_id(params[:repository_id])
     if @repository.nil?
       render_404
-    else
-      @gitolite_repo_path = GitHosting.repository_path(@repository)
     end
   end
 

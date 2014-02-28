@@ -35,8 +35,6 @@ class RepositoryMirror < ActiveRecord::Base
 
 
   def push
-    repo_path = GitHosting.repository_path(repository)
-
     push_args = ""
 
     if push_mode == PUSHMODE_MIRROR
@@ -51,8 +49,13 @@ class RepositoryMirror < ActiveRecord::Base
     push_args << " \"#{dequote(url)}\""
     push_args << " \"#{dequote(explicit_refspec)}\"" unless explicit_refspec.blank?
 
-    push_message = %x[ echo 'export GIT_SSH=~/.ssh/run_gitolite_admin_ssh ; cd "#{repo_path}" && git push #{push_args} 2>&1' | #{GitHosting.shell_cmd_runner} "bash" ].chomp
-    push_failed = ($?.to_i != 0) ? true : false
+    begin
+      push_message = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "bash", :pipe_data => 'export GIT_SSH=~/.ssh/run_gitolite_admin_ssh && cd ' + "#{repository.gitolite_repository_path}" + ' && git push ' + "#{push_args}", :pipe_command => 'echo').chomp
+      push_failed = false
+    rescue RedmineGitolite::GitHosting::GitHostingException => e
+      push_message = e.output
+      push_failed = true
+    end
 
     return push_failed, push_message
   end

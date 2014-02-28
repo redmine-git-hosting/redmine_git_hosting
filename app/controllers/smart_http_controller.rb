@@ -73,7 +73,7 @@ class SmartHttpController < ApplicationController
     logger.info "repo_path  : #{repo_path}"
     logger.info "is_push    : #{is_push}"
 
-    if (@repository = Repository.find_by_path(repo_path, :parse_ext => true)) && @repository.is_a?(Repository::Git)
+    if (@repository = Repository::Git.find_by_path(repo_path, :loose => true)) && @repository.is_a?(Repository::Git)
       if (@project = @repository.project) && @repository.extra[:git_http] != 0
         allow_anonymous_read = @project.is_public
         # Push requires HTTP enabled or valid SSL
@@ -293,7 +293,7 @@ class SmartHttpController < ApplicationController
 
   ## Note: command must be started with a quote!
   def run_git_prefix
-    return "#{GitHosting.shell_cmd_runner} 'cd #{GitHosting.repository_path(@repository)}"
+    return "#{RedmineGitolite::GitHosting.shell_cmd_runner} 'cd #{@repository.gitolite_repository_path}"
   end
 
 

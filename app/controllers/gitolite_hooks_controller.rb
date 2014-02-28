@@ -158,8 +158,7 @@ class GitoliteHooksController < ApplicationController
       end
 
       # Grab the repository path
-      repo_path = GitHosting.repository_path(@repository)
-      revisions_in_range = %x[#{GitHosting.git_cmd_runner} --git-dir='#{repo_path}' rev-list --reverse #{range}]
+      revisions_in_range = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-list --reverse #{range}")
       logger.debug "Revisions in range : #{revisions_in_range.split().join(' ')}"
 
       commits = []

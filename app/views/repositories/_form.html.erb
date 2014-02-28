@@ -87,7 +87,7 @@
         selected = "false"
         if @repository.extra[:git_daemon] == 1
           selected = "true"
-        elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true)
+        elsif @project.is_public && RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default, true)
           selected = "true"
         end
       %>
@@ -104,7 +104,7 @@
         <p>
           <label><%= l(:label_enable_git_notify) %></label>
           <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-            <%= hidden_field_tag "extra[git_notify]", "true" %>
+            <%= hidden_field_tag "extra[git_notify]", "false" %>
             <%= check_box_tag "extra[git_notify]", (@repository.extra[:git_notify] == 1 ? 'true' : 'false'), (@repository.extra[:git_notify] == 1 ? true : false) %>
           </span>
         </p>
@@ -120,7 +120,10 @@
                                                               ], :selected => @repository.extra[:git_http].to_s) %>
       </p>
 
-
+      <p>
+        <%= label_tag  "", l(:label_mirroring_keys_installed) %>
+        <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
+      </p>
 
     <% else %>
       <%= repository_field_tags(f, @repository) if @repository %>

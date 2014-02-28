@@ -1,10 +1,10 @@
 <%
   # Gitolite Notifications Config
-  gitolite_notify_by_default            = RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true)
-  gitolite_notify_global_prefix         = RedmineGitolite::Config.get_setting(:gitolite_notify_global_prefix)
-  gitolite_notify_global_sender_address = RedmineGitolite::Config.get_setting(:gitolite_notify_global_sender_address)
-  gitolite_notify_global_include        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_include)
-  gitolite_notify_global_exclude        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude)
+  gitolite_notify_by_default            = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default, true)
+  gitolite_notify_global_prefix         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_prefix)
+  gitolite_notify_global_sender_address = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_sender_address)
+  gitolite_notify_global_include        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_include)
+  gitolite_notify_global_exclude        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_exclude)
 %>
 
 <h3><%= l(:label_gitolite_notify_config) %></h3>

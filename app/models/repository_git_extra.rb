@@ -33,7 +33,7 @@ class RepositoryGitExtra < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      GitHosting.logger.error "Error in validate_encoded_time(): #{e.message}"
+      RedmineGitolite::GitHosting.logger.error "Error in validate_encoded_time(): #{e.message}"
     end
     valid
   end
@@ -58,9 +58,9 @@ class RepositoryGitExtra < ActiveRecord::Base
 
 
   def setup_defaults
-    write_attribute(:git_http,   RedmineGitolite::Config.get_setting(:gitolite_http_by_default))
-    write_attribute(:git_daemon, RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true) ? 1 : 0)
-    write_attribute(:git_notify, RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true) ? 1 : 0)
+    write_attribute(:git_http,   RedmineGitolite::ConfigRedmine.get_setting(:gitolite_http_by_default))
+    write_attribute(:git_daemon, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default, true) ? 1 : 0)
+    write_attribute(:git_notify, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default, true) ? 1 : 0)
   end
 
 end

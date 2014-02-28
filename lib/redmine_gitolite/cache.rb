@@ -327,17 +327,17 @@ module RedmineGitolite
     ###############################################
 
     def self.max_cache_time
-      RedmineGitolite::Config.get_setting(:gitolite_cache_max_time).to_i
+      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_time).to_i
     end
 
 
     def self.max_cache_elements
-      RedmineGitolite::Config.get_setting(:gitolite_cache_max_elements).to_i
+      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_elements).to_i
     end
 
 
     def self.max_cache_size
-      RedmineGitolite::Config.get_setting(:gitolite_cache_max_size).to_i*1024*1024
+      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_size).to_i*1024*1024
     end
 
 
@@ -394,12 +394,14 @@ module RedmineGitolite
     end
 
 
-    @@time_limits=nil
-    def self.limit_cache(repo,date)
-      repo_id = repo.is_a?(Repository::Git) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
+    @@time_limits = nil
+
+    ## TODO: finish job
+    def self.limit_cache(repository, date)
+      repo_id = repository.git_cache_id
       logger.info "Executing limit cache : '#{repo_id}' for '#{date}'"
       @@time_limits ||= {}
-      @@time_limits[repo_id]=(ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
+      @@time_limits[repo_id] = (ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
     end
 
 
@@ -408,9 +410,9 @@ module RedmineGitolite
     end
 
 
-    # Given repository or repository_path, clear the cache entries
-    def self.clear_cache_for_repository(repo)
-      repo_id = repo.is_a?(Repository::Git) ? repo.git_label(:assume_unique => false) : Repository.repo_path_to_git_label(repo)
+    # Clear the cache entries for given repository
+    def self.clear_cache_for_repository(repository)
+      repo_id = repository.git_cache_id
 
       # Clear cache
       old_cached = GitCache.find_all_by_repo_identifier(repo_id)

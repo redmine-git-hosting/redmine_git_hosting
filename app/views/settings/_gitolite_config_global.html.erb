@@ -1,13 +1,13 @@
 <%
   # Gitolite Global Config
-  gitolite_config_file                 = RedmineGitolite::Config.get_setting(:gitolite_config_file)
-  gitolite_config_has_admin_key        = RedmineGitolite::Config.get_setting(:gitolite_config_has_admin_key, true)
-  gitolite_recycle_bin_expiration_time = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time)
+  gitolite_config_file                 = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
+  gitolite_config_has_admin_key        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_has_admin_key, true)
+  gitolite_recycle_bin_expiration_time = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_recycle_bin_expiration_time)
 
-  gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
-  gitolite_scripts_dir = RedmineGitolite::Config.get_setting(:gitolite_scripts_dir)
-  gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
-  gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split, true)
+  gitolite_temp_dir    = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_temp_dir)
+  gitolite_scripts_dir = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_scripts_dir)
+  gitolite_log_level   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level)
+  gitolite_log_split   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
 %>
 
 <h3><%= l(:label_gitolite_global_config) %></h3>
@@ -20,10 +20,13 @@
 </p>
 
 <p>
-  <label><%= l(:label_gitolite_scripts_dir) %><%= "<br/><em>[ #{l(:label_cannot_change_selinux)} ]</em>" if !GitHosting.scripts_dir_writeable?(:reset) %></label>
+  <label><%= l(:label_gitolite_scripts_dir) %></label>
   <%= text_field_tag("settings[gitolite_scripts_dir]", reldir_add_dotslash(gitolite_scripts_dir), :size => 60) %>
   <br />
   <em><%= l(:label_gitolite_scripts_dir_desc) %></em>
+  <% if !RedmineGitolite::Config.scripts_dir_writeable?(:reset => true) %>
+    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
+  <% end %>
 </p>
 
 <p>

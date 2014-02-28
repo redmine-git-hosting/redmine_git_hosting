@@ -1,8 +1,8 @@
 <%
   # Gitolite Storage Config
-  gitolite_global_storage_dir  = RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir)
-  gitolite_redmine_storage_dir = RedmineGitolite::Config.get_setting(:gitolite_redmine_storage_dir)
-  gitolite_recycle_bin_dir     = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_dir)
+  gitolite_global_storage_dir  = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_global_storage_dir)
+  gitolite_redmine_storage_dir = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_redmine_storage_dir)
+  gitolite_recycle_bin_dir     = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_recycle_bin_dir)
 %>
 
 <h3><%= l(:label_gitolite_storage_config) %></h3>
