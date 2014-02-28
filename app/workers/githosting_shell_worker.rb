@@ -1,6 +1,5 @@
 class GithostingShellWorker
   include Sidekiq::Worker
-  include RedmineGitolite::ShellAdapter
 
   sidekiq_options :queue => :git_hosting, :retry => false
 
@@ -12,6 +11,8 @@ class GithostingShellWorker
         Setting.check_cache
       end
     end
-    githosting_shell.handle_command(data['command'], data['object'])
+
+    githosting_shell = RedmineGitolite::Shell.new(data['command'], data['object'])
+    githosting_shell.handle_command
   end
 end

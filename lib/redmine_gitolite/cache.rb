@@ -24,9 +24,8 @@ module RedmineGitolite
     DEAD          = 3
 
 
-    @@logger = nil
     def self.logger
-      @@logger ||= RedmineGitolite::Log.get_logger(:git_cache)
+      RedmineGitolite::Log.get_logger(:git_cache)
     end
 
 

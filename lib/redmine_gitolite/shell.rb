@@ -2,131 +2,196 @@ module RedmineGitolite
 
   class Shell
 
-    @@logger = nil
+
     def logger
-      @@logger ||= RedmineGitolite::Log.get_logger(:worker)
+      RedmineGitolite::Log.get_logger(:worker)
     end
 
 
-    def handle_command(action, object_id)
+    def initialize(action, object_id)
+      @action = action
+      @object_id = object_id
+    end
 
-      if object_id.nil?
-        logger.error "#{action} : object_id is nil, exit !"
+
+    def handle_command
+      if @action.nil?
+        logger.error "action is nil, exit !"
         return false
       end
 
-      object = nil
-      method = nil
-
-      case action.to_sym
-
-        when :add_repository then
-          object = Repository.find_by_id(object_id)
-          method = :add_repository
-
-        when :update_repository then
-          object = Repository.find_by_id(object_id)
-          method = :update_repository
-
-        when :delete_repositories then
-          if !object_id.empty?
-            object = object_id
-            method = :delete_repositories
-          end
-
-        when :move_repositories then
-          object = Project.find_by_id(object_id)
-          method = :move_repositories
-
-        when :move_repositories_tree then
-          object = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x.parent_id.nil? }
-          method = :move_repositories_tree
-
-        when :add_ssh_key then
-          object = User.find_by_id(object_id)
-          method = :update_user
-
-        when :update_ssh_keys then
-          object = User.find_by_id(object_id)
-          method = :update_user
-
-        when :delete_ssh_key then
-          if !object_id.empty?
-            object = object_id
-            method = :delete_ssh_key
-          end
-
-        when :update_project then
-          object = Project.find_by_id(object_id)
-          method = :update_projects
-
-        when :update_projects then
-          if !object_id.empty?
-            object = []
-            object_id.each do |project_id|
-              project = Project.find_by_id(project_id)
-              if !project.nil?
-                object.push(project)
-              end
-            end
-            method = :update_projects
-          end
-
-        when :update_all_projects then
-          projects = Project.active_or_archived.find(:all, :include => :repositories)
-          if projects.length > 0
-            object = projects
-            method = :update_projects
-          end
-
-        when :update_all_projects_forced then
-          projects = Project.active_or_archived.find(:all, :include => :repositories)
-          if projects.length > 0
-            object = projects
-            method = :update_projects_forced
-          end
-
-        when :update_all_ssh_keys_forced then
-          users = User.all
-          if users.length > 0
-            object = users
-            method = :update_ssh_keys_forced
-          end
-
-        when :update_members then
-          object = Project.find_by_id(object_id)
-          method = :update_projects
-
-        when :update_role then
-          role = Role.find_by_id(object_id)
-          if !role.nil?
-            projects = role.members.map(&:project).flatten.uniq.compact
-            if projects.length > 0
-              object = projects
-              method = :update_projects
-            end
-          end
-
-        when :purge_recycle_bin then
-          if !object_id.empty?
-            object = object_id
-            method = :purge_recycle_bin
-          end
-
+      if @object_id.nil?
+        logger.error "#{@action} : object_id is nil, exit !"
+        return false
       end
 
+      method, object = self.send(@action)
+
       if !object.nil?
-        if !method.nil?
-          gr = RedmineGitolite::Admin.new
-          gr.send(method, object, action)
+        if !object.is_a?(Array)
+          call_gitolite(method, object)
+        elsif !object.empty?
+          call_gitolite(method, object)
         else
-          logger.error "method is nil"
           return false
         end
       else
         logger.error "object is nil"
         return false
       end
+    end
+
+
+    private
+
+
+    def call_gitolite(method, object)
+      gr = RedmineGitolite::Admin.new
+      gr.send(method, object, @action)
+    end
+
+
+    def add_repository
+      method = :add_repository
+      object = Repository.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def update_repository
+      method = :update_repository
+      object = Repository.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def delete_repositories
+      method = :delete_repositories
+      object = @object_id
+      return method, object
+    end
+
+
+    def move_repositories
+      method = :move_repositories
+      object = Project.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def move_repositories_tree
+      method = :move_repositories_tree
+      object = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x.parent_id.nil? }
+      return method, object
+    end
+
+
+    def add_ssh_key
+      method = :update_user
+      object = User.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def update_ssh_keys
+      method = :update_user
+      object = User.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def delete_ssh_key
+      method = :delete_ssh_key
+      object = @object_id
+      return method, object
+    end
+
+
+    def update_project
+      method = :update_projects
+      object = Project.find_by_id(@object_id)
+      return method, object
+    end
+
+
+    def update_projects
+      method = :update_projects
+
+      object = []
+      @object_id.each do |project_id|
+        project = Project.find_by_id(project_id)
+        if !project.nil?
+          object.push(project)
+        end
+      end
+
+      return method, object
+    end
+
+
+    def update_all_projects
+      method = :update_projects
+
+      object = []
+      projects = Project.active_or_archived.find(:all, :include => :repositories)
+      if projects.length > 0
+        object = projects
+      end
+
+      return method, object
+    end
+
+
+    def update_all_projects_forced
+      method = :update_projects_forced
+
+      object = []
+      projects = Project.active_or_archived.find(:all, :include => :repositories)
+      if projects.length > 0
+        object = projects
+      end
+
+      return method, object
+    end
+
+
+    def update_all_ssh_keys_forced
+      method = :update_ssh_keys_forced
+      object = User.all
+
+      return method, object
+    end
+
+
+    def update_members
+      method = :update_projects
+      object = Project.find_by_id(@object_id)
+
+      return method, object
+    end
+
+
+    def update_role
+      method = :update_projects
+
+      object = []
+      role = Role.find_by_id(@object_id)
+      if !role.nil?
+        projects = role.members.map(&:project).flatten.uniq.compact
+        if projects.length > 0
+          object = projects
+        end
+      end
+
+      return method, object
+    end
+
+
+    def purge_recycle_bin
+      method = :purge_recycle_bin
+      object = @object_id
+
+      return method, object
     end
 
   end

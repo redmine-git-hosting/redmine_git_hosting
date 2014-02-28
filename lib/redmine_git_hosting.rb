@@ -35,7 +35,6 @@ apply_patch do
   require_dependency 'redmine_gitolite/hooks'
   require_dependency 'redmine_gitolite/recycle'
   require_dependency 'redmine_gitolite/log'
-  require_dependency 'redmine_gitolite/shell_adapter'
   require_dependency 'redmine_gitolite/shell'
   require_dependency 'redmine_gitolite/translations'
 
