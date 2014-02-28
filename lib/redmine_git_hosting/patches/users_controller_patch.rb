@@ -10,8 +10,11 @@ module RedmineGitHosting
           alias_method_chain :update, :git_hosting
           alias_method_chain :edit,   :git_hosting
 
-          helper :gitolite_public_keys
+          include GitHostingHelper
           include GitolitePublicKeysHelper
+
+          helper :git_hosting
+          helper :gitolite_public_keys
         end
       end
 
