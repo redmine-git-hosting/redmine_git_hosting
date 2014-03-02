@@ -473,15 +473,16 @@ module RedmineGitolite
 
 
     def do_move_repositories(repository)
-      repo_id   = repository.git_name
-      repo_name = "#{GitHosting.old_repository_name(repository)}"
+      repo_id   = repository.redmine_name
+      repo_name = repository.old_repository_name
+
       repo_conf = @gitolite_config.repos[repo_name]
 
-      old_repo_name = "#{GitHosting.old_repository_name(repository)}"
-      new_repo_name = "#{GitHosting.new_repository_name(repository)}"
+      old_repo_name = repository.old_repository_name
+      new_repo_name = repository.new_repository_name
 
-      old_relative_path  = "#{repository.url}"
-      new_relative_path  = "#{repository.gitolite_repository_path}"
+      old_relative_path  = repository.url
+      new_relative_path  = repository.gitolite_repository_path
 
       old_relative_parent_path = old_relative_path.gsub(repo_id + '.git', '')
       new_relative_parent_path = new_relative_path.gsub(repo_id + '.git', '')

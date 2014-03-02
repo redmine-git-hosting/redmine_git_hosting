@@ -28,6 +28,13 @@ module RedmineGitolite
 
 
     def self.resync_gitolite(data_hash)
+      if data_hash.has_key?(:option)
+        if data_hash[:option] == :flush_cache
+          logger.info "Flush Settings Cache !"
+          Setting.check_cache
+        end
+      end
+
       if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_use_sidekiq, true)
         GithostingShellWorker.perform_async(data_hash)
       else
