@@ -7,12 +7,13 @@ module RedmineGitolite
 
     def update_project
       object = Project.find_by_id(@object_id)
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
     def update_projects
       object = []
+
       @object_id.each do |project_id|
         project = Project.find_by_id(project_id)
         if !project.nil?
@@ -20,7 +21,7 @@ module RedmineGitolite
         end
       end
 
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
@@ -31,7 +32,7 @@ module RedmineGitolite
         object = projects
       end
 
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
@@ -42,13 +43,13 @@ module RedmineGitolite
         object = projects
       end
 
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
     def update_members
       object = Project.find_by_id(@object_id)
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
@@ -62,7 +63,7 @@ module RedmineGitolite
         end
       end
 
-      update_projects(object)
+      do_update_projects(object)
     end
 
 
@@ -95,7 +96,7 @@ module RedmineGitolite
     private
 
 
-    def update_projects(projects)
+    def do_update_projects(projects)
       projects = (projects.is_a?(Array) ? projects : [projects])
 
       if projects.detect{|p| p.repositories.detect{|r| r.is_a?(Repository::Git)}}
