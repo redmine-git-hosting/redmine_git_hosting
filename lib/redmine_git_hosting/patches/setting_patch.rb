@@ -382,7 +382,7 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_hooks_are_asynchronous] != valuehash[:gitolite_hooks_are_asynchronous]
                 # Need to update our .gitconfig
                 hooks = RedmineGitolite::Hooks.new
-                hooks.update_global_hook_params
+                hooks.hook_params_installed?
             end
 
 
