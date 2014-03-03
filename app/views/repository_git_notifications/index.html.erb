@@ -41,11 +41,11 @@
       <% if !@git_notification.nil? %>
         <p>
           <label><%= l(:label_gitolite_notify_prefix) %></label>
-          <%= text_field_tag :prefix, @git_notification.prefix, :disabled => true %>
+          <span class="label label-info"><%= @git_notification.prefix %></span>
         </p>
         <p>
           <label><%= l(:label_gitolite_notify_sender_address) %></label>
-          <%= text_field_tag :sender_address, @git_notification.sender_address, :disabled => true %>
+          <span class="label label-info"><%= @git_notification.sender_address %></span>
         </p>
       <% end %>
 
