@@ -132,13 +132,13 @@ module RedmineGitolite
       end
 
       if !File.directory?(@@temp_dir_path)
-        logger.info "Create tmp directory : '#{@@temp_dir_path}'"
+        logger.info { "Create tmp directory : '#{@@temp_dir_path}'" }
 
         begin
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "mkdir -p '#{@@temp_dir_path}'")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "chmod 700 '#{@@temp_dir_path}'")
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error "Cannot create tmp directory : '#{@@temp_dir_path}'"
+          logger.error { "Cannot create tmp directory : '#{@@temp_dir_path}'" }
         end
 
       end
@@ -154,7 +154,7 @@ module RedmineGitolite
 
       if !@@temp_dir_writeable
 
-        logger.debug "Testing if temp directory '#{get_temp_dir_path}' is writeable ..."
+        logger.debug { "Testing if temp directory '#{get_temp_dir_path}' is writeable ..." }
 
         mytestfile = "#{get_temp_dir_path}writecheck"
 
@@ -200,13 +200,13 @@ module RedmineGitolite
       end
 
       if !File.directory?(@@scripts_dir_path)
-        logger.info "Create scripts directory : '#{@@scripts_dir_path}'"
+        logger.info { "Create scripts directory : '#{@@scripts_dir_path}'" }
 
         begin
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "mkdir -p '#{@@scripts_dir_path}'")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "chmod 750 '#{@@scripts_dir_path}'")
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error "Cannot create scripts directory : '#{@@scripts_dir_path}'"
+          logger.error { "Cannot create scripts directory : '#{@@scripts_dir_path}'" }
         end
       end
 
@@ -221,7 +221,7 @@ module RedmineGitolite
 
       if !@@scripts_dir_writeable
 
-        logger.debug "Testing if scripts directory '#{get_scripts_dir_path}' is writeable ..."
+        logger.debug { "Testing if scripts directory '#{get_scripts_dir_path}' is writeable ..." }
 
         mytestfile = "#{get_scripts_dir_path}writecheck"
 
@@ -258,28 +258,28 @@ module RedmineGitolite
         return @@sudo_gitolite_to_redmine_user_cached
       end
 
-      logger.info "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..."
+      logger.info { "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..." }
 
       if gitolite_user == redmine_user
         @@sudo_gitolite_to_redmine_user_cached = true
         @@sudo_gitolite_to_redmine_user_stamp = Time.new
-        logger.info "OK!"
+        logger.info { "OK!" }
         return @@sudo_gitolite_to_redmine_user_cached
       end
 
       begin
         test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "sudo -inu #{redmine_user} whoami")
         if test.match(/#{redmine_user}/)
-          logger.info "OK!"
+          logger.info { "OK!" }
           @@sudo_gitolite_to_redmine_user_cached = true
           @@sudo_gitolite_to_redmine_user_stamp = Time.new
         else
-          logger.warn "Error while testing sudo_git_to_redmine_user"
+          logger.warn { "Error while testing sudo_git_to_redmine_user" }
           @@sudo_gitolite_to_redmine_user_cached = false
           @@sudo_gitolite_to_redmine_user_stamp = Time.new
         end
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Error while testing sudo_git_to_redmine_user"
+        logger.error { "Error while testing sudo_git_to_redmine_user" }
         @@sudo_gitolite_to_redmine_user_cached = false
         @@sudo_gitolite_to_redmine_user_stamp = Time.new
       end
@@ -298,28 +298,28 @@ module RedmineGitolite
         return @@sudo_redmine_to_gitolite_user_cached
       end
 
-      logger.info "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..."
+      logger.info { "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..." }
 
       if gitolite_user == redmine_user
         @@sudo_redmine_to_gitolite_user_cached = true
         @@sudo_redmine_to_gitolite_user_stamp = Time.new
-        logger.info "OK!"
+        logger.info { "OK!" }
         return @@sudo_redmine_to_gitolite_user_cached
       end
 
       begin
         test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "whoami")
         if test.match(/#{gitolite_user}/)
-          logger.info "OK!"
+          logger.info { "OK!" }
           @@sudo_redmine_to_gitolite_user_cached = true
           @@sudo_redmine_to_gitolite_user_stamp = Time.new
         else
-          logger.warn "Error while testing sudo_web_to_gitolite_user"
+          logger.warn { "Error while testing sudo_web_to_gitolite_user" }
           @@sudo_redmine_to_gitolite_user_cached = false
           @@sudo_redmine_to_gitolite_user_stamp = Time.new
         end
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Error while testing sudo_web_to_gitolite_user"
+        logger.error { "Error while testing sudo_web_to_gitolite_user" }
         @@sudo_redmine_to_gitolite_user_cached = false
         @@sudo_redmine_to_gitolite_user_stamp = Time.new
       end
@@ -356,7 +356,7 @@ module RedmineGitolite
         return @@gitolite_version_cached
       end
 
-      logger.debug "Getting Gitolite version..."
+      logger.debug { "Getting Gitolite version..." }
 
       begin
         version = RedmineGitolite::GitHosting.execute_command(:ssh_cmd, "#{gitolite_user}@localhost info").split("\n")
@@ -372,7 +372,7 @@ module RedmineGitolite
           end
         end
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Error while getting Gitolite version"
+        logger.error { "Error while getting Gitolite version" }
         @@gitolite_version_cached = -1
       end
 
@@ -389,12 +389,12 @@ module RedmineGitolite
         return @@gitolite_banner_cached
       end
 
-      logger.debug "Getting Gitolite banner..."
+      logger.debug { "Getting Gitolite banner..." }
 
       begin
         @@gitolite_banner_cached = RedmineGitolite::GitHosting.execute_command(:ssh_cmd, "#{gitolite_user}@localhost info")
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Error while getting Gitolite banner"
+        logger.error { "Error while getting Gitolite banner" }
         @@gitolite_banner_cached = "Error : #{e.message}"
       end
 
@@ -491,7 +491,7 @@ module RedmineGitolite
       if !File.exists?(gitolite_admin_ssh_script_path)
         installed = false
 
-        logger.info "Create script file : '#{gitolite_admin_ssh_script_path}'"
+        logger.info { "Create script file : '#{gitolite_admin_ssh_script_path}'" }
 
         begin
           File.open(gitolite_admin_ssh_script_path, "w") do |f|
@@ -503,7 +503,7 @@ module RedmineGitolite
 
           installed = true
         rescue => e
-          logger.error "Cannot create script file : '#{gitolite_admin_ssh_script_path}'"
+          logger.error { "Cannot create script file : '#{gitolite_admin_ssh_script_path}'" }
           installed = false
         end
       end
@@ -518,7 +518,7 @@ module RedmineGitolite
       if !File.exists?(git_cmd_script_path)
         installed = false
 
-        logger.info "Create script file : '#{git_cmd_script_path}'"
+        logger.info { "Create script file : '#{git_cmd_script_path}'" }
 
         begin
           File.open(git_cmd_script_path, "w") do |f|
@@ -542,7 +542,7 @@ module RedmineGitolite
 
           installed = true
         rescue => e
-          logger.error "Cannot create script file : '#{git_cmd_script_path}'"
+          logger.error { "Cannot create script file : '#{git_cmd_script_path}'" }
           installed = false
         end
       end
@@ -566,7 +566,7 @@ module RedmineGitolite
       if !File.exists?(shell_cmd_script_path)
         installed = false
 
-        RedmineGitolite::GitHosting.logger.info "Create script file : '#{shell_cmd_script_path}'"
+        RedmineGitolite::GitHosting.logger.info { "Create script file : '#{shell_cmd_script_path}'" }
 
         begin
           # use perl script for shell_cmd_runner so we can
@@ -600,7 +600,7 @@ module RedmineGitolite
 
           installed = true
         rescue => e
-          RedmineGitolite::GitHosting.logger.error "Cannot create script file : '#{shell_cmd_script_path}'"
+          RedmineGitolite::GitHosting.logger.error { "Cannot create script file : '#{shell_cmd_script_path}'" }
           installed = false
         end
       end
@@ -640,7 +640,7 @@ module RedmineGitolite
       @@mirroring_keys_installed = false if opts.has_key?(:reset) && opts[:reset] == true
 
       if !@@mirroring_keys_installed
-        logger.info "Installing Redmine Gitolite mirroring SSH keys ..."
+        logger.info { "Installing Redmine Gitolite mirroring SSH keys ..." }
 
         begin
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat > #{GITOLITE_SSH_PRIVATE_KEY_PATH}'", :pipe_data => "'#{gitolite_ssh_private_key}'", :pipe_command => 'cat')
@@ -658,12 +658,12 @@ module RedmineGitolite
 
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'chmod 700 #{GITOLITE_MIRRORING_SCRIPT_PATH}'")
 
-          logger.info "Done !"
+          logger.info { "Done !" }
 
           @@mirroring_keys_installed = true
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error "Failed installing Redmine Gitolite mirroring SSH keys !"
-          logger.error e.output
+          logger.error { "Failed installing Redmine Gitolite mirroring SSH keys !" }
+          logger.error { e.output }
           @@mirroring_keys_installed = false
         end
       end

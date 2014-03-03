@@ -47,7 +47,7 @@ module RedmineGitHosting
 
           cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
 
-          RedmineGitolite::GitHosting.logger.debug "Send GitCommand : #{cmd_str}"
+          RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
 
           # Compute string from repo_path that should be same as: repo.git_cache_id
           # If only we had access to the repo (we don't).

@@ -313,7 +313,7 @@ module RedmineGitolite
         end
       end
 
-      logger.debug "#{@action} : moving Gitolite repository from '#{old_path}' to '#{new_path}'"
+      logger.debug { "#{@action} : moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
 
       if !RedmineGitolite::GitHosting.file_exists? new_parent_path
         begin

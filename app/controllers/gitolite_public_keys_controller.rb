@@ -127,16 +127,16 @@ class GitolitePublicKeysController < ApplicationController
 
 
   def destroy_ssh_key
-    RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' has deleted a SSH key"
-    repo_key = Hash.new
+    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
+    repo_key = {}
     repo_key[:title]    = @gitolite_public_key.identifier
     repo_key[:key]      = @gitolite_public_key.key
     repo_key[:location] = @gitolite_public_key.location
     repo_key[:owner]    = @gitolite_public_key.owner
-    RedmineGitolite::GitHosting.logger.info "Delete SSH key #{@gitolite_public_key.identifier}"
+    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{@gitolite_public_key.identifier}" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
 
-    project_list = Array.new
+    project_list = []
     @gitolite_public_key.user.projects_by_role.each do |role|
       role[1].each do |project|
         project_list.push(project.id)
@@ -144,7 +144,7 @@ class GitolitePublicKeysController < ApplicationController
     end
 
     if project_list.length > 0
-      RedmineGitolite::GitHosting.logger.info "Update project to remove SSH access : #{project_list.uniq}"
+      RedmineGitolite::GitHosting.logger.info { "Update project to remove SSH access : #{project_list.uniq}" }
       RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
     end
   end

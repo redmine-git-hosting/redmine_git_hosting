@@ -21,37 +21,37 @@ class SmartHttpController < ApplicationController
     return render_method_not_allowed if command == 'not_allowed'
 
     if !command
-      logger.error "###### AUTHENTICATED ######"
-      logger.error "project name    : #{@project.identifier}"
-      logger.error "repository dir  : #{@repository.url}"
+      logger.error { "###### AUTHENTICATED ######" }
+      logger.error { "project name    : #{@project.identifier}" }
+      logger.error { "repository dir  : #{@repository.url}" }
       if !@user.nil?
-        logger.info "user_name       : #{@user.login}"
+        logger.info { "user_name       : #{@user.login}" }
       else
-        logger.info "user_name       : anonymous (project is public)"
+        logger.info { "user_name       : anonymous (project is public)" }
       end
-      logger.error "command not found, exiting !"
-      logger.error "##########################"
+      logger.error { "command not found, exiting !" }
+      logger.error { "##########################" }
       return render_not_found
     end
 
-    logger.info "###### AUTHENTICATED ######"
-    logger.info "project name    : #{@project.identifier}"
-    logger.info "repository dir  : #{@repository.url}"
-    logger.info "command         : #{command}"
-    logger.info "rpc             : #{@rpc}"
+    logger.info { "###### AUTHENTICATED ######" }
+    logger.info { "project name    : #{@project.identifier}" }
+    logger.info { "repository dir  : #{@repository.url}" }
+    logger.info { "command         : #{command}" }
+    logger.info { "rpc             : #{@rpc}" }
     if !@user.nil?
-      logger.info "user_name       : #{@user.login}"
+      logger.info { "user_name       : #{@user.login}" }
       @authenticated = true
     else
       if @project.is_public
-        logger.info "user_name       : anonymous (project is public)"
+        logger.info { "user_name       : anonymous (project is public)" }
         @authenticated = true
       else
         @authenticated = false
       end
     end
 
-    logger.info "##########################"
+    logger.info { "##########################" }
 
     self.method(command).call()
   end
@@ -68,10 +68,10 @@ class SmartHttpController < ApplicationController
     query_valid = false
     authentication_valid = true
 
-    logger.info "###### AUTHENTICATION ######"
-    logger.info "git_params : #{git_params.join(', ')}"
-    logger.info "repo_path  : #{repo_path}"
-    logger.info "is_push    : #{is_push}"
+    logger.info { "###### AUTHENTICATION ######" }
+    logger.info { "git_params : #{git_params.join(', ')}" }
+    logger.info { "repo_path  : #{repo_path}" }
+    logger.info { "is_push    : #{is_push}" }
 
     if (@repository = Repository::Git.find_by_path(repo_path, :loose => true)) && @repository.is_a?(Repository::Git)
       if (@project = @repository.project) && @repository.extra[:git_http] != 0
@@ -100,13 +100,13 @@ class SmartHttpController < ApplicationController
     #so, just render case where user queried a project
     #that's nonexistant or for which smart http isn't active
     if !query_valid
-      logger.error "Invalid query, exiting !"
-      logger.error "Your may are trying to push data without SSL!"
-      logger.error "############################"
+      logger.error { "Invalid query, exiting !" }
+      logger.error { "Your may are trying to push data without SSL!" }
+      logger.error { "############################" }
       return render_no_access
     end
 
-    logger.info "############################"
+    logger.info { "############################" }
 
     return query_valid && authentication_valid
   end
@@ -244,13 +244,13 @@ class SmartHttpController < ApplicationController
   def has_access(rpc, check_content_type = false)
     if check_content_type
       if request.content_type != "application/x-git-%s-request" % rpc
-        logger.error "Invalid content type #{request.content_type}"
+        logger.error { "Invalid content type #{request.content_type}" }
         return false
       end
     end
 
     if !VALID_SERVICE_TYPES.include? rpc
-      logger.error "Invalid service type #{rpc}"
+      logger.error { "Invalid service type #{rpc}" }
       return false
     end
 
@@ -259,22 +259,22 @@ class SmartHttpController < ApplicationController
 
 
   def internal_send_file(requested_file, content_type)
-    logger.info "###### SEND FILE ######"
-    logger.info "requested_file : #{requested_file}"
-    logger.info "content_type   : #{content_type}"
+    logger.info { "###### SEND FILE ######" }
+    logger.info { "requested_file : #{requested_file}" }
+    logger.info { "content_type   : #{content_type}" }
 
     if !File.exists?(requested_file)
-      logger.error "error          : File not found!"
-      logger.error "#######################"
+      logger.error { "error          : File not found!" }
+      logger.error { "#######################" }
       return render_not_found
     end
 
     last_modified = File.mtime(requested_file).httpdate
     file_size = File.size?(requested_file)
 
-    logger.info "last_modified  : #{last_modified}"
-    logger.info "file_size      : #{file_size}"
-    logger.info "#######################"
+    logger.info { "last_modified  : #{last_modified}" }
+    logger.info { "file_size      : #{file_size}" }
+    logger.info { "#######################" }
 
 
     self.response.status = 200
@@ -349,15 +349,15 @@ class SmartHttpController < ApplicationController
   # --------------------------------------
 
   def render_method_not_allowed
-    logger.error "###### HTTP ERRORS ######"
+    logger.error { "###### HTTP ERRORS ######" }
     if request.env['SERVER_PROTOCOL'] == "HTTP/1.1"
-      logger.error "method : not allowed"
+      logger.error { "method : not allowed" }
       head :method_not_allowed
     else
-      logger.error "method : bad request"
+      logger.error { "method : bad request" }
       head :bad_request
     end
-    logger.error "#########################"
+    logger.error { "#########################" }
     return head
   end
 
@@ -405,9 +405,8 @@ class SmartHttpController < ApplicationController
   end
 
 
-  @@logger = nil
   def logger
-    @@logger ||= RedmineGitolite::Log.get_logger(:smart_http)
+    RedmineGitolite::Log.get_logger(:smart_http)
   end
 
 end

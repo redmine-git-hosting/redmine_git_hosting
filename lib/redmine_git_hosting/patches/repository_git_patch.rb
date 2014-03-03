@@ -409,7 +409,7 @@ module RedmineGitHosting
 
 
         def clean_cache
-          RedmineGitolite::Log.get_logger(:git_cache).info "Clean cache before delete repository '#{gitolite_repository_name}'"
+          RedmineGitolite::Log.get_logger(:global).info { "Clean cache before delete repository '#{gitolite_repository_name}'" }
           RedmineGitolite::Cache.clear_cache_for_repository(self)
         end
 

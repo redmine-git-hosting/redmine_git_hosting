@@ -34,16 +34,16 @@ class GitoliteHooksController < ApplicationController
     self.response_body = Enumerator.new do |y|
 
       ## Fetch commits from the repository
-      logger.info "Fetching changesets for '#{@project.identifier}' repository ... "
+      logger.info { "Fetching changesets for '#{@project.identifier}' repository ... " }
       y << "  - Fetching changesets for '#{@project.identifier}' repository ... "
 
       begin
         @repository.fetch_changesets
-        logger.info "Succeeded!"
+        logger.info { "Succeeded!" }
         y << " [success]\n"
       rescue Redmine::Scm::Adapters::CommandFailed => e
-        logger.error "Failed!"
-        logger.error "Error during fetching changesets: #{e.message}"
+        logger.error { "Failed!" }
+        logger.error { "Error during fetching changesets: #{e.message}" }
         y << " [failure]\n"
       end
 
@@ -56,17 +56,17 @@ class GitoliteHooksController < ApplicationController
       ## Push to each mirror
       @repository.repository_mirrors.all(:order => 'active DESC, created_at ASC', :conditions => "active=1").each do |mirror|
         if mirror.needs_push(payloads)
-          logger.info "Pushing changes to #{mirror.url} ... "
+          logger.info { "Pushing changes to #{mirror.url} ... " }
           y << "  - Pushing changes to #{mirror.url} ... "
 
           push_failed, push_message = mirror.push
 
           if push_failed
-            logger.error "Failed!"
-            logger.error "#{push_message}"
+            logger.error { "Failed!" }
+            logger.error { "#{push_message}" }
             y << " [failure]\n"
           else
-            logger.info "Succeeded!"
+            logger.info { "Succeeded!" }
             y << " [success]\n"
           end
         end
@@ -108,11 +108,11 @@ class GitoliteHooksController < ApplicationController
         end
 
         if error_message
-          logger.error "#{message} Failed!"
-          logger.error "#{error_message}"
+          logger.error { "#{message} Failed!" }
+          logger.error { "#{error_message}" }
           y << " [failure]\n"
         else
-          logger.info "#{message} Succeeded!"
+          logger.info { "#{message} Succeeded!" }
           y << " [success]\n"
 
         end
@@ -125,9 +125,8 @@ class GitoliteHooksController < ApplicationController
   protected
 
 
-  @@logger = nil
   def logger
-    @@logger ||= RedmineGitolite::Log.get_logger(:git_hooks)
+    RedmineGitolite::Log.get_logger(:git_hooks)
   end
 
 
@@ -147,11 +146,11 @@ class GitoliteHooksController < ApplicationController
 
       if newhead.match(/^0{40}$/)
         # Deleting a branch
-        logger.info "Deleting branch '#{branch}'"
+        logger.info { "Deleting branch '#{branch}'" }
         next
       elsif oldhead.match(/^0{40}$/)
         # Creating a branch
-        logger.info "Creating branch '#{branch}'"
+        logger.info { "Creating branch '#{branch}'" }
         range = newhead
       else
         range = "#{oldhead}..#{newhead}"
@@ -159,12 +158,12 @@ class GitoliteHooksController < ApplicationController
 
       # Grab the repository path
       revisions_in_range = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-list --reverse #{range}")
-      logger.debug "Revisions in range : #{revisions_in_range.split().join(' ')}"
+      logger.debug { "Revisions in range : #{revisions_in_range.split().join(' ')}" }
 
       commits = []
 
       revisions_in_range.split().each do |rev|
-        logger.debug "Revision : '#{rev.strip}'"
+        logger.debug { "Revision : '#{rev.strip}'" }
         revision = @repository.find_changeset_by_name(rev.strip)
         next if revision.nil?
 

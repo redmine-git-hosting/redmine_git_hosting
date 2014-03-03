@@ -33,7 +33,7 @@ class RepositoryGitExtra < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      RedmineGitolite::GitHosting.logger.error "Error in validate_encoded_time(): #{e.message}"
+      RedmineGitolite::GitHosting.logger.error { "Error in validate_encoded_time(): #{e.message}" }
     end
     valid
   end

@@ -38,7 +38,7 @@ module RedmineGitHosting
 
           if @project.gitolite_repos.detect {|repo| repo.url != repo.gitolite_repository_path || repo.url != repo.root_url}
             # Hm... something about parent hierarchy changed.  Update us and our children
-            RedmineGitolite::GitHosting.logger.info "Move repositories of project : '#{@project}'"
+            RedmineGitolite::GitHosting.logger.info { "Move repositories of project : '#{@project}'" }
             RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories, :object => @project.id })
             update = false
           end
@@ -88,7 +88,7 @@ module RedmineGitHosting
             project_list.push(project.id)
           end
 
-          RedmineGitolite::GitHosting.logger.info "Project has been archived, update it : '#{@project}'"
+          RedmineGitolite::GitHosting.logger.info { "Project has been archived, update it : '#{@project}'" }
           RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list })
         end
 
@@ -97,7 +97,7 @@ module RedmineGitHosting
           # Do actual update
           unarchive_without_git_hosting(&block)
 
-          RedmineGitolite::GitHosting.logger.info "Project has been unarchived, update it : '#{@project}'"
+          RedmineGitolite::GitHosting.logger.info { "Project has been unarchived, update it : '#{@project}'" }
           RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_project, :object => @project.id })
         end
 
@@ -111,7 +111,7 @@ module RedmineGitHosting
             repository = Repository.factory("Git")
             repository.is_default = true
             @project.repositories << repository
-            RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'"
+            RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
             RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => repository.id })
           end
         end
@@ -125,7 +125,7 @@ module RedmineGitHosting
               repository.extra.save
             end
           end
-          RedmineGitolite::GitHosting.logger.info "Set Git daemon for repositories of project : '#{@project}'"
+          RedmineGitolite::GitHosting.logger.info { "Set Git daemon for repositories of project : '#{@project}'" }
           RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_project, :object => @project.id })
         end
 

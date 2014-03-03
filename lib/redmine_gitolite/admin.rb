@@ -42,7 +42,7 @@ module RedmineGitolite
         @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       else
         begin
-          logger.info "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}"
+          logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
 
           RedmineGitolite::GitHosting.shell %[rm -rf "#{@gitolite_admin_dir}"]
           RedmineGitolite::GitHosting.shell %[env GIT_SSH=#{@gitolite_admin_ssh_script_path} git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}]
@@ -50,8 +50,8 @@ module RedmineGitolite
 
           @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
         rescue => e
-          logger.error e.message
-          logger.error "Cannot clone Gitolite Admin repository !!"
+          logger.error { e.message }
+          logger.error { "Cannot clone Gitolite Admin repository !!" }
           return false
         end
       end
@@ -61,15 +61,15 @@ module RedmineGitolite
           begin
             RedmineGitolite::GitHosting.shell %[touch "#{@gitolite_config_file_path}"]
           rescue => e
-            logger.error e.message
-            logger.error "Cannot create Gitolite configuration file '#{@gitolite_config_file_path}' !!"
+            logger.error { e.message }
+            logger.error { "Cannot create Gitolite configuration file '#{@gitolite_config_file_path}' !!" }
             return false
           end
         end
       else
         if !File.exists?(@gitolite_config_file_path)
-          logger.error "Gitolite configuration file does not exist '#{@gitolite_config_file_path}' !!"
-          logger.error "Please check your Gitolite installation"
+          logger.error { "Gitolite configuration file does not exist '#{@gitolite_config_file_path}' !!" }
+          logger.error { "Please check your Gitolite installation" }
           return false
         end
       end

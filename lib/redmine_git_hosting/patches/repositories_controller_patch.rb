@@ -49,7 +49,7 @@ module RedmineGitHosting
               end
 
               @repository.extra.update_attributes(params[:extra])
-              RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'"
+              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
               RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id })
             end
           end
@@ -75,7 +75,7 @@ module RedmineGitHosting
               end
 
               @repository.extra.update_attributes(params[:extra])
-              RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'"
+              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'" }
               RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => @repository.id })
             end
           end
@@ -87,7 +87,7 @@ module RedmineGitHosting
 
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
-              RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'"
+              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'" }
               repository_data = {}
               repository_data['repo_name'] = @repository.gitolite_repository_name
               repository_data['repo_path'] = @repository.gitolite_repository_path

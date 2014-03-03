@@ -51,14 +51,14 @@ module RedmineGitolite
       end
 
       if result.length > 0
-        logger.info "Garbage-collecting expired '#{result.length}' file#{(result.length != 1) ? "s" : ""} from Recycle Bin :"
+        logger.info { "Garbage-collecting expired '#{result.length}' file#{(result.length != 1) ? "s" : ""} from Recycle Bin :" }
 
         result.each do |filename|
-          logger.info "Deleting '#{filename}'"
+          logger.info { "Deleting '#{filename}'" }
           begin
             RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{filename}'")
           rescue RedmineGitolite::GitHosting::GitHostingException => e
-            logger.error "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{filename}' !"
+            logger.error { "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{filename}' !" }
           end
         end
 
@@ -76,29 +76,29 @@ module RedmineGitolite
 
       # Only bother if actually exists!
       if !file_exists?(repo_path)
-        logger.warn "Repository does not exist #{repo_path}"
+        logger.warn { "Repository does not exist #{repo_path}" }
         return false
       end
 
       trash_name = repo_name.gsub(/\//, TRASH_DIR_SEP)
       trash_path = File.join(@recycle_bin_dir, "#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{trash_name}.git")
 
-      logger.info "Moving '#{repo_name}' to Recycle Bin..."
-      logger.debug "'#{repo_path}' => '#{trash_path}'"
+      logger.info { "Moving '#{repo_name}' to Recycle Bin..." }
+      logger.debug { "'#{repo_path}' => '#{trash_path}'" }
 
       if create_recycle_bin
         begin
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{repo_path}' '#{trash_path}'")
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error "Attempt to move repository '#{repo_path}' to Recycle Bin failed !"
+          logger.error { "Attempt to move repository '#{repo_path}' to Recycle Bin failed !" }
           return false
         end
       else
         return false
       end
 
-      logger.info "Done !"
-      logger.info "Will remain for at least #{@recycle_bin_expiration_time/60.0} hours"
+      logger.info { "Done !" }
+      logger.info { "Will remain for at least #{@recycle_bin_expiration_time/60.0} hours" }
 
       clean_path_tree(repo_name)
 
@@ -123,7 +123,7 @@ module RedmineGitolite
 
       if files.length > 0
         # Found something!
-        logger.info "Restoring '#{repo_name}.git'"
+        logger.info { "Restoring '#{repo_name}.git'" }
 
         begin
           # Complete directory path (if exists) without trailing '/'
@@ -135,12 +135,12 @@ module RedmineGitolite
             RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{repo_prefix}'")
           end
 
-          logger.info "Moving '#{files.first}' to '#{repo_path}'"
+          logger.info { "Moving '#{files.first}' to '#{repo_path}'" }
 
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{files.first}' '#{repo_path}'")
           restored = true
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error "Attempt to recover '#{repo_name}.git' from recycle bin failed"
+          logger.error { "Attempt to recover '#{repo_name}.git' from recycle bin failed" }
           restored = false
         end
 
@@ -173,7 +173,7 @@ module RedmineGitolite
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "chmod 770 '#{@recycle_bin_dir}'")
         return true
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Attempt to create recycle bin directory '#{@recycle_bin_dir}' failed !"
+        logger.error { "Attempt to create recycle bin directory '#{@recycle_bin_dir}' failed !" }
         return false
       end
     end
@@ -184,7 +184,6 @@ module RedmineGitolite
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rmdir '#{@recycle_bin_dir}'")
         return true
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        # logger.error "Attempt to delete recycle bin directory '#{@recycle_bin_dir}' failed !"
         return false
       end
     end
@@ -200,15 +199,15 @@ module RedmineGitolite
         redmine_storage = File.join(@global_storage_dir, @redmine_storage_dir)
 
         return false if repo_subpath == redmine_storage
-        logger.info "Attempting to clean path '#{repo_subpath}'"
+        logger.info { "Attempting to clean path '#{repo_subpath}'" }
       end
 
       begin
         result = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{repo_subpath}' -depth -type d ! -regex '.*\.git/.*' -empty -delete -print").chomp.split("\n")
-        result.each { |dir| logger.info "Removed empty repository subdirectory : #{dir}" }
+        result.each { |dir| logger.info { "Removed empty repository subdirectory : #{dir}" } }
         return true
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Attempt to clean path '#{repo_subpath}' failed"
+        logger.error { "Attempt to clean path '#{repo_subpath}' failed" }
         return false
       end
     end

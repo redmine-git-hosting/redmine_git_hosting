@@ -34,7 +34,7 @@ class RepositoryGitNotification < ActiveRecord::Base
 
 
   def update_repository
-    RedmineGitolite::GitHosting.logger.info "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'"
+    RedmineGitolite::GitHosting.logger.info { "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
   end
 

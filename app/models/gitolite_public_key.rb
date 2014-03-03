@@ -125,7 +125,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def add_ssh_key
-    RedmineGitolite::GitHosting.logger.info "User '#{User.current.login}' has added a SSH key"
+    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
 
     if user_key?
@@ -137,7 +137,7 @@ class GitolitePublicKey < ActiveRecord::Base
       end
 
       if project_list.length > 0
-        RedmineGitolite::GitHosting.logger.info "Update project to add SSH access : #{project_list.uniq}"
+        RedmineGitolite::GitHosting.logger.info { "Update project to add SSH access : #{project_list.uniq}" }
         RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
       end
     end

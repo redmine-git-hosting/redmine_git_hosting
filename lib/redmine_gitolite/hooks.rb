@@ -103,10 +103,10 @@ module RedmineGitolite
       hook_dir_exists = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "test -r '#{POST_RECEIVE_HOOK_DIR}' && echo 'yes' || echo 'no'").match(/yes/)
 
       if !hook_dir_exists
-        logger.info "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' not created yet, installing it..."
+        logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' not created yet, installing it..." }
 
         if install_hooks_dir(POST_RECEIVE_HOOK_DIR)
-          logger.info "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' installed"
+          logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' installed" }
           @@check_hooks_dir_installed_cached = true
         else
           @@check_hooks_dir_installed_cached = false
@@ -114,7 +114,7 @@ module RedmineGitolite
 
         @@check_hooks_dir_installed_stamp = Time.new
       else
-        logger.info "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' is already present, will not touch it !"
+        logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' is already present, will not touch it !" }
         @@check_hooks_dir_installed_cached = true
         @@check_hooks_dir_installed_stamp = Time.new
       end
@@ -124,14 +124,14 @@ module RedmineGitolite
 
 
     def install_hooks_dir(hook_dir)
-      logger.info "Installing hook directory '#{hook_dir}'"
+      logger.info { "Installing hook directory '#{hook_dir}'" }
 
       begin
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{hook_dir}'")
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "chmod 755 '#{hook_dir}'")
         return true
       rescue => e
-        logger.error "Problems installing hook directory '#{hook_dir}'"
+        logger.error { "Problems installing hook directory '#{hook_dir}'" }
         return false
       end
     end
@@ -159,7 +159,7 @@ module RedmineGitolite
       end
 
       if @gitolite_command.nil?
-        logger.error "Unable to find Gitolite version, cannot install '#{hook_name}' hook file !"
+        logger.error { "Unable to find Gitolite version, cannot install '#{hook_name}' hook file !" }
         @@check_hooks_installed_stamp[hook_name] = Time.new
         @@check_hooks_installed_cached[hook_name] = false
         return @@check_hooks_installed_cached[hook_name]
@@ -169,11 +169,11 @@ module RedmineGitolite
 
       if !hook_exists?(@@post_receive_hook_path[hook_name])
 
-        logger.info "Hook '#{hook_name}' does not exist, installing it ..."
+        logger.info { "Hook '#{hook_name}' does not exist, installing it ..." }
 
         if install_hook_file(hook_data)
-          logger.info "Hook '#{hook_name}' installed"
-          logger.info "Running '#{@gitolite_command}' on the Gitolite install ..."
+          logger.info { "Hook '#{hook_name}' installed" }
+          logger.info { "Running '#{@gitolite_command}' on the Gitolite install ..." }
 
           if update_gitolite
             @@check_hooks_installed_cached[hook_name] = true
@@ -193,7 +193,7 @@ module RedmineGitolite
         digest = Digest::MD5.hexdigest(content)
 
         if hook_digest(hook_data) == digest
-          logger.info "Our '#{hook_name}' hook is already installed"
+          logger.info { "Our '#{hook_name}' hook is already installed" }
           @@check_hooks_installed_stamp[hook_name] = Time.new
           @@check_hooks_installed_cached[hook_name] = true
           return @@check_hooks_installed_cached[hook_name]
@@ -201,15 +201,15 @@ module RedmineGitolite
         else
 
           error_msg = "Hook '#{hook_name}' is already present but it's not ours!"
-          logger.warn error_msg
+          logger.warn { error_msg }
           @@check_hooks_installed_cached[hook_name] = error_msg
 
           if @force_hooks_update
-            logger.info "Restoring '#{hook_name}' hook since forceInstallHook == true"
+            logger.info { "Restoring '#{hook_name}' hook since forceInstallHook == true" }
 
             if install_hook_file(hook_data)
-              logger.info "Hook '#{hook_name}' installed"
-              logger.info "Running '#{@gitolite_command}' on the Gitolite install..."
+              logger.info { "Hook '#{hook_name}' installed" }
+              logger.info { "Running '#{@gitolite_command}' on the Gitolite install..." }
 
               if update_gitolite
                 @@check_hooks_installed_cached[hook_name] = true
@@ -239,14 +239,14 @@ module RedmineGitolite
         filemode = 644
       end
 
-      logger.info "Installing hook '#{source_path}' in '#{destination_path}'"
+      logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
       begin
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat - > #{destination_path}'", :pipe_data => "'#{source_path}'", :pipe_command => 'cat')
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "chmod #{filemode} '#{destination_path}'")
         return true
       rescue => e
-        logger.error "Problems installing hook from '#{source_path}' in '#{destination_path}'"
+        logger.error { "Problems installing hook from '#{source_path}' in '#{destination_path}'" }
         return false
       end
     end
@@ -287,7 +287,7 @@ module RedmineGitolite
       begin
         hooks_params = RedmineGitolite::GitHosting.execute_command(:git_cmd, "config -f .gitconfig --get-regexp #{GITOLITE_HOOKS_NAMESPACE}").split("\n")
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Problems to retrieve Gitolite hook parameters in Gitolite config"
+        logger.error { "Problems to retrieve Gitolite hook parameters in Gitolite config" }
         hooks_params = []
       end
 
@@ -309,13 +309,13 @@ module RedmineGitolite
 
 
     def set_hook_param(name, value)
-      logger.info "Set Git hooks global parameter : #{name} (#{value})"
+      logger.info { "Set Git hooks global parameter : #{name} (#{value})" }
 
       begin
         RedmineGitolite::GitHosting.execute_command(:git_cmd, "config --global #{GITOLITE_HOOKS_NAMESPACE}.#{name} '#{value}'")
         return true
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error "Error while setting Git hooks global parameter : #{name} (#{value})"
+        logger.error { "Error while setting Git hooks global parameter : #{name} (#{value})" }
         return false
       end
 

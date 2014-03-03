@@ -181,7 +181,7 @@ module RedmineGitHosting
                   h
                 end.values.max) || 0) > 1
                 # Oops -- have duplication.  Force to false.
-                RedmineGitolite::GitHosting.logger.error "Detected non-unique repository identifiers. Setting unique_repo_identifier => 'false'"
+                RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Setting unique_repo_identifier => 'false'" }
                 valuehash[:unique_repo_identifier] = 'false'
               end
             end
@@ -193,7 +193,7 @@ module RedmineGitHosting
                   h
                 end.values.max) || 0) > 1
                 # Oops -- have duplication.  Force to false.
-                RedmineGitolite::GitHosting.logger.error "Detected non-unique repository identifiers. Setting hierarchical_organisation => 'false'"
+                RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Setting hierarchical_organisation => 'false'" }
                 valuehash[:hierarchical_organisation] = 'true'
               end
             end
@@ -318,8 +318,8 @@ module RedmineGitHosting
                 # Need to update everyone!
                 projects = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x if x.parent_id.nil? }
                 if projects.length > 0
-                  RedmineGitolite::GitHosting.logger.info "Gitolite configuration has been modified : repositories hierarchy"
-                  RedmineGitolite::GitHosting.logger.info "Resync all projects (root projects : '#{projects.length}')..."
+                  RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
+                  RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
                   RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :option => :flush_cache })
                 end
             end
@@ -328,7 +328,6 @@ module RedmineGitHosting
             ## Gitolite config file has changed, create a new one!
             if @@old_valuehash[:gitolite_config_file] != valuehash[:gitolite_config_file] ||
                @@old_valuehash[:gitolite_config_has_admin_key] != valuehash[:gitolite_config_has_admin_key] ||
-               @@old_valuehash[:unique_repo_identifier] != valuehash[:unique_repo_identifier] ||
                @@old_valuehash[:gitolite_notify_global_prefix] != valuehash[:gitolite_notify_global_prefix] ||
                @@old_valuehash[:gitolite_notify_global_sender_address] != valuehash[:gitolite_notify_global_sender_address] ||
                @@old_valuehash[:gitolite_notify_global_include] != valuehash[:gitolite_notify_global_include] ||
@@ -336,7 +335,7 @@ module RedmineGitHosting
                 # Need to update everyone!
                 projects = Project.active_or_archived.find(:all, :include => :repositories)
                 if projects.length > 0
-                  RedmineGitolite::GitHosting.logger.info "Gitolite configuration has been modified, resync all projects..."
+                  RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
                   RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
                 end
             end
@@ -354,7 +353,7 @@ module RedmineGitHosting
               # Need to update everyone!
               projects = Project.active_or_archived.find(:all, :include => :repositories)
               if projects.length > 0
-                RedmineGitolite::GitHosting.logger.info "Forced resync of all projects (#{projects.length})..."
+                RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
                 RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects_forced, :object => projects.length })
               end
 
@@ -367,7 +366,7 @@ module RedmineGitHosting
               # Need to update everyone!
               users = User.all
               if users.length > 0
-                RedmineGitolite::GitHosting.logger.info "Forced resync of all ssh keys (#{users.length})..."
+                RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys (#{users.length})..." }
                 RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_ssh_keys_forced, :object => users.length })
               end
 

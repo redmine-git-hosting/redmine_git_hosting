@@ -34,7 +34,7 @@ module RedmineGitolite
     def self.execute(cmd_str, repo_id, options = {}, &block)
       if max_cache_time == 0 || repo_id.nil? || options[:uncached]
         # Disabled cache, simply launch shell, don't redirect
-        # Rails.logger.error "Cache disabled: repo_id(#{repo_id}), cmd_str: #{cmd_str}"
+        logger.warn { "Cache is disabled : '#{repo_id}'" }
         options.delete(:uncached)
         retio = options.empty? ? Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, &block) : Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
         status = $?
@@ -51,7 +51,7 @@ module RedmineGitolite
       end
 
       if status && status.exitstatus != 0
-        logger.error "Git exited with non-zero status : #{$?.exitstatus}"
+        logger.error { "Git exited with non-zero status : #{$?.exitstatus}" }
         raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{$?.exitstatus}"
       end
       return retio
@@ -121,7 +121,7 @@ module RedmineGitolite
 
       if @my_read_stream.nil?
         # Shouldn't happen, but might be problem
-        logger.error "Call to #{my_method.to_s} before IO-handlers wrapped."
+        logger.error { "Call to #{my_method.to_s} before IO-handlers wrapped." }
         raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
       end
 
@@ -350,8 +350,8 @@ module RedmineGitolite
 
 
     def self.check_cache(primary_key, secondary_key = nil)
-      logger.debug "Probing cache entry"
-      logger.debug compose_key(primary_key, secondary_key)
+      logger.debug { "Probing cache entry" }
+      logger.debug { compose_key(primary_key, secondary_key) }
 
       out = nil
       cached = GitCache.find_by_command(compose_key(primary_key, secondary_key))
@@ -375,8 +375,8 @@ module RedmineGitolite
 
 
     def self.set_cache(repo_id, out_value, primary_key, secondary_key = nil)
-      logger.debug "Inserting cache entry for repository '#{repo_id}'"
-      logger.debug compose_key(primary_key, secondary_key)
+      logger.debug { "Inserting cache entry for repository '#{repo_id}'" }
+      logger.debug { compose_key(primary_key, secondary_key) }
 
       gitc = GitCache.create(
         :command         => compose_key(primary_key, secondary_key),
@@ -398,7 +398,7 @@ module RedmineGitolite
     ## TODO: finish job
     def self.limit_cache(repository, date)
       repo_id = repository.git_cache_id
-      logger.info "Executing limit cache : '#{repo_id}' for '#{date}'"
+      logger.info { "Executing limit cache : '#{repo_id}' for '#{date}'" }
       @@time_limits ||= {}
       @@time_limits[repo_id] = (ActiveRecord::Base.default_timezone == :utc ? date.utc : date).to_i
     end
@@ -418,7 +418,7 @@ module RedmineGitolite
       if old_cached != nil
         old_ids = old_cached.collect(&:id)
         GitCache.destroy(old_ids)
-        logger.info "Removed '#{old_cached.count}' expired cache entries for repository '#{repo_id}'"
+        logger.info { "Removed '#{old_cached.count}' expired cache entries for repository '#{repo_id}'" }
       end
     end
 
@@ -432,7 +432,7 @@ module RedmineGitolite
       if old_cached != nil
         old_ids = old_cached.collect(&:id)
         GitCache.destroy(old_ids)
-        logger.info "Removed '#{old_cached.count}' expired cache entries among all repositories"
+        logger.info { "Removed '#{old_cached.count}' expired cache entries among all repositories" }
       end
     end
 
