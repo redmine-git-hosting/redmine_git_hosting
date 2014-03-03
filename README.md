@@ -1,4 +1,4 @@
-## Redmine Git Hosting Plugin
+## ![logo](https://raw.github.com/jbox-web/redmine_git_hosting/gh-pages/images/git_logo.png) Redmine Git Hosting Plugin
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
