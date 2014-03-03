@@ -29,6 +29,11 @@ apply_patch do
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/git_hosting'
   require_dependency 'redmine_gitolite/admin'
+  require_dependency 'redmine_gitolite/admin_projects'
+  require_dependency 'redmine_gitolite/admin_repositories'
+  require_dependency 'redmine_gitolite/admin_repositories_helper'
+  require_dependency 'redmine_gitolite/admin_users'
+  require_dependency 'redmine_gitolite/admin_users_helper'
   require_dependency 'redmine_gitolite/config'
   require_dependency 'redmine_gitolite/config_redmine'
   require_dependency 'redmine_gitolite/cache'
