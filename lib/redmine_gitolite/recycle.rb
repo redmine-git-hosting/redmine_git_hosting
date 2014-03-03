@@ -63,7 +63,7 @@ module RedmineGitolite
         end
 
         # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
-        remove_recycle_bin_dir
+        delete_recycle_bin_dir
 
         return
       end
