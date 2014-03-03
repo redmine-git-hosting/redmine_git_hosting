@@ -36,7 +36,7 @@ module RedmineGitolite
 
     def remove_inactive_keys(keys)
       keys.each do |key|
-        ssh_key = Hash.new
+        ssh_key = {}
         ssh_key['owner']    = key.owner
         ssh_key['location'] = key.location
         logger.info { "#{@action} : removing inactive SSH key of '#{key.owner}'" }
@@ -47,7 +47,8 @@ module RedmineGitolite
 
     def remove_inactive_key(key)
       repo_keys = @gitolite_admin.ssh_keys[key['owner']]
-      repo_key = repo_keys.find_all{|k| k.location == key['location'] && k.owner == key['owner']}.first
+      repo_key  = repo_keys.find_all{|k| k.location == key['location'] && k.owner == key['owner']}.first
+
       if repo_key
         logger.info { "#{@action} : SSH key '#{key['owner']}' exists in Gitolite, delete it ..." }
         @gitolite_admin.rm_key repo_key
