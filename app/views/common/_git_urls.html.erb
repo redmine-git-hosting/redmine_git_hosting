@@ -11,10 +11,8 @@
 
     <input id="git_url_text" readonly="readonly" />
 
-    <div id="clipboard_container">
-      <div id="clipboard_button" data-clipboard-target="git_url_text">
-        <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
-      </div>
+    <div id="clipboard_button" data-clipboard-target="git_url_text">
+      <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
     </div>
 
   </div>
@@ -32,6 +30,7 @@
 
   <%= javascript_include_tag 'plugins/bootstrap_tooltip',  :plugin => 'redmine_git_hosting' %>
   <%= javascript_include_tag 'plugins/zero_clipboard_min', :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'set_zero_clipboard',         :plugin => 'redmine_git_hosting' %>
 
   <%= javascript_tag do %>
     var access_list = [];
@@ -41,21 +40,13 @@
     <% end %>
 
     $(document).ready(function() {
-      ZeroClipboard.config({ moviePath: "<%= plugin_asset_link('ZeroClipboard.swf') %>" });
-      var client = new ZeroClipboard($('#clipboard_button'));
+      var git_url_client = Object();
+      git_url_client.movie_path    = '<%= plugin_asset_link('ZeroClipboard.swf') %>';
+      git_url_client.label_to_copy = '<%= l(:label_copy_to_clipboard) %>';
+      git_url_client.label_copied  = '<%= l(:label_copied_to_clipboard) %>';
+      git_url_client.target        = '#clipboard_button';
 
-      $('#global-zeroclipboard-html-bridge').tooltip({
-        title:     '<%= l(:label_copy_to_clipboard) %>',
-        placement: 'right'
-      });
-
-      client.on('mouseover', function() {
-        $('#global-zeroclipboard-html-bridge').tooltip('show');
-      });
-
-      client.on('complete', function() {
-        $('.tooltip .tooltip-inner').text('<%= l(:label_copied_to_clipboard) %>');
-      });
+      createZeroClipBoard(git_url_client);
 
       $('#git_url_list li').first().addClass('selected');
       var key    = $('#git_url_list li').first().attr('id');

@@ -68,7 +68,7 @@
 
   <div style="margin: 2px 3px; width: 99%;">
 
-    <div id="clipboard_container">
+    <div>
       <div id="mirror_clipboard_button" data-clipboard-target="mirror_pubkey" title="<%= l(:label_copy_to_clipboard) %>" style="float: left;">
         <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
       </div>
@@ -90,7 +90,12 @@
   $(document).ready(function() {
     initModalBoxes(modals);
 
-    ZeroClipboard.config({ moviePath: "<%= plugin_asset_link('ZeroClipboard.swf') %>" });
-    var client = new ZeroClipboard($('#mirror_clipboard_button'));
+    var mirror_client = Object();
+    mirror_client.movie_path    = '<%= plugin_asset_link('ZeroClipboard.swf') %>';
+    mirror_client.label_to_copy = '<%= l(:label_copy_to_clipboard) %>';
+    mirror_client.label_copied  = '<%= l(:label_copied_to_clipboard) %>';
+    mirror_client.target        = '#mirror_clipboard_button';
+
+    createZeroClipBoard(mirror_client);
   });
 <% end %>

@@ -1,7 +1,8 @@
 /*
 ZERO CLIPBOARD
 */
-#clipboard_container  { height: 25px; display: block; float: left; }
+#clipboard_button,
+#mirror_clipboard_button { height: 25px; display: block; float: left; }
 
 #clipboard_button,
 #mirror_clipboard_button { position: relative; padding: 0; text-align: center; border-color: #BBBBBB; border-style: solid; border-width: 1px; width: 24px; height: 23px; }
