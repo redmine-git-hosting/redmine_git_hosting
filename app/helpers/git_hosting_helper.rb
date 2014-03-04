@@ -12,6 +12,11 @@ module GitHostingHelper
   end
 
 
+  def user_allowed_to(permission, project)
+    return User.current.allowed_to?(permission, project)
+  end
+
+
   ## DEPLOYMENTS KEYS PERMISSIONS
   def can_create_deployment_keys_for_some_project(theuser = User.current)
     return true if theuser.admin?
@@ -19,69 +24,6 @@ module GitHostingHelper
       return true if role.allowed_to?(:create_deployment_keys)
     end
     return false
-  end
-
-
-  def can_create_deployment_keys(project)
-    return User.current.admin? || User.current.allowed_to?(:create_deployment_keys, project)
-  end
-
-
-  def can_view_deployment_keys(project)
-    return User.current.admin? || User.current.allowed_to?(:view_deployment_keys, project)
-  end
-
-
-  def can_edit_deployment_keys(project)
-    return User.current.admin? || User.current.allowed_to?(:edit_deployment_keys, project)
-  end
-
-
-  ## MIRRORS PERMISSIONS
-  def can_create_mirrors(project)
-    return User.current.allowed_to?(:create_repository_mirrors, project)
-  end
-
-
-  def can_view_mirrors(project)
-    return User.current.allowed_to?(:view_repository_mirrors, project)
-  end
-
-
-  def can_edit_mirrors(project)
-    return User.current.allowed_to?(:edit_repository_mirrors, project)
-  end
-
-
-  ## POST RECEIVE PERMISSIONS
-  def can_create_post_receive_urls(project)
-    return User.current.allowed_to?(:create_repository_post_receive_urls, project)
-  end
-
-
-  def can_view_post_receive_urls(project)
-    return User.current.allowed_to?(:view_repository_post_receive_urls, project)
-  end
-
-
-  def can_edit_post_receive_urls(project)
-    return User.current.allowed_to?(:edit_repository_post_receive_urls, project)
-  end
-
-
-  ## GIT MAILING LIST PERMISSIONS
-  def can_create_git_notifications(project)
-    return User.current.allowed_to?(:create_repository_git_notifications, project)
-  end
-
-
-  def can_view_git_notifications(project)
-    return User.current.allowed_to?(:view_repository_git_notifications, project)
-  end
-
-
-  def can_edit_git_notifications(project)
-    return User.current.allowed_to?(:edit_repository_git_notifications, project)
   end
 
 

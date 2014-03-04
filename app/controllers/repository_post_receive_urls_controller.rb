@@ -11,7 +11,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
   include GitHostingHelper
-  helper :git_hosting
+  helper  :git_hosting
 
 
   def index
@@ -117,7 +117,7 @@ class RepositoryPostReceiveUrlsController < ApplicationController
   def find_repository_post_receive_url
     post_receive_url = RepositoryPostReceiveUrl.find_by_id(params[:id])
 
-    if post_receive_url and post_receive_url.repository_id == @repository.id
+    if post_receive_url && post_receive_url.repository_id == @repository.id
       @post_receive_url = post_receive_url
     elsif post_receive_url
       render_403

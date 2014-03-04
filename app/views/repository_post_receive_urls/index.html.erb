@@ -1,6 +1,6 @@
 <div>
 
-  <% if can_create_post_receive_urls(@project) %>
+  <% if user_allowed_to(:create_repository_post_receive_urls, @project) %>
     <div class="contextual">
       <%= link_to(l(:label_post_receive_url_add), new_repository_post_receive_url_path(@repository),
                                                   :class => 'icon icon-add modal-box') %>
@@ -27,12 +27,12 @@
             <td><%= post_receive_url.url %></td>
 
             <td>
-              <%= post_receive_mode(post_receive_url).html_safe %><br />
-              <%= checked_image post_receive_url.active? %>
+              <%= post_receive_mode(post_receive_url).html_safe %>
+              <%= checked_image2 post_receive_url.active? %>
             </td>
 
             <td class="buttons">
-              <% if can_edit_post_receive_urls(@project) %>
+              <% if user_allowed_to(:edit_repository_post_receive_urls, @project) %>
 
                 <%= link_to l(:button_edit), edit_repository_post_receive_url_path(@repository, post_receive_url),
                                              :class => 'icon icon-edit modal-box' %>

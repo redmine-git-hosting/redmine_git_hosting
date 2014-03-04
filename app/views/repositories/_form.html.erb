@@ -100,7 +100,7 @@
         </span>
       </p>
 
-      <% if can_create_git_notifications(@repository.project) %>
+      <% if user_allowed_to(:create_repository_git_notifications, @repository.project) %>
         <p>
           <label><%= l(:label_enable_git_notify) %></label>
           <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">

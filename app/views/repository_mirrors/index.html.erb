@@ -1,6 +1,6 @@
 <div>
 
-  <% if can_create_mirrors(@project) %>
+  <% if user_allowed_to(:create_repository_mirrors, @project) %>
     <div class="contextual">
       <%= link_to l(:label_mirror_add), new_repository_mirror_path(@repository),
                                         :class => 'icon icon-add modal-box' %>
@@ -29,12 +29,12 @@
             <td><%= refspec(mirror, 64).html_safe %></td>
 
             <td>
-              <%= mirror_mode(mirror).html_safe %><br/>
-              <%= checked_image mirror.active? %>
+              <%= mirror_mode(mirror).html_safe %>
+              <%= checked_image2 mirror.active? %>
             </td>
 
             <td class="buttons">
-              <% if can_edit_mirrors(@project) %>
+              <% if user_allowed_to(:edit_repository_mirrors, @project) %>
 
                 <% if mirror.active == 1 -%>
                   <%= link_to l(:label_mirror_push), push_to_mirror_path(@repository, mirror),

@@ -135,17 +135,17 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
 
   def can_view_credentials
-    render_403 unless can_view_deployment_keys(@project)
+    render_403 unless user_allowed_to(:view_deployment_keys, @project)
   end
 
 
   def can_create_credentials
-    render_403 unless can_create_deployment_keys(@project)
+    render_403 unless user_allowed_to(:create_deployment_keys, @project)
   end
 
 
   def can_edit_credentials
-    render_403 unless can_edit_deployment_keys(@project)
+    render_403 unless user_allowed_to(:edit_deployment_keys, @project)
   end
 
 

@@ -15,28 +15,29 @@
 
   <div id="repository-tabs">
     <ul>
-      <% if can_view_deployment_keys(@repository.project) %>
+
+      <% if user_allowed_to(:view_deployment_keys, @repository.project) %>
         <li>
           <%= link_to "<i class=\"fa fa-ticket\"></i>".html_safe + l(:label_deployment_credentials),
                       repository_deployment_credentials_path(@repository) %>
         </li>
       <% end %>
 
-      <% if can_view_git_notifications(@repository.project) %>
+      <% if user_allowed_to(:view_repository_git_notifications, @repository.project) %>
         <li>
           <%= link_to "<i class=\"fa fa-envelope\"></i>".html_safe + l(:label_git_notifications),
                       repository_git_notifications_path(@repository) %>
         </li>
       <% end %>
 
-      <% if can_view_mirrors(@repository.project) %>
+      <% if user_allowed_to(:view_repository_mirrors, @repository.project) %>
         <li>
           <%= link_to "<i class=\"fa fa-sitemap\"></i>".html_safe + l(:label_repository_mirrors),
                       repository_mirrors_path(@repository) %>
         </li>
       <% end %>
 
-      <% if can_view_post_receive_urls(@repository.project) %>
+      <% if user_allowed_to(:view_repository_post_receive_urls, @repository.project) %>
         <li>
           <%= link_to "<i class=\"fa fa-external-link\"></i>".html_safe + l(:label_post_receive_urls),
                       repository_post_receive_urls_path(@repository) %>

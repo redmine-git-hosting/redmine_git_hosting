@@ -4,7 +4,7 @@
 
     <% if !@git_notification.nil? %>
 
-      <% if can_edit_git_notifications(@project) %>
+      <% if user_allowed_to(:edit_repository_git_notifications, @project) %>
 
         <div class="contextual">
           <%= link_to(l(:label_git_notifications_edit), edit_repository_git_notification_path(@repository, @git_notification),
@@ -20,7 +20,7 @@
 
     <% else %>
 
-      <% if can_create_git_notifications(@project) %>
+      <% if user_allowed_to(:create_repository_git_notifications, @project) %>
         <div class="contextual">
           <%= link_to(l(:label_git_notifications_add), new_repository_git_notification_path(@repository),
                                                        :class => 'icon icon-add modal-box') %>

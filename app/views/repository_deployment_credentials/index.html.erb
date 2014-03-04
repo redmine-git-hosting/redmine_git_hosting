@@ -1,6 +1,6 @@
 <div>
 
-  <% if can_create_deployment_keys(@project) %>
+  <% if user_allowed_to(:create_deployment_keys, @project) %>
     <div class="contextual">
       <%
         if !@user_keys.empty? || !@other_keys.empty?
@@ -50,7 +50,7 @@
             <td><%= checked_image credential.honored? %></td>
             <td><%= checked_image credential.active? %></td>
             <td class="buttons">
-              <% if can_edit_deployment_keys(@project) && (User.current.admin? || User.current == credential.user) %>
+              <% if user_allowed_to(:edit_deployment_keys, @project) && (User.current.admin? || User.current == credential.user) %>
 
                 <%= link_to l(:button_edit), edit_repository_deployment_credential_path(@repository, credential),
                                              :class => 'icon icon-edit modal-box' %>
