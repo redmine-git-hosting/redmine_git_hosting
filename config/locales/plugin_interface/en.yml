@@ -133,6 +133,9 @@ en:
   notice_public_key_updated: Public key <strong>%{title}</strong> was successfully updated.
   notice_public_key_deleted: Public key <strong>%{title}</strong> was successfully deleted.
 
+  # User SSH keys (fields)
+  field_key: this key
+
   # User SSH keys (labels)
   label_public_keys: Public keys
   label_public_key: Public key
@@ -147,14 +150,12 @@ en:
   label_key_type: Public key type
   label_user_key: User key
   label_deploy_key: Deploy key
-  label_cut_and_paste: Key
-  label_cut_and_paste_desc: (Cut and paste entire .pub file)
+  label_cut_and_paste: Cut and paste entire .pub file.
   label_identifier_cannot_be_changed: Identifier<br/><em>(Cannot be changed)</em>
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
 
   # User SSH keys (confirmation)
-  text_gitolite_key_destroy_confirmation: Are you sure you want to destroy %{title}?
-  text_this_key: this key
+  text_gitolite_key_destroy_confirmation: "Are you sure you want to destroy this key : %{title} ?"
 
   # User SSH keys (errors)
   error_public_key_create_failed: Failed to create public key.
@@ -165,7 +166,7 @@ en:
   error_key_type_mismatch: type (%{type1}) does not match type within body of key (%{type2}).
   error_key_in_use_by_you: 'is already in use by you as "%{name}".'
   error_key_in_use_by_other: 'is already in use by user "%{login}" as "%{name}".'
-  error_key_in_use_by_admin: is already in use as the Gitolite administrator key.
+  error_key_in_use_by_gitolite_admin: is already in use as the Gitolite administrator key.
   error_key_in_use_by_someone: is already in use. It belongs to another user (ask administrator for details).
   word_or: or
 

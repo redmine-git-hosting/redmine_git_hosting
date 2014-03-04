@@ -189,46 +189,49 @@ class GitolitePublicKey < ActiveRecord::Base
     # First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
     # crypto type matches.  Note that we ignore presence of comment!
     keypieces = key.match(/^(\S+)\s+(\S+)/)
+
     if !keypieces || keypieces[1].length > 10  # Probably has key as first component
-      errors.add(:key,l(:error_key_needs_two_components))
+      errors.add(:key, l(:error_key_needs_two_components))
       return false
     end
 
-    if !(KEY_FORMATS.index(keypieces[1]))
-      errors.add(:key,l(:error_key_bad_type, :types => wrap_and_join(KEY_FORMATS, l(:word_or))))
+    key_format = keypieces[1]
+    key_data   = keypieces[2]
+
+    if !KEY_FORMATS.include?(key_format)
+      errors.add(:key, l(:error_key_bad_type, :types => wrap_and_join(KEY_FORMATS, l(:word_or))))
       return false
     end
 
     # Make sure that key has proper number of characters (divisible by 4) and no more than 2 '='
-    if (keypieces[2].length % 4) != 0 || !(keypieces[2].match(/^[a-zA-Z0-9\+\/]+={0,2}$/))
+    if (key_data.length % 4) != 0 || !key_data.match(/^[a-zA-Z0-9\+\/]+={0,2}$/)
       errors.add(:key, l(:error_key_corrupted))
       return false
     end
 
-    deckey = Base64.decode64(keypieces[2])
+    key_data_decoded = Base64.decode64(key_data)
+
     piecearray = []
-    while deckey.length >= 4
+
+    while key_data_decoded.length >= 4
       length = 0
-      deckey.slice!(0..3).bytes do |byte|
+      key_data_decoded.slice!(0..3).bytes do |byte|
         length = length * 256 + byte
       end
-      if deckey.length < length
+      if key_data_decoded.length < length
         errors.add(:key, l(:error_key_corrupted))
         return false
       end
-      piecearray << deckey.slice!(0..length-1)
+      piecearray << key_data_decoded.slice!(0..length-1)
     end
 
-    if deckey.length != 0
+    if key_data_decoded.length != 0
       errors.add(:key, l(:error_key_corrupted))
       return false
     end
 
-    if piecearray[0] != keypieces[1]
-      puts YAML::dump(keypieces[1])
-      puts YAML::dump(piecearray[0])
-
-      # errors.add(:key, l(:error_key_type_mismatch, :type1 => keypieces[1], :type2 => piecearray[0]))
+    if piecearray[0] != key_format
+      errors.add(:key, l(:error_key_type_mismatch, :type1 => key_format, :type2 => piecearray[0]))
       return false
     end
 
@@ -240,25 +243,28 @@ class GitolitePublicKey < ActiveRecord::Base
     # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
-    allkeys = [GitolitePublicKey.new({ :user => nil, :key => %x[cat '#{RedmineGitolite::ConfigRedmine.get_setting(:gitolite_ssh_public_key)}'] })]
+    all_keys = []
+
+    all_keys.push GitolitePublicKey.new({ :user => nil, :key => File.read(RedmineGitolite::ConfigRedmine.get_setting(:gitolite_ssh_public_key)) })
 
     # Check all active keys
-    allkeys += (GitolitePublicKey.active.all)
+    all_keys += (GitolitePublicKey.active.all)
 
-    allkeys.each do |existingkey|
-      next if existingkey.id == id
-      existingpieces = existingkey.key.match(/^(\S+)\s+(\S+)/)
-      if existingpieces && (existingpieces[2] == keypieces[2])
+    all_keys.each do |existing_key|
+
+      existingpieces = existing_key.key.match(/^(\S+)\s+(\S+)/)
+
+      if existingpieces && (existingpieces[2] == key_data)
         # Hm.... have a duplicate key!
-        if existingkey.user == User.current
-          errors.add(:key, l(:error_key_in_use_by_you, :name => existingkey.title))
+        if existing_key.user == User.current
+          errors.add(:key, l(:error_key_in_use_by_you, :name => existing_key.title))
           return false
         elsif User.current.admin?
-          if existingkey.user
-            errors.add(:key, l(:error_key_in_use_by_other, :login => existingkey.user.login, :name => existingkey.title))
+          if existing_key.user
+            errors.add(:key, l(:error_key_in_use_by_other, :login => existing_key.user.login, :name => existing_key.title))
             return false
           else
-            errors.add(:key, l(:error_key_in_use_by_admin))
+            errors.add(:key, l(:error_key_in_use_by_gitolite_admin))
             return false
           end
         else

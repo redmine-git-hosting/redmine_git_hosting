@@ -195,4 +195,4 @@ MISC
 
 td.buttons { width: 20%; }
 
-#key_type_options label { padding-left: 7px; }
+.select_key_type { margin-left: 10px; }
