@@ -22,7 +22,7 @@ module RedmineGitHosting
           RedmineGitolite::GitHosting.logger.info { "Rebuild SSH keys for user : '#{self.login}'" }
           RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_ssh_keys, :object => self.id })
 
-          project_list = Array.new
+          project_list = []
           self.projects_by_role.each do |role|
             role[1].each do |project|
               project_list.push(project.id)
@@ -40,11 +40,11 @@ module RedmineGitHosting
           RedmineGitolite::GitHosting.logger.info { "User '#{self.login}' has been deleted from Redmine delete ssh keys !" } if self.gitolite_public_keys.any?
 
           self.gitolite_public_keys.each do |ssh_key|
-            repo_key = Hash.new
-            repo_key[:title]    = ssh_key.identifier
-            repo_key[:key]      = ssh_key.key
-            repo_key[:location] = ssh_key.location
-            repo_key[:owner]    = ssh_key.owner
+            repo_key = {}
+            repo_key['title']    = ssh_key.identifier
+            repo_key['key']      = ssh_key.key
+            repo_key['location'] = ssh_key.location
+            repo_key['owner']    = ssh_key.owner
             RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{ssh_key.identifier}" }
             RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
           end

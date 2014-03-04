@@ -16,6 +16,7 @@ class GitolitePublicKeysController < ApplicationController
 
   def create
     @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
+
     if params[:create_button]
       if @gitolite_public_key.save
         flash[:notice] = l(:notice_public_key_added, :title => keylabel(@gitolite_public_key))
@@ -128,11 +129,13 @@ class GitolitePublicKeysController < ApplicationController
 
   def destroy_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
+
     repo_key = {}
-    repo_key[:title]    = @gitolite_public_key.identifier
-    repo_key[:key]      = @gitolite_public_key.key
-    repo_key[:location] = @gitolite_public_key.location
-    repo_key[:owner]    = @gitolite_public_key.owner
+    repo_key['title']    = @gitolite_public_key.identifier
+    repo_key['key']      = @gitolite_public_key.key
+    repo_key['location'] = @gitolite_public_key.location
+    repo_key['owner']    = @gitolite_public_key.owner
+
     RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{@gitolite_public_key.identifier}" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
 
