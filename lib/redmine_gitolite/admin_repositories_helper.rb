@@ -95,7 +95,7 @@ module RedmineGitolite
       repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
       repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
 
-      if User.anonymous.allowed_to?(:view_changesets, project) && (repository.extra.git_http == 1 || repository.extra.git_http == 2)
+      if User.anonymous.allowed_to?(:view_changesets, project) && (repository.extra.git_http == 1 || repository.extra.git_http == 2 || repository.extra.git_http == 3)
         repo_conf.set_git_config("http.uploadpack", 'true')
       else
         repo_conf.set_git_config("http.uploadpack", 'false')
