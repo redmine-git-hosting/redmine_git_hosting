@@ -24,15 +24,21 @@ module RedmineGitolite
 
 
     def content
-      return [] if !file_exists?(@recycle_bin_dir)
+      return {} if !file_exists?(@recycle_bin_dir)
 
       begin
-        content = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{@recycle_bin_dir}' -type d -regex '.*\.git' -prune -print").chomp.split("\n")
+        directories = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{@recycle_bin_dir}' -type d -regex '.*\.git' -prune -print").chomp.split("\n")
       rescue RedmineGitolite::GitHosting::GitHostingException => e
-        content = []
+        directories = {}
       end
 
-      return content
+      if !directories.empty?
+        return_value = get_directories_size(directories)
+      else
+        return_value = directories
+      end
+
+      return return_value
     end
 
 
@@ -210,6 +216,15 @@ module RedmineGitolite
         logger.error { "Attempt to clean path '#{repo_subpath}' failed" }
         return false
       end
+    end
+
+
+    def get_directories_size(directories)
+      data = {}
+      directories.sort.each do |directory|
+        data[directory] = { :size => (RedmineGitolite::GitHosting.execute_command(:shell_cmd, "du -sh '#{directory}'").split(" ")[0] rescue '') }
+      end
+      return data
     end
 
   end

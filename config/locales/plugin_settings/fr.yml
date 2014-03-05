@@ -156,6 +156,7 @@ fr:
   label_tab_gitolite_recycle_bin: Corbeille
   label_empty_recycle_bin: Vider la corbeille
   label_recycle_bin_content: Contenu de la corbeille
+  label_recycle_bin_content_size: Taille
   label_delete_from_recyle_bin: Supprimer de la corbeille
   label_delete_warning: Attention! La suppression est définitive!
 

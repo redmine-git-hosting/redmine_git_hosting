@@ -7,12 +7,14 @@
 <% if !recycle_bin.content.empty? %>
   <table class="table table-hover">
     <th><%= l(:label_recycle_bin_content) %></th>
+    <th><%= l(:label_recycle_bin_content_size) %></th>
     <th><%= l(:label_delete_from_recyle_bin) %> (<%= link_to l(:label_select_all), 'javascript:void(0);', :id => 'select_all' %>)</th>
 
-    <% recycle_bin.content.sort.each do |repo_trash| %>
+    <% recycle_bin.content.each do |repo_trash| %>
       <tr>
-        <td><%= repo_trash %></td>
-        <td><%= check_box_tag "settings[gitolite_purge_repos][#{repo_trash}]", true, false, :class => 'empty_trash' %></td>
+        <td><%= repo_trash[0] %></td>
+        <td><%= repo_trash[1][:size] %></td>
+        <td><%= check_box_tag "settings[gitolite_purge_repos][#{repo_trash[0]}]", true, false, :class => 'empty_trash' %></td>
       </tr>
     <% end %>
 
