@@ -43,7 +43,7 @@ module RedmineGitolite
         object = projects
       end
 
-      do_update_projects(object)
+      update_projects_forced(object)
     end
 
 
