@@ -22,34 +22,7 @@ module RedmineGitolite
         end
       end
 
-      # Create new repo object
-      repo_conf = Gitolite::Config::Repo.new(repo_name)
-
-      # Set post-receive hook params
-      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
-      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
-      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
-
-      # Set mail-notifications hook params
-      if repository.extra.git_notify == 1
-        mailing_list   = repository.mailing_list_params[:mailing_list]
-        email_prefix   = repository.mailing_list_params[:email_prefix]
-        sender_address = repository.mailing_list_params[:sender_address]
-
-        if !mailing_list.empty?
-          repo_conf.set_git_config("multimailhook.environment", "gitolite")
-          repo_conf.set_git_config("multimailhook.mailinglist", mailing_list.keys.join(", "))
-          repo_conf.set_git_config("multimailhook.from", email_prefix)
-          repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
-
-          # Set SMTP server for mail-notifications hook
-          #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
-        end
-      end
-
-      @gitolite_config.add_repo(repo_conf)
-
-      repo_conf.permissions = build_permissions(repository)
+      do_update_repository(repository)
     end
 
 
@@ -68,34 +41,7 @@ module RedmineGitolite
         return false
       end
 
-      # Create new repo object
-      repo_conf = Gitolite::Config::Repo.new(repo_name)
-
-      # Set post-receive hook params
-      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
-      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
-      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
-
-      # Set mail-notifications hook params
-      if repository.extra.git_notify == 1
-        mailing_list   = repository.mailing_list_params[:mailing_list]
-        email_prefix   = repository.mailing_list_params[:email_prefix]
-        sender_address = repository.mailing_list_params[:sender_address]
-
-        if !mailing_list.empty?
-          repo_conf.set_git_config("multimailhook.environment", "gitolite")
-          repo_conf.set_git_config("multimailhook.mailinglist", mailing_list.keys.join(", "))
-          repo_conf.set_git_config("multimailhook.from", email_prefix)
-          repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
-
-          # Set SMTP server for mail-notifications hook
-          #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
-        end
-      end
-
-      @gitolite_config.add_repo(repo_conf)
-
-      repo_conf.permissions = build_permissions(repository)
+      do_update_repository(repository)
     end
 
 
@@ -133,6 +79,54 @@ module RedmineGitolite
 
         gitolite_admin_repo_commit("#{@action} : #{project.identifier} | #{repo_list}")
       end
+    end
+
+
+    def do_update_repository(repository)
+      repo_name = repository.gitolite_repository_name
+      repo_conf = @gitolite_config.repos[repo_name]
+      project   = repository.project
+
+      # Create new repo object
+      repo_conf = Gitolite::Config::Repo.new(repo_name)
+
+      # Set post-receive hook params
+      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
+      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
+      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
+
+      if User.anonymous.allowed_to?(:view_changesets, project) && (repository.extra.git_http == 1 || repository.extra.git_http == 2)
+        repo_conf.set_git_config("http.uploadpack", 'true')
+      else
+        repo_conf.set_git_config("http.uploadpack", 'false')
+      end
+
+      # Set mail-notifications hook params
+      mailing_list = repository.mailing_list_params[:mailing_list]
+
+      if repository.extra.git_notify == 1 && !mailing_list.empty?
+
+        email_prefix   = repository.mailing_list_params[:email_prefix]
+        sender_address = repository.mailing_list_params[:sender_address]
+
+        repo_conf.set_git_config("multimailhook.environment", "gitolite")
+        repo_conf.set_git_config("multimailhook.mailinglist", mailing_list.keys.join(", "))
+        repo_conf.set_git_config("multimailhook.from", email_prefix)
+        repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
+
+        # Set SMTP server for mail-notifications hook
+        #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
+
+      else
+        repo_conf.set_git_config("multimailhook.environment", '')
+        repo_conf.set_git_config("multimailhook.mailinglist", '')
+        repo_conf.set_git_config("multimailhook.from", '')
+        repo_conf.set_git_config("multimailhook.emailPrefix", '')
+      end
+
+      @gitolite_config.add_repo(repo_conf)
+
+      repo_conf.permissions = build_permissions(repository)
     end
 
 

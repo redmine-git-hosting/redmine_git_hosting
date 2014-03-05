@@ -112,6 +112,26 @@ class SmartHttpController < ApplicationController
   end
 
 
+  class Streamer
+
+    def initialize(command, input)
+      @command = command
+      @input = input
+    end
+
+    def each
+      IO.popen(@command, File::RDWR) do |pipe|
+        pipe.write @input
+
+        while !pipe.eof?
+          yield pipe.read(8192)
+        end
+      end
+    end
+
+  end
+
+
   def service_rpc
     return render_no_access if !has_access(@rpc, true)
 
@@ -122,15 +142,7 @@ class SmartHttpController < ApplicationController
     self.response.status = 200
     self.response.headers["Content-Type"]  = "application/x-git-%s-result" % @rpc
     self.response.headers["Last-Modified"] = Time.now.to_s
-
-    IO.popen(command, File::RDWR) do |pipe|
-      pipe.write(input)
-      while !pipe.eof?
-        self.response_body = Enumerator.new do |y|
-          y << pipe.read(8192)
-        end
-      end
-    end
+    self.response_body = Streamer.new(command, input)
   end
 
 
@@ -287,13 +299,13 @@ class SmartHttpController < ApplicationController
 
   ## Note: command must be terminated with a quote!
   def git_command(command)
-    return "#{run_git_prefix()} && export GL_BYPASS_UPDATE_HOOK=true && git #{command}'"
+    return "#{run_git_prefix} && export GL_BYPASS_UPDATE_HOOK=true && git #{command}'"
   end
 
 
   ## Note: command must be started with a quote!
   def run_git_prefix
-    return "#{RedmineGitolite::GitHosting.shell_cmd_runner} 'cd #{@repository.gitolite_repository_path}"
+    return "#{RedmineGitolite::Config.shell_cmd_runner} 'cd #{@repository.gitolite_repository_path}"
   end
 
 
