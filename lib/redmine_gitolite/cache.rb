@@ -175,7 +175,7 @@ module RedmineGitolite
     class EnumerableRedirector
       include Enumerable
 
-      def initialize(my_enum,my_redirector)
+      def initialize(my_enum, my_redirector)
         @my_enum = my_enum
         @my_redirector = my_redirector
       end
@@ -378,17 +378,21 @@ module RedmineGitolite
       logger.debug { "Inserting cache entry for repository '#{repo_id}'" }
       logger.debug { compose_key(primary_key, secondary_key) }
 
-      gitc = GitCache.create(
-        :command         => compose_key(primary_key, secondary_key),
-        :command_output  => out_value,
-        :repo_identifier => repo_id
-      )
+      begin
+        gitc = GitCache.create(
+          :command         => compose_key(primary_key, secondary_key),
+          :command_output  => out_value,
+          :repo_identifier => repo_id
+        )
 
-      gitc.save
+        gitc.save
 
-      if GitCache.count > max_cache_elements && max_cache_elements >= 0
-        oldest = GitCache.find(:last, :order => "created_at DESC")
-        GitCache.destroy(oldest.id)
+        if GitCache.count > max_cache_elements && max_cache_elements >= 0
+          oldest = GitCache.find(:last, :order => "created_at DESC")
+          GitCache.destroy(oldest.id)
+        end
+      rescue => e
+        logger.error "Could not insert in cache, this is the error : '#{e.message}'"
       end
     end
 
