@@ -15,6 +15,7 @@ It provides these functionalities :
 * [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
 * [Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
 * [Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
+* [Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
