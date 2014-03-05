@@ -15,18 +15,18 @@ class MigrateParameters < ActiveRecord::Migration
 
     new_setting[:gitolite_temp_dir]                    = File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
     new_setting[:gitolite_script_dir]                  = './'
+    new_setting[:gitolite_lock_wait_time]              = 10
     new_setting[:gitolite_config_file]                 = 'gitolite.conf'
-    new_setting[:gitolite_config_has_admin_key]        = false
-    new_setting[:gitolite_recycle_bin_expiration_time] = '24.0'
-    new_setting[:gitolite_lock_wait_time]              = '10'
+    new_setting[:gitolite_config_has_admin_key]        = true
+    new_setting[:gitolite_recycle_bin_expiration_time] = 24.0
 
     new_setting[:gitolite_hooks_debug]            = true
     new_setting[:gitolite_force_hooks_update]     = true
     new_setting[:gitolite_hooks_are_asynchronous] = false
 
-    new_setting[:gitolite_cache_max_time] = '900'
-    new_setting[:gitolite_cache_max_size] = '16'
-    new_setting[:gitolite_cache_max_elements] = '2000'
+    new_setting[:gitolite_cache_max_time] = 86400
+    new_setting[:gitolite_cache_max_size] = 16
+    new_setting[:gitolite_cache_max_elements] = 2000
 
     new_setting[:ssh_server_domain]     = RedmineGitolite::Config.my_root_url
     new_setting[:http_server_domain]    = RedmineGitolite::Config.my_root_url
@@ -34,9 +34,8 @@ class MigrateParameters < ActiveRecord::Migration
     new_setting[:http_server_subdir]    = ''
     new_setting[:show_repositories_url] = true
 
-    new_setting[:gitolite_notify_cia_by_default] = '0'
-    new_setting[:gitolite_daemon_by_default]     = '0'
-    new_setting[:gitolite_http_by_default]       = '1'
+    new_setting[:gitolite_daemon_by_default]  = false
+    new_setting[:gitolite_http_by_default]    = 1
 
     new_setting[:all_projects_use_git]      = false
     new_setting[:delete_git_repositories]   = false
@@ -48,7 +47,7 @@ class MigrateParameters < ActiveRecord::Migration
     new_setting[:gitolite_log_split]   = false
     new_setting[:gitolite_resync_all]  = false
 
-    new_setting[:gitolite_notify_by_default] = '1'
+    new_setting[:gitolite_notify_by_default] = true
     new_setting[:gitolite_notify_global_prefix] = '[REDMINE]'
     new_setting[:gitolite_notify_global_sender_address] = Setting.mail_from.to_s.strip.downcase
     new_setting[:gitolite_notify_global_include] = []

@@ -47,7 +47,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite Cache Config
       :gitolite_cache_max_time          => 86400,
       :gitolite_cache_max_size          => 16,
-      :gitolite_cache_max_elements      => 1000,
+      :gitolite_cache_max_elements      => 2000,
 
       # Gitolite Access Config
       :ssh_server_domain                => 'localhost',
