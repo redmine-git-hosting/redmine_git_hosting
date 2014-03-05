@@ -6,6 +6,7 @@
       <th><%= l(:field_repository_is_default) %></th>
       <th><%= l(:label_scm) %></th>
       <th><%= l(:label_repository) %></th>
+      <th><%= l(:label_repository_default_branch) %></th>
       <th><%= l(:label_repository_enabled_capabilities) %></th>
       <th></th>
     </tr>
@@ -22,8 +23,11 @@
           <%= h repository.scm_name %>
         <% end %>
       </td>
-      <td><%=link_to h(repository.url),
-            {:controller => 'repositories', :action => 'show',:id => @project, :repository_id => repository.identifier_param} %>
+      <td>
+        <%=link_to h(repository.url), {:controller => 'repositories', :action => 'show',:id => @project, :repository_id => repository.identifier_param} %>
+      </td>
+      <td>
+        <span class="label label-info"><%= repository.extra[:default_branch] %></span>
       </td>
       <td align="center">
         <% if repository.is_a?(Repository::Git) %>
@@ -61,5 +65,6 @@
 
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_git_hosting' %>
   <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_git_hosting' %>
 <% end %>

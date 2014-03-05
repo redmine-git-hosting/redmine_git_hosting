@@ -50,5 +50,22 @@ module RedmineGitolite
       end
     end
 
+
+    def update_repository_default_branch
+      repository = Repository.find_by_id(@object_id)
+
+      begin
+        RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{repository.gitolite_repository_path}' symbolic-ref HEAD refs/heads/#{repository.extra[:default_branch]}")
+        logger.info { "Default branch successfully updated for repository '#{repository.gitolite_repository_name}'"}
+      rescue RedmineGitolite::GitHostingException => e
+        logger.error { "Error while updating default branch for repository '#{repository.gitolite_repository_name}'"}
+      end
+
+      RedmineGitolite::Cache.clear_cache_for_repository(repository)
+
+      logger.info { "Fetch changesets for repository '#{repository.gitolite_repository_name}'"}
+      repository.fetch_changesets
+    end
+
   end
 end

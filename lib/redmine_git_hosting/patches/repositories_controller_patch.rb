@@ -74,9 +74,24 @@ module RedmineGitHosting
                 params[:extra][:git_notify] = 0
               end
 
+              update_default_branch = false
+
+              if @repository.extra[:default_branch] != params[:extra][:default_branch]
+                update_default_branch = true
+              end
+
+              ## Update attributes
               @repository.extra.update_attributes(params[:extra])
+
+              ## Update repository
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'" }
               RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => @repository.id })
+
+              ## Update repository default branch
+              if update_default_branch
+                RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified default_branch of '#{@repository.gitolite_repository_name}' ('#{@repository.extra[:default_branch]}')" }
+                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository_default_branch, :object => @repository.id })
+              end
             end
           end
         end

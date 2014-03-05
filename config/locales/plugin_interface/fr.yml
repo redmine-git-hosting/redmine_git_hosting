@@ -183,6 +183,7 @@ fr:
   label_git_daemon: Daemon Git
   label_smart_http: Smart HTTP
   label_git_notify: Notifications Git
+  label_repository_default_branch: Branche par défaut
 
   # Repository list view
   label_repository_enabled_capabilities: Fonctionnalité activées du dépôt

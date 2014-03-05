@@ -7,7 +7,7 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   validates_associated :repository
 
-  attr_accessible :id, :repository_id, :key, :git_http, :git_daemon, :git_notify
+  attr_accessible :id, :repository_id, :key, :git_http, :git_daemon, :git_notify, :default_branch
 
   after_initialize :set_values
 
@@ -61,6 +61,7 @@ class RepositoryGitExtra < ActiveRecord::Base
     write_attribute(:git_http,   RedmineGitolite::ConfigRedmine.get_setting(:gitolite_http_by_default))
     write_attribute(:git_daemon, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default, true) ? 1 : 0)
     write_attribute(:git_notify, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default, true) ? 1 : 0)
+    write_attribute(:default_branch, 'master')
   end
 
 end
