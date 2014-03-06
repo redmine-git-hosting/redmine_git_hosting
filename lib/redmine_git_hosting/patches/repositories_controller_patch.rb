@@ -76,7 +76,7 @@ module RedmineGitHosting
 
               update_default_branch = false
 
-              if @repository.extra[:default_branch] != params[:extra][:default_branch]
+              if params[:extra].has_key?(:default_branch) && @repository.extra[:default_branch] != params[:extra][:default_branch]
                 update_default_branch = true
               end
 
