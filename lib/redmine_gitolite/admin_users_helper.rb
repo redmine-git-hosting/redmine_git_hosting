@@ -19,12 +19,12 @@ module RedmineGitolite
         repo_keys = @gitolite_admin.ssh_keys[key.owner]
         repo_key = repo_keys.find_all{|k| k.location == key.location && k.owner == key.owner}.first
         if repo_key
-          logger.info { "#{@action} : SSH key '#{key.owner}' already exists in Gitolite, update it ..." }
+          logger.info { "#{@action} : SSH key '#{key.owner}@#{key.location}' already exists in Gitolite, update it ..." }
           repo_key.type, repo_key.blob, repo_key.email = parts
           repo_key.owner = key.owner
           repo_key.location = key.location
         else
-          logger.info { "#{@action} : SSH key '#{key.owner}' does not exist in Gitolite, create it ..." }
+          logger.info { "#{@action} : SSH key '#{key.owner}@#{key.location}' does not exist in Gitolite, create it ..." }
           repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2])
           repo_key.location = key.location
           repo_key.owner = key.owner
@@ -50,10 +50,10 @@ module RedmineGitolite
       repo_key  = repo_keys.find_all{|k| k.location == key['location'] && k.owner == key['owner']}.first
 
       if repo_key
-        logger.info { "#{@action} : SSH key '#{key['owner']}' exists in Gitolite, delete it ..." }
+        logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' exists in Gitolite, delete it ..." }
         @gitolite_admin.rm_key repo_key
       else
-        logger.info { "#{@action} : SSH key '#{key['owner']}' does not exits in Gitolite, exit !" }
+        logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' does not exits in Gitolite, exit !" }
         return false
       end
     end
