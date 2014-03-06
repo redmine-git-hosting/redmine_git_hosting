@@ -10,7 +10,8 @@ module RedmineGitolite
       :add_repository,
       :update_repository,
       :delete_repositories,
-      :update_repository_default_branch
+      :update_repository_default_branch,
+      :create_readme_file
     ]
 
     USERS_METHODS = [

@@ -109,6 +109,7 @@ en:
 
   label_all_projects_use_git: Automatically initialize Git repositories for new projects?
   label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
+  label_init_repositories_on_create: Automatically initialize repositories with a README file (à la Github)
   label_hierarchical_organisation: Directory and URL structure for<br/>Redmine-managed repositories
   label_unique_repo_identifier: Repository identifiers are globally unique?
 

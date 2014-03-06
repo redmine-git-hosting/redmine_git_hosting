@@ -113,6 +113,11 @@ module RedmineGitHosting
             @project.repositories << repository
             RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
             RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => repository.id })
+
+            if RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true)
+              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository with README '#{repository.gitolite_repository_name}', create README file" }
+              RedmineGitolite::GitHosting.resync_gitolite({ :command => :create_readme_file, :object => repository.id })
+            end
           end
         end
 
