@@ -91,9 +91,9 @@ module RedmineGitolite
       repo_conf = Gitolite::Config::Repo.new(repo_name)
 
       # Set post-receive hook params
-      repo_conf.set_git_config("redmineGitolite.projectId", repository.project.identifier.to_s)
-      repo_conf.set_git_config("redmineGitolite.repositoryId", "#{repository.identifier || ''}")
-      repo_conf.set_git_config("redmineGitolite.repositoryKey", repository.extra.key)
+      repo_conf.set_git_config("redminegitolite.projectid", repository.project.identifier.to_s)
+      repo_conf.set_git_config("redminegitolite.repositoryid", "#{repository.identifier || ''}")
+      repo_conf.set_git_config("redminegitolite.repositorykey", repository.extra.key)
 
       if User.anonymous.allowed_to?(:view_changesets, project) && (repository.extra.git_http == 1 || repository.extra.git_http == 2 || repository.extra.git_http == 3)
         repo_conf.set_git_config("http.uploadpack", 'true')

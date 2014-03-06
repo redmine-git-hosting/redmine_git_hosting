@@ -23,20 +23,20 @@ def load_gitolite_vars
   redmine_vars_hash = {}
 
   redmine_var_names = [
-    "redmineGitolite.redmineUrl",
-    "redmineGitolite.projectId",
-    "redmineGitolite.repositoryId",
-    "redmineGitolite.repositoryKey",
-    "redmineGitolite.debugMode",
-    "redmineGitolite.asyncMode",
+    "redminegitolite.redmineurl",
+    "redminegitolite.projectid",
+    "redminegitolite.repositoryid",
+    "redminegitolite.repositorykey",
+    "redminegitolite.debugmode",
+    "redminegitolite.asyncmode",
   ]
 
   redmine_var_names.each do |var_name|
     var_value = get_gitolite_config(var_name)
 
     if var_value.to_s == ""
-      # Allow blank repositoryID (as default)
-      if var_name != "redmineGitolite.repositoryId"
+      # Allow blank repositoryid (as default)
+      if var_name != "redminegitolite.repositoryid"
         logger("", false, true)
         logger("Repository does not have '#{var_name}' set, exiting...", false, true)
         logger("", false, true)
@@ -98,9 +98,9 @@ end
 
 def get_http_params(redmine_vars_hash)
   clear_time = Time.new.utc.to_i.to_s
-  params = { "clear_time" => clear_time, "encoded_time" => Digest::SHA1.hexdigest(clear_time.to_s + redmine_vars_hash["repositoryKey"]) }
+  params = { "clear_time" => clear_time, "encoded_time" => Digest::SHA1.hexdigest(clear_time.to_s + redmine_vars_hash["repositorykey"]) }
   redmine_vars_hash.each_key do |key|
-    if key != "repositoryKey"
+    if key != "repositorykey"
       params[key] = redmine_vars_hash[key]
     end
   end
@@ -211,7 +211,7 @@ $debug = false
 redmine_vars_hash = load_gitolite_vars
 
 ## Set debug mode if needed
-$debug = redmine_vars_hash["debugMode"] == "true"
+$debug = redmine_vars_hash["debugmode"] == "true"
 
 ## Let's read the refs passed to us, but also copy stdin
 ## for potential use with extra hooks.
@@ -227,7 +227,7 @@ end
 redmine_vars_hash["refs[]"] = refs
 
 ## Fork if needed
-if redmine_vars_hash["asyncMode"] == "true"
+if redmine_vars_hash["asyncmode"] == "true"
   pid = fork
   exit unless pid.nil?
   pid = fork
@@ -242,10 +242,10 @@ end
 
 ## Do the job!
 logger("", false, true)
-logger("Notifying Redmine project '#{redmine_vars_hash['projectId']}' about changes to this repo...", false, true)
+logger("Notifying Redmine project '#{redmine_vars_hash['projectid']}' about changes to this repo...", false, true)
 
 ## Call Redmine
-success = run_http_query(redmine_vars_hash["redmineUrl"], redmine_vars_hash)
+success = run_http_query(redmine_vars_hash["redmineurl"], redmine_vars_hash)
 
 if !success
   logger("Error contacting Redmine about changes to this repo.", false, true)

@@ -228,14 +228,14 @@ class GitoliteHooksController < ApplicationController
   # Locate that actual repository that is in use here.
   # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
   def find_project_and_repository
-    @project = Project.find_by_identifier(params[:projectId])
+    @project = Project.find_by_identifier(params[:projectid])
     if @project.nil?
-      render :text => l(:error_project_not_found, :identifier => params[:projectId]) if @project.nil?
+      render :text => l(:error_project_not_found, :identifier => params[:projectid]) if @project.nil?
       return
     end
 
-    if params[:repositoryId] && !params[:repositoryId].blank?
-      @repository = @project.repositories.find_by_identifier(params[:repositoryId])
+    if params[:repositoryid] && !params[:repositoryid].blank?
+      @repository = @project.repositories.find_by_identifier(params[:repositoryid])
     else
       # return default or first repo with blank identifier
       @repository = @project.repository || @project.repo_blank_ident
