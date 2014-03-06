@@ -61,6 +61,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Redmine Config
       :all_projects_use_git             => false,
       :delete_git_repositories          => true,
+      :init_repositories_on_create      => false,
       :hierarchical_organisation        => true,
       :unique_repo_identifier           => false,
 
