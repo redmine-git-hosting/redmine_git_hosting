@@ -7,6 +7,8 @@ This plugin allows straightforward management of Gitolite within Redmine.
 It provides these functionalities :
 
 * [SSH Public Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-ssh-public-keys-management)
+* [Automatic Repository Creation](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-creation)
+* [Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
 * [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
 * [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
 * [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
