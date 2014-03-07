@@ -20,6 +20,7 @@ It provides these functionalities :
 * [*(new)* Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
 * [*(new)* Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
 * [*(new)* Git Revision Download](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-revision-download) (from [Git Revision Download](https://github.com/chantra/redmine_gitrevision_download))
+* [*(new)* README Preview](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-readme-preview) (from [README at Repositories](https://github.com/simeji/readme_at_repositories))
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
