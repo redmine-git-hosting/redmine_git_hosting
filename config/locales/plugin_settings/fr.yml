@@ -109,7 +109,7 @@ fr:
 
   label_all_projects_use_git: Créer automatiquement un dépôt Git pour les nouveaux projets
   label_delete_git_repositories: Effacer les dépôts Git d'un projet quand celui-ci est effacé?<br/>(seront mis dans la corbeille)
-  label_init_repositories_on_create: Initialiser automatiquement les dépôts avec un fichier README (à la Github)
+  label_init_repositories_on_create: Initialiser automatiquement les dépôts Git avec un fichier README (à la Github)
   label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
   label_unique_repo_identifier: Les identifiants de dépôts sont unique
 
