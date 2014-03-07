@@ -269,13 +269,8 @@ module RedmineGitHosting
 
 
             if valuehash.has_key?(:gitolite_purge_repos) && !valuehash[:gitolite_purge_repos].empty?
-              valuehash[:gitolite_purge_repos].each do |trash_repo, value|
-                if value == 'true'
-                  @@delete_trash_repo.push(trash_repo)
-                end
-              end
-
-              valuehash[:gitolite_purge_repos] = {}
+              @@delete_trash_repo = valuehash[:gitolite_purge_repos]
+              valuehash[:gitolite_purge_repos] = []
             end
 
             # Save back results
