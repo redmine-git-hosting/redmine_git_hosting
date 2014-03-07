@@ -8,16 +8,17 @@ It provides these functionalities :
 
 * [SSH Public Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-ssh-public-keys-management)
 * [Automatic Repository Creation](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-creation)
-* [Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
 * [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
 * [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
 * [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
 * [Git Smart HTTP](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
 * [Git Daemon](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-daemon)
 * [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
-* [Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
-* [Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
-* [Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
+* [*(new)* Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
+* [*(new)* Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
+* [*(new)* Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
+* [*(new)* Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
+* 
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
