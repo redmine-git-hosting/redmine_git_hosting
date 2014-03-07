@@ -222,10 +222,22 @@ module RedmineGitolite
         read << "ARCHIVED_REDMINE_KEY"
       end
 
+      developer_team = rewind + write
+
+      rewind_branches = {}
+      rewind_branches[""] = rewind.uniq.sort
+      rewind_branches["personal/USER/"] = developer_team.uniq.sort unless developer_team.empty?
+
+      write_branches = {}
+      write_branches[""] = write.uniq.sort
+
+      read_branches = {}
+      read_branches[""] = read.uniq.sort
+
       permissions = {}
-      permissions["RW+"] = {"" => rewind.uniq.sort} unless rewind.empty?
-      permissions["RW"] = {"" => write.uniq.sort} unless write.empty?
-      permissions["R"] = {"" => read.uniq.sort} unless read.empty?
+      permissions["RW+"] = rewind_branches unless rewind.empty?
+      permissions["RW"] = write_branches unless write.empty?
+      permissions["R"] = read_branches unless read.empty?
 
       [permissions]
     end
