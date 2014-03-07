@@ -8,6 +8,12 @@ module RedmineGitolite
     def add_repository
       repository = Repository.find_by_id(@object_id)
 
+      if @options.has_key?(:create_readme_file) && (@options[:create_readme_file] == 'true' || @options[:create_readme_file] == true)
+        create_readme = true
+      else
+        create_readme = false
+      end
+
       wrapped_transaction do
 
         handle_repository_add(repository)
@@ -16,11 +22,17 @@ module RedmineGitolite
 
         recycle = RedmineGitolite::Recycle.new
 
-        if !recycle.recover_repository_if_present?(repository)
+        @recovered = recycle.recover_repository_if_present?(repository)
+
+        if !@recovered
           logger.info { "#{@action} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'" }
         else
           logger.info { "#{@action} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update" }
         end
+      end
+
+      if create_readme && !@recovered
+        create_readme_file(repository)
       end
     end
 
@@ -68,8 +80,7 @@ module RedmineGitolite
     end
 
 
-    def create_readme_file
-      repository = Repository.find_by_id(@object_id)
+    def create_readme_file(repository)
       temp_dir = Dir.mktmpdir
 
       command = ""
