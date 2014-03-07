@@ -89,7 +89,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_repository_post_receive_urls,   :repository_post_receive_urls => :index
     permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => :edit
 
-    permission :create_deployment_keys, :repository_deployment_credentials => :create_with_key
+    permission :create_deployment_keys, :repository_deployment_credentials => :create
     permission :view_deployment_keys,   :repository_deployment_credentials => :index
     permission :edit_deployment_keys,   :repository_deployment_credentials => :edit
 
