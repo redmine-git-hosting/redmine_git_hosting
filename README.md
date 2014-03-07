@@ -18,7 +18,6 @@ It provides these functionalities :
 * [*(new)* Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
 * [*(new)* Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
 * [*(new)* Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
-* 
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
