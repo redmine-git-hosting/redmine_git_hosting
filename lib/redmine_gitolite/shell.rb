@@ -37,9 +37,10 @@ module RedmineGitolite
     ]
 
 
-    def initialize(action, object_id)
+    def initialize(action, object_id, options)
       @action = action.to_sym
       @object_id = object_id
+      @options = options.symbolize_keys
     end
 
 
@@ -55,16 +56,16 @@ module RedmineGitolite
       end
 
       if REPOSITORIES_METHODS.include?(@action)
-        gitolite_admin = RedmineGitolite::AdminRepositories.new(@object_id, @action)
+        gitolite_admin = RedmineGitolite::AdminRepositories.new(@object_id, @action, @options)
         gitolite_admin.send(@action)
       elsif PROJECTS_METHODS.include?(@action)
-        gitolite_admin = RedmineGitolite::AdminProjects.new(@object_id, @action)
+        gitolite_admin = RedmineGitolite::AdminProjects.new(@object_id, @action, @options)
         gitolite_admin.send(@action)
       elsif USERS_METHODS.include?(@action)
-        gitolite_admin = RedmineGitolite::AdminUsers.new(@object_id, @action)
+        gitolite_admin = RedmineGitolite::AdminUsers.new(@object_id, @action, @options)
         gitolite_admin.send(@action)
       elsif ADMIN_METHODS.include?(@action)
-        gitolite_admin = RedmineGitolite::Admin.new(@object_id, @action)
+        gitolite_admin = RedmineGitolite::Admin.new(@object_id, @action, @options)
         gitolite_admin.send(@action)
       end
     end

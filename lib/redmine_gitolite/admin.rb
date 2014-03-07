@@ -7,7 +7,7 @@ module RedmineGitolite
 
     include RedmineGitolite::AdminHelper
 
-    def initialize(object_id, action)
+    def initialize(object_id, action, options)
       @gitolite_admin_dir        = RedmineGitolite::Config.gitolite_admin_dir
       @gitolite_config_file      = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
       @gitolite_config_file_path = File.join(@gitolite_admin_dir, 'conf', @gitolite_config_file)
@@ -18,6 +18,7 @@ module RedmineGitolite
       @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
       @object_id      = object_id
       @action         = action
+      @options        = options
     end
 
 
