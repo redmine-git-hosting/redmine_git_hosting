@@ -124,7 +124,7 @@ class RepositoryMirrorsController < ApplicationController
   def find_repository_mirror
     mirror = RepositoryMirror.find_by_id(params[:id])
 
-    if mirror and mirror.repository_id == @repository.id
+    if mirror && mirror.repository_id == @repository.id
       @mirror = mirror
     elsif mirror
       render_403

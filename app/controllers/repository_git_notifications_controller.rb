@@ -125,7 +125,7 @@ class RepositoryGitNotificationsController < ApplicationController
   def find_repository_git_notification
     git_notification = RepositoryGitNotification.find_by_id(params[:id])
 
-    if git_notification and git_notification.repository_id == @repository.id
+    if git_notification && git_notification.repository_id == @repository.id
       @git_notification = git_notification
     elsif git_notification
       render_403
