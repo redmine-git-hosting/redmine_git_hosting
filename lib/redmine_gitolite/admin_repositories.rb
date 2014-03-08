@@ -79,29 +79,5 @@ module RedmineGitolite
       repository.fetch_changesets
     end
 
-
-    def create_readme_file(repository)
-      temp_dir = Dir.mktmpdir
-
-      command = ""
-      command << "export GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path}"
-      command << " && git clone #{repository.ssh_url} #{temp_dir}"
-      command << " && cd #{temp_dir}"
-      command << " && echo '## #{repository.gitolite_repository_name}' >> README.md"
-      command << " && git add README.md"
-      command << " && git commit README.md -m 'Initialize repository'"
-      command << " && git push -u origin #{repository.extra[:default_branch]}"
-
-      begin
-        output = RedmineGitolite::GitHosting.execute_command(:local_cmd, command)
-        logger.info { "README file successfully created for repository '#{repository.gitolite_repository_name}'"}
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error { "Error while creating README file for repository '#{repository.gitolite_repository_name}'"}
-        logger.error { e.output }
-      end
-
-      FileUtils.remove_entry temp_dir rescue ''
-    end
-
   end
 end
