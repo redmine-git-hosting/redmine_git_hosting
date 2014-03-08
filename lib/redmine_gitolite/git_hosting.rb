@@ -66,7 +66,7 @@ module RedmineGitolite
 
       logger.debug { run_command }
 
-      return shell run_command
+      return shell(run_command)
     end
 
 
