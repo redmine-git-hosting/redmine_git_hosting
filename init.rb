@@ -93,6 +93,10 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_deployment_keys,   :repository_deployment_credentials => :index
     permission :edit_deployment_keys,   :repository_deployment_credentials => :edit
 
+    permission :create_repository_git_config_keys, :repository_git_config_keys => :create
+    permission :view_repository_git_config_keys,   :repository_git_config_keys => :index
+    permission :edit_repository_git_config_keys,   :repository_git_config_keys => :edit
+
     permission :create_repository_git_notifications, :repository_git_notifications => :create
     permission :view_repository_git_notifications,   :repository_git_notifications => :index
     permission :edit_repository_git_notifications,   :repository_git_notifications => :edit

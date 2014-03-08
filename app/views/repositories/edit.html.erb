@@ -43,6 +43,13 @@
                       repository_post_receive_urls_path(@repository) %>
         </li>
       <% end %>
+
+      <% if user_allowed_to(:view_repository_git_config_keys, @repository.project) %>
+        <li>
+          <%= link_to "<i class=\"fa fa-th-list\"></i>".html_safe + l(:label_git_config_keys),
+                      repository_git_config_keys_path(@repository) %>
+        </li>
+      <% end %>
     </ul>
   </div>
 

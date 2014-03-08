@@ -13,6 +13,10 @@ en:
   permission_view_deployment_keys: View deployment keys
   permission_edit_deployment_keys: Edit deployment keys
 
+  permission_create_repository_git_config_keys: Create Git config keys
+  permission_view_repository_git_config_keys: View Git config keys
+  permission_edit_repository_git_config_keys: Edit Git config keys
+
   permission_create_repository_git_notifications: Create Git mailing list
   permission_view_repository_git_notifications: View Git mailing list
   permission_edit_repository_git_notifications: Edit Git mailing list
