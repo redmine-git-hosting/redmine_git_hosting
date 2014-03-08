@@ -10,3 +10,4 @@ fr:
         ident_not_unique: "correspond à un identifiant de dépôt existant"
         ident_cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
         blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
+        error_wrong_config_key_format: "Mauvais format de clé (doit contenir au moin un '.')"

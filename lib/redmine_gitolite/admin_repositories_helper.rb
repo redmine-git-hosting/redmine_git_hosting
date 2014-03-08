@@ -116,12 +116,13 @@ module RedmineGitolite
 
         # Set SMTP server for mail-notifications hook
         #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
+      end
 
-      else
-        repo_conf.set_git_config("multimailhook.environment", '')
-        repo_conf.set_git_config("multimailhook.mailinglist", '')
-        repo_conf.set_git_config("multimailhook.from", '')
-        repo_conf.set_git_config("multimailhook.emailPrefix", '')
+      # Set Git config keys
+      if repository.repository_git_config_keys.any?
+        repository.repository_git_config_keys.each do |git_config_key|
+          repo_conf.set_git_config(git_config_key.key, git_config_key.value)
+        end
       end
 
       @gitolite_config.add_repo(repo_conf)
@@ -351,6 +352,26 @@ module RedmineGitolite
       end
 
       FileUtils.remove_entry temp_dir rescue ''
+    end
+
+
+    def delete_hook_param(repository, parameter_name)
+      begin
+        RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{repository.gitolite_repository_path}' config --local --unset #{parameter_name}")
+        logger.info { "Git config key '#{parameter_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'"}
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while deleting Git config key '#{parameter_name}' for repository '#{repository.gitolite_repository_name}'"}
+      end
+    end
+
+
+    def delete_hook_section(repository, section_name)
+      begin
+        RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{repository.gitolite_repository_path}' config --local --remove-section #{section_name} || true")
+        logger.info { "Git config section '#{section_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'"}
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while deleting Git config section '#{section_name}' for repository '#{repository.gitolite_repository_name}'"}
+      end
     end
 
 

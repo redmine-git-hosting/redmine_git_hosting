@@ -44,6 +44,17 @@ module RedmineGitolite
         handle_repository_update(repository)
         gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
       end
+
+      # Unset Git Mailing list if necessary
+      mailing_list = repository.mailing_list_params[:mailing_list]
+      if repository.extra.git_notify == 0 || mailing_list.empty?
+        delete_hook_section(repository, 'multimailhook')
+      end
+
+      # Treat options
+      if @options.has_key?(:delete_git_config_key) && !@options[:delete_git_config_key].empty?
+        delete_hook_param(repository, @options[:delete_git_config_key])
+      end
     end
 
 

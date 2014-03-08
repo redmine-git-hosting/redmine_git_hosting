@@ -8,11 +8,11 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   validates_uniqueness_of :key, :scope => :repository_id
 
-  after_update   :create_or_update_config_key
-  before_destroy :delete_config_key
+  validate :check_key_format
 
-
-  private
+  after_commit ->(obj) { obj.create_or_update_config_key }, on: :create
+  after_commit ->(obj) { obj.create_or_update_config_key }, on: :update
+  after_commit ->(obj) { obj.delete_config_key },           on: :destroy
 
 
   def create_or_update_config_key
@@ -29,6 +29,17 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   def delete_config_key
     options = {:delete_git_config_key => self.key}
     update_repository(options)
+  end
+
+
+  private
+
+
+  def check_key_format
+    if !self.key.include?('.')
+      errors.add(:key, :error_wrong_config_key_format)
+      return false
+    end
   end
 
 
