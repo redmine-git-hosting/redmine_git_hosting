@@ -245,7 +245,7 @@ module RedmineGitolite
         begin
           logger.info { "#{@action} : cleaning repository path : '#{path}'" }
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rmdir '#{path}' 2>/dev/null || true")
-        rescue RedmineGitolite::GitHostingException => e
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
           logger.error { "#{@action} : error while cleaning repository path '#{path}'" }
         end
       end
@@ -264,7 +264,7 @@ module RedmineGitolite
         else
           empty_repo = false
         end
-      rescue Exception => e
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
         empty_repo = false
       end
 
@@ -291,7 +291,7 @@ module RedmineGitolite
           logger.warn { "#{@action} : target repository '#{new_path}' already exists and is empty, remove it ..." }
           begin
             RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{new_path}'")
-          rescue RedmineGitolite::GitHostingException => e
+          rescue RedmineGitolite::GitHosting::GitHostingException => e
             logger.error { "#{@action} : removing existing target repository failed, exit !" }
             return false
           end
@@ -300,7 +300,7 @@ module RedmineGitolite
           begin
             RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{old_path}'")
             return true
-          rescue RedmineGitolite::GitHostingException => e
+          rescue RedmineGitolite::GitHosting::GitHostingException => e
             logger.error { "#{@action} : removing source repository directory failed, exit !" }
             return false
           end
@@ -312,7 +312,7 @@ module RedmineGitolite
       if !RedmineGitolite::GitHosting.file_exists? new_parent_path
         begin
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{new_parent_path}'")
-        rescue RedmineGitolite::GitHostingException => e
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
           logger.error { "#{@action} : creation of parent path '#{new_parent_path}' failed, exit !" }
           return false
         end
@@ -322,7 +322,7 @@ module RedmineGitolite
         RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{old_path}' '#{new_path}'")
         logger.info { "#{@action} : done !" }
         return true
-      rescue RedmineGitolite::GitHostingException => e
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
         logger.error { "move_physical_repo(#{old_path}, #{new_path}) failed" }
         return false
       end
