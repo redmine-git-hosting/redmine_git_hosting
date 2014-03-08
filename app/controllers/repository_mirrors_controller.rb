@@ -14,11 +14,6 @@ class RepositoryMirrorsController < RedmineGitHostingController
   end
 
 
-  def show
-    render_404
-  end
-
-
   def new
     @mirror = RepositoryMirror.new()
   end
@@ -42,10 +37,6 @@ class RepositoryMirrorsController < RedmineGitHostingController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 

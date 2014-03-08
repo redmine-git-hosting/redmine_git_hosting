@@ -14,11 +14,6 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   end
 
 
-  def show
-    render_404
-  end
-
-
   def new
     @post_receive_url = RepositoryPostReceiveUrl.new()
   end
@@ -42,10 +37,6 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 

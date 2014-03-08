@@ -14,11 +14,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
   end
 
 
-  def show
-    render_404
-  end
-
-
   def new
     @git_notification = RepositoryGitNotification.new()
   end
@@ -47,10 +42,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 

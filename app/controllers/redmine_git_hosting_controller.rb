@@ -13,6 +13,15 @@ class RedmineGitHostingController < ApplicationController
   helper  :git_hosting
 
 
+  def show
+    render_404
+  end
+
+
+  def edit
+  end
+
+
   protected
 
 

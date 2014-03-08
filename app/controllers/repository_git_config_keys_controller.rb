@@ -14,11 +14,6 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   end
 
 
-  def show
-    render_404
-  end
-
-
   def new
     @git_config_key = RepositoryGitConfigKey.new()
   end
@@ -42,10 +37,6 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 
