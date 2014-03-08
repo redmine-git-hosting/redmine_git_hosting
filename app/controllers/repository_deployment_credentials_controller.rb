@@ -1,11 +1,7 @@
-class RepositoryDeploymentCredentialsController < ApplicationController
+class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
-  before_filter :require_login
-  before_filter :set_repository_variable
-  before_filter :set_project_variable
-  before_filter :check_xhr_request
-
+  before_filter :can_view_credentials,   :only => [:index]
   before_filter :can_create_credentials, :only => [:new, :create]
   before_filter :can_edit_credentials,   :only => [:edit, :update, :destroy]
 
@@ -13,13 +9,8 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   before_filter :find_key,                   :only => [:edit, :update, :destroy]
   before_filter :find_all_keys,              :only => [:index, :new]
 
-  include GitHostingHelper
   include GitolitePublicKeysHelper
-
-  helper :git_hosting
-  helper :gitolite_public_keys
-
-  layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
+  helper  :gitolite_public_keys
 
 
   def index
@@ -29,11 +20,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
       format.html { render :layout => 'popup' }
       format.js
     end
-  end
-
-
-  def show
-    render_404
   end
 
 
@@ -70,10 +56,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 
@@ -118,22 +100,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   protected
 
 
-  def delete_ssh_key
-    repo_key = {}
-    repo_key[:title]    = @key.identifier
-    repo_key[:key]      = @key.key
-    repo_key[:location] = @key.location
-    repo_key[:owner]    = @key.owner
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-  end
-
-
-  # This is a success URL to return to basic listing
-  def success_url
-    url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id)
-  end
-
-
   def can_view_credentials
     render_403 unless user_allowed_to(:view_deployment_keys, @project)
   end
@@ -146,22 +112,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
   def can_edit_credentials
     render_403 unless user_allowed_to(:edit_deployment_keys, @project)
-  end
-
-
-  def set_repository_variable
-    @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil?
-      render_404
-    end
-  end
-
-
-  def set_project_variable
-    @project = @repository.project
-    if @project.nil?
-      render_404
-    end
   end
 
 
@@ -204,8 +154,14 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   end
 
 
-  def check_xhr_request
-    @is_xhr ||= request.xhr?
+  def delete_ssh_key
+    repo_key = {}
+    repo_key[:title]    = @key.identifier
+    repo_key[:key]      = @key.key
+    repo_key[:location] = @key.location
+    repo_key[:owner]    = @key.owner
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
   end
+
 
 end

@@ -1,6 +1,10 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
+  before_filter :can_view_git_notifications,   :only => [:index]
+  before_filter :can_create_git_notifications, :only => [:new, :create]
+  before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
+
   before_filter :find_repository_git_notification, :except => [:index, :new, :create]
 
 
@@ -79,6 +83,21 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   protected
+
+
+  def can_view_git_notifications
+    render_403 unless user_allowed_to(:view_repository_git_notifications, @project)
+  end
+
+
+  def can_create_git_notifications
+    render_403 unless user_allowed_to(:create_repository_git_notifications, @project)
+  end
+
+
+  def can_edit_git_notifications
+    render_403 unless user_allowed_to(:edit_repository_git_notifications, @project)
+  end
 
 
   def find_repository_git_notification

@@ -4,8 +4,8 @@ class RedmineGitHostingController < ApplicationController
   before_filter :require_login
   before_filter :set_repository_variable
   before_filter :set_project_variable
-  before_filter :check_required_permissions
   before_filter :check_xhr_request
+  before_filter :check_required_permissions
 
   layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 

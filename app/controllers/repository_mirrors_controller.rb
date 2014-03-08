@@ -1,6 +1,10 @@
 class RepositoryMirrorsController < RedmineGitHostingController
   unloadable
 
+  before_filter :can_view_mirrors,   :only => [:index]
+  before_filter :can_create_mirrors, :only => [:new, :create]
+  before_filter :can_edit_mirrors,   :only => [:edit, :update, :destroy]
+
   before_filter :find_repository_mirror, :except => [:index, :new, :create]
 
 
@@ -78,6 +82,21 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   protected
+
+
+  def can_view_mirrors
+    render_403 unless user_allowed_to(:view_repository_mirrors, @project)
+  end
+
+
+  def can_create_mirrors
+    render_403 unless user_allowed_to(:create_repository_mirrors, @project)
+  end
+
+
+  def can_edit_mirrors
+    render_403 unless user_allowed_to(:edit_repository_mirrors, @project)
+  end
 
 
   def find_repository_mirror

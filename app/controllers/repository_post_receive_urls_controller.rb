@@ -1,6 +1,10 @@
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   unloadable
 
+  before_filter :can_view_post_receive_urls,   :only => [:index]
+  before_filter :can_create_post_receive_urls, :only => [:new, :create]
+  before_filter :can_edit_post_receive_urls,   :only => [:edit, :update, :destroy]
+
   before_filter :find_repository_post_receive_url, :except => [:index, :new, :create]
 
 
@@ -71,6 +75,21 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
 
   protected
+
+
+  def can_view_post_receive_urls
+    render_403 unless user_allowed_to(:view_repository_post_receive_urls, @project)
+  end
+
+
+  def can_create_post_receive_urls
+    render_403 unless user_allowed_to(:create_repository_post_receive_urls, @project)
+  end
+
+
+  def can_edit_post_receive_urls
+    render_403 unless user_allowed_to(:edit_repository_post_receive_urls, @project)
+  end
 
 
   def find_repository_post_receive_url
