@@ -31,6 +31,16 @@
 </p>
 
 <p>
+  <%= label_tag  "", l(:label_redmine_user) %>
+  <span class="label label-success"><%= RedmineGitolite::Config.redmine_user %></span>
+</p>
+
+<p>
+  <%= label_tag  "", l(:label_gitolite_user) %>
+  <span class="label label-success"><%= RedmineGitolite::Config.gitolite_user %></span>
+</p>
+
+<p>
   <%= label_tag  "", l(:label_sudo_gitolite_to_redmine_user) %>
   <%= image_tag (RedmineGitolite::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %>
 </p>
