@@ -201,7 +201,7 @@ namespace :selinux do
     desc "Install SELinux tags and policy for Redmine Git Hosting."
     task :install_policy => [:environment] do
       puts "Installing SELinux tags and policy for Redmine Git Hosting :"
-      sh "semodule -i #{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.pp"
+      sh "semodule -i #{Rails.root}/#{plugin_dir}/redmine_git_hosting/contrib/selinux/redmine_git.pp"
       puts "Done !"
     end
 
@@ -209,7 +209,7 @@ namespace :selinux do
     desc "Build and install SELinux tags and policy for Redmine Git Hosting."
     task :build_policy => [:environment] do
       puts "Building and installing SELinux policy for Redmine Git Hosting :"
-      sh "#{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.sh"
+      sh "#{Rails.root}/#{plugin_dir}/redmine_git_hosting/contrib/selinux/redmine_git.sh"
       puts "Done !"
     end
 
