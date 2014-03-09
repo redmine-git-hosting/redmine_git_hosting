@@ -25,17 +25,4 @@ module GitolitePublicKeysHelper
     end
   end
 
-
-  def wrap_and_join(in_array, my_or = "or")
-    my_array = in_array.map{|x| "\"#{x}\""}
-    length = my_array.length
-    return my_array if length < 2
-    my_array[length-1] = my_or + " " + my_array[length-1]
-    if length == 2
-      my_array.join(' ')
-    else
-      my_array.join(', ')
-    end
-  end
-
 end
