@@ -6,7 +6,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          helper :git_hosting
+          helper  :git_hosting
           include GitHostingHelper
         end
       end

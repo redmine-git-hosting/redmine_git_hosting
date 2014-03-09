@@ -17,13 +17,23 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
-        # Add in values for viewing public keys:
         def account_with_git_hosting(&block)
           # Previous routine
           account_without_git_hosting(&block)
 
+          # Set public key values for view
+          set_public_key_values
+        end
+
+
+        private
+
+
+        # Add in values for viewing public keys:
+        def set_public_key_values
           @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all,:order => 'title ASC, created_at ASC')
           @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all,:order => 'title ASC, created_at ASC')
           @gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
@@ -41,6 +51,7 @@ module RedmineGitHosting
         end
 
       end
+
 
     end
   end
