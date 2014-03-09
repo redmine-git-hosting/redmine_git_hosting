@@ -17,16 +17,6 @@ module GitHostingHelper
   end
 
 
-  ## DEPLOYMENTS KEYS PERMISSIONS
-  def can_create_deployment_keys_for_some_project(theuser = User.current)
-    return true if theuser.admin?
-    theuser.projects_by_role.each_key do |role|
-      return true if role.allowed_to?(:create_deployment_keys)
-    end
-    return false
-  end
-
-
   # Post-receive Mode
   def post_receive_mode(prurl)
     if prurl.active == 0
