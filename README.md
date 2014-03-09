@@ -12,7 +12,7 @@ It provides these functionalities :
 * [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
 * [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
 * [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
-* [Git Smart HTTP](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
+* [Git Smart HTTP (with vulnerability patch)](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
 * [Git Daemon](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-daemon)
 * [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
 * [*(new)* Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
