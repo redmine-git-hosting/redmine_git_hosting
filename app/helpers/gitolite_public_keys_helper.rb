@@ -1,10 +1,11 @@
 module GitolitePublicKeysHelper
+  unloadable
 
   def keylabel(key)
     if key.user == User.current
-      "\"#{key.title}\""
+      "'#{key.title}'"
     else
-      "\"#{key.user.login}@#{key.title}\""
+      "'#{key.user.login}@#{key.title}'"
     end
   end
 
