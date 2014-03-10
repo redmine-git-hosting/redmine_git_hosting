@@ -208,8 +208,10 @@ module RedmineGitolite
         end
 
         ## DEPLOY KEY
-        if repository.repository_deployment_credentials.active.any?
-          repository.repository_deployment_credentials.active.each do |cred|
+        deploy_keys = repository.repository_deployment_credentials.active
+
+        if deploy_keys.any?
+          deploy_keys.each do |cred|
             if cred.perm == "RW+"
               rewind << cred.gitolite_public_key.owner
             elsif cred.perm == "R"
