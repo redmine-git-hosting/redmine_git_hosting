@@ -39,7 +39,8 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :strip_whitespace
   before_validation :remove_control_characters
 
-  after_commit      :add_ssh_key, :on => :create
+  after_commit ->(obj) { obj.add_ssh_key },     on: :create
+  after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
 
 
   @@myregular = /^(.*)@redmine_\d*_\d*(.pub)?$/
@@ -138,6 +139,32 @@ class GitolitePublicKey < ActiveRecord::Base
         RedmineGitolite::GitHosting.logger.info { "Update project to add SSH access : #{project_list.uniq}" }
         RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
       end
+    end
+  end
+
+
+  def destroy_ssh_key
+    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
+
+    repo_key = {}
+    repo_key['title']    = self.identifier
+    repo_key['key']      = self.key
+    repo_key['location'] = self.location
+    repo_key['owner']    = self.owner
+
+    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
+
+    project_list = []
+    self.user.projects_by_role.each do |role|
+      role[1].each do |project|
+        project_list.push(project.id)
+      end
+    end
+
+    if project_list.length > 0
+      RedmineGitolite::GitHosting.logger.info { "Update project to remove SSH access : #{project_list.uniq}" }
+      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
     end
   end
 

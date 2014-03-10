@@ -72,9 +72,11 @@ class GitolitePublicKeysController < ApplicationController
 
   def destroy
     if request.delete?
-      destroy_key
+      if @gitolite_public_key.destroy
+        flash[:notice] = l(:notice_public_key_deleted, :title => view_context.keylabel(@gitolite_public_key))
+      end
+      redirect_to @redirect_url
     end
-    redirect_to @redirect_url
   end
 
 
@@ -111,43 +113,6 @@ class GitolitePublicKeysController < ApplicationController
       render_403
     else
       render_404
-    end
-  end
-
-
-  def destroy_key
-    @gitolite_public_key[:active] = 0
-
-    # Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
-    @gitolite_public_key.save(:validate => false)
-    destroy_ssh_key
-
-    flash[:notice] = l(:notice_public_key_deleted, :title => view_context.keylabel(@gitolite_public_key))
-  end
-
-
-  def destroy_ssh_key
-    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
-
-    repo_key = {}
-    repo_key['title']    = @gitolite_public_key.identifier
-    repo_key['key']      = @gitolite_public_key.key
-    repo_key['location'] = @gitolite_public_key.location
-    repo_key['owner']    = @gitolite_public_key.owner
-
-    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{@gitolite_public_key.identifier}" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-
-    project_list = []
-    @gitolite_public_key.user.projects_by_role.each do |role|
-      role[1].each do |project|
-        project_list.push(project.id)
-      end
-    end
-
-    if project_list.length > 0
-      RedmineGitolite::GitHosting.logger.info { "Update project to remove SSH access : #{project_list.uniq}" }
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
     end
   end
 

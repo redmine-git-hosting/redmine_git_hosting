@@ -84,7 +84,6 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     if will_delete_key && @key.repository_deployment_credentials.empty?
       # Key no longer used -- delete it!
-      delete_ssh_key
       @key.destroy
       flash[:notice] = l(:notice_deployment_credential_deleted_with_key)
     else
@@ -152,16 +151,5 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       @other_keys = deploy_users.map {|user| user.gitolite_public_keys.active.deploy_key.find(:all, :order => "title ASC")}.flatten
     end
   end
-
-
-  def delete_ssh_key
-    repo_key = {}
-    repo_key[:title]    = @key.identifier
-    repo_key[:key]      = @key.key
-    repo_key[:location] = @key.location
-    repo_key[:owner]    = @key.owner
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-  end
-
 
 end

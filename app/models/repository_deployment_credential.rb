@@ -17,7 +17,8 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   scope :active,   -> { where active: STATUS_ACTIVE }
   scope :inactive, -> { where active: STATUS_LOCKED }
 
-  after_commit  :update_permissions
+  after_commit ->(obj) { obj.update_permissions }, on: :create
+  after_commit ->(obj) { obj.update_permissions }, on: :update
 
 
   def self.valid_perms
