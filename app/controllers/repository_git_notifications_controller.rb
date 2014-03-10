@@ -86,17 +86,17 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def can_view_git_notifications
-    render_403 unless user_allowed_to(:view_repository_git_notifications, @project)
+    render_403 unless view_context.user_allowed_to(:view_repository_git_notifications, @project)
   end
 
 
   def can_create_git_notifications
-    render_403 unless user_allowed_to(:create_repository_git_notifications, @project)
+    render_403 unless view_context.user_allowed_to(:create_repository_git_notifications, @project)
   end
 
 
   def can_edit_git_notifications
-    render_403 unless user_allowed_to(:edit_repository_git_notifications, @project)
+    render_403 unless view_context.user_allowed_to(:edit_repository_git_notifications, @project)
   end
 
 

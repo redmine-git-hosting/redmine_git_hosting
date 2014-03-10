@@ -85,17 +85,17 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def can_view_mirrors
-    render_403 unless user_allowed_to(:view_repository_mirrors, @project)
+    render_403 unless view_context.user_allowed_to(:view_repository_mirrors, @project)
   end
 
 
   def can_create_mirrors
-    render_403 unless user_allowed_to(:create_repository_mirrors, @project)
+    render_403 unless view_context.user_allowed_to(:create_repository_mirrors, @project)
   end
 
 
   def can_edit_mirrors
-    render_403 unless user_allowed_to(:edit_repository_mirrors, @project)
+    render_403 unless view_context.user_allowed_to(:edit_repository_mirrors, @project)
   end
 
 
