@@ -12,6 +12,7 @@ class SmartHttpController < ApplicationController
 
   before_filter :authenticate
 
+
   def index
 
     @request = Rack::Request.new(request.env)

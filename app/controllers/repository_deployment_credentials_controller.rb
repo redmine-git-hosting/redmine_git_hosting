@@ -9,8 +9,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   before_filter :find_key,                   :only => [:edit, :update, :destroy]
   before_filter :find_all_keys,              :only => [:index, :new]
 
-  include GitolitePublicKeysHelper
-  helper  :gitolite_public_keys
+  helper :gitolite_public_keys
 
 
   def index

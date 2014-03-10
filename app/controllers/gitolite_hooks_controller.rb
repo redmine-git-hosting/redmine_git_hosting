@@ -10,9 +10,6 @@ class GitoliteHooksController < ApplicationController
   skip_before_filter :verify_authenticity_token, :check_if_login_required
   before_filter      :find_project_and_repository
 
-  helper  :git_hosting
-  include GitHostingHelper
-
 
   def stub
     # Stub method simply to generate correct urls, just return a 404 to any user requesting this
@@ -21,7 +18,7 @@ class GitoliteHooksController < ApplicationController
 
 
   def post_receive
-    if not @repository.extra.validate_encoded_time(params[:clear_time], params[:encoded_time])
+    if !@repository.extra.validate_encoded_time(params[:clear_time], params[:encoded_time])
       render(:text => "The hook key provided is not valid. Please let your server admin know about it")
       return
     end
@@ -140,7 +137,7 @@ class GitoliteHooksController < ApplicationController
       oldhead, newhead, refname = ref.split(',')
 
       # Only pay attention to branch updates
-      next if not refname.match(/refs\/heads\//)
+      next if !refname.match(/refs\/heads\//)
 
       branch = refname.gsub('refs/heads/', '')
 

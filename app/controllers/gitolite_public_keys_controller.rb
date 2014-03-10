@@ -10,7 +10,7 @@ class GitolitePublicKeysController < ApplicationController
   helper :users
   helper :custom_fields
 
-  helper  :gitolite_public_keys
+  helper :gitolite_public_keys
 
 
   def create
