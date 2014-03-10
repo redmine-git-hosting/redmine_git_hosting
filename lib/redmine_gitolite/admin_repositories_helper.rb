@@ -95,7 +95,7 @@ module RedmineGitolite
       repo_conf.set_git_config("redminegitolite.repositoryid", "#{repository.identifier || ''}")
       repo_conf.set_git_config("redminegitolite.repositorykey", repository.extra.key)
 
-      if User.anonymous.allowed_to?(:view_changesets, project) && (repository.extra.git_http == 1 || repository.extra.git_http == 2 || repository.extra.git_http == 3)
+      if User.anonymous.allowed_to?(:view_changesets, project) && repository.extra.git_http != 0
         repo_conf.set_git_config("http.uploadpack", 'true')
       else
         repo_conf.set_git_config("http.uploadpack", 'false')
@@ -221,7 +221,7 @@ module RedmineGitolite
         end
 
         read << "DUMMY_REDMINE_KEY" if read.empty? && write.empty? && rewind.empty?
-        read << "gitweb" if User.anonymous.allowed_to?(:browse_repository, project)
+        read << "gitweb" if User.anonymous.allowed_to?(:browse_repository, project) && repository.extra.git_http != 0
         read << "daemon" if User.anonymous.allowed_to?(:view_changesets, project) && repository.extra.git_daemon == 1
       else
         read << "ARCHIVED_REDMINE_KEY"
