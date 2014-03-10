@@ -13,7 +13,6 @@ module RedmineGitHosting
           alias_method_chain :archive,   :git_hosting
           alias_method_chain :unarchive, :git_hosting
 
-          include GitHostingHelper
           helper :git_hosting
         end
       end

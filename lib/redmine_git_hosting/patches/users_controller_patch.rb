@@ -10,10 +10,6 @@ module RedmineGitHosting
           alias_method_chain :update, :git_hosting
           alias_method_chain :edit,   :git_hosting
 
-          include GitHostingHelper
-          include GitolitePublicKeysHelper
-
-          helper :git_hosting
           helper :gitolite_public_keys
         end
       end
@@ -44,8 +40,8 @@ module RedmineGitHosting
 
         # Add in values for viewing public keys:
         def set_public_key_values
-          @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all,:order => 'title ASC, created_at ASC')
-          @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all,:order => 'title ASC, created_at ASC')
+          @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all, :order => 'title ASC, created_at ASC')
+          @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all, :order => 'title ASC, created_at ASC')
           @gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
           @gitolite_public_key  = @gitolite_public_keys.detect{|x| x.id == params[:public_key_id].to_i}
 

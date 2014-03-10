@@ -7,7 +7,6 @@ module RedmineGitHosting
           unloadable
 
           helper  :git_hosting
-          include GitHostingHelper
         end
       end
 

@@ -10,8 +10,7 @@ class GitolitePublicKeysController < ApplicationController
   helper :users
   helper :custom_fields
 
-  helper :gitolite_public_keys
-  include GitolitePublicKeysHelper
+  helper  :gitolite_public_keys
 
 
   def create
@@ -19,7 +18,7 @@ class GitolitePublicKeysController < ApplicationController
 
     if params[:create_button]
       if @gitolite_public_key.save
-        flash[:notice] = l(:notice_public_key_added, :title => keylabel(@gitolite_public_key))
+        flash[:notice] = l(:notice_public_key_added, :title => view_context.keylabel(@gitolite_public_key))
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
@@ -48,7 +47,7 @@ class GitolitePublicKeysController < ApplicationController
     if !request.get?
       if params[:save_button]
         if @gitolite_public_key.update_attributes(params[:gitolite_public_key])
-          flash[:notice] = l(:notice_public_key_updated, :title => keylabel(@gitolite_public_key))
+          flash[:notice] = l(:notice_public_key_updated, :title => view_context.keylabel(@gitolite_public_key))
 
           respond_to do |format|
             format.html { redirect_to @redirect_url }
@@ -120,10 +119,10 @@ class GitolitePublicKeysController < ApplicationController
     @gitolite_public_key[:active] = 0
 
     # Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
-    @gitolite_public_key.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
+    @gitolite_public_key.save(:validate => false)
     destroy_ssh_key
 
-    flash[:notice] = l(:notice_public_key_deleted, :title => keylabel(@gitolite_public_key))
+    flash[:notice] = l(:notice_public_key_deleted, :title => view_context.keylabel(@gitolite_public_key))
   end
 
 
