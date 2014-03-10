@@ -204,6 +204,7 @@ en:
   label_git_notify: Git Notifications
   label_repository_default_branch: Repository default branch
   label_init_repo_with_readme: Initialize this repository with a README
+  label_browse_repository: Browse repository
 
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities

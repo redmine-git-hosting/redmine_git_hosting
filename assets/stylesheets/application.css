@@ -72,6 +72,8 @@ REPOSITORY EDIT
   padding-right: 10px;
 }
 
+#git_hosting_settings div.split { display: block; float: left; width: 40%; }
+
 
 /*
 REPOSITORY VIEW

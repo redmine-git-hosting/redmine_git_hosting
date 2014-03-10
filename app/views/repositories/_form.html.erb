@@ -29,7 +29,7 @@
 
 <div id="git_hosting_settings" class="box tabular">
 
-  <div style="display: block; float: left; width: 40%;">
+  <div class="split">
     <p>
       <% if @repository.new_record? %>
         <%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
@@ -77,9 +77,16 @@
     <% else %>
       <p><%= f.text_field :identifier %></p>
     <% end %>
+
+    <% if @repository && @repository.is_a?(Repository::Git) && !@repository.new_record? %>
+      <p>
+        <label><%= l(:label_browse_repository) %></label>
+        <%=link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
+      </p>
+    <% end %>
   </div>
 
-  <div style="display: block; float: left; width: 40%;">
+  <div class="split">
     <% button_disabled = true %>
     <% if @repository %>
       <% button_disabled = !@repository.class.scm_available %>
