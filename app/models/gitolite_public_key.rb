@@ -205,6 +205,8 @@ class GitolitePublicKey < ActiveRecord::Base
   def key_format_and_uniqueness
     return if key.blank?
 
+    return if !new_record?
+
     # First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
     # crypto type matches.  Note that we ignore presence of comment!
     keypieces = key.match(/^(\S+)\s+(\S+)/)
