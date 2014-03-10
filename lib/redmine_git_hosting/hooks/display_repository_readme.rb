@@ -35,6 +35,7 @@ module RedmineGitHosting
           :locals => {:html => formatter}
         })
       end
+
     end
   end
 end

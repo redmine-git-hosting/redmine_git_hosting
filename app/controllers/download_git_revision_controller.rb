@@ -2,8 +2,11 @@ class DownloadGitRevisionController < ApplicationController
   unloadable
 
   before_filter :require_login
+  before_filter :can_download_git_revision
   before_filter :set_repository_variable
   before_filter :set_project_variable
+
+  helper :git_hosting
 
 
   def index
@@ -86,6 +89,11 @@ class DownloadGitRevisionController < ApplicationController
 
 
   private
+
+
+  def can_download_git_revision
+    render_403 unless view_context.user_allowed_to(:download_git_revision, @project)
+  end
 
 
   def set_repository_variable
