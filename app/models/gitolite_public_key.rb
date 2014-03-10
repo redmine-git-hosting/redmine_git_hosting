@@ -174,9 +174,17 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def has_not_been_changed
     unless new_record?
+      has_errors = false
+
       %w(identifier key user_id key_type).each do |attribute|
-        errors.add(attribute, 'may not be changed') unless changes[attribute].blank?
+        method = "#{attribute}_changed?"
+        if self.send(method)
+          errors.add(attribute, 'may not be changed')
+          has_errors = true
+        end
       end
+
+      return has_errors
     end
   end
 
