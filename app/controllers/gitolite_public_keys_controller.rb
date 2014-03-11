@@ -18,7 +18,7 @@ class GitolitePublicKeysController < ApplicationController
 
     if params[:create_button]
       if @gitolite_public_key.save
-        flash[:notice] = l(:notice_public_key_added, :title => view_context.keylabel(@gitolite_public_key))
+        flash[:notice] = l(:notice_public_key_created, :title => view_context.keylabel(@gitolite_public_key))
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
