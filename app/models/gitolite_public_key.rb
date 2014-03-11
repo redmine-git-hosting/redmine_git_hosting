@@ -126,20 +126,6 @@ class GitolitePublicKey < ActiveRecord::Base
   def add_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
-
-    if user_key?
-      project_list = []
-      self.user.projects_by_role.each do |role|
-        role[1].each do |project|
-          project_list.push(project.id)
-        end
-      end
-
-      if project_list.length > 0
-        RedmineGitolite::GitHosting.logger.info { "Update project to add SSH access : #{project_list.uniq}" }
-        RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
-      end
-    end
   end
 
 
@@ -154,18 +140,6 @@ class GitolitePublicKey < ActiveRecord::Base
 
     RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-
-    project_list = []
-    self.user.projects_by_role.each do |role|
-      role[1].each do |project|
-        project_list.push(project.id)
-      end
-    end
-
-    if project_list.length > 0
-      RedmineGitolite::GitHosting.logger.info { "Update project to remove SSH access : #{project_list.uniq}" }
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
-    end
   end
 
 

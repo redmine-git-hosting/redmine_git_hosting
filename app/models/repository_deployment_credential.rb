@@ -19,6 +19,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   after_commit ->(obj) { obj.update_permissions }, on: :create
   after_commit ->(obj) { obj.update_permissions }, on: :update
+  after_commit ->(obj) { obj.update_permissions }, on: :destroy
 
 
   def self.valid_perms
