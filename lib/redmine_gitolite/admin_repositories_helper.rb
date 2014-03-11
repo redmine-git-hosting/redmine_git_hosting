@@ -269,6 +269,10 @@ module RedmineGitolite
       users   = repository.project.member_principals.map(&:user).compact.uniq
       project = repository.project
 
+      rewind = []
+      write  = []
+      read   = []
+
       if project.active?
         rewind_users = users.select{|user| user.allowed_to?(:manage_repository, project)}
         write_users  = users.select{|user| user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
