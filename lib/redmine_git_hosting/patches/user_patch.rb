@@ -16,7 +16,13 @@ module RedmineGitHosting
 
       module InstanceMethods
 
+        def gitolite_identifier
+          "redmine_#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
+        end
+
+
         private
+
 
         def update_ssh_keys
           RedmineGitolite::GitHosting.logger.info { "Rebuild SSH keys for user : '#{self.login}'" }

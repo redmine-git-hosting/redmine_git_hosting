@@ -95,7 +95,7 @@ module RedmineGitolite
       repo_conf.set_git_config("redminegitolite.repositoryid", "#{repository.identifier || ''}")
       repo_conf.set_git_config("redminegitolite.repositorykey", repository.extra.key)
 
-      if User.anonymous.allowed_to?(:view_changesets, project) && repository.extra.git_http != 0
+      if User.anonymous.allowed_to?(:view_changesets, project) || repository.extra.git_http != 0
         repo_conf.set_git_config("http.uploadpack", 'true')
       else
         repo_conf.set_git_config("http.uploadpack", 'false')
@@ -183,29 +183,14 @@ module RedmineGitolite
       users   = repository.project.member_principals.map(&:user).compact.uniq
       project = repository.project
 
-      rewind = []
-      write  = []
-      read   = []
-
       if project.active?
         rewind_users = users.select{|user| user.allowed_to?(:manage_repository, project)}
         write_users  = users.select{|user| user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
         read_users   = users.select{|user| user.allowed_to?(:view_changesets, project) && !user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
 
-        ## REWIND
-        rewind_users.each do |user|
-          rewind += get_keys(user) if user.gitolite_public_keys.active.user_key.all.any?
-        end
-
-        ## WRITE
-        write_users.each do |user|
-          write  += get_keys(user) if user.gitolite_public_keys.active.user_key.all.any?
-        end
-
-        ## READ
-        read_users.each do |user|
-          read += get_keys(user) if user.gitolite_public_keys.active.user_key.all.any?
-        end
+        rewind = rewind_users.map{|user| user.gitolite_identifier}
+        write  = write_users.map{|user| user.gitolite_identifier}
+        read   = read_users.map{|user| user.gitolite_identifier}
 
         ## DEPLOY KEY
         deploy_keys = repository.repository_deployment_credentials.active
@@ -233,15 +218,6 @@ module RedmineGitolite
       permissions["R"] = {"" => read.uniq.sort} unless read.empty?
 
       [permissions]
-    end
-
-
-    def get_keys(user)
-      array = []
-      user.gitolite_public_keys.active.user_key.all.each do |key|
-        array.push(key.owner)
-      end
-      return array
     end
 
 
