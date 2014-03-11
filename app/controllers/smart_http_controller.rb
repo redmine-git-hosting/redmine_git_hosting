@@ -10,34 +10,20 @@ class SmartHttpController < ApplicationController
   # prevents login action to be filtered by check_if_login_required application scope filter
   skip_before_filter :check_if_login_required, :verify_authenticity_token
 
+  before_filter :extract_parameters
+  before_filter :find_repository
+  before_filter :check_query
   before_filter :authenticate
 
 
   def index
-
     @request = Rack::Request.new(request.env)
 
     command, @requested_file, @rpc = match_routing(@request)
 
     return render_method_not_allowed if command == 'not_allowed'
 
-    if !command
-      logger.error { "###### AUTHENTICATED ######" }
-      logger.error { "project name    : #{@project.identifier}" }
-      logger.error { "repository dir  : #{@repository.url}" }
-      if !@user.nil?
-        logger.info { "user_name       : #{@user.login}" }
-      else
-        logger.info { "user_name       : anonymous (project is public)" }
-      end
-      logger.error { "command not found, exiting !" }
-      logger.error { "##########################" }
-      return render_not_found
-    end
-
     logger.info { "###### AUTHENTICATED ######" }
-    logger.info { "project name    : #{@project.identifier}" }
-    logger.info { "repository dir  : #{@repository.url}" }
     logger.info { "command         : #{command}" }
     logger.info { "rpc             : #{@rpc}" }
     if !@user.nil?
@@ -61,55 +47,93 @@ class SmartHttpController < ApplicationController
   private
 
 
-  def authenticate
+  def extract_parameters
     git_params = params[:git_params].split('/')
-    repo_path  = params[:repo_path]
-    is_push    = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
-
-    query_valid = false
-    authentication_valid = true
+    @repo_path  = params[:repo_path]
+    @is_push    = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
 
     logger.info { "###### AUTHENTICATION ######" }
-    logger.info { "git_params : #{git_params.join(', ')}" }
-    logger.info { "repo_path  : #{repo_path}" }
-    logger.info { "is_push    : #{is_push}" }
+    logger.info { "git_params      : #{git_params.join(', ')}" }
+    logger.info { "repo_path       : #{@repo_path}" }
+    logger.info { "is_push         : #{@is_push}" }
+  end
 
-    if (@repository = Repository::Git.find_by_path(repo_path, :loose => true)) && @repository.is_a?(Repository::Git)
-      if (@project = @repository.project) && @repository.extra[:git_http] != 0
-        allow_anonymous_read = @project.is_public
-        # Push requires HTTP enabled or valid SSL
-        # Read is ok over HTTP for public projects
-        if @repository.extra[:git_http] == 2 || (@repository.extra[:git_http] == 1 && is_ssl?) || !is_push && allow_anonymous_read
-          query_valid = true
-          if is_push || (!allow_anonymous_read)
-            authentication_valid = false
-            authenticate_or_request_with_http_basic do |login, password|
-              @user = User.find_by_login(login);
-              if @user.is_a?(User)
-                if @user.allowed_to?( :commit_access, @project ) || ((!is_push) && @user.allowed_to?( :view_changesets, @project ))
-                  authentication_valid = @user.check_password?(password)
-                end
-              end
-              authentication_valid
-            end
-          end
-        end
-      end
-    end
 
-    #if authentication failed, error already rendered
-    #so, just render case where user queried a project
-    #that's nonexistant or for which smart http isn't active
-    if !query_valid
-      logger.error { "Invalid query, exiting !" }
-      logger.error { "Your may are trying to push data without SSL!" }
+  def find_repository
+    @repository = Repository::Git.find_by_path(@repo_path, :loose => true)
+
+    if !@repository
+      logger.error { "Repository not found, exiting !" }
+      logger.error { "############################" }
+      return render_not_found
+    elsif !@repository.is_a?(Repository::Git)
+      logger.error { "Repository is not a Git repository, exiting !" }
+      logger.error { "############################" }
+      return render_not_found
+    elsif @repository.extra[:git_http] == 0
+      logger.error { "SmartHttp is disabled for this repository '#{@repository.gitolite_repository_name}', exiting !" }
       logger.error { "############################" }
       return render_no_access
     end
 
-    logger.info { "############################" }
+    @project = @repository.project
+    @allow_anonymous_read = @project.is_public
 
-    return query_valid && authentication_valid
+    logger.info { "project name    : #{@project.identifier}" }
+    logger.info { "public project  : #{@allow_anonymous_read}" }
+    logger.info { "repository name : #{@repository.gitolite_repository_name}" }
+    logger.info { "repository path : #{@repository.gitolite_repository_path}" }
+  end
+
+
+  def check_query
+    # PUSH CASE
+    if @is_push
+      if !is_ssl?
+        logger.error { "Your are trying to push data without SSL!" }
+        logger.error { "############################" }
+        return render_no_access
+      else
+        if @repository.extra[:git_http] == 1
+          logger.info { "Valid push" }
+        elsif @repository.extra[:git_http] == 2
+          logger.info { "Valid push" }
+        elsif @repository.extra[:git_http] == 3
+          logger.info { "Invalid push, HTTPS is disabled for this repository (HTTP only)" }
+          logger.error { "############################" }
+          return render_no_access
+        end
+      end
+    end
+  end
+
+
+  def authenticate
+    authentication_valid = true
+    @user = nil
+
+    # Push requires valid SSL
+    # Read is ok over HTTP for public projects
+    if @is_push || !@allow_anonymous_read
+
+      authentication_valid = false
+
+      authenticate_or_request_with_http_basic do |login, password|
+        @user = User.find_by_login(login)
+        if !@user.nil?
+          if @user.allowed_to?(:commit_access, @project) || (!@is_push && @user.allowed_to?(:view_changesets, @project))
+            authentication_valid = @user.check_password?(password)
+          end
+        end
+
+        authentication_valid
+      end
+
+    end
+
+    logger.info { "##########################" }
+
+    return authentication_valid
   end
 
 
