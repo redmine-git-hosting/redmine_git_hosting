@@ -615,7 +615,8 @@ module RedmineGitolite
     ##                           ##
     ###############################
 
-    GITOLITE_DEFAULT_CONFIG_FILE = 'gitolite.conf'
+    GITOLITE_DEFAULT_CONFIG_FILE       = 'gitolite.conf'
+    GITOLITE_IDENTIFIER_DEFAULT_PREFIX = 'redmine_'
 
     GITOLITE_MIRRORING_KEYS_NAME   = "redmine_gitolite_admin_id_rsa_mirroring"
     GITOLITE_SSH_PRIVATE_KEY_PATH  = "~/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}"

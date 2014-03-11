@@ -29,12 +29,15 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_redmine_storage_dir   => '',
       :gitolite_recycle_bin_dir       => 'recycle_bin/',
 
+      # Gitolite Config File
+      :gitolite_config_file                  => 'gitolite.conf',
+      :gitolite_config_has_admin_key         => true,
+      :gitolite_identifier_prefix            => 'redmine_',
+
       # Gitolite Global Config
       :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
       :gitolite_scripts_dir                  => './',
       :gitolite_lock_wait_time               => 10,
-      :gitolite_config_file                  => 'gitolite.conf',
-      :gitolite_config_has_admin_key         => true,
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,

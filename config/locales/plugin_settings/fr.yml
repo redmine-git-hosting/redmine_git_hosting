@@ -28,6 +28,13 @@ fr:
   label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
   label_gitolite_redmine_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
 
+  # Gitolite Config File
+  label_tab_config_file: Fichier de configuration
+  label_gitolite_config_file: Fichier de configuration de Gitolite
+  label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.
+  label_gitolite_identifier_prefix: Préfixe Gitolite
+  label_gitolite_identifier_prefix_desc: (Sera utilisé pour générer les identifiants de clé SSH)
+
   # Gitolite Global Config
   label_tab_global: Global
   label_gitolite_global_config: Configuration globale du plugin
@@ -37,8 +44,6 @@ fr:
   label_gitolite_scripts_dir: Répertoire des scripts
   label_gitolite_scripts_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
 
-  label_gitolite_config_file: Fichier de configuration de Gitolite
-  label_gitolite_config_has_admin_key: Le fichier de configuration de Gitolite a la clé d'administration.
   label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 

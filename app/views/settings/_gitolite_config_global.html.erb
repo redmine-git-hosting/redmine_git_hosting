@@ -1,7 +1,5 @@
 <%
   # Gitolite Global Config
-  gitolite_config_file                 = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
-  gitolite_config_has_admin_key        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_has_admin_key, true)
   gitolite_recycle_bin_expiration_time = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_recycle_bin_expiration_time)
 
   gitolite_temp_dir    = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_temp_dir)
@@ -27,19 +25,6 @@
   <% if !RedmineGitolite::Config.scripts_dir_writeable?(:reset => true) %>
     <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
   <% end %>
-</p>
-
-<p>
-  <label><%= l(:label_gitolite_config_file) %></label>
-  <%= text_field_tag("settings[gitolite_config_file]", "./#{gitolite_config_file}", :size => 60) %>
-</p>
-
-<p>
-  <label><%= l(:label_gitolite_config_has_admin_key) %></label>
-  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-    <%= hidden_field_tag "settings[gitolite_config_has_admin_key]", "false" %>
-    <%= check_box_tag "settings[gitolite_config_has_admin_key]", gitolite_config_has_admin_key, gitolite_config_has_admin_key %>
-  </span>
 </p>
 
 <p>

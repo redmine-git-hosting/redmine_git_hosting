@@ -60,6 +60,7 @@ class GitolitePublicKey < ActiveRecord::Base
       begin
         my_time = Time.now
         time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
+        key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
         case key_type
           when KEY_TYPE_USER
             # add "redmine_" as a prefix to the username, and then the current date
@@ -67,11 +68,12 @@ class GitolitePublicKey < ActiveRecord::Base
             #
             # also, it ensures that it is very, very unlikely to conflict with any
             # existing key name if gitolite config is also being edited manually
-            "redmine_#{self.user.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           when KEY_TYPE_DEPLOY
             # add "redmine_deploy_key_" as a prefix, and then the current date
             # to help ensure uniqueness of each key identifier
-            "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            # "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           else
             nil
           end

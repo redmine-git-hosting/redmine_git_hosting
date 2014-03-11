@@ -13,10 +13,11 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
         def gitolite_identifier
-          "redmine_#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
+          "#{RedmineGitolite::ConfigRedmine.get_setting(:gitolite_identifier_prefix)}#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
         end
 
 
@@ -28,6 +29,7 @@ module RedmineGitHosting
         end
 
       end
+
 
     end
   end

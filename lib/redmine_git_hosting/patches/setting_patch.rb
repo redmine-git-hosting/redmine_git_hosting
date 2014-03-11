@@ -144,6 +144,7 @@ module RedmineGitHosting
               # Repair key must be true if default path
               if valuehash[:gitolite_config_file] == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
                 valuehash[:gitolite_config_has_admin_key] = 'true'
+                valuehash[:gitolite_identifier_prefix] = RedmineGitolite::Config::GITOLITE_IDENTIFIER_DEFAULT_PREFIX
               end
             end
 

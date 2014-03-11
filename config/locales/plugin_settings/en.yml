@@ -28,6 +28,13 @@ en:
   label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
   label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
 
+  # Gitolite Config File
+  label_tab_config_file: Configuration file
+  label_gitolite_config_file: Gitolite configuration file
+  label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
+  label_gitolite_identifier_prefix: Gitolite prefix
+  label_gitolite_identifier_prefix_desc: (Will be used to generate SSH keys identifiers)
+
   # Gitolite Global Config
   label_tab_global: Global
   label_gitolite_global_config: Gitolite Global Configuration
@@ -37,8 +44,6 @@ en:
   label_gitolite_scripts_dir: Scripts dir
   label_gitolite_scripts_dir_desc: (Can be absolute or relative to Redmine root)
 
-  label_gitolite_config_file: Gitolite configuration file
-  label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
   label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
   label_gitolite_recycle_bin_expiration_time_desc: (In hours)
 
