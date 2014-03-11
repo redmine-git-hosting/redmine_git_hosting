@@ -13,6 +13,7 @@ module RedmineGitolite
       @gitolite_default_config_file      = RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
       @gitolite_config_file_path         = File.join(@gitolite_admin_dir, 'conf', @gitolite_config_file)
       @gitolite_default_config_file_path = File.join(@gitolite_admin_dir, 'conf', @gitolite_default_config_file)
+      @gitolite_identifier_prefix        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_identifier_prefix)
 
       @delete_git_repositories   = RedmineGitolite::ConfigRedmine.get_setting(:delete_git_repositories, true)
       @gitolite_server_port      = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_server_port)

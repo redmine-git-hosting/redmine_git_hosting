@@ -2,7 +2,10 @@ module RedmineGitolite
 
   module AdminRepositoriesHelper
 
-    def handle_repository_add(repository, force = false)
+    def handle_repository_add(repository, opts = {})
+      force = (opts.has_key?(:force) && opts[:force] == true) || false
+      old_perms = (opts.has_key?(:old_perms) && opts[:old_perms].is_a?(Hash)) ? opts[:old_perms] : {}
+
       repo_name = repository.gitolite_repository_name
       repo_path = repository.gitolite_repository_path
       repo_conf = @gitolite_config.repos[repo_name]
@@ -10,10 +13,12 @@ module RedmineGitolite
       if !repo_conf
         logger.info { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, create it ..." }
         logger.debug { "#{@action} : repository path '#{repo_path}'" }
+        old_permissions = old_perms
       else
-        if force == true
+        if force
           logger.warn { "#{@action} : repository '#{repo_name}' already exists in Gitolite, force mode !" }
           logger.debug { "#{@action} : repository path '#{repo_path}'" }
+          old_permissions = get_old_permissions(repo_conf)
           @gitolite_config.rm_repo(repo_name)
         else
           logger.warn { "#{@action} : repository '#{repo_name}' already exists in Gitolite, exit !" }
@@ -22,7 +27,7 @@ module RedmineGitolite
         end
       end
 
-      do_update_repository(repository)
+      do_update_repository(repository, old_permissions)
     end
 
 
@@ -34,6 +39,7 @@ module RedmineGitolite
       if repo_conf
         logger.info { "#{@action} : repository '#{repo_name}' exists in Gitolite, update it ..." }
         logger.debug { "#{@action} : repository path '#{repo_path}'" }
+        old_perms = get_old_permissions(repo_conf)
         @gitolite_config.rm_repo(repo_name)
       else
         logger.warn { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
@@ -41,7 +47,7 @@ module RedmineGitolite
         return false
       end
 
-      do_update_repository(repository)
+      do_update_repository(repository, old_perms)
     end
 
 
@@ -82,7 +88,7 @@ module RedmineGitolite
     end
 
 
-    def do_update_repository(repository)
+    def do_update_repository(repository, old_permissions)
       repo_name = repository.gitolite_repository_name
       repo_conf = @gitolite_config.repos[repo_name]
       project   = repository.project
@@ -129,7 +135,10 @@ module RedmineGitolite
 
       @gitolite_config.add_repo(repo_conf)
 
-      repo_conf.permissions = build_permissions(repository)
+      current_permissions = build_permissions(repository)
+      current_permissions = merge_permissions(current_permissions, old_permissions)
+
+      repo_conf.permissions = [current_permissions]
     end
 
 
@@ -169,13 +178,90 @@ module RedmineGitolite
           repository.update_column(:root_url, new_relative_path)
 
           # update gitolite conf
+          old_perms = get_old_permissions(repo_conf)
           @gitolite_config.rm_repo(old_repo_name)
-          handle_repository_add(repository, true)
+          handle_repository_add(repository, :old_perms => old_perms)
         else
           return false
         end
       end
 
+    end
+
+
+    SKIP_USERS = [ 'gitweb', 'daemon', 'DUMMY_REDMINE_KEY', 'ARCHIVED_REDMINE_KEY' ]
+
+    def get_old_permissions(repo_conf)
+      current_permissions = repo_conf.permissions[0]
+      old_permissions = {}
+
+      current_permissions.each do |perm, branch_settings|
+        old_permissions[perm] = {}
+
+        branch_settings.each do |branch, user_list|
+          next if user_list.empty?
+
+          new_user_list = []
+
+          user_list.each do |user|
+            ## We assume here that ':gitolite_config_file' is different than 'gitolite.conf'
+            ## like 'redmine.conf' with 'include "redmine.conf"' in 'gitolite.conf'.
+            ## This way, we know that all repos in this file are managed by Redmine so we
+            ## don't need to backup users
+            next if @gitolite_identifier_prefix == ''
+
+            # ignore these users
+            next if SKIP_USERS.include?(user)
+
+            # backup users that are not Redmine users
+            if !user.include?(@gitolite_identifier_prefix)
+              new_user_list.push(user)
+            end
+          end
+
+          if new_user_list.any?
+            old_permissions[perm][branch] = new_user_list
+          end
+        end
+      end
+
+      return old_permissions
+    end
+
+
+    def merge_permissions(current_permissions, old_permissions)
+      merge_permissions = {}
+      merge_permissions['RW+'] = {}
+      merge_permissions['RW'] = {}
+      merge_permissions['R'] = {}
+
+      current_permissions.each do |perm, branch_settings|
+        branch_settings.each do |branch, user_list|
+          if user_list.any?
+            if !merge_permissions[perm].has_key?(branch)
+              merge_permissions[perm][branch] = []
+            end
+            merge_permissions[perm][branch] += user_list
+          end
+        end
+      end
+
+      old_permissions.each do |perm, branch_settings|
+        branch_settings.each do |branch, user_list|
+          if user_list.any?
+            if !merge_permissions[perm].has_key?(branch)
+              merge_permissions[perm][branch] = []
+            end
+            merge_permissions[perm][branch] += user_list
+          end
+        end
+      end
+
+      merge_permissions.each do |perm, branch_settings|
+        merge_permissions.delete(perm) if merge_permissions[perm].empty?
+      end
+
+      return merge_permissions
     end
 
 
@@ -217,7 +303,7 @@ module RedmineGitolite
       permissions["RW"] = {"" => write.uniq.sort} unless write.empty?
       permissions["R"] = {"" => read.uniq.sort} unless read.empty?
 
-      [permissions]
+      permissions
     end
 
 

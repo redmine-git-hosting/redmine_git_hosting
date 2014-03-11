@@ -127,7 +127,7 @@ module RedmineGitolite
     def handle_project_update(project, force = false)
       project.gitolite_repos.each do |repository|
         if force == true
-          handle_repository_add(repository, true)
+          handle_repository_add(repository, :force => true)
         else
           handle_repository_update(repository)
         end
