@@ -225,6 +225,7 @@ fr:
   label_help_repository_setup_new: Configurer un nouveau dépôt
   label_help_repository_setup_existing: Configurer un dépôt existant
   label_help_repository_clone: Cloner un dépôt
+  label_help_no_repo_rights: "Désolé, vous n'avez pas accès à ce dépôt. Vous ne pouvez rien faire."
   label_this_urls_has_permissions: "Cette URL est accessilbe en <span id=\"%{span_id}\"></span>."
   label_read_write_permission: Lecture+Ecriture
   label_read_only_permission: Lecture seule
