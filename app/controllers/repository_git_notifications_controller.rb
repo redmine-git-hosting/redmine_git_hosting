@@ -24,12 +24,10 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def create
-    @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
-
     params[:repository_git_notifications][:include_list] = params[:repository_git_notifications][:include_list].select{|mail| !mail.blank?}
     params[:repository_git_notifications][:exclude_list] = params[:repository_git_notifications][:exclude_list].select{|mail| !mail.blank?}
 
-    @git_notification.update_attributes(params[:repository_git_notifications])
+    @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
     @git_notification.repository = @repository
 
     respond_to do |format|
