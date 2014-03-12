@@ -43,15 +43,13 @@ class GitolitePublicKey < ActiveRecord::Base
   after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
 
 
-  @@myregular = /^(.*)@redmine_\d*_\d*(.pub)?$/
-  def self.ident_to_user_token(identifier)
-    result = @@myregular.match(identifier)
-    (result != nil) ? result[1] : nil
+  def self.by_user(user)
+    where("user_id = ?", user.id)
   end
 
 
-  def self.by_user(user)
-    where("user_id = ?", user.id)
+  def to_s
+    title
   end
 
 
@@ -81,17 +79,6 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
-  # Key type checking functions
-  def user_key?
-    key_type == KEY_TYPE_USER
-  end
-
-
-  def deploy_key?
-    key_type == KEY_TYPE_DEPLOY
-  end
-
-
   # Make sure that current identifier is consistent with current user login.
   # This method explicitly overrides the static nature of the identifier
   def reset_identifier
@@ -100,15 +87,20 @@ class GitolitePublicKey < ActiveRecord::Base
     set_identifier
 
     # Need to override the "never change identifier" constraint
-    # Note that Rails 3 has a different calling convention...
     self.save(:validate => false)
 
     self.identifier
   end
 
 
-  def to_s
-    title
+  # Key type checking functions
+  def user_key?
+    key_type == KEY_TYPE_USER
+  end
+
+
+  def deploy_key?
+    key_type == KEY_TYPE_DEPLOY
   end
 
 
@@ -143,6 +135,9 @@ class GitolitePublicKey < ActiveRecord::Base
     RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
   end
+
+
+  private
 
 
   # Strip leading and trailing whitespace
