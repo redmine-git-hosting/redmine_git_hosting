@@ -73,6 +73,9 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   end
 
 
+  private
+
+
   def correct_key_type
     if gitolite_public_key && gitolite_public_key.key_type != GitolitePublicKey::KEY_TYPE_DEPLOY
       errors.add(:base, "Public Key Must Be a Deployment Key")

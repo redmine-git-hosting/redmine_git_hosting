@@ -15,6 +15,9 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   after_commit ->(obj) { obj.delete_config_key },           on: :destroy
 
 
+  protected
+
+
   def create_or_update_config_key
     options = {}
 
