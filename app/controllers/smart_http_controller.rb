@@ -22,6 +22,7 @@ class SmartHttpController < ApplicationController
     command, @requested_file, @rpc = match_routing(@request)
 
     return render_method_not_allowed if command == 'not_allowed'
+    return render_not_found if !command
 
     logger.info { "###### AUTHENTICATED ######" }
     logger.info { "command         : #{command}" }
@@ -49,8 +50,8 @@ class SmartHttpController < ApplicationController
 
   def extract_parameters
     git_params = params[:git_params].split('/')
-    @repo_path  = params[:repo_path]
-    @is_push    = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
+    @repo_path = params[:repo_path].gsub(params[:prefix], '')
+    @is_push   = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
 
     logger.info { "###### AUTHENTICATION ######" }
     logger.info { "git_params      : #{git_params.join(', ')}" }
