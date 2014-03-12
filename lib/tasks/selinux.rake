@@ -47,6 +47,8 @@
 #                                                                              #
 ################################################################################
 
+require 'rbconfig'
+
 @@across_roots_values = []
 
 namespace :selinux do
@@ -325,7 +327,7 @@ end
 def redmine_roots(*optionpath)
   if @@redmine_roots["/"].nil?
     glob_pattern = regex_to_glob(redmine_root_pattern)
-    search_command = "find #{glob_pattern} -maxdepth #{@@find_maxdepth} -type d -regextype posix-extended -regex #{@@redmine_root_pattern} -prune"
+    search_command = "find #{glob_pattern} -maxdepth #{@@find_maxdepth} -type d #{get_regex_parameter} -regex #{@@redmine_root_pattern} -prune"
     if glob_pattern =~ /.*[\(\[\*\+\?].*/
       puts "Searching for directories matching '#{@@redmine_root_pattern}' (may take a bit) :"
       puts "#{search_command}"
@@ -351,6 +353,35 @@ def redmine_roots(*optionpath)
     @@redmine_roots["/"]
   end
 
+end
+
+def get_regex_parameter
+  case get_os_version
+    when :linux
+      "-regextype posix-extended"
+    when :macosx
+      "-E"
+    when :unix
+      "-E"
+  end
+end
+
+def get_os_version
+  @os ||= (
+    host_os = RbConfig::CONFIG['host_os']
+    case host_os
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        :windows
+      when /darwin|mac os/
+        :macosx
+      when /linux/
+        :linux
+      when /solaris|bsd/
+        :unix
+      else
+        raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+    end
+  )
 end
 
 # Take input list of directories and see if all of them match the root pattern.
