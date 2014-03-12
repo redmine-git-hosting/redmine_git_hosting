@@ -44,24 +44,28 @@ module RedmineGitolite
 
 
     def gitolite_admin_repo_clone
+
+      ## Get or clone Gitolite Admin repo
       if (File.exists? "#{@gitolite_admin_dir}") && (File.exists? "#{@gitolite_admin_dir}/.git") && (File.exists? "#{@gitolite_admin_dir}/keydir") && (File.exists? "#{@gitolite_admin_dir}/conf")
         @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       else
-        begin
-          logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
+        logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
 
+        begin
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "rm -rf '#{@gitolite_admin_dir}'")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "export GIT_SSH=#{@gitolite_admin_ssh_script_path} && git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "chmod 700 '#{@gitolite_admin_dir}'")
-
-          @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { e.message }
+          logger.error { e.command }
+          logger.error { e.output }
           logger.error { "Cannot clone Gitolite Admin repository !!" }
           return false
         end
+
+        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       end
 
+      ## Set Gitolite config file
       if @gitolite_config_file != @gitolite_default_config_file
         if !File.exists?(@gitolite_config_file_path)
           begin
@@ -95,6 +99,7 @@ module RedmineGitolite
         end
       end
 
+      ## Return Gitolite::GitoliteAdmin object
       logger.info { "Using Gitolite configuration file : '#{@gitolite_config_file}'" }
       @gitolite_admin.config = @gitolite_config = Gitolite::Config.new(@gitolite_config_file_path)
     end
