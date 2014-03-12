@@ -12,14 +12,6 @@ class RepositoryGitExtra < ActiveRecord::Base
   after_initialize :set_values
 
 
-  def after_initialize
-    if self.repository.nil?
-      generate
-      setup_defaults
-    end
-  end
-
-
   def validate_encoded_time(clear_time, encoded_time)
     valid = false
     begin
