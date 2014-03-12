@@ -274,6 +274,12 @@ module RedmineGitHosting
               valuehash[:gitolite_purge_repos] = []
             end
 
+
+            if valuehash[:all_projects_use_git] == 'false'
+              valuehash[:init_repositories_on_create] = 'false'
+            end
+
+
             # Save back results
             self.value = valuehash
           end
