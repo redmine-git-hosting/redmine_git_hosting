@@ -10,8 +10,18 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   validates_format_of :sender_address, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :allow_blank => true
 
-  after_update  :update_repository
-  after_destroy :update_repository
+  after_commit ->(obj) { obj.update_repository }, on: :create
+  after_commit ->(obj) { obj.update_repository }, on: :update
+  after_commit ->(obj) { obj.update_repository }, on: :destroy
+
+
+  protected
+
+
+  def update_repository
+    RedmineGitolite::GitHosting.logger.info { "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
+  end
 
 
   private
@@ -32,10 +42,5 @@ class RepositoryGitNotification < ActiveRecord::Base
     end
   end
 
-
-  def update_repository
-    RedmineGitolite::GitHosting.logger.info { "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
-  end
 
 end
