@@ -185,7 +185,7 @@ module RedmineGitolite
           # update gitolite conf
           old_perms = get_old_permissions(repo_conf)
           @gitolite_config.rm_repo(old_repo_name)
-          handle_repository_add(repository, :old_perms => old_perms)
+          handle_repository_add(repository, :force => true, :old_perms => old_perms)
         else
           return false
         end
@@ -349,20 +349,15 @@ module RedmineGitolite
 
 
     def move_physical_repo(old_path, new_path, new_parent_path)
-      ## CASE 1
+      ## CASE 0
       if old_path == new_path
         logger.info { "#{@action} : old repository and new repository are identical '#{old_path}', nothing to do, exit !" }
         return true
       end
 
-      ## CASE 2
-      if !RedmineGitolite::GitHosting.file_exists? old_path
-        logger.error { "#{@action} : old repository '#{old_path}' does not exist, cannot move it, exit !" }
-        return false
-      end
+      ## CASE 1
+      if RedmineGitolite::GitHosting.file_exists?(new_path) && RedmineGitolite::GitHosting.file_exists?(old_path)
 
-      ## CASE 3
-      if RedmineGitolite::GitHosting.file_exists? new_path
         if is_repository_empty?(new_path)
           logger.warn { "#{@action} : target repository '#{new_path}' already exists and is empty, remove it ..." }
           begin
@@ -372,37 +367,55 @@ module RedmineGitolite
             return false
           end
         else
-          logger.warn { "#{@action} : target repository '#{new_path}' exists and is not empty, considered as already moved, remove the old_path" }
-          begin
-            RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{old_path}'")
-            return true
-          rescue RedmineGitolite::GitHosting::GitHostingException => e
-            logger.error { "#{@action} : removing source repository directory failed, exit !" }
+          logger.warn { "#{@action} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove the old_path" }
+
+          if is_repository_empty?(old_path)
+            begin
+              RedmineGitolite::GitHosting.execute_command(:shell_cmd, "rm -rf '#{old_path}'")
+              return true
+            rescue RedmineGitolite::GitHosting::GitHostingException => e
+              logger.error { "#{@action} : removing source repository directory failed, exit !" }
+              return false
+            end
+          else
+            logger.error { "#{@action} : the source repository directory is not empty, cannot remove it, exit ! (This repo will be orphan)" }
             return false
           end
         end
-      end
 
-      logger.debug { "#{@action} : moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
+      ## CASE 2
+      elsif !RedmineGitolite::GitHosting.file_exists?(new_path) && !RedmineGitolite::GitHosting.file_exists?(old_path)
+        logger.error { "#{@action} : both old repository '#{old_path}' and new repository '#{new_path}' does not exist, cannot move it, exit but let Gitolite create the new repo !" }
+        return true
 
-      if !RedmineGitolite::GitHosting.file_exists? new_parent_path
+      ## CASE 3
+      elsif RedmineGitolite::GitHosting.file_exists?(new_path) && !RedmineGitolite::GitHosting.file_exists?(old_path)
+        logger.error { "#{@action} : old repository '#{old_path}' does not exist, but the new one does, use it !" }
+        return true
+
+      ## CASE 4
+      elsif !RedmineGitolite::GitHosting.file_exists?(new_path) && RedmineGitolite::GitHosting.file_exists?(old_path)
+
+        logger.debug { "#{@action} : really moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
+
+        if !RedmineGitolite::GitHosting.file_exists? new_parent_path
+          begin
+            RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{new_parent_path}'")
+          rescue RedmineGitolite::GitHosting::GitHostingException => e
+            logger.error { "#{@action} : creation of parent path '#{new_parent_path}' failed, exit !" }
+            return false
+          end
+        end
+
         begin
-          RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{new_parent_path}'")
+          RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{old_path}' '#{new_path}'")
+          logger.info { "#{@action} : done !" }
+          return true
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "#{@action} : creation of parent path '#{new_parent_path}' failed, exit !" }
+          logger.error { "move_physical_repo(#{old_path}, #{new_path}) failed" }
           return false
         end
       end
-
-      begin
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mv '#{old_path}' '#{new_path}'")
-        logger.info { "#{@action} : done !" }
-        return true
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error { "move_physical_repo(#{old_path}, #{new_path}) failed" }
-        return false
-      end
-
     end
 
 
