@@ -99,8 +99,8 @@ class GitolitePublicKeysController < ApplicationController
 
 
   def set_users_keys
-    @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all, :order => 'title ASC, created_at ASC')
-    @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all, :order => 'title ASC, created_at ASC')
+    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.active.order('title ASC, created_at ASC')
+    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.active.order('title ASC, created_at ASC')
     @gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
   end
 

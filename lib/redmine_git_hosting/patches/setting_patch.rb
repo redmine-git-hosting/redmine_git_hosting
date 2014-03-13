@@ -318,7 +318,7 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_redmine_storage_dir] != valuehash[:gitolite_redmine_storage_dir] ||
                @@old_valuehash[:hierarchical_organisation] != valuehash[:hierarchical_organisation]
                 # Need to update everyone!
-                projects = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x if x.parent_id.nil? }
+                projects = Project.active_or_archived.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
                   RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
@@ -335,7 +335,7 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_notify_global_include] != valuehash[:gitolite_notify_global_include] ||
                @@old_valuehash[:gitolite_notify_global_exclude] != valuehash[:gitolite_notify_global_exclude]
                 # Need to update everyone!
-                projects = Project.active_or_archived.find(:all, :include => :repositories)
+                projects = Project.active_or_archived.includes(:repositories).all
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
                   RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
@@ -353,7 +353,7 @@ module RedmineGitHosting
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_projects == true
               # Need to update everyone!
-              projects = Project.active_or_archived.find(:all, :include => :repositories)
+              projects = Project.active_or_archived.includes(:repositories).all
               if projects.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
                 RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects_forced, :object => projects.length })

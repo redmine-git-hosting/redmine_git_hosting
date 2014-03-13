@@ -27,7 +27,7 @@ module RedmineGitolite
 
     def update_all_projects
       object = []
-      projects = Project.active_or_archived.find(:all, :include => :repositories)
+      projects = Project.active_or_archived.includes(:repositories).all
       if projects.length > 0
         object = projects
       end
@@ -38,7 +38,7 @@ module RedmineGitolite
 
     def update_all_projects_forced
       object = []
-      projects = Project.active_or_archived.find(:all, :include => :repositories)
+      projects = Project.active_or_archived.includes(:repositories).all
       if projects.length > 0
         object = projects
       end
@@ -79,7 +79,7 @@ module RedmineGitolite
 
 
     def move_repositories_tree
-      projects = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x.parent_id.nil? }
+      projects = Project.active_or_archived.includes(:repositories).all.select { |x| x.parent_id.nil? }
 
       wrapped_transaction do
         @delete_parent_path = []
