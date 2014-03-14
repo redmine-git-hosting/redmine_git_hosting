@@ -27,7 +27,11 @@
         <%=link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
       </td>
       <td>
-        <span class="label label-info"><%= repository.extra[:default_branch] %></span>
+        <% if repository.is_a?(Repository::Git) %>
+          <span class="label label-info"><%= repository.extra[:default_branch] %></span>
+        <% else %>
+        -
+        <% end %>
       </td>
       <td align="center">
         <% if repository.is_a?(Repository::Git) %>
