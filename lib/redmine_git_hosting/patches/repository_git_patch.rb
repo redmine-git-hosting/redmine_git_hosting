@@ -342,6 +342,11 @@ module RedmineGitHosting
         end
 
 
+        def exists_in_gitolite?
+          RedmineGitolite::GitHosting.dir_exists?(gitolite_repository_path)
+        end
+
+
         private
 
 

@@ -81,7 +81,12 @@
     <% if @repository && @repository.is_a?(Repository::Git) && !@repository.new_record? %>
       <p>
         <label><%= l(:label_browse_repository) %></label>
-        <%=link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
+        <%= link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
+      </p>
+
+      <p>
+        <%= label_tag  "", l(:label_repository_exists_in_gitolite) %>
+        <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
       </p>
     <% end %>
   </div>
@@ -133,17 +138,17 @@
       </p>
 
       <p>
-        <%= label_tag  "", l(:label_mirroring_keys_installed) %>
-        <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
-      </p>
-
-      <p>
         <%= label_tag  "", l(:label_repository_default_branch) %>
         <% if !@repository.new_record? && !@repository.branches.empty? %>
           <%= select_tag "extra[default_branch]", options_for_select(@repository.branches.collect{ |b| [b.to_s, b.to_s] }, :selected => @repository.branches.find{ |b| b.is_default}.to_s) %>
         <% else %>
           <span class="label label-info"><%= @repository.extra[:default_branch] %></span>
         <% end %>
+      </p>
+
+      <p>
+        <%= label_tag  "", l(:label_mirroring_keys_installed) %>
+        <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
       </p>
 
     <% else %>

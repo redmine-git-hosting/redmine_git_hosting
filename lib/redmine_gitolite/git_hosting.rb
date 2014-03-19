@@ -92,11 +92,22 @@ module RedmineGitolite
     ## TEST IF FILE EXIST ON GITOLITE SIDE
     def self.file_exists?(filename)
       begin
-        file_exists = execute_command(:shell_cmd, "test -r '#{filename}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
+        exists = execute_command(:shell_cmd, "test -r '#{filename}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
       rescue GitHostingException => e
-        file_exists = false
+        exists = false
       end
-      return file_exists
+      return exists
+    end
+
+
+    ## TEST IF DIRECTORY EXIST ON GITOLITE SIDE
+    def self.dir_exists?(dirname)
+      begin
+        exists = execute_command(:shell_cmd, "test -d '#{dirname}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
+      rescue GitHostingException => e
+        exists = false
+      end
+      return exists
     end
 
   end

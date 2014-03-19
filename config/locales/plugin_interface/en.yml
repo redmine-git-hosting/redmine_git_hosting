@@ -205,6 +205,7 @@ en:
   label_repository_default_branch: Repository default branch
   label_init_repo_with_readme: Initialize this repository with a README
   label_browse_repository: Browse repository
+  label_repository_exists_in_gitolite: Repository exists in Gitolite
 
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities
