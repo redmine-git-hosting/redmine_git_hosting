@@ -118,8 +118,8 @@ module RedmineGitolite
           repo_conf.set_git_config("multimailhook.enabled", 'true')
           repo_conf.set_git_config("multimailhook.environment", "gitolite")
           repo_conf.set_git_config("multimailhook.mailinglist", mailing_list.keys.join(", "))
-          repo_conf.set_git_config("multimailhook.from", email_prefix)
-          repo_conf.set_git_config("multimailhook.emailPrefix", sender_address)
+          repo_conf.set_git_config("multimailhook.from", sender_address)
+          repo_conf.set_git_config("multimailhook.emailPrefix", email_prefix)
 
           # Set SMTP server for mail-notifications hook
           #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
