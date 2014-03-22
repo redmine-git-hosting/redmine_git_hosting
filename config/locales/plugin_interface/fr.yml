@@ -180,14 +180,10 @@ fr:
   error_public_key_create_failed: Échec de création de clé publique.
   error_public_key_update_failed: Échec de modification de clé publique.
   error_key_corrupted: semble être corrompue.
-  error_key_needs_two_components: "a besoin d'au moins deux composantes: [type-de-clé] et [valeur-de-la-clé]."
-  error_key_bad_type: "est de type inconnu. Les types valides sont %{types}."
-  error_key_type_mismatch: de type (%{type1}) ne correspond pas au type dans le corps de la clé (%{type2}).
   error_key_in_use_by_you: "est déjà utilisée par vous comme « %{name} »."
   error_key_in_use_by_other: "est déjà utilisée par l'utilisateur « %{login} » comme « %{name} »."
   error_key_in_use_by_gitolite_admin: est déjà utilisée comme clé d'administration Gitolite.
   error_key_in_use_by_someone: est déjà utilisé. Elle appartient à une autre utilisateur (demandez à vôtre administrateur pour les détails).
-  word_or: ou
 
 
   ########### REPOSITORIES ###########

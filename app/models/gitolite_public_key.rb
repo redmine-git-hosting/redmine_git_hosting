@@ -1,5 +1,3 @@
-require 'base64'
-
 class GitolitePublicKey < ActiveRecord::Base
   unloadable
 
@@ -10,10 +8,6 @@ class GitolitePublicKey < ActiveRecord::Base
   KEY_TYPE_DEPLOY = 1
 
   DEPLOY_PSEUDO_USER = "deploy_key"
-
-  # These two constants are related -- don't change one without the other
-  KEY_FORMATS = ['ssh-rsa', 'ssh-dss']
-  KEY_NUM_COMPONENTS = [3, 5]
 
   belongs_to :user
   has_many   :repository_deployment_credentials, :dependent => :destroy
@@ -33,7 +27,8 @@ class GitolitePublicKey < ActiveRecord::Base
   validates_associated :repository_deployment_credentials
 
   validate :has_not_been_changed
-  validate :key_format_and_uniqueness
+  validate :key_format
+  validate :key_uniqueness
 
   before_validation :set_identifier
   before_validation :strip_whitespace
@@ -187,79 +182,29 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
-  def wrap_and_join(in_array, my_or = "or")
-    my_array = in_array.map{|x| "\"#{x}\""}
-    length = my_array.length
-    return my_array if length < 2
-    my_array[length-1] = my_or + " " + my_array[length-1]
-    if length == 2
-      my_array.join(' ')
-    else
-      my_array.join(', ')
+  def key_format
+    file = Tempfile.new('foo')
+
+    begin
+      file.write(key)
+      file.close
+      RedmineGitolite::GitHosting.execute_command(:local_cmd, "ssh-keygen -l -f #{file.path}")
+      valid = true
+    rescue RedmineGitolite::GitHosting::GitHostingException => e
+      errors.add(:key, l(:error_key_corrupted))
+      valid = false
+    ensure
+      file.unlink
     end
+
+    return valid
   end
 
 
-  def key_format_and_uniqueness
-    return if key.blank?
-
-    return if !new_record?
-
-    # First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
-    # crypto type matches.  Note that we ignore presence of comment!
+  def key_uniqueness
     keypieces = key.match(/^(\S+)\s+(\S+)/)
-
-    if !keypieces || keypieces[1].length > 10  # Probably has key as first component
-      errors.add(:key, l(:error_key_needs_two_components))
-      return false
-    end
-
     key_format = keypieces[1]
     key_data   = keypieces[2]
-
-    if !KEY_FORMATS.include?(key_format)
-      errors.add(:key, l(:error_key_bad_type, :types => wrap_and_join(KEY_FORMATS, l(:word_or))))
-      return false
-    end
-
-    # Make sure that key has proper number of characters (divisible by 4) and no more than 2 '='
-    if (key_data.length % 4) != 0 || !key_data.match(/^[a-zA-Z0-9\+\/]+={0,2}$/)
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    key_data_decoded = Base64.decode64(key_data)
-
-    piecearray = []
-
-    while key_data_decoded.length >= 4
-      length = 0
-      key_data_decoded.slice!(0..3).bytes do |byte|
-        length = length * 256 + byte
-      end
-      if key_data_decoded.length < length
-        errors.add(:key, l(:error_key_corrupted))
-        return false
-      end
-      piecearray << key_data_decoded.slice!(0..length-1)
-    end
-
-    if key_data_decoded.length != 0
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    if piecearray[0] != key_format
-      errors.add(:key, l(:error_key_type_mismatch, :type1 => key_format, :type2 => piecearray[0]))
-      return false
-    end
-
-    if piecearray.length != KEY_NUM_COMPONENTS[KEY_FORMATS.index(piecearray[0])]
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
     all_keys = []
@@ -293,6 +238,7 @@ class GitolitePublicKey < ActiveRecord::Base
       end
     end
 
+    return true
   end
 
 end

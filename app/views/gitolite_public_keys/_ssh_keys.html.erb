@@ -1,0 +1,30 @@
+<table class="list">
+
+  <% if ssh_keys.empty? %>
+    <tr>
+      <td>
+        <label><%= l(:label_no_public_keys) %></label>
+      </td>
+    </tr>
+  <% else %>
+    <% ssh_keys.each do |key| %>
+      <tr class="<%= curcycle=cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
+        <td style="text-align: left;"><%= h(key) %></td>
+
+        <% if params[:id] %>
+          <td style="width: 60%; text-align: center;"><%= "keydir/#{key.identifier}.pub" %></td>
+        <% end %>
+
+        <td style="width:10%;" class="buttons">
+          <%= link_to l(:button_edit), { :public_key_id => key.id, :tab => params[:id]&&'keys'},
+                                       :class => 'icon icon-edit' %>
+
+          <%= link_to l(:button_delete), public_key_path(key, :user_id => params[:id]),
+                                         :method  => 'delete',
+                                         :class   => 'icon icon-del',
+                                         :confirm => l(:text_gitolite_key_destroy_confirmation, :title => keylabel(key)) %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
