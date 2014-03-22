@@ -47,8 +47,8 @@
             </td>
             <td><%= "keydir/#{credential.gitolite_public_key.identifier}.pub" %></td>
             <td><%= credential.perm %></td>
-            <td><%= checked_image credential.honored? %></td>
-            <td><%= checked_image credential.active? %></td>
+            <td><%= checked_image2 credential.honored? %></td>
+            <td><%= checked_image2 credential.active? %></td>
             <td class="buttons">
               <% if user_allowed_to(:edit_deployment_keys, @project) && (User.current.admin? || User.current == credential.user) %>
 
