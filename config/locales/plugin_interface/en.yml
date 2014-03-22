@@ -66,7 +66,7 @@ en:
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_permissions: Access Permissions
   label_deployment_credential_delete_when_unused: Delete key when unused?
-  label_deployment_credential_which_deploy_key: Select Deployment Key
+  label_deployment_credential_select_deploy_key: Select Deployment Key
 
   label_deployment_credential_owner: Owner
   label_deployment_credential_public_key_name: Public key name
@@ -107,8 +107,8 @@ en:
 
   # Basics notices
   notice_git_notifications_created: Mailing list was successfully created
-  notice_git_notifications_deleted: Mailing list was successfully deleted
   notice_git_notifications_updated: Mailing list was successfully updated
+  notice_git_notifications_deleted: Mailing list was successfully deleted
   notice_git_notifications_create_failed: Failed to create mailing list
   notice_git_notifications_update_failed: Failed to update mailing list
 
@@ -127,8 +127,8 @@ en:
   label_post_receive_urls: Post Receive URLs
   label_post_receive_url_add: Add Post Receive URL
   label_post_receive_url_create: Create Repository Post-receive URL
-  label_post_receive_url_delete: Delete Repository Post-receive URL
   label_post_receive_url_edit: Edit Repository Post-receive URL
+  label_post_receive_url_delete: Delete Repository Post-receive URL
 
   # Basics notices
   notice_post_receive_url_created: Post-receive URL was successfully created.
