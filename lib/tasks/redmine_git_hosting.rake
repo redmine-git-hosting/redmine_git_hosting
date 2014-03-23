@@ -35,7 +35,7 @@ namespace :redmine_git_hosting do
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
   task :restore_defaults => [:environment] do
     puts "Reloading defaults from init.rb..."
-    GitHosting.logger.warn "Reloading defaults from init.rb from command line"
+    RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
 
     default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
 
@@ -46,7 +46,7 @@ namespace :redmine_git_hosting do
       valuehash = (Setting.plugin_redmine_git_hosting).clone
       default_hash.each do |key,value|
         if valuehash[key] != value
-          puts "Changing '#{key}': '#{valuehash[key]}' => '#{value}'\n"
+          puts "Changing '#{key}' : '#{valuehash[key]}' => '#{value}'\n"
           valuehash[key] = value
           changes += 1
         end
@@ -69,15 +69,21 @@ namespace :redmine_git_hosting do
   desc "Update/repair Gitolite configuration"
   task :update_repositories => [:environment] do
     puts "Performing manual update_repositories operation..."
-    GitHosting.logger.warn "Performing manual update_repositories operation from command line"
-    GitHosting.update_repositories(:resync_all => true)
+    RedmineGitolite::GitHosting.logger.warn { "Performing manual update_repositories operation from command line" }
+
+    projects = Project.active_or_archived.find(:all, :include => :repositories)
+    if projects.length > 0
+      RedmineGitolite::GitHosting.logger.info { "Resync all projects (#{projects.length})..." }
+      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
+    end
+
     puts "Done!"
   end
 
   desc "Fetch commits from gitolite repositories/update gitolite configuration"
   task :fetch_changesets => [:environment] do
     puts "Performing manual fetch_changesets operation..."
-    GitHosting.logger.warn "Performing manual fetch_changesets operation from command line"
+    RedmineGitolite::GitHosting.logger.warn { "Performing manual fetch_changesets operation from command line" }
     Repository.fetch_changesets
     puts "Done!"
   end

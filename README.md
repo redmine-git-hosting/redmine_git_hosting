@@ -12,13 +12,16 @@ It provides these functionalities :
 * [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
 * [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
 * [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
-* [Git Smart HTTP](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
+* [Git Smart HTTP (with vulnerability patch)](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
 * [Git Daemon](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-daemon)
 * [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
 * [*(new)* Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
 * [*(new)* Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
 * [*(new)* Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
 * [*(new)* Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
+* [*(new)* Git Revision Download](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-revision-download) (from [Git Revision Download](https://github.com/chantra/redmine_gitrevision_download))
+* [*(new)* README Preview](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-readme-preview) (from [README at Repositories](https://github.com/simeji/readme_at_repositories))
+* [*(new)* Git Config Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-config-keys-management)
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 

@@ -8,6 +8,12 @@ module RedmineGitolite
     def add_repository
       repository = Repository.find_by_id(@object_id)
 
+      if @options.has_key?(:create_readme_file) && (@options[:create_readme_file] == 'true' || @options[:create_readme_file] == true)
+        create_readme = true
+      else
+        create_readme = false
+      end
+
       wrapped_transaction do
 
         handle_repository_add(repository)
@@ -16,11 +22,17 @@ module RedmineGitolite
 
         recycle = RedmineGitolite::Recycle.new
 
-        if !recycle.recover_repository_if_present?(repository)
+        @recovered = recycle.recover_repository_if_present?(repository)
+
+        if !@recovered
           logger.info { "#{@action} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'" }
         else
           logger.info { "#{@action} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update" }
         end
+      end
+
+      if create_readme && !@recovered
+        create_readme_file(repository)
       end
     end
 
@@ -31,6 +43,11 @@ module RedmineGitolite
       wrapped_transaction do
         handle_repository_update(repository)
         gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
+      end
+
+      # Treat options
+      if @options.has_key?(:delete_git_config_key) && !@options[:delete_git_config_key].empty?
+        delete_hook_param(repository, @options[:delete_git_config_key])
       end
     end
 
@@ -65,31 +82,6 @@ module RedmineGitolite
 
       logger.info { "Fetch changesets for repository '#{repository.gitolite_repository_name}'"}
       repository.fetch_changesets
-    end
-
-
-    def create_readme_file
-      repository = Repository.find_by_id(@object_id)
-      temp_dir = Dir.mktmpdir
-
-      command = ""
-      command << "export GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path}"
-      command << " && git clone #{repository.ssh_url} #{temp_dir}"
-      command << " && cd #{temp_dir}"
-      command << " && echo '## #{repository.gitolite_repository_name}' >> README.md"
-      command << " && git add README.md"
-      command << " && git commit README.md -m 'Initialize repository'"
-      command << " && git push -u origin #{repository.extra[:default_branch]}"
-
-      begin
-        output = RedmineGitolite::GitHosting.execute_command(:local_cmd, command)
-        logger.info { "README file successfully created for repository '#{repository.gitolite_repository_name}'"}
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error { "Error while creating README file for repository '#{repository.gitolite_repository_name}'"}
-        logger.error { e.output }
-      end
-
-      FileUtils.remove_entry temp_dir rescue ''
     end
 
   end

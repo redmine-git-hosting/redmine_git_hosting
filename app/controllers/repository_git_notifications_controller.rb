@@ -1,17 +1,12 @@
-class RepositoryGitNotificationsController < ApplicationController
+class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
-  before_filter :require_login
-  before_filter :set_repository_variable
-  before_filter :set_project_variable
-  before_filter :check_required_permissions
-  before_filter :check_xhr_request
+  before_filter :set_current_tab
+  before_filter :can_view_git_notifications,   :only => [:index]
+  before_filter :can_create_git_notifications, :only => [:new, :create]
+  before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
+
   before_filter :find_repository_git_notification, :except => [:index, :new, :create]
-
-  layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
-
-  include GitHostingHelper
-  helper :git_hosting
 
 
   def index
@@ -24,23 +19,16 @@ class RepositoryGitNotificationsController < ApplicationController
   end
 
 
-  def show
-    render_404
-  end
-
-
   def new
     @git_notification = RepositoryGitNotification.new()
   end
 
 
   def create
-    @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
-
     params[:repository_git_notifications][:include_list] = params[:repository_git_notifications][:include_list].select{|mail| !mail.blank?}
     params[:repository_git_notifications][:exclude_list] = params[:repository_git_notifications][:exclude_list].select{|mail| !mail.blank?}
 
-    @git_notification.update_attributes(params[:repository_git_notifications])
+    @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
     @git_notification.repository = @repository
 
     respond_to do |format|
@@ -57,10 +45,6 @@ class RepositoryGitNotificationsController < ApplicationController
         format.js { render "form_error", :layout => false }
       end
     end
-  end
-
-
-  def edit
   end
 
 
@@ -97,35 +81,28 @@ class RepositoryGitNotificationsController < ApplicationController
   end
 
 
-  protected
+  private
 
 
-  # This is a success URL to return to basic listing
-  def success_url
-    url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id)
+  def can_view_git_notifications
+    render_403 unless view_context.user_allowed_to(:view_repository_git_notifications, @project)
   end
 
 
-  def set_repository_variable
-    @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil?
-      render_404
-    end
+  def can_create_git_notifications
+    render_403 unless view_context.user_allowed_to(:create_repository_git_notifications, @project)
   end
 
 
-  def set_project_variable
-    @project = @repository.project
-    if @project.nil?
-      render_404
-    end
+  def can_edit_git_notifications
+    render_403 unless view_context.user_allowed_to(:edit_repository_git_notifications, @project)
   end
 
 
   def find_repository_git_notification
     git_notification = RepositoryGitNotification.find_by_id(params[:id])
 
-    if git_notification and git_notification.repository_id == @repository.id
+    if git_notification && git_notification.repository_id == @repository.id
       @git_notification = git_notification
     elsif git_notification
       render_403
@@ -135,31 +112,8 @@ class RepositoryGitNotificationsController < ApplicationController
   end
 
 
-  def check_required_permissions
-    # Deny access if the current user is not allowed to manage the project's repository
-    if !@project.module_enabled?(:repository)
-      render_403
-    end
-
-    return true if User.current.admin?
-
-    not_enough_perms = true
-
-    User.current.roles_for_project(@project).each do |role|
-      if role.allowed_to?(:manage_repository)
-        not_enough_perms = false
-        break
-      end
-    end
-
-    if not_enough_perms
-      render_403
-    end
-  end
-
-
-  def check_xhr_request
-    @is_xhr ||= request.xhr?
+  def set_current_tab
+    @tab = 'repository_git_notifications'
   end
 
 end

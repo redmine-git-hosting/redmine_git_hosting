@@ -1,7 +1,7 @@
 ################################################################################
-# Rakefile for selinux installation for Redmine+Redmine_Git_Hosting Plugin     #
+# Rakefile for SELinux installation for Redmine+Redmine Git Hosting Plugin     #
 #                                                                              #
-# This rakefile provides a variety of options for configuring the selinux      #
+# This rakefile provides a variety of options for configuring the SELinux      #
 # context for Redmine + Redmine_Git_Hosting Plugin.  In addition to the usual  #
 # environment variables (such as RAIL_ENV), this rakefile has one additional   #
 # variable, ROOT_PATTERN.  ROOT_PATTERN holds an optional regular expression   #
@@ -18,24 +18,24 @@
 # optional (of course). Default for ROOT_PATTERN is Rails.root                 #
 #                                                                              #
 # 1) Build bin directory with customized scripts for redmine_git_hosting,      #
-#    install new selinux policy, and install complete selinux context for      #
+#    install new SELinux policy, and install complete SELinux context for      #
 #    redmine+redmine_git_hosting plugin                                        #
 #                                                                              #
 # rake selinux:install RAILS_ENV=xxx ROOT_PATTERN="yyy"                        #
-# rake selinux:remove RAILS_ENV=xxx ROOT_PATTERN="yyy"                         #
+# rake selinux:remove  RAILS_ENV=xxx ROOT_PATTERN="yyy"                        #
 #                                                                              #
 # 2) Build bin directory with customized scripts for redmine_git_hosting,      #
-#    install new selinux policy, and install selinux context for               #
-#    redmine_git_hosting plugin (not for complete redmine installation). This  #
-#    option assumes that the redmine installation (and plugin) code are        #
+#    install new SELinux policy, and install SELinux context for               #
+#    redmine_git_hosting plugin (not for complete redmine installation).       #
+#    This option assumes that the redmine installation (and plugin) code are   #
 #    already labeled as "public_content_rw_t" except for dispatch.* files      #
 #    which should be labeled as "httpd_sys_script_exec_t".                     #
 #                                                                              #
 # rake selinux:redmine_git_hosting:install RAILS_ENV=xxx ROOT_PATTERN="yyy"    #
-# rake selinux:redmine_git_hosting:remove RAILS_ENV=xxx ROOT_PATTERN="yyy"     #
+# rake selinux:redmine_git_hosting:remove  RAILS_ENV=xxx ROOT_PATTERN="yyy"    #
 #                                                                              #
 # 3) Build bin directory with customized scripts for redmine_git_hosting and   #
-#    install new selinux policy. Do not install file contexts of any sort.     #
+#    install new SELinux policy. Do not install file contexts of any sort.     #
 #    Proper labeling (done in some other way) should have all of redmine       #
 #    (including plugins) labeled as "public_content_rw_t", with the exception  #
 #    of public/dispatch.* (which should be labeled "httpd_sys_script_exec_t")  #
@@ -43,24 +43,27 @@
 #    with the new label "httpd_redmine_git_script_exec_t".                     #
 #                                                                              #
 # rake selinux:redmine_git_hosting:install_scripts_and_policy RAILS_ENV=xxx ROOT_PATTERN="yyy"
-# rake selinux:redmine_git_hosting:remove_scripts_and_policy RAILS_ENV=xxx ROOT_PATTERN="yyy"
+# rake selinux:redmine_git_hosting:remove_scripts_and_policy  RAILS_ENV=xxx ROOT_PATTERN="yyy"
 #                                                                              #
 ################################################################################
 
+require 'rbconfig'
+
 @@across_roots_values = []
+
 namespace :selinux do
 
-  desc "Configure selinux for Redmine and Redmine_Git_Hosting plugin"
+  desc "Configure SELinux for Redmine and Redmine Git Hosting plugin."
   task :install => [:install_contexts, "selinux:redmine_git_hosting:install"] do
   end
 
-  desc "Unconfigure selinux for Redmine and Redmine_Git_Hosting plugin"
+  desc "Unconfigure SELinux for Redmine and Redmine Git Hosting plugin."
   task :remove => ["selinux:redmine_git_hosting:remove", :remove_contexts] do
   end
 
-  desc "Install selinux file contexts for redmine (without plugins)"
+  desc "Install SELinux file contexts for Redmine (without plugins)."
   task :install_contexts do
-    puts "[Installing file contexts for redmine:"
+    puts "Installing file contexts for Redmine :"
     roots = redmine_roots
     root_pattern = redmine_root_pattern
 
@@ -68,15 +71,15 @@ namespace :selinux do
     sh "semanage fcontext -a -t httpd_sys_script_exec_t \"#{root_pattern}/public/dispatch.*\""
 
     roots.each do |path|
-      puts "Setting new context for redmine root instance at #{path}."
+      puts "Setting new context for Redmine root instance at : '#{path}'."
       sh "restorecon -R -p #{path}"
     end
-    puts "DONE.]"
+    puts "Done !"
   end
 
-  desc "Remove selinux file contexts for redmine (without plugins)"
+  desc "Remove SELinux file contexts for Redmine (without plugins)."
   task :remove_contexts do
-    puts "[Removing file contexts for redmine (ignoring errors):"
+    puts "Removing file contexts for Redmine (ignoring errors) :"
     roots = redmine_roots
     root_pattern = redmine_root_pattern
 
@@ -84,32 +87,33 @@ namespace :selinux do
     sh "semanage fcontext -d \"#{root_pattern}/public/dispatch.*\""
 
     roots.each do |path|
-      puts "Setting new context for redmine root instance at #{path}."
+      puts "Setting new context for Redmine root instance at '#{path}'."
       sh "restorecon -R -p #{path}"
     end
-    puts "DONE.]"
+    puts "Done !"
   end
+
 
   namespace :redmine_git_hosting do
 
-    desc "Install scripts, policy, and file context for redmine_git_hosting plugin."
+    desc "Install scripts, policy, and file context for Redmine Git Hosting plugin."
     task :install => [:install_scripts, :install_policy, :install_contexts] do
     end
 
-    desc "Remove scripts, policy, and file context for redmine_git_hosting plugin."
+    desc "Remove scripts, policy, and file context for Redmine Git Hosting plugin."
     task :remove => [:remove_contexts, :remove_policy, :remove_scripts] do
     end
 
-    desc "Install scripts and policy for redmine_git_hosting plugin."
+    desc "Install scripts and policy for Redmine Git Hosting plugin."
     task :install_scripts_and_policy => [:install_scripts, :install_policy] do
     end
 
-    desc "Remove scripts and policy for redmine_git_hosting plugin."
+    desc "Remove scripts and policy for Redmine Git Hosting plugin."
     task :remove_scripts_and_policy => [:remove_policy, :remove_scripts] do
     end
 
-    desc "Call task in all redmine instances (argument is desired helper task)"
-    task :across_roots, [:funname, :pattern] do |t,args|
+    desc "Call task in all Redmine instances (argument is desired helper task)"
+    task :across_roots, [:funname, :pattern] do |t, args|
       @@across_roots_values = []
       redmine_roots.each do |path|
         if getwd == path
@@ -127,105 +131,107 @@ namespace :selinux do
       end
     end
 
-    desc "Generate and install redmine_git_hosting shell scripts."
+    desc "Generate and install Redmine Git Hosting shell scripts."
     task :install_scripts do
-      puts "[Generating and installing redmine_git_hosting shell scripts:"
+      puts "Generating and installing Redmine Git Hosting shell scripts :"
       Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
-      Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:install_scripts_helper,"Populating script dir: (.*)\n")
-      puts "DONE.]"
+      Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:install_scripts_helper, "Populating script dir : (.*)\n")
+      puts "Done !"
     end
 
-    desc "Helper function for generating and installing redmine_git_hosting shell scripts."
+    desc "Helper function for generating and installing Redmine Git Hosting shell scripts."
     task :install_scripts_helper => [:environment] do
-      if defined?(Rails) && Rails.logger
-        Rails.logger.auto_flushing = true if Rails.logger.respond_to?(:auto_flushing=)
-        Rails.logger.warn "\n\nInstalling scripts from command line (via rake at #{my_date})"
-      end
+
+      RedmineGitolite::GitHosting.logger.warn { "Installing scripts from command line (via rake at #{my_date})" }
+
       web_program = ENV['HTTPD'] || 'httpd'
       web_user = ENV['WEB_USER'] || %x[ps aux | grep #{web_program} | sed "s/ .*$//" | sort -u | grep -v `whoami`].split("\n")[0]
-      GitHosting.redmine_user = web_user
+
+      RedmineGitolite::Config.redmine_user = web_user
 
       # Helper only executed in local environment
-      bin_path = GitHosting.scripts_dir_path
-      puts "Populating script dir: #{bin_path}"
-      print "Clearing out script directory..."
+      bin_path = RedmineGitolite::Config.get_scripts_dir_path
+      puts "Populating script dir : '#{bin_path}'"
+      print "Clearing out script directory... "
       %x[rm -rf "#{bin_path}"]
-      puts "Success!"
-      print "Writing customized scripts to script directory..."
-      GitHosting.update_gitolite_scripts
-      puts "Success!"
+      puts "Success !"
+      print "Writing customized scripts to script directory... "
+      RedmineGitolite::Config.update_scripts
+      puts "Success !"
+
       if (ENV['READ_ONLY']||"true").downcase != "false"
-        print "Making scripts READ_ONLY..."
+        print "Making scripts READ_ONLY... "
         %x[chmod 550 -R "#{bin_path}"]
-        puts "Success!"
+        puts "Success !"
       else
-        print "Making scripts Re-WRITEABLE..."
+        print "Making scripts Re-WRITEABLE... "
         %x[chmod 750 -R "#{bin_path}"]
-        puts "Success!"
+        puts "Success !"
       end
     end
 
-    desc "Remove redmine_git_hosting shell scripts."
+    desc "Remove Redmine Git Hosting shell scripts."
     task :remove_scripts do
-      if Redmine::VERSION.to_s < '1.4'
-        plugin_dir = 'vendor/plugins'
-      else
-        plugin_dir = 'plugins'
-      end
+      plugin_dir = 'plugins'
 
-      puts "[Deleting redmine_git_hosting shell scripts:"
+      puts "Deleting Redmine Git Hosting shell scripts :"
       if @@across_roots_values.empty?
-        puts "  [Finding script directories:"
+        puts "Finding script directories :"
         Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
-        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
-        puts "  DONE.]"
+        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory, "Script directory : (.*)\n")
+        puts "Done !"
       end
       @@across_roots_values.each do |bin_path|
         print "Clearing out #{bin_path} directory..."
         %x[rm -rf "#{bin_path}"]
-        puts "Success!"
+        puts "Success !"
       end
-      puts "DONE.]"
+      puts "Done !"
     end
 
-    desc "Helper function for removing redmine_git_hosting shell scripts."
+
+    desc "Helper function for removing Redmine Git Hosting shell scripts."
     task :remove_scripts_helper => [:environment] do
       # Helper only executed in local environment
-      bin_path = GitHosting.scripts_dir_path
-      print "Clearing out #{bin_path} directory..."
+      bin_path = RedmineGitolite::Config.get_scripts_dir_path
+      print "Clearing out '#{bin_path}' directory..."
       %x[rm -rf "#{bin_path}"]
-      puts "Success!"
+      puts "Success !"
     end
 
-    desc "Install selinux tags and policy for redmine_git_hosting."
+
+    desc "Install SELinux tags and policy for Redmine Git Hosting."
     task :install_policy => [:environment] do
-      puts "[Installing selinux tags and policy for redmine_git_hosting:"
-      sh "semodule -i #{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.pp"
-      puts "DONE.]"
+      puts "Installing SELinux tags and policy for Redmine Git Hosting :"
+      sh "semodule -i #{Rails.root}/#{plugin_dir}/redmine_git_hosting/contrib/selinux/redmine_git.pp"
+      puts "Done !"
     end
 
-    desc "Build and install selinux tags and policy for redmine_git_hosting."
+
+    desc "Build and install SELinux tags and policy for Redmine Git Hosting."
     task :build_policy => [:environment] do
-      puts "[Building and installing selinux policy for redmine_git_hosting:"
-      sh "#{Rails.root}/#{plugin_dir}/redmine_git_hosting/selinux/redmine_git.sh"
-      puts "DONE.]"
+      puts "Building and installing SELinux policy for Redmine Git Hosting :"
+      sh "#{Rails.root}/#{plugin_dir}/redmine_git_hosting/contrib/selinux/redmine_git.sh"
+      puts "Done !"
     end
 
-    desc "Remove selinux tags and policy for redmine_git_hosting."
+
+    desc "Remove SELinux tags and policy for Redmine Git Hosting plugin."
     task :remove_policy => [:environment] do
-      puts "[Deleting selinux tags and policy for redmine_git_hosting."
+      puts "Deleting SELinux tags and policy for Redmine Git Hosting plugin :"
       sh "semodule -r redmine_git | true"
-      puts "DONE.]"
+      puts "Done !"
     end
 
-    desc "Install file contexts for redmine_git_hosting plugin."
+
+    desc "Install file contexts for Redmine Git Hosting plugin."
     task :install_contexts do
-      puts "[Installing file context for redmine_git_hosting plugin:"
+      puts "Installing file context for Redmine Git Hosting plugin :"
       if @@across_roots_values.empty?
-        puts "  [Finding script directories:"
+        puts "Finding script directories :"
         Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
-        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
-        puts "  DONE.]"
+        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory, "Script directory : (.*)\n")
+        puts "Done !"
       end
 
       bin_list = @@across_roots_values.map {|x| x[-1,1]=="/"?x[0..-2]:x}  # Kill off last "/"
@@ -236,17 +242,17 @@ namespace :selinux do
         sh "semanage fcontext -a -t httpd_redmine_git_script_exec_t \"#{next_dir}(/.*)?\" | true" if pattern.class != String
         sh "restorecon -R -p \"#{next_dir}\""
       end
-      puts "DONE.]"
+      puts "Done !"
     end
 
-    desc "Remove file contexts for redmine_git_hosting plugin."
+    desc "Remove file contexts for Redmine Git Hosting plugin."
     task :remove_contexts do
-      puts "[Removing file context for redmine_git_hosting plugin:"
+      puts "Removing file context for Redmine Git Hosting plugin :"
       if @@across_roots_values.empty?
-        puts "  [Finding script directories:"
+        puts "Finding script directories :"
         Rake::Task["selinux:redmine_git_hosting:across_roots"].reenable
-        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory,"Script directory: (.*)\n")
-        puts "  DONE.]"
+        Rake::Task["selinux:redmine_git_hosting:across_roots"].invoke(:get_script_directory, "Script directory : (.*)\n")
+        puts "Done !"
       end
 
       bin_list = @@across_roots_values.map {|x| x[-1,1]=="/"?x[0..-2]:x}  # Kill off last "/"
@@ -257,12 +263,12 @@ namespace :selinux do
         sh "semanage fcontext -d \"#{next_dir}(/.*)?\" | true" if pattern.class != String
         sh "restorecon -R -p \"#{next_dir}\""
       end
-      puts "DONE.]"
+      puts "Done !"
     end
 
-    desc "Helper function to retrieve binary directory for redmine_git_hosting plugin"
+    desc "Helper function to retrieve binary directory for Redmine Git Hosting plugin"
     task :get_script_directory => [:environment] do
-      puts "    Script directory: #{GitHosting.scripts_dir_path}"
+      puts "Script directory : #{RedmineGitolite::Config.get_scripts_dir_path}"
     end
 
   end
@@ -321,12 +327,12 @@ end
 def redmine_roots(*optionpath)
   if @@redmine_roots["/"].nil?
     glob_pattern = regex_to_glob(redmine_root_pattern)
-    search_command = "find #{glob_pattern} -maxdepth #{@@find_maxdepth} -type d -regextype posix-extended -regex #{@@redmine_root_pattern} -prune"
+    search_command = "find #{glob_pattern} -maxdepth #{@@find_maxdepth} -type d #{get_regex_parameter} -regex #{@@redmine_root_pattern} -prune"
     if glob_pattern =~ /.*[\(\[\*\+\?].*/
-      puts "Searching for directories matching \"#{@@redmine_root_pattern}\" (may take a bit):"
+      puts "Searching for directories matching '#{@@redmine_root_pattern}' (may take a bit) :"
       puts "#{search_command}"
     end
-    new_roots=%x[#{search_command}].split("\n")
+    new_roots = %x[#{search_command}].split("\n")
     if new_roots.length == 0
       fail "Error: ROOT_PATTERN does not match any directories!"
     end
@@ -336,7 +342,7 @@ def redmine_roots(*optionpath)
   if optionpath.length > 0
     pathend = optionpath.join("/")
     if @@redmine_roots[pathend].nil?
-      subpaths = @@redmine_roots["/"].map{|myroot|"#{myroot}/#{pathend}"}.select{|dir|File.directory?(dir)}
+      subpaths = @@redmine_roots["/"].map{|myroot| "#{myroot}/#{pathend}"}.select{|dir| File.directory?(dir)}
       if subpaths.length == 0
         fail "Error: ROOT_PATTERN/#{pathend} does not match any directories!"
       end
@@ -347,6 +353,35 @@ def redmine_roots(*optionpath)
     @@redmine_roots["/"]
   end
 
+end
+
+def get_regex_parameter
+  case get_os_version
+    when :linux
+      "-regextype posix-extended"
+    when :macosx
+      "-E"
+    when :unix
+      "-E"
+  end
+end
+
+def get_os_version
+  @os ||= (
+    host_os = RbConfig::CONFIG['host_os']
+    case host_os
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        :windows
+      when /darwin|mac os/
+        :macosx
+      when /linux/
+        :linux
+      when /solaris|bsd/
+        :unix
+      else
+        raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+    end
+  )
 end
 
 # Take input list of directories and see if all of them match the root pattern.

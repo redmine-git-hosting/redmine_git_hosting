@@ -1,5 +1,5 @@
 <% if !@is_xhr %>
-  <h2><%=l(:label_post_receive_url_edit)%></h2>
+  <h2><%= l(:label_post_receive_url_edit) %></h2>
 <% end %>
 
 <%= labelled_form_for :repository_post_receive_urls, @post_receive_url,

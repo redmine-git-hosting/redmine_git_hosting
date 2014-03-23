@@ -2,45 +2,48 @@
 <% flash.now[:warning] = l(:notice_empty_repository) %>
 
 <div class="box">
-  <h2><%= l(:label_help_git_setup) %> :</h2>
+  <% if User.current.allowed_to?(:view_changesets, @project) %>
+    <h2><%= l(:label_help_git_setup) %> :</h2>
 
-  <pre>
-    <a href="http://git-scm.com/download" target="_blank"><%= l(:label_download_and_install_git) %></a>
-    git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
-    git config --global user.email <%= User.current.mail ? User.current.mail : "mail@example.com" %>
-    <% if !User.current.anonymous? && User.current.gitolite_public_keys.active.length == 0 %>
-    <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'} %>
+    <pre>
+      <a href="http://git-scm.com/download" target="_blank"><%= l(:label_download_and_install_git) %></a>
+      git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
+      git config --global user.email <%= User.current.mail ? User.current.mail : "mail@example.com" %>
+      <% if !User.current.anonymous? && User.current.gitolite_public_keys.active.length == 0 %>
+      <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'} %>
+      <% end %>
+    </pre>
+
+    <% if User.current.allowed_to?(:commit_access, @project) %>
+    <div id="repository_setup">
+    <h2><%= l(:label_help_repository_setup_new) %> :</h2>
+    <pre>
+      mkdir <%= @repository.redmine_name %>
+      cd <%= @repository.redmine_name %>
+      git init
+      touch readme.txt
+      git add readme.txt
+      git commit -m 'Initializing <%= @repository.redmine_name %> repository'
+      git remote add origin <span class="git_url_access"></span>
+      git push -u origin master
+    </pre>
+
+    <h2><%= l(:label_help_repository_setup_existing) %> :</h2>
+    <pre>
+      cd existing_git_repo
+      git remote add origin <span class="git_url_access"></span>
+      git push -u origin master
+    </pre>
+    </div>
     <% end %>
-  </pre>
 
-  <% if User.current.allowed_to?(:commit_access, @project) %>
-  <div id="repository_setup">
-  <h2><%= l(:label_help_repository_setup_new) %> :</h2>
-  <pre>
-    mkdir <%= @repository.redmine_name %>
-    cd <%= @repository.redmine_name %>
-    git init
-    touch readme.txt
-    git add readme.txt
-    git commit -m 'Initializing <%= @repository.redmine_name %> repository'
-    git remote add origin <span class="git_url_access"></span>
-    git push -u origin master
-  </pre>
-
-  <h2><%= l(:label_help_repository_setup_existing) %> :</h2>
-  <pre>
-    cd existing_git_repo
-    git remote add origin <span class="git_url_access"></span>
-    git push -u origin master
-  </pre>
-  </div>
+    <h2><%= l(:label_help_repository_clone) %> :</h2>
+    <pre>
+      git clone <span class="git_url_access"></span>
+    </pre>
+  <% else %>
+    <%= l(:label_help_no_repo_rights) %>
   <% end %>
-
-  <h2><%= l(:label_help_repository_clone) %> :</h2>
-  <pre>
-    git clone <span class="git_url_access"></span>
-  </pre>
-
 </div>
 
 <% content_for :sidebar do %>
@@ -53,7 +56,7 @@
     <% end %>
   </ul>
 
-  <% if @repository.is_a?(Repository::Git) && RedmineGitolite::ConfigRedmine.get_setting(:show_repositories_url, true) %>
+  <% if @repository.is_a?(Repository::Git) && RedmineGitolite::ConfigRedmine.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, @project) %>
     <div class="git_hosting_urls">
       <h3><%= l(:label_repository_access_url) %></h3>
       <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>

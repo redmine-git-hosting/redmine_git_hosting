@@ -7,17 +7,23 @@ module RedmineGitolite
 
     include RedmineGitolite::AdminHelper
 
-    def initialize(object_id, action)
-      @gitolite_admin_dir        = RedmineGitolite::Config.gitolite_admin_dir
-      @gitolite_config_file      = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
-      @gitolite_config_file_path = File.join(@gitolite_admin_dir, 'conf', @gitolite_config_file)
+    def initialize(object_id, action, options)
+      @gitolite_admin_dir                = RedmineGitolite::Config.gitolite_admin_dir
+      @gitolite_config_file              = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
+      @gitolite_default_config_file      = RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+      @gitolite_config_file_path         = File.join(@gitolite_admin_dir, 'conf', @gitolite_config_file)
+      @gitolite_default_config_file_path = File.join(@gitolite_admin_dir, 'conf', @gitolite_default_config_file)
+      @gitolite_identifier_prefix        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_identifier_prefix)
+
       @delete_git_repositories   = RedmineGitolite::ConfigRedmine.get_setting(:delete_git_repositories, true)
       @gitolite_server_port      = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_server_port)
       @gitolite_admin_url        = RedmineGitolite::Config.gitolite_admin_url
       @gitolite_admin_ssh_script_path = RedmineGitolite::Config.gitolite_admin_ssh_script_path
       @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
+
       @object_id      = object_id
       @action         = action
+      @options        = options
     end
 
 
@@ -38,25 +44,29 @@ module RedmineGitolite
 
 
     def gitolite_admin_repo_clone
+
+      ## Get or clone Gitolite Admin repo
       if (File.exists? "#{@gitolite_admin_dir}") && (File.exists? "#{@gitolite_admin_dir}/.git") && (File.exists? "#{@gitolite_admin_dir}/keydir") && (File.exists? "#{@gitolite_admin_dir}/conf")
         @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       else
-        begin
-          logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
+        logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
 
+        begin
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "rm -rf '#{@gitolite_admin_dir}'")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "export GIT_SSH=#{@gitolite_admin_ssh_script_path} && git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "chmod 700 '#{@gitolite_admin_dir}'")
-
-          @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { e.message }
+          logger.error { e.command }
+          logger.error { e.output }
           logger.error { "Cannot clone Gitolite Admin repository !!" }
           return false
         end
+
+        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       end
 
-      if @gitolite_config_file != RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+      ## Set Gitolite config file
+      if @gitolite_config_file != @gitolite_default_config_file
         if !File.exists?(@gitolite_config_file_path)
           begin
             RedmineGitolite::GitHosting.execute_command(:local_cmd, "touch '#{@gitolite_config_file_path}'")
@@ -66,6 +76,21 @@ module RedmineGitolite
             return false
           end
         end
+
+        begin
+          include_present = RedmineGitolite::GitHosting.execute_command(:local_cmd, "grep '#{@gitolite_config_file}' #{@gitolite_default_config_file_path} | wc -l")
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          logger.error { e.message }
+          logger.error { "Cannot know if 'include #{@gitolite_config_file}' is present in Gitolite configuration file '#{@gitolite_default_config_file_path}' !!" }
+          return false
+        end
+
+        if include_present.to_i == 1
+          logger.info { "Directive 'include \"#{@gitolite_config_file}\"' is already present in Gitolite configuration file '#{@gitolite_default_config_file}'" }
+        else
+          logger.warn { "Directive 'include \"#{@gitolite_config_file}\"' is not present in Gitolite configuration file '#{@gitolite_default_config_file}'" }
+        end
+
       else
         if !File.exists?(@gitolite_config_file_path)
           logger.error { "Gitolite configuration file does not exist '#{@gitolite_config_file_path}' !!" }
@@ -74,12 +99,13 @@ module RedmineGitolite
         end
       end
 
+      ## Return Gitolite::GitoliteAdmin object
       logger.info { "Using Gitolite configuration file : '#{@gitolite_config_file}'" }
       @gitolite_admin.config = @gitolite_config = Gitolite::Config.new(@gitolite_config_file_path)
     end
 
 
-    def gitolite_admin_repo_commit(message = nil)
+    def gitolite_admin_repo_commit(message = '')
       @gitolite_admin.save("#{@action} : #{message}")
     end
 

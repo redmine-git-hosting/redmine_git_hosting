@@ -40,7 +40,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   end
 
 
-  protected
+  private
 
 
   # Strip leading and trailing whitespace

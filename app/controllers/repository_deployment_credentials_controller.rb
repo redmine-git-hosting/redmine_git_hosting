@@ -1,11 +1,8 @@
-class RepositoryDeploymentCredentialsController < ApplicationController
+class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
-  before_filter :require_login
-  before_filter :set_repository_variable
-  before_filter :set_project_variable
-  before_filter :check_xhr_request
-
+  before_filter :set_current_tab
+  before_filter :can_view_credentials,   :only => [:index]
   before_filter :can_create_credentials, :only => [:new, :create]
   before_filter :can_edit_credentials,   :only => [:edit, :update, :destroy]
 
@@ -13,13 +10,7 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   before_filter :find_key,                   :only => [:edit, :update, :destroy]
   before_filter :find_all_keys,              :only => [:index, :new]
 
-  include GitHostingHelper
-  include GitolitePublicKeysHelper
-
-  helper :git_hosting
   helper :gitolite_public_keys
-
-  layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
 
 
   def index
@@ -29,11 +20,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
       format.html { render :layout => 'popup' }
       format.js
     end
-  end
-
-
-  def show
-    render_404
   end
 
 
@@ -73,10 +59,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   end
 
 
-  def edit
-  end
-
-
   def update
     respond_to do |format|
       if @credential.update_attributes(params[:repository_deployment_credentials])
@@ -102,7 +84,6 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
     if will_delete_key && @key.repository_deployment_credentials.empty?
       # Key no longer used -- delete it!
-      delete_ssh_key
       @key.destroy
       flash[:notice] = l(:notice_deployment_credential_deleted_with_key)
     else
@@ -115,53 +96,21 @@ class RepositoryDeploymentCredentialsController < ApplicationController
   end
 
 
-  protected
-
-
-  def delete_ssh_key
-    repo_key = {}
-    repo_key[:title]    = @key.identifier
-    repo_key[:key]      = @key.key
-    repo_key[:location] = @key.location
-    repo_key[:owner]    = @key.owner
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-  end
-
-
-  # This is a success URL to return to basic listing
-  def success_url
-    url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id)
-  end
+  private
 
 
   def can_view_credentials
-    render_403 unless user_allowed_to(:view_deployment_keys, @project)
+    render_403 unless view_context.user_allowed_to(:view_deployment_keys, @project)
   end
 
 
   def can_create_credentials
-    render_403 unless user_allowed_to(:create_deployment_keys, @project)
+    render_403 unless view_context.user_allowed_to(:create_deployment_keys, @project)
   end
 
 
   def can_edit_credentials
-    render_403 unless user_allowed_to(:edit_deployment_keys, @project)
-  end
-
-
-  def set_repository_variable
-    @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil?
-      render_404
-    end
-  end
-
-
-  def set_project_variable
-    @project = @repository.project
-    if @project.nil?
-      render_404
-    end
+    render_403 unless view_context.user_allowed_to(:edit_deployment_keys, @project)
   end
 
 
@@ -192,20 +141,20 @@ class RepositoryDeploymentCredentialsController < ApplicationController
 
   def find_all_keys
     # display create_with_key view.  Find preexisting keys to offer to user
-    @user_keys = GitolitePublicKey.by_user(User.current).active.deploy_key.order('title ASC')
+    @user_keys = GitolitePublicKey.by_user(User.current).deploy_key.active.order('title ASC')
     @disabled_keys = @repository.repository_deployment_credentials.active.map(&:gitolite_public_key)
 
     @other_keys = []
     if User.current.admin?
       # Admin can use other's deploy keys as well
-      deploy_users = @project.users.find(:all, :order => "login ASC").select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
-      @other_keys = deploy_users.map {|user| user.gitolite_public_keys.active.deploy_key.find(:all, :order => "title ASC")}.flatten
+      deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
+      @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.active.order('title ASC')}.flatten
     end
   end
 
 
-  def check_xhr_request
-    @is_xhr ||= request.xhr?
+  def set_current_tab
+    @tab = 'repository_deployment_credentials'
   end
 
 end

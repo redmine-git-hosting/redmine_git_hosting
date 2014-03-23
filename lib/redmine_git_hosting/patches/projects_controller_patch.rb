@@ -13,7 +13,6 @@ module RedmineGitHosting
           alias_method_chain :archive,   :git_hosting
           alias_method_chain :unarchive, :git_hosting
 
-          include GitHostingHelper
           helper :git_hosting
         end
       end
@@ -55,7 +54,6 @@ module RedmineGitHosting
 
           # Only take projects that have Git repos.
           git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}
-          return if git_projects.empty?
 
           git_projects.reverse.each do |project|
             project.gitolite_repos.reverse.each do |repository|
@@ -111,13 +109,11 @@ module RedmineGitHosting
             repository = Repository.factory("Git")
             repository.is_default = true
             @project.repositories << repository
-            RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
-            RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => repository.id })
 
-            if RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true)
-              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository with README '#{repository.gitolite_repository_name}', create README file" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :create_readme_file, :object => repository.id })
-            end
+            options = { :create_readme_file => RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true) }
+
+            RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
+            RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => repository.id, :options => options })
           end
         end
 

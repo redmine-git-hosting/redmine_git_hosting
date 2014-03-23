@@ -14,6 +14,7 @@ module RedmineGitHosting
           has_many :repository_mirrors,                :dependent => :destroy, :foreign_key => 'repository_id'
           has_many :repository_post_receive_urls,      :dependent => :destroy, :foreign_key => 'repository_id'
           has_many :repository_deployment_credentials, :dependent => :destroy, :foreign_key => 'repository_id'
+          has_many :repository_git_config_keys,        :dependent => :destroy, :foreign_key => 'repository_id'
 
           alias_method_chain :report_last_commit,       :git_hosting
           alias_method_chain :extra_report_last_commit, :git_hosting
@@ -73,8 +74,10 @@ module RedmineGitHosting
         # form, it will still identify the repository (as long as there are not more than
         # one repo with the same identifier.
         #
-        # Note about pre Redmine 1.4 -- only look at last component and try to match to a path.
-        # If that doesn't work, return nil.
+        # Example of data captured by regex :
+        # <MatchData "test/test2/test3/test4/test5.git" 1:"test4/" 2:"test4" 3:"test5" 4:".git">
+        # <MatchData "blabla2.git" 1:nil 2:nil 3:"blabla2" 4:".git">
+
         def find_by_path(path, flags = {})
           if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
             if proj = Project.find_by_identifier(parseit[3])
@@ -83,7 +86,7 @@ module RedmineGitHosting
             elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
               find_by_identifier(parseit[3])
             elsif parseit[2] && proj = Project.find_by_identifier(parseit[2])
-              find_by_identifier_and_project_id(parseit[3],proj.id) ||
+              find_by_identifier_and_project_id(parseit[3], proj.id) ||
               flags[:loose] && find_by_identifier(parseit[3]) || nil
             else
               nil
@@ -336,6 +339,16 @@ module RedmineGitHosting
           end
 
           return parent_parts.join("/")
+        end
+
+
+        def exists_in_gitolite?
+          RedmineGitolite::GitHosting.dir_exists?(gitolite_repository_path)
+        end
+
+
+        def gitolite_hook_key
+          self.extra.key
         end
 
 

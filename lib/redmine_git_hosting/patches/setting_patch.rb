@@ -144,6 +144,7 @@ module RedmineGitHosting
               # Repair key must be true if default path
               if valuehash[:gitolite_config_file] == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
                 valuehash[:gitolite_config_has_admin_key] = 'true'
+                valuehash[:gitolite_identifier_prefix] = RedmineGitolite::Config::GITOLITE_IDENTIFIER_DEFAULT_PREFIX
               end
             end
 
@@ -269,14 +270,15 @@ module RedmineGitHosting
 
 
             if valuehash.has_key?(:gitolite_purge_repos) && !valuehash[:gitolite_purge_repos].empty?
-              valuehash[:gitolite_purge_repos].each do |trash_repo, value|
-                if value == 'true'
-                  @@delete_trash_repo.push(trash_repo)
-                end
-              end
-
-              valuehash[:gitolite_purge_repos] = {}
+              @@delete_trash_repo = valuehash[:gitolite_purge_repos]
+              valuehash[:gitolite_purge_repos] = []
             end
+
+
+            if valuehash[:all_projects_use_git] == 'false'
+              valuehash[:init_repositories_on_create] = 'false'
+            end
+
 
             # Save back results
             self.value = valuehash
@@ -316,11 +318,11 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_redmine_storage_dir] != valuehash[:gitolite_redmine_storage_dir] ||
                @@old_valuehash[:hierarchical_organisation] != valuehash[:hierarchical_organisation]
                 # Need to update everyone!
-                projects = Project.active_or_archived.find(:all, :include => :repositories).select { |x| x if x.parent_id.nil? }
+                projects = Project.active_or_archived.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
                   RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
-                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :option => :flush_cache })
+                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :options => {:flush_cache => true} })
                 end
             end
 
@@ -333,7 +335,7 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_notify_global_include] != valuehash[:gitolite_notify_global_include] ||
                @@old_valuehash[:gitolite_notify_global_exclude] != valuehash[:gitolite_notify_global_exclude]
                 # Need to update everyone!
-                projects = Project.active_or_archived.find(:all, :include => :repositories)
+                projects = Project.active_or_archived.includes(:repositories).all
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
                   RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
@@ -351,7 +353,7 @@ module RedmineGitHosting
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_projects == true
               # Need to update everyone!
-              projects = Project.active_or_archived.find(:all, :include => :repositories)
+              projects = Project.active_or_archived.includes(:repositories).all
               if projects.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
                 RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects_forced, :object => projects.length })

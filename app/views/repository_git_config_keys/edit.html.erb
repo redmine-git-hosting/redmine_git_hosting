@@ -1,0 +1,15 @@
+<% if !@is_xhr %>
+  <h2><%= l(:label_git_config_key_edit) %></h2>
+<% end %>
+
+<%= labelled_form_for :repository_git_config_keys, @git_config_key,
+                      :url  => repository_git_config_key_path(@repository, @git_config_key),
+                      :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
+
+  <%= render :partial => 'form', :locals => { :f => f } %>
+
+  <% if !@is_xhr %>
+    <%= submit_tag l(:button_save), :disable_with => l(:label_backup_in_progress) %>
+    <%= link_to l(:button_cancel), url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id) %>
+  <% end %>
+<% end %>

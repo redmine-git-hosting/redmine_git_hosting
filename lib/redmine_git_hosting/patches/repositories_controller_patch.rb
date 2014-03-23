@@ -12,7 +12,8 @@ module RedmineGitHosting
           alias_method_chain :update,  :git_hosting
           alias_method_chain :destroy, :git_hosting
 
-          include GitHostingHelper
+          before_filter :set_current_tab, :only => :edit
+
           helper :git_hosting
         end
       end
@@ -49,13 +50,11 @@ module RedmineGitHosting
               end
 
               @repository.extra.update_attributes(params[:extra])
-              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id })
 
-              if params[:repository][:create_readme] == 'true'
-                RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository with README '#{@repository.gitolite_repository_name}', create README file" }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :create_readme_file, :object => @repository.id })
-              end
+              options = params[:repository][:create_readme] == 'true' ? {:create_readme_file => true} : {:create_readme_file => false}
+
+              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
+              RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id, :options => options })
             end
           end
         end
@@ -114,6 +113,14 @@ module RedmineGitHosting
               RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_repositories, :object => [repository_data] })
             end
           end
+        end
+
+
+        private
+
+
+        def set_current_tab
+          @tab = params[:tab] || ""
         end
 
       end

@@ -29,12 +29,15 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_redmine_storage_dir   => '',
       :gitolite_recycle_bin_dir       => 'recycle_bin/',
 
+      # Gitolite Config File
+      :gitolite_config_file                  => 'gitolite.conf',
+      :gitolite_config_has_admin_key         => true,
+      :gitolite_identifier_prefix            => 'redmine_',
+
       # Gitolite Global Config
       :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
       :gitolite_scripts_dir                  => './',
       :gitolite_lock_wait_time               => 10,
-      :gitolite_config_file                  => 'gitolite.conf',
-      :gitolite_config_has_admin_key         => true,
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,
@@ -60,8 +63,8 @@ Redmine::Plugin.register :redmine_git_hosting do
 
       # Redmine Config
       :all_projects_use_git             => false,
-      :delete_git_repositories          => true,
       :init_repositories_on_create      => false,
+      :delete_git_repositories          => true,
       :hierarchical_organisation        => true,
       :unique_repo_identifier           => false,
 
@@ -89,9 +92,13 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_repository_post_receive_urls,   :repository_post_receive_urls => :index
     permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => :edit
 
-    permission :create_deployment_keys, :repository_deployment_credentials => :create_with_key
+    permission :create_deployment_keys, :repository_deployment_credentials => :create
     permission :view_deployment_keys,   :repository_deployment_credentials => :index
     permission :edit_deployment_keys,   :repository_deployment_credentials => :edit
+
+    permission :create_repository_git_config_keys, :repository_git_config_keys => :create
+    permission :view_repository_git_config_keys,   :repository_git_config_keys => :index
+    permission :edit_repository_git_config_keys,   :repository_git_config_keys => :edit
 
     permission :create_repository_git_notifications, :repository_git_notifications => :create
     permission :view_repository_git_notifications,   :repository_git_notifications => :index

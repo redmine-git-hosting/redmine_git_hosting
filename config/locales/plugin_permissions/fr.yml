@@ -13,6 +13,10 @@ fr:
   permission_view_deployment_keys: Voir des clés de déploiement
   permission_edit_deployment_keys: Modifier des clés de déploiement
 
+  permission_create_repository_git_config_keys: Créer des clés de configuration Git
+  permission_view_repository_git_config_keys: Voir des clés de configuration Git
+  permission_edit_repository_git_config_keys: Modifier des clés de configuration Git
+
   permission_create_repository_git_notifications: Créer des listes de distributions git
   permission_view_repository_git_notifications: Voir les listes de distribution git
   permission_edit_repository_git_notifications: Modifier les listes de distribution git

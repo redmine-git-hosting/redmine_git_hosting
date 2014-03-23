@@ -32,7 +32,12 @@ module RedmineGitolite
     # Primary interface: execute given command and send IO to block
     # options[:write_stdin] will derive caching key from data that block writes to io stream
     def self.execute(cmd_str, repo_id, options = {}, &block)
-      if max_cache_time == 0 || repo_id.nil? || options[:uncached]
+      if repo_id.nil?
+        logger.error { "repo_id is nil, exit!" }
+        return false
+      end
+
+      if max_cache_time == 0 || options[:uncached]
         # Disabled cache, simply launch shell, don't redirect
         logger.warn { "Cache is disabled : '#{repo_id}'" }
         options.delete(:uncached)
@@ -50,7 +55,7 @@ module RedmineGitolite
         (retio, status) = redirector.exit_shell
       end
 
-      if status && status.exitstatus != 0
+      if status && status.exitstatus.to_i != 0
         logger.error { "Git exited with non-zero status : #{$?.exitstatus}" }
         raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{$?.exitstatus}"
       end

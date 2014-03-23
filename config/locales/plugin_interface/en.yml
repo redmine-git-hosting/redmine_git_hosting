@@ -52,8 +52,8 @@ en:
   label_deployment_credential_delete: Delete Deployment Credential
 
   # Basics notices
+  notice_deployment_credential_created: Deployment Credential was successfully created.
   notice_deployment_credential_updated: Deployment Credential was successfully updated.
-  notice_deployment_credential_added: Deployment Credential was successfully added.
   notice_deployment_credential_deleted: Deployment Credential was successfully deleted.
   notice_deployment_credential_deleted_with_key: Both Deployment Credential and Key were successfully deleted.
   notice_deployment_credential_create_failed: Failed to create deployment credential
@@ -66,7 +66,7 @@ en:
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_permissions: Access Permissions
   label_deployment_credential_delete_when_unused: Delete key when unused?
-  label_deployment_credential_which_deploy_key: Select Deployment Key
+  label_deployment_credential_select_deploy_key: Select Deployment Key
 
   label_deployment_credential_owner: Owner
   label_deployment_credential_public_key_name: Public key name
@@ -76,6 +76,25 @@ en:
   label_deployment_credential_active: Active?
 
   select_other_keys: Other keys
+
+
+  ########### GIT CONFIG KEYS ###########
+  # Basics labels
+  label_git_config_keys: Git Config Keys
+  label_git_config_key_add: Add Git Config Key
+  label_git_config_key_create: Create New Git Config Key
+  label_git_config_key_edit: Edit Git Config Key
+  label_git_config_key_delete: Delete Git Config Key
+
+  # Basics notices
+  notice_git_config_key_created: Git config key was successfully created.
+  notice_git_config_key_updated: Git config key was successfully updated.
+  notice_git_config_key_deleted: Git config key was successfully deleted.
+  notice_git_config_key_create_failed: Failed to create Git config key
+  notice_git_config_key_update_failed: Failed to update Git config key
+
+  label_key: Key
+  label_value: Value
 
 
   ########### GIT NOTIFICATIONS ###########
@@ -88,8 +107,8 @@ en:
 
   # Basics notices
   notice_git_notifications_created: Mailing list was successfully created
-  notice_git_notifications_deleted: Mailing list was successfully deleted
   notice_git_notifications_updated: Mailing list was successfully updated
+  notice_git_notifications_deleted: Mailing list was successfully deleted
   notice_git_notifications_create_failed: Failed to create mailing list
   notice_git_notifications_update_failed: Failed to update mailing list
 
@@ -108,8 +127,8 @@ en:
   label_post_receive_urls: Post Receive URLs
   label_post_receive_url_add: Add Post Receive URL
   label_post_receive_url_create: Create Repository Post-receive URL
-  label_post_receive_url_delete: Delete Repository Post-receive URL
   label_post_receive_url_edit: Edit Repository Post-receive URL
+  label_post_receive_url_delete: Delete Repository Post-receive URL
 
   # Basics notices
   notice_post_receive_url_created: Post-receive URL was successfully created.
@@ -129,7 +148,7 @@ en:
   ########### SSH KEYS ###########
 
   # User SSH keys (notices)
-  notice_public_key_added: Public key <strong>%{title}</strong> was successfully added.
+  notice_public_key_created: Public key <strong>%{title}</strong> was successfully created.
   notice_public_key_updated: Public key <strong>%{title}</strong> was successfully updated.
   notice_public_key_deleted: Public key <strong>%{title}</strong> was successfully deleted.
 
@@ -161,14 +180,10 @@ en:
   error_public_key_create_failed: Failed to create public key.
   error_public_key_update_failed: Failed to update public key.
   error_key_corrupted: seems to be corrupted.
-  error_key_needs_two_components: 'needs at least two components: [key-type] and [key-value].'
-  error_key_bad_type: 'has a bad type.  Valid types are %{types}.'
-  error_key_type_mismatch: type (%{type1}) does not match type within body of key (%{type2}).
   error_key_in_use_by_you: 'is already in use by you as "%{name}".'
   error_key_in_use_by_other: 'is already in use by user "%{login}" as "%{name}".'
   error_key_in_use_by_gitolite_admin: is already in use as the Gitolite administrator key.
   error_key_in_use_by_someone: is already in use. It belongs to another user (ask administrator for details).
-  word_or: or
 
 
   ########### REPOSITORIES ###########
@@ -185,6 +200,8 @@ en:
   label_git_notify: Git Notifications
   label_repository_default_branch: Repository default branch
   label_init_repo_with_readme: Initialize this repository with a README
+  label_browse_repository: Browse repository
+  label_repository_exists_in_gitolite: Repository exists in Gitolite
 
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities
@@ -205,6 +222,7 @@ en:
   label_help_repository_setup_new: Setup New Repository
   label_help_repository_setup_existing: Setup Existing Repository
   label_help_repository_clone: Clone Repository
+  label_help_no_repo_rights: "Sorry, you don't have access to this repository. There's nothing you can do."
   label_this_urls_has_permissions: "This URL has <span id=\"%{span_id}\"></span> access."
   label_read_write_permission: Read+Write
   label_read_only_permission: Read Only
@@ -212,7 +230,8 @@ en:
   notice_empty_repository: Repository is empty. Get started by following the instructions below.
 
   # Gitolite Hooks
-  error_project_not_found: "No project was found with the identifier \"%{identifier}\""
+  error_project_not_found: "No project with this identifier was found"
+  error_repository_not_found: "No repository with this identifier was found"
 
 
   ########### MISCELANOUS ###########

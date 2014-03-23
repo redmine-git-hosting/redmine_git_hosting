@@ -22,7 +22,7 @@
                                             :label    => :label_deployment_credential_select_deploy_key %>
     </p>
 
-    <p><%= f.select :perm, options_for_select(RepositoryDeploymentCredential::valid_perms, RepositoryDeploymentCredential::default_perm),
+    <p><%= f.select :perm, options_for_select(RepositoryDeploymentCredential::VALID_PERMS, RepositoryDeploymentCredential::DEFAULT_PERM),
                            :required => true,
                            :label    => :label_deployment_credential_permissions %>
     </p>

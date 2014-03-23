@@ -11,7 +11,6 @@ class GitolitePublicKeysController < ApplicationController
   helper :custom_fields
 
   helper :gitolite_public_keys
-  include GitolitePublicKeysHelper
 
 
   def create
@@ -19,7 +18,7 @@ class GitolitePublicKeysController < ApplicationController
 
     if params[:create_button]
       if @gitolite_public_key.save
-        flash[:notice] = l(:notice_public_key_added, :title => keylabel(@gitolite_public_key))
+        flash[:notice] = l(:notice_public_key_created, :title => view_context.keylabel(@gitolite_public_key))
 
         respond_to do |format|
           format.html { redirect_to @redirect_url }
@@ -48,7 +47,7 @@ class GitolitePublicKeysController < ApplicationController
     if !request.get?
       if params[:save_button]
         if @gitolite_public_key.update_attributes(params[:gitolite_public_key])
-          flash[:notice] = l(:notice_public_key_updated, :title => keylabel(@gitolite_public_key))
+          flash[:notice] = l(:notice_public_key_updated, :title => view_context.keylabel(@gitolite_public_key))
 
           respond_to do |format|
             format.html { redirect_to @redirect_url }
@@ -73,13 +72,15 @@ class GitolitePublicKeysController < ApplicationController
 
   def destroy
     if request.delete?
-      destroy_key
+      if @gitolite_public_key.destroy
+        flash[:notice] = l(:notice_public_key_deleted, :title => view_context.keylabel(@gitolite_public_key))
+      end
+      redirect_to @redirect_url
     end
-    redirect_to @redirect_url
   end
 
 
-  protected
+  private
 
 
   def set_user_variable
@@ -98,57 +99,20 @@ class GitolitePublicKeysController < ApplicationController
 
 
   def set_users_keys
-    @gitolite_user_keys   = @user.gitolite_public_keys.active.user_key.find(:all, :order => 'title ASC, created_at ASC')
-    @gitolite_deploy_keys = @user.gitolite_public_keys.active.deploy_key.find(:all, :order => 'title ASC, created_at ASC')
+    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.active.order('title ASC, created_at ASC')
+    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.active.order('title ASC, created_at ASC')
     @gitolite_public_keys = @gitolite_user_keys + @gitolite_deploy_keys
   end
 
 
   def find_gitolite_public_key
     key = GitolitePublicKey.find_by_id(params[:id])
-    if key and (@user == key.user || @user.admin?)
+    if key && (@user == key.user || @user.admin?)
       @gitolite_public_key = key
     elsif key
       render_403
     else
       render_404
-    end
-  end
-
-
-  def destroy_key
-    @gitolite_public_key[:active] = 0
-
-    # Since we are ultimately destroying this key, just force save (since old keys may fail new validations)
-    @gitolite_public_key.save((Rails::VERSION::STRING.split('.')[0].to_i > 2) ? { :validate => false } : false)
-    destroy_ssh_key
-
-    flash[:notice] = l(:notice_public_key_deleted, :title => keylabel(@gitolite_public_key))
-  end
-
-
-  def destroy_ssh_key
-    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
-
-    repo_key = {}
-    repo_key['title']    = @gitolite_public_key.identifier
-    repo_key['key']      = @gitolite_public_key.key
-    repo_key['location'] = @gitolite_public_key.location
-    repo_key['owner']    = @gitolite_public_key.owner
-
-    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{@gitolite_public_key.identifier}" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
-
-    project_list = []
-    @gitolite_public_key.user.projects_by_role.each do |role|
-      role[1].each do |project|
-        project_list.push(project.id)
-      end
-    end
-
-    if project_list.length > 0
-      RedmineGitolite::GitHosting.logger.info { "Update project to remove SSH access : #{project_list.uniq}" }
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
     end
   end
 

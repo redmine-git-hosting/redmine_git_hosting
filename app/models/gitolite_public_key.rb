@@ -1,7 +1,3 @@
-require 'base64'
-
-include GitolitePublicKeysHelper
-
 class GitolitePublicKey < ActiveRecord::Base
   unloadable
 
@@ -12,10 +8,6 @@ class GitolitePublicKey < ActiveRecord::Base
   KEY_TYPE_DEPLOY = 1
 
   DEPLOY_PSEUDO_USER = "deploy_key"
-
-  # These two constants are related -- don't change one without the other
-  KEY_FORMATS = ['ssh-rsa', 'ssh-dss']
-  KEY_NUM_COMPONENTS = [3, 5]
 
   belongs_to :user
   has_many   :repository_deployment_credentials, :dependent => :destroy
@@ -35,24 +27,24 @@ class GitolitePublicKey < ActiveRecord::Base
   validates_associated :repository_deployment_credentials
 
   validate :has_not_been_changed
-  validate :key_format_and_uniqueness
+  validate :key_format
+  validate :key_uniqueness
 
   before_validation :set_identifier
   before_validation :strip_whitespace
   before_validation :remove_control_characters
 
-  after_commit      :add_ssh_key, :on => :create
-
-
-  @@myregular = /^(.*)@redmine_\d*_\d*(.pub)?$/
-  def self.ident_to_user_token(identifier)
-    result = @@myregular.match(identifier)
-    (result != nil) ? result[1] : nil
-  end
+  after_commit ->(obj) { obj.add_ssh_key },     on: :create
+  after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
 
 
   def self.by_user(user)
     where("user_id = ?", user.id)
+  end
+
+
+  def to_s
+    title
   end
 
 
@@ -61,6 +53,7 @@ class GitolitePublicKey < ActiveRecord::Base
       begin
         my_time = Time.now
         time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
+        key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
         case key_type
           when KEY_TYPE_USER
             # add "redmine_" as a prefix to the username, and then the current date
@@ -68,26 +61,16 @@ class GitolitePublicKey < ActiveRecord::Base
             #
             # also, it ensures that it is very, very unlikely to conflict with any
             # existing key name if gitolite config is also being edited manually
-            "redmine_#{self.user.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           when KEY_TYPE_DEPLOY
             # add "redmine_deploy_key_" as a prefix, and then the current date
             # to help ensure uniqueness of each key identifier
-            "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            # "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           else
             nil
           end
         end
-  end
-
-
-  # Key type checking functions
-  def user_key?
-    key_type == KEY_TYPE_USER
-  end
-
-
-  def deploy_key?
-    key_type == KEY_TYPE_DEPLOY
   end
 
 
@@ -99,15 +82,20 @@ class GitolitePublicKey < ActiveRecord::Base
     set_identifier
 
     # Need to override the "never change identifier" constraint
-    # Note that Rails 3 has a different calling convention...
     self.save(:validate => false)
 
     self.identifier
   end
 
 
-  def to_s
-    title
+  # Key type checking functions
+  def user_key?
+    key_type == KEY_TYPE_USER
+  end
+
+
+  def deploy_key?
+    key_type == KEY_TYPE_DEPLOY
   end
 
 
@@ -127,21 +115,24 @@ class GitolitePublicKey < ActiveRecord::Base
   def add_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
     RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
-
-    if user_key?
-      project_list = []
-      self.user.projects_by_role.each do |role|
-        role[1].each do |project|
-          project_list.push(project.id)
-        end
-      end
-
-      if project_list.length > 0
-        RedmineGitolite::GitHosting.logger.info { "Update project to add SSH access : #{project_list.uniq}" }
-        RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list.uniq })
-      end
-    end
   end
+
+
+  def destroy_ssh_key
+    RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
+
+    repo_key = {}
+    repo_key['title']    = self.identifier
+    repo_key['key']      = self.key
+    repo_key['location'] = self.location
+    repo_key['owner']    = self.owner
+
+    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
+    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
+  end
+
+
+  private
 
 
   # Strip leading and trailing whitespace
@@ -176,71 +167,44 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def has_not_been_changed
     unless new_record?
+      has_errors = false
+
       %w(identifier key user_id key_type).each do |attribute|
-        errors.add(attribute, 'may not be changed') unless changes[attribute].blank?
+        method = "#{attribute}_changed?"
+        if self.send(method)
+          errors.add(attribute, 'may not be changed')
+          has_errors = true
+        end
       end
+
+      return has_errors
     end
   end
 
 
-  def key_format_and_uniqueness
-    return if key.blank?
+  def key_format
+    file = Tempfile.new('foo')
 
-    # First, check that key crypto type is present and of correct form.  Also, decode base64 and see if key
-    # crypto type matches.  Note that we ignore presence of comment!
-    keypieces = key.match(/^(\S+)\s+(\S+)/)
-
-    if !keypieces || keypieces[1].length > 10  # Probably has key as first component
-      errors.add(:key, l(:error_key_needs_two_components))
-      return false
+    begin
+      file.write(key)
+      file.close
+      RedmineGitolite::GitHosting.execute_command(:local_cmd, "ssh-keygen -l -f #{file.path}")
+      valid = true
+    rescue RedmineGitolite::GitHosting::GitHostingException => e
+      errors.add(:key, l(:error_key_corrupted))
+      valid = false
+    ensure
+      file.unlink
     end
 
+    return valid
+  end
+
+
+  def key_uniqueness
+    keypieces = key.match(/^(\S+)\s+(\S+)/)
     key_format = keypieces[1]
     key_data   = keypieces[2]
-
-    if !KEY_FORMATS.include?(key_format)
-      errors.add(:key, l(:error_key_bad_type, :types => wrap_and_join(KEY_FORMATS, l(:word_or))))
-      return false
-    end
-
-    # Make sure that key has proper number of characters (divisible by 4) and no more than 2 '='
-    if (key_data.length % 4) != 0 || !key_data.match(/^[a-zA-Z0-9\+\/]+={0,2}$/)
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    key_data_decoded = Base64.decode64(key_data)
-
-    piecearray = []
-
-    while key_data_decoded.length >= 4
-      length = 0
-      key_data_decoded.slice!(0..3).bytes do |byte|
-        length = length * 256 + byte
-      end
-      if key_data_decoded.length < length
-        errors.add(:key, l(:error_key_corrupted))
-        return false
-      end
-      piecearray << key_data_decoded.slice!(0..length-1)
-    end
-
-    if key_data_decoded.length != 0
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    if piecearray[0] != key_format
-      errors.add(:key, l(:error_key_type_mismatch, :type1 => key_format, :type2 => piecearray[0]))
-      return false
-    end
-
-    if piecearray.length != KEY_NUM_COMPONENTS[KEY_FORMATS.index(piecearray[0])]
-      errors.add(:key, l(:error_key_corrupted))
-      return false
-    end
-
-    # First version of uniqueness check -- simply check all keys...
 
     # Check against the gitolite administrator key file (owned by noone).
     all_keys = []
@@ -274,6 +238,7 @@ class GitolitePublicKey < ActiveRecord::Base
       end
     end
 
+    return true
   end
 
 end
