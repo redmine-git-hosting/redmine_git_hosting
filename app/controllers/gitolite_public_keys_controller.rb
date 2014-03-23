@@ -80,7 +80,7 @@ class GitolitePublicKeysController < ApplicationController
   end
 
 
-  protected
+  private
 
 
   def set_user_variable

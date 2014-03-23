@@ -95,7 +95,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   end
 
 
-  protected
+  private
 
 
   def can_view_credentials

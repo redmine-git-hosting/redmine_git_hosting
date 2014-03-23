@@ -74,7 +74,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   end
 
 
-  protected
+  private
 
 
   def can_view_post_receive_urls

@@ -21,7 +21,7 @@ class RedmineGitHostingController < ApplicationController
   end
 
 
-  protected
+  private
 
 
   def set_repository_variable

@@ -81,7 +81,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
   end
 
 
-  protected
+  private
 
 
   def can_view_mirrors
