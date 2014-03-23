@@ -1,5 +1,4 @@
 module GitolitePublicKeysHelper
-  unloadable
 
   def keylabel(key)
     if key.user == User.current
