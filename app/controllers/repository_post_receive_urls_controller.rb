@@ -1,6 +1,7 @@
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   unloadable
 
+  before_filter :set_current_tab
   before_filter :can_view_post_receive_urls,   :only => [:index]
   before_filter :can_create_post_receive_urls, :only => [:new, :create]
   before_filter :can_edit_post_receive_urls,   :only => [:edit, :update, :destroy]
@@ -104,5 +105,9 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
     end
   end
 
+
+  def set_current_tab
+    @tab = 'repository_post_receive_urls'
+  end
 
 end

@@ -12,7 +12,8 @@ module RedmineGitHosting
           alias_method_chain :update,  :git_hosting
           alias_method_chain :destroy, :git_hosting
 
-          include GitHostingHelper
+          before_filter :set_current_tab, :only => :edit
+
           helper :git_hosting
         end
       end
@@ -112,6 +113,14 @@ module RedmineGitHosting
               RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_repositories, :object => [repository_data] })
             end
           end
+        end
+
+
+        private
+
+
+        def set_current_tab
+          @tab = params[:tab] || ""
         end
 
       end

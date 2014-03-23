@@ -1,6 +1,7 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
+  before_filter :set_current_tab
   before_filter :can_view_credentials,   :only => [:index]
   before_filter :can_create_credentials, :only => [:new, :create]
   before_filter :can_edit_credentials,   :only => [:edit, :update, :destroy]
@@ -149,6 +150,11 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
       @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.active.order('title ASC')}.flatten
     end
+  end
+
+
+  def set_current_tab
+    @tab = 'repository_deployment_credentials'
   end
 
 end

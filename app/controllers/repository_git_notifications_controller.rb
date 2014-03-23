@@ -1,6 +1,7 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
+  before_filter :set_current_tab
   before_filter :can_view_git_notifications,   :only => [:index]
   before_filter :can_create_git_notifications, :only => [:new, :create]
   before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
@@ -110,5 +111,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
     end
   end
 
+
+  def set_current_tab
+    @tab = 'repository_git_notifications'
+  end
 
 end

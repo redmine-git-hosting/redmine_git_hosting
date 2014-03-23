@@ -1,6 +1,7 @@
 class RepositoryGitConfigKeysController < RedmineGitHostingController
   unloadable
 
+  before_filter :set_current_tab
   before_filter :can_view_config_keys,   :only => [:index]
   before_filter :can_create_config_keys, :only => [:new, :create]
   before_filter :can_edit_config_keys,   :only => [:edit, :update, :destroy]
@@ -104,5 +105,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     end
   end
 
+
+  def set_current_tab
+    @tab = 'repository_git_config_keys'
+  end
 
 end

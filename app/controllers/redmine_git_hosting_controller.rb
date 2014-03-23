@@ -64,7 +64,7 @@ class RedmineGitHostingController < ApplicationController
 
 
   def success_url
-    url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id)
+    url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id, :tab => @tab)
   end
 
 

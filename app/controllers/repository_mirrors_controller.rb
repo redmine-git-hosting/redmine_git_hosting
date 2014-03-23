@@ -1,6 +1,7 @@
 class RepositoryMirrorsController < RedmineGitHostingController
   unloadable
 
+  before_filter :set_current_tab
   before_filter :can_view_mirrors,   :only => [:index]
   before_filter :can_create_mirrors, :only => [:new, :create]
   before_filter :can_edit_mirrors,   :only => [:edit, :update, :destroy]
@@ -111,5 +112,9 @@ class RepositoryMirrorsController < RedmineGitHostingController
     end
   end
 
+
+  def set_current_tab
+    @tab = 'repository_mirrors'
+  end
 
 end
