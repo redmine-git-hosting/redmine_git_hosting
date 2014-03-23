@@ -347,6 +347,11 @@ module RedmineGitHosting
         end
 
 
+        def gitolite_hook_key
+          self.extra.key
+        end
+
+
         private
 
 
