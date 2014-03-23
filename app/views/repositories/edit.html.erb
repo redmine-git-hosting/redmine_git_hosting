@@ -49,6 +49,13 @@
                       repository_git_config_keys_path(@repository) %>
         </li>
       <% end %>
+
+      <% if user_allowed_to(:view_repository_protected_branches, @repository.project) %>
+        <li id="tab-repository_protected_branches">
+          <%= link_to "<i class=\"fa fa-lock\"></i>".html_safe + l(:label_protected_branches),
+                      repository_protected_branches_path(@repository) %>
+        </li>
+      <% end %>
     </ul>
   </div>
 

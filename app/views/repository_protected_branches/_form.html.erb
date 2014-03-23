@@ -1,0 +1,12 @@
+<div id="validation_messages_protected_branch"><%= error_messages_for 'protected_branch' %></div>
+
+<% roles = Role.find_all_givable %>
+
+<div class="box">
+  <p><%= f.select     :role_id,     roles.collect{|role| [role.name, role.id]}, :required => true %></p>
+  <p><%= f.text_field :path,        :required => true, :size => 65, :label => l(:label_branch_path) %></p>
+  <p><%= f.select     :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, RepositoryProtectedBranche::DEFAULT_PERM),
+                      :required => true,
+                      :label    => :label_permissions %>
+  </p>
+</div>

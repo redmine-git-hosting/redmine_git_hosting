@@ -97,6 +97,24 @@ en:
   label_value: Value
 
 
+  ########### PROTECTED BRANCHES ###########
+  # Basics labels
+  label_protected_branches: Protected branches
+  label_protected_branch_add: Add protected branch
+  label_protected_branch_create: Create protected branch
+  label_protected_branch_edit: Edit protected branch
+  label_protected_branch_delete: Delete protected branch
+
+  # Basics notices
+  notice_protected_branch_created: Protected branch was successfully created.
+  notice_protected_branch_updated: Protected branch was successfully updated.
+  notice_protected_branch_deleted: Protected branch was successfully deleted.
+  notice_protected_branch_create_failed: Failed to create protected branch
+  notice_protected_branch_update_failed: Failed to update protected branch
+
+  label_branch_path: Branch path
+
+
   ########### GIT NOTIFICATIONS ###########
   # Basics labels
   label_git_notifications: Mailing list
@@ -247,3 +265,4 @@ en:
   label_url: URL
   label_mode: Mode
   button_ok: OK
+  button_clone: Clone

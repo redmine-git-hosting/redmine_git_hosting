@@ -1,0 +1,66 @@
+<div>
+
+  <% if user_allowed_to(:create_repository_protected_branches, @project) %>
+    <div class="contextual">
+      <%= link_to(l(:label_protected_branch_add), new_repository_protected_branch_path(@repository),
+                                                  :class => 'icon icon-add modal-box') %>
+
+    </div>
+  <% end %>
+
+  <h3><%= l(:label_protected_branches) %></h3>
+
+  <% if @repository_protected_branches.any? %>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><%= l(:label_role) %></th>
+          <th><%= l(:label_branch_path) %></th>
+          <th><%= l(:label_permissions) %></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @repository_protected_branches.each do |protected_branch| %>
+          <tr>
+            <td><span class="label label-info"><%= protected_branch.role %></span></td>
+            <td><span class="label label-info"><%= protected_branch.path %></span></td>
+            <td>
+              <% color = protected_branch.permissions == '-' ? 'important' : 'success' %>
+              <span class="label label-<%= color %>"><%= protected_branch.permissions %></span>
+            </td>
+
+            <td class="buttons">
+              <% if user_allowed_to(:edit_repository_protected_branches, @project) %>
+
+                <%= link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch),
+                                             :class => 'icon icon-edit modal-box' %>
+
+                <%= link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch),
+                                              :class => 'icon icon-clone modal-box' %>
+
+                <%= link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch),
+                                               :remote  => true,
+                                               :method  => :delete,
+                                               :confirm => l(:text_are_you_sure),
+                                               :class   => 'icon icon-del' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% end %>
+
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    initModalBoxes(modals);
+  });
+<% end %>

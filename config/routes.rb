@@ -6,6 +6,8 @@ RedmineApp::Application.routes.draw do
 
   match 'repositories/:repository_id/mirrors/:id/push', :to => 'repository_mirrors#push', :via => [:get], :as => 'push_to_mirror'
 
+  match 'repositories/:repository_id/protected_branches/:id/clone', :to => 'repository_protected_branches#clone', :via => [:get], :as => 'clone_repository_protected_branch'
+
   match 'repositories/:repository_id/download_revision/:rev', :to  => 'download_git_revision#index',
                                                               :via => [:get],
                                                               :as  => 'download_git_revision'
@@ -17,6 +19,7 @@ RedmineApp::Application.routes.draw do
       resources :deployment_credentials, controller: 'repository_deployment_credentials'
       resources :git_notifications,      controller: 'repository_git_notifications'
       resources :git_config_keys,        controller: 'repository_git_config_keys'
+      resources :protected_branches,     controller: 'repository_protected_branches'
     end
   end
 

@@ -17,6 +17,10 @@ fr:
   permission_view_repository_git_config_keys: Voir des clés de configuration Git
   permission_edit_repository_git_config_keys: Modifier des clés de configuration Git
 
+  permission_create_repository_protected_branches: Créer des branches protégées
+  permission_view_repository_protected_branches: Voir des branches protégées
+  permission_edit_repository_protected_branches: Modifier des branches protégées
+
   permission_create_repository_git_notifications: Créer des listes de distributions git
   permission_view_repository_git_notifications: Voir les listes de distribution git
   permission_edit_repository_git_notifications: Modifier les listes de distribution git

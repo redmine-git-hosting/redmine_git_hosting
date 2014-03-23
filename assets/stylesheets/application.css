@@ -5,6 +5,7 @@ PLUGIN ICONS
 
 .icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
 .icon-push { background-image: url("../images/icon-divide.png"); }
+.icon-clone { background-image: url("../images/clone.png"); }
 .icon-deployment-credentials { background-image: url("../images/textfield_key.png"); }
 .icon-post-receive-urls { background-image: url("../images/link.png"); }
 .icon-mirrors { background-image: url("../images/table_multiple.png"); }
