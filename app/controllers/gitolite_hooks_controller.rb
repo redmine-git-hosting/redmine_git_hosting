@@ -92,7 +92,7 @@ class GitoliteHooksController < ApplicationController
     @project = Project.find_by_identifier(params[:projectid])
 
     if @project.nil?
-      render :text => l(:error_project_not_found, :identifier => params[:projectid])
+      render :partial => 'gitolite_hooks/project_not_found'
       return
     end
 
@@ -104,7 +104,7 @@ class GitoliteHooksController < ApplicationController
     end
 
     if @repository.nil?
-      render_404
+      render :partial => 'gitolite_hooks/repository_not_found'
     end
   end
 

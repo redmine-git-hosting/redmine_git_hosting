@@ -230,7 +230,8 @@ fr:
   notice_empty_repository: Le dépôt est vide. Commencez en suivant les instructions ci-dessous.
 
   # Gitolite Hooks
-  error_project_not_found: "Aucun projet avec l'identifiant « %{identifier} » n'a été trouvé."
+  error_project_not_found: "Aucun projet avec cet identifiant n'a été trouvé"
+  error_repository_not_found: "Aucun dépôt avec cet identifiant n'a été trouvé"
 
 
   ########### MISCELANOUS ###########

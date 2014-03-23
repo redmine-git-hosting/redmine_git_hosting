@@ -230,7 +230,8 @@ en:
   notice_empty_repository: Repository is empty. Get started by following the instructions below.
 
   # Gitolite Hooks
-  error_project_not_found: "No project was found with the identifier \"%{identifier}\""
+  error_project_not_found: "No project with this identifier was found"
+  error_repository_not_found: "No repository with this identifier was found"
 
 
   ########### MISCELANOUS ###########
