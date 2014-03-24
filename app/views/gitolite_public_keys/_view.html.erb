@@ -47,7 +47,7 @@
 
         </p>
 
-        <div id="key_type_options" style="display: none;">
+        <div id="key_type_options" style="display: <%= (@new_key || @gitolite_public_key.key_type == 0) ? 'none' : '' %>;">
           <p>
             <%= f.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %>
           </p>
