@@ -56,10 +56,10 @@ module RedmineGitHosting
           12.times {|m| fields << month_name(((Date.today.month - 1 - m) % 12) + 1)}
 
           data = {}
-          data[:categories] = fields
+          data[:categories] = fields.reverse
           data[:series] = []
-          data[:series].push({:name => l(:label_revision_plural), :data => commits_by_month})
-          data[:series].push({:name => l(:label_change_plural), :data => changes_by_month})
+          data[:series].push({:name => l(:label_revision_plural), :data => commits_by_month[0..11].reverse})
+          data[:series].push({:name => l(:label_change_plural), :data => changes_by_month[0..11].reverse})
 
           return data
         end
