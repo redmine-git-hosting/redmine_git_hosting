@@ -37,8 +37,8 @@ module RedmineGitHosting
           data = {}
 
           total_commits = Changeset.where("repository_id = ?", self.id).count
-          first_commit  = Changeset.where("repository_id = ?", self.id).first
-          last_commit   = Changeset.where("repository_id = ?", self.id).last
+          first_commit  = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').first
+          last_commit   = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').last
           active_for    = (last_commit.commit_date - first_commit.commit_date).to_i
           committers    = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq.size
 
