@@ -144,3 +144,26 @@ function createPieChart(element){
     series: element.series
   });
 }
+
+function createBarChart(element){
+  $(element.target).highcharts({
+    chart: {
+      type: "bar"
+    },
+    title: {
+      text: element.label
+    },
+    xAxis: {
+      categories: element.categories,
+      title: {
+        text: element.label_y_axis
+      }
+    },
+    yAxis: {
+      title: {
+        text: element.label_x_axis
+      }
+    },
+    series: element.series
+  });
+}

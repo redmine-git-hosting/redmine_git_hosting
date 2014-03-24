@@ -250,6 +250,7 @@ en:
   label_commits_number: Number of commits
   label_commit_plural: Commits
   label_commits_per_day: Commits per day
+  label_commits_per_hour: Commits per hour
   label_commits_per_weekday: Commits per weekday
 
   label_monday: Monday
@@ -273,4 +274,5 @@ en:
   label_delete_in_progress: Deleting...
   label_url: URL
   label_mode: Mode
+  label_hour: Hour
   button_ok: OK

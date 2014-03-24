@@ -32,7 +32,10 @@
     <div id="chart_commits_per_month" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
     <div id="chart_commits_per_day" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
 
-    <div style="clear: both; margin: 10px;  margin-bottom: 20px;"></div>
+    <div style="clear: both; margin: 10px;"></div>
+
+    <div id="chart_commits_per_hour" style="height: 500px; width: 47%; margin: 10px; float: left;"></div>
+    <div id="chart_commits_per_weekday" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
 
     <div id="chart_commits_per_weekday" style="margin-top: 20px;"></div>
 
@@ -60,6 +63,14 @@
         borderWidth: 1,
         backgroundColor: '#FFFFFF'
       };
+
+      var chart_commits_per_hour          = new Object();
+      chart_commits_per_hour.label        = "<%= l(:label_commits_per_hour) %>";
+      chart_commits_per_hour.label_y_axis = "<%= l(:label_hour) %>";
+      chart_commits_per_hour.label_x_axis = "<%= l(:label_commits_number) %>";
+      chart_commits_per_hour.target       = '#chart_commits_per_hour';
+      chart_commits_per_hour.categories   = <%= @repository.commits_per_hours[:categories].to_json.html_safe %>;
+      chart_commits_per_hour.series       = <%= @repository.commits_per_hours[:series].to_json.html_safe %>;
 
       var chart_commits_per_weekday     = new Object();
       chart_commits_per_weekday.label   = "<%= l(:label_commits_per_weekday) %>";
@@ -109,11 +120,13 @@
 
 </div>
 
+<div style="clear: both; margin: 10px;"></div>
 
 <%= javascript_tag do %>
   $(document).ready(function() {
     createAreaChart(chart_commits_per_month);
     createZoomableAreaChart(chart_commits_per_day);
+    createBarChart(chart_commits_per_hour);
     createPieChart(chart_commits_per_weekday);
 
     <% author_charts.each do |chart| %>

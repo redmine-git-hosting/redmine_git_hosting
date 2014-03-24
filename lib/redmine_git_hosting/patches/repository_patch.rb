@@ -34,14 +34,13 @@ module RedmineGitHosting
       module InstanceMethods
 
         def global_statistics
-          data = {}
-
           total_commits = Changeset.where("repository_id = ?", self.id).count
           first_commit  = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').first
           last_commit   = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').last
           active_for    = (last_commit.commit_date - first_commit.commit_date).to_i
           committers    = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq.size
 
+          data = {}
           data[l(:label_total_commits)]               = total_commits
           data[l(:label_total_contributors)]          = committers
           data[l(:label_first_commit_date)]           = first_commit.commit_date
@@ -54,11 +53,30 @@ module RedmineGitHosting
         end
 
 
-        def commits_per_day
+        def commits_per_hours
+          total_commits_by_hour = Changeset.where("repository_id = ?", self.id).map(&:committed_on)
+
+          commits_by_hour = [0] * 24
+          total_commits_by_hour.each {|c| commits_by_hour[get_hour_from_date(c)] += 1 }
+
+          hours = (0..23).step(1).to_a
+          new_hours = []
+          hours.each { |h| new_hours.push("#{h}h") }
+
           data = {}
+          data[:categories]    = new_hours
+          data[:series]        = []
+          data[:series].push({:name => l(:label_commit_plural), :data => commits_by_hour})
+
+          return data
+        end
+
+
+        def commits_per_day
           total_commits_by_day = Changeset.where("repository_id = ?", self.id).group(:commit_date).count
           total_changes_by_day = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:commit_date).count
 
+          data = {}
           data[:categories]    = total_commits_by_day.keys
           data[:series]        = []
           data[:series].push({:name => l(:label_commit_plural), :data => total_commits_by_day.values})
@@ -192,6 +210,18 @@ module RedmineGitHosting
           end
 
           return data
+        end
+
+
+        private
+
+
+        def get_hour_from_date(date)
+          return nil unless date
+          time = date.to_time
+          zone = User.current.time_zone
+          local = zone ? time.in_time_zone(zone) : (time.utc? ? time.localtime : time)
+          local.hour
         end
 
       end
