@@ -47,6 +47,8 @@
                        :id => @project, :page => nil, :key => User.current.rss_key})) %>
    <% end %>
 
+   <%= call_hook(:view_repositories_show_bottom, { :repository => @repository, :project => @project }) %>
+
    <% other_formats_links do |f| %>
     <%= f.link_to 'Atom',
                   :url => {:action => 'revisions', :id => @project,

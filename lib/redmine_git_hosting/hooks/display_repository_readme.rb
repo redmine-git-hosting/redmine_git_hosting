@@ -7,7 +7,7 @@ module RedmineGitHosting
 
       @@markdown_ext = %w(.txt)
 
-      def view_repositories_show_contextual(context)
+      def view_repositories_show_bottom(context)
 
         path = context[:request].params['path'] || ''
         rev = (_rev = context[:request].params['rev']).blank? ? nil : _rev
