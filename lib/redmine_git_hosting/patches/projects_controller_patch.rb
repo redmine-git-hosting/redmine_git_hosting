@@ -12,6 +12,8 @@ module RedmineGitHosting
           alias_method_chain :destroy,   :git_hosting
           alias_method_chain :archive,   :git_hosting
           alias_method_chain :unarchive, :git_hosting
+          alias_method_chain :close,     :git_hosting
+          alias_method_chain :reopen,    :git_hosting
 
           helper :git_hosting
         end
@@ -37,9 +39,10 @@ module RedmineGitHosting
 
           if @project.gitolite_repos.detect {|repo| repo.url != repo.gitolite_repository_path || repo.url != repo.root_url}
             # Hm... something about parent hierarchy changed.  Update us and our children
+            update = false
+
             RedmineGitolite::GitHosting.logger.info { "Move repositories of project : '#{@project}'" }
             RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories, :object => @project.id })
-            update = false
           end
 
           # Adjust daemon status
@@ -74,25 +77,11 @@ module RedmineGitHosting
 
         def archive_with_git_hosting(&block)
           archive_without_git_hosting(&block)
-
-          projects = @project.self_and_descendants
-
-          # Only take projects that have Git repos.
-          git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}
-          return if git_projects.empty?
-
-          project_list = []
-          git_projects.each do |project|
-            project_list.push(project.id)
-          end
-
-          RedmineGitolite::GitHosting.logger.info { "Project has been archived, update it : '#{@project}'" }
-          RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list })
+          update_projects("Project has been archived, update it : '#{@project}'")
         end
 
 
         def unarchive_with_git_hosting(&block)
-          # Do actual update
           unarchive_without_git_hosting(&block)
 
           RedmineGitolite::GitHosting.logger.info { "Project has been unarchived, update it : '#{@project}'" }
@@ -100,7 +89,35 @@ module RedmineGitHosting
         end
 
 
+        def close_with_git_hosting(&block)
+          close_without_git_hosting(&block)
+          update_projects("Project has been closed, update it : '#{@project}'")
+        end
+
+
+        def reopen_with_git_hosting(&block)
+          reopen_without_git_hosting(&block)
+          update_projects("Project has been reopened, update it : '#{@project}'")
+        end
+
+
         private
+
+
+        def update_projects(message)
+          projects = @project.self_and_descendants
+
+          # Only take projects that have Git repos.
+          git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}
+
+          project_list = []
+          git_projects.each do |project|
+            project_list.push(project.id)
+          end
+
+          RedmineGitolite::GitHosting.logger.info { message }
+          RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list })
+        end
 
 
         def git_repo_init

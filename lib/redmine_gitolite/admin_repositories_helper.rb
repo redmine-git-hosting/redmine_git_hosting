@@ -194,7 +194,7 @@ module RedmineGitolite
     end
 
 
-    SKIP_USERS = [ 'gitweb', 'daemon', 'DUMMY_REDMINE_KEY', 'ARCHIVED_REDMINE_KEY' ]
+    SKIP_USERS = [ 'gitweb', 'daemon', 'DUMMY_REDMINE_KEY', 'REDMINE_ARCHIVED_PROJECT', 'REDMINE_CLOSED_PROJECT' ]
 
     def get_old_permissions(repo_conf)
       current_permissions = repo_conf.permissions[0]
@@ -278,11 +278,11 @@ module RedmineGitolite
       write  = []
       read   = []
 
-      if project.active?
-        rewind_users = users.select{|user| user.allowed_to?(:manage_repository, project)}
-        write_users  = users.select{|user| user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
-        read_users   = users.select{|user| user.allowed_to?(:view_changesets, project) && !user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
+      rewind_users = users.select{|user| user.allowed_to?(:manage_repository, project)}
+      write_users  = users.select{|user| user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
+      read_users   = users.select{|user| user.allowed_to?(:view_changesets, project) && !user.allowed_to?(:commit_access, project) && !user.allowed_to?(:manage_repository, project)}
 
+      if project.active?
         rewind = rewind_users.map{|user| user.gitolite_identifier}
         write  = write_users.map{|user| user.gitolite_identifier}
         read   = read_users.map{|user| user.gitolite_identifier}
@@ -303,8 +303,12 @@ module RedmineGitolite
         read << "DUMMY_REDMINE_KEY" if read.empty? && write.empty? && rewind.empty?
         read << "gitweb" if User.anonymous.allowed_to?(:browse_repository, project) && repository.extra.git_http != 0
         read << "daemon" if User.anonymous.allowed_to?(:view_changesets, project) && repository.extra.git_daemon == 1
+      elsif project.archived?
+        read << "REDMINE_ARCHIVED_PROJECT"
       else
-        read << "ARCHIVED_REDMINE_KEY"
+        all_read = rewind_users + write_users + read_users
+        read     = all_read.map{|user| user.gitolite_identifier}
+        read << "REDMINE_CLOSED_PROJECT" if read.empty?
       end
 
       permissions = {}
