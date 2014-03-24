@@ -1,0 +1,33 @@
+<h2><%= l(:label_statistics) %></h2>
+
+<%= javascript_include_tag 'highcharts/highcharts',        :plugin => 'redmine_git_hosting' %>
+<%= javascript_include_tag 'highcharts/modules/drilldown', :plugin => 'redmine_git_hosting' %>
+<%= javascript_include_tag 'set_highcharts',               :plugin => 'redmine_git_hosting' %>
+
+<div id="chart_commits_per_month"></div>
+<div id="chart_commits_per_author"></div>
+
+<%= javascript_tag do %>
+  var chart_commits_per_month          = new Object();
+  chart_commits_per_month.label        = "<%= l(:label_commits_per_month) %>";
+  chart_commits_per_month.label_y_axis = "<%= l(:label_commits_number) %>";
+  chart_commits_per_month.target       = '#chart_commits_per_month';
+  chart_commits_per_month.categories   = <%= @repository.commits_per_month[:categories].to_json.html_safe %>;
+  chart_commits_per_month.series       = <%= @repository.commits_per_month[:series].to_json.html_safe %>;
+
+  var chart_commits_per_author          = new Object();
+  chart_commits_per_author.label        = "<%= l(:label_commits_per_author) %>";
+  chart_commits_per_author.label_y_axis = "<%= l(:label_commits_number) %>";
+  chart_commits_per_author.target       = '#chart_commits_per_author';
+  chart_commits_per_author.categories   = <%= @repository.commits_per_author[:categories].to_json.html_safe %>;
+  chart_commits_per_author.series       = <%= @repository.commits_per_author[:series].to_json.html_safe %>;
+
+  $(document).ready(function() {
+    createColumnChart(chart_commits_per_month);
+    createColumnChart(chart_commits_per_author);
+  });
+<% end %>
+
+<p><%= link_to l(:button_back), :action => 'show', :id => @project %></p>
+
+<% html_title(l(:label_repository), l(:label_statistics)) -%>

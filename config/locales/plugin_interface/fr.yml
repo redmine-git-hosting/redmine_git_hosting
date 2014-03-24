@@ -247,3 +247,5 @@ fr:
   label_url: URL
   label_mode: Mode
   button_ok: OK
+
+  label_commits_number: Nombre de commits
