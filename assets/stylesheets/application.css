@@ -283,3 +283,33 @@ li {
   padding-top: 10px;
   text-align: right;
 }
+
+.span6 {
+  width: 500px;
+}
+
+.thumbnail h5 {
+  background: none repeat scroll 0 0 #1ABC9C;
+  color: #FFFFFF;
+  padding: 10px;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 10px 0;
+}
+
+.thumbnail h4 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 5px;
+  border-bottom: 0 none;
+}
+
+.thumbnail h4 small {
+  color: #999999;
+  font-weight: normal;
+  line-height: 1;
+}

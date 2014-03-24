@@ -54,6 +54,62 @@ module RedmineGitHosting
         end
 
 
+        def commits_per_day
+          data = {}
+          total_commits_by_day = Changeset.where("repository_id = ?", self.id).group(:commit_date).count
+          total_changes_by_day = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:commit_date).count
+
+          data[:categories]    = total_commits_by_day.keys
+          data[:series]        = []
+          data[:series].push({:name => l(:label_commit_plural), :data => total_commits_by_day.values})
+          data[:series].push({:name => l(:label_change_plural), :data => total_changes_by_day.values})
+
+          return data
+        end
+
+
+        def commits_per_weekday
+          week_day = {}
+          week_day[l(:label_monday)]    = 0
+          week_day[l(:label_tuesday)]   = 0
+          week_day[l(:label_wednesday)] = 0
+          week_day[l(:label_thursday)]  = 0
+          week_day[l(:label_friday)]    = 0
+          week_day[l(:label_saturday)]  = 0
+          week_day[l(:label_sunday)]    = 0
+
+          total_commits = Changeset.where("repository_id = ?", self.id).group(:commit_date).count
+          total_commits.each do |commit_date, commit_count|
+            case commit_date.to_date.wday
+              when 0
+                week_day[l(:label_sunday)] += commit_count
+              when 1
+                week_day[l(:label_monday)] += commit_count
+              when 2
+                week_day[l(:label_tuesday)] += commit_count
+              when 3
+                week_day[l(:label_wednesday)] += commit_count
+              when 4
+                week_day[l(:label_thursday)] += commit_count
+              when 5
+                week_day[l(:label_friday)] += commit_count
+              when 6
+                week_day[l(:label_saturday)] += commit_count
+            end
+          end
+
+          data = {}
+          data[:name] = l(:label_commit_plural)
+          data[:data] = []
+
+          week_day.each do |key, value|
+            data[:data].push([key, value])
+          end
+
+          return [data]
+        end
+
+
         def commits_per_month
           @date_to = Date.today
           @date_from = @date_to << 11
@@ -79,14 +135,14 @@ module RedmineGitHosting
           data = {}
           data[:categories] = fields.reverse
           data[:series] = []
-          data[:series].push({:name => l(:label_revision_plural), :data => commits_by_month[0..11].reverse})
+          data[:series].push({:name => l(:label_commit_plural), :data => commits_by_month[0..11].reverse})
           data[:series].push({:name => l(:label_change_plural), :data => changes_by_month[0..11].reverse})
 
           return data
         end
 
 
-        def commits_per_author
+        def commits_per_author_global
           commits_by_author = Changeset.where("repository_id = ?", self.id).group(:committer).count
           commits_by_author.to_a.sort! {|x, y| x.last <=> y.last}
 
@@ -102,13 +158,38 @@ module RedmineGitHosting
           changes_data = changes_data + [0]*(10 - changes_data.length) if changes_data.length<10
 
           # Remove email adress in usernames
-          fields = fields.collect {|c| c.gsub(%r{<.+@.+>}, '') }
+          fields = fields.collect {|c| c.gsub(%r{<.+@.+>}, '').strip }
 
           data = {}
           data[:categories] = fields
           data[:series] = []
-          data[:series].push({:name => l(:label_revision_plural), :data => commits_data})
+          data[:series].push({:name => l(:label_commit_plural), :data => commits_data})
           data[:series].push({:name => l(:label_change_plural), :data => changes_data})
+
+          return data
+        end
+
+
+        def commits_per_author
+          data = []
+
+          committers = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq
+
+          committers.each do |committer|
+            commits = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).count
+
+            committer_name = committer.split('<')[0].strip
+            committer_mail = committer.split('<')[1].gsub('>', '')
+
+            commits_data = {}
+            commits_data[:author_name]   = committer_name
+            commits_data[:author_mail]   = committer_mail
+            commits_data[:total_commits] = commits.values.map(&:to_i).reduce(:+)
+            commits_data[:categories]    = commits.keys
+            commits_data[:series]        = []
+            commits_data[:series].push({:name => l(:label_commit_plural), :data => commits.values})
+            data.push(commits_data)
+          end
 
           return data
         end

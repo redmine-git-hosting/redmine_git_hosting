@@ -249,6 +249,17 @@ fr:
   label_active_days: jours
 
   label_commits_number: Nombre de commits
+  label_commit_plural: Commits
+  label_commits_per_day: Commits par jour
+  label_commits_per_weekday: Commits par jour de la semaine
+
+  label_monday: Lundi
+  label_tuesday: Mardi
+  label_wednesday: Mercredi
+  label_thursday: Jeudi
+  label_friday: Vendredi
+  label_saturday: Samedi
+  label_sunday: Dimanche
 
 
   ########### MISCELANOUS ###########
