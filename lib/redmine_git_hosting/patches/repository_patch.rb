@@ -33,6 +33,27 @@ module RedmineGitHosting
 
       module InstanceMethods
 
+        def global_statistics
+          data = {}
+
+          total_commits = Changeset.where("repository_id = ?", self.id).count
+          first_commit  = Changeset.where("repository_id = ?", self.id).first
+          last_commit   = Changeset.where("repository_id = ?", self.id).last
+          active_for    = (last_commit.commit_date - first_commit.commit_date).to_i
+          committers    = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq.size
+
+          data[l(:label_total_commits)]               = total_commits
+          data[l(:label_total_contributors)]          = committers
+          data[l(:label_first_commit_date)]           = first_commit.commit_date
+          data[l(:label_latest_commit_date)]          = last_commit.commit_date
+          data[l(:label_active_for)]                  = "#{active_for} #{l(:label_active_days)}"
+          data[l(:label_average_commit_per_day)]      = total_commits.fdiv(active_for).round(2)
+          data[l(:label_average_contributor_commits)] = total_commits.fdiv(committers).round(2)
+
+          return data
+        end
+
+
         def commits_per_month
           @date_to = Date.today
           @date_from = @date_to << 11

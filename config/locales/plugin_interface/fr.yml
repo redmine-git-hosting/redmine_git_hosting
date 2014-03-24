@@ -234,6 +234,23 @@ fr:
   error_repository_not_found: "Aucun dépôt avec cet identifiant n'a été trouvé"
 
 
+  # Statistics
+  label_repository_statistics_global: Statistiques globales
+  label_repository_statistics_commits: Statistiques des commits
+  label_repository_statistics_contributors: Statistiques des contributeurs
+
+  label_total_commits: Nombre total de commits
+  label_total_contributors: Nombre total de contributeurs
+  label_average_contributor_commits: Moyenne des commits par contributeur
+  label_average_commit_per_day: Moyenne des commits par jour
+  label_first_commit_date: Date du premier commit
+  label_latest_commit_date: Date du dernier commit
+  label_active_for: Actif depuis
+  label_active_days: jours
+
+  label_commits_number: Nombre de commits
+
+
   ########### MISCELANOUS ###########
 
   label_enabled: Activé
@@ -247,5 +264,3 @@ fr:
   label_url: URL
   label_mode: Mode
   button_ok: OK
-
-  label_commits_number: Nombre de commits

@@ -1,11 +1,42 @@
 <h2><%= l(:label_statistics) %></h2>
 
-<%= javascript_include_tag 'highcharts/highcharts',        :plugin => 'redmine_git_hosting' %>
-<%= javascript_include_tag 'highcharts/modules/drilldown', :plugin => 'redmine_git_hosting' %>
-<%= javascript_include_tag 'set_highcharts',               :plugin => 'redmine_git_hosting' %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag    'application',                  :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag    'bootstrap/bootstrap_custom',   :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'highcharts/highcharts',        :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'highcharts/modules/drilldown', :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'set_highcharts',               :plugin => 'redmine_git_hosting' %>
+<% end %>
 
-<div id="chart_commits_per_month"></div>
-<div id="chart_commits_per_author"></div>
+<div id="statistics-tabs">
+  <ul>
+    <li><a href="#statistics-global"><%= l(:label_repository_statistics_global) %></a></li>
+    <li><a href="#statistics-commits"><%= l(:label_repository_statistics_commits) %></a></li>
+    <li><a href="#statistics-contributors"><%= l(:label_repository_statistics_contributors) %></a></li>
+  </ul>
+
+  <div id="statistics-global">
+    <ul class="thumbnails">
+      <% @repository.global_statistics.each do |key, value| %>
+        <li class="span4">
+          <div class="thumbnail">
+            <div class="title"><%= key %></div>
+            <div class="value"><%= value %></div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div id="statistics-commits">
+    <div id="chart_commits_per_month"></div>
+    <div id="chart_commits_per_author"></div>
+  </div>
+
+  <div id="statistics-contributors">
+
+  </div>
+</div>
 
 <%= javascript_tag do %>
   var chart_commits_per_month          = new Object();
@@ -25,6 +56,8 @@
   $(document).ready(function() {
     createColumnChart(chart_commits_per_month);
     createColumnChart(chart_commits_per_author);
+
+    $("#statistics-tabs").tabs();
   });
 <% end %>
 

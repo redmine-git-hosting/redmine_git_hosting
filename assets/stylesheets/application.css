@@ -198,3 +198,88 @@ MISC
 td.buttons { width: 20%; }
 
 .select_key_type { margin-left: 10px; }
+
+
+/*
+STATISTICS
+*/
+#statistics-global {
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.thumbnails:before, .thumbnails:after {
+  content: "";
+  display: table;
+  line-height: 0;
+}
+
+.thumbnails:after {
+  clear: both;
+}
+
+.thumbnails:before, .thumbnails:after {
+  content: "";
+  display: table;
+  line-height: 0;
+}
+
+.thumbnails {
+  list-style: none outside none;
+  margin-left: -20px;
+}
+
+ul, ol {
+  margin: 0 0 10px 25px;
+  padding: 0;
+}
+
+#statistics-global .thumbnail {
+  background: none repeat scroll 0 0 #3498DB;
+  padding: 10px;
+}
+
+.thumbnail {
+  position: relative;
+}
+
+.thumbnail {
+  border: 1px solid #DDDDDD;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+  display: block;
+  line-height: 20px;
+  padding: 4px;
+  transition: all 0.2s ease-in-out 0s;
+}
+
+.thumbnails > li {
+  float: left;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.span4 {
+  width: 300px;
+}
+
+[class*="span"] {
+  float: left;
+  margin-left: 20px;
+  min-height: 1px;
+}
+
+li {
+  line-height: 20px;
+}
+
+#statistics-global .thumbnail .title {
+  font-size: 1.1em;
+}
+
+#statistics-global .thumbnail .value {
+  font-size: 3em;
+  line-height: 1em;
+  padding-top: 10px;
+  text-align: right;
+}
