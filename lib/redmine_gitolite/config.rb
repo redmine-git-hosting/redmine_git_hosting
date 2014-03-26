@@ -334,9 +334,18 @@ module RedmineGitolite
     ##                           ##
     ###############################
 
+    def self.sudo_version_raw
+      begin
+        version = RedmineGitolite::GitHosting.execute_command(:local_cmd, "sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g'")
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while getting sudo version !" }
+        version = "0.0.0"
+      end
+    end
+
+
     def self.sudo_version
-      sudo_version_str = %x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
-      split_version    = sudo_version_str.split(/\./)
+      split_version    = sudo_version_raw.split(/\./)
       sudo_version     = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
       return sudo_version
     end

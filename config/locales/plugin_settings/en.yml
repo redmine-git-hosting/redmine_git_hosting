@@ -158,6 +158,7 @@ en:
   label_gitolite_hooks_params_installed: Hooks parameters installed?
   label_gitolite_hooks_installed: Hooks installed?
   label_redmine_user: Redmine username
+  label_sudo_version: Sudo version
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin
