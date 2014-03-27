@@ -3,16 +3,27 @@ class GitoliteHooksController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required
 
-  before_filter      :find_project_and_repository, :only => :post_receive
-  before_filter      :validate_hook_key,           :only => :post_receive
+  before_filter      :find_hook
+  before_filter      :find_project
+  before_filter      :find_repository
+  before_filter      :validate_hook_key
 
-  before_filter      :find_project, :only => :post_receive_issue
 
   include GitoliteHooksHelper
   helper  :gitolite_hooks
 
 
   def post_receive
+    method = "post_receive_#{@hook_type}"
+
+    self.send(method)
+  end
+
+
+  private
+
+
+  def post_receive_redmine
     ## Clear existing cache
     RedmineGitolite::Cache.clear_cache_for_repository(@repository)
 
@@ -82,7 +93,7 @@ class GitoliteHooksController < ApplicationController
   end
 
 
-  def post_receive_issue
+  def post_receive_github
     github_issue = GithubIssue.find_by_github_id(params[:issue][:id])
     redmine_issue = Issue.find_by_subject(params[:issue][:title])
     create_relation = false
@@ -115,7 +126,7 @@ class GitoliteHooksController < ApplicationController
       issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
 
       if issue_journal.nil?
-        issue_journal = create_issue_journal(params, github_issue.issue)
+        issue_journal = create_issue_journal(github_issue.issue, params)
 
         github_comment = GithubComment.new
         github_comment.github_id = params[:comment][:id]
@@ -129,16 +140,25 @@ class GitoliteHooksController < ApplicationController
   end
 
 
-  private
-
-
   def logger
     RedmineGitolite::Log.get_logger(:git_hooks)
   end
 
 
+  VALID_HOOKS = [ 'redmine', 'github' ]
+
+  def find_hook
+    if !VALID_HOOKS.include?(params[:type])
+      render :text => "The hook name provided is not valid. Please let your server admin know about it"
+      return
+    else
+      @hook_type = params[:type]
+    end
+  end
+
+
   def find_project
-    @project = Project.find_by_identifier(params[:project_id])
+    @project = Project.find_by_identifier(params[:projectid])
 
     if @project.nil?
       render :partial => 'gitolite_hooks/project_not_found'
@@ -149,31 +169,29 @@ class GitoliteHooksController < ApplicationController
 
   # Locate that actual repository that is in use here.
   # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
-  def find_project_and_repository
-    @project = Project.find_by_identifier(params[:projectid])
+  def find_repository
+    if @hook_type == 'redmine'
+      if params[:repositoryid] && !params[:repositoryid].blank?
+        @repository = @project.repositories.find_by_identifier(params[:repositoryid])
+      else
+        # return default or first repo with blank identifier
+        @repository = @project.repository || @project.repo_blank_ident
+      end
 
-    if @project.nil?
-      render :partial => 'gitolite_hooks/project_not_found'
-      return
-    end
-
-    if params[:repositoryid] && !params[:repositoryid].blank?
-      @repository = @project.repositories.find_by_identifier(params[:repositoryid])
-    else
-      # return default or first repo with blank identifier
-      @repository = @project.repository || @project.repo_blank_ident
-    end
-
-    if @repository.nil?
-      render :partial => 'gitolite_hooks/repository_not_found'
+      if @repository.nil?
+        render :partial => 'gitolite_hooks/repository_not_found'
+        return
+      end
     end
   end
 
 
   def validate_hook_key
-    if !view_context.validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
-      render :text => "The hook key provided is not valid. Please let your server admin know about it"
-      return
+    if @hook_type == 'redmine'
+      if !validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
+        render :text => "The hook key provided is not valid. Please let your server admin know about it"
+        return
+      end
     end
   end
 

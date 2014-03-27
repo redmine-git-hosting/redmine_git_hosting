@@ -162,7 +162,9 @@ module GitoliteHooksHelper
   end
 
 
-  def create_issue_journal(params, issue)
+  def create_issue_journal(issue, params)
+    logger.info { "Github Issues Sync : create new journal for issue '##{issue.id}'" }
+
     journal = Journal.new
     journal.journalized_id = issue.id
     journal.journalized_type = 'Issue'
@@ -179,6 +181,8 @@ module GitoliteHooksHelper
 
 
   def create_redmine_issue(params)
+    logger.info { "Github Issues Sync : create new issue" }
+
     issue = Issue.new
     issue.project_id = @project.id
     issue.tracker_id = @project.trackers.find(:first).try(:id)
@@ -197,6 +201,8 @@ module GitoliteHooksHelper
 
 
   def update_redmine_issue(issue, params)
+    logger.info { "Github Issues Sync : update issue '##{issue.id}'" }
+
     if params[:issue][:state] == 'closed'
       issue.status_id = 5
     else
@@ -219,6 +225,7 @@ module GitoliteHooksHelper
     user = User.find_by_mail(user_data['email'])
 
     if user.nil?
+      logger.info { "Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous" }
       user = User.anonymous
       user.mail = user_data['email']
       user.firstname = user_data['name']

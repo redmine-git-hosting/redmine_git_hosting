@@ -112,7 +112,7 @@ module RedmineGitolite
         server_domain = my_root_url(false)
       end
 
-      return File.join(scheme, server_domain, "/githooks/post-receive")
+      return File.join(scheme, server_domain, "/githooks/post-receive/redmine")
     end
 
 

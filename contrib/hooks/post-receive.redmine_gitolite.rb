@@ -4,6 +4,7 @@ require 'digest/sha1'
 require 'net/http'
 require 'net/https'
 require 'uri'
+require 'yaml'
 
 
 ###############################
@@ -57,8 +58,17 @@ def get_gitolite_config(varname)
 end
 
 
-def run_http_query(url_str, params)
+def run_http_query(params)
   params = get_http_params(params)
+
+  # pass projectid directly in the url
+  url_str = "#{params['redmineurl']}/#{params['projectid']}"
+
+  # remove useless params
+  params = params.tap{|x| x.delete('redmineurl')}
+  params = params.tap{|x| x.delete('projectid')}
+  params = params.tap{|x| x.delete('debugmode')}
+  params = params.tap{|x| x.delete('asyncmode')}
 
   url  = URI(url_str)
   http = Net::HTTP.new(url.host, url.port)
@@ -98,7 +108,9 @@ end
 
 def get_http_params(redmine_vars_hash)
   clear_time = Time.new.utc.to_i.to_s
-  params = { "clear_time" => clear_time, "encoded_time" => Digest::SHA1.hexdigest(clear_time.to_s + redmine_vars_hash["repositorykey"]) }
+  params = {}
+  params["clear_time"]   = clear_time
+  params["encoded_time"] = Digest::SHA1.hexdigest(clear_time.to_s + redmine_vars_hash["repositorykey"])
   redmine_vars_hash.each_key do |key|
     if key != "repositorykey"
       params[key] = redmine_vars_hash[key]
@@ -245,7 +257,7 @@ logger("", false, true)
 logger("Notifying Redmine project '#{redmine_vars_hash['projectid']}' about changes to this repo...", false, true)
 
 ## Call Redmine
-success = run_http_query(redmine_vars_hash["redmineurl"], redmine_vars_hash)
+success = run_http_query(redmine_vars_hash)
 
 if !success
   logger("Error contacting Redmine about changes to this repo.", false, true)
