@@ -1,5 +1,3 @@
-require 'json'
-
 class GitoliteHooksController < ApplicationController
   unloadable
 
@@ -10,7 +8,8 @@ class GitoliteHooksController < ApplicationController
 
   before_filter      :find_project, :only => :post_receive_issue
 
-  helper :gitolite_hooks
+  include GitoliteHooksHelper
+  helper  :gitolite_hooks
 
 
   def post_receive
@@ -37,7 +36,7 @@ class GitoliteHooksController < ApplicationController
 
 
       ## Get payload
-      payload = view_context.build_payload(params[:refs])
+      payload = build_payload(params[:refs])
 
 
       ## Push to each mirror
@@ -67,7 +66,7 @@ class GitoliteHooksController < ApplicationController
 
         method = (post_receive_url.mode == :github) ? :post : :get
 
-        post_failed, post_message = view_context.post_data(post_receive_url.url, payload, :method => method)
+        post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
 
         if post_failed
           logger.error { "Failed!" }
@@ -85,16 +84,34 @@ class GitoliteHooksController < ApplicationController
 
   def post_receive_issue
     github_issue = GithubIssue.find_by_github_id(params[:issue][:id])
+    redmine_issue = Issue.find_by_subject(params[:issue][:title])
+    create_relation = false
 
+    ## We don't have stored relation
     if github_issue.nil?
-      redmine_issue = create_redmine_issue(params)
+
+      ## And we don't have issue in Redmine
+      if redmine_issue.nil?
+        create_relation = true
+        redmine_issue = create_redmine_issue(params)
+      else
+        ## Create relation and update issue
+        create_relation = true
+        redmine_issue = update_redmine_issue(redmine_issue, params)
+      end
+    else
+      ## We have one relation, update issue
+      redmine_issue = update_redmine_issue(github_issue.issue, params)
+    end
+
+    if create_relation
       github_issue = GithubIssue.new
       github_issue.github_id = params[:issue][:id]
       github_issue.issue_id = redmine_issue.id
       github_issue.save!
     end
 
-    if params[:issue][:comments] > 0
+    if params.has_key?(:comment)
       issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
 
       if issue_journal.nil?
@@ -113,54 +130,6 @@ class GitoliteHooksController < ApplicationController
 
 
   private
-
-
-  def create_issue_journal(params, issue)
-    journal = Journal.new
-    journal.journalized_id = issue.id
-    journal.journalized_type = 'Issue'
-    journal.notes = params[:comment][:body]
-    journal.created_on = params[:comment][:created_at]
-
-    ## Get user mail
-    user = find_user(params[:comment][:user][:url])
-    journal.user_id = user.id
-
-    journal.save!
-    return journal
-  end
-
-
-  def create_redmine_issue(params)
-    issue = Issue.new
-    issue.project_id = @project.id
-    issue.tracker_id = 2
-    issue.subject = params[:issue][:title]
-    issue.description = params[:issue][:body]
-    issue.updated_on = params[:issue][:updated_at]
-    issue.created_on = params[:issue][:created_at]
-
-    ## Get user mail
-    user = find_user(params[:issue][:user][:url])
-    issue.author = user
-
-    issue.save!
-    return issue
-  end
-
-
-  def find_user(url)
-    post_failed, user_data = view_context.post_data(url, "", :method => :get)
-    user_data = JSON.parse(user_data)
-
-    user = User.find_by_mail(user_data[:email])
-
-    if user.nil?
-      user = User.anonymous
-    end
-
-    return user
-  end
 
 
   def logger

@@ -1,9 +1,9 @@
 class CreateGithubIssues < ActiveRecord::Migration
 
   def self.up
-    create_table :github_issues, :id => false do |t|
-      t.column :github_id, :integer
-      t.column :issue_id,  :integer
+    create_table :github_issues do |t|
+      t.column :github_id, :integer, :null => false
+      t.column :issue_id,  :integer, :null => false
     end
   end
 

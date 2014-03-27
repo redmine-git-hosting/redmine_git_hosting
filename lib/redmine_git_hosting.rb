@@ -24,6 +24,9 @@ apply_patch do
   require_dependency 'member'
   require_dependency 'roles_controller'
 
+  require_dependency 'issue'
+  require_dependency 'journal'
+
   require_dependency 'my_controller'
 
   ## Redmine Git Hosting Libs
@@ -61,6 +64,9 @@ apply_patch do
 
   require_dependency 'redmine_git_hosting/patches/member_patch'
   require_dependency 'redmine_git_hosting/patches/roles_controller_patch'
+
+  require_dependency 'redmine_git_hosting/patches/issue_patch'
+  require_dependency 'redmine_git_hosting/patches/journal_patch'
 
   require_dependency 'redmine_git_hosting/patches/my_controller_patch'
 

@@ -1,3 +1,4 @@
+require 'json'
 require 'net/http'
 require 'net/https'
 require 'uri'
@@ -158,6 +159,73 @@ module GitoliteHooksHelper
     end
 
     return failed, message
+  end
+
+
+  def create_issue_journal(params, issue)
+    journal = Journal.new
+    journal.journalized_id = issue.id
+    journal.journalized_type = 'Issue'
+    journal.notes = params[:comment][:body]
+    journal.created_on = params[:comment][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:comment][:user][:url])
+    journal.user_id = user.id
+
+    journal.save!
+    return journal
+  end
+
+
+  def create_redmine_issue(params)
+    issue = Issue.new
+    issue.project_id = @project.id
+    issue.tracker_id = @project.trackers.find(:first).try(:id)
+    issue.subject = params[:issue][:title].chomp[0, 255]
+    issue.description = params[:issue][:body]
+    issue.updated_on = params[:issue][:updated_at]
+    issue.created_on = params[:issue][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:issue][:user][:url])
+    issue.author = user
+
+    issue.save!
+    return issue
+  end
+
+
+  def update_redmine_issue(issue, params)
+    if params[:issue][:state] == 'closed'
+      issue.status_id = 5
+    else
+      issue.status_id = 1
+    end
+
+    issue.subject = params[:issue][:title].chomp[0, 255]
+    issue.description = params[:issue][:body]
+    issue.updated_on = params[:issue][:updated_at]
+
+    issue.save!
+    return issue
+  end
+
+
+  def find_user(url)
+    post_failed, user_data = post_data(url, "", :method => :get)
+    user_data = JSON.parse(user_data)
+
+    user = User.find_by_mail(user_data['email'])
+
+    if user.nil?
+      user = User.anonymous
+      user.mail = user_data['email']
+      user.firstname = user_data['name']
+      user.lastname  = user_data['login']
+    end
+
+    return user
   end
 
 end
