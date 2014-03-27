@@ -23,6 +23,7 @@ It provides these functionalities :
 * [*(new)* README Preview](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-readme-preview) (from [README at Repositories](https://github.com/simeji/readme_at_repositories))
 * [*(new)* Git Config Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-config-keys-management)
 * [*(new)* Improved Repository Statistics](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#improved-repository-statistics)
+* [*(new)* Github Issues Sync](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#github-issues-sync)
 
 You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
 
