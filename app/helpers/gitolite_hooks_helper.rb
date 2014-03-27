@@ -141,22 +141,23 @@ module GitoliteHooksHelper
       request = Net::HTTP::Get.new(uri.request_uri)
     end
 
-    error_message = ""
+    message = ""
 
     begin
       res = http.start {|openhttp| openhttp.request request}
       if !res.is_a?(Net::HTTPSuccess)
-        error_message = "Return code : #{res.code} (#{res.message})."
+        message = "Return code : #{res.code} (#{res.message})."
         failed = true
       else
+        message = res.body
         failed = false
       end
     rescue => e
-      error_message = "Exception : #{e.message}"
+      message = "Exception : #{e.message}"
       failed = true
     end
 
-    return failed, error_message
+    return failed, message
   end
 
 end
