@@ -24,5 +24,6 @@ RedmineApp::Application.routes.draw do
   match ':repo_path/*git_params', :prefix => RedmineGitolite::ConfigRedmine.get_setting(:http_server_subdir), :repo_path => /([^\/]+\/)*?[^\/]+\.git/, :to => 'smart_http#index'
 
   # POST RECEIVE
-  match 'githooks/post-receive', :to => 'gitolite_hooks#post_receive'
+  match 'githooks/post-receive',                   :to => 'gitolite_hooks#post_receive'
+  match 'githooks/post-receive-issue/:project_id', :to => 'gitolite_hooks#post_receive_issue', :via => [:post]
 end

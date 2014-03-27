@@ -1,9 +1,14 @@
+require 'json'
+
 class GitoliteHooksController < ApplicationController
   unloadable
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required
-  before_filter      :find_project_and_repository
-  before_filter      :validate_hook_key
+
+  before_filter      :find_project_and_repository, :only => :post_receive
+  before_filter      :validate_hook_key,           :only => :post_receive
+
+  before_filter      :find_project, :only => :post_receive_issue
 
   helper :gitolite_hooks
 
@@ -78,11 +83,98 @@ class GitoliteHooksController < ApplicationController
   end
 
 
+  def post_receive_issue
+    github_issue = GithubIssue.find_by_github_id(params[:issue][:id])
+
+    if github_issue.nil?
+      redmine_issue = create_redmine_issue(params)
+      github_issue = GithubIssue.new
+      github_issue.github_id = params[:issue][:id]
+      github_issue.issue_id = redmine_issue.id
+      github_issue.save!
+    end
+
+    if params[:issue][:comments] > 0
+      issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
+
+      if issue_journal.nil?
+        issue_journal = create_issue_journal(params, github_issue.issue)
+
+        github_comment = GithubComment.new
+        github_comment.github_id = params[:comment][:id]
+        github_comment.journal_id = issue_journal.id
+        github_comment.save!
+      end
+    end
+
+    render :text => "OK!"
+    return
+  end
+
+
   private
+
+
+  def create_issue_journal(params, issue)
+    journal = Journal.new
+    journal.journalized_id = issue.id
+    journal.journalized_type = 'Issue'
+    journal.notes = params[:comment][:body]
+    journal.created_on = params[:comment][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:comment][:user][:url])
+    journal.user_id = user.id
+
+    journal.save!
+    return journal
+  end
+
+
+  def create_redmine_issue(params)
+    issue = Issue.new
+    issue.project_id = @project.id
+    issue.tracker_id = 2
+    issue.subject = params[:issue][:title]
+    issue.description = params[:issue][:body]
+    issue.updated_on = params[:issue][:updated_at]
+    issue.created_on = params[:issue][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:issue][:user][:url])
+    issue.author = user
+
+    issue.save!
+    return issue
+  end
+
+
+  def find_user(url)
+    post_failed, user_data = view_context.post_data(url, "", :method => :get)
+    user_data = JSON.parse(user_data)
+
+    user = User.find_by_mail(user_data[:email])
+
+    if user.nil?
+      user = User.anonymous
+    end
+
+    return user
+  end
 
 
   def logger
     RedmineGitolite::Log.get_logger(:git_hooks)
+  end
+
+
+  def find_project
+    @project = Project.find_by_identifier(params[:project_id])
+
+    if @project.nil?
+      render :partial => 'gitolite_hooks/project_not_found'
+      return
+    end
   end
 
 
