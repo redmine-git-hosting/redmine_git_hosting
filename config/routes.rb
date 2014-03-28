@@ -25,4 +25,45 @@ RedmineApp::Application.routes.draw do
 
   # POST RECEIVE
   match 'githooks/post-receive/:type/:projectid',  :to => 'gitolite_hooks#post_receive', :via => [:post]
+
+  # ARCHIVED REPOSITORIES
+  get 'archived_projects/index',                                                :to => 'archived_repositories#index'
+  get 'archived_projects/:id/repository/:repository_id/statistics',             :to => 'archived_repositories#stats'
+  get 'archived_projects/:id/repository/:repository_id/graph',                  :to => 'archived_repositories#graph'
+  get 'archived_projects/:id/repository/:repository_id/changes(/*path(.:ext))', :to => 'archived_repositories#changes'
+  get 'archived_projects/:id/repository/:repository_id/revisions/:rev',         :to => 'archived_repositories#revision'
+  get 'archived_projects/:id/repository/:repository_id/revision',               :to => 'archived_repositories#revision'
+  get 'archived_projects/:id/repository/:repository_id/revisions',              :to => 'archived_repositories#revisions'
+  get 'archived_projects/:id/repository/:repository_id/revisions/:rev/:action(/*path(.:ext))',
+      :controller => 'archived_repositories',
+      :format => false,
+      :constraints => {
+            :action => /(browse|show|entry|raw|annotate|diff)/,
+            :rev    => /[a-z0-9\.\-_]+/
+          }
+
+  get 'archived_projects/:id/repository/statistics',               :to => 'archived_repositories#stats'
+  get 'archived_projects/:id/repository/graph',                    :to => 'archived_repositories#graph'
+  get 'archived_projects/:id/repository/changes(/*path(.:ext))',   :to => 'archived_repositories#changes'
+  get 'archived_projects/:id/repository/revisions',                :to => 'archived_repositories#revisions'
+  get 'archived_projects/:id/repository/revisions/:rev',           :to => 'archived_repositories#revision'
+  get 'archived_projects/:id/repository/revision',                 :to => 'archived_repositories#revision'
+  get 'archived_projects/:id/repository/revisions/:rev/:action(/*path(.:ext))',
+      :controller => 'archived_repositories',
+      :format => false,
+      :constraints => {
+            :action => /(browse|show|entry|raw|annotate|diff)/,
+            :rev    => /[a-z0-9\.\-_]+/
+          }
+  get 'archived_projects/:id/repository/:repository_id/:action(/*path(.:ext))',
+      :controller => 'archived_repositories',
+      :action => /(browse|show|entry|raw|changes|annotate|diff)/
+
+  get 'archived_projects/:id/repository/:action(/*path(.:ext))',
+      :controller => 'archived_repositories',
+      :action => /(browse|show|entry|raw|changes|annotate|diff)/
+
+  get 'archived_projects/:id/repository/:repository_id', :to => 'archived_repositories#show', :path => nil
+  get 'archived_projects/:id/repository',                :to => 'archived_repositories#show', :path => nil
+
 end

@@ -263,8 +263,11 @@ fr:
   label_sunday: Dimanche
 
 
-  ########### MISCELANOUS ###########
+  ########### ARCHIVED REPOSITORIES ###########
+  label_archived_repositories: Dépôts archivés
 
+
+  ########### MISCELANOUS ###########
   label_enabled: Activé
   label_disabled: Désactivé
   label_true: Vrai

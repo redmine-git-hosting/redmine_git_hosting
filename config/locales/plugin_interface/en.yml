@@ -262,6 +262,10 @@ en:
   label_sunday: Sunday
 
 
+  ########### ARCHIVED REPOSITORIES ###########
+  label_archived_repositories: Archived repositories
+
+
   ########### MISCELANOUS ###########
 
   label_enabled: Enabled
