@@ -21,9 +21,9 @@ end
 
 
 def load_gitolite_vars
-  redmine_vars_hash = {}
+  git_config = {}
 
-  redmine_var_names = [
+  redmine_vars = [
     "redminegitolite.redmineurl",
     "redminegitolite.projectid",
     "redminegitolite.repositoryid",
@@ -32,7 +32,7 @@ def load_gitolite_vars
     "redminegitolite.asyncmode",
   ]
 
-  redmine_var_names.each do |var_name|
+  redmine_vars.each do |var_name|
     var_value = get_gitolite_config(var_name)
 
     if var_value.to_s == ""
@@ -45,39 +45,45 @@ def load_gitolite_vars
       end
     else
       var_name = var_name.gsub(/^.*\./, "")
-      redmine_vars_hash[var_name] = var_value
+      git_config[var_name] = var_value
     end
   end
 
-  return redmine_vars_hash
+  return git_config
 end
 
 
-def get_gitolite_config(varname)
-  (%x[git config #{varname}]).chomp.strip
+def get_gitolite_config(var_name)
+  (%x[git config #{var_name}]).chomp.strip
 end
 
 
-def run_http_query(params)
-  params = get_http_params(params)
+def run_http_query(git_config)
+  logger("", false, true)
+
+  if git_config.has_key?('repositoryid')
+    repo_name = "#{git_config['projectid']}/#{git_config['repositoryid']}"
+  else
+    repo_name = "#{git_config['projectid']}"
+  end
+
+  logger("Notifying Redmine about changes to this repository : '#{repo_name}' ...", false, true)
 
   # pass projectid directly in the url
-  url_str = "#{params['redmineurl']}/#{params['projectid']}"
+  string_url = "#{git_config['redmineurl']}/#{git_config['projectid']}"
 
-  # remove useless params
-  params = params.tap{|x| x.delete('redmineurl')}
-  params = params.tap{|x| x.delete('projectid')}
-  params = params.tap{|x| x.delete('debugmode')}
-  params = params.tap{|x| x.delete('asyncmode')}
+  logger("Redmine URL : '#{string_url}'", true, true)
 
-  url  = URI(url_str)
+  params = get_http_params(git_config)
+
+  url  = URI(string_url)
   http = Net::HTTP.new(url.host, url.port)
   http.open_timeout = 5
   http.read_timeout = 10
 
   if url.scheme == 'https'
     http.use_ssl = true
-    http.ssl_version = :SSLv3 if http.respond_to? :ssl_version
+    http.ssl_version = :SSLv3 if http.respond_to?(:ssl_version)
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
 
@@ -106,17 +112,28 @@ def run_http_query(params)
 end
 
 
-def get_http_params(redmine_vars_hash)
+def get_http_params(git_config)
+  ignore_list = [
+    "redmineurl",
+    "projectid",
+    "debugmode",
+    "asyncmode",
+    "repositorykey"
+  ]
+
   clear_time = Time.new.utc.to_i.to_s
-  params = {}
-  params["clear_time"]   = clear_time
-  params["encoded_time"] = Digest::SHA1.hexdigest(clear_time.to_s + redmine_vars_hash["repositorykey"])
-  redmine_vars_hash.each_key do |key|
-    if key != "repositorykey"
-      params[key] = redmine_vars_hash[key]
+
+  new_git_config = {}
+  new_git_config["clear_time"]   = clear_time
+  new_git_config["encoded_time"] = Digest::SHA1.hexdigest(clear_time.to_s + git_config["repositorykey"])
+
+  git_config.each_key do |key|
+    if !ignore_list.include?(key)
+      new_git_config[key] = git_config[key]
     end
   end
-  return params
+
+  return new_git_config
 end
 
 
@@ -220,10 +237,10 @@ STDOUT.sync = true
 $debug = false
 
 ## Load Gitolite config variables
-redmine_vars_hash = load_gitolite_vars
+git_config = load_gitolite_vars
 
 ## Set debug mode if needed
-$debug = redmine_vars_hash["debugmode"] == "true"
+$debug = git_config["debugmode"] == "true"
 
 ## Let's read the refs passed to us, but also copy stdin
 ## for potential use with extra hooks.
@@ -236,10 +253,10 @@ $<.each do |line|
 end
 
 ## Set refs
-redmine_vars_hash["refs[]"] = refs
+git_config["refs[]"] = refs
 
 ## Fork if needed
-if redmine_vars_hash["asyncmode"] == "true"
+if git_config["asyncmode"] == "true"
   pid = fork
   exit unless pid.nil?
   pid = fork
@@ -252,12 +269,8 @@ if redmine_vars_hash["asyncmode"] == "true"
   STDERR.reopen STDOUT
 end
 
-## Do the job!
-logger("", false, true)
-logger("Notifying Redmine project '#{redmine_vars_hash['projectid']}' about changes to this repo...", false, true)
-
-## Call Redmine
-success = run_http_query(redmine_vars_hash)
+## Do the job, call Redmine
+success = run_http_query(git_config)
 
 if !success
   logger("Error contacting Redmine about changes to this repo.", false, true)
