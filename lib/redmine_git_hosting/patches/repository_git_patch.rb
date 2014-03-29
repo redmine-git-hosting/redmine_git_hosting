@@ -49,6 +49,7 @@ module RedmineGitHosting
           return @@cached_id if @@cached_path == repo_path
 
           repo = Repository::Git.find_by_path(repo_path, :loose => true)
+
           if repo
             # Cache translated id path, return id
             @@cached_path = repo_path

@@ -47,15 +47,23 @@ module RedmineGitHosting
 
           cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
 
-          RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
-
           # Compute string from repo_path that should be same as: repo.git_cache_id
           # If only we had access to the repo (we don't).
-          repo_id = Repository::Git.repo_path_to_git_cache_id(repo_path)
+          RedmineGitolite::GitHosting.logger.debug { "Lookup for git_cache_id with repository path '#{repo_path}' ... " }
 
-          # Insert cache between shell execution and caller
-          # repo_path argument used to identify cache entries
-          RedmineGitolite::Cache.execute(cmd_str, repo_id, options, &block)
+          git_cache_id = Repository::Git.repo_path_to_git_cache_id(repo_path)
+
+          if !git_cache_id.nil?
+            # Insert cache between shell execution and caller
+            # repo_path argument used to identify cache entries
+            RedmineGitolite::GitHosting.logger.debug { "Found git_cache_id ('#{git_cache_id}'), call cache... " }
+            RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
+            RedmineGitolite::Cache.execute(cmd_str, git_cache_id, options, &block)
+          else
+            RedmineGitolite::GitHosting.logger.debug { "Unable to find git_cache_id, bypass cache... " }
+            RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
+            Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
+          end
         end
 
       end
