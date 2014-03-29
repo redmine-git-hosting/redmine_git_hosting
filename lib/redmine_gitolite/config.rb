@@ -104,15 +104,7 @@ module RedmineGitolite
 
 
     def self.gitolite_hooks_url
-      if https_server_domain != '' && https_server_domain.split(':')[0] != 'localhost'
-        scheme = "https://"
-        server_domain = my_root_url(true)
-      else
-        scheme = "http://"
-        server_domain = my_root_url(false)
-      end
-
-      return File.join(scheme, server_domain, "/githooks/post-receive/redmine")
+      return File.join("#{Setting.protocol}://", Setting.host_name, "/githooks/post-receive/redmine")
     end
 
 
