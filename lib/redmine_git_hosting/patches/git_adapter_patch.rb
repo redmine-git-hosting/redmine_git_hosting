@@ -55,7 +55,6 @@ module RedmineGitHosting
 
           if !git_cache_id.nil?
             # Insert cache between shell execution and caller
-            # repo_path argument used to identify cache entries
             RedmineGitolite::GitHosting.logger.debug { "Found git_cache_id ('#{git_cache_id}'), call cache... " }
             RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
             RedmineGitolite::Cache.execute(cmd_str, git_cache_id, options, &block)
