@@ -159,6 +159,8 @@ fr:
   label_gitolite_hooks_installed: Hooks installés?
   label_redmine_user: Nom d'utilisateur Redmine
   label_sudo_version: Version de sudo
+  label_home_variable_is_set: La variable d'environnement '$HOME' est initialisée?
+  label_home_variable_not_set: La variable d'environnement '$HOME' n'est pas correctement initialisée
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Corbeille
