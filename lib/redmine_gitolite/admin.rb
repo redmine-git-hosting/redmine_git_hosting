@@ -20,6 +20,7 @@ module RedmineGitolite
       @gitolite_admin_url        = RedmineGitolite::Config.gitolite_admin_url
       @gitolite_admin_ssh_script_path = RedmineGitolite::Config.gitolite_admin_ssh_script_path
       @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
+      @gitolite_debug = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level) == 'debug' ? true : false
 
       @object_id      = object_id
       @action         = action
@@ -47,7 +48,7 @@ module RedmineGitolite
 
       ## Get or clone Gitolite Admin repo
       if (File.exists? "#{@gitolite_admin_dir}") && (File.exists? "#{@gitolite_admin_dir}/.git") && (File.exists? "#{@gitolite_admin_dir}/keydir") && (File.exists? "#{@gitolite_admin_dir}/conf")
-        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
+        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir, :debug => @gitolite_debug)
       else
         logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
 
@@ -62,7 +63,7 @@ module RedmineGitolite
           return false
         end
 
-        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
+        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir, :debug => @gitolite_debug)
       end
 
       ## Set Gitolite config file
