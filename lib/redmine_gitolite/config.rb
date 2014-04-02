@@ -260,7 +260,7 @@ module RedmineGitolite
       end
 
       begin
-        test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "sudo -inu #{redmine_user} whoami")
+        test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "sudo -n -u #{redmine_user} -i whoami")
         if test.match(/#{redmine_user}/)
           logger.info { "OK!" }
           @@sudo_gitolite_to_redmine_user_cached = true
@@ -531,10 +531,10 @@ module RedmineGitolite
             f.puts "else"
             if sudo_version < SUDO_VERSION_SWITCH
               f.puts '  cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-              f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
+              f.puts "  sudo -n -u #{gitolite_user} -i eval \"git $cmd\""
             else
               f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
-              f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
+              f.puts "  sudo -n -u #{gitolite_user} -i eval \"git $cmd\""
             end
             f.puts 'fi'
           end
@@ -593,7 +593,7 @@ module RedmineGitolite
               f.puts "  $command =~ s/'/\\\\\\\\'/g;"
             end
             f.puts '  $command =~ s/"/\\\\"/g;'
-            f.puts '  exec("sudo -u ' + gitolite_user + ' -i eval \"$command\"");'
+            f.puts '  exec("sudo -n -u ' + gitolite_user + ' -i eval \"$command\"");'
             f.puts '}'
           end
 
