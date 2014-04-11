@@ -257,6 +257,11 @@ git_config["refs[]"] = refs
 
 ## Fork if needed
 if git_config["asyncmode"] == "true"
+  logger("", false, true)
+  logger("This is Redmine Git Hosting post-receive hook forking to background...", false, true)
+  logger("Bye Bye!!", false, true)
+  logger("", false, true)
+
   pid = fork
   exit unless pid.nil?
   pid = fork
