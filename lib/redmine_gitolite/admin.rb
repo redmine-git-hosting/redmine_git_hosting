@@ -5,8 +5,6 @@ module RedmineGitolite
 
   class Admin
 
-    include RedmineGitolite::AdminHelper
-
     def initialize(object_id, action, options)
       @gitolite_admin_dir                = RedmineGitolite::Config.gitolite_admin_dir
       @gitolite_config_file              = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
