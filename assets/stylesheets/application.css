@@ -269,10 +269,6 @@ ul, ol {
   min-height: 1px;
 }
 
-li {
-  line-height: 20px;
-}
-
 #statistics-global .thumbnail .title {
   font-size: 1.1em;
 }
