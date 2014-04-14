@@ -325,7 +325,7 @@ class SmartHttpController < ApplicationController
 
   ## Note: command must be terminated with a quote!
   def git_command(command)
-    return "#{run_git_prefix} && export GL_BYPASS_UPDATE_HOOK=true && git #{command}'"
+    return "#{run_git_prefix} && env GL_BYPASS_UPDATE_HOOK=true git #{command}'"
   end
 
 
