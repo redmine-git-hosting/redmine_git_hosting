@@ -6,14 +6,14 @@ class MigrateParameters < ActiveRecord::Migration
     # Legacy settings
     new_setting[:gitolite_user]                 = 'git'
     new_setting[:gitolite_server_port]          = '22'
-    new_setting[:gitolite_ssh_private_key]      = File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s
-    new_setting[:gitolite_ssh_public_key]       = File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s
+    new_setting[:gitolite_ssh_private_key]      = File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s
+    new_setting[:gitolite_ssh_public_key]       = File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s
 
     new_setting[:gitolite_global_storage_dir]   = 'repositories/'
     new_setting[:gitolite_redmine_storage_dir]  = ''
     new_setting[:gitolite_recycle_bin_dir]      = 'recycle_bin/'
 
-    new_setting[:gitolite_temp_dir]                    = File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
+    new_setting[:gitolite_temp_dir]                    = File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s
     new_setting[:gitolite_script_dir]                  = './'
     new_setting[:gitolite_timeout]                     = 10
     new_setting[:gitolite_config_file]                 = 'gitolite.conf'
