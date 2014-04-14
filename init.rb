@@ -4,9 +4,6 @@ require 'redmine'
 
 require 'redmine_git_hosting'
 
-REDMINE_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
-REDMINE_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
-
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
