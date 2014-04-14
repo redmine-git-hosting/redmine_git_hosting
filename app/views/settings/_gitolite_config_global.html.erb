@@ -4,6 +4,7 @@
 
   gitolite_temp_dir    = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_temp_dir)
   gitolite_scripts_dir = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_scripts_dir)
+  gitolite_timeout     = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_timeout)
   gitolite_log_level   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level)
   gitolite_log_split   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
 
@@ -28,6 +29,13 @@
   <% if !RedmineGitolite::Config.scripts_dir_writeable?(:reset => true) %>
     <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
   <% end %>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_timeout) %></label>
+  <%= text_field_tag("settings[gitolite_timeout]", "#{gitolite_timeout}", :size => 10) %>
+  <br />
+  <em><%= l(:label_gitolite_timeout_desc) %></em>
 </p>
 
 <p>
