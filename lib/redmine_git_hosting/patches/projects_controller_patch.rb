@@ -108,15 +108,10 @@ module RedmineGitHosting
           projects = @project.self_and_descendants
 
           # Only take projects that have Git repos.
-          git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}
-
-          project_list = []
-          git_projects.each do |project|
-            project_list.push(project.id)
-          end
+          git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
 
           RedmineGitolite::GitHosting.logger.info { message }
-          RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => project_list })
+          RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => git_projects })
         end
 
 
