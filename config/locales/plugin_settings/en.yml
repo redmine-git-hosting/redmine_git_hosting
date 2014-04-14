@@ -47,6 +47,8 @@ en:
   label_gitolite_temp_dir_desc: (Must be absolute)
   label_gitolite_scripts_dir: Scripts dir
   label_gitolite_scripts_dir_desc: (Can be absolute or relative to Redmine root)
+  label_gitolite_timeout: Git timeout
+  label_gitolite_timeout_desc: (In seconds)
 
   label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
   label_gitolite_recycle_bin_expiration_time_desc: (In hours)

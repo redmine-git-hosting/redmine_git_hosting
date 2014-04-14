@@ -259,6 +259,16 @@ module RedmineGitHosting
             end
 
 
+            # Validate gitolite_timeout > 0 and < 30 (and exclude non-numbers)
+            if valuehash[:gitolite_timeout]
+              if valuehash[:gitolite_timeout].to_i > 0 and valuehash[:gitolite_timeout].to_i < 30
+                valuehash[:gitolite_timeout] = "#{valuehash[:gitolite_timeout].to_i}"
+              else
+                valuehash[:gitolite_timeout] = @@old_valuehash[:gitolite_timeout]
+              end
+            end
+
+
             ## This a force update
             if valuehash[:gitolite_resync_all_projects] == 'true'
               @@resync_projects = true

@@ -15,7 +15,7 @@ class MigrateParameters < ActiveRecord::Migration
 
     new_setting[:gitolite_temp_dir]                    = File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s
     new_setting[:gitolite_script_dir]                  = './'
-    new_setting[:gitolite_lock_wait_time]              = 10
+    new_setting[:gitolite_timeout]                     = 10
     new_setting[:gitolite_config_file]                 = 'gitolite.conf'
     new_setting[:gitolite_config_has_admin_key]        = true
     new_setting[:gitolite_recycle_bin_expiration_time] = 24.0
@@ -99,7 +99,7 @@ class MigrateParameters < ActiveRecord::Migration
             new_setting[:gitolite_recycle_bin_expiration_time] = value
 
           when 'gitLockWaitTime' then
-            new_setting[:gitolite_lock_wait_time] = value
+            new_setting[:gitolite_timeout] = value
 
           # Gitolite Hooks Config
           when 'gitHooksAreAsynchronous' then
