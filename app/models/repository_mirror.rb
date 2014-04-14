@@ -50,7 +50,7 @@ class RepositoryMirror < ActiveRecord::Base
     push_args << " \"#{dequote(explicit_refspec)}\"" unless explicit_refspec.blank?
 
     begin
-      push_message = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "bash", :pipe_data => 'export GIT_SSH=~/.ssh/run_gitolite_admin_ssh && cd ' + "#{repository.gitolite_repository_path}" + ' && git push ' + "#{push_args}", :pipe_command => 'echo').chomp
+      push_message = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "bash", :pipe_data => 'cd ' + "#{repository.gitolite_repository_path}" + ' && env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push ' + "#{push_args}", :pipe_command => 'echo').chomp
       push_failed = false
     rescue RedmineGitolite::GitHosting::GitHostingException => e
       push_message = e.output
