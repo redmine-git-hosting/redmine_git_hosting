@@ -668,7 +668,7 @@ module RedmineGitolite
 
           git_user_dir = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cd ~ && pwd'").chomp.strip
 
-          command = 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p ' + "#{gitolite_server_port}" + ' -i ' + "#{git_user_dir}/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}" + ' "$@"'
+          command = 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -i ' + "#{git_user_dir}/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}" + ' "$@"'
 
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat > #{GITOLITE_MIRRORING_SCRIPT_PATH}'",  :pipe_data => "#!/bin/sh", :pipe_command => 'echo')
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat >> #{GITOLITE_MIRRORING_SCRIPT_PATH}'", :pipe_data => command, :pipe_command => 'echo')
