@@ -3,6 +3,10 @@ module RedmineGitolite
   module Config
 
 
+    GITHUB_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
+    GITHUB_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
+
+
     def self.logger
       RedmineGitolite::Log.get_logger(:global)
     end
