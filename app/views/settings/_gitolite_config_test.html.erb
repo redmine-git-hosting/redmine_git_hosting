@@ -58,12 +58,6 @@
   </tr>
 
   <tr>
-    <td><%= l(:label_home_variable_is_set) %></td>
-    <% state = !ENV.has_key?('HOME') ? 'important' : 'success' %>
-    <td><span class="label label-<%= state %>"><%= !ENV.has_key?('HOME') ? l(:label_home_variable_not_set) : ENV['HOME'] %></span></td>
-  </tr>
-
-  <tr>
     <td><%= l(:label_sudo_gitolite_to_redmine_user) %></td>
     <td><%= image_tag (RedmineGitolite::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %></td>
   </tr>

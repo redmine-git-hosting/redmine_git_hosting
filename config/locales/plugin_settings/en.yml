@@ -166,8 +166,6 @@ en:
   label_redmine_user: Redmine username
   label_sudo_version: Sudo version
   label_git_version: Git version
-  label_home_variable_is_set: Environment variable '$HOME' is set?
-  label_home_variable_not_set: Environment variable '$HOME' is not correctly set
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin
