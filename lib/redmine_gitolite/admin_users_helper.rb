@@ -28,7 +28,7 @@ module RedmineGitolite
           repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2])
           repo_key.location = key.location
           repo_key.owner = key.owner
-          @gitolite_admin.add_key repo_key
+          @gitolite_admin.add_key(repo_key)
         end
       end
     end
@@ -51,7 +51,7 @@ module RedmineGitolite
 
       if repo_key
         logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' exists in Gitolite, delete it ..." }
-        @gitolite_admin.rm_key repo_key
+        @gitolite_admin.rm_key(repo_key)
       else
         logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' does not exits in Gitolite, exit !" }
         return false
