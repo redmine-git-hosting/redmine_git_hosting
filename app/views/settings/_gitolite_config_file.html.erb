@@ -3,8 +3,6 @@
   gitolite_config_file          = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_file)
   gitolite_config_has_admin_key = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_config_has_admin_key, true)
   gitolite_identifier_prefix    = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_identifier_prefix)
-  git_config_username           = RedmineGitolite::ConfigRedmine.get_setting(:git_config_username)
-  git_config_email              = RedmineGitolite::ConfigRedmine.get_setting(:git_config_email)
 
   disable_button = (gitolite_config_file == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE ? true : false)
 %>
@@ -30,20 +28,6 @@
   <%= text_field_tag("settings[gitolite_identifier_prefix]", "#{gitolite_identifier_prefix}", :size => 60, :disabled => disable_button) %>
   <br />
   <em><%= l(:label_gitolite_identifier_prefix_desc) %></em>
-</p>
-
-<p>
-  <label><%= l(:label_git_config_username) %></label>
-  <%= text_field_tag("settings[git_config_username]", "#{git_config_username}", :size => 60) %>
-  <br />
-  <em><%= l(:label_git_config_username_desc) %></em>
-</p>
-
-<p>
-  <label><%= l(:label_git_config_email) %></label>
-  <%= text_field_tag("settings[git_config_email]", "#{git_config_email}", :size => 60) %>
-  <br />
-  <em><%= l(:label_git_config_email_desc) %></em>
 </p>
 
 <br />

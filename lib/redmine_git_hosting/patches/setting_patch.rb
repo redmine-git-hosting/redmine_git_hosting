@@ -249,6 +249,16 @@ module RedmineGitHosting
             end
 
 
+            # Validate git author address
+            if valuehash[:git_config_email].blank?
+              valuehash[:git_config_email] = Setting.mail_from.to_s.strip.downcase
+            else
+              if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(valuehash[:git_config_email])
+                valuehash[:git_config_email] = @@old_valuehash[:git_config_email]
+              end
+            end
+
+
             ## This a force update
             if valuehash[:gitolite_resync_all_projects] == 'true'
               @@resync_projects = true
