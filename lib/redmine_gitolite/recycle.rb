@@ -122,7 +122,7 @@ module RedmineGitolite
 
       # Pull up any matching repositories. Sort them (beginning is representation of time)
       begin
-        files = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{@recycle_bin_dir}' -type d -regex '#{myregex}' -prune || true").chomp.split("\n").sort {|x, y| y <=> x }
+        files = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "find '#{@recycle_bin_dir}' -type d -regex '#{myregex}' -prune -print 2> /dev/null").chomp.split("\n").sort {|x, y| y <=> x }
       rescue Exception => e
         files = []
       end
