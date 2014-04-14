@@ -113,8 +113,12 @@ module RedmineGitolite
       logger.info { "#{@action} : commiting to Gitolite..." }
       begin
         @gitolite_admin.save("#{@action} : #{message}", :author => @gitolite_author)
+      rescue Grit::Git::GitTimeout => e
+        logger.error { "#{e.message} : #{e.command}" }
+      rescue Grit::Git::CommandFailed => e
+        logger.error { "#{e.message} : #{e.command} | #{e.err}" }
       rescue => e
-        logger.error { "Error : #{e.message}" }
+        logger.error { "#{e.message}" }
       end
     end
 
@@ -123,8 +127,12 @@ module RedmineGitolite
       logger.info { "#{@action} : pushing to Gitolite..." }
       begin
         @gitolite_admin.apply
+      rescue Grit::Git::GitTimeout => e
+        logger.error { "#{e.message} : #{e.command}" }
+      rescue Grit::Git::CommandFailed => e
+        logger.error { "#{e.message} : #{e.command} | #{e.err}" }
       rescue => e
-        logger.error { "Error : #{e.message}" }
+        logger.error { "#{e.message}" }
       end
     end
 
