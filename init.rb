@@ -21,8 +21,8 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite SSH Config
       :gitolite_user                  => 'git',
       :gitolite_server_port           => '22',
-      :gitolite_ssh_private_key       => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s,
-      :gitolite_ssh_public_key        => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s,
+      :gitolite_ssh_private_key       => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
+      :gitolite_ssh_public_key        => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
       # Gitolite Storage Config
       :gitolite_global_storage_dir    => 'repositories/',
@@ -37,7 +37,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :git_config_email                      => 'redmine@example.com',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s,
       :gitolite_scripts_dir                  => './',
       :gitolite_lock_wait_time               => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,

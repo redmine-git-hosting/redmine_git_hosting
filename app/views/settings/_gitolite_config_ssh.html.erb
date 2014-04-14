@@ -19,7 +19,7 @@
 
 <p>
   <label><%= l(:label_gitolite_ssh_private_key) %></label>
-  <%= text_field_tag("settings[gitolite_ssh_private_key]", gitolite_ssh_private_key, :size => 60) %>
+  <%= text_field_tag("settings[gitolite_ssh_private_key]", gitolite_ssh_private_key, :size => 110) %>
   <% if !scripts_dir_writeable %>
     <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
   <% end %>
@@ -27,7 +27,7 @@
 
 <p>
   <label><%= l(:label_gitolite_ssh_public_key) %></label>
-  <%= text_field_tag("settings[gitolite_ssh_public_key]", gitolite_ssh_public_key, :size => 60) %>
+  <%= text_field_tag("settings[gitolite_ssh_public_key]", gitolite_ssh_public_key, :size => 110) %>
   <% if !scripts_dir_writeable %>
     <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
   <% end %>
