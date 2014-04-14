@@ -33,6 +33,8 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_config_file                  => 'gitolite.conf',
       :gitolite_config_has_admin_key         => true,
       :gitolite_identifier_prefix            => 'redmine_',
+      :git_config_username                   => 'Redmine Git Hosting',
+      :git_config_email                      => 'redmine@example.com',
 
       # Gitolite Global Config
       :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,

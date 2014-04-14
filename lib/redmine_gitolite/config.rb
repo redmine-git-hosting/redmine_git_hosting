@@ -63,6 +63,16 @@ module RedmineGitolite
     end
 
 
+    def self.git_config_username
+      RedmineGitolite::ConfigRedmine.get_setting(:git_config_username)
+    end
+
+
+    def self.git_config_email
+      RedmineGitolite::ConfigRedmine.get_setting(:git_config_email)
+    end
+
+
     GITOLITE_ADMIN_REPO = 'gitolite-admin.git'
 
     # Full Gitolite URL
@@ -73,6 +83,11 @@ module RedmineGitolite
 
     def self.gitolite_admin_dir
       File.join(get_temp_dir_path, GITOLITE_ADMIN_REPO)
+    end
+
+
+    def self.gitolite_commit_author
+      "#{git_config_username} <#{git_config_email}>"
     end
 
 

@@ -22,6 +22,7 @@ module RedmineGitolite
       @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
       @gitolite_debug = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level) == 'debug' ? true : false
       @gitolite_timeout = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_lock_wait_time)
+      @gitolite_author  = RedmineGitolite::Config.gitolite_commit_author
 
       @object_id      = object_id
       @action         = action
@@ -111,7 +112,7 @@ module RedmineGitolite
     def gitolite_admin_repo_commit(message = '')
       logger.info { "#{@action} : commiting to Gitolite..." }
       begin
-        @gitolite_admin.save("#{@action} : #{message}")
+        @gitolite_admin.save("#{@action} : #{message}", :author => @gitolite_author)
       rescue => e
         logger.error { "Error : #{e.message}" }
       end
