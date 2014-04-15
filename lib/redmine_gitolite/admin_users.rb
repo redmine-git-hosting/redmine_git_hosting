@@ -25,7 +25,7 @@ module RedmineGitolite
 
     def update_all_ssh_keys_forced
       object = User.all
-      update_ssh_keys(object)
+      update_all_ssh_keys(object)
     end
 
 
@@ -51,8 +51,10 @@ module RedmineGitolite
     def update_all_ssh_keys(users)
       wrapped_transaction do
         users.each do |user|
-          handle_user_update(user)
-          gitolite_admin_repo_commit("#{user.login}")
+          if user.gitolite_public_keys.any?
+            handle_user_update(user)
+            gitolite_admin_repo_commit("#{user.login}")
+          end
         end
       end
     end
