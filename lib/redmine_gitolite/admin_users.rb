@@ -24,7 +24,7 @@ module RedmineGitolite
 
 
     def update_all_ssh_keys_forced
-      object = User.all
+      object = User.includes(:gitolite_public_keys).all
       update_all_ssh_keys(object)
     end
 
