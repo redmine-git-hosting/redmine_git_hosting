@@ -251,6 +251,38 @@ en:
   error_project_not_found: "No project with this identifier was found"
   error_repository_not_found: "No repository with this identifier was found"
 
+  # Statistics
+  label_repository_statistics_global: Global statistics
+  label_repository_statistics_commits: Commits statistics
+  label_repository_statistics_contributors: Contributors statistics
+
+  label_total_commits: Total commits
+  label_total_contributors: Total contributors
+  label_average_contributor_commits: Average commits per contributor
+  label_average_commit_per_day: Average commits per day
+  label_first_commit_date: First commit date
+  label_latest_commit_date: Latest commit date
+  label_active_for: Active for
+  label_active_days: days
+
+  label_commits_number: Number of commits
+  label_commit_plural: Commits
+  label_commits_per_day: Commits per day
+  label_commits_per_hour: Commits per hour
+  label_commits_per_weekday: Commits per weekday
+
+  label_monday: Monday
+  label_tuesday: Tuesday
+  label_wednesday: Wednesday
+  label_thursday: Thursday
+  label_friday: Friday
+  label_saturday: Saturday
+  label_sunday: Sunday
+
+
+  ########### ARCHIVED REPOSITORIES ###########
+  label_archived_repositories: Archived repositories
+
 
   ########### MISCELANOUS ###########
 
@@ -264,5 +296,6 @@ en:
   label_delete_in_progress: Deleting...
   label_url: URL
   label_mode: Mode
+  label_hour: Hour
   button_ok: OK
   button_clone: Clone

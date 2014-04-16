@@ -4,8 +4,12 @@
 
   gitolite_temp_dir    = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_temp_dir)
   gitolite_scripts_dir = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_scripts_dir)
+  gitolite_timeout     = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_timeout)
   gitolite_log_level   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level)
   gitolite_log_split   = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+
+  git_config_username  = RedmineGitolite::ConfigRedmine.get_setting(:git_config_username)
+  git_config_email     = RedmineGitolite::ConfigRedmine.get_setting(:git_config_email)
 %>
 
 <h3><%= l(:label_gitolite_global_config) %></h3>
@@ -25,6 +29,13 @@
   <% if !RedmineGitolite::Config.scripts_dir_writeable?(:reset => true) %>
     <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
   <% end %>
+</p>
+
+<p>
+  <label><%= l(:label_gitolite_timeout) %></label>
+  <%= text_field_tag("settings[gitolite_timeout]", "#{gitolite_timeout}", :size => 10) %>
+  <br />
+  <em><%= l(:label_gitolite_timeout_desc) %></em>
 </p>
 
 <p>
@@ -61,4 +72,18 @@
   <% else %>
     <em><%= l(:label_gitolite_log_split_off) %></em>
   <% end %>
+</p>
+
+<p>
+  <label><%= l(:label_git_config_username) %></label>
+  <%= text_field_tag("settings[git_config_username]", "#{git_config_username}", :size => 60) %>
+  <br />
+  <em><%= l(:label_git_config_username_desc) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_git_config_email) %></label>
+  <%= text_field_tag("settings[git_config_email]", "#{git_config_email}", :size => 60) %>
+  <br />
+  <em><%= l(:label_git_config_email_desc) %></em>
 </p>

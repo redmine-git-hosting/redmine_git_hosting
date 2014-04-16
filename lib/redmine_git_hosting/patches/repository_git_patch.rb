@@ -39,6 +39,19 @@ module RedmineGitHosting
         end
 
 
+        def have_duplicated_identifier?
+          if ((self.all.map(&:identifier).inject(Hash.new(0)) do |h, x|
+              h[x] += 1 unless x.blank?
+              h
+            end.values.max) || 0) > 1
+            # Oops -- have duplication
+            return true
+          else
+            return false
+          end
+        end
+
+
         # Translate repository path into a unique ID for use in caching of git commands.
         #
         # We perform caching here to speed this up, since this function gets called
@@ -50,6 +63,7 @@ module RedmineGitHosting
           return @@cached_id if @@cached_path == repo_path
 
           repo = Repository::Git.find_by_path(repo_path, :loose => true)
+
           if repo
             # Cache translated id path, return id
             @@cached_path = repo_path

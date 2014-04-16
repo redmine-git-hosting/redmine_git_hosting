@@ -2,13 +2,28 @@ class GitoliteHooksController < ApplicationController
   unloadable
 
   skip_before_filter :verify_authenticity_token, :check_if_login_required
-  before_filter      :find_project_and_repository
+
+  before_filter      :find_hook
+  before_filter      :find_project
+  before_filter      :find_repository
   before_filter      :validate_hook_key
 
-  helper :gitolite_hooks
+
+  include GitoliteHooksHelper
+  helper  :gitolite_hooks
 
 
   def post_receive
+    method = "post_receive_#{@hook_type}"
+
+    self.send(method)
+  end
+
+
+  private
+
+
+  def post_receive_redmine
     ## Clear existing cache
     RedmineGitolite::Cache.clear_cache_for_repository(@repository)
 
@@ -32,7 +47,7 @@ class GitoliteHooksController < ApplicationController
 
 
       ## Get payload
-      payload = view_context.build_payload(params[:refs])
+      payload = build_payload(params[:refs])
 
 
       ## Push to each mirror
@@ -62,7 +77,7 @@ class GitoliteHooksController < ApplicationController
 
         method = (post_receive_url.mode == :github) ? :post : :get
 
-        post_failed, post_message = view_context.post_data(post_receive_url.url, payload, :method => method)
+        post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
 
         if post_failed
           logger.error { "Failed!" }
@@ -78,7 +93,51 @@ class GitoliteHooksController < ApplicationController
   end
 
 
-  private
+  def post_receive_github
+    github_issue = GithubIssue.find_by_github_id(params[:issue][:id])
+    redmine_issue = Issue.find_by_subject(params[:issue][:title])
+    create_relation = false
+
+    ## We don't have stored relation
+    if github_issue.nil?
+
+      ## And we don't have issue in Redmine
+      if redmine_issue.nil?
+        create_relation = true
+        redmine_issue = create_redmine_issue(params)
+      else
+        ## Create relation and update issue
+        create_relation = true
+        redmine_issue = update_redmine_issue(redmine_issue, params)
+      end
+    else
+      ## We have one relation, update issue
+      redmine_issue = update_redmine_issue(github_issue.issue, params)
+    end
+
+    if create_relation
+      github_issue = GithubIssue.new
+      github_issue.github_id = params[:issue][:id]
+      github_issue.issue_id = redmine_issue.id
+      github_issue.save!
+    end
+
+    if params.has_key?(:comment)
+      issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
+
+      if issue_journal.nil?
+        issue_journal = create_issue_journal(github_issue.issue, params)
+
+        github_comment = GithubComment.new
+        github_comment.github_id = params[:comment][:id]
+        github_comment.journal_id = issue_journal.id
+        github_comment.save!
+      end
+    end
+
+    render :text => "OK!"
+    return
+  end
 
 
   def logger
@@ -86,33 +145,53 @@ class GitoliteHooksController < ApplicationController
   end
 
 
-  # Locate that actual repository that is in use here.
-  # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
-  def find_project_and_repository
+  VALID_HOOKS = [ 'redmine', 'github' ]
+
+  def find_hook
+    if !VALID_HOOKS.include?(params[:type])
+      render :text => "The hook name provided is not valid. Please let your server admin know about it"
+      return
+    else
+      @hook_type = params[:type]
+    end
+  end
+
+
+  def find_project
     @project = Project.find_by_identifier(params[:projectid])
 
     if @project.nil?
       render :partial => 'gitolite_hooks/project_not_found'
       return
     end
+  end
 
-    if params[:repositoryid] && !params[:repositoryid].blank?
-      @repository = @project.repositories.find_by_identifier(params[:repositoryid])
-    else
-      # return default or first repo with blank identifier
-      @repository = @project.repository || @project.repo_blank_ident
-    end
 
-    if @repository.nil?
-      render :partial => 'gitolite_hooks/repository_not_found'
+  # Locate that actual repository that is in use here.
+  # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
+  def find_repository
+    if @hook_type == 'redmine'
+      if params[:repositoryid] && !params[:repositoryid].blank?
+        @repository = @project.repositories.find_by_identifier(params[:repositoryid])
+      else
+        # return default or first repo with blank identifier
+        @repository = @project.repository || @project.repo_blank_ident
+      end
+
+      if @repository.nil?
+        render :partial => 'gitolite_hooks/repository_not_found'
+        return
+      end
     end
   end
 
 
   def validate_hook_key
-    if !view_context.validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
-      render :text => "The hook key provided is not valid. Please let your server admin know about it"
-      return
+    if @hook_type == 'redmine'
+      if !validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
+        render :text => "The hook key provided is not valid. Please let your server admin know about it"
+        return
+      end
     end
   end
 

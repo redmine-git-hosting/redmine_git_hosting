@@ -4,14 +4,11 @@ require 'redmine'
 
 require 'redmine_git_hosting'
 
-REDMINE_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
-REDMINE_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
-
 Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version '0.7'
+  version '0.7-devel'
   url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
@@ -21,8 +18,8 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite SSH Config
       :gitolite_user                  => 'git',
       :gitolite_server_port           => '22',
-      :gitolite_ssh_private_key       => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa').to_s,
-      :gitolite_ssh_public_key        => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s,
+      :gitolite_ssh_private_key       => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
+      :gitolite_ssh_public_key        => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
       # Gitolite Storage Config
       :gitolite_global_storage_dir    => 'repositories/',
@@ -35,12 +32,14 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_identifier_prefix            => 'redmine_',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(ENV['HOME'], 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s,
       :gitolite_scripts_dir                  => './',
-      :gitolite_lock_wait_time               => 10,
+      :gitolite_timeout                      => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,
+      :git_config_username                   => 'Redmine Git Hosting',
+      :git_config_email                      => 'redmine@example.com',
 
       # Gitolite Hooks Config
       :gitolite_hooks_are_asynchronous  => false,
@@ -116,4 +115,10 @@ Redmine::Plugin.register :redmine_git_hosting do
   Redmine::MenuManager.map :admin_menu do |menu|
     menu.push :redmine_git_hosting, { :controller => 'settings', :action => 'plugin', :id => 'redmine_git_hosting' }, :caption => :module_name
   end
+
+  Redmine::MenuManager.map :top_menu do |menu|
+    menu.push :archived_repositories, { :controller => 'archived_repositories', :action => 'index' }, :caption => :label_archived_repositories, :after => :administration,
+              :if => Proc.new { User.current.logged? && User.current.admin? }
+  end
+
 end

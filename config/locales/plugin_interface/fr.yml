@@ -252,8 +252,40 @@ fr:
   error_repository_not_found: "Aucun dépôt avec cet identifiant n'a été trouvé"
 
 
-  ########### MISCELANOUS ###########
+  # Statistics
+  label_repository_statistics_global: Statistiques globales
+  label_repository_statistics_commits: Statistiques des commits
+  label_repository_statistics_contributors: Statistiques des contributeurs
 
+  label_total_commits: Nombre total de commits
+  label_total_contributors: Nombre total de contributeurs
+  label_average_contributor_commits: Moyenne des commits par contributeur
+  label_average_commit_per_day: Moyenne des commits par jour
+  label_first_commit_date: Date du premier commit
+  label_latest_commit_date: Date du dernier commit
+  label_active_for: Actif depuis
+  label_active_days: jours
+
+  label_commits_number: Nombre de commits
+  label_commit_plural: Commits
+  label_commits_per_day: Commits par jour
+  label_commits_per_hour: Commits par heure
+  label_commits_per_weekday: Commits par jour de la semaine
+
+  label_monday: Lundi
+  label_tuesday: Mardi
+  label_wednesday: Mercredi
+  label_thursday: Jeudi
+  label_friday: Vendredi
+  label_saturday: Samedi
+  label_sunday: Dimanche
+
+
+  ########### ARCHIVED REPOSITORIES ###########
+  label_archived_repositories: Dépôts archivés
+
+
+  ########### MISCELANOUS ###########
   label_enabled: Activé
   label_disabled: Désactivé
   label_true: Vrai
@@ -264,5 +296,6 @@ fr:
   label_delete_in_progress: Effacement...
   label_url: URL
   label_mode: Mode
+  label_hour: Heure
   button_ok: OK
   button_clone: Cloner

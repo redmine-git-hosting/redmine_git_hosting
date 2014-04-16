@@ -1,3 +1,4 @@
+require 'json'
 require 'net/http'
 require 'net/https'
 require 'uri'
@@ -141,22 +142,97 @@ module GitoliteHooksHelper
       request = Net::HTTP::Get.new(uri.request_uri)
     end
 
-    error_message = ""
+    message = ""
 
     begin
       res = http.start {|openhttp| openhttp.request request}
       if !res.is_a?(Net::HTTPSuccess)
-        error_message = "Return code : #{res.code} (#{res.message})."
+        message = "Return code : #{res.code} (#{res.message})."
         failed = true
       else
+        message = res.body
         failed = false
       end
     rescue => e
-      error_message = "Exception : #{e.message}"
+      message = "Exception : #{e.message}"
       failed = true
     end
 
-    return failed, error_message
+    return failed, message
+  end
+
+
+  def create_issue_journal(issue, params)
+    logger.info { "Github Issues Sync : create new journal for issue '##{issue.id}'" }
+
+    journal = Journal.new
+    journal.journalized_id = issue.id
+    journal.journalized_type = 'Issue'
+    journal.notes = params[:comment][:body]
+    journal.created_on = params[:comment][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:comment][:user][:url])
+    journal.user_id = user.id
+
+    journal.save!
+    return journal
+  end
+
+
+  def create_redmine_issue(params)
+    logger.info { "Github Issues Sync : create new issue" }
+
+    issue = Issue.new
+    issue.project_id = @project.id
+    issue.tracker_id = @project.trackers.find(:first).try(:id)
+    issue.subject = params[:issue][:title].chomp[0, 255]
+    issue.description = params[:issue][:body]
+    issue.updated_on = params[:issue][:updated_at]
+    issue.created_on = params[:issue][:created_at]
+
+    ## Get user mail
+    user = find_user(params[:issue][:user][:url])
+    issue.author = user
+
+    issue.save!
+    return issue
+  end
+
+
+  def update_redmine_issue(issue, params)
+    logger.info { "Github Issues Sync : update issue '##{issue.id}'" }
+
+    if params[:issue][:state] == 'closed'
+      issue.status_id = 5
+    else
+      issue.status_id = 1
+    end
+
+    issue.subject = params[:issue][:title].chomp[0, 255]
+    issue.description = params[:issue][:body]
+    issue.updated_on = params[:issue][:updated_at]
+
+    issue.save!
+    return issue
+  end
+
+
+  def find_user(url)
+    post_failed, user_data = post_data(url, "", :method => :get)
+    user_data = JSON.parse(user_data)
+
+    user = User.find_by_mail(user_data['email'])
+
+    if user.nil?
+      logger.info { "Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous" }
+      user = User.anonymous
+      user.mail = user_data['email']
+      user.firstname = user_data['name']
+      user.lastname  = user_data['login']
+    end
+
+    return user
   end
 
 end

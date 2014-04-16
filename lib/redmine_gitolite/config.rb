@@ -3,6 +3,10 @@ module RedmineGitolite
   module Config
 
 
+    GITHUB_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
+    GITHUB_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
+
+
     def self.logger
       RedmineGitolite::Log.get_logger(:global)
     end
@@ -63,6 +67,16 @@ module RedmineGitolite
     end
 
 
+    def self.git_config_username
+      RedmineGitolite::ConfigRedmine.get_setting(:git_config_username)
+    end
+
+
+    def self.git_config_email
+      RedmineGitolite::ConfigRedmine.get_setting(:git_config_email)
+    end
+
+
     GITOLITE_ADMIN_REPO = 'gitolite-admin.git'
 
     # Full Gitolite URL
@@ -73,6 +87,11 @@ module RedmineGitolite
 
     def self.gitolite_admin_dir
       File.join(get_temp_dir_path, GITOLITE_ADMIN_REPO)
+    end
+
+
+    def self.gitolite_commit_author
+      "#{git_config_username} <#{git_config_email}>"
     end
 
 
@@ -104,15 +123,7 @@ module RedmineGitolite
 
 
     def self.gitolite_hooks_url
-      if https_server_domain != '' && https_server_domain.split(':')[0] != 'localhost'
-        scheme = "https://"
-        server_domain = my_root_url(true)
-      else
-        scheme = "http://"
-        server_domain = my_root_url(false)
-      end
-
-      return File.join(scheme, server_domain, "/githooks/post-receive")
+      return File.join("#{Setting.protocol}://", Setting.host_name, "/githooks/post-receive/redmine")
     end
 
 
@@ -268,7 +279,7 @@ module RedmineGitolite
       end
 
       begin
-        test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "sudo -inu #{redmine_user} whoami")
+        test = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "sudo -n -u #{redmine_user} -i whoami")
         if test.match(/#{redmine_user}/)
           logger.info { "OK!" }
           @@sudo_gitolite_to_redmine_user_cached = true
@@ -334,9 +345,18 @@ module RedmineGitolite
     ##                           ##
     ###############################
 
+    def self.sudo_version_raw
+      begin
+        version = RedmineGitolite::GitHosting.execute_command(:local_cmd, "sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g'")
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while getting sudo version !" }
+        version = "0.0.0"
+      end
+    end
+
+
     def self.sudo_version
-      sudo_version_str = %x[ sudo -V 2>&1 | head -n1 | sed 's/^.* //g' | sed 's/[a-z].*$//g' ]
-      split_version    = sudo_version_str.split(/\./)
+      split_version    = sudo_version_raw.split(/\./)
       sudo_version     = 100*100*(split_version[0].to_i) + 100*(split_version[1].to_i) + split_version[2].to_i
       return sudo_version
     end
@@ -530,10 +550,10 @@ module RedmineGitolite
             f.puts "else"
             if sudo_version < SUDO_VERSION_SWITCH
               f.puts '  cmd=$(printf "\\\\\\"%s\\\\\\" " "$@")'
-              f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
+              f.puts "  sudo -n -u #{gitolite_user} -i eval \"git $cmd\""
             else
               f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
-              f.puts "  sudo -u #{gitolite_user} -i eval \"git $cmd\""
+              f.puts "  sudo -n -u #{gitolite_user} -i eval \"git $cmd\""
             end
             f.puts 'fi'
           end
@@ -592,7 +612,7 @@ module RedmineGitolite
               f.puts "  $command =~ s/'/\\\\\\\\'/g;"
             end
             f.puts '  $command =~ s/"/\\\\"/g;'
-            f.puts '  exec("sudo -u ' + gitolite_user + ' -i eval \"$command\"");'
+            f.puts '  exec("sudo -n -u ' + gitolite_user + ' -i eval \"$command\"");'
             f.puts '}'
           end
 
@@ -652,7 +672,7 @@ module RedmineGitolite
 
           git_user_dir = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cd ~ && pwd'").chomp.strip
 
-          command = 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p ' + "#{gitolite_server_port}" + ' -i ' + "#{git_user_dir}/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}" + ' "$@"'
+          command = 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -i ' + "#{git_user_dir}/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}" + ' "$@"'
 
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat > #{GITOLITE_MIRRORING_SCRIPT_PATH}'",  :pipe_data => "#!/bin/sh", :pipe_command => 'echo')
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat >> #{GITOLITE_MIRRORING_SCRIPT_PATH}'", :pipe_data => command, :pipe_command => 'echo')

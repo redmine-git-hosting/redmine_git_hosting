@@ -1,0 +1,143 @@
+<h2><%= l(:label_statistics) %></h2>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag    'application',                  :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag    'bootstrap/bootstrap_custom',   :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'highcharts/highcharts',        :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'highcharts/modules/drilldown', :plugin => 'redmine_git_hosting' %>
+  <%= javascript_include_tag 'set_highcharts',               :plugin => 'redmine_git_hosting' %>
+<% end %>
+
+<div id="statistics-tabs">
+  <ul>
+    <li><a href="#statistics-global"><%= l(:label_repository_statistics_global) %></a></li>
+    <li><a href="#statistics-commits"><%= l(:label_repository_statistics_commits) %></a></li>
+    <li><a href="#statistics-contributors"><%= l(:label_repository_statistics_contributors) %></a></li>
+  </ul>
+
+  <div id="statistics-global">
+    <ul class="thumbnails">
+      <% @repository.global_statistics.each do |key, value| %>
+        <li class="span4">
+          <div class="thumbnail">
+            <div class="title"><%= key %></div>
+            <div class="value"><%= value %></div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div id="statistics-commits">
+    <div id="chart_commits_per_month" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
+    <div id="chart_commits_per_day" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
+
+    <div style="clear: both; margin: 10px;"></div>
+
+    <div id="chart_commits_per_hour" style="height: 500px; width: 47%; margin: 10px; float: left;"></div>
+    <div id="chart_commits_per_weekday" style="height: 300px; width: 47%; margin: 10px; float: left;"></div>
+
+    <div id="chart_commits_per_weekday" style="margin-top: 20px;"></div>
+
+    <%= javascript_tag do %>
+      var chart_commits_per_month          = new Object();
+      chart_commits_per_month.label        = "<%= l(:label_commits_per_month) %>";
+      chart_commits_per_month.label_y_axis = "<%= l(:label_commits_number) %>";
+      chart_commits_per_month.target       = '#chart_commits_per_month';
+      chart_commits_per_month.categories   = <%= @repository.commits_per_month[:categories].to_json.html_safe %>;
+      chart_commits_per_month.series       = <%= @repository.commits_per_month[:series].to_json.html_safe %>;
+
+      var chart_commits_per_day          = new Object();
+      chart_commits_per_day.label        = "<%= l(:label_commits_per_day) %>";
+      chart_commits_per_day.label_y_axis = "<%= l(:label_commits_number) %>";
+      chart_commits_per_day.target       = '#chart_commits_per_day';
+      chart_commits_per_day.categories   = <%= @repository.commits_per_day[:categories].to_json.html_safe %>;
+      chart_commits_per_day.series       = <%= @repository.commits_per_day[:series].to_json.html_safe %>;
+      chart_commits_per_day.legend       = {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 50,
+        y: 50,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor: '#FFFFFF'
+      };
+
+      var chart_commits_per_hour          = new Object();
+      chart_commits_per_hour.label        = "<%= l(:label_commits_per_hour) %>";
+      chart_commits_per_hour.label_y_axis = "<%= l(:label_hour) %>";
+      chart_commits_per_hour.label_x_axis = "<%= l(:label_commits_number) %>";
+      chart_commits_per_hour.target       = '#chart_commits_per_hour';
+      chart_commits_per_hour.categories   = <%= @repository.commits_per_hours[:categories].to_json.html_safe %>;
+      chart_commits_per_hour.series       = <%= @repository.commits_per_hours[:series].to_json.html_safe %>;
+
+      var chart_commits_per_weekday     = new Object();
+      chart_commits_per_weekday.label   = "<%= l(:label_commits_per_weekday) %>";
+      chart_commits_per_weekday.target  = '#chart_commits_per_weekday';
+      chart_commits_per_weekday.series  = <%= @repository.commits_per_weekday.to_json.html_safe %>;
+    <% end %>
+  </div>
+
+  <div id="statistics-contributors">
+    <ul class="thumbnails">
+      <% author_charts = [] %>
+      <% @repository.commits_per_author.each do |commits_data| %>
+        <% idx = @repository.commits_per_author.index(commits_data) %>
+        <% author_charts.push("chart_commits_per_author_#{idx}") %>
+        <%= javascript_tag do %>
+          var chart_commits_per_author_<%= idx %> = new Object();
+          chart_commits_per_author_<%= idx %>.label        = "";
+          chart_commits_per_author_<%= idx %>.label_y_axis = "<%= l(:label_commits_number) %>";
+          chart_commits_per_author_<%= idx %>.target       = '#chart_commits_per_author_<%= idx %>';
+          chart_commits_per_author_<%= idx %>.categories   = <%= commits_data[:categories].to_json.html_safe %>;
+          chart_commits_per_author_<%= idx %>.series       = <%= commits_data[:series].to_json.html_safe %>;
+          chart_commits_per_author_<%= idx %>.legend       = {};
+        <% end %>
+        <li class="span6">
+          <div id="contributor-<%= idx %>" class="thumbnail">
+            <h4>
+              <%= commits_data[:author_name] %><br>
+              <small><%= commits_data[:author_mail] %></small>
+            </h4>
+            <h5><%= commits_data[:total_commits] %></h5>
+            <div id="chart_commits_per_author_<%= idx %>" style="height: 200px; width: 100%"></div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+    <div id="chart_commits_per_author"></div>
+    <%= javascript_tag do %>
+      var chart_commits_per_author          = new Object();
+      chart_commits_per_author.label        = "<%= l(:label_commits_per_author) %>";
+      chart_commits_per_author.label_y_axis = "<%= l(:label_commits_number) %>";
+      chart_commits_per_author.target       = '#chart_commits_per_author';
+      chart_commits_per_author.categories   = <%= @repository.commits_per_author_global[:categories].to_json.html_safe %>;
+      chart_commits_per_author.series       = <%= @repository.commits_per_author_global[:series].to_json.html_safe %>;
+    <% end %>
+  </div>
+
+</div>
+
+<div style="clear: both; margin: 10px;"></div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    createAreaChart(chart_commits_per_month);
+    createZoomableAreaChart(chart_commits_per_day);
+    createBarChart(chart_commits_per_hour);
+    createPieChart(chart_commits_per_weekday);
+
+    <% author_charts.each do |chart| %>
+    createZoomableAreaChart(<%= chart %>);
+    <% end %>
+    createColumnChart(chart_commits_per_author);
+
+    $("#statistics-tabs").tabs();
+  });
+<% end %>
+
+<p><%= link_to l(:button_back), :action => 'show', :id => @project %></p>
+
+<% html_title(l(:label_repository), l(:label_statistics)) -%>

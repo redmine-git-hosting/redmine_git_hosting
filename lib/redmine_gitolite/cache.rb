@@ -32,22 +32,17 @@ module RedmineGitolite
     # Primary interface: execute given command and send IO to block
     # options[:write_stdin] will derive caching key from data that block writes to io stream
     def self.execute(cmd_str, repo_id, options = {}, &block)
-      if repo_id.nil?
-        logger.error { "repo_id is nil, exit!" }
-        return false
-      end
-
       if max_cache_time == 0 || options[:uncached]
         # Disabled cache, simply launch shell, don't redirect
         logger.warn { "Cache is disabled : '#{repo_id}'" }
         options.delete(:uncached)
-        retio = options.empty? ? Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, &block) : Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
+        retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
         status = $?
       elsif !options[:write_stdin] && out = self.check_cache(cmd_str)
         # Simple case -- have cached result that depends only on cmd_str
         block.call(out)
-        status = nil
         retio = out
+        status = nil
       else
         # Create redirector stream and call block
         redirector = self.new(cmd_str, repo_id, options)
@@ -56,9 +51,10 @@ module RedmineGitolite
       end
 
       if status && status.exitstatus.to_i != 0
-        logger.error { "Git exited with non-zero status : #{$?.exitstatus}" }
-        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{$?.exitstatus}"
+        logger.error { "Git exited with non-zero status : #{status.exitstatus}" }
+        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus}"
       end
+
       return retio
     end
 

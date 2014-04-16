@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'lockfile'
-gem 'jbox-gitolite'
+gem 'jbox-gitolite', '~> 1.1.11'
 
 gem 'github-markup'
 gem 'RedCloth'

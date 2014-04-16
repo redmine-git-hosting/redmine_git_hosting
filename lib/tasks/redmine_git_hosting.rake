@@ -66,6 +66,7 @@ namespace :redmine_git_hosting do
     puts "Done!"
   end
 
+
   desc "Update/repair Gitolite configuration"
   task :update_repositories => [:environment] do
     puts "Performing manual update_repositories operation..."
@@ -80,6 +81,7 @@ namespace :redmine_git_hosting do
     puts "Done!"
   end
 
+
   desc "Fetch commits from gitolite repositories/update gitolite configuration"
   task :fetch_changesets => [:environment] do
     puts "Performing manual fetch_changesets operation..."
@@ -88,6 +90,21 @@ namespace :redmine_git_hosting do
     puts "Done!"
   end
 
+
+  desc "Check repositories identifier uniqueness"
+  task :check_repository_uniqueness => [:environment] do
+    puts "Checking repositories identifier uniqueness..."
+    if Repository::Git.have_duplicated_identifier?
+      # Oops -- have duplication.
+      RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers!" }
+      puts "Detected non-unique repository identifiers!"
+    else
+      puts "pass!"
+    end
+    puts "Done!"
+  end
+
+
   desc "Install redmine_git_hosting scripts"
   task :install_scripts do |t,args|
     if !ENV["READ_ONLY"]
@@ -95,6 +112,7 @@ namespace :redmine_git_hosting do
     end
     Rake::Task["selinux:redmine_git_hosting:install_scripts"].invoke
   end
+
 
   desc "Remove redmine_git_hosting scripts"
   task :remove_scripts do

@@ -20,6 +20,9 @@ module RedmineGitolite
       @gitolite_admin_url        = RedmineGitolite::Config.gitolite_admin_url
       @gitolite_admin_ssh_script_path = RedmineGitolite::Config.gitolite_admin_ssh_script_path
       @lock_file_path = File.join(RedmineGitolite::Config.get_temp_dir_path, 'redmine_git_hosting_lock')
+      @gitolite_debug = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level) == 'debug' ? true : false
+      @gitolite_timeout = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_timeout).to_i
+      @gitolite_author  = RedmineGitolite::Config.gitolite_commit_author
 
       @object_id      = object_id
       @action         = action
@@ -46,14 +49,12 @@ module RedmineGitolite
     def gitolite_admin_repo_clone
 
       ## Get or clone Gitolite Admin repo
-      if (File.exists? "#{@gitolite_admin_dir}") && (File.exists? "#{@gitolite_admin_dir}/.git") && (File.exists? "#{@gitolite_admin_dir}/keydir") && (File.exists? "#{@gitolite_admin_dir}/conf")
-        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
-      else
+      if !Gitolite::GitoliteAdmin.is_gitolite_admin_repo?(@gitolite_admin_dir)
         logger.info { "Clone Gitolite Admin Repo : #{@gitolite_admin_url} (port : #{@gitolite_server_port}) to #{@gitolite_admin_dir}" }
 
         begin
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "rm -rf '#{@gitolite_admin_dir}'")
-          RedmineGitolite::GitHosting.execute_command(:local_cmd, "export GIT_SSH=#{@gitolite_admin_ssh_script_path} && git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}")
+          RedmineGitolite::GitHosting.execute_command(:local_cmd, "env GIT_SSH=#{@gitolite_admin_ssh_script_path} git clone ssh://#{@gitolite_admin_url} #{@gitolite_admin_dir}")
           RedmineGitolite::GitHosting.execute_command(:local_cmd, "chmod 700 '#{@gitolite_admin_dir}'")
         rescue RedmineGitolite::GitHosting::GitHostingException => e
           logger.error { e.command }
@@ -61,8 +62,6 @@ module RedmineGitolite
           logger.error { "Cannot clone Gitolite Admin repository !!" }
           return false
         end
-
-        @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir)
       end
 
       ## Set Gitolite config file
@@ -101,12 +100,26 @@ module RedmineGitolite
 
       ## Return Gitolite::GitoliteAdmin object
       logger.info { "Using Gitolite configuration file : '#{@gitolite_config_file}'" }
-      @gitolite_admin.config = @gitolite_config = Gitolite::Config.new(@gitolite_config_file_path)
+
+      @gitolite_admin = Gitolite::GitoliteAdmin.new(@gitolite_admin_dir, :config_file => @gitolite_config_file,
+                                                                         :debug       => @gitolite_debug,
+                                                                         :timeout     => @gitolite_timeout,
+                                                                         :env         => {'GIT_SSH' => @gitolite_admin_ssh_script_path})
+      @gitolite_config = @gitolite_admin.config
     end
 
 
     def gitolite_admin_repo_commit(message = '')
-      @gitolite_admin.save("#{@action} : #{message}")
+      logger.info { "#{@action} : commiting to Gitolite..." }
+      begin
+        @gitolite_admin.save("#{@action} : #{message}", :author => @gitolite_author)
+      rescue Grit::Git::GitTimeout => e
+        logger.error { "#{e.message} : #{e.command}" }
+      rescue Grit::Git::CommandFailed => e
+        logger.error { "#{e.message} : #{e.command} | #{e.err}" }
+      rescue => e
+        logger.error { "#{e.message}" }
+      end
     end
 
 
@@ -114,8 +127,12 @@ module RedmineGitolite
       logger.info { "#{@action} : pushing to Gitolite..." }
       begin
         @gitolite_admin.apply
+      rescue Grit::Git::GitTimeout => e
+        logger.error { "#{e.message} : #{e.command}" }
+      rescue Grit::Git::CommandFailed => e
+        logger.error { "#{e.message} : #{e.command} | #{e.err}" }
       rescue => e
-        logger.error { "Error : #{e.message}" }
+        logger.error { "#{e.message}" }
       end
     end
 

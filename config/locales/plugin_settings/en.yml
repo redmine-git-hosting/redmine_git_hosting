@@ -34,6 +34,10 @@ en:
   label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
   label_gitolite_identifier_prefix: Gitolite prefix
   label_gitolite_identifier_prefix_desc: (Will be used to generate SSH keys identifiers)
+  label_git_config_username: Git author name
+  label_git_config_username_desc: (Will be used as author name in commits)
+  label_git_config_email: Git author email
+  label_git_config_email_desc: (Will be used as author email in commits)
 
   # Gitolite Global Config
   label_tab_global: Global
@@ -43,6 +47,8 @@ en:
   label_gitolite_temp_dir_desc: (Must be absolute)
   label_gitolite_scripts_dir: Scripts dir
   label_gitolite_scripts_dir_desc: (Can be absolute or relative to Redmine root)
+  label_gitolite_timeout: Git timeout
+  label_gitolite_timeout_desc: (In seconds)
 
   label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
   label_gitolite_recycle_bin_expiration_time_desc: (In hours)
@@ -158,6 +164,8 @@ en:
   label_gitolite_hooks_params_installed: Hooks parameters installed?
   label_gitolite_hooks_installed: Hooks installed?
   label_redmine_user: Redmine username
+  label_sudo_version: Sudo version
+  label_git_version: Git version
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin

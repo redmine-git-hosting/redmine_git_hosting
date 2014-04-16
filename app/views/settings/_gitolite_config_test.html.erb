@@ -53,6 +53,11 @@
   </tr>
 
   <tr>
+    <td><%= l(:label_sudo_version) %></td>
+    <td><span class="label label-success"><%= RedmineGitolite::Config.sudo_version_raw %></span></td>
+  </tr>
+
+  <tr>
     <td><%= l(:label_sudo_gitolite_to_redmine_user) %></td>
     <td><%= image_tag (RedmineGitolite::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %></td>
   </tr>
@@ -91,6 +96,11 @@
   <tr>
     <td><%= l(:label_mirroring_keys_installed) %></td>
     <td><%= image_tag (RedmineGitolite::Config.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png') %></td>
+  </tr>
+
+  <tr>
+    <td><%= l(:label_git_version) %></td>
+    <td><span class="label label-success"><%= Repository::Git.scm_version_string %></span></td>
   </tr>
 
   <tr>
