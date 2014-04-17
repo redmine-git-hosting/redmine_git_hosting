@@ -133,8 +133,8 @@ module RedmineGitHosting
         def disable_git_daemon_if_not_public
           # Go through all gitolite repos and diable Git daemon if necessary
           @project.gitolite_repos.each do |repository|
-            if repository.extra.git_daemon == 1 && !@project.is_public
-              repository.extra.git_daemon = 0
+            if repository.extra[:git_daemon] && !@project.is_public
+              repository.extra[:git_daemon] = false
               repository.extra.save
             end
           end

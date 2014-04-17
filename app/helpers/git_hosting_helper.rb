@@ -70,4 +70,48 @@ module GitHostingHelper
     ((stripped[0, 1] != "/") ? '.' : '') + norm + ((norm[-1, 1] != "/") ? "/" : "")
   end
 
+
+  def render_feature(repository, feature)
+    css_class = 'icon icon-git'
+
+    case feature
+
+      when :repository_deployment_credentials
+        label = l(:label_deployment_credentials)
+        css_class << ' icon-deployment-credentials'
+        enabled = repository.repository_deployment_credentials.active.any?
+
+      when :repository_post_receive_urls
+        label = l(:label_post_receive_urls)
+        css_class << ' icon-post-receive-urls'
+        enabled = repository.repository_post_receive_urls.active.any?
+
+      when :repository_mirrors
+        label = l(:label_repository_mirrors)
+        css_class << ' icon-mirrors'
+        enabled = repository.repository_mirrors.active.any?
+
+      when :git_daemon
+        label = l(:label_git_daemon)
+        css_class << ' icon-git-daemon'
+        enabled = (repository.project.is_public && repository.extra[:git_daemon])
+
+      when :git_http
+        label = l(:label_smart_http)
+        css_class << ' icon-git-smarthttp'
+        enabled = repository.extra[:git_http] != 0
+
+      when :git_notify
+        label = l(:label_git_notify)
+        css_class << ' icon-git-notify'
+        enabled = repository.extra[:git_notify]
+
+    end
+
+    label << (!enabled ? " (#{l(:label_disabled)})" : '')
+    css_class << (!enabled ? ' icon-git-disabled' : '')
+
+    content_tag(:span, '', :title => label, :class => css_class)
+  end
+
 end
