@@ -35,12 +35,12 @@
       </td>
       <td align="center">
         <% if repository.is_a?(Repository::Git) %>
-          <span title="<%= l(:label_deployment_credentials) %><%= !repository.repository_deployment_credentials.active.any? ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-deployment-credentials <%= !repository.repository_deployment_credentials.active.any? ? 'icon-git-disabled' : '' %>"></span>
-          <span title="<%= l(:label_post_receive_urls) %><%= !repository.repository_post_receive_urls.active.any? ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-post-receive-urls <%= !repository.repository_post_receive_urls.active.any? ? 'icon-git-disabled' : '' %>"></span>
-          <span title="<%= l(:label_repository_mirrors) %><%= !repository.repository_mirrors.active.any? ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-mirrors <%= !repository.repository_mirrors.active.any? ? 'icon-git-disabled' : '' %>"></span>
-          <span title="<%= l(:label_git_daemon) %><%= !(repository.project.is_public && repository.extra[:git_daemon] == 1) ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-git-daemon <%= !(repository.project.is_public && repository.extra[:git_daemon] == 1) ? 'icon-git-disabled' : '' %>"></span>
-          <span title="<%= l(:label_smart_http) %><%= repository.extra[:git_http] == 0 ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-git-smarthttp <%= repository.extra[:git_http] == 0 ? 'icon-git-disabled' : '' %>"></span>
-          <span title="<%= l(:label_git_notify) %><%= repository.extra[:git_notify] == 0 ? " (#{l(:label_disabled)})" : '' %>" class="icon icon-git icon-git-notify <%= repository.extra[:git_notify] == 0 ? 'icon-git-disabled' : '' %>"></span>
+          <%= render_feature(repository, :repository_deployment_credentials) %>
+          <%= render_feature(repository, :repository_post_receive_urls) %>
+          <%= render_feature(repository, :repository_mirrors) %>
+          <%= render_feature(repository, :git_daemon) %>
+          <%= render_feature(repository, :git_http) %>
+          <%= render_feature(repository, :git_notify) %>
         <% end %>
       </td>
       <td class="buttons">
