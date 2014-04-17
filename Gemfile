@@ -9,3 +9,7 @@ gem 'org-ruby'
 gem 'creole'
 gem 'wikicloth'
 gem 'asciidoctor'
+
+group :development, :test do
+  gem 'rspec', '2.14.1'
+end

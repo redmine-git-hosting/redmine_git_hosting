@@ -379,18 +379,8 @@ module RedmineGitolite
       logger.debug { "Getting Gitolite version..." }
 
       begin
-        version = RedmineGitolite::GitHosting.execute_command(:ssh_cmd, "#{gitolite_user}@localhost info").split("\n")
-        version.each do |line|
-          if line =~ /gitolite[ -]v?2./
-            @@gitolite_version_cached = 2
-            break
-          elsif line.include?('running gitolite3')
-            @@gitolite_version_cached = 3
-            break
-          else
-            @@gitolite_version_cached = 0
-          end
-        end
+        version = RedmineGitolite::GitHosting.execute_command(:ssh_cmd, "#{gitolite_user}@localhost info").split("\n").first
+        @@gitolite_version_cached = compute_gitolite_version(version)
       rescue RedmineGitolite::GitHosting::GitHostingException => e
         logger.error { "Error while getting Gitolite version" }
         @@gitolite_version_cached = -1
@@ -398,6 +388,19 @@ module RedmineGitolite
 
       @@gitolite_version_stamp = Time.new
       return @@gitolite_version_cached
+    end
+
+
+    def self.compute_gitolite_version(line)
+      version = ''
+      if line =~ /gitolite[ -]v?2./
+         version = 2
+      elsif line.include?('running gitolite3')
+        version = 3
+      else
+        version = 0
+      end
+      return version
     end
 
 
