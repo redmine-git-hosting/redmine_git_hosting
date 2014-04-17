@@ -1,6 +1,6 @@
 <div>
 
-  <% if @repository.extra[:git_notify] == 1 %>
+  <% if @repository.extra[:git_notify] %>
 
     <% if !@git_notification.nil? %>
 
@@ -36,7 +36,7 @@
         (!@git_notification.nil? && @git_notification.include_list.any?) ||
         (!@git_notification.nil? && @git_notification.exclude_list.any?) %>
 
-    <div style="opacity: <%= @repository.extra[:git_notify] == 0 ? '0.5' : '1' %>;">
+    <div style="opacity: <%= @repository.extra[:git_notify] ? '1' : '0.5' %>;">
 
       <% if !@git_notification.nil? %>
         <p>
