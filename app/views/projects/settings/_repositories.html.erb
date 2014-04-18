@@ -24,7 +24,7 @@
         <% end %>
       </td>
       <td>
-        <%=link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
+        <%= link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
       </td>
       <td>
         <% if repository.is_a?(Repository::Git) %>

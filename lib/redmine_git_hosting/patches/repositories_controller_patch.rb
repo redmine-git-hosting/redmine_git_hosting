@@ -37,17 +37,8 @@ module RedmineGitHosting
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
 
-              if params[:extra][:git_daemon] == 'true'
-                params[:extra][:git_daemon] = 1
-              else
-                params[:extra][:git_daemon] = 0
-              end
-
-              if params[:extra][:git_notify] == 'true'
-                params[:extra][:git_notify] = 1
-              else
-                params[:extra][:git_notify] = 0
-              end
+              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
+              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
 
               @repository.extra.update_attributes(params[:extra])
 
@@ -66,17 +57,8 @@ module RedmineGitHosting
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
 
-              if params[:extra][:git_daemon] == 'true'
-                params[:extra][:git_daemon] = 1
-              else
-                params[:extra][:git_daemon] = 0
-              end
-
-              if params[:extra][:git_notify] == 'true'
-                params[:extra][:git_notify] = 1
-              else
-                params[:extra][:git_notify] = 0
-              end
+              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
+              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
 
               update_default_branch = false
 
