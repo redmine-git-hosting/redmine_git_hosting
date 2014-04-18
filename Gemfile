@@ -4,7 +4,7 @@ gem 'lockfile'
 gem 'jbox-gitolite', '~> 1.1.11'
 
 gem 'github-markup'
-gem 'redcarpet'
+gem 'redcarpet', '~> 2.3.0'
 gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
