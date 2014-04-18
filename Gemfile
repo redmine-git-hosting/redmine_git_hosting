@@ -11,5 +11,7 @@ gem 'wikicloth'
 gem 'asciidoctor'
 
 group :development, :test do
-  gem 'rspec', '2.14.1'
+  gem 'rspec',       '2.14.1'
+  gem 'guard-rspec', '2.6.0'
+  gem 'guard-spork', '1.5.1'
 end

@@ -1,3 +1,4 @@
 .*.swp
 /selinux/tmp
-
+Gemfile.lock
+/tmp
