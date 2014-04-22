@@ -31,6 +31,7 @@ You can follow announcements [here](https://github.com/jbox-web/redmine_git_host
 ## Code status
 
 * [![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
+* [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
 
 ## Installation
 
