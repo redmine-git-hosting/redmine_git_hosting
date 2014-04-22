@@ -13,7 +13,7 @@ gem 'asciidoctor'
 
 group :development, :test do
   gem 'rspec',          '~> 2.14.1'
-  gem 'guard-rspec',    '~> 2.6.0'
+  gem 'guard-rspec',    '~> 4.2.8'
   gem 'guard-spork',    '~> 1.5.1'
   gem 'simplecov',      '~> 0.8.2'
   gem 'simplecov-rcov', '~> 0.2.3'
