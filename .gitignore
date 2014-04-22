@@ -2,3 +2,5 @@
 /selinux/tmp
 Gemfile.lock
 /tmp
+/rdoc
+/coverage
