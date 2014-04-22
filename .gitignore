@@ -1,6 +1,7 @@
 .*.swp
-/selinux/tmp
 Gemfile.lock
+/selinux/tmp
 /tmp
 /rdoc
 /coverage
+/junit
