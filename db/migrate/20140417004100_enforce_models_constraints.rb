@@ -10,7 +10,7 @@ class EnforceModelsConstraints < ActiveRecord::Migration
     change_column :gitolite_public_keys, :key_type,   :integer, :null => false, :after => :user_id
     change_column :gitolite_public_keys, :title,      :string, :null => false
     change_column :gitolite_public_keys, :identifier, :string, :null => false
-    change_column :gitolite_public_keys, :key,        :string, :null => false
+    change_column :gitolite_public_keys, :key,        :text,   :null => false
     change_column :gitolite_public_keys, :active,     :boolean, :default => true
     change_column :gitolite_public_keys, :delete_when_unused, :boolean, :default => true, :after => :active
 
