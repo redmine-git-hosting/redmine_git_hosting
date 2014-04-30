@@ -71,7 +71,7 @@ class GitoliteHooksController < ApplicationController
 
 
       ## Post to each post-receive URL
-      @repository.repository_post_receive_urls.active.order('created_at ASC').each do |post_receive_url|
+      @repository.repository_post_receive_urls.active.each do |post_receive_url|
         logger.info { "Notifying #{post_receive_url.url} ... " }
         y << "  - Notifying #{post_receive_url.url} ... "
 
