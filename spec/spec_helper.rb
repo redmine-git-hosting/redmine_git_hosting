@@ -1,19 +1,28 @@
 require 'rubygems'
 require 'spork'
-
+require 'factory_girl_rails'
+require 'database_cleaner'
 require 'simplecov'
 require 'simplecov-rcov'
+
+## Load FactoryGirls factories
+Dir[Rails.root.join("plugins/redmine_git_hosting/spec/factories/**/*.rb")].each {|f| require f}
+
+## Configure SimpleCov
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.start 'rails'
 
-Spork.prefork do
-  # Loading more in this block will cause your tests to run faster. However,
-  # if you change any configuration or code from libraries loaded here, you'll
-  # need to restart spork for it take effect.
+## Configure RSpec
+RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+  config.color = true
 
-end
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
 
-Spork.each_run do
-  # This code will be run each time you run your specs.
-  require File.expand_path('../../lib/redmine_gitolite/config', __FILE__)
+  config.after(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
 end

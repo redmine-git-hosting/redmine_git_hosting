@@ -1,28 +1,29 @@
 class GitolitePublicKey < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE = 1
-  STATUS_LOCKED = 0
+  TITLE_LENGTH_LIMIT = 255
 
-  KEY_TYPE_USER = 0
+  STATUS_ACTIVE = true
+  STATUS_LOCKED = false
+
+  KEY_TYPE_USER   = 0
   KEY_TYPE_DEPLOY = 1
 
   DEPLOY_PSEUDO_USER = "deploy_key"
 
+  ## Relations
   belongs_to :user
   has_many   :repository_deployment_credentials, :dependent => :destroy
 
-  scope :active,   -> { where active: STATUS_ACTIVE }
-  scope :inactive, -> { where active: STATUS_LOCKED }
+  ## Validations
+  validates :user_id,    presence: true
 
-  scope :user_key,   -> { where key_type: KEY_TYPE_USER }
-  scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
+  validates :title,      presence: true, uniqueness: { case_sensitive: false, scope: :user_id },
+                         length: { maximum: TITLE_LENGTH_LIMIT }
 
-  validates_presence_of   :title, :identifier, :key, :key_type
-  validates_inclusion_of  :key_type, :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY]
-
-  validates_uniqueness_of :title,      :scope => :user_id
-  validates_uniqueness_of :identifier, :scope => :user_id
+  validates :identifier, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates :key,        presence: true
+  validates :key_type,   presence: true, inclusion: { in: [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
   validates_associated :repository_deployment_credentials
 
@@ -30,6 +31,14 @@ class GitolitePublicKey < ActiveRecord::Base
   validate :key_format
   validate :key_uniqueness
 
+  ## Scopes
+  scope :active,   -> { where active: STATUS_ACTIVE }
+  scope :inactive, -> { where active: STATUS_LOCKED }
+
+  scope :user_key,   -> { where key_type: KEY_TYPE_USER }
+  scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
+
+  ## Callbacks
   before_validation :set_identifier
   before_validation :strip_whitespace
   before_validation :remove_control_characters
@@ -49,28 +58,31 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def set_identifier
-    self.identifier ||=
-      begin
-        my_time = Time.now
-        time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
-        key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
-        case key_type
-          when KEY_TYPE_USER
-            # add "redmine_" as a prefix to the username, and then the current date
-            # this helps ensure uniqueness of each key identifier
-            #
-            # also, it ensures that it is very, very unlikely to conflict with any
-            # existing key name if gitolite config is also being edited manually
-            "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-          when KEY_TYPE_DEPLOY
-            # add "redmine_deploy_key_" as a prefix, and then the current date
-            # to help ensure uniqueness of each key identifier
-            # "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-            "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-          else
-            nil
+    if !self.user_id.nil?
+      self.identifier ||=
+        begin
+          my_time = Time.now
+          time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
+          key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
+          case key_type
+            when KEY_TYPE_USER
+              # add "redmine_" as a prefix to the username, and then the current date
+              # this helps ensure uniqueness of each key identifier
+              #
+              # also, it ensures that it is very, very unlikely to conflict with any
+              # existing key name if gitolite config is also being edited manually
+              "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            when KEY_TYPE_DEPLOY
+              # add "redmine_deploy_key_" as a prefix, and then the current date
+              # to help ensure uniqueness of each key identifier
+              "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            else
+              nil
+            end
           end
-        end
+    else
+      nil
+    end
   end
 
 
@@ -166,19 +178,19 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def has_not_been_changed
-    unless new_record?
-      has_errors = false
+    return if new_record?
 
-      %w(identifier key user_id key_type).each do |attribute|
-        method = "#{attribute}_changed?"
-        if self.send(method)
-          errors.add(attribute, 'may not be changed')
-          has_errors = true
-        end
+    valid = true
+
+    %w(identifier key user_id key_type).each do |attribute|
+      method = "#{attribute}_changed?"
+      if self.send(method)
+        errors.add(attribute, 'may not be changed')
+        valid = false
       end
-
-      return has_errors
     end
+
+    return valid
   end
 
 
@@ -205,6 +217,9 @@ class GitolitePublicKey < ActiveRecord::Base
     return if !new_record?
 
     keypieces = key.match(/^(\S+)\s+(\S+)/)
+
+    return false if keypieces.nil?
+
     key_format = keypieces[1]
     key_data   = keypieces[2]
 
