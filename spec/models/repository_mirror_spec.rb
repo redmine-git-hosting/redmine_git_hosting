@@ -61,7 +61,7 @@ describe RepositoryMirror do
     it { expect(@mirror.active).to be false }
   end
 
-  # Test format validation
+  ## Test format validation
   describe "when git url is valid" do
     it "should be valid" do
       addresses = [
