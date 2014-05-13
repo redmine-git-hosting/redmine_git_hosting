@@ -27,7 +27,7 @@ class RepositoryMirror < ActiveRecord::Base
 
   validate :check_refspec
 
-  validates_associated    :repository
+  validates_associated :repository
 
   ## Scopes
   scope :active,   -> { where active: STATUS_ACTIVE }
