@@ -1,36 +1,41 @@
 class RepositoryMirror < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE   = 1
-  STATUS_INACTIVE = 0
+  STATUS_ACTIVE   = true
+  STATUS_INACTIVE = false
 
   PUSHMODE_MIRROR       = 0
   PUSHMODE_FORCE        = 1
   PUSHMODE_FAST_FORWARD = 2
 
+  attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
+
+  ## Relations
   belongs_to :repository
 
+  ## Validations
+  validates :repository_id, :presence => true
+
+  ## Only allow SSH format
+  ## ssh://git@redmine.example.org/project1/project2/project3/project4.git
+  ## ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
+  validates :url, :presence   => true,
+                  :uniqueness => { :case_sensitive => false, :scope => :repository_id },
+                  :format     => { :with => /^(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-~]+)(\.git)?$/i }
+
+  validates :push_mode, :presence => true, :inclusion => { :in => [PUSHMODE_MIRROR, PUSHMODE_FORCE, PUSHMODE_FAST_FORWARD] }
+
+  validate :check_refspec
+
+  validates_associated    :repository
+
+  ## Scopes
   scope :active,   -> { where active: STATUS_ACTIVE }
   scope :inactive, -> { where active: STATUS_INACTIVE }
 
   scope :has_explicit_refspec, -> { where push_mode: '> 0' }
 
-  attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
-
-  validates_presence_of   :repository_id
-
-  ## Only allow SSH format
-  ## git@github.com:user/project.git
-  ## git-test@redmine.example.org:my_user/test.git
-  ## git-test@redmine.example/project1/project2/project3/project4.git
-  validates_format_of     :url, :with => /^([A-Za-z0-9\-]+@)([A-Za-z0-9\.\-]+)(:|\/)([A-Za-z0-9\_\-\/]+)(\.git)?$/i, :allow_blank => false
-
-  validates_uniqueness_of :url, :scope => [:repository_id]
-
-  validates_associated    :repository
-
-  validate :check_refspec
-
+  ## Callbacks
   before_validation :strip_whitespace
 
 
@@ -109,10 +114,12 @@ class RepositoryMirror < ActiveRecord::Base
       self.include_all_branches = false
       self.include_all_tags     = false
       self.explicit_refspec     = ""
+      return true
 
     elsif include_all_branches && include_all_tags
       errors.add(:base, "Cannot #{l(:field_include_all_branches)} and #{l(:field_include_all_tags)} at the same time.")
       errors.add(:explicit_refspec, "cannot be used with #{l(:field_include_all_branches)} or #{l(:field_include_all_tags)}") unless explicit_refspec.blank?
+      return false
 
     elsif !explicit_refspec.blank?
       errors.add(:explicit_refspec, "cannot be used with #{l(:field_include_all_branches)}.") if include_all_branches
@@ -124,8 +131,11 @@ class RepositoryMirror < ActiveRecord::Base
         errors.add(:explicit_refspec, "cannot have null first component (will delete remote branch(s))")
       end
 
+      return false
+
     elsif !include_all_branches && !include_all_tags
       errors.add(:base, "Must include at least one item to push.")
+      return false
     end
   end
 
