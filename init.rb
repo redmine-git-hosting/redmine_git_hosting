@@ -32,7 +32,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_identifier_prefix            => 'redmine_',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting', '/').to_s,
       :gitolite_scripts_dir                  => './',
       :gitolite_timeout                      => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,

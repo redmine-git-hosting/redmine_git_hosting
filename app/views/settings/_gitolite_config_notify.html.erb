@@ -1,6 +1,6 @@
 <%
   # Gitolite Notifications Config
-  gitolite_notify_by_default            = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default, true)
+  gitolite_notify_by_default            = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default)
   gitolite_notify_global_prefix         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_prefix)
   gitolite_notify_global_sender_address = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_sender_address)
   gitolite_notify_global_include        = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_global_include)

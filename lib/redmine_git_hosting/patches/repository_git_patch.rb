@@ -34,7 +34,7 @@ module RedmineGitHosting
 
         # Repo ident unique
         def repo_ident_unique?
-          RedmineGitolite::ConfigRedmine.get_setting(:unique_repo_identifier, true)
+          RedmineGitolite::ConfigRedmine.get_setting(:unique_repo_identifier)
         end
 
 
@@ -337,7 +337,7 @@ module RedmineGitHosting
 
 
         def get_full_parent_path
-          return "" if !RedmineGitolite::ConfigRedmine.get_setting(:hierarchical_organisation, true)
+          return "" if !RedmineGitolite::ConfigRedmine.get_setting(:hierarchical_organisation)
 
           if self.is_default?
             parent_parts = []

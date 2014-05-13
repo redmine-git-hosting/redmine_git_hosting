@@ -44,13 +44,19 @@ namespace :redmine_git_hosting do
     else
       changes = 0
       valuehash = (Setting.plugin_redmine_git_hosting).clone rescue {}
-      default_hash.each do |key,value|
+      default_hash.each do |key, value|
         if valuehash[key] != value
           puts "Changing '#{key}' : #{valuehash[key]} => #{value}\n"
-          valuehash[key] = value
           changes += 1
         end
+
+        if value.is_a?(String) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
+          valuehash[key] = value.to_s
+        else
+          valuehash[key] = value
+        end
       end
+
       if changes == 0
         puts "No changes necessary.\n"
       else
@@ -60,6 +66,7 @@ namespace :redmine_git_hosting do
           puts "Success!\n"
         rescue => e
           puts "Failure.\n"
+          puts e.message
         end
       end
     end

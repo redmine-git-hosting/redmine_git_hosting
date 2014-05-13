@@ -18,7 +18,7 @@ describe Repository::Git do
 
   it { expect(@repository_git.extra[:git_http]).to eq 1 }
   it { expect(@repository_git.extra[:git_daemon]).to be false }
-  it { expect(@repository_git.extra[:git_notify]).to be false }
+  it { expect(@repository_git.extra[:git_notify]).to be true }
   it { expect(@repository_git.extra[:default_branch]).to eq "master" }
 
 

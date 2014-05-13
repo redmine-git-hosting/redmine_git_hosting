@@ -272,14 +272,14 @@ module RedmineGitHosting
             ## This a force update
             if valuehash[:gitolite_resync_all_projects] == 'true'
               @@resync_projects = true
-              valuehash[:gitolite_resync_all_projects] = false
+              valuehash[:gitolite_resync_all_projects] = 'false'
             end
 
 
             ## This a force update
             if valuehash[:gitolite_resync_all_ssh_keys] == 'true'
               @@resync_ssh_keys = true
-              valuehash[:gitolite_resync_all_ssh_keys] = false
+              valuehash[:gitolite_resync_all_ssh_keys] = 'false'
             end
 
 
@@ -293,6 +293,30 @@ module RedmineGitHosting
               valuehash[:init_repositories_on_create] = 'false'
             end
 
+            ## Convert boolean
+            [
+              :gitolite_config_has_admin_key,
+              :gitolite_log_split,
+              :show_repositories_url,
+              :gitolite_daemon_by_default,
+              :download_revision_enabled,
+              :gitolite_hooks_are_asynchronous,
+              :gitolite_force_hooks_update,
+              :gitolite_hooks_debug,
+              :gitolite_notify_by_default,
+              :all_projects_use_git,
+              :init_repositories_on_create,
+              :delete_git_repositories,
+              :hierarchical_organisation,
+              :unique_repo_identifier,
+              :gitolite_use_sidekiq
+            ].each do |setting|
+              if valuehash[setting] == 'true'
+                valuehash[setting] = true
+              else
+                valuehash[setting] = false
+              end
+            end
 
             # Save back results
             self.value = valuehash

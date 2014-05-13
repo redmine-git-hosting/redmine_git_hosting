@@ -12,39 +12,40 @@ module RedmineGitolite
 
     def self.get_logger(type)
       file = File.join(Rails.root, 'log', 'git_hosting.log').to_s
+      split_log = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split)
 
-      if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true) && !File.directory?(File.join(Rails.root, 'log', 'git_hosting').to_s)
+      if split_log && !File.directory?(File.join(Rails.root, 'log', 'git_hosting').to_s)
         FileUtils.mkdir_p(File.join(Rails.root, 'log', 'git_hosting').to_s)
       end
 
       case type
         when :global then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_hosting.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_hosting.log').to_s if split_log
           prefix = '[GitHosting]'
           @@logger_global ||= LoggerGlobal.new(file, prefix)
 
         when :worker then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_worker.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_worker.log').to_s if split_log
           prefix = '[GitWorker]'
           @@logger_worker ||= LoggerGlobal.new(file, prefix)
 
         when :recycle_bin then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_recycle_bin.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_recycle_bin.log').to_s if split_log
           prefix = '[GitRecycleBin]'
           @@logger_recycle_bin ||= LoggerGlobal.new(file, prefix)
 
         when :git_cache then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_cache.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_cache.log').to_s if split_log
           prefix = '[GitCache]'
           @@logger_git_cache ||= LoggerGlobal.new(file, prefix)
 
         when :smart_http then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_smart_http.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_smart_http.log').to_s if split_log
           prefix = '[GitSmartHttp]'
           @@logger_smart_http ||= LoggerGlobal.new(file, prefix)
 
         when :git_hooks then
-          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_hooks.log').to_s if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split, true)
+          file   = File.join(Rails.root, 'log', 'git_hosting', 'git_hooks.log').to_s if split_log
           prefix = '[GitHooks]'
           @@logger_git_hooks ||= LoggerGlobal.new(file, prefix)
 

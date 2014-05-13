@@ -37,7 +37,7 @@ module RedmineGitolite
         data_hash[:options] = {}
       end
 
-      if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_use_sidekiq, true)
+      if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_use_sidekiq)
         GithostingShellWorker.perform_async(data_hash)
       else
         githosting_shell = RedmineGitolite::Shell.new(data_hash[:command], data_hash[:object], data_hash[:options])

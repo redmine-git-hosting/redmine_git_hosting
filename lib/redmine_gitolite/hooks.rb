@@ -24,9 +24,9 @@ module RedmineGitolite
     def initialize
       @gitolite_command   = RedmineGitolite::Config.gitolite_command
       @gitolite_hooks_url = RedmineGitolite::Config.gitolite_hooks_url
-      @debug_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_debug, true)
-      @async_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_are_asynchronous, true)
-      @force_hooks_update = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_force_hooks_update, true)
+      @debug_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_debug)
+      @async_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_are_asynchronous)
+      @force_hooks_update = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_force_hooks_update)
 
       @global_hook_params = get_global_hooks_params
       @gitolite_hooks_namespace = GITOLITE_HOOKS_NAMESPACE

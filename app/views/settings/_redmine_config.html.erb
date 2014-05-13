@@ -1,10 +1,10 @@
 <%
   # Redmine Config
-  all_projects_use_git        = RedmineGitolite::ConfigRedmine.get_setting(:all_projects_use_git, true)
-  init_repositories_on_create = RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true)
-  delete_git_repositories     = RedmineGitolite::ConfigRedmine.get_setting(:delete_git_repositories, true)
-  hierarchical_organisation   = RedmineGitolite::ConfigRedmine.get_setting(:hierarchical_organisation, true)
-  unique_repo_identifier      = RedmineGitolite::ConfigRedmine.get_setting(:unique_repo_identifier, true)
+  all_projects_use_git        = RedmineGitolite::ConfigRedmine.get_setting(:all_projects_use_git)
+  init_repositories_on_create = RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create)
+  delete_git_repositories     = RedmineGitolite::ConfigRedmine.get_setting(:delete_git_repositories)
+  hierarchical_organisation   = RedmineGitolite::ConfigRedmine.get_setting(:hierarchical_organisation)
+  unique_repo_identifier      = RedmineGitolite::ConfigRedmine.get_setting(:unique_repo_identifier)
 %>
 
 <h3><%= l(:label_redmine_config) %></h3>
