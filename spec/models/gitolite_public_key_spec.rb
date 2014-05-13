@@ -12,6 +12,14 @@ describe GitolitePublicKey do
 
     subject { @ssh_key }
 
+    it { should respond_to(:user) }
+    it { should respond_to(:key_type) }
+    it { should respond_to(:title) }
+    it { should respond_to(:identifier) }
+    it { should respond_to(:key) }
+    it { should respond_to(:active) }
+    it { should respond_to(:delete_when_unused) }
+
     it { should be_valid }
 
     it { expect(@ssh_key.to_s).to eq "test-key" }
