@@ -13,7 +13,11 @@ Dir[Rails.root.join("plugins/redmine_git_hosting/lib/tasks/**/*.rake")].each {|f
 Rake::Task.define_task(:environment)
 
 ## Configure SimpleCov
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::RcovFormatter,
+]
+
 SimpleCov.start 'rails'
 
 ## Configure RSpec
