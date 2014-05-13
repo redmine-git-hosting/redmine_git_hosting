@@ -3,25 +3,31 @@ require 'uri'
 class RepositoryPostReceiveUrl < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE   = 1
-  STATUS_INACTIVE = 0
-
-  belongs_to :repository
-
-  scope :active,   -> { where active: STATUS_ACTIVE }
-  scope :inactive, -> { where active: STATUS_INACTIVE }
+  STATUS_ACTIVE   = true
+  STATUS_INACTIVE = false
 
   attr_accessible :url, :mode, :active
 
-  validates_presence_of   :repository_id
+  ## Relations
+  belongs_to :repository
 
-  validates_format_of     :url, :with  => URI::regexp(%w(http https)), :allow_blank => false
-  validates_uniqueness_of :url, :scope => [:repository_id]
+  ## Validations
+  validates :repository_id, :presence => true
 
-  validates_associated    :repository
+  ## Only allow HTTP(s) format
+  validates :url, :presence   => true,
+                  :uniqueness => { :case_sensitive => false, :scope => :repository_id },
+                  :format     => { :with => URI::regexp(%w(http https)) }
 
-  validates_inclusion_of  :mode, :in => [:github, :get]
+  validates :mode, :presence => true, :inclusion => { :in => [:github, :get] }
 
+  validates_associated :repository
+
+  ## Scopes
+  scope :active,   -> { where active: STATUS_ACTIVE }
+  scope :inactive, -> { where active: STATUS_INACTIVE }
+
+  ## Callbacks
   before_validation :strip_whitespace
 
 
