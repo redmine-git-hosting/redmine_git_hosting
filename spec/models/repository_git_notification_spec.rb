@@ -3,8 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryGitNotification do
 
   before do
-    repository_git = FactoryGirl.create(:repository_git)
-    @git_notification = FactoryGirl.build(:repository_git_notification, repository_id: repository_git.id)
+    @project          = FactoryGirl.create(:project)
+    @repository_git   = FactoryGirl.create(:repository, :project_id => @project.id)
+    @git_notification = FactoryGirl.build(:repository_git_notification, :repository_id => @repository_git.id)
   end
 
   subject { @git_notification }

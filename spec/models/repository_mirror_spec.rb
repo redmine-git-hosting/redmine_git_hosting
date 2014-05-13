@@ -3,8 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryMirror do
 
   before do
-    repository_git = FactoryGirl.create(:repository_git)
-    @mirror = FactoryGirl.build(:repository_mirror, repository_id: repository_git.id)
+    @project        = FactoryGirl.create(:project)
+    @repository_git = FactoryGirl.create(:repository, :project_id => @project.id)
+    @mirror         = FactoryGirl.build(:repository_mirror, :repository_id => @repository_git.id)
   end
 
   subject { @mirror }

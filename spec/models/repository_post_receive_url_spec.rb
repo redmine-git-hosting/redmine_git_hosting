@@ -3,7 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryPostReceiveUrl do
 
   before do
-    @repository_git = FactoryGirl.create(:repository_git)
+    @project          = FactoryGirl.create(:project)
+    @repository_git   = FactoryGirl.create(:repository, :project_id => @project.id)
     @post_receive_url = FactoryGirl.build(:repository_post_receive_url, :repository_id => @repository_git.id)
   end
 
