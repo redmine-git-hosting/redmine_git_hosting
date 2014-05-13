@@ -16,14 +16,14 @@ class GitolitePublicKey < ActiveRecord::Base
   has_many   :repository_deployment_credentials, :dependent => :destroy
 
   ## Validations
-  validates :user_id,    presence: true
+  validates :user_id,    :presence => true
 
-  validates :title,      presence: true, uniqueness: { case_sensitive: false, scope: :user_id },
-                         length: { maximum: TITLE_LENGTH_LIMIT }
+  validates :title,      :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id },
+                         :length => { :maximum => TITLE_LENGTH_LIMIT }
 
-  validates :identifier, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
-  validates :key,        presence: true
-  validates :key_type,   presence: true, inclusion: { in: [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
+  validates :identifier, :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
+  validates :key,        :presence => true
+  validates :key_type,   :presence => true, :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
   validates_associated :repository_deployment_credentials
 
