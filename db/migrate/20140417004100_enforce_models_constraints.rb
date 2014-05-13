@@ -4,7 +4,7 @@ class EnforceModelsConstraints < ActiveRecord::Migration
 
     change_column :git_caches, :repo_identifier, :string, :null => false, :after => :id
     change_column :git_caches, :command,         :text,   :null => false
-    change_column :git_caches, :command_output,  :binary, :null => false
+    change_column :git_caches, :command_output,  :binary, :null => false, :limit => 16777216
 
     change_column :gitolite_public_keys, :user_id,    :integer, :null => false, :after => :id
     change_column :gitolite_public_keys, :key_type,   :integer, :null => false, :after => :user_id
