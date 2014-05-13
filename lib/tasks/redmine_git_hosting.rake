@@ -43,10 +43,10 @@ namespace :redmine_git_hosting do
       puts "No defaults specified in init.rb!"
     else
       changes = 0
-      valuehash = (Setting.plugin_redmine_git_hosting).clone
+      valuehash = (Setting.plugin_redmine_git_hosting).clone rescue {}
       default_hash.each do |key,value|
         if valuehash[key] != value
-          puts "Changing '#{key}' : '#{valuehash[key]}' => '#{value}'\n"
+          puts "Changing '#{key}' : #{valuehash[key]} => #{value}\n"
           valuehash[key] = value
           changes += 1
         end

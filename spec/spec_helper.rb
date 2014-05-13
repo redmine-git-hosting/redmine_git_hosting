@@ -1,11 +1,16 @@
 require 'database_cleaner'
 require 'factory_girl_rails'
+require 'rake'
 require 'rubygems'
 require 'simplecov'
 require 'simplecov-rcov'
 
 ## Load FactoryGirls factories
 Dir[Rails.root.join("plugins/redmine_git_hosting/spec/factories/**/*.rb")].each {|f| require f}
+
+## Load RakeTasks
+Dir[Rails.root.join("plugins/redmine_git_hosting/lib/tasks/**/*.rake")].each {|f| load f}
+Rake::Task.define_task(:environment)
 
 ## Configure SimpleCov
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
@@ -23,6 +28,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    Rake::Task['redmine_git_hosting:restore_defaults'].invoke
   end
 
   config.before(:each) do

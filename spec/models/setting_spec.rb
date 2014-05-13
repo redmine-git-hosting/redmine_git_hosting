@@ -1,0 +1,16 @@
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+describe Setting do
+
+  before do
+    Rake::Task['redmine_git_hosting:restore_defaults'].invoke
+    @settings = Setting.plugin_redmine_git_hosting
+    @default_settings = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
+  end
+
+  subject { @settings }
+
+  it { should be_an_instance_of(Hash) }
+
+  it { expect(@settings).to eq @default_settings }
+end
