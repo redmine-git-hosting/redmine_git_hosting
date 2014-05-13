@@ -1,7 +1,6 @@
-require 'rubygems'
-require 'spork'
-require 'factory_girl_rails'
 require 'database_cleaner'
+require 'factory_girl_rails'
+require 'rubygems'
 require 'simplecov'
 require 'simplecov-rcov'
 
@@ -16,6 +15,7 @@ SimpleCov.start 'rails'
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.color = true
+  config.fail_fast = true
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
