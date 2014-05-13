@@ -2,12 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryMirror do
 
-  repository_git = FactoryGirl.create(:repository_git)
-
-  before { @mirror = FactoryGirl.build(:repository_mirror, repository_id: repository_git.id) }
+  before do
+    repository_git = FactoryGirl.create(:repository_git)
+    @mirror = FactoryGirl.build(:repository_mirror, repository_id: repository_git.id)
+  end
 
   subject { @mirror }
 
+  it { should respond_to(:repository) }
   it { should respond_to(:url) }
   it { should respond_to(:push_mode) }
   it { should respond_to(:include_all_branches) }
@@ -15,7 +17,7 @@ describe RepositoryMirror do
   it { should respond_to(:explicit_refspec) }
   it { should respond_to(:active) }
 
-  it { should be_valid, proc { @mirror.errors.full_messages } }
+  it { should be_valid }
 
   it { expect(@mirror.active).to be true }
   it { expect(@mirror.include_all_branches).to be false }
@@ -23,6 +25,11 @@ describe RepositoryMirror do
   it { expect(@mirror.explicit_refspec).to eq "" }
 
   ## Test presence validation
+  describe "when repository_id is not present" do
+    before { @mirror.repository_id = "" }
+    it { should_not be_valid }
+  end
+
   describe "when url is not present" do
     before { @mirror.url = "" }
     it { should_not be_valid }
@@ -48,6 +55,12 @@ describe RepositoryMirror do
     it { should_not be_valid }
   end
 
+  describe "when active is false" do
+    before { @mirror.active = false }
+    it { should be_valid }
+    it { expect(@mirror.active).to be false }
+  end
+
   # Test format validation
   describe "when git url is valid" do
     it "should be valid" do
@@ -71,14 +84,15 @@ describe RepositoryMirror do
     end
   end
 
-  # ## Test uniqueness validation
-  # describe "when mirror url is already taken" do
-  #   before do
-  #     mirror_with_same_url = @mirror.dup
-  #     mirror_with_same_url.save
-  #   end
+  ## Test uniqueness validation
+  describe "when mirror url is already taken" do
+    before do
+      @mirror.save
+      @mirror_with_same_url = @mirror.dup
+      @mirror_with_same_url.save
+    end
 
-  #   it { should_not be_valid }
-  # end
+    it { expect(@mirror_with_same_url).not_to be_valid }
+  end
 
 end
