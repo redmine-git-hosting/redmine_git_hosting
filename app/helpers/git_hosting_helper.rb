@@ -114,4 +114,20 @@ module GitHostingHelper
     content_tag(:span, '', :title => label, :class => css_class)
   end
 
+
+  def render_hook_state(state)
+    case state
+      when true
+        image = 'true.png'
+        tip = ''
+      when false
+        image = 'exclamation.png'
+        tip = ''
+      else
+        image = 'warning.png'
+        tip = state
+    end
+    return image, tip
+  end
+
 end

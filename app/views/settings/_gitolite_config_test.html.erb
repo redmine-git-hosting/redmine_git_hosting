@@ -86,8 +86,12 @@
     <td>
       <% hooks_installed  = hooks_manager.hooks_installed? %>
       <% hooks_installed.each do |hook, installed| %>
-        <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+        <% image, tip = render_hook_state(installed) %>
+        <%= image_tag(image, :style => "vertical-align: bottom;") %>
         <em><%= hook %></em>
+        <% if !tip.blank? %>
+          <em>(<%= tip %>)</em>
+        <% end %>
         <br />
       <% end %>
     </td>
