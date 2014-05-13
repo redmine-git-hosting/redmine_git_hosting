@@ -1,15 +1,22 @@
 class RepositoryGitNotification < ActiveRecord::Base
   unloadable
 
+  VALID_EMAIL_REGEX  = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
+
+  ## Relations
   belongs_to :repository
 
-  serialize :include_list, Array
-  serialize :exclude_list, Array
+  ## Validations
+  validates :repository_id,  :presence => true
+  validates :sender_address, :format => { :with => VALID_EMAIL_REGEX, :allow_blank => true }
 
   validate :validate_mailing_list
 
-  validates_format_of :sender_address, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :allow_blank => true
+  ## Serializations
+  serialize :include_list, Array
+  serialize :exclude_list, Array
 
+  ## Callbacks
   after_commit ->(obj) { obj.update_repository }, on: :create
   after_commit ->(obj) { obj.update_repository }, on: :update
   after_commit ->(obj) { obj.update_repository }, on: :destroy
