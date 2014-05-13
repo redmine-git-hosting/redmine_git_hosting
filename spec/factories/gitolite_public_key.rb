@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :gitolite_public_key do |gitolite_public_key|
     gitolite_public_key.key_type 0
     gitolite_public_key.title    'test-key'
-    gitolite_public_key.key      'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEArPAhHP5+5eeiV/W6t4zUvGTPDp/e65lLVCq/180WiTMZJ5jOj+/lnrC/AF4LRlawr2mXUIOgf5i8QM0vNuoC+2oGEz7oymZJxS6fQmWfYz8fG2AXfsXjVwnlk9itp3IYMFXODYFTrgNSwxYHVF2j/4HYnzc7KFId6C9o/+hzK+LAae/1SufFd18nwJhSQmPwDBIX0dW6N/nbQ7hOkJFOQzHIh7D3KdP3KyhobsKOa1Q1zM3TIvOp7nzVcr416SNfxCYAw9Vs0v7X1L+6sD2x5Jkej5xYbJwYSIdKkgtTCPSBs7zG9Q05hHtSe7kOh/VJfWroUKn1nvxHXe/rbw421w== Maciek@MACIEK-PC'
+    gitolite_public_key.key      'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpqFJzsx3wTi3t3X/eOizU6rdtNQoqg5uSjL89F+Ojjm2/sah3ouzx+3E461FDYaoJL58Qs9eRhL+ev0BY7khYXph8nIVDzNEjhLqjevX+YhpaW9Ll7V807CwAyvMNm08aup/NrrlI/jO+At348/ivJrfO7ClcPhq4+Id9RZfvbrKaitGOURD7q6Bd7xjUjELUN8wmYxu5zvx/2n/5woVdBUMXamTPxOY5y6DxTNJ+EYzrCr+bNb7459rWUvBHUQGI2fXDGmFpGiv6ShKRhRtwob1JHI8QC9OtxonrIUesa2dW6RFneUaM7tfRfffC704Uo7yuSswb7YK+p1A9QIt5 nicolas@tchoum'
   end
 
 end
