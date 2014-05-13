@@ -9,7 +9,7 @@ describe GitolitePublicKey do
     @user1 = users[0]
     @user2 = users[1]
 
-    @ssh_key = FactoryGirl.build(:gitolite_public_key, user_id: @user1.id)
+    @ssh_key = FactoryGirl.build(:gitolite_public_key, :user_id => @user1.id)
   end
 
   subject { @ssh_key }
@@ -133,7 +133,7 @@ describe GitolitePublicKey do
   describe "when title is already taken" do
     before do
       @ssh_key.save
-      @ssh_key_with_same_title = FactoryGirl.build(:gitolite_public_key, user_id: @user1.id)
+      @ssh_key_with_same_title = FactoryGirl.build(:gitolite_public_key, :user_id => @user1.id)
       @ssh_key_with_same_title.save
     end
 
@@ -143,7 +143,7 @@ describe GitolitePublicKey do
   describe "when key is already taken" do
     before do
       @ssh_key.save
-      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, user_id: @user1.id, title: 'foo', key: SSH_KEY)
+      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, :user_id => @user1.id, :title => 'foo', :key => SSH_KEY)
       @ssh_key_with_same_key.save
     end
 
@@ -154,7 +154,7 @@ describe GitolitePublicKey do
     before do
       @ssh_key.save
       User.current = @user1
-      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, user_id: @user1.id, title: 'foo', key: SSH_KEY)
+      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, :user_id => @user1.id, :title => 'foo', :key => SSH_KEY)
       @ssh_key_with_same_key.save
     end
 
@@ -166,7 +166,7 @@ describe GitolitePublicKey do
       @ssh_key.save
       @user2.admin = true
       User.current = @user2
-      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, user_id: @user1.id, title: 'foo', key: SSH_KEY)
+      @ssh_key_with_same_key = FactoryGirl.build(:gitolite_public_key, :user_id => @user1.id, :title => 'foo', :key => SSH_KEY)
       @ssh_key_with_same_key.save
     end
 
@@ -181,11 +181,11 @@ describe GitolitePublicKey do
     INACTIVE_SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zVI35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4C8cGYljjUWkx3v nicolas@tchoum'
 
     before do
-      active_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, user_id: @user1.id, title: 'active1', key: ACTIVE_SSH_KEY_1, active: true, key_type: 1)
-      active_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, user_id: @user1.id, title: 'active2', key: ACTIVE_SSH_KEY_2, active: true, key_type: 1)
+      active_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active1', key: ACTIVE_SSH_KEY_1, :active => true, :key_type => 1)
+      active_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active2', key: ACTIVE_SSH_KEY_2, :active => true, :key_type => 1)
 
-      inactive_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, user_id: @user2.id, title: 'inactive1', key: INACTIVE_SSH_KEY_1, active: false)
-      inactive_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, user_id: @user2.id, title: 'inactive2', key: INACTIVE_SSH_KEY_2, active: false)
+      inactive_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'inactive1', key: INACTIVE_SSH_KEY_1, :active => false)
+      inactive_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'inactive2', key: INACTIVE_SSH_KEY_2, :active => false)
     end
 
     it { expect(GitolitePublicKey.active.length).to be == 2 }
