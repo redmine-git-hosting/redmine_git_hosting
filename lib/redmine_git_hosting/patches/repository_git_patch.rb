@@ -154,6 +154,8 @@ module RedmineGitHosting
           if identifier.blank?
             # Should only happen with one repo/project (the default)
             project.identifier
+          elsif self.class.repo_ident_unique?
+            identifier
           else
             "#{project.identifier}/#{identifier}"
           end
@@ -172,12 +174,12 @@ module RedmineGitHosting
 
 
         def gitolite_repository_name
-          File.expand_path(File.join("./", RedmineGitolite::ConfigRedmine.get_setting(:gitolite_redmine_storage_dir), get_full_parent_path, redmine_name), "/")[1..-1]
+          File.expand_path(File.join("./", RedmineGitolite::ConfigRedmine.get_setting(:gitolite_redmine_storage_dir), get_full_parent_path, git_cache_id), "/")[1..-1]
         end
 
 
         def redmine_repository_path
-          File.expand_path(File.join("./", get_full_parent_path, redmine_name), "/")[1..-1]
+          File.expand_path(File.join("./", get_full_parent_path, git_cache_id), "/")[1..-1]
         end
 
 
@@ -346,8 +348,10 @@ module RedmineGitHosting
 
           if self.is_default?
             parent_parts = []
-          else
+          elsif self.class.repo_ident_unique?
             parent_parts = [project.identifier.to_s]
+          else
+            parent_parts = []
           end
 
           p = project
