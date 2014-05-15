@@ -93,9 +93,46 @@ namespace :redmine_git_hosting do
     Rake::Task["selinux:redmine_git_hosting:remove_scripts"].invoke
   end
 
+
+  desc "Show library version"
+  task :version do
+    puts "#{name} #{version}"
+  end
+
+
+  desc "Start unit tests"
+  task :test => :default
+  task :default do
+    RSpec::Core::RakeTask.new(:spec) do |config|
+      config.rspec_opts = "plugins/redmine_git_hosting/spec --color --format nested --fail-fast"
+    end
+    Rake::Task["spec"].invoke
+  end
+
+
+  desc "Start unit tests in JUnit format"
+  task :test_junit do
+    RSpec::Core::RakeTask.new(:spec) do |config|
+      config.rspec_opts = "plugins/redmine_git_hosting/spec --format RspecJunitFormatter --out junit/rspec.xml"
+    end
+    Rake::Task["spec"].invoke
+  end
+
 end
+
 
 # Produce date string of form used by redmine logs
 def my_date
   Time.now.strftime("%Y-%m-%d %H:%M:%S")
+end
+
+
+def name
+  "Redmine Git Hosting"
+end
+
+
+def version
+  line = File.read(Rails.root.join("plugins/redmine_git_hosting/init.rb"))[/^\s*version\s*.*/]
+  line.match(/.*version\s*['"](.*)['"]/)[1]
 end
