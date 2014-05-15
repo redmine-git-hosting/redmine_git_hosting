@@ -124,8 +124,15 @@ module RedmineGitHosting
         def extra
           retval = self.git_extra
           if retval.nil?
-            retval = RepositoryGitExtra.new()
-            self.git_extra = retval  # Should save object...
+            options = {
+              :git_http       => RedmineGitolite::ConfigRedmine.get_setting(:gitolite_http_by_default),
+              :git_daemon     => RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default),
+              :git_notify     => RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default),
+              :default_branch => 'master'
+            }
+
+            retval = RepositoryGitExtra.new(options)
+            self.extra = retval  # Should save object...
           end
           retval
         end

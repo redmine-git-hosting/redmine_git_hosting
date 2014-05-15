@@ -1,12 +1,23 @@
 class RepositoryGitExtra < ActiveRecord::Base
   unloadable
 
+  HTTP  = 1
+  HTTPS = 2
+  BOTH  = 3
+
   attr_accessible :git_http, :git_daemon, :git_notify, :default_branch
 
   ## Relations
   belongs_to :repository
 
   ## Validations
+  validates :repository_id,  :presence  => true, :uniqueness => true
+  validates :git_http,       :presence  => true, :inclusion => { :in => [HTTP, HTTPS, BOTH] }
+  validates :git_daemon,     :inclusion => { :in => [true, false] }
+  validates :git_notify,     :inclusion => { :in => [true, false] }
+  validates :default_branch, :presence  => true
+  validates :key,            :presence  => true
+
   validates_associated :repository
 
   ## Callbacks
@@ -17,25 +28,9 @@ class RepositoryGitExtra < ActiveRecord::Base
 
 
   def set_values
-    if self.repository.nil?
-      generate
-      setup_defaults
+    if self.repository.nil? && self.key.nil?
+      self.key = (0...64+rand(64) ).map{65.+(rand(25)).chr}.join
     end
-  end
-
-
-  def generate
-    if self.key.nil?
-      write_attribute(:key, (0...64+rand(64) ).map{65.+(rand(25)).chr}.join)
-    end
-  end
-
-
-  def setup_defaults
-    write_attribute(:git_http,   RedmineGitolite::ConfigRedmine.get_setting(:gitolite_http_by_default))
-    write_attribute(:git_daemon, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default))
-    write_attribute(:git_notify, RedmineGitolite::ConfigRedmine.get_setting(:gitolite_notify_by_default))
-    write_attribute(:default_branch, 'master')
   end
 
 end
