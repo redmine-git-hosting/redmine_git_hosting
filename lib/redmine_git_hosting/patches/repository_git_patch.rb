@@ -61,7 +61,7 @@ module RedmineGitHosting
           # Return cached value if pesent
           return @@cached_id if @@cached_path == repo_path
 
-          repo = Repository::Git.find_by_path(repo_path, :loose => true)
+          repo = repo_path_to_object(repo_path)
 
           if repo
             # Cache translated id path, return id
@@ -72,6 +72,11 @@ module RedmineGitHosting
             @@cached_path = nil
             @@cached_id = nil
           end
+        end
+
+
+        def repo_path_to_object(repo_path)
+          find_by_path(repo_path, :loose => true)
         end
 
 
@@ -126,8 +131,8 @@ module RedmineGitHosting
         end
 
 
-        def extra=(new_extra_struct)
-          self.git_extra = (new_extra_struct)
+        def extra=(extra)
+          self.git_extra = extra
         end
 
 
