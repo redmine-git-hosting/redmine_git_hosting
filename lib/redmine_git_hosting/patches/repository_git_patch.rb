@@ -108,7 +108,7 @@ module RedmineGitHosting
               find_by_identifier_and_project_id(parseit[3], proj.id) ||
               flags[:loose] && find_by_identifier(parseit[3]) || nil
             else
-              nil
+              find_by_identifier(parseit[3]) || nil
             end
           else
             nil
