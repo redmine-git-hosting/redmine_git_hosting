@@ -1,9 +1,10 @@
 class RepositoryGitExtra < ActiveRecord::Base
   unloadable
 
-  HTTP  = 1
-  HTTPS = 2
-  BOTH  = 3
+  DISABLED = 0
+  HTTP     = 1
+  HTTPS    = 2
+  BOTH     = 3
 
   attr_accessible :git_http, :git_daemon, :git_notify, :default_branch
 
@@ -12,7 +13,7 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   ## Validations
   validates :repository_id,  :presence  => true, :uniqueness => true
-  validates :git_http,       :presence  => true, :inclusion => { :in => [HTTP, HTTPS, BOTH] }
+  validates :git_http,       :presence  => true, :inclusion => { :in => [DISABLED, HTTP, HTTPS, BOTH] }
   validates :git_daemon,     :inclusion => { :in => [true, false] }
   validates :git_notify,     :inclusion => { :in => [true, false] }
   validates :default_branch, :presence  => true
