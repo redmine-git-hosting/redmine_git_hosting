@@ -280,7 +280,7 @@ module RedmineGitHosting
             hash[:http] = http_access
           end
 
-          if project.is_public && extra[:git_daemon] == 1
+          if project.is_public && extra[:git_daemon]
             hash[:git] = git_access
           end
 
