@@ -19,11 +19,7 @@ end
 require File.expand_path(File.dirname(__FILE__) + '/../test/test_helper')
 
 ## Load FactoryGirls factories
-Dir[Rails.root.join("plugins/redmine_git_hosting/spec/factories/**/*.rb")].each {|f| require f}
-
-## Load RakeTasks
-Dir[Rails.root.join("plugins/redmine_git_hosting/lib/tasks/**/*.rake")].each {|f| load f}
-Rake::Task.define_task(:environment)
+Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each {|f| require f}
 
 ## Configure RSpec
 RSpec.configure do |config|
@@ -37,7 +33,6 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
-    Rake::Task['redmine_git_hosting:restore_defaults'].invoke
   end
 
   config.before(:each) do
