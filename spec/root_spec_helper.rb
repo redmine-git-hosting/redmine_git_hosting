@@ -16,7 +16,8 @@ SimpleCov.start 'rails' do
 end
 
 ## Load Redmine App
-require File.expand_path(File.dirname(__FILE__) + '/../test/test_helper')
+ENV["RAILS_ENV"] = 'test'
+require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 
 ## Load FactoryGirls factories
 Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each {|f| require f}
