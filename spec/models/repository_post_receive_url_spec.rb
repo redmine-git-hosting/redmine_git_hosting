@@ -13,11 +13,15 @@ describe RepositoryPostReceiveUrl do
   it { should respond_to(:repository) }
   it { should respond_to(:url) }
   it { should respond_to(:active) }
+  it { should respond_to(:use_triggers) }
+  it { should respond_to(:triggers) }
 
   it { should be_valid }
 
   it { expect(@post_receive_url.active).to be true }
   it { expect(@post_receive_url.mode.to_sym).to eq :github }
+  it { expect(@post_receive_url.use_triggers).to be false }
+  it { expect(@post_receive_url.triggers).to be_a(Array) }
 
   ## Test presence validation
   describe "when repository_id is not present" do
@@ -30,12 +34,41 @@ describe RepositoryPostReceiveUrl do
     it { should_not be_valid }
   end
 
+  describe "when active is true" do
+    before { @post_receive_url.active = true }
+    it { should be_valid }
+    it { expect(@post_receive_url.active).to be true }
+  end
+
   describe "when active is false" do
     before { @post_receive_url.active = false }
     it { should be_valid }
     it { expect(@post_receive_url.active).to be false }
   end
 
+  describe "when use_triggers is true" do
+    before { @post_receive_url.use_triggers = true }
+    it { should be_valid }
+    it { expect(@post_receive_url.use_triggers).to be true }
+  end
+
+  describe "when use_triggers is false" do
+    before { @post_receive_url.use_triggers = false }
+    it { should be_valid }
+    it { expect(@post_receive_url.use_triggers).to be false }
+  end
+
+  describe "when triggers is set" do
+    before { @post_receive_url.triggers = [ 'foo', 'bar', 'foobar' ] }
+    it { should be_valid }
+    it { expect(@post_receive_url.triggers).to eq [ 'foo', 'bar', 'foobar' ] }
+  end
+
+  describe "when triggers is unset" do
+    before { @post_receive_url.triggers = [] }
+    it { should be_valid }
+    it { expect(@post_receive_url.triggers).to eq [] }
+  end
 
   ## Test format validation
   describe "when url is valid" do

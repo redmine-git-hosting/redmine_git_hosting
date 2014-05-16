@@ -139,10 +139,13 @@ en:
 
   # Basics fields
   field_mode: Mode
+  field_use_triggers: Use triggers
 
   # Misc
   label_github_post: GitHub&nbsp;POST
   label_empty_get: Empty&nbsp;GET
+  label_use_triggers: Use triggers
+  label_triggers: Triggers
 
 
   ########### SSH KEYS ###########

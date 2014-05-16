@@ -22,9 +22,7 @@ module GitHostingHelper
 
   # Post-receive Mode
   def post_receive_mode(prurl)
-    if prurl.active == 0
-      l(:label_mirror_inactive)
-    elsif prurl.mode == :github
+    if prurl.mode == :github
       l(:label_github_post)
     else
       l(:label_empty_get)

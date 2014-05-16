@@ -139,10 +139,13 @@ fr:
 
   # Basics fields
   field_mode: Mode
+  field_use_triggers: Utiliser les déclencheurs
 
   # Misc
   label_github_post: "POST&nbsp;GitHub"
   label_empty_get: "GET&nbsp;vide"
+  label_use_triggers: Utilise les déclencheurs
+  label_triggers: Déclencheurs
 
 
   ########### SSH KEYS ###########

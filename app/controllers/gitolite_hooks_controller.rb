@@ -72,20 +72,22 @@ class GitoliteHooksController < ApplicationController
 
       ## Post to each post-receive URL
       @repository.repository_post_receive_urls.active.each do |post_receive_url|
-        logger.info { "Notifying #{post_receive_url.url} ... " }
-        y << "  - Notifying #{post_receive_url.url} ... "
+        if post_receive_url.needs_push(payload)
+          logger.info { "Notifying #{post_receive_url.url} ... " }
+          y << "  - Notifying #{post_receive_url.url} ... "
 
-        method = (post_receive_url.mode == :github) ? :post : :get
+          method = (post_receive_url.mode == :github) ? :post : :get
 
-        post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
+          post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
 
-        if post_failed
-          logger.error { "Failed!" }
-          logger.error { "#{post_message}" }
-          y << " [failure]\n"
-        else
-          logger.info { "Succeeded!" }
-          y << " [success]\n"
+          if post_failed
+            logger.error { "Failed!" }
+            logger.error { "#{post_message}" }
+            y << " [failure]\n"
+          else
+            logger.info { "Succeeded!" }
+            y << " [success]\n"
+          end
         end
       end if @repository.repository_post_receive_urls.any?
 

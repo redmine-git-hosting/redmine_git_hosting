@@ -10,4 +10,34 @@
 
   <p><%= f.select     :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
   <p><%= f.check_box  :active %></p>
+
+  <% if @repository.branches.any? %>
+    <p><%= f.check_box  :use_triggers %></p>
+
+    <% style = @post_receive_url.use_triggers? ? '' : 'style=display:none;' %>
+
+    <div id="triggers_options" <%= style %>>
+      <%= hidden_field_tag "repository_post_receive_urls[triggers][]", "" %>
+
+      <% @repository.branches.each do |branch| %>
+        <p>
+          <label><%= branch.to_s %></label>
+          <%= check_box_tag "repository_post_receive_urls[triggers][]", branch.to_s, @post_receive_url.triggers.include?(branch.to_s) %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
 </div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#repository_post_receive_urls_use_triggers').click(function () {
+      if ($(this).attr('checked')) {
+        $('#triggers_options').show();
+      } else {
+        $('#triggers_options').hide();
+      }
+    })
+  });
+<% end %>
