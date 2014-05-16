@@ -25,7 +25,7 @@ Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each {|f| require f}
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.color = true
-  config.fail_fast = true
+  config.fail_fast = false
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

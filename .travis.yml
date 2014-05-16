@@ -1,17 +1,32 @@
 language: ruby
 rvm:
- - 2.1.0
- - 2.0.0
- - 1.9.3
+  - 2.1.0
+  - 2.0.0
+  - 1.9.3
 gemfile:
- - Gemfile
+  - Gemfile
 branches:
   only:
     - devel
     - travis
-before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq libicu-dev
 env:
-  global:
-    - TRAVIS_BUILD_DIR="redmine_git_hosting"
+  - "REDMINE_LANG=en"
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libicu-dev
+  - cd ../..
+  - ./jbox-web/redmine_git_hosting/contrib/travis/install_redmine.sh
+  - cd redmine
+  - echo $(pwd)
+  - export BUNDLE_GEMFILE=$PWD/Gemfile
+before_script:
+  - echo $(pwd)
+  - mysql -e 'create database redmine;'
+  - mysql -e 'create database redmine_test;'
+  - bundle exec rake generate_secret_token
+  - bundle exec rake db:migrate
+  - bundle exec rake redmine:load_default_data
+  - bundle exec rake redmine:plugins:migrate
+  - bundle exec rake db:test:prepare
+script:
+  - bundle exec rake redmine_git_hosting:test

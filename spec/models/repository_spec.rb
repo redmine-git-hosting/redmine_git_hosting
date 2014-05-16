@@ -124,7 +124,7 @@ describe Repository::Git do
         end
 
         my_hash = {
-          :ssh   => {:url => "ssh://git-jbox@localhost/redmine/project-parent/project-child.git",        :commiter => "false"},
+          :ssh   => {:url => "ssh://git@localhost/redmine/project-parent/project-child.git",             :commiter => "false"},
           :https => {:url => "https://redmine-test-user@localhost/git/project-parent/project-child.git", :commiter => "false"},
           :http  => {:url => "http://redmine-test-user@localhost/git/project-parent/project-child.git",  :commiter => "false"},
           :git   => {:url => "git://localhost/redmine/project-parent/project-child.git",                 :commiter => "false"}
@@ -161,7 +161,7 @@ describe Repository::Git do
           @repository_1.save
         end
 
-        my_hash = { :ssh => {:url => "ssh://git-jbox@localhost/redmine/project-parent/project-child.git", :commiter => "false"}}
+        my_hash = { :ssh => {:url => "ssh://git@localhost/redmine/project-parent/project-child.git", :commiter => "false"}}
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -458,7 +458,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_1.ssh_url).to eq 'ssh://git-jbox@localhost/redmine/project-parent/project-child.git'
+        expect(@repository_1.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child.git'
       end
 
       it "should have a valid git_url" do
@@ -532,7 +532,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_2.ssh_url).to eq 'ssh://git-jbox@localhost/redmine/project-parent/project-child/repo1-test.git'
+        expect(@repository_2.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child/repo1-test.git'
       end
 
       it "should have a valid git_url" do
@@ -697,7 +697,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_1.ssh_url).to eq 'ssh://git-jbox@localhost/redmine/project-parent/project-child.git'
+        expect(@repository_1.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child.git'
       end
 
       it "should have a valid git_url" do
@@ -771,7 +771,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_2.ssh_url).to eq 'ssh://git-jbox@localhost/redmine/project-parent/project-child/repo-test.git'
+        expect(@repository_2.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child/repo-test.git'
       end
 
       it "should have a valid git_url" do
@@ -915,7 +915,7 @@ describe Repository::Git do
       it { expect(@repository_1.http_user_login).to eq  '' }
       it { expect(@repository_1.git_access_path).to eq  'redmine/project-child.git' }
       it { expect(@repository_1.http_access_path).to eq 'git/project-child.git' }
-      it { expect(@repository_1.ssh_url).to eq   'ssh://git-jbox@localhost/redmine/project-child.git' }
+      it { expect(@repository_1.ssh_url).to eq   'ssh://git@localhost/redmine/project-child.git' }
       it { expect(@repository_1.git_url).to eq   'git://localhost/redmine/project-child.git' }
       it { expect(@repository_1.http_url).to eq  'http://localhost/git/project-child.git' }
       it { expect(@repository_1.https_url).to eq 'https://localhost/git/project-child.git' }
@@ -937,7 +937,7 @@ describe Repository::Git do
       it { expect(@repository_2.http_user_login).to eq  '' }
       it { expect(@repository_2.git_access_path).to eq  'redmine/repo1-test.git' }
       it { expect(@repository_2.http_access_path).to eq 'git/repo1-test.git' }
-      it { expect(@repository_2.ssh_url).to eq   'ssh://git-jbox@localhost/redmine/repo1-test.git' }
+      it { expect(@repository_2.ssh_url).to eq   'ssh://git@localhost/redmine/repo1-test.git' }
       it { expect(@repository_2.git_url).to eq   'git://localhost/redmine/repo1-test.git' }
       it { expect(@repository_2.http_url).to eq  'http://localhost/git/repo1-test.git' }
       it { expect(@repository_2.https_url).to eq 'https://localhost/git/repo1-test.git' }
@@ -1057,7 +1057,7 @@ describe Repository::Git do
       it { expect(@repository_1.http_user_login).to eq  '' }
       it { expect(@repository_1.git_access_path).to eq  'redmine/project-child.git' }
       it { expect(@repository_1.http_access_path).to eq 'git/project-child.git' }
-      it { expect(@repository_1.ssh_url).to eq   'ssh://git-jbox@localhost/redmine/project-child.git' }
+      it { expect(@repository_1.ssh_url).to eq   'ssh://git@localhost/redmine/project-child.git' }
       it { expect(@repository_1.git_url).to eq   'git://localhost/redmine/project-child.git' }
       it { expect(@repository_1.http_url).to eq  'http://localhost/git/project-child.git' }
       it { expect(@repository_1.https_url).to eq 'https://localhost/git/project-child.git' }
@@ -1079,7 +1079,7 @@ describe Repository::Git do
       it { expect(@repository_2.http_user_login).to eq  '' }
       it { expect(@repository_2.git_access_path).to eq  'redmine/project-child/repo-test.git' }
       it { expect(@repository_2.http_access_path).to eq 'git/project-child/repo-test.git' }
-      it { expect(@repository_2.ssh_url).to eq   'ssh://git-jbox@localhost/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.ssh_url).to eq   'ssh://git@localhost/redmine/project-child/repo-test.git' }
       it { expect(@repository_2.git_url).to eq   'git://localhost/redmine/project-child/repo-test.git' }
       it { expect(@repository_2.http_url).to eq  'http://localhost/git/project-child/repo-test.git' }
       it { expect(@repository_2.https_url).to eq 'https://localhost/git/project-child/repo-test.git' }
