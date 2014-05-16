@@ -32,8 +32,8 @@ class GitoliteHooksController < ApplicationController
     self.response_body = Enumerator.new do |y|
 
       ## Fetch commits from the repository
-      logger.info { "Fetching changesets for '#{@project.identifier}' repository ... " }
-      y << "  - Fetching changesets for '#{@project.identifier}' repository ... "
+      logger.info { "Fetching changesets for '#{@repository.redmine_name}' repository ... " }
+      y << "  - Fetching changesets for '#{@repository.redmine_name}' repository ... "
 
       begin
         @repository.fetch_changesets
@@ -51,45 +51,55 @@ class GitoliteHooksController < ApplicationController
 
 
       ## Push to each mirror
-      @repository.repository_mirrors.active.order('created_at ASC').each do |mirror|
-        if mirror.needs_push(payload)
-          logger.info { "Pushing changes to #{mirror.url} ... " }
-          y << "  - Pushing changes to #{mirror.url} ... "
+      if @repository.repository_mirrors.active.any?
+        logger.info { "Notifying mirrors about changes to this repository :" }
+        y << "\nNotifying mirrors about changes to this repository :\n"
 
-          push_failed, push_message = mirror.push
+        @repository.repository_mirrors.active.each do |mirror|
+          if mirror.needs_push(payload)
+            logger.info { "Pushing changes to #{mirror.url} ... " }
+            y << "  - Pushing changes to #{mirror.url} ... "
 
-          if push_failed
-            logger.error { "Failed!" }
-            logger.error { "#{push_message}" }
-            y << " [failure]\n"
-          else
-            logger.info { "Succeeded!" }
-            y << " [success]\n"
+            push_failed, push_message = mirror.push
+
+            if push_failed
+              logger.error { "Failed!" }
+              logger.error { "#{push_message}" }
+              y << " [failure]\n"
+            else
+              logger.info { "Succeeded!" }
+              y << " [success]\n"
+            end
           end
         end
-      end if @repository.repository_mirrors.any?
+      end
 
 
       ## Post to each post-receive URL
-      @repository.repository_post_receive_urls.active.each do |post_receive_url|
-        if post_receive_url.needs_push(payload)
-          logger.info { "Notifying #{post_receive_url.url} ... " }
-          y << "  - Notifying #{post_receive_url.url} ... "
+      if @repository.repository_post_receive_urls.active.any?
+        logger.info { "Notifying post receive urls about changes to this repository :" }
+        y << "\nNotifying post receive urls about changes to this repository :\n"
 
-          method = (post_receive_url.mode == :github) ? :post : :get
+        @repository.repository_post_receive_urls.active.each do |post_receive_url|
+          if post_receive_url.needs_push(payload)
+            logger.info { "Notifying #{post_receive_url.url} ... " }
+            y << "  - Notifying #{post_receive_url.url} ... "
 
-          post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
+            method = (post_receive_url.mode == :github) ? :post : :get
 
-          if post_failed
-            logger.error { "Failed!" }
-            logger.error { "#{post_message}" }
-            y << " [failure]\n"
-          else
-            logger.info { "Succeeded!" }
-            y << " [success]\n"
+            post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
+
+            if post_failed
+              logger.error { "Failed!" }
+              logger.error { "#{post_message}" }
+              y << " [failure]\n"
+            else
+              logger.info { "Succeeded!" }
+              y << " [success]\n"
+            end
           end
         end
-      end if @repository.repository_post_receive_urls.any?
+      end
 
     end
   end
