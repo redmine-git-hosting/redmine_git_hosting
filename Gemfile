@@ -17,7 +17,7 @@ group :development, :test do
 
   gem 'simplecov',      '~> 0.8.2'
   gem 'simplecov-rcov', '~> 0.2.3'
-  gem 'rake',           '~> 10.3.1'
+  gem 'rake',           '~> 10.1.1'
 
   gem 'factory_girl',       '~> 4.4.0'
   gem 'factory_girl_rails', '~> 4.4.1'
