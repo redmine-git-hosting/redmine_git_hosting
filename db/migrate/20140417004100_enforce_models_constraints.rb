@@ -27,7 +27,7 @@ class EnforceModelsConstraints < ActiveRecord::Migration
 
     change_column :repository_mirrors, :repository_id, :integer, :null => false, :after => :id
     change_column :repository_mirrors, :url,           :string,  :null => false, :after => :repository_id
-    change_column :repository_mirrors, :push_mode,     :string,  :null => false
+    change_column :repository_mirrors, :push_mode,     :integer, :null => false
     remove_column :repository_mirrors, :created_at
     remove_column :repository_mirrors, :updated_at
 

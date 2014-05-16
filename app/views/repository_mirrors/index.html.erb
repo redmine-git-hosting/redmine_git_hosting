@@ -17,6 +17,7 @@
           <th><%= l(:label_url) %></th>
           <th><%= l(:label_mirror_refspec) %></th>
           <th><%= l(:label_mode) %></th>
+          <th><%= l(:label_enabled) %></th>
           <th></th>
         </tr>
       </thead>
@@ -30,13 +31,16 @@
 
             <td>
               <%= mirror_mode(mirror).html_safe %>
+            </td>
+
+            <td>
               <%= checked_image2 mirror.active? %>
             </td>
 
             <td class="buttons">
               <% if user_allowed_to(:edit_repository_mirrors, @project) %>
 
-                <% if mirror.active == 1 -%>
+                <% if mirror.active? %>
                   <%= link_to l(:label_mirror_push), push_to_mirror_path(@repository, mirror),
                                                      :title => l(:label_mirror_push_title),
                                                      :alt   => l(:label_mirror_push_title),

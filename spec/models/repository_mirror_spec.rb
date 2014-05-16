@@ -24,6 +24,8 @@ describe RepositoryMirror do
   it { expect(@mirror.include_all_branches).to be false }
   it { expect(@mirror.include_all_tags).to be false }
   it { expect(@mirror.explicit_refspec).to eq "" }
+  it { expect(@mirror.push_mode).to eq 0 }
+  it { expect(@mirror.push_mode).to be_a(Integer) }
 
   ## Test presence validation
   describe "when repository_id is not present" do
@@ -54,6 +56,28 @@ describe RepositoryMirror do
     end
 
     it { should_not be_valid }
+  end
+
+  describe "when push_mode forced without params" do
+    before do
+      @mirror.push_mode = 1
+    end
+
+    it { should_not be_valid }
+  end
+
+  describe "when push_mode fast forward without params" do
+    before do
+      @mirror.push_mode = 2
+    end
+
+    it { should_not be_valid }
+  end
+
+  describe "when active is true" do
+    before { @mirror.active = true }
+    it { should be_valid }
+    it { expect(@mirror.active).to be true }
   end
 
   describe "when active is false" do

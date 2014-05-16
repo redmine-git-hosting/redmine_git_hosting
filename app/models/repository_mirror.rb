@@ -23,7 +23,9 @@ class RepositoryMirror < ActiveRecord::Base
                   :uniqueness => { :case_sensitive => false, :scope => :repository_id },
                   :format     => { :with => /^(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-~]+)(\.git)?$/i }
 
-  validates :push_mode, :presence => true, :inclusion => { :in => [PUSHMODE_MIRROR, PUSHMODE_FORCE, PUSHMODE_FAST_FORWARD] }
+  validates :push_mode, :presence     => true,
+                        :numericality => { :only_integer => true },
+                        :inclusion    => { :in => [PUSHMODE_MIRROR, PUSHMODE_FORCE, PUSHMODE_FAST_FORWARD] }
 
   validate :check_refspec
 
@@ -68,7 +70,7 @@ class RepositoryMirror < ActiveRecord::Base
 
   # If we have an explicit refspec, check it against incoming payloads
   # Special case: if we do not pass in any payloads, return true
-  def needs_push(payloads=[])
+  def needs_push(payloads = [])
     return true if payloads.empty?
     return true if push_mode == PUSHMODE_MIRROR
 

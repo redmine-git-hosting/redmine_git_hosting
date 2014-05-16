@@ -34,11 +34,7 @@ module GitHostingHelper
 
   # Mirror Mode
   def mirror_mode(mirror)
-    if mirror.active == 0
-      l(:label_mirror_inactive)
-    else
-      [l(:label_mirror), l(:label_forced), l(:label_unforced)][mirror.push_mode]
-    end
+    [l(:label_mirror_full_mirror), l(:label_mirror_forced_update), l(:label_mirror_fast_forward)][mirror.push_mode]
   end
 
 
