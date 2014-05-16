@@ -29,13 +29,9 @@
 
             <td><%= refspec(mirror, 64).html_safe %></td>
 
-            <td>
-              <%= mirror_mode(mirror).html_safe %>
-            </td>
+            <td><%= mirror_mode(mirror).html_safe %></td>
 
-            <td>
-              <%= checked_image2 mirror.active? %>
-            </td>
+            <td><%= checked_image2 mirror.active? %></td>
 
             <td class="buttons">
               <% if user_allowed_to(:edit_repository_mirrors, @project) %>
