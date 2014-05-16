@@ -8,6 +8,10 @@ gemfile:
 branches:
   only:
     - devel
+    - travis
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libicu-dev
+env:
+  global:
+    - TRAVIS_BUILD_DIR="redmine_git_hosting"
