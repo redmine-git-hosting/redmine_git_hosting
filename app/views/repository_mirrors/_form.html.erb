@@ -5,9 +5,8 @@
   <p><%= f.text_field :url, :required => true, :size => 65, :label => :label_url %></p>
   <em><p>
     <%= l(:label_mirror_url_accepted_format) %> :<br/>
-     - git@github.com:user/project.git<br/>
-     - git-test@redmine.example.org:my_user/test.git<br/>
-     - git-test@redmine.example/project1/project2/project3/project4.git<br/>
+     - ssh://git@redmine.example.org/project1/project2/project3/project4.git<br/>
+     - ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git<br/>
   </p></em>
 
   <p><%= f.check_box :active %></p>
