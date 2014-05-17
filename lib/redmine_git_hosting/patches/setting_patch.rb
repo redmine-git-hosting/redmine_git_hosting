@@ -227,7 +227,7 @@ module RedmineGitHosting
                 if has_error > 0
                   valuehash[setting] = @@old_valuehash[setting]
                 end
-              end
+              end if !valuehash[setting].nil?
             end
 
 
