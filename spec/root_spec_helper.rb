@@ -1,9 +1,13 @@
+require 'codeclimate-test-reporter'
 require 'database_cleaner'
 require 'factory_girl_rails'
 require 'rake'
 require 'rubygems'
 require 'simplecov'
 require 'simplecov-rcov'
+
+## Start CodeClimate TestReporter
+CodeClimate::TestReporter.start
 
 ## Configure SimpleCov
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
