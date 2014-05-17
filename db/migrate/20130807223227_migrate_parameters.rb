@@ -164,7 +164,11 @@ class MigrateParameters < ActiveRecord::Migration
     puts "Applying configuration update"
     puts YAML::dump(new_setting)
 
-    Setting[:plugin_redmine_git_hosting] = new_setting
+    begin
+      Setting.plugin_redmine_git_hosting = new_setting
+    rescue => e
+      puts e.message
+    end
   end
 
 end
