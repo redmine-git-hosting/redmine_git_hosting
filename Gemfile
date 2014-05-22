@@ -12,8 +12,6 @@ gem 'wikicloth'
 gem 'asciidoctor'
 
 group :development, :test do
-  gem 'travis-lint',    '~> 1.8.0'
-
   gem 'rspec',          '~> 2.14.1'
   gem 'rspec-rails',    '~> 2.14.2'
 

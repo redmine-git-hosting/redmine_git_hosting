@@ -12,5 +12,5 @@ describe Setting do
 
   it { should be_an_instance_of(Hash) }
 
-  #it { expect(@settings).to eq @default_settings }
+  it { expect(@settings).to eq @default_settings }
 end
