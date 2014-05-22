@@ -87,7 +87,7 @@ module GitoliteHooksHelper
           }
         }
 
-        revision.changes.each do |change|
+        revision.filechanges.each do |change|
           if change.action == "M"
             commit[:modified] << change.path
           elsif change.action == "A"
