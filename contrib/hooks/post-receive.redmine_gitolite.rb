@@ -249,7 +249,7 @@ stdin_copy = ""
 $<.each do |line|
   r = line.chomp.strip.split
   refs.push( [ r[0].to_s, r[1].to_s, r[2].to_s ].join(",") )
-  stdin_copy = (stdin_copy == "" ? "" : $/) + line
+  stdin_copy << line
 end
 
 ## Set refs
