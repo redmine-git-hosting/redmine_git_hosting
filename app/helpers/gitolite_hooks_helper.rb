@@ -109,12 +109,16 @@ module GitoliteHooksHelper
         :after      => newhead,
         :ref        => refname,
         :commits    => commits,
+        :pusher     => {
+          :name  => Setting["app_title"],
+          :email => Setting["mail_from"]
+        },
         :repository => {
           :description => @project.description,
           :fork        => false,
           :forks       => 0,
           :homepage    => @project.homepage,
-          :name        => @project.identifier,
+          :name        => @repository.redmine_name,
           :open_issues => @project.issues.open.length,
           :watchers    => 0,
           :private     => !@project.is_public,
