@@ -72,7 +72,7 @@ REPOSITORY EDIT
   padding-right: 10px;
 }
 
-#git_hosting_settings div.split { display: block; float: left; width: 40%; }
+#git_hosting_settings div.split { display: block; float: left; width: 42%; }
 
 
 /*
@@ -144,7 +144,7 @@ REPOSITORY SETTINGS
 */
 #git_hosting_settings label {
   margin-left: -190px;
-  padding-left: 5px;
+  padding-left: 10px;
   padding-right: 10px;
   width: 190px;
 }
