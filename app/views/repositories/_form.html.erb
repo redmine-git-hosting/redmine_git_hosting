@@ -90,7 +90,15 @@
       </p>
     <% end %>
 
-    <%= repository_field_tags(f, @repository) %>
+    <%= content_tag('p', f.select(
+                          :path_encoding, [nil] + Setting::ENCODINGS,
+                          :label => l(:field_scm_path_encoding)
+                         ) + '<br />'.html_safe + l(:text_scm_path_encoding_note)) +
+
+        content_tag('p', f.check_box(
+                          :extra_report_last_commit,
+                          :label => l(:label_git_report_last_commit)
+                         )) %>
   </div>
 
   <div class="split">
