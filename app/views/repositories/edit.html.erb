@@ -57,6 +57,17 @@
 
   <% content_for :header_tags do %>
     <%= javascript_tag do %>
+
+      function post_mode_change(elem) {
+        if (!elem) return;
+        var idx = elem.selectedIndex;
+        if (idx == 0) {
+          $('#payload_options').show();
+        } else {
+          $('#payload_options').hide();
+        }
+      }
+
       function push_mode_change(elem) {
         if (!elem) return;
         var idx = elem.selectedIndex;

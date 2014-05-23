@@ -8,8 +8,15 @@
      - https://example.com<br/>
   </p></em>
 
-  <p><%= f.select     :mode, [['Github-style POST', :github], ['Empty GET request', :get]] %></p>
   <p><%= f.check_box  :active %></p>
+
+  <p><%= f.select     :mode, [['Github-style POST', :github], ['Empty GET request', :get]], {}, :onchange => "post_mode_change(this); return false;" %></p>
+
+  <% style = @post_receive_url.mode == :github ? '' : 'style=display:none;' %>
+
+  <div id="payload_options" <%= style %>>
+    <p><%= f.check_box  :split_payloads %></p>
+  </div>
 
   <% if @repository.branches.any? %>
     <p><%= f.check_box  :use_triggers %></p>

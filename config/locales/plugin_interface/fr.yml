@@ -140,12 +140,14 @@ fr:
   # Basics fields
   field_mode: Mode
   field_use_triggers: Utiliser les déclencheurs
+  field_split_payloads: Découper le payload global en plusieurs payloads
 
   # Misc
   label_github_post: "POST&nbsp;GitHub"
   label_empty_get: "GET&nbsp;vide"
   label_use_triggers: Utilise les déclencheurs
   label_triggers: Déclencheurs
+  label_split_payloads: split payloads
 
 
   ########### SSH KEYS ###########

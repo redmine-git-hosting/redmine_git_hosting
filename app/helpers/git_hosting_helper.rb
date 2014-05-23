@@ -22,11 +22,16 @@ module GitHostingHelper
 
   # Post-receive Mode
   def post_receive_mode(prurl)
+    label = ""
     if prurl.mode == :github
-      l(:label_github_post)
+      label << l(:label_github_post)
+      if prurl.split_payloads?
+        label <<  "&nbsp;(#{l(:label_split_payloads)})"
+      end
     else
-      l(:label_empty_get)
+      label << l(:label_empty_get)
     end
+    return label
   end
 
 

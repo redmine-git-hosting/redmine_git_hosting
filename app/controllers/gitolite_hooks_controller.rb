@@ -47,7 +47,7 @@ class GitoliteHooksController < ApplicationController
 
 
       ## Get payload
-      payload = build_payload(params[:refs])
+      global_payload = build_payload(params[:refs])
 
 
       ## Push to each mirror
@@ -56,7 +56,7 @@ class GitoliteHooksController < ApplicationController
         y << "\nNotifying mirrors about changes to this repository :\n"
 
         @repository.repository_mirrors.active.each do |mirror|
-          if mirror.needs_push(payload)
+          if mirror.needs_push(global_payload)
             logger.info { "Pushing changes to #{mirror.url} ... " }
             y << "  - Pushing changes to #{mirror.url} ... "
 
@@ -81,21 +81,40 @@ class GitoliteHooksController < ApplicationController
         y << "\nNotifying post receive urls about changes to this repository :\n"
 
         @repository.repository_post_receive_urls.active.each do |post_receive_url|
-          if post_receive_url.needs_push(payload)
-            logger.info { "Notifying #{post_receive_url.url} ... " }
-            y << "  - Notifying #{post_receive_url.url} ... "
+          if payloads = post_receive_url.needs_push(global_payload)
 
             method = (post_receive_url.mode == :github) ? :post : :get
 
-            post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
+            if method == :post && post_receive_url.split_payloads?
+              payloads.each do |payload|
+                logger.info { "Notifying #{post_receive_url.url} for '#{payload[:ref]}' ... " }
+                y << "  - Notifying #{post_receive_url.url} for '#{payload[:ref]}' ... "
 
-            if post_failed
-              logger.error { "Failed!" }
-              logger.error { "#{post_message}" }
-              y << " [failure]\n"
+                post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
+
+                if post_failed
+                  logger.error { "Failed!" }
+                  logger.error { "#{post_message}" }
+                  y << " [failure]\n"
+                else
+                  logger.info { "Succeeded!" }
+                  y << " [success]\n"
+                end
+              end
             else
-              logger.info { "Succeeded!" }
-              y << " [success]\n"
+              logger.info { "Notifying #{post_receive_url.url} ... " }
+              y << "  - Notifying #{post_receive_url.url} ... "
+
+              post_failed, post_message = post_data(post_receive_url.url, global_payload, :method => method)
+
+              if post_failed
+                logger.error { "Failed!" }
+                logger.error { "#{post_message}" }
+                y << " [failure]\n"
+              else
+                logger.info { "Succeeded!" }
+                y << " [success]\n"
+              end
             end
           end
         end

@@ -15,13 +15,15 @@ describe RepositoryPostReceiveUrl do
   it { should respond_to(:active) }
   it { should respond_to(:use_triggers) }
   it { should respond_to(:triggers) }
+  it { should respond_to(:split_payloads) }
 
   it { should be_valid }
 
   it { expect(@post_receive_url.active).to be true }
-  it { expect(@post_receive_url.mode.to_sym).to eq :github }
+  it { expect(@post_receive_url.mode).to eq :github }
   it { expect(@post_receive_url.use_triggers).to be false }
   it { expect(@post_receive_url.triggers).to be_a(Array) }
+  it { expect(@post_receive_url.split_payloads).to be false }
 
   ## Test presence validation
   describe "when repository_id is not present" do
@@ -68,6 +70,18 @@ describe RepositoryPostReceiveUrl do
     before { @post_receive_url.triggers = [] }
     it { should be_valid }
     it { expect(@post_receive_url.triggers).to eq [] }
+  end
+
+  describe "when split_payloads is true" do
+    before { @post_receive_url.split_payloads = true }
+    it { should be_valid }
+    it { expect(@post_receive_url.split_payloads).to be true }
+  end
+
+  describe "when split_payloads is false" do
+    before { @post_receive_url.split_payloads = false }
+    it { should be_valid }
+    it { expect(@post_receive_url.split_payloads).to be false }
   end
 
   ## Test format validation
@@ -142,6 +156,71 @@ describe RepositoryPostReceiveUrl do
 
     it { expect(RepositoryPostReceiveUrl.active.length).to be == 2 }
     it { expect(RepositoryPostReceiveUrl.inactive.length).to be == 2 }
+  end
+
+  describe "#needs_push" do
+
+    before do
+      @global_payload   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/global_payload.yml')))
+      @master_payload   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/master_payload.yml')))
+      @branches_payload = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/branches_payload.yml')))
+    end
+
+    context "when payload is empty" do
+      before do
+        @needs_push = @post_receive_url.needs_push([])
+      end
+
+      it "shoud return false" do
+        expect(@needs_push).to be false
+      end
+    end
+
+    context "when triggers are not used" do
+      before do
+        @needs_push = @post_receive_url.needs_push(@global_payload)
+      end
+
+      it "should return the global payload to push" do
+        expect(@needs_push).to eq @global_payload
+      end
+    end
+
+    context "when triggers are empty" do
+      before do
+        @post_receive_url.use_triggers = true
+        @needs_push = @post_receive_url.needs_push(@global_payload)
+      end
+
+      it "should return the global payload to push" do
+        expect(@needs_push).to eq @global_payload
+      end
+    end
+
+    context "when triggers is set to master" do
+      before do
+        @post_receive_url.use_triggers = true
+        @post_receive_url.triggers = [ 'master' ]
+        @needs_push = @post_receive_url.needs_push(@global_payload)
+      end
+
+      it "should return the master payload" do
+        expect(@needs_push).to eq @master_payload
+      end
+    end
+
+    context "when triggers is set to master" do
+      before do
+        @post_receive_url.use_triggers = true
+        @post_receive_url.triggers = [ 'master' ]
+        @needs_push = @post_receive_url.needs_push(@branches_payload)
+      end
+
+      it "should not be found in branches payload and return false" do
+        expect(@needs_push).to be false
+      end
+    end
+
   end
 
 end
