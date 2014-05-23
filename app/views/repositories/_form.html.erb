@@ -89,6 +89,8 @@
         <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
       </p>
     <% end %>
+
+    <%= repository_field_tags(f, @repository) %>
   </div>
 
   <div class="split">
