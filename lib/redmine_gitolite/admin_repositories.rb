@@ -38,6 +38,8 @@ module RedmineGitolite
           logger.warn { "#{@action} : repository not empty, cannot create README file in path '#{repository.gitolite_repository_path}'" }
         end
       end
+
+      repository.fetch_changesets
     end
 
 
