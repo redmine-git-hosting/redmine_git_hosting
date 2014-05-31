@@ -32,7 +32,11 @@ module RedmineGitolite
       end
 
       if create_readme && !@recovered
-        create_readme_file(repository)
+        if is_repository_empty?(repository.gitolite_repository_path)
+          create_readme_file(repository)
+        else
+          logger.warn { "#{@action} : repository not empty, cannot create README file in path '#{repository.gitolite_repository_path}'" }
+        end
       end
     end
 
