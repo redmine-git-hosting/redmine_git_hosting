@@ -362,7 +362,7 @@ module RedmineGitHosting
 
 
         def gitolite_hook_key
-          self.extra.key
+          extra[:key]
         end
 
 
