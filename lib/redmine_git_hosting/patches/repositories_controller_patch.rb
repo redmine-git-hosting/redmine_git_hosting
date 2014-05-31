@@ -21,7 +21,7 @@ module RedmineGitHosting
       module InstanceMethods
 
         def show_with_git_hosting(&block)
-          if @repository.is_a?(Repository::Git) and @rev.blank?
+          if @repository.is_a?(Repository::Git) && @repository.empty?
             # Fake list of repos
             @repositories = @project.gitolite_repos
             render :action => 'git_instructions'

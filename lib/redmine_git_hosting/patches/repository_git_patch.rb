@@ -366,6 +366,15 @@ module RedmineGitHosting
         end
 
 
+        def empty?
+          if extra_info.nil? || !extra_info.has_key?('heads')
+            return true
+          else
+            return false
+          end
+        end
+
+
         private
 
 
