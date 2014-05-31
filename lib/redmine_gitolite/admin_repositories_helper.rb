@@ -424,6 +424,8 @@ module RedmineGitolite
 
 
     def create_readme_file(repository)
+      logger.info { "Create README file for repository '#{repository.gitolite_repository_name}'"}
+
       temp_dir = Dir.mktmpdir
 
       command = ""
