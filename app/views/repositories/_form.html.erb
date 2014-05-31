@@ -98,7 +98,7 @@
         content_tag('p', f.check_box(
                           :extra_report_last_commit,
                           :label => l(:label_git_report_last_commit)
-                         )) %>
+                         )) if @repository.is_a?(Repository::Git) %>
   </div>
 
   <div class="split">
