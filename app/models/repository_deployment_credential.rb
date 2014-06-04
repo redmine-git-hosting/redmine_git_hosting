@@ -34,9 +34,9 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   scope :inactive, -> { where active: STATUS_LOCKED }
 
   ## Callbacks
-  after_commit ->(obj) { obj.update_permissions }, on: :create
-  after_commit ->(obj) { obj.update_permissions }, on: :update
-  after_commit ->(obj) { obj.update_permissions }, on: :destroy
+  after_commit ->(obj) { obj.update_permissions }, :on => :create
+  after_commit ->(obj) { obj.update_permissions }, :on => :update
+  after_commit ->(obj) { obj.update_permissions }, :on => :destroy
 
 
   def to_s

@@ -15,9 +15,9 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   validate :check_key_format
 
   ## Callbacks
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :create
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :update
-  after_commit ->(obj) { obj.delete_config_key },           on: :destroy
+  after_commit ->(obj) { obj.create_or_update_config_key }, :on => :create
+  after_commit ->(obj) { obj.create_or_update_config_key }, :on => :update
+  after_commit ->(obj) { obj.delete_config_key },           :on => :destroy
 
 
   protected

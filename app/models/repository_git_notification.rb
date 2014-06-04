@@ -17,9 +17,9 @@ class RepositoryGitNotification < ActiveRecord::Base
   serialize :exclude_list, Array
 
   ## Callbacks
-  after_commit ->(obj) { obj.update_repository }, on: :create
-  after_commit ->(obj) { obj.update_repository }, on: :update
-  after_commit ->(obj) { obj.update_repository }, on: :destroy
+  after_commit ->(obj) { obj.update_repository }, :on => :create
+  after_commit ->(obj) { obj.update_repository }, :on => :update
+  after_commit ->(obj) { obj.update_repository }, :on => :destroy
 
 
   protected

@@ -43,8 +43,8 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :strip_whitespace
   before_validation :remove_control_characters
 
-  after_commit ->(obj) { obj.add_ssh_key },     on: :create
-  after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
+  after_commit ->(obj) { obj.add_ssh_key },     :on => :create
+  after_commit ->(obj) { obj.destroy_ssh_key }, :on => :destroy
 
 
   def self.by_user(user)
