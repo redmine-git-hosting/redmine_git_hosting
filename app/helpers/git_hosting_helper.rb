@@ -11,6 +11,27 @@ module GitHostingHelper
   end
 
 
+  def label_with_icon(label, icon, inverse = false, fixed = false)
+    css_class = [ "fa", "fa-lg" ]
+
+    css_class.push(icon)
+
+    if inverse
+      css_class.push("fa-inverse")
+    end
+
+    if fixed
+      css_class.push("fa-fw")
+      css_class.delete("fa-lg")
+    end
+
+    css_class = css_class.join(" ")
+    content = content_tag(:i, "", :class => css_class) + label
+
+    return content.html_safe
+  end
+
+
   def user_allowed_to(permission, project)
     if project.active?
       return User.current.allowed_to?(permission, project)
