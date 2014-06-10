@@ -205,6 +205,9 @@ class GitolitePublicKey < ActiveRecord::Base
     return if !new_record?
 
     keypieces = key.match(/^(\S+)\s+(\S+)/)
+
+    return false if keypieces.nil?
+
     key_format = keypieces[1]
     key_data   = keypieces[2]
 
