@@ -40,11 +40,11 @@ apply_patch do
   require_dependency 'redmine_gitolite/config'
   require_dependency 'redmine_gitolite/config_redmine'
   require_dependency 'redmine_gitolite/cache'
+  require_dependency 'redmine_gitolite/extra_loading'
   require_dependency 'redmine_gitolite/hooks'
   require_dependency 'redmine_gitolite/recycle'
   require_dependency 'redmine_gitolite/log'
   require_dependency 'redmine_gitolite/shell'
-  require_dependency 'redmine_gitolite/translations'
 
   ## Redmine Git Hosting Patches
   require_dependency 'redmine_git_hosting/patches/project_patch'
