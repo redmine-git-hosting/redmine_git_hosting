@@ -157,7 +157,7 @@ module RedmineGitHosting
 
         # This is the (possibly non-unique) basename for the git repository
         def redmine_name
-          identifier.blank? ? project.identifier : identifier
+          (identifier.blank? or is_default?) ? project.identifier : identifier
         end
 
 
