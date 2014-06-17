@@ -31,12 +31,6 @@ apply_patch do
 
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/git_hosting'
-  require_dependency 'redmine_gitolite/admin'
-  require_dependency 'redmine_gitolite/admin_projects'
-  require_dependency 'redmine_gitolite/admin_repositories'
-  require_dependency 'redmine_gitolite/admin_repositories_helper'
-  require_dependency 'redmine_gitolite/admin_users'
-  require_dependency 'redmine_gitolite/admin_users_helper'
   require_dependency 'redmine_gitolite/config'
   require_dependency 'redmine_gitolite/config_redmine'
   require_dependency 'redmine_gitolite/cache'
@@ -45,6 +39,13 @@ apply_patch do
   require_dependency 'redmine_gitolite/recycle'
   require_dependency 'redmine_gitolite/log'
   require_dependency 'redmine_gitolite/shell'
+
+  require_dependency 'redmine_gitolite/gitolite_wrapper'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/admin'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/projects'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/repositories'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/repositories_helper'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/users'
 
   ## Redmine Git Hosting Patches
   require_dependency 'redmine_git_hosting/patches/project_patch'
