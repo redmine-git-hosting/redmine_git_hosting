@@ -24,9 +24,10 @@ module Hooks
 
 
     def call_mirrors
+      y = ""
+
       ## Push to each mirror
       if @repository.repository_mirrors.active.any?
-        y = ""
 
         logger.info { "Notifying mirrors about changes to this repository :" }
         y << "\nNotifying mirrors about changes to this repository :\n"
@@ -48,9 +49,9 @@ module Hooks
             end
           end
         end
-
-        return y
       end
+
+      return y
     end
 
   end

@@ -26,9 +26,10 @@ module Hooks
 
 
     def call_webservices
+      y = ""
+
       ## Post to each post-receive URL
       if @repository.repository_post_receive_urls.active.any?
-        y = ""
 
         logger.info { "Notifying post receive urls about changes to this repository :" }
         y << "\nNotifying post receive urls about changes to this repository :\n"
@@ -71,9 +72,9 @@ module Hooks
             end
           end
         end
-
-        return y
       end
+
+      return y
     end
 
   end
