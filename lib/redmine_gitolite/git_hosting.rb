@@ -1,3 +1,5 @@
+require 'open3'
+
 module RedmineGitolite
 
   module GitHosting
@@ -37,77 +39,51 @@ module RedmineGitolite
         data_hash[:options] = {}
       end
 
-      if RedmineGitolite::ConfigRedmine.get_setting(:gitolite_use_sidekiq)
+      if RedmineGitolite::Config.get_setting(:gitolite_use_sidekiq)
         GithostingShellWorker.perform_async(data_hash)
       else
-        githosting_shell = RedmineGitolite::Shell.new(data_hash[:command], data_hash[:object], data_hash[:options])
-        githosting_shell.handle_command
+        # githosting_shell = RedmineGitolite::Shell.new(data_hash[:command], data_hash[:object], data_hash[:options])
+        # githosting_shell.handle_command
+
+        RedmineGitolite::GitoliteWrapper.update(data_hash[:command], data_hash[:object], data_hash[:options])
       end
     end
 
 
-    def self.execute_command(command_type, command, flags = {})
-      case command_type
-        when :git_cmd then
-          runner = RedmineGitolite::Config.git_cmd_script_path
-        when :shell_cmd then
-          runner = RedmineGitolite::Config.shell_cmd_script_path
-        when :ssh_cmd then
-          runner = RedmineGitolite::Config.gitolite_admin_ssh_script_path
-        when :local_cmd then
-          runner = ''
-      end
-
-      if flags.has_key?(:pipe_data)
-        run_command = "#{flags[:pipe_command]} '#{flags[:pipe_data]}' | #{runner} #{command} 2>&1"
-      else
-        run_command = "#{runner} #{command} 2>&1"
-      end
-
-      logger.debug { run_command }
-
-      return shell(run_command)
+    # Returns a rails cache identifier with the key as its last part
+    def self.cache_key(key)
+      ['/redmine/plugin/redmine_git_hosting/', key].join
     end
 
 
-    def self.shell(command)
-      begin
-        result = %x[ #{command} ]
-        code = $?.exitstatus
-      rescue Exception => e
-        result = e.message
-        code = -1
-      end
-
+    # Executes the given command and a list of parameters on the shell
+    # and returns the result.
+    #
+    # If the operation throws an exception or the operation yields a non-zero exit code
+    # we rethrow a +GitHostingException+ with a meaningful error message.
+    def self.capture(command, *params)
+      output, err, code = execute(command, *params)
       if code != 0
-        command = "Command failed (return #{code}): #{command}"
-        output =  "Command output : '#{result.split("\n").join("\n  ")}'"
-        raise GitHostingException.new(command, output), "Shell Error"
+        error_msg = "Non-zero exit code #{code} for `#{command} #{params.join(" ")}`"
+        logger.debug { error_msg }
+        raise GitHostingException.new(command, error_msg)
       end
 
-      return result
+      output
     end
 
 
-    ## TEST IF FILE EXIST ON GITOLITE SIDE
-    def self.file_exists?(filename)
-      begin
-        exists = execute_command(:shell_cmd, "test -r '#{filename}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
-      rescue GitHostingException => e
-        exists = false
-      end
-      return exists
-    end
-
-
-    ## TEST IF DIRECTORY EXIST ON GITOLITE SIDE
-    def self.dir_exists?(dirname)
-      begin
-        exists = execute_command(:shell_cmd, "test -d '#{dirname}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
-      rescue GitHostingException => e
-        exists = false
-      end
-      return exists
+    # Executes the given command and a list of parameters on the shell
+    # and returns stdout, stderr, and the exit code.
+    #
+    # If the operation throws an exception or the operation we rethrow a
+    # +GitHostingException+ with a meaningful error message.
+    def self.execute(command, *params)
+      Open3.capture3(command, *params)
+    rescue => e
+      error_msg = "Exception occured executing `#{command} #{params.join(" ")}` : #{e.message}"
+      logger.debug { error_msg }
+      raise GitHostingException.new(command, error_msg)
     end
 
   end

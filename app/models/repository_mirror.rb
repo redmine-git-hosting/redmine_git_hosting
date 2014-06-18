@@ -44,22 +44,24 @@ class RepositoryMirror < ActiveRecord::Base
 
 
   def push
-    push_args = ""
+    push_args = []
 
     if push_mode == PUSHMODE_MIRROR
-      push_args << " --mirror"
+      push_args << "--mirror"
     else
       # Not mirroring -- other possible push_args
-      push_args << " --force" if push_mode == PUSHMODE_FORCE
-      push_args << " --all"   if include_all_branches
-      push_args << " --tags"  if include_all_tags
+      push_args << "--force" if push_mode == PUSHMODE_FORCE
+      push_args << "--all"   if include_all_branches
+      push_args << "--tags"  if include_all_tags
     end
 
-    push_args << " \"#{dequote(url)}\""
-    push_args << " \"#{dequote(explicit_refspec)}\"" unless explicit_refspec.blank?
+    push_args << "#{dequote(url)}"
+    push_args << "#{dequote(explicit_refspec)}" unless explicit_refspec.blank?
+
+    command = "cd #{repository.gitolite_repository_path} && env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args.join(' ')}"
 
     begin
-      push_message = RedmineGitolite::GitoliteWrapper.pipe_sudo("bash", :pipe_data => 'cd ' + "#{repository.gitolite_repository_path}" + ' && env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push ' + "#{push_args}", :pipe_command => 'echo').chomp
+      push_message = RedmineGitolite::GitoliteWrapper.pipe_sudo('echo', "'#{command}'", "bash")[0].chomp
       push_failed = false
     rescue RedmineGitolite::GitHosting::GitHostingException => e
       push_message = e.output

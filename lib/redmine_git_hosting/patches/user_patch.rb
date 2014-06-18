@@ -24,7 +24,7 @@ module RedmineGitHosting
 
 
         def gitolite_identifier
-          "#{RedmineGitolite::ConfigRedmine.get_setting(:gitolite_identifier_prefix)}#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
+          "#{RedmineGitolite::Config.get_setting(:gitolite_identifier_prefix)}#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
         end
 
 

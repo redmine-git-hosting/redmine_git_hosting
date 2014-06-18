@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec/spec_helper')
 RSpec.configure do |config|
 
   config.before(:suite) do
-    RedmineGitolite::ConfigRedmine.reload_config
+    RedmineGitolite::Config.reload!
   end
 
 end

@@ -12,7 +12,7 @@ module RedmineGitolite
 
     def self.get_logger(type)
       file = File.join(Rails.root, 'log', 'git_hosting.log').to_s
-      split_log = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_split)
+      split_log = RedmineGitolite::Config.get_setting(:gitolite_log_split)
 
       if split_log && !File.directory?(File.join(Rails.root, 'log', 'git_hosting').to_s)
         FileUtils.mkdir_p(File.join(Rails.root, 'log', 'git_hosting').to_s)
@@ -72,7 +72,7 @@ module RedmineGitolite
 
 
       def get_log_level
-        case RedmineGitolite::ConfigRedmine.get_setting(:gitolite_log_level)
+        case RedmineGitolite::Config.get_setting(:gitolite_log_level)
           when 'debug' then
             return Logger::DEBUG
           when 'info' then

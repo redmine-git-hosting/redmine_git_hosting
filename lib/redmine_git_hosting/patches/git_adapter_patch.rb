@@ -22,11 +22,11 @@ module RedmineGitHosting
       module ClassMethods
 
         def sq_bin_with_git_hosting
-          return Redmine::Scm::Adapters::GitAdapter::shell_quote(RedmineGitolite::Config.git_cmd_runner)
+          return Redmine::Scm::Adapters::GitAdapter::shell_quote(RedmineGitolite::Scripts.git_cmd_runner)
         end
 
         def client_command_with_git_hosting
-          return RedmineGitolite::Config.git_cmd_runner
+          return RedmineGitolite::Scripts.git_cmd_runner
         end
 
       end
@@ -38,7 +38,7 @@ module RedmineGitHosting
 
         def git_cmd_with_git_hosting(args, options = {}, &block)
           repo_path = root_url || url
-          full_args = [RedmineGitolite::Config.git_cmd_runner, '--git-dir', repo_path]
+          full_args = [RedmineGitolite::Scripts.git_cmd_runner, '--git-dir', repo_path]
           if self.class.client_version_above?([1, 7, 2])
             full_args << '-c' << 'core.quotepath=false'
             full_args << '-c' << 'log.decorate=no'

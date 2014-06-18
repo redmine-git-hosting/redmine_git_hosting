@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Setting do
 
   before do
-    RedmineGitolite::ConfigRedmine.reload_config
+    RedmineGitolite::Config.reload!
     @settings = Setting.plugin_redmine_git_hosting
     @default_settings = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
   end

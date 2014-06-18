@@ -327,17 +327,17 @@ module RedmineGitolite
     ###############################################
 
     def self.max_cache_time
-      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_time).to_i
+      RedmineGitolite::Config.get_setting(:gitolite_cache_max_time).to_i
     end
 
 
     def self.max_cache_elements
-      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_elements).to_i
+      RedmineGitolite::Config.get_setting(:gitolite_cache_max_elements).to_i
     end
 
 
     def self.max_cache_size
-      RedmineGitolite::ConfigRedmine.get_setting(:gitolite_cache_max_size).to_i*1024*1024
+      RedmineGitolite::Config.get_setting(:gitolite_cache_max_size).to_i*1024*1024
     end
 
 

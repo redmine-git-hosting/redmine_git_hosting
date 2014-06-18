@@ -226,7 +226,7 @@ class GitolitePublicKey < ActiveRecord::Base
     # Check against the gitolite administrator key file (owned by noone).
     all_keys = []
 
-    all_keys.push GitolitePublicKey.new({ :user => nil, :key => File.read(RedmineGitolite::ConfigRedmine.get_setting(:gitolite_ssh_public_key)) })
+    all_keys.push GitolitePublicKey.new({ :user => nil, :key => File.read(RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)) })
 
     # Check all active keys
     all_keys += (GitolitePublicKey.active.all)

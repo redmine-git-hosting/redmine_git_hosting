@@ -29,7 +29,7 @@ class DownloadGitRevisionController < ApplicationController
     begin
       content = download.content
     rescue => e
-      flash.now[:error] = l(:git_archive_timeout, :timeout => e.message)
+      flash.now[:error] = l(:git_archive_timeout, :timeout => e.output)
       render_404
       return
     end

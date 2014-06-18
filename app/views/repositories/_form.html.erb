@@ -64,7 +64,7 @@
         <p>
           <label><%= l(:label_init_repo_with_readme) %></label>
           <%= hidden_field_tag "repository[create_readme]", "false" %>
-          <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create) %>
+          <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) %>
         </p>
       <% elsif @project.repository != @repository %>
         <p>
@@ -112,7 +112,7 @@
         selected = "false"
         if @repository.extra[:git_daemon]
           selected = "true"
-        elsif @project.is_public && RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default)
+        elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
           selected = "true"
         end
       %>
@@ -156,7 +156,7 @@
 
       <p>
         <%= label_tag  "", l(:label_mirroring_keys_installed) %>
-        <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
+        <%= image_tag (RedmineGitolite::Mirrors.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
       </p>
 
     <% else %>

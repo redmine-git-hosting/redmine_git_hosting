@@ -36,7 +36,7 @@ namespace :redmine_git_hosting do
   task :restore_defaults => [:environment] do
     puts "Reloading defaults from init.rb..."
     RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
-    RedmineGitolite::ConfigRedmine.reload_config
+    RedmineGitolite::Config.reload!
     puts "Done!"
   end
 

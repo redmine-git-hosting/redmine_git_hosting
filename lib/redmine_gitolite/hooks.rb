@@ -4,10 +4,8 @@ module RedmineGitolite
 
   class Hooks
 
-    GITOLITE_HOOKS_DIR       = '~/.gitolite/hooks/common'
     GITOLITE_HOOKS_NAMESPACE = 'redminegitolite'
 
-    POST_RECEIVE_HOOK_DIR    = File.join(GITOLITE_HOOKS_DIR, 'post-receive.d')
     PACKAGE_HOOKS_DIR        = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), 'contrib', 'hooks')
 
     POST_RECEIVE_HOOKS    = {
@@ -22,11 +20,14 @@ module RedmineGitolite
 
 
     def initialize
-      @gitolite_command   = RedmineGitolite::Config.gitolite_command
-      @gitolite_hooks_url = RedmineGitolite::Config.gitolite_hooks_url
-      @debug_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_debug)
-      @async_mode         = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_hooks_are_asynchronous)
-      @force_hooks_update = RedmineGitolite::ConfigRedmine.get_setting(:gitolite_force_hooks_update)
+      @gitolite_command   = RedmineGitolite::GitoliteWrapper.gitolite_command
+      @gitolite_hooks_url = RedmineGitolite::GitoliteWrapper.gitolite_hooks_url
+      @debug_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug)
+      @async_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous)
+      @force_hooks_update = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update)
+
+      @gitolite_hooks_dir    = set_gitolite_hook_dir
+      @post_receive_hook_dir = File.join(@gitolite_hooks_dir, 'post-receive.d')
 
       @global_hook_params = get_global_hooks_params
       @gitolite_hooks_namespace = GITOLITE_HOOKS_NAMESPACE
@@ -61,13 +62,13 @@ module RedmineGitolite
       end
 
       if @global_hook_params["debugmode"] != @debug_mode.to_s
-        installed['debugmode'] = set_hook_param("debugmode", @debug_mode)
+        installed['debugmode'] = set_hook_param("debugmode", @debug_mode.to_s)
       else
         installed['debugmode'] = true
       end
 
       if @global_hook_params["asyncmode"] != @async_mode.to_s
-        installed['asyncmode'] = set_hook_param("asyncmode", @async_mode)
+        installed['asyncmode'] = set_hook_param("asyncmode", @async_mode.to_s)
       else
         installed['asyncmode'] = true
       end
@@ -81,6 +82,15 @@ module RedmineGitolite
 
     def logger
       RedmineGitolite::Log.get_logger(:global)
+    end
+
+
+    def set_gitolite_hook_dir
+      begin
+        File.join(RedmineGitolite::GitoliteWrapper.gitolite_home_dir, '.gitolite', 'hooks', 'common')
+      rescue => e
+        File.join('~', '.gitolite', 'hooks', 'common')
+      end
     end
 
 
@@ -100,13 +110,11 @@ module RedmineGitolite
         return @@check_hooks_dir_installed_cached
       end
 
-      hook_dir_exists = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "test -r '#{POST_RECEIVE_HOOK_DIR}' && echo 'yes' || echo 'no'").match(/yes/)
+      if !hook_dir_exists?(@post_receive_hook_dir)
+        logger.info { "Global hook directory '#{@post_receive_hook_dir}' not created yet, installing it..." }
 
-      if !hook_dir_exists
-        logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' not created yet, installing it..." }
-
-        if install_hooks_dir(POST_RECEIVE_HOOK_DIR)
-          logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' installed" }
+        if install_hooks_dir(@post_receive_hook_dir)
+          logger.info { "Global hook directory '#{@post_receive_hook_dir}' installed" }
           @@check_hooks_dir_installed_cached = true
         else
           @@check_hooks_dir_installed_cached = false
@@ -114,7 +122,7 @@ module RedmineGitolite
 
         @@check_hooks_dir_installed_stamp = Time.new
       else
-        logger.info { "Global hook directory '#{POST_RECEIVE_HOOK_DIR}' is already present, will not touch it !" }
+        logger.info { "Global hook directory '#{@post_receive_hook_dir}' is already present, will not touch it !" }
         @@check_hooks_dir_installed_cached = true
         @@check_hooks_dir_installed_stamp = Time.new
       end
@@ -127,8 +135,8 @@ module RedmineGitolite
       logger.info { "Installing hook directory '#{hook_dir}'" }
 
       begin
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "mkdir -p '#{hook_dir}'")
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "chmod 755 '#{hook_dir}'")
+        RedmineGitolite::GitoliteWrapper.sudo_mkdir('-p', hook_dir)
+        RedmineGitolite::GitoliteWrapper.sudo_chmod('755', hook_dir)
         return true
       rescue => e
         logger.error { "Problems installing hook directory '#{hook_dir}'" }
@@ -165,9 +173,9 @@ module RedmineGitolite
         return @@check_hooks_installed_cached[hook_name]
       end
 
-      @@post_receive_hook_path[hook_name] ||= File.join(GITOLITE_HOOKS_DIR, hook_data[:destination])
+      @@post_receive_hook_path[hook_name] ||= File.join(@gitolite_hooks_dir, hook_data[:destination])
 
-      if !hook_exists?(@@post_receive_hook_path[hook_name])
+      if !hook_file_exists?(@@post_receive_hook_path[hook_name])
 
         logger.info { "Hook '#{hook_name}' does not exist, installing it ..." }
 
@@ -189,8 +197,8 @@ module RedmineGitolite
 
       else
 
-        content = RedmineGitolite::GitHosting.execute_command(:shell_cmd, "cat '#{@@post_receive_hook_path[hook_name]}'") rescue ''
-        digest = Digest::MD5.hexdigest(content)
+        content = RedmineGitolite::GitoliteWrapper.sudo_capture('cat', @@post_receive_hook_path[hook_name])
+        digest  = Digest::MD5.hexdigest(content)
 
         if hook_digest(hook_data) == digest
           logger.info { "Our '#{hook_name}' hook is already installed" }
@@ -231,19 +239,19 @@ module RedmineGitolite
 
     def install_hook_file(hook_data)
       source_path      = File.join(PACKAGE_HOOKS_DIR, hook_data[:source])
-      destination_path = File.join(GITOLITE_HOOKS_DIR, hook_data[:destination])
+      destination_path = File.join(@gitolite_hooks_dir, hook_data[:destination])
 
       if hook_data[:executable]
-        filemode = 755
+        filemode = '755'
       else
-        filemode = 644
+        filemode = '644'
       end
 
       logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
       begin
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat - > #{destination_path}'", :pipe_data => "'#{source_path}'", :pipe_command => 'cat')
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "chmod #{filemode} '#{destination_path}'")
+        RedmineGitolite::GitoliteWrapper.pipe_sudo('cat', source_path, "'cat - > #{destination_path}'")
+        RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
         return true
       rescue => e
         logger.error { "Problems installing hook from '#{source_path}' in '#{destination_path}'" }
@@ -265,18 +273,27 @@ module RedmineGitolite
 
     def update_gitolite
       begin
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, @gitolite_command)
+        RedmineGitolite::GitoliteWrapper.sudo_capture('eval', @gitolite_command)
         return true
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+      rescue => e
         return false
       end
     end
 
 
-    def hook_exists?(hook_path)
+    def hook_file_exists?(hook_path)
       begin
-        RedmineGitolite::GitHosting.execute_command(:shell_cmd, "test -s '#{hook_path}' && echo 'yes' || echo 'no'").match(/yes/) ? true : false
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        RedmineGitolite::GitoliteWrapper.sudo_file_exists?(hook_path)
+      rescue => e
+        return false
+      end
+    end
+
+
+    def hook_dir_exists?(hook_dir)
+      begin
+        RedmineGitolite::GitoliteWrapper.sudo_dir_exists?(hook_dir)
+      rescue => e
         return false
       end
     end
@@ -285,7 +302,7 @@ module RedmineGitolite
     # Return a hash with global config parameters.
     def get_global_hooks_params
       begin
-        hooks_params = RedmineGitolite::GitHosting.execute_command(:git_cmd, "config -f .gitconfig --get-regexp #{GITOLITE_HOOKS_NAMESPACE}").split("\n")
+        hooks_params = RedmineGitolite::GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', GITOLITE_HOOKS_NAMESPACE).split("\n")
       rescue RedmineGitolite::GitHosting::GitHostingException => e
         logger.error { "Problems to retrieve Gitolite hook parameters in Gitolite config" }
         hooks_params = []
@@ -308,17 +325,25 @@ module RedmineGitolite
     end
 
 
+    # Returns the global gitconfig prefix for
+    # a config with that given key under the
+    # hooks namespace.
+    #
+    def gitconfig_prefix(key)
+      [GITOLITE_HOOKS_NAMESPACE, '.', key].join
+    end
+
+
     def set_hook_param(name, value)
       logger.info { "Set Git hooks global parameter : #{name} (#{value})" }
 
       begin
-        RedmineGitolite::GitHosting.execute_command(:git_cmd, "config --global #{GITOLITE_HOOKS_NAMESPACE}.#{name} '#{value}'")
+        RedmineGitolite::GitoliteWrapper.sudo_capture('git', 'config', '--global', gitconfig_prefix(name), value)
         return true
       rescue RedmineGitolite::GitHosting::GitHostingException => e
         logger.error { "Error while setting Git hooks global parameter : #{name} (#{value})" }
         return false
       end
-
     end
 
   end

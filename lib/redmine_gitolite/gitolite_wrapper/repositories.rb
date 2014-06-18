@@ -68,7 +68,7 @@ module RedmineGitolite
             handle_repository_delete(repository_data)
 
             recycle = RedmineGitolite::Recycle.new
-            recycle.move_repository_to_recycle(repository_data) if @delete_git_repositories
+            recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories)
 
             gitolite_admin_repo_commit("#{repository_data['repo_name']}")
           end
@@ -80,10 +80,10 @@ module RedmineGitolite
         repository = Repository.find_by_id(@object_id)
 
         begin
-          RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{repository.gitolite_repository_path}' symbolic-ref HEAD refs/heads/#{repository.extra[:default_branch]}")
-          logger.info { "Default branch successfully updated for repository '#{repository.gitolite_repository_name}'"}
+          RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'symbolic-ref', 'HEAD', "refs/heads/#{repository.extra[:default_branch]}")
+          logger.info { "Default branch successfully updated for repository '#{repository.gitolite_repository_name}'" }
         rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while updating default branch for repository '#{repository.gitolite_repository_name}'"}
+          logger.error { "Error while updating default branch for repository '#{repository.gitolite_repository_name}'" }
         end
 
         RedmineGitolite::Cache.clear_cache_for_repository(repository)
