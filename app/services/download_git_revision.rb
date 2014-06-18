@@ -16,7 +16,7 @@ class DownloadGitRevision
     @commit_id     = ''
     @content_type  = ''
     @filename      = ''
-    @cmd_args      = ''
+    @cmd_args      = []
 
     validate_revision
     fill_data
@@ -24,7 +24,7 @@ class DownloadGitRevision
 
 
   def content
-    RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' archive #{@cmd_args} #{@commit_id}")
+    RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'archive', *@cmd_args, @commit_id)
   end
 
 
@@ -44,10 +44,10 @@ class DownloadGitRevision
 
     # is the revision a tag?
     if commit_id.nil?
-      tags = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' tag").split
+      tags = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'tag').split
       tags.each do |x|
         if x == @revision
-          commit_id = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-list #{@revision}").split[0]
+          commit_id = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-list', @revision).split[0]
           break
         end
       end
@@ -58,7 +58,7 @@ class DownloadGitRevision
       commit_id = @revision
     end
 
-    valid_commit = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-parse --quiet --verify #{commit_id}")
+    valid_commit = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-parse', '--quiet', '--verify', commit_id).chomp.strip
 
     if valid_commit == ''
       @commit_valid = false
@@ -76,25 +76,23 @@ class DownloadGitRevision
       project_name = "tarball"
     end
 
-    cmd_args = ""
-
     case @format
       when 'tar' then
         extension     = 'tar'
         @content_type = 'application/x-tar'
-        @cmd_args << " --format=tar"
+        @cmd_args << "--format=tar"
 
       when 'tar.gz' then
         extension     = 'tar.gz'
         @content_type = 'application/x-gzip'
-        @cmd_args << " --format=tar.gz"
-        @cmd_args << " -7"
+        @cmd_args << "--format=tar.gz"
+        @cmd_args << "-7"
 
       when 'zip' then
         extension     = 'zip'
         @content_type = 'application/x-zip'
-        @cmd_args << " --format=zip"
-        @cmd_args << " -7"
+        @cmd_args << "--format=zip"
+        @cmd_args << "-7"
     end
 
     @filename = "#{project_name}-#{@revision}.#{extension}"

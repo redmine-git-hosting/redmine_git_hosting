@@ -49,7 +49,7 @@ class GithubPayload
       end
 
       # Grab the repository path
-      revisions_in_range = RedmineGitolite::GitHosting.execute_command(:git_cmd, "--git-dir='#{@repository.gitolite_repository_path}' rev-list --reverse #{range}")
+      revisions_in_range = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-list', '--reverse', range)
       logger.debug { "Revisions in range : #{revisions_in_range.split().join(' ')}" }
 
       commits = []
