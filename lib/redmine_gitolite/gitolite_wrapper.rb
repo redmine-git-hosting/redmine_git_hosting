@@ -55,6 +55,11 @@ module RedmineGitolite
     end
 
 
+    def self.gitolite_key_subdir
+      'redmine_git_hosting'
+    end
+
+
     def self.git_config_username
       RedmineGitolite::Config.get_setting(:git_config_username)
     end
@@ -198,7 +203,7 @@ module RedmineGitolite
 
       command = [pipe_command, data, '|', runner, sudo_command, '2>&1'].join(' ')
 
-      logger.info { command }
+      logger.debug { command }
 
       return GitHosting.execute(command)
     end
@@ -252,6 +257,7 @@ module RedmineGitolite
     #
     # If force=true, it will delete using 'rm -rf <path>', otherwise
     # it uses rmdir
+    #
     def self.sudo_rmdir(path, force = false)
       if force
         sudo_capture('rm', '-rf', path)
@@ -262,20 +268,14 @@ module RedmineGitolite
 
 
     # Moves a file/directory to a new target.
-    # Creates the parent of the target path using mkdir -p.
     #
     def self.sudo_move(old_path, new_path)
       sudo_capture('mv', old_path, new_path)
     end
 
 
-    # Copy a file/directory to a new target.
+    # Test if repository is empty on Gitolite side
     #
-    def self.sudo_cp(source, target)
-      sudo_capture('cp', source, target)
-    end
-
-
     def self.sudo_repository_empty?(path)
       empty_repo = false
 
@@ -382,7 +382,7 @@ module RedmineGitolite
         public_key: gitolite_ssh_public_key,
         private_key: gitolite_ssh_private_key,
 
-        key_subdir: 'redmine_git_hosting',
+        key_subdir: gitolite_key_subdir,
         config_file: gitolite_config_file
       }
     end
