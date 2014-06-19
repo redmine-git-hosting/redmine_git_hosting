@@ -23,16 +23,17 @@ describe RepositoryDeploymentCredential do
 
   subject { @deployment_credential }
 
+  it { should be_valid }
+
   it { should respond_to(:repository) }
   it { should respond_to(:gitolite_public_key) }
   it { should respond_to(:user) }
   it { should respond_to(:perm) }
   it { should respond_to(:active) }
 
-  it { should be_valid }
-
-  it { expect(@deployment_credential.active).to be true }
-
+  it "is a active credential" do
+    expect(@deployment_credential.active?).to be true
+  end
 
   ## Test presence validation
   describe "when repository_id is not present" do
@@ -57,20 +58,20 @@ describe RepositoryDeploymentCredential do
 
   describe "when active is false" do
     before { @deployment_credential.active = false }
-    it { should be_valid }
-    it { expect(@deployment_credential.active).to be false }
+    it 'shoud be inactive' do
+      expect(@deployment_credential.active?).to be false
+    end
   end
-
 
   ## Test format validation
   describe "when perm is valid" do
-    it "should be valid" do
-      perms = [
-        'R',
-        'RW+'
-      ]
+    perms = [
+      'R',
+      'RW+'
+    ]
 
-      perms.each do |valid_perm|
+    perms.each do |valid_perm|
+      it "should be valid" do
         @deployment_credential.perm = valid_perm
         expect(@deployment_credential).to be_valid
       end
