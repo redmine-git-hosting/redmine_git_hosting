@@ -45,7 +45,7 @@ module RedmineGitHosting
               options = params[:repository][:create_readme] == 'true' ? {:create_readme_file => true} : {:create_readme_file => false}
 
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id, :options => options })
+              RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @repository.id, options)
             end
           end
         end
@@ -71,12 +71,12 @@ module RedmineGitHosting
 
               ## Update repository
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => @repository.id })
+              RedmineGitolite::GitHosting.resync_gitolite(:update_repository, @repository.id)
 
               ## Update repository default branch
               if update_default_branch
                 RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified default_branch of '#{@repository.gitolite_repository_name}' ('#{@repository.extra[:default_branch]}')" }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository_default_branch, :object => @repository.id })
+                RedmineGitolite::GitHosting.resync_gitolite(:update_repository_default_branch, @repository.id)
               end
             end
           end
@@ -92,7 +92,7 @@ module RedmineGitHosting
               repository_data = {}
               repository_data['repo_name'] = @repository.gitolite_repository_name
               repository_data['repo_path'] = @repository.gitolite_repository_path
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_repositories, :object => [repository_data] })
+              RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, [repository_data])
             end
           end
         end

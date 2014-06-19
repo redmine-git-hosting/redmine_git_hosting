@@ -361,7 +361,7 @@ module RedmineGitHosting
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
                   RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
-                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :options => {:flush_cache => true} })
+                  RedmineGitolite::GitHosting.resync_gitolite(:move_repositories_tree, projects.length, {:flush_cache => true})
                 end
             end
 
@@ -377,7 +377,7 @@ module RedmineGitHosting
                 projects = Project.active_or_archived.includes(:repositories).all
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
-                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
+                  RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects, projects.length)
                 end
             end
 
@@ -395,7 +395,7 @@ module RedmineGitHosting
               projects = Project.active_or_archived.includes(:repositories).all
               if projects.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects_forced, :object => projects.length })
+                RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects_forced, projects.length)
               end
 
               @@resync_projects = false
@@ -408,7 +408,7 @@ module RedmineGitHosting
               users = User.all
               if users.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys (#{users.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_ssh_keys_forced, :object => users.length })
+                RedmineGitolite::GitHosting.resync_gitolite(:update_all_ssh_keys_forced, users.length)
               end
 
               @@resync_ssh_keys = false
@@ -434,7 +434,7 @@ module RedmineGitHosting
 
 
             if !@@delete_trash_repo.empty?
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :purge_recycle_bin, :object => @@delete_trash_repo })
+              RedmineGitolite::GitHosting.resync_gitolite(:purge_recycle_bin, @@delete_trash_repo)
               @@delete_trash_repo = []
             end
 

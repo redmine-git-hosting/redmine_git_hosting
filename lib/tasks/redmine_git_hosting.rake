@@ -49,7 +49,7 @@ namespace :redmine_git_hosting do
     projects = Project.active_or_archived.find(:all, :include => :repositories)
     if projects.length > 0
       RedmineGitolite::GitHosting.logger.info { "Resync all projects (#{projects.length})..." }
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
+      RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects, projects.length)
     end
 
     puts "Done!"

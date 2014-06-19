@@ -401,7 +401,14 @@ module RedmineGitolite
     # Update the Gitolite Repository
     #
     # action: An API action defined in one of the gitolite/* classes.
-    def self.update(action, object, options={})
+    def self.update(action, object, options = {})
+      options = options.symbolize_keys
+
+      if options.has_key?(:flush_cache) && options[:flush_cache] == true
+        logger.info { "Flush Settings Cache !" }
+        Setting.check_cache
+      end
+
       WRAPPERS.each do |wrappermod|
         if wrappermod.method_defined?(action)
           return wrappermod.new(action, object, options).send(action)

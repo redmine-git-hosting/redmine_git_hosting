@@ -40,7 +40,7 @@ module RedmineGitHosting
             git_projects = self.projects.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
 
             RedmineGitolite::GitHosting.logger.info { "User status has changed, update projects" }
-            RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_projects, :object => git_projects })
+            RedmineGitolite::GitHosting.resync_gitolite(:update_projects, git_projects)
           end
         end
 

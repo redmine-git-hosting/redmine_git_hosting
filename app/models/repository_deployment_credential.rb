@@ -71,7 +71,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   def update_permissions
     RedmineGitolite::GitHosting.logger.info { "Update deploy keys for repository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
+    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id)
   end
 
 

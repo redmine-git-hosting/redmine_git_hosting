@@ -128,21 +128,21 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def add_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_ssh_key, :object => self.user.id })
+    RedmineGitolite::GitHosting.resync_gitolite(:add_ssh_key, self.user.id)
   end
 
 
   def destroy_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
 
-    repo_key = {}
-    repo_key['title']    = self.identifier
-    repo_key['key']      = self.key
-    repo_key['location'] = self.location
-    repo_key['owner']    = self.owner
+    ssh_key = {}
+    ssh_key['title']    = self.identifier
+    ssh_key['key']      = self.key
+    ssh_key['location'] = self.location
+    ssh_key['owner']    = self.owner
 
     RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
+    RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, ssh_key)
   end
 
 
