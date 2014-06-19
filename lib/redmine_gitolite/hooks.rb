@@ -181,7 +181,7 @@ module RedmineGitolite
 
         if install_hook_file(hook_data)
           logger.info { "Hook '#{hook_name}' installed" }
-          logger.info { "Running '#{@gitolite_command}' on the Gitolite install ..." }
+          logger.info { "Running '#{@gitolite_command.join(' ')}' on the Gitolite install ..." }
 
           if update_gitolite
             @@check_hooks_installed_cached[hook_name] = true
@@ -217,7 +217,7 @@ module RedmineGitolite
 
             if install_hook_file(hook_data)
               logger.info { "Hook '#{hook_name}' installed" }
-              logger.info { "Running '#{@gitolite_command}' on the Gitolite install..." }
+              logger.info { "Running '#{@gitolite_command.join(' ')}' on the Gitolite install..." }
 
               if update_gitolite
                 @@check_hooks_installed_cached[hook_name] = true
@@ -273,7 +273,7 @@ module RedmineGitolite
 
     def update_gitolite
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_capture('eval', @gitolite_command)
+        RedmineGitolite::GitoliteWrapper.sudo_capture(*@gitolite_command)
         return true
       rescue => e
         return false

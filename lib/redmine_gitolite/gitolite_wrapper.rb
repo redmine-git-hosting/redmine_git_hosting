@@ -99,47 +99,88 @@ module RedmineGitolite
       File.join(gitolite_temp_dir, gitolite_user, 'gitolite-admin.git')
     end
 
+    def self.gitolite_home_dir
+      sudo_capture('pwd').chomp.strip
+    end
+
+
+    ###############################
+    ##                           ##
+    ##      GITOLITE INFOS       ##
+    ##                           ##
+    ###############################
+
+    def self.find_version(output)
+      version = nil
+
+      line = output.split("\n")[0]
+
+      if line =~ /gitolite[ -]v?2./
+        version = 2
+      elsif line.include?('running gitolite3')
+        version = 3
+      else
+        version = 0
+      end
+
+      return version
+    end
+
 
     def self.gitolite_command
       if gitolite_version == 2
-        'gl-setup'
+        gitolite_command = ['gl-setup']
+      elsif gitolite_version == 3
+        gitolite_command = ['gitolite', 'setup']
       else
-        'gitolite setup'
+        gitolite_command = nil
       end
+      return gitolite_command
     end
 
+
+    @@gitolite_version_cached = nil
+    @@gitolite_version_stamp  = nil
 
     def self.gitolite_version
-      Rails.cache.fetch(GitHosting.cache_key('gitolite_version')) do
-        logger.debug("Updating Gitolite version")
-        out, err, code = ssh_shell('info')
-        return 3 if out.include?('running gitolite3')
-        return 2 if out =~ /gitolite[ -]v?2./
-        logger.error("Couldn't retrieve gitolite version through SSH.")
-        logger.debug("Gitolite version error output: #{err}") unless err.nil?
+      if !@@gitolite_version_cached.nil? && (Time.new - @@gitolite_version_stamp <= 1)
+        return @@gitolite_version_cached
       end
+
+      logger.debug { "Getting Gitolite version..." }
+
+      begin
+        out, err, code = ssh_shell('info')
+        @@gitolite_version_cached = find_version(out)
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while getting Gitolite version" }
+        @@gitolite_version_cached = -1
+      end
+
+      @@gitolite_version_stamp = Time.new
+      return @@gitolite_version_cached
     end
 
 
-    # Returns the gitolite welcome/info banner, containing its version.
-    #
-    # Upon error, returns the shell error code instead.
+    @@gitolite_banner_cached = nil
+    @@gitolite_banner_stamp  = nil
+
     def self.gitolite_banner
-      Rails.cache.fetch(GitHosting.cache_key('gitolite_banner')) {
-        logger.debug("Retrieving gitolite banner")
-        begin
-          GitoliteWrapper.ssh_capture('info')
-        rescue => e
-          errstr = "Error while getting Gitolite banner: #{e.message}"
-          logger.error(errstr)
-          errstr
-        end
-      }
-    end
+      if !@@gitolite_banner_cached.nil? && (Time.new - @@gitolite_banner_stamp <= 1)
+        return @@gitolite_banner_cached
+      end
 
+      logger.debug { "Getting Gitolite banner..." }
 
-    def self.gitolite_home_dir
-      sudo_capture('pwd').chomp.strip
+      begin
+        @@gitolite_banner_cached = ssh_shell('info')[0]
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { "Error while getting Gitolite banner" }
+        @@gitolite_banner_cached = "Error : #{e.message}"
+      end
+
+      @@gitolite_banner_stamp = Time.new
+      return @@gitolite_banner_cached
     end
 
 
@@ -309,7 +350,7 @@ module RedmineGitolite
     #
     # Returns stdout, stderr and the exit code
     def self.ssh_shell(*params)
-      GitHosting.shell2('ssh', *ssh_shell_params.concat(params))
+      GitHosting.execute('ssh', *ssh_shell_params.concat(params))
     end
 
 

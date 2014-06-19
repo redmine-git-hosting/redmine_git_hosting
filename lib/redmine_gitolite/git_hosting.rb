@@ -38,12 +38,6 @@ module RedmineGitolite
     end
 
 
-    # Returns a rails cache identifier with the key as its last part
-    def self.cache_key(key)
-      ['/redmine/plugin/redmine_git_hosting/', key].join
-    end
-
-
     # Executes the given command and a list of parameters on the shell
     # and returns the result.
     #

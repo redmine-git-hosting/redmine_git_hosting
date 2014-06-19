@@ -103,8 +103,8 @@
     <td><%= l(:label_gitolite_version) %></td>
     <td>
       <% gitolite_version = RedmineGitolite::GitoliteWrapper.gitolite_version %>
-      <span class="label label-<%#= gitolite_version <= 0 ? 'important' : 'success' %>">
-        <%#= gitolite_version <= 0 ? l(:label_unknown_gitolite_version) : gitolite_version %>
+      <span class="label label-<%= gitolite_version <= 0 ? 'important' : 'success' %>">
+        <%= gitolite_version <= 0 ? l(:label_unknown_gitolite_version) : gitolite_version %>
       </span>
     </td>
   </tr>
