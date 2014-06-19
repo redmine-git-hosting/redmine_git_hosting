@@ -25,8 +25,6 @@ class GitolitePublicKey < ActiveRecord::Base
   validates :key,         :presence => true
   validates :key_type,    :presence => true, :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
-  validates_associated :repository_deployment_credentials
-
   validate :has_not_been_changed
   validate :key_correctness
   validate :key_uniqueness
