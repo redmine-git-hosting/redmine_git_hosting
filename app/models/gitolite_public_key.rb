@@ -16,19 +16,19 @@ class GitolitePublicKey < ActiveRecord::Base
   has_many   :repository_deployment_credentials, :dependent => :destroy
 
   ## Validations
-  validates :user_id,    :presence => true
+  validates :user_id,     :presence => true
 
-  validates :title,      :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id },
-                         :length => { :maximum => TITLE_LENGTH_LIMIT }
+  validates :title,       :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id },
+                          :length => { :maximum => TITLE_LENGTH_LIMIT }
 
-  validates :identifier, :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
-  validates :key,        :presence => true
-  validates :key_type,   :presence => true, :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
+  validates :identifier,  :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
+  validates :key,         :presence => true
+  validates :key_type,    :presence => true, :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
   validates_associated :repository_deployment_credentials
 
   validate :has_not_been_changed
-  validate :key_format
+  validate :key_correctness
   validate :key_uniqueness
 
   ## Scopes
@@ -39,9 +39,11 @@ class GitolitePublicKey < ActiveRecord::Base
   scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
 
   ## Callbacks
-  before_validation :set_identifier
   before_validation :strip_whitespace
   before_validation :remove_control_characters
+
+  before_validation :set_identifier
+  before_validation :set_fingerprint
 
   after_commit ->(obj) { obj.add_ssh_key },     :on => :create
   after_commit ->(obj) { obj.destroy_ssh_key }, :on => :destroy
@@ -57,32 +59,34 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
-  def set_identifier
-    if !self.user_id.nil?
-      self.identifier ||=
-        begin
-          my_time = Time.now
-          time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
-          key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
-          case key_type
-            when KEY_TYPE_USER
-              # add "redmine_" as a prefix to the username, and then the current date
-              # this helps ensure uniqueness of each key identifier
-              #
-              # also, it ensures that it is very, very unlikely to conflict with any
-              # existing key name if gitolite config is also being edited manually
-              "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-            when KEY_TYPE_DEPLOY
-              # add "redmine_deploy_key_" as a prefix, and then the current date
-              # to help ensure uniqueness of each key identifier
-              "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-            else
-              nil
-            end
-          end
-    else
-      nil
-    end
+  # Returns the path to this key under the gitolite keydir
+  # resolves to <user.gitolite_identifier>/<location>/<owner>.pub
+  #
+  # tile: test-key
+  # identifier: redmine_admin_1@redmine_test_key
+  # identifier: redmine_admin_1@redmine_deploy_key_1
+  #
+  #
+  # keydir/
+  # ├── redmine_git_hosting
+  # │   └── redmine_admin_1
+  # │       ├── redmine_test_key
+  # │       │   └── redmine_admin_1.pub
+  # │       ├── redmine_deploy_key_1
+  # │       │   └── redmine_admin_1.pub
+  # │       └── redmine_deploy_key_2
+  # │           └── redmine_admin_1.pub
+  # └── redmine_gitolite_admin_id_rsa.pub
+  #
+  #
+  # The root folder for this user is the user's identifier
+  # for logical grouping of their keys, which are organized
+  # by their title in subfolders.
+  #
+  # This is due to the new gitolite multi-keys organization
+  # using folders. See http://gitolite.com/gitolite/users.html
+  def gitolite_path
+    File.join('keydir', RedmineGitolite::GitoliteWrapper.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
   end
 
 
@@ -177,6 +181,46 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
+  # Returns the unique identifier for this key based on the key_type
+  #
+  # For user public keys, this simply is the user's gitolite_identifier.
+  # For deployment keys, we use an incrementing number.
+  def set_identifier
+    if !self.user_id.nil?
+      key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
+
+      case key_type
+        when KEY_TYPE_USER
+          tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
+          self.identifier ||= [ self.user.gitolite_identifier, '@', 'redmine_', tag ].join
+
+        when KEY_TYPE_DEPLOY
+          self.identifier ||= [ self.user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
+      end
+    else
+      nil
+    end
+  end
+
+
+  def set_fingerprint
+    file = Tempfile.new('keytest')
+    file.write(self.key)
+    file.close
+
+    begin
+      output = RedmineGitolite::GitHosting.capture('ssh-keygen', '-l', '-f', file.path)
+      if output
+        self.fingerprint = output.split[1]
+      end
+    rescue RedmineGitolite::GitHosting::GitHostingException => e
+      errors.add(:key, l(:error_key_corrupted))
+    ensure
+      file.unlink
+    end
+  end
+
+
   def has_not_been_changed
     return if new_record?
 
@@ -185,7 +229,7 @@ class GitolitePublicKey < ActiveRecord::Base
     %w(identifier key user_id key_type).each do |attribute|
       method = "#{attribute}_changed?"
       if self.send(method)
-        errors.add(attribute, 'may not be changed')
+        errors.add(attribute, 'cannot be changed')
         valid = false
       end
     end
@@ -194,64 +238,29 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
-  def key_format
-    file = Tempfile.new('foo')
-
-    begin
-      file.write(key)
-      file.close
-      RedmineGitolite::GitHosting.execute_command(:local_cmd, "ssh-keygen -l -f #{file.path}")
-      valid = true
-    rescue RedmineGitolite::GitHosting::GitHostingException => e
-      errors.add(:key, l(:error_key_corrupted))
-      valid = false
-    ensure
-      file.unlink
-    end
-
-    return valid
+  def key_correctness
+    # Test correctness of fingerprint from output
+    # and general ssh-(r|d|ecd)sa <key> <id> structure
+    (self.fingerprint =~ /^(\w{2}:?)+$/i) && (self.key.match(/^(\S+)\s+(\S+)/))
   end
 
 
   def key_uniqueness
     return if !new_record?
 
-    keypieces = key.match(/^(\S+)\s+(\S+)/)
+    existing = GitolitePublicKey.find_by_fingerprint(self.fingerprint)
 
-    return false if keypieces.nil?
-
-    key_format = keypieces[1]
-    key_data   = keypieces[2]
-
-    # Check against the gitolite administrator key file (owned by noone).
-    all_keys = []
-
-    all_keys.push GitolitePublicKey.new({ :user => nil, :key => File.read(RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)) })
-
-    # Check all active keys
-    all_keys += (GitolitePublicKey.active.all)
-
-    all_keys.each do |existing_key|
-
-      existingpieces = existing_key.key.match(/^(\S+)\s+(\S+)/)
-
-      if existingpieces && (existingpieces[2] == key_data)
-        # Hm.... have a duplicate key!
-        if existing_key.user == User.current
-          errors.add(:key, l(:error_key_in_use_by_you, :name => existing_key.title))
-          return false
-        elsif User.current.admin?
-          if existing_key.user
-            errors.add(:key, l(:error_key_in_use_by_other, :login => existing_key.user.login, :name => existing_key.title))
-            return false
-          else
-            errors.add(:key, l(:error_key_in_use_by_gitolite_admin))
-            return false
-          end
-        else
-          errors.add(:key, l(:error_key_in_use_by_someone))
-          return false
-        end
+    if existing
+      # Hm.... have a duplicate key!
+      if existing.user == User.current
+        errors.add(:key, l(:error_key_in_use_by_you, :name => existing.title))
+        return false
+      elsif User.current.admin?
+        errors.add(:key, l(:error_key_in_use_by_other, :login => existing.user.login, :name => existing.title))
+        return false
+      else
+        errors.add(:key, l(:error_key_in_use_by_someone))
+        return false
       end
     end
 

@@ -23,8 +23,12 @@ module RedmineGitHosting
       module InstanceMethods
 
 
+        #
+        # Returns a unique identifier for this user to use for gitolite keys.
+        # As login names may change (i.e., user renamed), we use the user id
+        # with its login name as a prefix for readibility.
         def gitolite_identifier
-          "#{RedmineGitolite::Config.get_setting(:gitolite_identifier_prefix)}#{self.login.underscore}".gsub(/[^0-9a-zA-Z\-]/, '_')
+          [RedmineGitolite::Config.get_setting(:gitolite_identifier_prefix), self.login.underscore.gsub(/[^0-9a-zA-Z]/, '_'), '_', self.id].join
         end
 
 

@@ -45,7 +45,7 @@
                 <%= credential.gitolite_public_key.title %>
               <% end %>
             </td>
-            <td><%= "keydir/#{credential.gitolite_public_key.identifier}.pub" %></td>
+            <td><%= credential.gitolite_public_key.gitolite_path %></td>
             <td><%= credential.perm %></td>
             <td><%= checked_image2 credential.honored? %></td>
             <td><%= checked_image2 credential.active? %></td>
