@@ -23,7 +23,7 @@ group :development, :test do
   gem 'factory_girl',       '~> 4.4.0'
   gem 'factory_girl_rails', '~> 4.4.1'
 
-  gem 'database_cleaner',   '~> 1.2.0'
+  gem 'database_cleaner'
 
   gem 'rspec_junit_formatter', "~> 0.1.6"
 
