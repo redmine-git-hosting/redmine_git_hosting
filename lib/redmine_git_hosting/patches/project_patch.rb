@@ -7,7 +7,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          scope :active_or_archived, -> { where "status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_ARCHIVED}" }
+          scope :active_or_closed, -> { where "status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_CLOSED}" }
 
           # Place additional constraints on repository identifiers
           # because of multi repos

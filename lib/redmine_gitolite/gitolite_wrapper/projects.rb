@@ -10,7 +10,11 @@ module RedmineGitolite
 
       def update_projects
         if @object_id == 'all'
-          projects = Project.active_or_archived.includes(:repositories).all
+          projects = Project.includes(:repositories).all
+        elsif @object_id == 'active'
+          projects = Project.active.includes(:repositories).all
+        elsif @object_id == 'active_or_closed'
+          projects = Project.active_or_closed.includes(:repositories).all
         else
           projects = @object_id.map{ |project_id| Project.find_by_id(project_id) }
         end
@@ -35,7 +39,7 @@ module RedmineGitolite
 
 
       def move_repositories_tree
-        projects = Project.active_or_archived.includes(:repositories).all.select{ |x| x.parent_id.nil? }
+        projects = Project.includes(:repositories).all.select{ |x| x.parent_id.nil? }
 
         @admin.transaction do
           @delete_parent_path = []
