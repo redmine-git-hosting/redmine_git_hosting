@@ -243,7 +243,7 @@ module RedmineGitolite
         else
           all_read = rewind_users + write_users + read_users
           read     = all_read.map{|user| user.gitolite_identifier}
-          read << "REDMINE_CLOSED_PROJECT" if read.empty?
+          read << "REDMINE_CLOSED_PROJECT"
         end
 
         permissions = {}
