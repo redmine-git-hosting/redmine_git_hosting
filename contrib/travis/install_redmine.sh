@@ -43,8 +43,10 @@ echo ""
 
 echo "#### INSTALL DATABASE FILE"
 if [ "$DATABASE_ADAPTER" == "mysql" ] ; then
+  echo "Type : mysql"
   cp "redmine/plugins/redmine_git_hosting/spec/database_mysql.yml" "redmine/config/database.yml"
 else
+  echo "Type : postgres"
   cp "redmine/plugins/redmine_git_hosting/spec/database_postgres.yml" "redmine/config/database.yml"
 fi
 
