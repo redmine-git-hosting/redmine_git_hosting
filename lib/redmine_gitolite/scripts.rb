@@ -198,7 +198,7 @@ module RedmineGitolite
       end
 
       begin
-        test = GitoliteWrapper.sudo_capture('sudo', '-i', '-n', '-u', redmine_user, 'whoami')
+        test = GitoliteWrapper.sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
         if test.match(/#{redmine_user}/)
           logger.info { "OK!" }
           @@sudo_gitolite_to_redmine_user_cached = true

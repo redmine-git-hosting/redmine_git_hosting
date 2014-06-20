@@ -197,7 +197,7 @@ module RedmineGitolite
     # * (-n) non-interactive
     # * (-u `gitolite_user`) target user
     def self.sudo_shell_params
-      ['-i', '-n', '-u', gitolite_user]
+      ['-n', '-u', gitolite_user, '-i']
     end
 
 
