@@ -42,7 +42,12 @@ echo "Done !"
 echo ""
 
 echo "#### INSTALL DATABASE FILE"
-cp "redmine/plugins/redmine_git_hosting/spec/database.yml" "redmine/config/database.yml"
+if [ "$DATABASE_ADAPTER" == "mysql" ] ; then
+  cp "redmine/plugins/redmine_git_hosting/spec/database_mysql.yml" "redmine/config/database.yml"
+else
+  cp "redmine/plugins/redmine_git_hosting/spec/database_postgres.yml" "redmine/config/database.yml"
+fi
+
 echo "Done !"
 echo ""
 
