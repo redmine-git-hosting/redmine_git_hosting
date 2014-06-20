@@ -64,6 +64,7 @@ Thanks for their contribution to :
 * Lukas Mika
 * Nicholas Clark
 * Robert Chady
+* and others :)
 
 ## Contribute
 
