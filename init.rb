@@ -64,6 +64,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :all_projects_use_git             => false,
       :init_repositories_on_create      => false,
       :delete_git_repositories          => true,
+
+      # This params work together!
+      # When hierarchical_organisation = true, unique_repo_identifier MUST be false
+      # When hierarchical_organisation = false, unique_repo_identifier MUST be true
       :hierarchical_organisation        => true,
       :unique_repo_identifier           => false,
 

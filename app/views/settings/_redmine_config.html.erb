@@ -4,7 +4,6 @@
   init_repositories_on_create = RedmineGitolite::Config.get_setting(:init_repositories_on_create)
   delete_git_repositories     = RedmineGitolite::Config.get_setting(:delete_git_repositories)
   hierarchical_organisation   = RedmineGitolite::Config.get_setting(:hierarchical_organisation)
-  unique_repo_identifier      = RedmineGitolite::Config.get_setting(:unique_repo_identifier)
 %>
 
 <h3><%= l(:label_redmine_config) %></h3>
@@ -38,14 +37,6 @@
   <span class="bootstrap-switch switch-small switch-extended" data-on="primary" data-off="default" data-on-label="<%= l(:label_hierarchical) %>" data-off-label="<%= l(:label_flat) %>">
     <%= hidden_field_tag "settings[hierarchical_organisation]", "false" %>
     <%= check_box_tag "settings[hierarchical_organisation]", hierarchical_organisation, hierarchical_organisation %>
-  </span>
-</p>
-
-<p>
-  <label><%= l(:label_unique_repo_identifier) %></label>
-  <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-    <%= hidden_field_tag "settings[unique_repo_identifier]", "false" %>
-    <%= check_box_tag "settings[unique_repo_identifier]", unique_repo_identifier, unique_repo_identifier %>
   </span>
 </p>
 

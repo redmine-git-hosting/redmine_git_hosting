@@ -176,21 +176,24 @@ module RedmineGitHosting
             end
 
 
-            # Check to see if we are trying to claim all repository identifiers are unique
-            if valuehash[:unique_repo_identifier] == 'true'
-              if Repository::Git.have_duplicated_identifier?
-                # Oops -- have duplication.  Force to false.
-                RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to unique_repo_identifier, setting unique_repo_identifier => 'false'" }
-                valuehash[:unique_repo_identifier] = 'false'
-              end
+            # hierarchical_organisation and unique_repo_identifier are now combined
+            if valuehash[:hierarchical_organisation] == 'true'
+              valuehash[:unique_repo_identifier] = 'false'
+            else
+              valuehash[:unique_repo_identifier] = 'true'
             end
 
 
-            if @@old_valuehash[:hierarchical_organisation] == 'true' && valuehash[:hierarchical_organisation] == 'false'
+            # Check duplication if we are switching from a mode to another
+            if @@old_valuehash[:hierarchical_organisation] == true && valuehash[:hierarchical_organisation] == 'false'
               if Repository::Git.have_duplicated_identifier?
                 # Oops -- have duplication.  Force to true.
                 RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to flat mode, setting hierarchical_organisation => 'true'" }
                 valuehash[:hierarchical_organisation] = 'true'
+                valuehash[:unique_repo_identifier] = 'false'
+              else
+                valuehash[:hierarchical_organisation] = 'false'
+                valuehash[:unique_repo_identifier] = 'true'
               end
             end
 

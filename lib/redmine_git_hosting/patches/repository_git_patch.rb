@@ -353,13 +353,7 @@ module RedmineGitHosting
         def get_full_parent_path
           return "" if !RedmineGitolite::Config.get_setting(:hierarchical_organisation)
 
-          if self.is_default?
-            parent_parts = []
-          elsif self.class.repo_ident_unique?
-            parent_parts = [project.identifier.to_s]
-          else
-            parent_parts = []
-          end
+          parent_parts = []
 
           p = project
           while p.parent
