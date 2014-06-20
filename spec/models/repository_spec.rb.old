@@ -26,7 +26,6 @@ describe Repository::Git do
   context "common_tests" do
     before do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
-      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
 
       @repository_1   = FactoryGirl.create(:repository, :project_id => @project_child.id, :is_default => true)
       @repository_2   = FactoryGirl.create(:repository, :project_id => @project_child.id, :identifier => 'repo-test')
@@ -358,7 +357,7 @@ describe Repository::Git do
       it { expect(Repository::Git).to respond_to(:find_by_path) }
 
       describe ".repo_ident_unique?" do
-        it { expect(Repository::Git.repo_ident_unique?).to be false }
+        it { expect(Repository::Git.repo_ident_unique?).to be true }
       end
 
       describe ".have_duplicated_identifier?" do
@@ -406,6 +405,245 @@ describe Repository::Git do
   end
 
 
+  context "when hierarchical_organisation_with_unique_identifier" do
+    before do
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+      collection_of_unique_repositories
+    end
+
+    describe ".repo_ident_unique?" do
+      it { expect(Repository::Git.repo_ident_unique?).to be true }
+    end
+
+    describe ".have_duplicated_identifier?" do
+      it { expect(Repository::Git.have_duplicated_identifier?).to be false }
+    end
+
+    describe "repository1" do
+      it "should be default repository" do
+        expect(@repository_1.is_default).to be true
+      end
+
+      it "should have nil identifier" do
+        expect(@repository_1.identifier).to be nil
+      end
+
+      it "should have a valid url" do
+        expect(@repository_1.url).to eq 'repositories/redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid root_url" do
+        expect(@repository_1.root_url).to eq 'repositories/redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid git_cache_id" do
+        expect(@repository_1.git_cache_id).to eq 'project-child'
+      end
+
+      it "should have a valid redmine_name" do
+        expect(@repository_1.redmine_name).to eq 'project-child'
+      end
+
+      it "should have a valid gitolite_repository_path" do
+        expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid gitolite_repository_name" do
+        expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-parent/project-child'
+      end
+
+      it "should have a valid redmine_repository_path" do
+        expect(@repository_1.redmine_repository_path).to eq 'project-parent/project-child'
+      end
+
+      it "should have a valid ssh_url" do
+        expect(@repository_1.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid git_url" do
+        expect(@repository_1.git_url).to eq 'git://localhost/redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid http_url" do
+        expect(@repository_1.http_url).to eq 'http://localhost/git/project-parent/project-child.git'
+      end
+
+      it "should have a valid https_url" do
+        expect(@repository_1.https_url).to eq 'https://localhost/git/project-parent/project-child.git'
+      end
+
+      it "should have a valid http_user_login" do
+        expect(@repository_1.http_user_login).to eq ''
+      end
+
+      it "should have a valid git_access_path" do
+        expect(@repository_1.git_access_path).to eq 'redmine/project-parent/project-child.git'
+      end
+
+      it "should have a valid http_access_path" do
+        expect(@repository_1.http_access_path).to eq 'git/project-parent/project-child.git'
+      end
+
+      it "should have a valid new_repository_name" do
+        expect(@repository_1.new_repository_name).to eq 'redmine/project-parent/project-child'
+      end
+
+      it "should have a valid old_repository_name" do
+        expect(@repository_1.old_repository_name).to eq 'redmine/project-parent/project-child'
+      end
+    end
+
+    describe "repository2" do
+      it "should not be default repository" do
+        expect(@repository_2.is_default).to be false
+      end
+
+      it "should have a valid identifier" do
+        expect(@repository_2.identifier).to eq 'repo1-test'
+      end
+
+      it "should have a valid url" do
+        expect(@repository_2.url).to eq 'repositories/redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid root_url" do
+        expect(@repository_2.root_url).to eq 'repositories/redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid git_cache_id" do
+        expect(@repository_2.git_cache_id).to eq 'repo1-test'
+      end
+
+      it "should have a valid redmine_name" do
+        expect(@repository_2.redmine_name).to eq 'repo1-test'
+      end
+
+      it "should have a valid gitolite_repository_path" do
+        expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid gitolite_repository_name" do
+        expect(@repository_2.gitolite_repository_name).to eq 'redmine/project-parent/project-child/repo1-test'
+      end
+
+      it "should have a valid redmine_repository_path" do
+        expect(@repository_2.redmine_repository_path).to eq 'project-parent/project-child/repo1-test'
+      end
+
+      it "should have a valid ssh_url" do
+        expect(@repository_2.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid git_url" do
+        expect(@repository_2.git_url).to eq 'git://localhost/redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid http_url" do
+        expect(@repository_2.http_url).to eq 'http://localhost/git/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid https_url" do
+        expect(@repository_2.https_url).to eq 'https://localhost/git/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid http_user_login" do
+        expect(@repository_2.http_user_login).to eq ''
+      end
+
+      it "should have a valid git_access_path" do
+        expect(@repository_2.git_access_path).to eq 'redmine/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid http_access_path" do
+        expect(@repository_2.http_access_path).to eq 'git/project-parent/project-child/repo1-test.git'
+      end
+
+      it "should have a valid new_repository_name" do
+        expect(@repository_2.new_repository_name).to eq 'redmine/project-parent/project-child/repo1-test'
+      end
+
+      it "should have a valid old_repository_name" do
+        expect(@repository_2.old_repository_name).to eq 'redmine/project-parent/project-child/repo1-test'
+      end
+    end
+
+    describe "repository3" do
+      it { expect(@repository_3.git_cache_id).to eq 'project-parent' }
+      it { expect(@repository_3.redmine_name).to eq 'project-parent' }
+    end
+
+    describe "repository4" do
+      it { expect(@repository_4.git_cache_id).to eq 'repo2-test' }
+      it { expect(@repository_4.redmine_name).to eq 'repo2-test' }
+    end
+
+    describe ".repo_path_to_git_cache_id" do
+      describe "when identifier are not unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be false" do
+          expect(Repository::Git.repo_ident_unique?).to be false
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          it { expect(@repo2).to eq @repository_2 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'project-child/repo1-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'project-parent/repo2-test' }
+        end
+      end
+
+      describe "when identifier are unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be true
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          it { expect(@repo2).to eq @repository_2 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'repo1-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'repo2-test' }
+        end
+      end
+    end
+  end
+
+
   context "when hierarchical_organisation_with_non_unique_identifier" do
     before do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
@@ -414,15 +652,11 @@ describe Repository::Git do
     end
 
     describe ".repo_ident_unique?" do
-      it "should be false" do
-        expect(Repository::Git.repo_ident_unique?).to be false
-      end
+      it { expect(Repository::Git.repo_ident_unique?).to be false }
     end
 
     describe ".have_duplicated_identifier?" do
-      it "should be true" do
-        expect(Repository::Git.have_duplicated_identifier?).to be true
-      end
+      it { expect(Repository::Git.have_duplicated_identifier?).to be true }
     end
 
     describe "repository1" do
@@ -574,28 +808,19 @@ describe Repository::Git do
     end
 
     describe "repository3" do
-      it "should have a git_cache_id" do
-        expect(@repository_3.git_cache_id).to eq 'project-parent'
-      end
-
-      it "should have a redmine_name" do
-        expect(@repository_3.redmine_name).to eq 'project-parent'
-      end
+      it { expect(@repository_3.git_cache_id).to eq 'project-parent' }
+      it { expect(@repository_3.redmine_name).to eq 'project-parent' }
     end
 
     describe "repository4" do
-      it "should have a git_cache_id" do
-        expect(@repository_4.git_cache_id).to eq 'project-parent/repo-test'
-      end
-
-      it "should have a redmine_name" do
-        expect(@repository_4.redmine_name).to eq 'repo-test'
-      end
+      it { expect(@repository_4.git_cache_id).to eq 'project-parent/repo-test' }
+      it { expect(@repository_4.redmine_name).to eq 'repo-test' }
     end
 
     describe ".repo_path_to_git_cache_id" do
       describe "when identifier are not unique" do
         before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
           @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
           @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
           @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
@@ -605,6 +830,10 @@ describe Repository::Git do
           @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
           @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
           @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be false" do
+          expect(Repository::Git.repo_ident_unique?).to be false
         end
 
         describe "repositories should match" do
@@ -619,6 +848,38 @@ describe Repository::Git do
           it { expect(@git_cache_id4).to eq 'project-parent/repo-test' }
         end
       end
+
+      describe "when identifier are unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be true
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          ## LIMIT CASE
+          it { expect(@repo2).to eq @repository_4 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'repo-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'repo-test' }
+        end
+      end
     end
   end
 
@@ -631,16 +892,13 @@ describe Repository::Git do
     end
 
     describe ".repo_ident_unique?" do
-      it "should be false" do
-        expect(Repository::Git.repo_ident_unique?).to be true
-      end
+      it { expect(Repository::Git.repo_ident_unique?).to be true }
     end
 
     describe ".have_duplicated_identifier?" do
-      it "should be true" do
-        expect(Repository::Git.have_duplicated_identifier?).to be false
-      end
+      it { expect(Repository::Git.have_duplicated_identifier?).to be false }
     end
+
 
     describe "repository1" do
       it { expect(@repository_1.is_default).to be true }
@@ -703,8 +961,9 @@ describe Repository::Git do
 
 
     describe ".repo_path_to_git_cache_id" do
-      describe "when identifier are unique" do
+      describe "when identifier are not unique" do
         before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
           @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
           @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
           @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
@@ -714,6 +973,41 @@ describe Repository::Git do
           @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
           @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
           @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be false
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          it { expect(@repo2).to eq @repository_2 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'project-child/repo1-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'project-parent/repo2-test' }
+        end
+      end
+
+      describe "when identifier are unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be true
         end
 
         describe "repositories should match" do
@@ -726,6 +1020,145 @@ describe Repository::Git do
           it { expect(@git_cache_id2).to eq 'repo1-test' }
           it { expect(@git_cache_id3).to eq 'project-parent' }
           it { expect(@git_cache_id4).to eq 'repo2-test' }
+        end
+      end
+    end
+  end
+
+
+  context "flat_organisation_with_non_unique_identifier" do
+    before do
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = false
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
+      collection_of_non_unique_repositories
+    end
+
+    describe ".repo_ident_unique?" do
+      it { expect(Repository::Git.repo_ident_unique?).to be false }
+    end
+
+    describe ".have_duplicated_identifier?" do
+      it { expect(Repository::Git.have_duplicated_identifier?).to be true }
+    end
+
+
+    describe "repository1" do
+      it { expect(@repository_1.is_default).to be true }
+      it { expect(@repository_1.identifier).to be nil }
+      it { expect(@repository_1.url).to eq      'repositories/redmine/project-child.git' }
+      it { expect(@repository_1.root_url).to eq 'repositories/redmine/project-child.git' }
+      it { expect(@repository_1.git_cache_id).to eq 'project-child' }
+      it { expect(@repository_1.redmine_name).to eq 'project-child' }
+      it { expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-child.git' }
+      it { expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-child' }
+      it { expect(@repository_1.redmine_repository_path).to eq  'project-child' }
+      it { expect(@repository_1.new_repository_name).to eq 'redmine/project-child' }
+      it { expect(@repository_1.old_repository_name).to eq 'redmine/project-child' }
+      it { expect(@repository_1.http_user_login).to eq  '' }
+      it { expect(@repository_1.git_access_path).to eq  'redmine/project-child.git' }
+      it { expect(@repository_1.http_access_path).to eq 'git/project-child.git' }
+      it { expect(@repository_1.ssh_url).to eq   'ssh://git@localhost/redmine/project-child.git' }
+      it { expect(@repository_1.git_url).to eq   'git://localhost/redmine/project-child.git' }
+      it { expect(@repository_1.http_url).to eq  'http://localhost/git/project-child.git' }
+      it { expect(@repository_1.https_url).to eq 'https://localhost/git/project-child.git' }
+    end
+
+
+    describe "repository2" do
+      it { expect(@repository_2.is_default).to be false }
+      it { expect(@repository_2.identifier).to eq 'repo-test' }
+      it { expect(@repository_2.url).to eq      'repositories/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.root_url).to eq 'repositories/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.git_cache_id).to eq 'project-child/repo-test' }
+      it { expect(@repository_2.redmine_name).to eq 'repo-test' }
+      it { expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.gitolite_repository_name).to eq 'redmine/project-child/repo-test' }
+      it { expect(@repository_2.redmine_repository_path).to eq  'project-child/repo-test' }
+      it { expect(@repository_2.new_repository_name).to eq 'redmine/project-child/repo-test' }
+      it { expect(@repository_2.old_repository_name).to eq 'redmine/project-child/repo-test' }
+      it { expect(@repository_2.http_user_login).to eq  '' }
+      it { expect(@repository_2.git_access_path).to eq  'redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.http_access_path).to eq 'git/project-child/repo-test.git' }
+      it { expect(@repository_2.ssh_url).to eq   'ssh://git@localhost/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.git_url).to eq   'git://localhost/redmine/project-child/repo-test.git' }
+      it { expect(@repository_2.http_url).to eq  'http://localhost/git/project-child/repo-test.git' }
+      it { expect(@repository_2.https_url).to eq 'https://localhost/git/project-child/repo-test.git' }
+    end
+
+
+    describe "repository3" do
+      it { expect(@repository_3.git_cache_id).to eq 'project-parent' }
+      it { expect(@repository_3.redmine_name).to eq 'project-parent' }
+    end
+
+
+    describe "repository4" do
+      it { expect(@repository_4.git_cache_id).to eq 'project-parent/repo-test' }
+      it { expect(@repository_4.redmine_name).to eq 'repo-test' }
+    end
+
+
+    describe ".repo_path_to_git_cache_id" do
+      describe "when identifier are not unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be false
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          it { expect(@repo2).to eq @repository_2 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'project-child/repo-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'project-parent/repo-test' }
+        end
+      end
+
+      describe "when identifier are unique" do
+        before do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+          @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
+          @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
+          @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
+          @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+
+          @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
+          @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
+          @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
+          @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        end
+
+        it "unique_repo_identifier should be true" do
+          expect(Repository::Git.repo_ident_unique?).to be true
+        end
+
+        describe "repositories should match" do
+          it { expect(@repo1).to eq @repository_1 }
+          ## LIMIT CASE
+          it { expect(@repo2).to eq @repository_4 }
+          it { expect(@repo3).to eq @repository_3 }
+          it { expect(@repo4).to eq @repository_4 }
+
+          it { expect(@git_cache_id1).to eq 'project-child' }
+          it { expect(@git_cache_id2).to eq 'repo-test' }
+          it { expect(@git_cache_id3).to eq 'project-parent' }
+          it { expect(@git_cache_id4).to eq 'repo-test' }
         end
       end
     end
