@@ -4,7 +4,6 @@ REDMINE_SIDEKIQ_PLUGIN="https://github.com/ogom/redmine_sidekiq.git"
 REDMINE_BOOTSTRAP_PLUGIN="https://github.com/jbox-web/redmine_bootstrap_kit.git"
 
 REDMINE_SOURCE_URL="http://www.redmine.org/releases"
-# REDMINE_VERSION="2.5.1"
 
 REDMINE_NAME="redmine-${REDMINE_VERSION}"
 REDMINE_PACKAGE="${REDMINE_NAME}.tar.gz"
