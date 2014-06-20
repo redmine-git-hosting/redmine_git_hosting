@@ -50,6 +50,21 @@ Copyright (c) 2010-2011 Eric Bishop (ericpaulbishop@gmail.com)
 
 Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket-rentals.de)
 
+Thanks for their contribution to :
+
+* Akasch
+* Alexander Meindl
+* Soeren Helbig
+* Aleksander Palyan
+* wvolz
+* bberawk
+* Thomas Debesse
+* Philip Schiffer
+* Daniel Dehennin
+* Lukas Mika
+* Nicholas Clark
+* Robert Chady
+
 ## Contribute
 
 You can contribute to this plugin in many ways such as :
