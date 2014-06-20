@@ -120,6 +120,8 @@ module RedmineGitHosting
             # Create new repository
             repository = Repository.factory("Git")
             repository.is_default = true
+            repository.extra_info = {}
+            repository.extra_info['extra_report_last_commit'] = '1'
             @project.repositories << repository
 
             options = { :create_readme_file => RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true) }
