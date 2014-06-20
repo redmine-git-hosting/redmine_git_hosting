@@ -85,7 +85,7 @@ module RedmineGitHosting
           unarchive_without_git_hosting(&block)
 
           RedmineGitolite::GitHosting.logger.info { "Project has been unarchived, update it : '#{@project}'" }
-          RedmineGitolite::GitHosting.resync_gitolite(:update_project, @project.id)
+          RedmineGitolite::GitHosting.resync_gitolite(:update_projects, [@project.id])
         end
 
 
@@ -141,7 +141,7 @@ module RedmineGitHosting
             end
           end
           RedmineGitolite::GitHosting.logger.info { "Set Git daemon for repositories of project : '#{@project}'" }
-          RedmineGitolite::GitHosting.resync_gitolite(:update_project, @project.id)
+          RedmineGitolite::GitHosting.resync_gitolite(:update_projects, [@project.id])
         end
 
       end

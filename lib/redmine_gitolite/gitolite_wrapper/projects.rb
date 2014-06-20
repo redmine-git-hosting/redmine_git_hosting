@@ -4,90 +4,48 @@ module RedmineGitolite
 
     class Projects < Admin
 
+      include RedmineGitolite::GitoliteWrapper::ProjectsHelper
       include RedmineGitolite::GitoliteWrapper::RepositoriesHelper
 
 
-      def update_project
-        object = Project.find_by_id(@object_id)
-        do_update_projects(object)
-      end
-
-
       def update_projects
-        object = []
-
-        @object_id.each do |project_id|
-          project = Project.find_by_id(project_id)
-          if !project.nil?
-            object.push(project)
-          end
+        if @object_id == 'all'
+          projects = Project.active_or_archived.includes(:repositories).all
+        else
+          projects = @object_id.map{ |project_id| Project.find_by_id(project_id) }
         end
 
-        do_update_projects(object)
-      end
-
-
-      def update_all_projects
-        object = []
-        projects = Project.active_or_archived.includes(:repositories).all
-        if projects.length > 0
-          object = projects
-        end
-
-        do_update_projects(object)
-      end
-
-
-      def update_all_projects_forced
-        object = []
-        projects = Project.active_or_archived.includes(:repositories).all
-        if projects.length > 0
-          object = projects
-        end
-
-        update_projects_forced(object)
-      end
-
-
-      def update_members
-        object = Project.find_by_id(@object_id)
-        do_update_projects(object)
-      end
-
-
-      def update_role
-        object = []
-        role = Role.find_by_id(@object_id)
-        if !role.nil?
-          projects = role.members.map(&:project).flatten.uniq.compact
-          if projects.length > 0
-            object = projects
-          end
-        end
-
-        do_update_projects(object)
+        perform_update(projects)
       end
 
 
       def move_repositories
-        project = Project.find_by_id(@object_id)
+        projects = Project.find_by_id(@object_id).self_and_descendants
+
+        # Only take projects that have Git repos.
+        git_projects = projects.uniq.select{ |p| p.gitolite_repos.any? }
+        return if git_projects.empty?
 
         @admin.transaction do
           @delete_parent_path = []
-          handle_repositories_move(project)
+          handle_repositories_move(git_projects)
           clean_path(@delete_parent_path)
         end
       end
 
 
       def move_repositories_tree
-        projects = Project.active_or_archived.includes(:repositories).all.select { |x| x.parent_id.nil? }
+        projects = Project.active_or_archived.includes(:repositories).all.select{ |x| x.parent_id.nil? }
 
         @admin.transaction do
           @delete_parent_path = []
 
           projects.each do |project|
-            handle_repositories_move(project)
+            git_projects = project.self_and_descendants.uniq.select{ |p| p.gitolite_repos.any? }
+
+            next if git_projects.empty?
+
+            handle_repositories_move(git_projects)
           end
 
           clean_path(@delete_parent_path)
@@ -98,37 +56,22 @@ module RedmineGitolite
       private
 
 
-      def do_update_projects(projects)
-        projects = (projects.is_a?(Array) ? projects : [projects])
+      def perform_update(projects)
+        git_projects = projects.uniq.select{ |p| p.gitolite_repos.any? }
+        return if git_projects.empty?
 
-        if projects.detect{|p| p.repositories.detect{|r| r.is_a?(Repository::Git)}}
-          @admin.transaction do
-            projects.each do |project|
-              handle_project_update(project)
-              gitolite_admin_repo_commit("#{project.identifier}")
-            end
+        @admin.transaction do
+          git_projects.each do |project|
+            handle_project_update(project)
+            gitolite_admin_repo_commit("#{project.identifier}")
           end
         end
       end
 
 
-      def update_projects_forced(projects)
-        projects = (projects.is_a?(Array) ? projects : [projects])
-
-        if projects.detect{|p| p.repositories.detect{|r| r.is_a?(Repository::Git)}}
-          @admin.transaction do
-            projects.each do |project|
-              handle_project_update(project, true)
-              gitolite_admin_repo_commit("#{project.identifier}")
-            end
-          end
-        end
-      end
-
-
-      def handle_project_update(project, force = false)
+      def handle_project_update(project)
         project.gitolite_repos.each do |repository|
-          if force == true
+          if @options[:force] == true
             handle_repository_add(repository, :force => true)
           else
             handle_repository_update(repository)

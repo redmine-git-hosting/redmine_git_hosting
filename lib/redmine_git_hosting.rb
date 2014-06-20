@@ -43,6 +43,7 @@ apply_patch do
   require_dependency 'redmine_gitolite/gitolite_wrapper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/admin'
   require_dependency 'redmine_gitolite/gitolite_wrapper/projects'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/projects_helper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/repositories'
   require_dependency 'redmine_gitolite/gitolite_wrapper/repositories_helper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/users'

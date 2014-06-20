@@ -17,7 +17,7 @@ module RedmineGitHosting
 
         def update_member
           RedmineGitolite::GitHosting.logger.info { "Membership changes on project '#{self.project}', update!" }
-          RedmineGitolite::GitHosting.resync_gitolite(:update_members, self.project.id)
+          RedmineGitolite::GitHosting.resync_gitolite(:update_projects, [self.project.id])
         end
 
       end

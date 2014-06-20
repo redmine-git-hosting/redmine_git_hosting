@@ -54,7 +54,7 @@ module RedmineGitHosting
           projects = Project.active_or_archived.includes(:repositories).all
           if projects.length > 0
             RedmineGitolite::GitHosting.logger.info { "Role has been #{message}, resync all projects..." }
-            RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects, projects.length)
+            RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
           end
         end
 

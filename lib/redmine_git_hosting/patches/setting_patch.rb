@@ -380,7 +380,7 @@ module RedmineGitHosting
                 projects = Project.active_or_archived.includes(:repositories).all
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
-                  RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects, projects.length)
+                  RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
                 end
             end
 
@@ -398,7 +398,7 @@ module RedmineGitHosting
               projects = Project.active_or_archived.includes(:repositories).all
               if projects.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite(:update_all_projects_forced, projects.length)
+                RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all', {:force => true})
               end
 
               @@resync_projects = false
