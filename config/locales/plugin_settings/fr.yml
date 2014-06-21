@@ -15,8 +15,6 @@ fr:
   label_gitolite_ssh_public_key: Clé publique SSH de Gitolite
   label_gitolite_server_port: Port du serveur SSH local
 
-  label_cannot_change_selinux: Ne peut être changé dans la configuration actuelle
-
   # Gitolite Storage Config
   label_tab_storage: Stockage
   label_gitolite_storage_config: Configuration du stockage dans Gitolite
