@@ -68,5 +68,32 @@ module RedmineGitolite
       raise GitHostingException.new(command, error_msg)
     end
 
+
+    # It calls the block and pass it to stdin pipe.
+    # It return the output from stdout.
+    # Note that stdout and stderr must be merged by appending '2>&1' in the block command.
+    # Raises an exception if the command does not exit with 0.
+    #
+    def self.pipe(command, *params, &block)
+      Open3.popen3(command, *params) do |stdin, stdout, stderr, thr|
+        begin
+          stdin.puts block.call
+          stdin.close
+
+          output = stdout.read
+          exitcode = thr.value.exitstatus
+
+          if exitcode != 0
+            logger.error { output }
+            raise GitHostingException.new(command, output)
+          end
+        ensure
+          stdout.close
+        end
+
+        return output
+      end
+    end
+
   end
 end

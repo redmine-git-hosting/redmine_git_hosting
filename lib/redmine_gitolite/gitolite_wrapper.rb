@@ -1,5 +1,4 @@
 require 'gitolite'
-require 'open3'
 
 module RedmineGitolite
 
@@ -223,30 +222,7 @@ module RedmineGitolite
     # Raises an exception if the command does not exit with 0.
     #
     def self.sudo_pipe(*params, &block)
-      Open3.popen3("sudo", *sudo_shell_params.concat(params))  do |stdin, stdout, stderr, thr|
-        begin
-          exitcode = thr.value.exitstatus
-          if exitcode != 0
-            logger.error("sudo call with '#{params.join(" ")}' returned exit #{exitcode}. Error was: #{stderr.read}")
-          else
-            block.call(stdout)
-          end
-        ensure
-          stdout.close
-          stdin.close
-        end
-      end
-    end
-
-
-    def self.pipe_sudo(pipe_command, data, sudo_command)
-      runner = RedmineGitolite::Scripts.shell_cmd_script_path
-
-      command = [pipe_command, data, '|', runner, sudo_command, '2>&1'].join(' ')
-
-      logger.debug { command }
-
-      return GitHosting.execute(command)
+      GitHosting.pipe('sudo', *sudo_shell_params.concat(params), &block)
     end
 
 

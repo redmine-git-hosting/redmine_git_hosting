@@ -3,15 +3,12 @@
   gitolite_recycle_bin_expiration_time = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time)
 
   gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
-  gitolite_scripts_dir = RedmineGitolite::Config.get_setting(:gitolite_scripts_dir)
   gitolite_timeout     = RedmineGitolite::Config.get_setting(:gitolite_timeout)
   gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
   gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split)
 
   git_config_username  = RedmineGitolite::Config.get_setting(:git_config_username)
   git_config_email     = RedmineGitolite::Config.get_setting(:git_config_email)
-
-  scripts_dir_writeable = RedmineGitolite::Scripts.scripts_dir_writeable?(:reset => true)
 %>
 
 <h3><%= l(:label_gitolite_global_config) %></h3>
@@ -21,16 +18,6 @@
   <%= text_field_tag("settings[gitolite_temp_dir]", gitolite_temp_dir, :size => 60) %>
   <br />
   <em><%= l(:label_gitolite_temp_dir_desc) %></em>
-</p>
-
-<p>
-  <label><%= l(:label_gitolite_scripts_dir) %></label>
-  <%= text_field_tag("settings[gitolite_scripts_dir]", reldir_add_dotslash(gitolite_scripts_dir), :size => 60) %>
-  <br />
-  <em><%= l(:label_gitolite_scripts_dir_desc) %></em>
-  <% if !scripts_dir_writeable %>
-    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
-  <% end %>
 </p>
 
 <p>

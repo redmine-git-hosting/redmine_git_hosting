@@ -3,34 +3,10 @@
 <table class="table table-hover">
 
   <tr>
-    <td><%= l(:label_scripts_dir_writeable) %></td>
-    <td>
-      <% state = RedmineGitolite::Scripts.scripts_dir_writeable?(:reset => true) %>
-      <span class="label label-<%= state ? 'success' : 'warning' %>"><%= RedmineGitolite::Scripts.get_scripts_dir_path %></span>
-    </td>
-  </tr>
-
-  <tr>
     <td><%= l(:label_temp_dir_writeable) %></td>
     <td>
       <% state = RedmineGitolite::Scripts.temp_dir_writeable?(:reset => true) %>
       <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Scripts.get_temp_dir_path %></span>
-    </td>
-  </tr>
-
-  <tr>
-    <td><%= l(:label_git_cmd_script_installed) %></td>
-    <td>
-      <% state = RedmineGitolite::Scripts.script_is_installed?(:git_cmd) %>
-      <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Scripts.git_cmd_script_path %></span>
-    </td>
-  </tr>
-
-  <tr>
-    <td><%= l(:label_shell_cmd_script_installed) %></td>
-    <td>
-      <% state = RedmineGitolite::Scripts.script_is_installed?(:shell_cmd) %>
-      <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Scripts.shell_cmd_script_path %></span>
     </td>
   </tr>
 
@@ -42,11 +18,6 @@
   <tr>
     <td><%= l(:label_gitolite_user) %></td>
     <td><span class="label label-success"><%= RedmineGitolite::Scripts.gitolite_user %></span></td>
-  </tr>
-
-  <tr>
-    <td><%= l(:label_sudo_version) %></td>
-    <td><span class="label label-success"><%= RedmineGitolite::Scripts.sudo_version_raw %></span></td>
   </tr>
 
   <tr>

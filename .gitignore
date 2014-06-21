@@ -1,6 +1,5 @@
 .*.swp
 Gemfile.lock
-/selinux/tmp
 /tmp
 /rdoc
 /coverage

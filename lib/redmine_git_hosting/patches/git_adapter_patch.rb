@@ -9,8 +9,7 @@ module RedmineGitHosting
           unloadable
 
           class << self
-            alias_method_chain :sq_bin,         :git_hosting
-            alias_method_chain :client_command, :git_hosting
+            alias_method_chain :scm_version_from_command_line, :git_hosting
           end
 
           alias_method_chain :git_cmd, :git_hosting
@@ -21,12 +20,8 @@ module RedmineGitHosting
 
       module ClassMethods
 
-        def sq_bin_with_git_hosting
-          return Redmine::Scm::Adapters::GitAdapter::shell_quote(RedmineGitolite::Scripts.git_cmd_runner)
-        end
-
-        def client_command_with_git_hosting
-          return RedmineGitolite::Scripts.git_cmd_runner
+        def scm_version_from_command_line_with_git_hosting
+          RedmineGitolite::GitoliteWrapper.sudo_capture('git', '--version', '--no-color')
         end
 
       end
@@ -38,11 +33,19 @@ module RedmineGitHosting
 
         def git_cmd_with_git_hosting(args, options = {}, &block)
           repo_path = root_url || url
-          full_args = [RedmineGitolite::Scripts.git_cmd_runner, '--git-dir', repo_path]
+
+          full_args = []
+          full_args << 'sudo'
+          full_args += RedmineGitolite::GitoliteWrapper.sudo_shell_params
+          full_args << 'git'
+          full_args << '--git-dir'
+          full_args << repo_path
+
           if self.class.client_version_above?([1, 7, 2])
             full_args << '-c' << 'core.quotepath=false'
             full_args << '-c' << 'log.decorate=no'
           end
+
           full_args += args
 
           cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')

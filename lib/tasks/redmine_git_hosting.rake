@@ -79,21 +79,6 @@ namespace :redmine_git_hosting do
   end
 
 
-  desc "Install redmine_git_hosting scripts"
-  task :install_scripts do |t,args|
-    if !ENV["READ_ONLY"]
-      ENV["READ_ONLY"] = "false"
-    end
-    Rake::Task["selinux:redmine_git_hosting:install_scripts"].invoke
-  end
-
-
-  desc "Remove redmine_git_hosting scripts"
-  task :remove_scripts do
-    Rake::Task["selinux:redmine_git_hosting:remove_scripts"].invoke
-  end
-
-
   desc "Show library version"
   task :version do
     puts "#{name} #{version}"

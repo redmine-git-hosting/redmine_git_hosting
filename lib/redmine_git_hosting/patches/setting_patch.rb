@@ -26,47 +26,6 @@ module RedmineGitHosting
           if self.name == 'plugin_redmine_git_hosting'
             valuehash = self.value
 
-            if !RedmineGitolite::Scripts.scripts_dir_writeable?
-              # If bin directory not alterable, don't allow changes to
-              # Script directory, Git Username, or Gitolite public or private keys
-              valuehash[:gitolite_scripts_dir] = @@old_valuehash[:gitolite_scripts_dir]
-              valuehash[:gitolite_user] = @@old_valuehash[:gitolite_user]
-              valuehash[:gitolite_ssh_private_key] = @@old_valuehash[:gitolite_ssh_private_key]
-              valuehash[:gitolite_ssh_public_key] = @@old_valuehash[:gitolite_ssh_public_key]
-              valuehash[:gitolite_server_port] = @@old_valuehash[:gitolite_server_port]
-
-            elsif valuehash[:gitolite_scripts_dir] && (valuehash[:gitolite_scripts_dir] != @@old_valuehash[:gitolite_scripts_dir])
-
-              # Remove old bin directory and scripts, since about to change directory
-              FileUtils.rm_rf(RedmineGitolite::Scripts.get_scripts_dir_path)
-
-              # Script directory either absolute or relative to redmine root
-              stripped = valuehash[:gitolite_scripts_dir].lstrip.rstrip
-
-              # Get rid of extra path components
-              normalizedFile = File.expand_path(stripped, "/")
-
-              if (normalizedFile == "/")
-                # Assume that we are relative bin directory ("/" and "" => "")
-                valuehash[:gitolite_scripts_dir] = "./"
-              elsif (stripped[0,1] != "/")
-                # Clobber leading '/' add trailing '/'
-                valuehash[:gitolite_scripts_dir] = normalizedFile[1..-1] + "/"
-              else
-                # Add trailing '/'
-                valuehash[:gitolite_scripts_dir] = normalizedFile + "/"
-              end
-
-            elsif valuehash[:gitolite_user] != @@old_valuehash[:gitolite_user] ||
-              valuehash[:gitolite_ssh_private_key] != @@old_valuehash[:gitolite_ssh_private_key] ||
-              valuehash[:gitolite_ssh_public_key] != @@old_valuehash[:gitolite_ssh_public_key] ||
-              valuehash[:gitolite_server_port] != @@old_valuehash[:gitolite_server_port]
-
-              # Remove old scripts, since about to change content (leave directory alone)
-              FileUtils.rm_f Dir.glob(File.join(RedmineGitolite::Scripts.get_scripts_dir_path, '*'))
-            end
-
-
             # Temp directory must be absolute and not-empty
             if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != @@old_valuehash[:gitolite_temp_dir])
 
@@ -341,17 +300,6 @@ module RedmineGitHosting
             if Setting.respond_to?(:check_cache)
               # Clear out all cached settings.
               Setting.check_cache
-            end
-
-
-            ## SSH infos has changed, update scripts!
-            if @@old_valuehash[:gitolite_scripts_dir] != valuehash[:gitolite_scripts_dir] ||
-               @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user] ||
-               @@old_valuehash[:gitolite_ssh_private_key] != valuehash[:gitolite_ssh_private_key] ||
-               @@old_valuehash[:gitolite_ssh_public_key] != valuehash[:gitolite_ssh_public_key] ||
-               @@old_valuehash[:gitolite_server_port] != valuehash[:gitolite_server_port]
-
-              RedmineGitolite::Scripts.update_scripts
             end
 
 

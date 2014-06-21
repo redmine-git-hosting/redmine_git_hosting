@@ -4,7 +4,6 @@
   gitolite_server_port     = RedmineGitolite::Config.get_setting(:gitolite_server_port)
   gitolite_ssh_private_key = RedmineGitolite::Config.get_setting(:gitolite_ssh_private_key)
   gitolite_ssh_public_key  = RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)
-  scripts_dir_writeable    = RedmineGitolite::Scripts.scripts_dir_writeable?(:reset => true)
 %>
 
 <h3><%= l(:label_gitolite_ssh_config) %></h3>
@@ -12,31 +11,19 @@
 <p>
   <label><%= l(:label_gitolite_user) %></label>
   <%= text_field_tag("settings[gitolite_user]", gitolite_user, :size => 60) %>
-  <% if !scripts_dir_writeable %>
-    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
-  <% end %>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_ssh_private_key) %></label>
   <%= text_field_tag("settings[gitolite_ssh_private_key]", gitolite_ssh_private_key, :size => 110) %>
-  <% if !scripts_dir_writeable %>
-    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
-  <% end %>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_ssh_public_key) %></label>
   <%= text_field_tag("settings[gitolite_ssh_public_key]", gitolite_ssh_public_key, :size => 110) %>
-  <% if !scripts_dir_writeable %>
-    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
-  <% end %>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_server_port) %></label>
   <%= text_field_tag("settings[gitolite_server_port]", gitolite_server_port, :size => 5) %>
-  <% if !scripts_dir_writeable %>
-    <br /><span class="label label-warning"><%= l(:label_cannot_change_selinux) %></span>
-  <% end %>
 </p>
