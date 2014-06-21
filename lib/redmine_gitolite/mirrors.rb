@@ -69,14 +69,20 @@ module RedmineGitolite
         command = ['#!/bin/sh', "\n", 'exec', 'ssh', '-T', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=no', '-i', key_path, '"$@"'].join(' ')
 
         begin
-          GitoliteWrapper.pipe_sudo('cat', gitolite_ssh_private_key, "'cat - > #{gitolite_ssh_private_key_path}'")
-          GitoliteWrapper.pipe_sudo('cat', gitolite_ssh_public_key,  "'cat - > #{gitolite_ssh_public_key_path}'")
+          GitoliteWrapper.sudo_pipe("bash") do
+            [ 'echo', "'" + File.read(gitolite_ssh_private_key).chomp.strip + "'", '>', gitolite_ssh_private_key_path ].join(' ')
+          end
+
+          GitoliteWrapper.sudo_pipe("bash") do
+            [ 'echo', "'" + File.read(gitolite_ssh_public_key).chomp.strip + "'", '>', gitolite_ssh_public_key_path ].join(' ')
+          end
+
+          GitoliteWrapper.sudo_pipe("bash") do
+            [ 'echo', "'" + command + "'", '>', gitolite_mirroring_script_path ].join(' ')
+          end
 
           GitoliteWrapper.sudo_chmod('600', gitolite_ssh_private_key_path)
           GitoliteWrapper.sudo_chmod('644', gitolite_ssh_public_key_path)
-
-          GitoliteWrapper.pipe_sudo('echo', "'#{command}'", "'cat - > #{gitolite_mirroring_script_path}'")
-
           GitoliteWrapper.sudo_chmod('700', gitolite_mirroring_script_path)
 
           logger.info { "Done !" }

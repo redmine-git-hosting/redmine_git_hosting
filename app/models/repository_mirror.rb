@@ -43,25 +43,16 @@ class RepositoryMirror < ActiveRecord::Base
   include GitoliteHooksHelper
 
 
+  def to_s
+    return "#{repository.project.identifier}-#{url}"
+  end
+
+
   def push
-    push_args = []
-
-    if push_mode == PUSHMODE_MIRROR
-      push_args << "--mirror"
-    else
-      # Not mirroring -- other possible push_args
-      push_args << "--force" if push_mode == PUSHMODE_FORCE
-      push_args << "--all"   if include_all_branches
-      push_args << "--tags"  if include_all_tags
-    end
-
-    push_args << "#{dequote(url)}"
-    push_args << "#{dequote(explicit_refspec)}" unless explicit_refspec.blank?
-
-    command = "cd #{repository.gitolite_repository_path} && env GIT_SSH=~/.ssh/run_gitolite_admin_ssh git push #{push_args.join(' ')}"
-
     begin
-      push_message = RedmineGitolite::GitoliteWrapper.pipe_sudo('echo', "'#{command}'", "bash")[0].chomp
+      push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe("bash") do
+        [ 'cd', repository.gitolite_repository_path, '&&', 'env', 'GIT_SSH=~/.ssh/run_gitolite_admin_ssh', 'git', 'push', *push_args, '2>&1' ].join(' ')
+      end
       push_failed = false
     rescue RedmineGitolite::GitHosting::GitHostingException => e
       push_message = e.output
@@ -88,11 +79,6 @@ class RepositoryMirror < ActiveRecord::Base
       end
     end
     false
-  end
-
-
-  def to_s
-    return "#{repository.project.identifier}-#{url}"
   end
 
 
@@ -153,6 +139,25 @@ class RepositoryMirror < ActiveRecord::Base
     else
       false
     end
+  end
+
+
+  def push_args
+    push_args = []
+
+    if self.push_mode == PUSHMODE_MIRROR
+      push_args << "--mirror"
+    else
+      # Not mirroring -- other possible push_args
+      push_args << "--force" if self.push_mode == PUSHMODE_FORCE
+      push_args << "--all"   if self.include_all_branches?
+      push_args << "--tags"  if self.include_all_tags?
+    end
+
+    push_args << "#{dequote(self.url)}"
+    push_args << "#{dequote(self.explicit_refspec)}" unless self.explicit_refspec.blank?
+
+    return push_args
   end
 
 end
