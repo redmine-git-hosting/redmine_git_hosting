@@ -26,7 +26,7 @@ module RedmineGitolite
       @async_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous)
       @force_hooks_update = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update)
 
-      @gitolite_hooks_dir    = set_gitolite_hook_dir
+      @gitolite_hooks_dir    = File.join('$HOME', '.gitolite', 'hooks', 'common')
       @post_receive_hook_dir = File.join(@gitolite_hooks_dir, 'post-receive.d')
 
       @global_hook_params = get_global_hooks_params
@@ -82,15 +82,6 @@ module RedmineGitolite
 
     def logger
       RedmineGitolite::Log.get_logger(:global)
-    end
-
-
-    def set_gitolite_hook_dir
-      begin
-        File.join(RedmineGitolite::GitoliteWrapper.gitolite_home_dir, '.gitolite', 'hooks', 'common')
-      rescue => e
-        File.join('~', '.gitolite', 'hooks', 'common')
-      end
     end
 
 
@@ -197,7 +188,7 @@ module RedmineGitolite
 
       else
 
-        content = RedmineGitolite::GitoliteWrapper.sudo_capture('cat', @@post_receive_hook_path[hook_name])
+        content = RedmineGitolite::GitoliteWrapper.sudo_capture('eval', 'cat', @@post_receive_hook_path[hook_name])
         digest  = Digest::MD5.hexdigest(content)
 
         if hook_digest(hook_data) == digest
@@ -250,7 +241,7 @@ module RedmineGitolite
       logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_pipe("bash") do
+        RedmineGitolite::GitoliteWrapper.sudo_pipe("sh") do
           [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
         end
         RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
@@ -275,7 +266,7 @@ module RedmineGitolite
 
     def update_gitolite
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_capture(*@gitolite_command)
+        RedmineGitolite::GitoliteWrapper.sudo_shell(*@gitolite_command)
         return true
       rescue => e
         return false

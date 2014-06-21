@@ -99,11 +99,6 @@ module RedmineGitolite
     end
 
 
-    def self.gitolite_home_dir
-      sudo_capture('pwd').chomp.strip
-    end
-
-
     ###############################
     ##                           ##
     ##      GITOLITE INFOS       ##
@@ -243,7 +238,7 @@ module RedmineGitolite
     #
     # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
     def self.sudo_test(path, *testarg)
-      out, _ , code = GitoliteWrapper.sudo_shell('test', *testarg, path)
+      out, _ , code = GitoliteWrapper.sudo_shell('eval', 'test', *testarg, path)
       return code == 0
     rescue => e
       logger.debug("File check for #{path} failed : #{e.message}")
@@ -256,7 +251,7 @@ module RedmineGitolite
     # e.g., sudo_mkdir('-p', '/some/path')
     #
     def self.sudo_mkdir(*args)
-      sudo_capture('mkdir', *args)
+      sudo_shell('eval', 'mkdir', *args)
     end
 
 
@@ -265,7 +260,7 @@ module RedmineGitolite
     # e.g., sudo_chmod('755', '/some/path')
     #
     def self.sudo_chmod(mode, file)
-      sudo_capture('chmod', mode, file)
+      sudo_shell('eval', 'chmod', mode, file)
     end
 
 
@@ -278,9 +273,9 @@ module RedmineGitolite
     #
     def self.sudo_rmdir(path, force = false)
       if force
-        sudo_capture('rm', '-rf', path)
+        sudo_shell('eval', 'rm', '-rf', path)
       else
-        sudo_capture('rmdir', path)
+        sudo_shell('eval', 'rmdir', path)
       end
     end
 
@@ -288,7 +283,7 @@ module RedmineGitolite
     # Moves a file/directory to a new target.
     #
     def self.sudo_move(old_path, new_path)
-      sudo_capture('mv', old_path, new_path)
+      sudo_shell('eval', 'mv', old_path, new_path)
     end
 
 
@@ -297,7 +292,7 @@ module RedmineGitolite
     def self.sudo_repository_empty?(path)
       empty_repo = false
 
-      path = File.join(path, 'objects')
+      path = File.join('$HOME', path, 'objects')
 
       begin
         output = sudo_capture('eval', 'find', path, '-type', 'f', '|', 'wc', '-l')
@@ -530,18 +525,18 @@ module RedmineGitolite
     GITOLITE_MIRRORING_KEYS_NAME   = "redmine_gitolite_admin_id_rsa_mirroring"
 
 
-    def self.gitolite_ssh_private_key_path
-      File.join(gitolite_home_dir, '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
+    def self.gitolite_ssh_private_key_dest_path
+      File.join('$HOME', '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
     end
 
 
-    def self.gitolite_ssh_public_key_path
-      File.join(gitolite_home_dir, '.ssh', "#{GITOLITE_MIRRORING_KEYS_NAME}.pub")
+    def self.gitolite_ssh_public_key_dest_path
+      File.join('$HOME', '.ssh', "#{GITOLITE_MIRRORING_KEYS_NAME}.pub")
     end
 
 
-    def self.gitolite_mirroring_script_path
-      File.join(gitolite_home_dir, '.ssh', 'run_gitolite_admin_ssh')
+    def self.gitolite_mirroring_script_dest_path
+      File.join('$HOME', '.ssh', 'run_gitolite_admin_ssh')
     end
 
 
@@ -570,31 +565,30 @@ module RedmineGitolite
       if !@@mirroring_keys_installed
         logger.info { "Installing Redmine Gitolite mirroring SSH keys ..." }
 
-        key_path = File.join(gitolite_home_dir, '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
-        command = ['#!/bin/sh', "\n", 'exec', 'ssh', '-T', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=no', '-i', key_path, '"$@"'].join(' ')
+        command = ['#!/bin/sh', "\n", 'exec', 'ssh', '-T', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=no', '-i', gitolite_ssh_private_key_dest_path, '"$@"'].join(' ')
 
         begin
-          sudo_pipe("bash") do
-            [ 'echo', "'" + File.read(gitolite_ssh_private_key).chomp.strip + "'", '>', gitolite_ssh_private_key_path ].join(' ')
+          sudo_pipe("sh") do
+            [ 'echo', "'" + File.read(gitolite_ssh_private_key).chomp.strip + "'", '>', gitolite_ssh_private_key_dest_path ].join(' ')
           end
 
-          sudo_pipe("bash") do
-            [ 'echo', "'" + File.read(gitolite_ssh_public_key).chomp.strip + "'", '>', gitolite_ssh_public_key_path ].join(' ')
+          sudo_pipe("sh") do
+            [ 'echo', "'" + File.read(gitolite_ssh_public_key).chomp.strip + "'", '>', gitolite_ssh_public_key_dest_path ].join(' ')
           end
 
-          sudo_pipe("bash") do
-            [ 'echo', "'" + command + "'", '>', gitolite_mirroring_script_path ].join(' ')
+          sudo_pipe("sh") do
+            [ 'echo', "'" + command + "'", '>', gitolite_mirroring_script_dest_path ].join(' ')
           end
 
-          sudo_chmod('600', gitolite_ssh_private_key_path)
-          sudo_chmod('644', gitolite_ssh_public_key_path)
-          sudo_chmod('700', gitolite_mirroring_script_path)
+          sudo_chmod('600', gitolite_ssh_private_key_dest_path)
+          sudo_chmod('644', gitolite_ssh_public_key_dest_path)
+          sudo_chmod('700', gitolite_mirroring_script_dest_path)
 
           logger.info { "Done !" }
 
           @@mirroring_keys_installed = true
         rescue GitHosting::GitHostingException => e
-          logger.error { "Failed installing Redmine Gitolite mirroring SSH keys !" }
+          logger.error { "Failed installing Redmine Gitolite mirroring SSH keys !(#{e.output})" }
           @@mirroring_keys_installed = false
         end
       end
