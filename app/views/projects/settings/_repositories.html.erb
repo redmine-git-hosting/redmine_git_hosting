@@ -35,12 +35,13 @@
       </td>
       <td align="center">
         <% if repository.is_a?(Repository::Git) %>
-          <%= render_feature(repository, :repository_deployment_credentials) %>
-          <%= render_feature(repository, :repository_post_receive_urls) %>
-          <%= render_feature(repository, :repository_mirrors) %>
+          <%= render_feature(repository, :deployment_credentials) %>
+          <%= render_feature(repository, :post_receive_urls) %>
+          <%= render_feature(repository, :mirrors) %>
           <%= render_feature(repository, :git_daemon) %>
           <%= render_feature(repository, :git_http) %>
           <%= render_feature(repository, :git_notify) %>
+          <%= render_feature(repository, :protected_branch) %>
         <% end %>
       </td>
       <td class="buttons">

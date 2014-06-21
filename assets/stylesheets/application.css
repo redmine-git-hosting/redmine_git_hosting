@@ -12,6 +12,7 @@ PLUGIN ICONS
 .icon-git-daemon { background-image: url("../images/changeset.png"); }
 .icon-git-smarthttp { background-image: url("../images/web.png"); }
 .icon-git-notify { background-image: url("../images/email.png"); }
+.icon-git-protected-branch { background-image: url("../images/locked.png"); }
 
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }

@@ -222,6 +222,7 @@ en:
   label_git_daemon: Git Daemon
   label_smart_http: Smart HTTP
   label_git_notify: Git Notifications
+  label_protected_branch: Protected Branches
   label_repository_default_branch: Repository default branch
   label_init_repo_with_readme: Initialize this repository with a README
   label_browse_repository: Browse repository
