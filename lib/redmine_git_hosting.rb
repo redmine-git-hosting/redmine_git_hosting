@@ -29,6 +29,8 @@ apply_patch do
 
   require_dependency 'my_controller'
 
+  require_dependency 'sys_controller'
+
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/cache'
   require_dependency 'redmine_gitolite/config'
@@ -69,6 +71,8 @@ apply_patch do
   require_dependency 'redmine_git_hosting/patches/journal_patch'
 
   require_dependency 'redmine_git_hosting/patches/my_controller_patch'
+
+  require_dependency 'redmine_git_hosting/patches/sys_controller_patch'
 
   ## Redmine Git Hosting Hooks
   require_dependency 'redmine_git_hosting/hooks/show_git_urls_on_project'
