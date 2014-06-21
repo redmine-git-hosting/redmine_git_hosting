@@ -40,10 +40,10 @@ describe Repository::Git do
     ## Test relations
     it { should respond_to(:git_extra) }
     it { should respond_to(:git_notification) }
-    it { should respond_to(:repository_mirrors) }
-    it { should respond_to(:repository_post_receive_urls) }
-    it { should respond_to(:repository_deployment_credentials) }
-    it { should respond_to(:repository_git_config_keys) }
+    it { should respond_to(:mirrors) }
+    it { should respond_to(:post_receive_urls) }
+    it { should respond_to(:deployment_credentials) }
+    it { should respond_to(:git_config_keys) }
 
     ## Test attributes
     it { should respond_to(:identifier) }
