@@ -27,14 +27,6 @@
   </tr>
 
   <tr>
-    <td><%= l(:label_shell_cmd_script_installed) %></td>
-    <td>
-      <% state = RedmineGitolite::Scripts.script_is_installed?(:shell_cmd) %>
-      <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Scripts.shell_cmd_script_path %></span>
-    </td>
-  </tr>
-
-  <tr>
     <td><%= l(:label_redmine_user) %></td>
     <td><span class="label label-success"><%= RedmineGitolite::Scripts.redmine_user %></span></td>
   </tr>

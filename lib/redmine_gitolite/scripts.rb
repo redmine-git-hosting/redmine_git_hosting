@@ -295,21 +295,8 @@ module RedmineGitolite
     ##                           ##
     ###############################
 
-    def self.shell_cmd_script_path
-      File.join(get_scripts_dir_path, "run_shell_cmd_as_gitolite_user")
-    end
-
-
     def self.git_cmd_script_path
       File.join(get_scripts_dir_path, "run_git_cmd_as_gitolite_user")
-    end
-
-
-    def self.shell_cmd_runner
-      if !File.exists?(shell_cmd_script_path)
-        script_is_installed?(:shell_cmd)
-      end
-      return shell_cmd_script_path
     end
 
 
@@ -327,7 +314,7 @@ module RedmineGitolite
     ##                           ##
     ###############################
 
-    GITOLITE_SCRIPTS    = [ :git_cmd, :shell_cmd ]
+    GITOLITE_SCRIPTS    = [ :git_cmd ]
     SUDO_VERSION_SWITCH = (100*100*1) + (100 * 7) + 3
 
 
@@ -377,64 +364,6 @@ module RedmineGitolite
           installed = true
         rescue => e
           logger.error { "Cannot create script file : '#{git_cmd_script_path}'" }
-          installed = false
-        end
-      end
-
-      return installed
-    end
-
-
-    def self.shell_cmd_script_is_installed?
-      ##############################################################################################################################
-      # So... older versions of sudo are completely different than newer versions of sudo
-      # Try running sudo -i [user] 'ls -l' on sudo > 1.7.4 and you get an error that command 'ls -l' doesn't exist
-      # do it on version < 1.7.3 and it runs just fine.  Different levels of escaping are necessary depending on which
-      # version of sudo you are using... which just completely CRAZY, but I don't know how to avoid it
-      #
-      # Note: I don't know whether the switch is at 1.7.3 or 1.7.4, the switch is between ubuntu 10.10 which uses 1.7.2
-      # and ubuntu 11.04 which uses 1.7.4.  I have tested that the latest 1.8.1p2 seems to have identical behavior to 1.7.4
-      ##############################################################################################################################
-      installed = true
-
-      if !File.exists?(shell_cmd_script_path)
-        installed = false
-
-        logger.info { "Create script file : '#{shell_cmd_script_path}'" }
-
-        begin
-          # use perl script for shell_cmd_runner so we can
-          # escape output more easily
-          File.open(shell_cmd_script_path, "w") do |f|
-            f.puts '#!/usr/bin/perl'
-            f.puts ''
-            f.puts 'my $command = join(" ", @ARGV);'
-            f.puts ''
-            f.puts 'my $user = `whoami`;'
-            f.puts 'chomp $user;'
-            f.puts 'if ($user eq "' + gitolite_user + '")'
-            f.puts '{'
-            f.puts '  exec("cd ~ ; $command");'
-            f.puts '}'
-            f.puts 'else'
-            f.puts '{'
-            f.puts '  $command =~ s/\\\\/\\\\\\\\/g;'
-            # Previous line turns \; => \\;
-            # If old sudo, turn \\; => "\\;" to protect ';' from loss as command separator during eval
-            if sudo_version < SUDO_VERSION_SWITCH
-              f.puts '  $command =~ s/(\\\\\\\\;)/"$1"/g;'
-              f.puts "  $command =~ s/'/\\\\\\\\'/g;"
-            end
-            f.puts '  $command =~ s/"/\\\\"/g;'
-            f.puts '  exec("sudo -n -u ' + gitolite_user + ' -i eval \"$command\"");'
-            f.puts '}'
-          end
-
-          FileUtils.chmod 0550, shell_cmd_script_path
-
-          installed = true
-        rescue => e
-          logger.error { "Cannot create script file : '#{shell_cmd_script_path}'" }
           installed = false
         end
       end

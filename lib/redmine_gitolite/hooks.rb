@@ -250,7 +250,9 @@ module RedmineGitolite
       logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
       begin
-        RedmineGitolite::GitoliteWrapper.pipe_sudo('cat', source_path, "'cat - > #{destination_path}'")
+        RedmineGitolite::GitoliteWrapper.sudo_pipe("bash") do
+          [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
+        end
         RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
         return true
       rescue => e

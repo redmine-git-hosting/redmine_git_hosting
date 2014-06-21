@@ -226,17 +226,6 @@ module RedmineGitolite
     end
 
 
-    def self.pipe_sudo(pipe_command, data, sudo_command)
-      runner = RedmineGitolite::Scripts.shell_cmd_script_path
-
-      command = [pipe_command, data, '|', runner, sudo_command, '2>&1'].join(' ')
-
-      logger.debug { command }
-
-      return GitHosting.execute(command)
-    end
-
-
     # Test if a file exists with size > 0
     def self.sudo_file_exists?(filename)
       sudo_test(filename, '-s')
