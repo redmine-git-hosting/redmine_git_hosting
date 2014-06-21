@@ -93,23 +93,7 @@ module RedmineGitolite
           end
 
           # Set mail-notifications hook params
-          mailing_list = repository.mailing_list_params[:mailing_list]
-
-          if repository.extra[:git_notify] && !mailing_list.empty?
-            email_prefix   = repository.mailing_list_params[:email_prefix]
-            sender_address = repository.mailing_list_params[:sender_address]
-
-            repo_conf.set_git_config("multimailhook.enabled", 'true')
-            repo_conf.set_git_config("multimailhook.environment", "gitolite")
-            repo_conf.set_git_config("multimailhook.mailinglist", mailing_list.keys.join(", "))
-            repo_conf.set_git_config("multimailhook.from", sender_address)
-            repo_conf.set_git_config("multimailhook.emailPrefix", email_prefix)
-
-            # Set SMTP server for mail-notifications hook
-            #~ repo_conf.set_git_config("multimailhook.smtpServer", ActionMailer::Base.smtp_settings[:address])
-          else
-            repo_conf.set_git_config("multimailhook.enabled", 'false')
-          end
+          repo_conf = set_mail_settings(repository, repo_conf)
 
           # Set Git config keys
           if repository.git_config_keys.any?
@@ -128,6 +112,34 @@ module RedmineGitolite
         current_permissions = merge_permissions(current_permissions, old_permissions)
 
         repo_conf.permissions = [current_permissions]
+      end
+
+
+      def set_mail_settings(repository, repo_conf)
+        notifier = ::GitNotifier.new(repository)
+
+        if repository.extra[:git_notify] && !notifier.mailing_list.empty?
+          repo_conf.set_git_config("multimailhook.enabled", 'true')
+          repo_conf.set_git_config("multimailhook.environment", "gitolite")
+
+          repo_conf.set_git_config("multimailhook.mailinglist", notifier.mailing_list.join(", "))
+          repo_conf.set_git_config("multimailhook.from", notifier.sender_address)
+          repo_conf.set_git_config("multimailhook.emailPrefix", notifier.email_prefix)
+          repo_conf.set_git_config("multimailhook.mailer", notifier.mailer)
+
+          # Set SMTP server for mail-notifications hook
+          if notifier.mailer == 'smtp'
+            repo_conf.set_git_config("multimailhook.smtpAuth", notifier.smtp_auth)
+            repo_conf.set_git_config("multimailhook.smtpServer", notifier.smtp_server)
+            repo_conf.set_git_config("multimailhook.smtpPort", notifier.smtp_port)
+            repo_conf.set_git_config("multimailhook.smtpUser", notifier.smtp_user)
+            repo_conf.set_git_config("multimailhook.smtpPass", notifier.smtp_pass)
+          end
+        else
+          repo_conf.set_git_config("multimailhook.enabled", 'false')
+        end
+
+        return repo_conf
       end
 
 
