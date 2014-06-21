@@ -45,7 +45,7 @@ module RedmineGitolite
 
     # Scan through the recyclebin and delete files older than 'preserve_time' minutes
     def delete_expired_files(repositories_array = [])
-      return unless dir_exists?(@recycle_bin_dir)
+      logger.info { "Nothing to do, exit !" } && return if !dir_exists?(@recycle_bin_dir)
 
       if !repositories_array.empty?
         result = repositories_array
@@ -140,6 +140,9 @@ module RedmineGitolite
 
           if prefix
             repo_prefix = File.join(@global_storage_dir, @redmine_storage_dir, prefix)
+
+            logger.info { "Create parent path : '#{repo_prefix}'" }
+
             # Has subdirectory.  Must reconstruct directory
             GitoliteWrapper.sudo_mkdir('-p', repo_prefix)
           end
