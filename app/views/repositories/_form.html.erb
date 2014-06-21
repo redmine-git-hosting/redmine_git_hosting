@@ -156,7 +156,7 @@
 
       <p>
         <%= label_tag  "", l(:label_mirroring_keys_installed) %>
-        <%= image_tag (RedmineGitolite::Mirrors.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
+        <%= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
       </p>
 
     <% else %>

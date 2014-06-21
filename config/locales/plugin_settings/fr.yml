@@ -43,8 +43,6 @@ fr:
 
   label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
   label_gitolite_temp_dir_desc: (Doit être absolu)
-  label_gitolite_scripts_dir: Répertoire des scripts
-  label_gitolite_scripts_dir_desc: (Peut être absolu ou relatif à la racine de Redmine)
   label_gitolite_timeout: Délai d'expiration Git
   label_gitolite_timeout_desc: (En secondes)
 
@@ -150,11 +148,7 @@ fr:
   label_sudo_redmine_to_gitolite_user: L'utilisateur Redmine peut sudo vers l'utilisateur Git?
   label_sudo_gitolite_to_redmine_user: L'utilisateur Git peut sudo vers l'utilisateur Redmine?
   label_unknown_gitolite_version: Version inconnue
-  label_scripts_dir_writeable: Le répertoire des scripts est accessible en écriture?
   label_temp_dir_writeable: Le répertoire temporaire est accessible en écriture?
-  label_gitolite_admin_ssh_script_installed: Script pour les commandes Gitolite Admin installé?
-  label_git_cmd_script_installed: Script pour les commandes Git installé?
-  label_shell_cmd_script_installed: Script pour les commandes Shell installé?
   label_mirroring_keys_installed: Clés de miroir installées?
   label_gitolite_version: Version de Gitolite
   label_gitolite_banner: Gitolite banner
@@ -162,7 +156,6 @@ fr:
   label_gitolite_hooks_params_installed: Paramètres des hooks installés?
   label_gitolite_hooks_installed: Hooks installés?
   label_redmine_user: Nom d'utilisateur Redmine
-  label_sudo_version: Version de Sudo
   label_git_version: Version de Git
 
   # Recycle Bin

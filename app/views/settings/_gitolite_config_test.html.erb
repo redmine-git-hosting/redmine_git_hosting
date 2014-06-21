@@ -5,29 +5,29 @@
   <tr>
     <td><%= l(:label_temp_dir_writeable) %></td>
     <td>
-      <% state = RedmineGitolite::Scripts.temp_dir_writeable?(:reset => true) %>
-      <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::Scripts.get_temp_dir_path %></span>
+      <% state = RedmineGitolite::GitoliteWrapper.temp_dir_writeable?(:reset => true) %>
+      <span class="label label-<%= state ? 'success' : 'important' %>"><%= RedmineGitolite::GitoliteWrapper.gitolite_admin_dir %></span>
     </td>
   </tr>
 
   <tr>
     <td><%= l(:label_redmine_user) %></td>
-    <td><span class="label label-success"><%= RedmineGitolite::Scripts.redmine_user %></span></td>
+    <td><span class="label label-success"><%= RedmineGitolite::GitoliteWrapper.redmine_user %></span></td>
   </tr>
 
   <tr>
     <td><%= l(:label_gitolite_user) %></td>
-    <td><span class="label label-success"><%= RedmineGitolite::Scripts.gitolite_user %></span></td>
+    <td><span class="label label-success"><%= RedmineGitolite::GitoliteWrapper.gitolite_user %></span></td>
   </tr>
 
   <tr>
     <td><%= l(:label_sudo_gitolite_to_redmine_user) %></td>
-    <td><%= image_tag (RedmineGitolite::Scripts.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %></td>
+    <td><%= image_tag (RedmineGitolite::GitoliteWrapper.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png') %></td>
   </tr>
 
   <tr>
     <td><%= l(:label_sudo_redmine_to_gitolite_user) %></td>
-    <td><%= image_tag (RedmineGitolite::Scripts.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png') %></td>
+    <td><%= image_tag (RedmineGitolite::GitoliteWrapper.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png') %></td>
   </tr>
 
   <% hooks_manager = RedmineGitolite::Hooks.new %>
@@ -62,7 +62,7 @@
 
   <tr>
     <td><%= l(:label_mirroring_keys_installed) %></td>
-    <td><%= image_tag (RedmineGitolite::Mirrors.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png') %></td>
+    <td><%= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png') %></td>
   </tr>
 
   <tr>

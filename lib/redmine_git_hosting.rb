@@ -36,9 +36,7 @@ apply_patch do
   require_dependency 'redmine_gitolite/git_hosting'
   require_dependency 'redmine_gitolite/hooks'
   require_dependency 'redmine_gitolite/log'
-  require_dependency 'redmine_gitolite/mirrors'
   require_dependency 'redmine_gitolite/recycle'
-  require_dependency 'redmine_gitolite/scripts'
 
   require_dependency 'redmine_gitolite/gitolite_wrapper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/admin'

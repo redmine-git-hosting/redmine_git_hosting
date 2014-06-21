@@ -75,6 +75,8 @@ module RedmineGitolite
         delete_recycle_bin_dir
 
         return
+      else
+        logger.info { "Nothing to do, exit !" }
       end
     end
 
@@ -216,17 +218,14 @@ module RedmineGitolite
         repo_subpath    = File.join(@global_storage_dir, old_prefix, '/')
         redmine_storage = File.join(@global_storage_dir, @redmine_storage_dir)
 
-        return false if repo_subpath == redmine_storage
+        return if repo_subpath == redmine_storage || repo_subpath == ''
         logger.info { "Attempting to clean path '#{repo_subpath}'" }
       end
 
       begin
-        result = RedmineGitolite::GitoliteWrapper.sudo_capture('find', repo_subpath, '-depth', '-type', 'd', '!', '-regex', "'.*\.git/.*'", '-empty', '-delete', '-print').chomp.split("\n").sort {|x, y| y <=> x }
-        result.each { |dir| logger.info { "Removed empty repository subdirectory : #{dir}" } }
-        return true
+        RedmineGitolite::GitoliteWrapper.sudo_rmdir(repo_subpath)
       rescue RedmineGitolite::GitHosting::GitHostingException => e
         logger.error { "Attempt to clean path '#{repo_subpath}' failed" }
-        return false
       end
     end
 

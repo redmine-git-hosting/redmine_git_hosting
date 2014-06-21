@@ -15,9 +15,7 @@ module RedmineGitolite
 
 
       def purge_recycle_bin
-        repositories_array = @object_id
-        recycle = RedmineGitolite::Recycle.new
-        recycle.delete_expired_files(repositories_array)
+        RedmineGitolite::Recycle.new().delete_expired_files(@object_id)
         logger.info { "#{@action} : done !" }
       end
 
