@@ -36,12 +36,10 @@
             <td class="buttons">
               <% if user_allowed_to(:edit_repository_mirrors, @project) %>
 
-                <% if mirror.active? %>
-                  <%= link_to l(:label_mirror_push), push_to_mirror_path(@repository, mirror),
-                                                     :title => l(:label_mirror_push_title),
-                                                     :alt   => l(:label_mirror_push_title),
-                                                     :class => 'icon icon-push modal-box-close-only' %>
-                <% end %>
+                <%= link_to l(:label_mirror_push), push_to_mirror_path(@repository, mirror),
+                                                   :title => l(:label_mirror_push_title),
+                                                   :alt   => l(:label_mirror_push_title),
+                                                   :class => 'icon icon-push modal-box-close-only' %>
 
                 <%= link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror),
                                              :class => 'icon icon-edit modal-box' %>
