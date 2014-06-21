@@ -218,6 +218,7 @@ en:
   label_enable_git_notify: Enable Mailing list
   label_enable_git_daemon: Enable Git Daemon
   label_enable_smart_http: Smart HTTP Mode
+  label_enable_protected_branches: Enable protected branches
   label_git_daemon: Git Daemon
   label_smart_http: Smart HTTP
   label_git_notify: Git Notifications

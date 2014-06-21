@@ -217,9 +217,10 @@ module RedmineGitolite
         write  = []
         read   = []
 
-        rewind_users = users.select{|user| user.allowed_to?(:manage_repository, project)}
-        write_users  = users.select{|user| user.allowed_to?(:commit_access, project)} - rewind_users
-        read_users   = users.select{|user| user.allowed_to?(:view_changesets, project)} - rewind_users - write_users
+        rewind_users   = users.select{|user| user.allowed_to?(:manage_repository, project)}
+        write_users    = users.select{|user| user.allowed_to?(:commit_access, project)} - rewind_users
+        read_users     = users.select{|user| user.allowed_to?(:view_changesets, project)} - rewind_users - write_users
+        developer_team = rewind_users + write_users
 
         if project.active?
           rewind = rewind_users.map{|user| user.gitolite_identifier}
