@@ -11,10 +11,10 @@ module RedmineGitHosting
           has_one  :git_extra,        :foreign_key => 'repository_id', :class_name => 'RepositoryGitExtra', :dependent => :destroy
           has_one  :git_notification, :foreign_key => 'repository_id', :class_name => 'RepositoryGitNotification', :dependent => :destroy
 
-          has_many :repository_mirrors,                :dependent => :destroy, :foreign_key => 'repository_id'
-          has_many :repository_post_receive_urls,      :dependent => :destroy, :foreign_key => 'repository_id'
-          has_many :repository_deployment_credentials, :dependent => :destroy, :foreign_key => 'repository_id'
-          has_many :repository_git_config_keys,        :dependent => :destroy, :foreign_key => 'repository_id'
+          has_many :mirrors,                :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryMirror'
+          has_many :post_receive_urls,      :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryPostReceiveUrl'
+          has_many :deployment_credentials, :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryDeploymentCredential'
+          has_many :git_config_keys,        :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryGitConfigKey'
 
           alias_method_chain :report_last_commit,       :git_hosting
           alias_method_chain :extra_report_last_commit, :git_hosting

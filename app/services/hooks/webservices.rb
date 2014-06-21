@@ -29,12 +29,12 @@ module Hooks
       y = ""
 
       ## Post to each post-receive URL
-      if @repository.repository_post_receive_urls.active.any?
+      if @repository.post_receive_urls.active.any?
 
         logger.info { "Notifying post receive urls about changes to this repository :" }
         y << "\nNotifying post receive urls about changes to this repository :\n"
 
-        @repository.repository_post_receive_urls.active.each do |post_receive_url|
+        @repository.post_receive_urls.active.each do |post_receive_url|
           if payloads = post_receive_url.needs_push(@payload)
 
             method = (post_receive_url.mode == :github) ? :post : :get

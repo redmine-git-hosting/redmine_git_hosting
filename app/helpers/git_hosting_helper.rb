@@ -99,17 +99,17 @@ module GitHostingHelper
       when :repository_deployment_credentials
         label = l(:label_deployment_credentials)
         css_class << ' icon-deployment-credentials'
-        enabled = repository.repository_deployment_credentials.active.any?
+        enabled = repository.deployment_credentials.active.any?
 
       when :repository_post_receive_urls
         label = l(:label_post_receive_urls)
         css_class << ' icon-post-receive-urls'
-        enabled = repository.repository_post_receive_urls.active.any?
+        enabled = repository.post_receive_urls.active.any?
 
       when :repository_mirrors
         label = l(:label_repository_mirrors)
         css_class << ' icon-mirrors'
-        enabled = repository.repository_mirrors.active.any?
+        enabled = repository.mirrors.active.any?
 
       when :git_daemon
         label = l(:label_git_daemon)

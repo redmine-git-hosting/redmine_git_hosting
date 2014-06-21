@@ -112,8 +112,8 @@ module RedmineGitolite
           end
 
           # Set Git config keys
-          if repository.repository_git_config_keys.any?
-            repository.repository_git_config_keys.each do |git_config_key|
+          if repository.git_config_keys.any?
+            repository.git_config_keys.each do |git_config_key|
               repo_conf.set_git_config(git_config_key.key, git_config_key.value)
             end
           end
@@ -227,7 +227,7 @@ module RedmineGitolite
           read   = read_users.map{|user| user.gitolite_identifier}
 
           ## DEPLOY KEY
-          repository.repository_deployment_credentials.active.each do |cred|
+          repository.deployment_credentials.active.each do |cred|
             if cred.perm == "RW+"
               rewind << cred.gitolite_public_key.owner
             elsif cred.perm == "R"
