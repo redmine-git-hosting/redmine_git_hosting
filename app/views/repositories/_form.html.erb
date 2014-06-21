@@ -139,8 +139,8 @@
         <p>
           <label><%= l(:label_enable_protected_branches) %></label>
           <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-            <%= hidden_field_tag "extra[protected_branches]", "false" %>
-            <%= check_box_tag "extra[protected_branches]", @repository.extra[:protected_branches], @repository.extra[:protected_branches] %>
+            <%= hidden_field_tag "extra[protected_branch]", "false" %>
+            <%= check_box_tag "extra[protected_branch]", @repository.extra[:protected_branch], @repository.extra[:protected_branch] %>
           </span>
         </p>
       <% end %>
