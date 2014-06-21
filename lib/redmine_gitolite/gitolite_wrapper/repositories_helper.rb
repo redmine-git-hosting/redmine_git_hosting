@@ -129,7 +129,7 @@ module RedmineGitolite
 
           # Set SMTP server for mail-notifications hook
           if notifier.mailer == 'smtp'
-            repo_conf.set_git_config("multimailhook.smtpAuth", notifier.smtp_auth)
+            repo_conf.set_git_config("multimailhook.smtpAuth", notifier.smtp_auth.to_s)
             repo_conf.set_git_config("multimailhook.smtpServer", notifier.smtp_server)
             repo_conf.set_git_config("multimailhook.smtpPort", notifier.smtp_port)
             repo_conf.set_git_config("multimailhook.smtpUser", notifier.smtp_user)

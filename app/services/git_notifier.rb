@@ -23,12 +23,24 @@ class GitNotifier
     @default_list   = []
     @mail_mapping   = {}
 
-    @mailer         = 'sendmail'
-    @smtp_auth      = 'false'
-    @smtp_server    = 'localhost'
-    @smtp_port      = '25'
-    @smtp_user      = ''
-    @smtp_pass      = ''
+    if ActionMailer::Base.delivery_method == :smtp
+      @mailer = 'smtp'
+    else
+      @mailer = 'sendmail'
+    end
+
+    @smtp_auth =
+    if ActionMailer::Base.smtp_settings.has_key?(:authentication) &&
+      ActionMailer::Base.smtp_settings[:authentication] != :none
+      true
+    else
+      false
+    end
+
+    @smtp_server = ActionMailer::Base.smtp_settings[:address]
+    @smtp_port   = ActionMailer::Base.smtp_settings[:port]
+    @smtp_user   = ActionMailer::Base.smtp_settings[:user_name]
+    @smtp_pass   = ActionMailer::Base.smtp_settings[:password]
 
     build_notifier
   end
@@ -47,7 +59,6 @@ class GitNotifier
     set_sender_address
     set_default_list
     set_mail_mapping
-    set_smtp_params
   end
 
 
@@ -94,17 +105,6 @@ class GitNotifier
     end
 
     @mail_mapping = mail_mapping
-  end
-
-
-  def set_smtp_params
-    ## TODO: finish the job
-    @mailer         = 'sendmail'
-    @smtp_auth      = 'false'
-    @smtp_server    = 'localhost'
-    @smtp_port      = '25'
-    @smtp_user      = ''
-    @smtp_pass      = ''
   end
 
 
