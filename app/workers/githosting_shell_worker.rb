@@ -3,9 +3,8 @@ class GithostingShellWorker
 
   sidekiq_options :queue => :git_hosting, :retry => false
 
-  def perform(data)
-    logger.info { "#{data['command']} | #{data['object']} | #{data['options']}" }
-    githosting_shell = RedmineGitolite::Shell.new(data['command'], data['object'], data['options'])
-    githosting_shell.handle_command
+  def perform(command, object, options = {})
+    logger.info { "#{command} | #{object} | #{options}" }
+    RedmineGitolite::GitoliteWrapper.update(command, object, options)
   end
 end

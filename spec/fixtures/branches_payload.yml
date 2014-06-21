@@ -1,0 +1,225 @@
+---
+- :before: 349873f6780acce61770d755f460082f939c35de
+  :after: 4754c319e4565d56d1d680e5a67032f38d7b1686
+  :ref: refs/heads/branch1
+  :commits:
+  - :id: 39eec0e81dd0619f2039e19df6d9b62b5740f15c
+    :message: test
+    :timestamp: 2014-05-22 21:20:54.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/39eec0e81dd0619f2039e19df6d9b62b5740f15c
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: c6d5b7772692a0c94c2bc49aa0801c004e5a6b73
+    :message: test
+    :timestamp: 2014-05-22 21:20:54.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/c6d5b7772692a0c94c2bc49aa0801c004e5a6b73
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 0116d0a680943e6ff5b41aa1b0d0842c39f20458
+    :message: test
+    :timestamp: 2014-05-22 21:20:55.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/0116d0a680943e6ff5b41aa1b0d0842c39f20458
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: b914656d7a3de10fa70979771875078ffe7d5f75
+    :message: test
+    :timestamp: 2014-05-22 21:20:55.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/b914656d7a3de10fa70979771875078ffe7d5f75
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: a6e1da9c875171bb6f15cf4ec97a2c6b75d43eda
+    :message: test
+    :timestamp: 2014-05-22 21:20:55.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/a6e1da9c875171bb6f15cf4ec97a2c6b75d43eda
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 8034f3c4c7c18845c3e4a3bebc6cefc14083cc78
+    :message: test
+    :timestamp: 2014-05-22 21:20:55.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/8034f3c4c7c18845c3e4a3bebc6cefc14083cc78
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 4754c319e4565d56d1d680e5a67032f38d7b1686
+    :message: test
+    :timestamp: 2014-05-22 21:20:56.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/4754c319e4565d56d1d680e5a67032f38d7b1686
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  :repository:
+    :description: ''
+    :fork: false
+    :forks: 0
+    :homepage: ''
+    :name: test
+    :open_issues: 0
+    :watchers: 0
+    :private: false
+    :url: http://redmine.example.net/projects/test/repository
+    :owner:
+      :name: Redmine
+      :email: redmine@example.net
+- :before: 1e063b23e50d274bc667808b1273911b7796b583
+  :after: c51932336314bad33b6a2b7d735205a0686442de
+  :ref: refs/heads/branch2
+  :commits:
+  - :id: 4caf42c4681f39e27c08776a0005c24ef4e76515
+    :message: test
+    :timestamp: 2014-05-22 21:21:03.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/4caf42c4681f39e27c08776a0005c24ef4e76515
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 95d0cddef1682766cbf28e2b101f5ecc61299b46
+    :message: test
+    :timestamp: 2014-05-22 21:21:04.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/95d0cddef1682766cbf28e2b101f5ecc61299b46
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 01e059c50d418da831afdc6175335a86efef4b64
+    :message: test
+    :timestamp: 2014-05-22 21:21:04.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/01e059c50d418da831afdc6175335a86efef4b64
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: c794954ac2f31a195557bef66dc5b1e1d9253248
+    :message: test
+    :timestamp: 2014-05-22 21:21:04.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/c794954ac2f31a195557bef66dc5b1e1d9253248
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 02b802617b55424a408c4cee9b4c58017d186e4b
+    :message: test
+    :timestamp: 2014-05-22 21:21:04.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/02b802617b55424a408c4cee9b4c58017d186e4b
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: ff0ae3c64e48de2b33a511694a72118f12a12951
+    :message: test
+    :timestamp: 2014-05-22 21:21:05.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/ff0ae3c64e48de2b33a511694a72118f12a12951
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 7f8af614170833d59ba5d8e09b8aba36f69ac11f
+    :message: test
+    :timestamp: 2014-05-22 21:21:05.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/7f8af614170833d59ba5d8e09b8aba36f69ac11f
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 08c1a24b67f6a6113238dfe681ba2c649b678336
+    :message: test
+    :timestamp: 2014-05-22 21:21:05.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/08c1a24b67f6a6113238dfe681ba2c649b678336
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 942d348461ebaa47c7bca2874de1556af7b30aea
+    :message: test
+    :timestamp: 2014-05-22 21:21:06.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/942d348461ebaa47c7bca2874de1556af7b30aea
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: a96c9d802c0f5ffe42fde052ee9e37ecfb3a8069
+    :message: test
+    :timestamp: 2014-05-22 21:21:06.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/a96c9d802c0f5ffe42fde052ee9e37ecfb3a8069
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: 5eb8b5a5f2ab6a794974975914cb661f56fe443f
+    :message: test
+    :timestamp: 2014-05-22 21:21:06.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/5eb8b5a5f2ab6a794974975914cb661f56fe443f
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  - :id: c51932336314bad33b6a2b7d735205a0686442de
+    :message: test
+    :timestamp: 2014-05-22 21:21:06.000000000 Z
+    :added: []
+    :modified: []
+    :removed: []
+    :url: http://redmine.example.net/projects/test/repository/revisions/c51932336314bad33b6a2b7d735205a0686442de
+    :author:
+      :name: Nicolas
+      :email: nrodriguez@jbox-web.com
+  :repository:
+    :description: ''
+    :fork: false
+    :forks: 0
+    :homepage: ''
+    :name: test
+    :open_issues: 0
+    :watchers: 0
+    :private: false
+    :url: http://redmine.example.net/projects/test/repository
+    :owner:
+      :name: Redmine
+      :email: redmine@example.net

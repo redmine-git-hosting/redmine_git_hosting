@@ -24,7 +24,7 @@
         <% end %>
       </td>
       <td>
-        <%=link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
+        <%= link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
       </td>
       <td>
         <% if repository.is_a?(Repository::Git) %>
@@ -68,7 +68,7 @@
 <% end %>
 
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_bootstrap_kit' %>
 <% end %>

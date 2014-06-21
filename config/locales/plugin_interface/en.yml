@@ -157,10 +157,15 @@ en:
 
   # Basics fields
   field_mode: Mode
+  field_use_triggers: Use triggers
+  field_split_payloads: Split the global payload in many payloads
 
   # Misc
   label_github_post: GitHub&nbsp;POST
   label_empty_get: Empty&nbsp;GET
+  label_use_triggers: Use triggers
+  label_triggers: Triggers
+  label_split_payloads: split payloads
 
 
   ########### SSH KEYS ###########
@@ -290,8 +295,8 @@ en:
   label_disabled: Disabled
   label_true: True
   label_false: False
-  label_yes: Yes
-  label_no: No
+  label_yes: "Yes"
+  label_no: "No"
   label_backup_in_progress: Saving...
   label_delete_in_progress: Deleting...
   label_url: URL

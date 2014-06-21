@@ -21,7 +21,7 @@ module RedmineGitHosting
       module InstanceMethods
 
         def show_with_git_hosting(&block)
-          if @repository.is_a?(Repository::Git) and @rev.blank?
+          if @repository.is_a?(Repository::Git) && @repository.empty?
             # Fake list of repos
             @repositories = @project.gitolite_repos
             render :action => 'git_instructions'
@@ -37,24 +37,15 @@ module RedmineGitHosting
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
 
-              if params[:extra][:git_daemon] == 'true'
-                params[:extra][:git_daemon] = 1
-              else
-                params[:extra][:git_daemon] = 0
-              end
-
-              if params[:extra][:git_notify] == 'true'
-                params[:extra][:git_notify] = 1
-              else
-                params[:extra][:git_notify] = 0
-              end
+              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
+              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
 
               @repository.extra.update_attributes(params[:extra])
 
               options = params[:repository][:create_readme] == 'true' ? {:create_readme_file => true} : {:create_readme_file => false}
 
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :add_repository, :object => @repository.id, :options => options })
+              RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @repository.id, options)
             end
           end
         end
@@ -66,17 +57,8 @@ module RedmineGitHosting
           if @repository.is_a?(Repository::Git)
             if !@repository.errors.any?
 
-              if params[:extra][:git_daemon] == 'true'
-                params[:extra][:git_daemon] = 1
-              else
-                params[:extra][:git_daemon] = 0
-              end
-
-              if params[:extra][:git_notify] == 'true'
-                params[:extra][:git_notify] = 1
-              else
-                params[:extra][:git_notify] = 0
-              end
+              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
+              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
 
               update_default_branch = false
 
@@ -89,12 +71,12 @@ module RedmineGitHosting
 
               ## Update repository
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => @repository.id })
+              RedmineGitolite::GitHosting.resync_gitolite(:update_repository, @repository.id)
 
               ## Update repository default branch
               if update_default_branch
                 RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified default_branch of '#{@repository.gitolite_repository_name}' ('#{@repository.extra[:default_branch]}')" }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository_default_branch, :object => @repository.id })
+                RedmineGitolite::GitHosting.resync_gitolite(:update_repository_default_branch, @repository.id)
               end
             end
           end
@@ -110,7 +92,7 @@ module RedmineGitHosting
               repository_data = {}
               repository_data['repo_name'] = @repository.gitolite_repository_name
               repository_data['repo_path'] = @repository.gitolite_repository_path
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_repositories, :object => [repository_data] })
+              RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, [repository_data])
             end
           end
         end

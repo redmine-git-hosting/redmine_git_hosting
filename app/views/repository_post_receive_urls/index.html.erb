@@ -17,6 +17,9 @@
         <tr>
           <th><%= l(:label_url) %></th>
           <th><%= l(:label_mode) %></th>
+          <th><%= l(:label_enabled) %></th>
+          <th><%= l(:label_use_triggers) %></th>
+          <th><%= l(:label_triggers) %></th>
           <th></th>
         </tr>
       </thead>
@@ -26,9 +29,16 @@
           <tr>
             <td><%= post_receive_url.url %></td>
 
+            <td><%= post_receive_mode(post_receive_url).html_safe %></td>
+
+            <td><%= checked_image2 post_receive_url.active? %></td>
+
+            <td><%= checked_image2 post_receive_url.use_triggers? %></td>
+
             <td>
-              <%= post_receive_mode(post_receive_url).html_safe %>
-              <%= checked_image2 post_receive_url.active? %>
+              <% post_receive_url.triggers.each do |trigger| %>
+                <span class="label label-info"><%= trigger %></span>
+              <% end %>
             </td>
 
             <td class="buttons">

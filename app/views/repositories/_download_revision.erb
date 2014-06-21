@@ -1,4 +1,4 @@
-<% if @repository.is_a?(Repository::Git) && RedmineGitolite::ConfigRedmine.get_setting(:download_revision_enabled, true) %>
+<% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:download_revision_enabled) %>
   <% if (@project.active? && User.current.allowed_to?(:download_git_revision, @project)) || (!@project.active? &&  User.current.allowed_to?(:download_git_revision, nil, :global => true)) %>
 
     <div style="clear: both;"></div>
@@ -26,7 +26,7 @@
     </div>
 
     <% content_for :header_tags do %>
-      <%= stylesheet_link_tag 'font_awesome', :plugin => 'redmine_git_hosting' %>
+      <%= stylesheet_link_tag 'font_awesome', :plugin => 'redmine_bootstrap_kit' %>
     <% end %>
 
   <% end %>

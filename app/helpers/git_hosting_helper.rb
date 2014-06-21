@@ -11,6 +11,27 @@ module GitHostingHelper
   end
 
 
+  def label_with_icon(label, icon, inverse = false, fixed = false)
+    css_class = [ "fa", "fa-lg" ]
+
+    css_class.push(icon)
+
+    if inverse
+      css_class.push("fa-inverse")
+    end
+
+    if fixed
+      css_class.push("fa-fw")
+      css_class.delete("fa-lg")
+    end
+
+    css_class = css_class.join(" ")
+    content = content_tag(:i, "", :class => css_class) + label
+
+    return content.html_safe
+  end
+
+
   def user_allowed_to(permission, project)
     if project.active?
       return User.current.allowed_to?(permission, project)
@@ -22,23 +43,22 @@ module GitHostingHelper
 
   # Post-receive Mode
   def post_receive_mode(prurl)
-    if prurl.active == 0
-      l(:label_mirror_inactive)
-    elsif prurl.mode == :github
-      l(:label_github_post)
+    label = ""
+    if prurl.mode == :github
+      label << l(:label_github_post)
+      if prurl.split_payloads?
+        label <<  "&nbsp;(#{l(:label_split_payloads)})"
+      end
     else
-      l(:label_empty_get)
+      label << l(:label_empty_get)
     end
+    return label
   end
 
 
   # Mirror Mode
   def mirror_mode(mirror)
-    if mirror.active == 0
-      l(:label_mirror_inactive)
-    else
-      [l(:label_mirror), l(:label_forced), l(:label_unforced)][mirror.push_mode]
-    end
+    [l(:label_mirror_full_mirror), l(:label_mirror_forced_update), l(:label_mirror_fast_forward)][mirror.push_mode]
   end
 
 
@@ -112,6 +132,22 @@ module GitHostingHelper
     css_class << (!enabled ? ' icon-git-disabled' : '')
 
     content_tag(:span, '', :title => label, :class => css_class)
+  end
+
+
+  def render_hook_state(state)
+    case state
+      when true
+        image = 'true.png'
+        tip = ''
+      when false
+        image = 'exclamation.png'
+        tip = ''
+      else
+        image = 'warning.png'
+        tip = state
+    end
+    return image, tip
   end
 
 end

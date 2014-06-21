@@ -36,33 +36,7 @@ namespace :redmine_git_hosting do
   task :restore_defaults => [:environment] do
     puts "Reloading defaults from init.rb..."
     RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
-
-    default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
-
-    if default_hash.nil? || default_hash.empty?
-      puts "No defaults specified in init.rb!"
-    else
-      changes = 0
-      valuehash = (Setting.plugin_redmine_git_hosting).clone
-      default_hash.each do |key,value|
-        if valuehash[key] != value
-          puts "Changing '#{key}' : '#{valuehash[key]}' => '#{value}'\n"
-          valuehash[key] = value
-          changes += 1
-        end
-      end
-      if changes == 0
-        puts "No changes necessary.\n"
-      else
-        puts "Committing changes ... "
-        begin
-          Setting.plugin_redmine_git_hosting = valuehash
-          puts "Success!\n"
-        rescue => e
-          puts "Failure.\n"
-        end
-      end
-    end
+    RedmineGitolite::Config.reload!
     puts "Done!"
   end
 
@@ -75,7 +49,7 @@ namespace :redmine_git_hosting do
     projects = Project.active_or_archived.find(:all, :include => :repositories)
     if projects.length > 0
       RedmineGitolite::GitHosting.logger.info { "Resync all projects (#{projects.length})..." }
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
+      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
     end
 
     puts "Done!"
@@ -119,9 +93,46 @@ namespace :redmine_git_hosting do
     Rake::Task["selinux:redmine_git_hosting:remove_scripts"].invoke
   end
 
+
+  desc "Show library version"
+  task :version do
+    puts "#{name} #{version}"
+  end
+
+
+  desc "Start unit tests"
+  task :test => :default
+  task :default do
+    RSpec::Core::RakeTask.new(:spec) do |config|
+      config.rspec_opts = "plugins/redmine_git_hosting/spec --color --format nested --fail-fast"
+    end
+    Rake::Task["spec"].invoke
+  end
+
+
+  desc "Start unit tests in JUnit format"
+  task :test_junit do
+    RSpec::Core::RakeTask.new(:spec) do |config|
+      config.rspec_opts = "plugins/redmine_git_hosting/spec --format RspecJunitFormatter --out junit/rspec.xml"
+    end
+    Rake::Task["spec"].invoke
+  end
+
 end
+
 
 # Produce date string of form used by redmine logs
 def my_date
   Time.now.strftime("%Y-%m-%d %H:%M:%S")
+end
+
+
+def name
+  "Redmine Git Hosting"
+end
+
+
+def version
+  line = File.read(Rails.root.join("plugins/redmine_git_hosting/init.rb"))[/^\s*version\s*.*/]
+  line.match(/.*version\s*['"](.*)['"]/)[1]
 end

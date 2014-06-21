@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 class GitoliteHooksController < ApplicationController
   unloadable
 
@@ -7,10 +9,6 @@ class GitoliteHooksController < ApplicationController
   before_filter      :find_project
   before_filter      :find_repository
   before_filter      :validate_hook_key
-
-
-  include GitoliteHooksHelper
-  helper  :gitolite_hooks
 
 
   def post_receive
@@ -27,114 +25,26 @@ class GitoliteHooksController < ApplicationController
     ## Clear existing cache
     RedmineGitolite::Cache.clear_cache_for_repository(@repository)
 
-    self.response.headers["Content-Type"] = "text/plain;"
+    self.response.headers["Content-Type"]  = "text/plain;"
+    self.response.headers['Last-Modified'] = Time.now.to_s
+    self.response.headers['Cache-Control'] = 'no-cache'
 
     self.response_body = Enumerator.new do |y|
+      ## First fetch changesets
+      y << Hooks::Redmine.new(@repository).execute
 
-      ## Fetch commits from the repository
-      logger.info { "Fetching changesets for '#{@project.identifier}' repository ... " }
-      y << "  - Fetching changesets for '#{@project.identifier}' repository ... "
+      ## Then build payload
+      payload = GithubPayload.new(@repository, params[:refs]).payload
 
-      begin
-        @repository.fetch_changesets
-        logger.info { "Succeeded!" }
-        y << " [success]\n"
-      rescue Redmine::Scm::Adapters::CommandFailed => e
-        logger.error { "Failed!" }
-        logger.error { "Error during fetching changesets : #{e.message}" }
-        y << " [failure]\n"
-      end
-
-
-      ## Get payload
-      payload = build_payload(params[:refs])
-
-
-      ## Push to each mirror
-      @repository.repository_mirrors.active.order('created_at ASC').each do |mirror|
-        if mirror.needs_push(payload)
-          logger.info { "Pushing changes to #{mirror.url} ... " }
-          y << "  - Pushing changes to #{mirror.url} ... "
-
-          push_failed, push_message = mirror.push
-
-          if push_failed
-            logger.error { "Failed!" }
-            logger.error { "#{push_message}" }
-            y << " [failure]\n"
-          else
-            logger.info { "Succeeded!" }
-            y << " [success]\n"
-          end
-        end
-      end if @repository.repository_mirrors.any?
-
-
-      ## Post to each post-receive URL
-      @repository.repository_post_receive_urls.active.order('created_at ASC').each do |post_receive_url|
-        logger.info { "Notifying #{post_receive_url.url} ... " }
-        y << "  - Notifying #{post_receive_url.url} ... "
-
-        method = (post_receive_url.mode == :github) ? :post : :get
-
-        post_failed, post_message = post_data(post_receive_url.url, payload, :method => method)
-
-        if post_failed
-          logger.error { "Failed!" }
-          logger.error { "#{post_message}" }
-          y << " [failure]\n"
-        else
-          logger.info { "Succeeded!" }
-          y << " [success]\n"
-        end
-      end if @repository.repository_post_receive_urls.any?
-
+      ## Then call hooks
+      y << Hooks::GitMirrors.new(@repository, payload).execute
+      y << Hooks::Webservices.new(@repository, payload).execute
     end
   end
 
 
   def post_receive_github
-    github_issue = GithubIssue.find_by_github_id(params[:issue][:id])
-    redmine_issue = Issue.find_by_subject(params[:issue][:title])
-    create_relation = false
-
-    ## We don't have stored relation
-    if github_issue.nil?
-
-      ## And we don't have issue in Redmine
-      if redmine_issue.nil?
-        create_relation = true
-        redmine_issue = create_redmine_issue(params)
-      else
-        ## Create relation and update issue
-        create_relation = true
-        redmine_issue = update_redmine_issue(redmine_issue, params)
-      end
-    else
-      ## We have one relation, update issue
-      redmine_issue = update_redmine_issue(github_issue.issue, params)
-    end
-
-    if create_relation
-      github_issue = GithubIssue.new
-      github_issue.github_id = params[:issue][:id]
-      github_issue.issue_id = redmine_issue.id
-      github_issue.save!
-    end
-
-    if params.has_key?(:comment)
-      issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
-
-      if issue_journal.nil?
-        issue_journal = create_issue_journal(github_issue.issue, params)
-
-        github_comment = GithubComment.new
-        github_comment.github_id = params[:comment][:id]
-        github_comment.journal_id = issue_journal.id
-        github_comment.save!
-      end
-    end
-
+    Hooks::GithubIssuesSync.new(@project, params).execute
     render :text => "OK!"
     return
   end
@@ -193,6 +103,27 @@ class GitoliteHooksController < ApplicationController
         return
       end
     end
+  end
+
+
+  def validate_encoded_time(clear_time, encoded_time, key)
+    valid = false
+
+    begin
+      cur_time_seconds  = Time.new.utc.to_i
+      test_time_seconds = clear_time.to_i
+
+      if cur_time_seconds - test_time_seconds < 5*60
+        test_encoded = Digest::SHA1.hexdigest(clear_time.to_s + key.to_s)
+        if test_encoded.to_s == encoded_time.to_s
+          valid = true
+        end
+      end
+    rescue Exception => e
+      logger.error { "Error in validate_encoded_time(): #{e.message}" }
+    end
+
+    return valid
   end
 
 end

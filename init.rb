@@ -32,7 +32,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_identifier_prefix            => 'redmine_',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting', '/').to_s,
       :gitolite_scripts_dir                  => './',
       :gitolite_timeout                      => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,
@@ -54,7 +54,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite Access Config
       :ssh_server_domain                => 'localhost',
       :http_server_domain               => 'localhost',
-      :https_server_domain              => '',
+      :https_server_domain              => 'localhost',
       :http_server_subdir               => '',
       :show_repositories_url            => true,
       :gitolite_daemon_by_default       => false,
@@ -64,6 +64,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :all_projects_use_git             => false,
       :init_repositories_on_create      => false,
       :delete_git_repositories          => true,
+
+      # This params work together!
+      # When hierarchical_organisation = true, unique_repo_identifier MUST be false
+      # When hierarchical_organisation = false, unique_repo_identifier MUST be true
       :hierarchical_organisation        => true,
       :unique_repo_identifier           => false,
 
@@ -117,7 +121,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   end
 
   Redmine::MenuManager.map :top_menu do |menu|
-    menu.push :archived_repositories, { :controller => 'archived_repositories', :action => 'index' }, :caption => :label_archived_repositories, :after => :administration,
+    menu.push :archived_repositories, { :controller => '/archived_repositories', :action => 'index' }, :caption => :label_archived_repositories, :after => :administration,
               :if => Proc.new { User.current.logged? && User.current.admin? }
   end
 

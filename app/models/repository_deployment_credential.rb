@@ -1,32 +1,42 @@
 class RepositoryDeploymentCredential < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE = 1
-  STATUS_INACTIVE = 0
+  STATUS_ACTIVE   = true
+  STATUS_INACTIVE = false
 
   VALID_PERMS  = [ "R", "RW+" ]
   DEFAULT_PERM = "RW+"
 
+  attr_accessible :perm, :active
+
+  ## Relations
   belongs_to :repository
   belongs_to :gitolite_public_key
   belongs_to :user
 
-  attr_accessible :perm, :active
+  ## Validations
+  validates :repository_id,          :presence => true,
+                                     :uniqueness => { :scope => :gitolite_public_key_id }
 
-  validates_presence_of :repository, :gitolite_public_key, :user, :perm
+  validates :gitolite_public_key_id, :presence => true
+  validates :user_id,                :presence => true
+  validates :perm,                   :presence => true,
+                                     :inclusion => { :in => VALID_PERMS }
+
+  validates_associated :repository
+  validates_associated :gitolite_public_key
+  validates_associated :user
 
   validate :correct_key_type, :owner_matches_key
 
-  validates_uniqueness_of :repository_id, :scope => :gitolite_public_key_id
-
-  validates_inclusion_of  :perm, :in => VALID_PERMS
-
+  ## Scopes
   scope :active,   -> { where active: STATUS_ACTIVE }
   scope :inactive, -> { where active: STATUS_LOCKED }
 
-  after_commit ->(obj) { obj.update_permissions }, on: :create
-  after_commit ->(obj) { obj.update_permissions }, on: :update
-  after_commit ->(obj) { obj.update_permissions }, on: :destroy
+  ## Callbacks
+  after_commit ->(obj) { obj.update_permissions }, :on => :create
+  after_commit ->(obj) { obj.update_permissions }, :on => :update
+  after_commit ->(obj) { obj.update_permissions }, :on => :destroy
 
 
   def to_s
@@ -61,7 +71,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   def update_permissions
     RedmineGitolite::GitHosting.logger.info { "Update deploy keys for repository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id })
+    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id)
   end
 
 

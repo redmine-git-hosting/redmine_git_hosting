@@ -15,7 +15,7 @@ namespace :redmine_git_hosting do
       repo_key['location'] = ssh_key.location
 
       puts "  - Delete SSH key #{ssh_key.identifier}"
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
+      RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, repo_key)
 
       ssh_key.reset_identifier
     end
@@ -31,7 +31,7 @@ namespace :redmine_git_hosting do
     end
 
     user_list.uniq.each do |user_id|
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_ssh_keys, :object => user_id })
+      RedmineGitolite::GitHosting.resync_gitolite(:update_ssh_keys, user_id)
     end
     puts ""
 
@@ -39,7 +39,7 @@ namespace :redmine_git_hosting do
     projects = Project.active_or_archived.find(:all, :include => :repositories)
     if projects.length > 0
       RedmineGitolite::GitHosting.logger.info "Gitolite configuration has been modified, resync all projects..."
-      RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
+      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
     end
     puts ""
 

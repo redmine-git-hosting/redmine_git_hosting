@@ -26,7 +26,7 @@ module RedmineGitHosting
           if self.name == 'plugin_redmine_git_hosting'
             valuehash = self.value
 
-            if !RedmineGitolite::Config.scripts_dir_writeable?
+            if !RedmineGitolite::Scripts.scripts_dir_writeable?
               # If bin directory not alterable, don't allow changes to
               # Script directory, Git Username, or Gitolite public or private keys
               valuehash[:gitolite_scripts_dir] = @@old_valuehash[:gitolite_scripts_dir]
@@ -38,7 +38,7 @@ module RedmineGitHosting
             elsif valuehash[:gitolite_scripts_dir] && (valuehash[:gitolite_scripts_dir] != @@old_valuehash[:gitolite_scripts_dir])
 
               # Remove old bin directory and scripts, since about to change directory
-              %x[ rm -rf '#{ RedmineGitolite::Config.get_scripts_dir_path }' ]
+              FileUtils.rm_rf(RedmineGitolite::Scripts.get_scripts_dir_path)
 
               # Script directory either absolute or relative to redmine root
               stripped = valuehash[:gitolite_scripts_dir].lstrip.rstrip
@@ -63,14 +63,15 @@ module RedmineGitHosting
               valuehash[:gitolite_server_port] != @@old_valuehash[:gitolite_server_port]
 
               # Remove old scripts, since about to change content (leave directory alone)
-              %x[ rm -f '#{ RedmineGitolite::Config.get_scripts_dir_path }'* ]
+              FileUtils.rm_f Dir.glob(File.join(RedmineGitolite::Scripts.get_scripts_dir_path, '*'))
             end
 
 
             # Temp directory must be absolute and not-empty
             if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != @@old_valuehash[:gitolite_temp_dir])
+
               # Remove old tmp directory, since about to change
-              %x[ rm -rf '#{ RedmineGitolite::Config.get_temp_dir_path }' ]
+              FileUtils.rm_rf(RedmineGitolite::Scripts.get_temp_dir_path)
 
               stripped = valuehash[:gitolite_temp_dir].lstrip.rstrip
 
@@ -79,7 +80,7 @@ module RedmineGitHosting
 
               if (normalizedFile == "/" || stripped[0,1] != "/")
                 # Don't allow either root-level (absolute) or relative
-                valuehash[:gitolite_temp_dir] = RedmineGitolite::Config.get_temp_dir_path
+                valuehash[:gitolite_temp_dir] = RedmineGitolite::Scripts.get_temp_dir_path
               else
                 # Add trailing '/'
                 valuehash[:gitolite_temp_dir] = normalizedFile + "/"
@@ -175,21 +176,24 @@ module RedmineGitHosting
             end
 
 
-            # Check to see if we are trying to claim all repository identifiers are unique
-            if valuehash[:unique_repo_identifier] == 'true'
-              if Repository::Git.have_duplicated_identifier?
-                # Oops -- have duplication.  Force to false.
-                RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to unique_repo_identifier, setting unique_repo_identifier => 'false'" }
-                valuehash[:unique_repo_identifier] = 'false'
-              end
+            # hierarchical_organisation and unique_repo_identifier are now combined
+            if valuehash[:hierarchical_organisation] == 'true'
+              valuehash[:unique_repo_identifier] = 'false'
+            else
+              valuehash[:unique_repo_identifier] = 'true'
             end
 
 
-            if @@old_valuehash[:hierarchical_organisation] == 'true' && valuehash[:hierarchical_organisation] == 'false'
+            # Check duplication if we are switching from a mode to another
+            if @@old_valuehash[:hierarchical_organisation] == true && valuehash[:hierarchical_organisation] == 'false'
               if Repository::Git.have_duplicated_identifier?
                 # Oops -- have duplication.  Force to true.
                 RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to flat mode, setting hierarchical_organisation => 'true'" }
                 valuehash[:hierarchical_organisation] = 'true'
+                valuehash[:unique_repo_identifier] = 'false'
+              else
+                valuehash[:hierarchical_organisation] = 'false'
+                valuehash[:unique_repo_identifier] = 'true'
               end
             end
 
@@ -272,14 +276,14 @@ module RedmineGitHosting
             ## This a force update
             if valuehash[:gitolite_resync_all_projects] == 'true'
               @@resync_projects = true
-              valuehash[:gitolite_resync_all_projects] = false
+              valuehash[:gitolite_resync_all_projects] = 'false'
             end
 
 
             ## This a force update
             if valuehash[:gitolite_resync_all_ssh_keys] == 'true'
               @@resync_ssh_keys = true
-              valuehash[:gitolite_resync_all_ssh_keys] = false
+              valuehash[:gitolite_resync_all_ssh_keys] = 'false'
             end
 
 
@@ -293,6 +297,30 @@ module RedmineGitHosting
               valuehash[:init_repositories_on_create] = 'false'
             end
 
+            ## Convert boolean
+            [
+              :gitolite_config_has_admin_key,
+              :gitolite_log_split,
+              :show_repositories_url,
+              :gitolite_daemon_by_default,
+              :download_revision_enabled,
+              :gitolite_hooks_are_asynchronous,
+              :gitolite_force_hooks_update,
+              :gitolite_hooks_debug,
+              :gitolite_notify_by_default,
+              :all_projects_use_git,
+              :init_repositories_on_create,
+              :delete_git_repositories,
+              :hierarchical_organisation,
+              :unique_repo_identifier,
+              :gitolite_use_sidekiq
+            ].each do |setting|
+              if valuehash[setting] == 'true'
+                valuehash[setting] = true
+              else
+                valuehash[setting] = false
+              end
+            end
 
             # Save back results
             self.value = valuehash
@@ -322,8 +350,8 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_ssh_private_key] != valuehash[:gitolite_ssh_private_key] ||
                @@old_valuehash[:gitolite_ssh_public_key] != valuehash[:gitolite_ssh_public_key] ||
                @@old_valuehash[:gitolite_server_port] != valuehash[:gitolite_server_port]
-                # Need to update scripts
-                RedmineGitolite::Config.update_scripts
+
+              RedmineGitolite::Scripts.update_scripts
             end
 
 
@@ -332,28 +360,33 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_redmine_storage_dir] != valuehash[:gitolite_redmine_storage_dir] ||
                @@old_valuehash[:hierarchical_organisation] != valuehash[:hierarchical_organisation]
                 # Need to update everyone!
-                projects = Project.active_or_archived.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
+                # We take all root projects (even those who are closed) and move each hierarchy individually
+                projects = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
                 if projects.length > 0
                   RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
                   RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
-                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :move_repositories_tree, :object => projects.length, :options => {:flush_cache => true} })
+                  RedmineGitolite::GitHosting.resync_gitolite(:move_repositories_tree, projects.length, {:flush_cache => true})
                 end
             end
 
 
             ## Gitolite config file has changed, create a new one!
             if @@old_valuehash[:gitolite_config_file] != valuehash[:gitolite_config_file] ||
-               @@old_valuehash[:gitolite_config_has_admin_key] != valuehash[:gitolite_config_has_admin_key] ||
-               @@old_valuehash[:gitolite_notify_global_prefix] != valuehash[:gitolite_notify_global_prefix] ||
+               @@old_valuehash[:gitolite_config_has_admin_key] != valuehash[:gitolite_config_has_admin_key]
+
+              RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects (active, closed, archived)..." }
+              RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
+            end
+
+
+            ## Gitolite default values has changed, update active projects
+            if @@old_valuehash[:gitolite_notify_global_prefix] != valuehash[:gitolite_notify_global_prefix] ||
                @@old_valuehash[:gitolite_notify_global_sender_address] != valuehash[:gitolite_notify_global_sender_address] ||
                @@old_valuehash[:gitolite_notify_global_include] != valuehash[:gitolite_notify_global_include] ||
                @@old_valuehash[:gitolite_notify_global_exclude] != valuehash[:gitolite_notify_global_exclude]
-                # Need to update everyone!
-                projects = Project.active_or_archived.includes(:repositories).all
-                if projects.length > 0
-                  RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects..." }
-                  RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects, :object => projects.length })
-                end
+
+              RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all active projects..." }
+              RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'active')
             end
 
 
@@ -366,13 +399,8 @@ module RedmineGitHosting
 
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_projects == true
-              # Need to update everyone!
-              projects = Project.active_or_archived.includes(:repositories).all
-              if projects.length > 0
-                RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (#{projects.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_projects_forced, :object => projects.length })
-              end
-
+              RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (active, closed, archived)..." }
+              RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all', {:force => true})
               @@resync_projects = false
             end
 
@@ -383,7 +411,7 @@ module RedmineGitHosting
               users = User.all
               if users.length > 0
                 RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys (#{users.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_all_ssh_keys_forced, :object => users.length })
+                RedmineGitolite::GitHosting.resync_gitolite(:update_all_ssh_keys_forced, users.length)
               end
 
               @@resync_ssh_keys = false
@@ -409,7 +437,7 @@ module RedmineGitHosting
 
 
             if !@@delete_trash_repo.empty?
-              RedmineGitolite::GitHosting.resync_gitolite({ :command => :purge_recycle_bin, :object => @@delete_trash_repo })
+              RedmineGitolite::GitHosting.resync_gitolite(:purge_recycle_bin, @@delete_trash_repo)
               @@delete_trash_repo = []
             end
 

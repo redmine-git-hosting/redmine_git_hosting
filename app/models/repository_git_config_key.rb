@@ -1,18 +1,23 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
+  ## Relations
   belongs_to :repository
 
-  validates_presence_of :key
-  validates_presence_of :value
+  ## Validations
+  validates :repository_id, :presence => true
 
-  validates_uniqueness_of :key, :scope => :repository_id
+  validates :key,           :presence => true,
+                            :uniqueness => { :case_sensitive => false, :scope => :repository_id }
+
+  validates :value,         :presence => true
 
   validate :check_key_format
 
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :create
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :update
-  after_commit ->(obj) { obj.delete_config_key },           on: :destroy
+  ## Callbacks
+  after_commit ->(obj) { obj.create_or_update_config_key }, :on => :create
+  after_commit ->(obj) { obj.create_or_update_config_key }, :on => :update
+  after_commit ->(obj) { obj.delete_config_key },           :on => :destroy
 
 
   protected
@@ -48,7 +53,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   def update_repository(options)
     RedmineGitolite::GitHosting.logger.info { "Rebuild Git config keys respository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite({ :command => :update_repository, :object => repository.id, :options => options })
+    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id, options)
   end
 
 end

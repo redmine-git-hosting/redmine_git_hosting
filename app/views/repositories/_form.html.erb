@@ -1,20 +1,18 @@
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_git_hosting' %>
+  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'jquery_tag_it',                    :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_switch',       :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_bootstrap_kit' %>
+
+  <%= javascript_include_tag 'jquery_tag_it',                 :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'plugins/bootstrap_switch',      :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'plugins/bootstrap_transitions', :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_bootstrap_kit' %>
+
   <%= stylesheet_link_tag 'git_urls',                         :plugin => 'redmine_git_hosting' %>
-
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_switch',       :plugin => 'redmine_git_hosting' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_git_hosting' %>
-
-  <%= stylesheet_link_tag 'tag_it/jquery_tagit',              :plugin => 'redmine_git_hosting' %>
-
-  <%= javascript_include_tag 'plugins/bootstrap_switch',      :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/bootstrap_transitions', :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/tag_it',                :plugin => 'redmine_git_hosting' %>
   <%= javascript_include_tag 'plugins/zero_clipboard_min',    :plugin => 'redmine_git_hosting' %>
-
-  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_git_hosting' %>
 
   <%= javascript_tag do %>
     $(document).ready(function() {
@@ -66,7 +64,7 @@
         <p>
           <label><%= l(:label_init_repo_with_readme) %></label>
           <%= hidden_field_tag "repository[create_readme]", "false" %>
-          <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::ConfigRedmine.get_setting(:init_repositories_on_create, true) %>
+          <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) %>
         </p>
       <% elsif @project.repository != @repository %>
         <p>
@@ -89,6 +87,16 @@
         <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
       </p>
     <% end %>
+
+    <%= content_tag('p', f.select(
+                          :path_encoding, [nil] + Setting::ENCODINGS,
+                          :label => l(:field_scm_path_encoding)
+                         ) + '<br />'.html_safe + l(:text_scm_path_encoding_note)) +
+
+        content_tag('p', f.check_box(
+                          :extra_report_last_commit,
+                          :label => l(:label_git_report_last_commit)
+                         )) if @repository.is_a?(Repository::Git) %>
   </div>
 
   <div class="split">
@@ -104,7 +112,7 @@
         selected = "false"
         if @repository.extra[:git_daemon]
           selected = "true"
-        elsif @project.is_public && RedmineGitolite::ConfigRedmine.get_setting(:gitolite_daemon_by_default, true)
+        elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
           selected = "true"
         end
       %>
@@ -148,7 +156,7 @@
 
       <p>
         <%= label_tag  "", l(:label_mirroring_keys_installed) %>
-        <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
+        <%= image_tag (RedmineGitolite::Mirrors.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
       </p>
 
     <% else %>

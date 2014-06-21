@@ -73,8 +73,8 @@ module RedmineGitHosting
 
 
         def commits_per_day
-          total_commits_by_day = Changeset.where("repository_id = ?", self.id).group(:commit_date).count
-          total_changes_by_day = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:commit_date).count
+          total_commits_by_day = Changeset.where("repository_id = ?", self.id).group(:commit_date).order(:commit_date).count
+          total_changes_by_day = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:commit_date).order(:commit_date).count
 
           data = {}
           data[:categories]    = total_commits_by_day.keys
@@ -194,7 +194,7 @@ module RedmineGitHosting
           committers = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq
 
           committers.each do |committer|
-            commits = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).count
+            commits = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).order(:commit_date).count
 
             committer_name = committer.split('<')[0].strip
             committer_mail = committer.split('<')[1].gsub('>', '')
