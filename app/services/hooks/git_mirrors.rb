@@ -27,12 +27,12 @@ module Hooks
       y = ""
 
       ## Push to each mirror
-      if @repository.repository_mirrors.active.any?
+      if @repository.mirrors.active.any?
 
         logger.info { "Notifying mirrors about changes to this repository :" }
         y << "\nNotifying mirrors about changes to this repository :\n"
 
-        @repository.repository_mirrors.active.each do |mirror|
+        @repository.mirrors.active.each do |mirror|
           if mirror.needs_push(@payload)
             logger.info { "Pushing changes to #{mirror.url} ... " }
             y << "  - Pushing changes to #{mirror.url} ... "

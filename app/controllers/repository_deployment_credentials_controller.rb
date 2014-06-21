@@ -142,7 +142,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   def find_all_keys
     # display create_with_key view.  Find preexisting keys to offer to user
     @user_keys = GitolitePublicKey.by_user(User.current).deploy_key.active.order('title ASC')
-    @disabled_keys = @repository.repository_deployment_credentials.active.map(&:gitolite_public_key)
+    @disabled_keys = @repository.deployment_credentials.active.map(&:gitolite_public_key)
 
     @other_keys = []
     if User.current.admin?

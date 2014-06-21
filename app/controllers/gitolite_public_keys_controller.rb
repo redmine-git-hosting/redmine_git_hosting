@@ -123,8 +123,8 @@ class GitolitePublicKeysController < ApplicationController
     default_title = "#{@project.name} Deploy Key"
 
     # Find number of keys or max default deploy key that matches
-    maxnum = @repository.repository_deployment_credentials.map(&:gitolite_public_key).uniq.count
-    @repository.repository_deployment_credentials.each do |credential|
+    maxnum = @repository.deployment_credentials.map(&:gitolite_public_key).uniq.count
+    @repository.deployment_credentials.each do |credential|
       if matches = credential.gitolite_public_key.title.match(/#{default_title} (\d+)$/)
         maxnum = [maxnum, matches[1].to_i].max
       end
