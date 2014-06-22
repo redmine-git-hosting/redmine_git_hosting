@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version '0.7-devel'
+  version '0.8-devel'
   url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
@@ -33,7 +33,6 @@ Redmine::Plugin.register :redmine_git_hosting do
 
       # Gitolite Global Config
       :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting', '/').to_s,
-      :gitolite_timeout                      => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,

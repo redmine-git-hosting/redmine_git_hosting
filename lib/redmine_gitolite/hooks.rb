@@ -26,7 +26,7 @@ module RedmineGitolite
       @async_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous)
       @force_hooks_update = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update)
 
-      @gitolite_hooks_dir    = set_gitolite_hook_dir
+      @gitolite_hooks_dir    = File.join('$HOME', '.gitolite', 'hooks', 'common')
       @post_receive_hook_dir = File.join(@gitolite_hooks_dir, 'post-receive.d')
 
       @global_hook_params = get_global_hooks_params
@@ -85,15 +85,6 @@ module RedmineGitolite
     end
 
 
-    def set_gitolite_hook_dir
-      begin
-        File.join(RedmineGitolite::GitoliteWrapper.gitolite_home_dir, '.gitolite', 'hooks', 'common')
-      rescue => e
-        File.join('~', '.gitolite', 'hooks', 'common')
-      end
-    end
-
-
     ###############################
     ##                           ##
     ##         HOOKS DIR         ##
@@ -135,10 +126,10 @@ module RedmineGitolite
       logger.info { "Installing hook directory '#{hook_dir}'" }
 
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_mkdir('-p', hook_dir)
-        RedmineGitolite::GitoliteWrapper.sudo_chmod('755', hook_dir)
+        GitoliteWrapper.sudo_mkdir('-p', hook_dir)
+        GitoliteWrapper.sudo_chmod('755', hook_dir)
         return true
-      rescue => e
+      rescue GitHosting::GitHostingException => e
         logger.error { "Problems installing hook directory '#{hook_dir}'" }
         return false
       end
@@ -197,7 +188,7 @@ module RedmineGitolite
 
       else
 
-        content = RedmineGitolite::GitoliteWrapper.sudo_capture('cat', @@post_receive_hook_path[hook_name])
+        content = GitoliteWrapper.sudo_capture('eval', 'cat', @@post_receive_hook_path[hook_name])
         digest  = Digest::MD5.hexdigest(content)
 
         if hook_digest(hook_data) == digest
@@ -250,12 +241,12 @@ module RedmineGitolite
       logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_pipe("bash") do
+        GitoliteWrapper.sudo_pipe("sh") do
           [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
         end
-        RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
+        GitoliteWrapper.sudo_chmod(filemode, destination_path)
         return true
-      rescue => e
+      rescue GitHosting::GitHostingException => e
         logger.error { "Problems installing hook from '#{source_path}' in '#{destination_path}'" }
         return false
       end
@@ -275,9 +266,9 @@ module RedmineGitolite
 
     def update_gitolite
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_capture(*@gitolite_command)
+        GitoliteWrapper.sudo_shell(*@gitolite_command)
         return true
-      rescue => e
+      rescue GitHosting::GitHostingException => e
         return false
       end
     end
@@ -285,8 +276,8 @@ module RedmineGitolite
 
     def hook_file_exists?(hook_path)
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_file_exists?(hook_path)
-      rescue => e
+        GitoliteWrapper.sudo_file_exists?(hook_path)
+      rescue GitHosting::GitHostingException => e
         return false
       end
     end
@@ -294,8 +285,8 @@ module RedmineGitolite
 
     def hook_dir_exists?(hook_dir)
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_dir_exists?(hook_dir)
-      rescue => e
+        GitoliteWrapper.sudo_dir_exists?(hook_dir)
+      rescue GitHosting::GitHostingException => e
         return false
       end
     end
@@ -304,8 +295,8 @@ module RedmineGitolite
     # Return a hash with global config parameters.
     def get_global_hooks_params
       begin
-        hooks_params = RedmineGitolite::GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', GITOLITE_HOOKS_NAMESPACE).split("\n")
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        hooks_params = GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', GITOLITE_HOOKS_NAMESPACE).split("\n")
+      rescue GitHosting::GitHostingException => e
         logger.error { "Problems to retrieve Gitolite hook parameters in Gitolite config" }
         hooks_params = []
       end
@@ -340,9 +331,9 @@ module RedmineGitolite
       logger.info { "Set Git hooks global parameter : #{name} (#{value})" }
 
       begin
-        RedmineGitolite::GitoliteWrapper.sudo_capture('git', 'config', '--global', gitconfig_prefix(name), value)
+        GitoliteWrapper.sudo_capture('git', 'config', '--global', gitconfig_prefix(name), value)
         return true
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+      rescue GitHosting::GitHostingException => e
         logger.error { "Error while setting Git hooks global parameter : #{name} (#{value})" }
         return false
       end

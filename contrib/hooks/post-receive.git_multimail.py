@@ -1412,19 +1412,48 @@ class SendMailer(Mailer):
 class SMTPMailer(Mailer):
     """Send emails using Python's smtplib."""
 
-    def __init__(self, envelopesender, smtpserver):
+    def __init__(self, envelopesender, smtpserver, smtpport=25, smtpuser=None, smtppass=None):
         if not envelopesender:
             sys.stderr.write(
                 'fatal: git_multimail: cannot use SMTPMailer without a sender address.\n'
                 'please set either multimailhook.envelopeSender or user.email\n'
                 )
             sys.exit(1)
+
         self.envelopesender = envelopesender
         self.smtpserver = smtpserver
+        self.smtpuser = smtpuser
+        self.smtppass = smtppass
+
         try:
-            self.smtp = smtplib.SMTP(self.smtpserver)
+            self.smtpport = int(smtpport)
+        except ValueError:
+            self.smtpport = 25
+            sys.stderr.write(
+                '*** Malformed value for multimailhook.smtpPort: %s\n' % smtpport
+                + '*** Expected a number. Defaulting to port 25.\n'
+                )
+
+        if self.smtpuser != None and self.smtppass != None:
+            self.smtpauth = True
+        else:
+            self.smtpauth = False
+
+        try:
+            if self.smtpport == 25:
+                self.smtp = smtplib.SMTP(self.smtpserver, self.smtpport)
+            elif self.smtpport == 465:
+                self.smtp = smtplib.SMTP_SSL(self.smtpserver, self.smtpport)
+            elif self.smtpport == 587:
+                self.smtp = smtplib.connect(self.smtpserver, self.smtpport)
+                self.smtp.ehlo()
+                self.smtp.starttls()
+                self.smtp.ehlo()
+
+            if self.smtpauth:
+                self.smtp.login(self.smtpuser, self.smtppass)
         except Exception, e:
-            sys.stderr.write('*** Error establishing SMTP connection to %s***\n' % self.smtpserver)
+            sys.stderr.write('*** Error establishing SMTP connection to %s:%s***\n' % (self.smtpserver, self.smtpport))
             sys.stderr.write('*** %s\n' % str(e))
             sys.exit(1)
 
@@ -2411,9 +2440,19 @@ def choose_mailer(config, environment):
 
     if mailer == 'smtp':
         smtpserver = config.get('smtpserver', default='localhost')
+        smtpport = config.get('smtpport', default=25)
+        smtpauth = config.get('smtpauth', default=False)
+
+        if smtpauth:
+            smtpuser = config.get('smtpuser', default=None)
+            smtppass = config.get('smtppass', default=None)
+
         mailer = SMTPMailer(
             envelopesender=(environment.get_sender() or environment.get_fromaddr()),
             smtpserver=smtpserver,
+            smtpport=smtpport,
+            smtpuser=smtpuser,
+            smtppass=smtppass
             )
     elif mailer == 'sendmail':
         command = config.get('sendmailcommand')

@@ -30,7 +30,7 @@ module RedmineGitHosting
             if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != @@old_valuehash[:gitolite_temp_dir])
 
               # Remove old tmp directory, since about to change
-              FileUtils.rm_rf(RedmineGitolite::Scripts.get_temp_dir_path)
+              FileUtils.rm_rf(RedmineGitolite::GitoliteWrapper.gitolite_admin_dir)
 
               stripped = valuehash[:gitolite_temp_dir].lstrip.rstrip
 
@@ -39,7 +39,7 @@ module RedmineGitHosting
 
               if (normalizedFile == "/" || stripped[0,1] != "/")
                 # Don't allow either root-level (absolute) or relative
-                valuehash[:gitolite_temp_dir] = RedmineGitolite::Scripts.get_temp_dir_path
+                valuehash[:gitolite_temp_dir] = RedmineGitolite::Scripts.gitolite_admin_dir
               else
                 # Add trailing '/'
                 valuehash[:gitolite_temp_dir] = normalizedFile + "/"
@@ -218,16 +218,6 @@ module RedmineGitHosting
             else
               if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(valuehash[:git_config_email])
                 valuehash[:git_config_email] = @@old_valuehash[:git_config_email]
-              end
-            end
-
-
-            # Validate gitolite_timeout > 0 and < 30 (and exclude non-numbers)
-            if valuehash[:gitolite_timeout]
-              if valuehash[:gitolite_timeout].to_i > 0 and valuehash[:gitolite_timeout].to_i < 30
-                valuehash[:gitolite_timeout] = "#{valuehash[:gitolite_timeout].to_i}"
-              else
-                valuehash[:gitolite_timeout] = @@old_valuehash[:gitolite_timeout]
               end
             end
 

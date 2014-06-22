@@ -11,7 +11,7 @@ module RedmineGitolite
 
           project.gitolite_repos.reverse.each do |repository|
             repo_list.push(repository.gitolite_repository_name)
-            do_move_repositories(repository)
+            perform_repository_move(repository)
           end
 
           gitolite_admin_repo_commit("#{@action} : #{project.identifier} | #{repo_list}")
@@ -19,7 +19,7 @@ module RedmineGitolite
       end
 
 
-      def do_move_repositories(repository)
+      def perform_repository_move(repository)
         repo_id   = repository.redmine_name
         repo_name = repository.old_repository_name
 
@@ -73,28 +73,28 @@ module RedmineGitolite
         end
 
         # Now we have multiple options, due to the way gitolite sets up repositories
-        new_path_exists = RedmineGitolite::GitoliteWrapper.sudo_dir_exists?(new_path)
-        old_path_exists = RedmineGitolite::GitoliteWrapper.sudo_dir_exists?(old_path)
+        new_path_exists = GitoliteWrapper.sudo_dir_exists?(new_path)
+        old_path_exists = GitoliteWrapper.sudo_dir_exists?(old_path)
 
         ## CASE 1
         if new_path_exists && old_path_exists
 
-          if RedmineGitolite::GitoliteWrapper.sudo_repository_empty?(new_path)
+          if GitoliteWrapper.sudo_repository_empty?(new_path)
             logger.warn { "#{@action} : target repository '#{new_path}' already exists and is empty, remove it ..." }
             begin
-              RedmineGitolite::GitoliteWrapper.sudo_rmdir(new_path, true)
-            rescue RedmineGitolite::GitHosting::GitHostingException => e
+              GitoliteWrapper.sudo_rmdir(new_path, true)
+            rescue GitHosting::GitHostingException => e
               logger.error { "#{@action} : removing existing target repository failed, exit !" }
               return false
             end
           else
             logger.warn { "#{@action} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove the old_path if empty" }
 
-            if RedmineGitolite::GitoliteWrapper.sudo_repository_empty?(old_path)
+            if GitoliteWrapper.sudo_repository_empty?(old_path)
               begin
-                RedmineGitolite::GitoliteWrapper.sudo_rmdir(old_path, true)
+                GitoliteWrapper.sudo_rmdir(old_path, true)
                 return true
-              rescue RedmineGitolite::GitHosting::GitHostingException => e
+              rescue GitHosting::GitHostingException => e
                 logger.error { "#{@action} : removing source repository directory failed, exit !" }
                 return false
               end
@@ -109,20 +109,20 @@ module RedmineGitolite
 
           logger.debug { "#{@action} : really moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
 
-          if !RedmineGitolite::GitoliteWrapper.sudo_dir_exists?(new_parent_path)
+          if !GitoliteWrapper.sudo_dir_exists?(new_parent_path)
             begin
-              RedmineGitolite::GitoliteWrapper.sudo_mkdir('-p', new_parent_path)
-            rescue RedmineGitolite::GitHosting::GitHostingException => e
+              GitoliteWrapper.sudo_mkdir('-p', new_parent_path)
+            rescue GitHosting::GitHostingException => e
               logger.error { "#{@action} : creation of parent path '#{new_parent_path}' failed, exit !" }
               return false
             end
           end
 
           begin
-            RedmineGitolite::GitoliteWrapper.sudo_move(old_path, new_path)
+            GitoliteWrapper.sudo_move(old_path, new_path)
             logger.info { "#{@action} : done !" }
             return true
-          rescue RedmineGitolite::GitHosting::GitHostingException => e
+          rescue GitHosting::GitHostingException => e
             logger.error { "move_physical_repo(#{old_path}, #{new_path}) failed" }
             return false
           end
@@ -145,8 +145,8 @@ module RedmineGitolite
         path_list.uniq.sort.reverse.each do |path|
           begin
             logger.info { "#{@action} : cleaning repository path : '#{path}'" }
-            RedmineGitolite::GitoliteWrapper.sudo_rmdir(path)
-          rescue RedmineGitolite::GitHosting::GitHostingException => e
+            GitoliteWrapper.sudo_rmdir(path)
+          rescue GitHosting::GitHostingException => e
             logger.error { "#{@action} : error while cleaning repository path '#{path}'" }
           end
         end

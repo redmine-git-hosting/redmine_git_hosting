@@ -33,10 +33,19 @@
 namespace :redmine_git_hosting do
 
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
-  task :restore_defaults => [:environment] do
+  task :restore_default_settings => [:environment] do
     puts "Reloading defaults from init.rb..."
     RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
     RedmineGitolite::Config.reload!
+    puts "Done!"
+  end
+
+
+  desc "Purge expired repositories from Recycle Bin"
+  task :purge_recycle_bin => [:environment] do
+    puts "Purging Recycle Bin..."
+    RedmineGitolite::GitHosting.logger.warn { "Purging Recycle Bin from command line" }
+    RedmineGitolite::Recycle.new().delete_expired_files
     puts "Done!"
   end
 
@@ -45,13 +54,8 @@ namespace :redmine_git_hosting do
   task :update_repositories => [:environment] do
     puts "Performing manual update_repositories operation..."
     RedmineGitolite::GitHosting.logger.warn { "Performing manual update_repositories operation from command line" }
-
-    projects = Project.active_or_archived.find(:all, :include => :repositories)
-    if projects.length > 0
-      RedmineGitolite::GitHosting.logger.info { "Resync all projects (#{projects.length})..." }
-      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
-    end
-
+    RedmineGitolite::GitHosting.logger.info { "Resync all projects (#{projects.length})..." }
+    RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
     puts "Done!"
   end
 

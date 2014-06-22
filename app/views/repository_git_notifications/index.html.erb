@@ -32,7 +32,7 @@
 
   <h3 class="git"><%= l(:label_git_notifications) %></h3>
 
-  <% if @repository.mailing_list_default_users.any? ||
+  <% if @repository.default_list.any? ||
         (!@git_notification.nil? && @git_notification.include_list.any?) ||
         (!@git_notification.nil? && @git_notification.exclude_list.any?) %>
 
@@ -60,9 +60,9 @@
         </tr>
         <tr>
           <td>
-            <% if @repository.mailing_list_default_users.any? %>
+            <% if @repository.default_list.any? %>
               <ul>
-                <% @repository.mailing_list_default_users.each do |item| %>
+                <% @repository.default_list.each do |item| %>
                   <li><%= item %></li>
                 <% end %>
               </ul>
@@ -90,9 +90,9 @@
           </td>
 
           <td>
-            <% if @repository.mailing_list_effective.any? %>
+            <% if @repository.mail_mapping.any? %>
               <ul>
-                <% @repository.mailing_list_effective.each do |item, from| %>
+                <% @repository.mail_mapping.each do |item, from| %>
                   <li><%= item %> (<%= from %>)</li>
                 <% end %>
               </ul>

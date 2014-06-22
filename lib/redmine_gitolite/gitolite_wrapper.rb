@@ -98,10 +98,6 @@ module RedmineGitolite
       File.join(gitolite_temp_dir, gitolite_user, 'gitolite-admin.git')
     end
 
-    def self.gitolite_home_dir
-      sudo_capture('pwd').chomp.strip
-    end
-
 
     ###############################
     ##                           ##
@@ -151,7 +147,7 @@ module RedmineGitolite
       begin
         out, err, code = ssh_shell('info')
         @@gitolite_version_cached = find_version(out)
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+      rescue GitHosting::GitHostingException => e
         logger.error { "Error while getting Gitolite version" }
         @@gitolite_version_cached = -1
       end
@@ -173,7 +169,7 @@ module RedmineGitolite
 
       begin
         @@gitolite_banner_cached = ssh_shell('info')[0]
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+      rescue GitHosting::GitHostingException => e
         logger.error { "Error while getting Gitolite banner" }
         @@gitolite_banner_cached = "Error : #{e.message}"
       end
@@ -242,7 +238,7 @@ module RedmineGitolite
     #
     # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
     def self.sudo_test(path, *testarg)
-      out, _ , code = GitoliteWrapper.sudo_shell('test', *testarg, path)
+      out, _ , code = GitoliteWrapper.sudo_shell('eval', 'test', *testarg, path)
       return code == 0
     rescue => e
       logger.debug("File check for #{path} failed : #{e.message}")
@@ -255,7 +251,7 @@ module RedmineGitolite
     # e.g., sudo_mkdir('-p', '/some/path')
     #
     def self.sudo_mkdir(*args)
-      sudo_capture('mkdir', *args)
+      sudo_shell('eval', 'mkdir', *args)
     end
 
 
@@ -264,7 +260,7 @@ module RedmineGitolite
     # e.g., sudo_chmod('755', '/some/path')
     #
     def self.sudo_chmod(mode, file)
-      sudo_capture('chmod', mode, file)
+      sudo_shell('eval', 'chmod', mode, file)
     end
 
 
@@ -277,9 +273,9 @@ module RedmineGitolite
     #
     def self.sudo_rmdir(path, force = false)
       if force
-        sudo_capture('rm', '-rf', path)
+        sudo_shell('eval', 'rm', '-rf', path)
       else
-        sudo_capture('rmdir', path)
+        sudo_shell('eval', 'rmdir', path)
       end
     end
 
@@ -287,7 +283,7 @@ module RedmineGitolite
     # Moves a file/directory to a new target.
     #
     def self.sudo_move(old_path, new_path)
-      sudo_capture('mv', old_path, new_path)
+      sudo_shell('eval', 'mv', old_path, new_path)
     end
 
 
@@ -296,7 +292,7 @@ module RedmineGitolite
     def self.sudo_repository_empty?(path)
       empty_repo = false
 
-      path = File.join(path, 'objects')
+      path = File.join('$HOME', path, 'objects')
 
       begin
         output = sudo_capture('eval', 'find', path, '-type', 'f', '|', 'wc', '-l')
@@ -348,11 +344,63 @@ module RedmineGitolite
     end
 
 
-    ##########################
-    #                        #
-    #  Config Tests / Setup  #
-    #                        #
-    ##########################
+    ###############################
+    ##                           ##
+    ##         TEMP DIR          ##
+    ##                           ##
+    ###############################
+
+    @@temp_dir_path = nil
+    @@previous_temp_dir_path = nil
+
+    def self.create_temp_dir
+      if (@@previous_temp_dir_path != gitolite_temp_dir)
+        @@previous_temp_dir_path = gitolite_temp_dir
+        @@temp_dir_path = gitolite_admin_dir
+      end
+
+      if !File.directory?(@@temp_dir_path)
+        logger.info { "Create tmp directory : '#{@@temp_dir_path}'" }
+
+        begin
+          FileUtils.mkdir_p @@temp_dir_path
+          FileUtils.chmod 0700, @@temp_dir_path
+        rescue => e
+          logger.error { "Cannot create tmp directory : '#{@@temp_dir_path}'" }
+        end
+
+      end
+
+      return @@temp_dir_path
+    end
+
+
+    @@temp_dir_writeable = false
+
+    def self.temp_dir_writeable?(opts = {})
+      @@temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
+
+      if !@@temp_dir_writeable
+
+        logger.debug { "Testing if temp directory '#{create_temp_dir}' is writeable ..." }
+
+        mytestfile = File.join(create_temp_dir, "writecheck")
+
+        if !File.directory?(create_temp_dir)
+          @@temp_dir_writeable = false
+        else
+          begin
+            FileUtils.touch mytestfile
+            FileUtils.rm mytestfile
+            @@temp_dir_writeable = true
+          rescue => e
+            @@temp_dir_writeable = false
+          end
+        end
+      end
+
+      return @@temp_dir_writeable
+    end
 
 
     def self.http_root_url
@@ -382,6 +430,173 @@ module RedmineGitolite
     end
 
 
+    ###############################
+    ##                           ##
+    ##        SUDO TESTS         ##
+    ##                           ##
+    ###############################
+
+    ## SUDO TEST1
+
+    @@sudo_gitolite_to_redmine_user_stamp = nil
+    @@sudo_gitolite_to_redmine_user_cached = nil
+
+    def self.can_gitolite_sudo_to_redmine_user?
+      if !@@sudo_gitolite_to_redmine_user_cached.nil? && (Time.new - @@sudo_gitolite_to_redmine_user_stamp <= 1)
+        return @@sudo_gitolite_to_redmine_user_cached
+      end
+
+      logger.info { "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..." }
+
+      if gitolite_user == redmine_user
+        @@sudo_gitolite_to_redmine_user_cached = true
+        @@sudo_gitolite_to_redmine_user_stamp = Time.new
+        logger.info { "OK!" }
+        return @@sudo_gitolite_to_redmine_user_cached
+      end
+
+      begin
+        test = sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
+        if test.match(/#{redmine_user}/)
+          logger.info { "OK!" }
+          @@sudo_gitolite_to_redmine_user_cached = true
+          @@sudo_gitolite_to_redmine_user_stamp = Time.new
+        else
+          logger.warn { "Error while testing sudo_git_to_redmine_user" }
+          @@sudo_gitolite_to_redmine_user_cached = false
+          @@sudo_gitolite_to_redmine_user_stamp = Time.new
+        end
+      rescue GitHosting::GitHostingException => e
+        logger.error { "Error while testing sudo_git_to_redmine_user" }
+        @@sudo_gitolite_to_redmine_user_cached = false
+        @@sudo_gitolite_to_redmine_user_stamp = Time.new
+      end
+
+      return @@sudo_gitolite_to_redmine_user_cached
+    end
+
+
+    ## SUDO TEST2
+
+    @@sudo_redmine_to_gitolite_user_stamp = nil
+    @@sudo_redmine_to_gitolite_user_cached = nil
+
+    def self.can_redmine_sudo_to_gitolite_user?
+      if !@@sudo_redmine_to_gitolite_user_cached.nil? && (Time.new - @@sudo_redmine_to_gitolite_user_stamp <= 1)
+        return @@sudo_redmine_to_gitolite_user_cached
+      end
+
+      logger.info { "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..." }
+
+      if gitolite_user == redmine_user
+        @@sudo_redmine_to_gitolite_user_cached = true
+        @@sudo_redmine_to_gitolite_user_stamp = Time.new
+        logger.info { "OK!" }
+        return @@sudo_redmine_to_gitolite_user_cached
+      end
+
+      begin
+        test = sudo_capture('whoami')
+        if test.match(/#{gitolite_user}/)
+          logger.info { "OK!" }
+          @@sudo_redmine_to_gitolite_user_cached = true
+          @@sudo_redmine_to_gitolite_user_stamp = Time.new
+        else
+          logger.warn { "Error while testing sudo_web_to_gitolite_user" }
+          @@sudo_redmine_to_gitolite_user_cached = false
+          @@sudo_redmine_to_gitolite_user_stamp = Time.new
+        end
+      rescue GitHosting::GitHostingException => e
+        logger.error { "Error while testing sudo_web_to_gitolite_user" }
+        @@sudo_redmine_to_gitolite_user_cached = false
+        @@sudo_redmine_to_gitolite_user_stamp = Time.new
+      end
+
+      return @@sudo_redmine_to_gitolite_user_cached
+    end
+
+
+    ###############################
+    ##                           ##
+    ##          MIRRORS          ##
+    ##                           ##
+    ###############################
+
+    GITOLITE_MIRRORING_KEYS_NAME   = "redmine_gitolite_admin_id_rsa_mirroring"
+
+
+    def self.gitolite_ssh_private_key_dest_path
+      File.join('$HOME', '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
+    end
+
+
+    def self.gitolite_ssh_public_key_dest_path
+      File.join('$HOME', '.ssh', "#{GITOLITE_MIRRORING_KEYS_NAME}.pub")
+    end
+
+
+    def self.gitolite_mirroring_script_dest_path
+      File.join('$HOME', '.ssh', 'run_gitolite_admin_ssh')
+    end
+
+
+    @@mirroring_public_key = nil
+
+    def self.mirroring_public_key
+      if @@mirroring_public_key.nil?
+        begin
+          public_key = File.read(gitolite_ssh_public_key).chomp.strip
+          @@mirroring_public_key = public_key.split(/[\t ]+/)[0].to_s + " " + public_key.split(/[\t ]+/)[1].to_s
+        rescue => e
+          logger.error { "Error while loading mirroring public key : #{e.output}" }
+          @@mirroring_public_key = nil
+        end
+      end
+
+      return @@mirroring_public_key
+    end
+
+
+    @@mirroring_keys_installed = false
+
+    def self.mirroring_keys_installed?(opts = {})
+      @@mirroring_keys_installed = false if opts.has_key?(:reset) && opts[:reset] == true
+
+      if !@@mirroring_keys_installed
+        logger.info { "Installing Redmine Gitolite mirroring SSH keys ..." }
+
+        command = ['#!/bin/sh', "\n", 'exec', 'ssh', '-T', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=no', '-i', gitolite_ssh_private_key_dest_path, '"$@"'].join(' ')
+
+        begin
+          sudo_pipe("sh") do
+            [ 'echo', "'" + File.read(gitolite_ssh_private_key).chomp.strip + "'", '>', gitolite_ssh_private_key_dest_path ].join(' ')
+          end
+
+          sudo_pipe("sh") do
+            [ 'echo', "'" + File.read(gitolite_ssh_public_key).chomp.strip + "'", '>', gitolite_ssh_public_key_dest_path ].join(' ')
+          end
+
+          sudo_pipe("sh") do
+            [ 'echo', "'" + command + "'", '>', gitolite_mirroring_script_dest_path ].join(' ')
+          end
+
+          sudo_chmod('600', gitolite_ssh_private_key_dest_path)
+          sudo_chmod('644', gitolite_ssh_public_key_dest_path)
+          sudo_chmod('700', gitolite_mirroring_script_dest_path)
+
+          logger.info { "Done !" }
+
+          @@mirroring_keys_installed = true
+        rescue GitHosting::GitHostingException => e
+          logger.error { "Failed installing Redmine Gitolite mirroring SSH keys !(#{e.output})" }
+          @@mirroring_keys_installed = false
+        end
+      end
+
+      return @@mirroring_keys_installed
+    end
+
+
     ##########################
     #                        #
     #   Gitolite Accessor    #
@@ -406,6 +621,7 @@ module RedmineGitolite
 
 
     def self.admin
+      create_temp_dir
       admin_dir = gitolite_admin_dir
       logger.info { "Acessing gitolite-admin.git at '#{admin_dir}'" }
       Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)

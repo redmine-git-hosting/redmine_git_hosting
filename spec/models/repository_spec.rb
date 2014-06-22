@@ -77,9 +77,8 @@ describe Repository::Git do
 
     it { should respond_to(:available_urls) }
 
-    it { should respond_to(:mailing_list_default_users) }
-    it { should respond_to(:mailing_list_effective) }
-    it { should respond_to(:mailing_list_params) }
+    it { should respond_to(:default_list) }
+    it { should respond_to(:mail_mapping) }
 
     it { should respond_to(:get_full_parent_path) }
     it { should respond_to(:exists_in_gitolite?) }
