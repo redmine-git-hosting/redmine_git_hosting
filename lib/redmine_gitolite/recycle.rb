@@ -58,7 +58,7 @@ module RedmineGitolite
       end
 
       if result.length > 0
-        logger.info { "Garbage-collecting #{result.length} expired repositor#{(result.length != 1) ? "ies" : "y"} from Recycle Bin :" }
+        logger.info { "Removing #{result.length} expired repositor#{(result.length != 1) ? "ies" : "y"} from Recycle Bin :" }
 
         result.each do |dirname|
           logger.info { "Deleting '#{dirname}'" }
@@ -68,6 +68,8 @@ module RedmineGitolite
             logger.error { "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{dirname}' !" }
           end
         end
+
+        logger.info { "Done !" }
 
         # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
         delete_recycle_bin_dir
