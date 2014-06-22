@@ -43,8 +43,6 @@ fr:
 
   label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
   label_gitolite_temp_dir_desc: (Doit être absolu)
-  label_gitolite_timeout: Délai d'expiration Git
-  label_gitolite_timeout_desc: (En secondes)
 
   label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)

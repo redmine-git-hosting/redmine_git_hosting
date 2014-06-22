@@ -3,7 +3,6 @@
   gitolite_recycle_bin_expiration_time = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time)
 
   gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
-  gitolite_timeout     = RedmineGitolite::Config.get_setting(:gitolite_timeout)
   gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
   gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split)
 
@@ -18,13 +17,6 @@
   <%= text_field_tag("settings[gitolite_temp_dir]", gitolite_temp_dir, :size => 60) %>
   <br />
   <em><%= l(:label_gitolite_temp_dir_desc) %></em>
-</p>
-
-<p>
-  <label><%= l(:label_gitolite_timeout) %></label>
-  <%= text_field_tag("settings[gitolite_timeout]", "#{gitolite_timeout}", :size => 10) %>
-  <br />
-  <em><%= l(:label_gitolite_timeout_desc) %></em>
 </p>
 
 <p>
