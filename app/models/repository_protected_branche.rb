@@ -4,6 +4,8 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   VALID_PERMS  = [ "RW+", "RW", "R", '-' ]
   DEFAULT_PERM = "RW+"
 
+  attr_accessible :role_id, :path, :permissions
+
   ## Relations
   belongs_to :repository
   belongs_to :role
