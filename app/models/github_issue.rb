@@ -3,5 +3,6 @@ class GithubIssue < ActiveRecord::Base
 
   belongs_to :issue
 
-  validates_uniqueness_of :github_id, :scope => :issue_id
+  validates :github_id, :presence => true
+  validates :issue_id,  :presence => true, :uniqueness => { :scope => :github_id }
 end
