@@ -3,6 +3,8 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   VALID_EMAIL_REGEX  = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
 
+  attr_accessible :prefix, :sender_address, :include_list, :exclude_list
+
   ## Relations
   belongs_to :repository
 
@@ -48,6 +50,5 @@ class RepositoryGitNotification < ActiveRecord::Base
       errors.add(:repository_git_notification, 'the same address is defined twice')
     end
   end
-
 
 end

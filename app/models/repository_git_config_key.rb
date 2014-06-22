@@ -1,6 +1,8 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
+  attr_accessible :key, :value
+
   ## Relations
   belongs_to :repository
 
