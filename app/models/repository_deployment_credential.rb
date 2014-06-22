@@ -27,7 +27,8 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   validates_associated :gitolite_public_key
   validates_associated :user
 
-  validate :correct_key_type, :owner_matches_key
+  validate :correct_key_type
+  validate :owner_matches_key
 
   ## Scopes
   scope :active,   -> { where active: STATUS_ACTIVE }
