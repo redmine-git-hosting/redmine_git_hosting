@@ -624,7 +624,11 @@ module RedmineGitolite
       create_temp_dir
       admin_dir = gitolite_admin_dir
       logger.info { "Acessing gitolite-admin.git at '#{admin_dir}'" }
-      Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
+      begin
+        Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
+      rescue => e
+        logger.error { e.message }
+      end
     end
 
 
