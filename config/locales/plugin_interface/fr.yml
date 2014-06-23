@@ -113,6 +113,7 @@ fr:
   notice_protected_branch_update_failed: Échec de modification de la branche protégée
 
   label_branch_path: Chemin de la branche
+  label_user_list: Liste des utilisateurs autorisés
 
 
   ########### GIT NOTIFICATIONS ###########

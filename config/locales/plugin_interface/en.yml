@@ -113,6 +113,7 @@ en:
   notice_protected_branch_update_failed: Failed to update protected branch
 
   label_branch_path: Branch path
+  label_user_list: Users allowed
 
 
   ########### GIT NOTIFICATIONS ###########

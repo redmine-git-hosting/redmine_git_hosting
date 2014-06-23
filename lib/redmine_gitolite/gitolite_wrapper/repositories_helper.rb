@@ -232,12 +232,12 @@ module RedmineGitolite
         rewind_users   = users.select{|user| user.allowed_to?(:manage_repository, project)}
         write_users    = users.select{|user| user.allowed_to?(:commit_access, project)} - rewind_users
         read_users     = users.select{|user| user.allowed_to?(:view_changesets, project)} - rewind_users - write_users
-        developer_team = rewind_users + write_users
 
         if project.active?
-          rewind = rewind_users.map{|user| user.gitolite_identifier}
-          write  = write_users.map{|user| user.gitolite_identifier}
-          read   = read_users.map{|user| user.gitolite_identifier}
+          rewind = rewind_users.map{|user| user.gitolite_identifier}.sort
+          write  = write_users.map{|user| user.gitolite_identifier}.sort
+          read   = read_users.map{|user| user.gitolite_identifier}.sort
+          developer_team = rewind + write
 
           ## DEPLOY KEY
           repository.deployment_credentials.active.each do |cred|
@@ -260,9 +260,30 @@ module RedmineGitolite
         end
 
         permissions = {}
-        permissions["RW+"] = {"" => rewind.uniq.sort} unless rewind.empty?
-        permissions["RW"] = {"" => write.uniq.sort} unless write.empty?
-        permissions["R"] = {"" => read.uniq.sort} unless read.empty?
+        permissions["RW+"] = {}
+        permissions["RW"] = {}
+        permissions["R"] = {}
+
+        if repository.extra[:protected_branch]
+          ## http://gitolite.com/gitolite/rules.html
+          ## The refex field is ignored for read check.
+          ## (Git does not support distinguishing one ref from another for access control during read operations).
+
+          repository.protected_branches.each do |branch|
+            case branch.permissions
+              when 'RW+'
+                permissions["RW+"][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
+              when 'RW'
+                permissions["RW"][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
+            end
+          end
+
+          permissions["RW+"]['personal/USER/'] = developer_team.sort unless developer_team.empty?
+        end
+
+        permissions["RW+"][""] = rewind unless rewind.empty?
+        permissions["RW"][""] = write unless write.empty?
+        permissions["R"][""] = read unless read.empty?
 
         permissions
       end

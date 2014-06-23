@@ -6,7 +6,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   before_filter :can_create_protected_branches, :only => [:new, :create]
   before_filter :can_edit_protected_branches,   :only => [:edit, :update, :destroy]
 
-  before_filter :find_repository_protected_branch, :except => [:index, :new, :create]
+  before_filter :find_repository_protected_branch, :except => [:index, :new, :create, :sort]
 
 
   def index
@@ -21,6 +21,8 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def new
     @protected_branch = RepositoryProtectedBranche.new()
+    @protected_branch.repository = @repository
+    @protected_branch.user_list  = []
   end
 
 
@@ -78,6 +80,14 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def clone
     @protected_branch = RepositoryProtectedBranche.clone_from(params[:id])
     render "new"
+  end
+
+
+  def sort
+    params[:repository_protected_branche].each_with_index do |id, index|
+      RepositoryProtectedBranche.update_all({position: index + 1}, {id: id})
+    end
+    render :nothing => true
   end
 
 
