@@ -25,9 +25,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def create
-    params[:repository_git_notifications][:include_list] = params[:repository_git_notifications][:include_list].select{|mail| !mail.blank?}
-    params[:repository_git_notifications][:exclude_list] = params[:repository_git_notifications][:exclude_list].select{|mail| !mail.blank?}
-
     @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
     @git_notification.repository = @repository
 
@@ -49,9 +46,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def update
-    params[:repository_git_notifications][:include_list] = params[:repository_git_notifications][:include_list].select{|mail| !mail.blank?}
-    params[:repository_git_notifications][:exclude_list] = params[:repository_git_notifications][:exclude_list].select{|mail| !mail.blank?}
-
     respond_to do |format|
       if @git_notification.update_attributes(params[:repository_git_notifications])
         flash[:notice] = l(:notice_git_notifications_updated)
