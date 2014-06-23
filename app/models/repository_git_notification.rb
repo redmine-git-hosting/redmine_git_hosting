@@ -19,6 +19,8 @@ class RepositoryGitNotification < ActiveRecord::Base
   serialize :exclude_list, Array
 
   ## Callbacks
+  before_validation :remove_blank_items
+
   after_commit ->(obj) { obj.update_repository }, :on => :create
   after_commit ->(obj) { obj.update_repository }, :on => :update
   after_commit ->(obj) { obj.update_repository }, :on => :destroy
@@ -34,6 +36,12 @@ class RepositoryGitNotification < ActiveRecord::Base
 
 
   private
+
+
+  def remove_blank_items
+    self.include_list = include_list.select{ |mail| !mail.blank? }
+    self.exclude_list = exclude_list.select{ |mail| !mail.blank? }
+  end
 
 
   def validate_mailing_list
