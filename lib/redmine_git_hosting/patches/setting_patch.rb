@@ -366,14 +366,13 @@ module RedmineGitHosting
 
 
             ## Gitolite hooks config has changed, update our .gitconfig!
-            if @@old_valuehash[:http_server_domain] !=  valuehash[:http_server_domain] ||
-               @@old_valuehash[:https_server_domain] !=  valuehash[:https_server_domain] ||
-               @@old_valuehash[:gitolite_hooks_debug] != valuehash[:gitolite_hooks_debug] ||
+            if @@old_valuehash[:gitolite_hooks_debug] != valuehash[:gitolite_hooks_debug] ||
                @@old_valuehash[:gitolite_force_hooks_update] != valuehash[:gitolite_force_hooks_update] ||
                @@old_valuehash[:gitolite_hooks_are_asynchronous] != valuehash[:gitolite_hooks_are_asynchronous]
-                # Need to update our .gitconfig
-                hooks = RedmineGitolite::Hooks.new
-                hooks.hook_params_installed?
+
+              # Need to update our .gitconfig
+              hooks = RedmineGitolite::Hooks.new
+              hooks.hook_params_installed?
             end
 
 
