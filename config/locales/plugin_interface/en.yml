@@ -97,6 +97,25 @@ en:
   label_value: Value
 
 
+  ########### PROTECTED BRANCHES ###########
+  # Basics labels
+  label_protected_branches: Protected branches
+  label_protected_branch_add: Add protected branch
+  label_protected_branch_create: Create protected branch
+  label_protected_branch_edit: Edit protected branch
+  label_protected_branch_delete: Delete protected branch
+
+  # Basics notices
+  notice_protected_branch_created: Protected branch was successfully created.
+  notice_protected_branch_updated: Protected branch was successfully updated.
+  notice_protected_branch_deleted: Protected branch was successfully deleted.
+  notice_protected_branch_create_failed: Failed to create protected branch
+  notice_protected_branch_update_failed: Failed to update protected branch
+
+  label_branch_path: Branch path
+  label_user_list: Users allowed
+
+
   ########### GIT NOTIFICATIONS ###########
   # Basics labels
   label_git_notifications: Mailing list
@@ -200,9 +219,11 @@ en:
   label_enable_git_notify: Enable Mailing list
   label_enable_git_daemon: Enable Git Daemon
   label_enable_smart_http: Smart HTTP Mode
+  label_enable_protected_branches: Enable protected branches
   label_git_daemon: Git Daemon
   label_smart_http: Smart HTTP
   label_git_notify: Git Notifications
+  label_protected_branch: Protected Branches
   label_repository_default_branch: Repository default branch
   label_init_repo_with_readme: Initialize this repository with a README
   label_browse_repository: Browse repository
@@ -285,3 +306,4 @@ en:
   label_mode: Mode
   label_hour: Hour
   button_ok: OK
+  button_clone: Clone

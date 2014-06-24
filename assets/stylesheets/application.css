@@ -5,12 +5,14 @@ PLUGIN ICONS
 
 .icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
 .icon-push { background-image: url("../images/icon-divide.png"); }
+.icon-clone { background-image: url("../images/clone.png"); }
 .icon-deployment-credentials { background-image: url("../images/textfield_key.png"); }
 .icon-post-receive-urls { background-image: url("../images/link.png"); }
 .icon-mirrors { background-image: url("../images/table_multiple.png"); }
 .icon-git-daemon { background-image: url("../images/changeset.png"); }
 .icon-git-smarthttp { background-image: url("../images/web.png"); }
 .icon-git-notify { background-image: url("../images/email.png"); }
+.icon-git-protected-branch { background-image: url("../images/locked.png"); }
 
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }

@@ -135,6 +135,16 @@
         </p>
       <% end %>
 
+      <% if user_allowed_to(:create_repository_protected_branches, @repository.project) %>
+        <p>
+          <label><%= l(:label_enable_protected_branches) %></label>
+          <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+            <%= hidden_field_tag "extra[protected_branch]", "false" %>
+            <%= check_box_tag "extra[protected_branch]", @repository.extra[:protected_branch], @repository.extra[:protected_branch] %>
+          </span>
+        </p>
+      <% end %>
+
       <p>
         <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
         <%= select_tag "extra[git_http]", options_for_select([

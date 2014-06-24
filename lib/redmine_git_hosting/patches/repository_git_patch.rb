@@ -15,6 +15,7 @@ module RedmineGitHosting
           has_many :post_receive_urls,      :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryPostReceiveUrl'
           has_many :deployment_credentials, :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryDeploymentCredential'
           has_many :git_config_keys,        :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryGitConfigKey'
+          has_many :protected_branches,     :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryProtectedBranche'
 
           alias_method_chain :report_last_commit,       :git_hosting
           alias_method_chain :extra_report_last_commit, :git_hosting

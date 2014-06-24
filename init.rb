@@ -101,6 +101,10 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_repository_git_config_keys,   :repository_git_config_keys => :index
     permission :edit_repository_git_config_keys,   :repository_git_config_keys => :edit
 
+    permission :create_repository_protected_branches, :repository_protected_branches => :create
+    permission :view_repository_protected_branches,   :repository_protected_branches => :index
+    permission :edit_repository_protected_branches,   :repository_protected_branches => :edit
+
     permission :create_repository_git_notifications, :repository_git_notifications => :create
     permission :view_repository_git_notifications,   :repository_git_notifications => :index
     permission :edit_repository_git_notifications,   :repository_git_notifications => :edit

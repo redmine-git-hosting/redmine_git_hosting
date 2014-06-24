@@ -1,0 +1,55 @@
+<div id="validation_messages_protected_branch"><%= error_messages_for 'protected_branch' %></div>
+
+<div class="box">
+  <p><%= f.text_field :path,        :required => true, :size => 65, :label => l(:label_branch_path) %></p>
+  <p><%= f.select     :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions),
+                      :required => true,
+                      :label    => :label_permissions %>
+  </p>
+
+  <%= hidden_field_tag "repository_protected_branches[user_list][]", "" %>
+
+  <p><label for="repository_protected_branches[user_list]"><%= l(:label_user_list) %> :</label></p>
+  <ul id="user_list">
+    <% if @protected_branch.user_list.any? %>
+      <% @protected_branch.user_list.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+
+<%= javascript_tag do %>
+  var user_list = <%= raw @protected_branch.available_users.to_json %>;
+
+  function loadTagIt(target){
+
+    $('#' + target).gtagit({
+      autocomplete: {source: function(request, resolve) {
+          // fetch new values with request.resolve
+          resolve(user_list);
+        }
+      },
+      afterTagAdded: function(event, ui) {
+        var value = ui.tag.children('input:hidden').val();
+        user_list = user_list.filter(function(v) { return v != value;});
+        $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+      },
+      afterTagRemoved: function(event, ui) {
+        var value = ui.tag.children('input:hidden').val();
+        user_list.push(value);
+        $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
+      },
+      showAutocompleteOnFocus: true,
+      placeholderText: '+ add user',
+      allowDuplicates: false,
+      caseSensitive: false,
+      fieldName: 'repository_protected_branches[' + target + '][]',
+    });
+
+  }
+
+  $(document).ready(function() {
+    loadTagIt('user_list');
+  });
+<% end %>
