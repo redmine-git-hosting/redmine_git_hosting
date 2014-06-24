@@ -29,8 +29,8 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
   def create
-    @credential = RepositoryDeploymentCredential.new(params[:repository_deployment_credentials])
-    key = GitolitePublicKey.find_by_id(params[:repository_deployment_credentials][:gitolite_public_key_id])
+    @credential = RepositoryDeploymentCredential.new(params[:repository_deployment_credential])
+    key = GitolitePublicKey.find_by_id(params[:repository_deployment_credential][:gitolite_public_key_id])
 
     @credential.repository = @repository
     @credential.gitolite_public_key = key if !key.nil?
@@ -61,7 +61,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @credential.update_attributes(params[:repository_deployment_credentials])
+      if @credential.update_attributes(params[:repository_deployment_credential])
         flash[:notice] = l(:notice_deployment_credential_updated)
 
         format.html { redirect_to success_url }

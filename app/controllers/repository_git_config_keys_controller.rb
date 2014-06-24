@@ -25,7 +25,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
 
   def create
-    @git_config_key = RepositoryGitConfigKey.new(params[:repository_git_config_keys])
+    @git_config_key = RepositoryGitConfigKey.new(params[:repository_git_config_key])
     @git_config_key.repository = @repository
 
     respond_to do |format|
@@ -47,7 +47,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @git_config_key.update_attributes(params[:repository_git_config_keys])
+      if @git_config_key.update_attributes(params[:repository_git_config_key])
         flash[:notice] = l(:notice_git_config_key_updated)
 
         format.html { redirect_to success_url }

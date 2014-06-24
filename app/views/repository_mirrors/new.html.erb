@@ -2,7 +2,7 @@
   <h2><%= l(:label_mirror_create) %></h2>
 <% end %>
 
-<%= labelled_form_for :repository_mirrors, @mirror,
+<%= labelled_form_for :repository_mirror, @mirror,
                       :url  => repository_mirrors_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 

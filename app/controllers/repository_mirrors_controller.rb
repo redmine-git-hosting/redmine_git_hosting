@@ -25,7 +25,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def create
-    @mirror = RepositoryMirror.new(params[:repository_mirrors])
+    @mirror = RepositoryMirror.new(params[:repository_mirror])
     @mirror.repository = @repository
 
     respond_to do |format|
@@ -47,7 +47,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @mirror.update_attributes(params[:repository_mirrors])
+      if @mirror.update_attributes(params[:repository_mirror])
         flash[:notice] = l(:notice_mirror_updated)
 
         format.html { redirect_to success_url }

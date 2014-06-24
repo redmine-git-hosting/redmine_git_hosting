@@ -25,7 +25,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
 
   def create
-    @post_receive_url = RepositoryPostReceiveUrl.new(params[:repository_post_receive_urls])
+    @post_receive_url = RepositoryPostReceiveUrl.new(params[:repository_post_receive_url])
     @post_receive_url.repository_id = @repository.id
 
     respond_to do |format|
@@ -47,7 +47,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @post_receive_url.update_attributes(params[:repository_post_receive_urls])
+      if @post_receive_url.update_attributes(params[:repository_post_receive_url])
         flash[:notice] = l(:notice_post_receive_url_updated)
 
         format.html { redirect_to success_url }

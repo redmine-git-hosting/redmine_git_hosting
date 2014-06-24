@@ -7,9 +7,9 @@
                       :label    => :label_permissions %>
   </p>
 
-  <%= hidden_field_tag "repository_protected_branches[user_list][]", "" %>
+  <%= hidden_field_tag "repository_protected_branche[user_list][]", "" %>
 
-  <p><label for="repository_protected_branches[user_list]"><%= l(:label_user_list) %> :</label></p>
+  <p><label for="repository_protected_branche[user_list]"><%= l(:label_user_list) %> :</label></p>
   <ul id="user_list">
     <% if @protected_branch.user_list.any? %>
       <% @protected_branch.user_list.each do |item| %>
@@ -44,7 +44,7 @@
       placeholderText: '+ add user',
       allowDuplicates: false,
       caseSensitive: false,
-      fieldName: 'repository_protected_branches[' + target + '][]',
+      fieldName: 'repository_protected_branche[' + target + '][]',
     });
 
   }

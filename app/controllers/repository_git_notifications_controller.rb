@@ -25,7 +25,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def create
-    @git_notification = RepositoryGitNotification.new(params[:repository_git_notifications])
+    @git_notification = RepositoryGitNotification.new(params[:repository_git_notification])
     @git_notification.repository = @repository
 
     respond_to do |format|
@@ -47,7 +47,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @git_notification.update_attributes(params[:repository_git_notifications])
+      if @git_notification.update_attributes(params[:repository_git_notification])
         flash[:notice] = l(:notice_git_notifications_updated)
 
         format.html { redirect_to success_url }

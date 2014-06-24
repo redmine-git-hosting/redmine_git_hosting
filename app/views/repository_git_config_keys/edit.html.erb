@@ -2,7 +2,7 @@
   <h2><%= l(:label_git_config_key_edit) %></h2>
 <% end %>
 
-<%= labelled_form_for :repository_git_config_keys, @git_config_key,
+<%= labelled_form_for :repository_git_config_key, @git_config_key,
                       :url  => repository_git_config_key_path(@repository, @git_config_key),
                       :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
 

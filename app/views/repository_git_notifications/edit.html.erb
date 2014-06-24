@@ -2,7 +2,7 @@
   <h2><%= l(:label_git_notifications_edit) %></h2>
 <% end %>
 
-<%= labelled_form_for :repository_git_notifications, @git_notification,
+<%= labelled_form_for :repository_git_notification, @git_notification,
                       :url  => repository_git_notification_path(@repository, @git_notification),
                       :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
 

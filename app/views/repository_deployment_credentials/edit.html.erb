@@ -2,7 +2,7 @@
   <h2><%= l(:label_deployment_credential_edit) %></h2>
 <% end %>
 
-<%= labelled_form_for :repository_deployment_credentials, @credential,
+<%= labelled_form_for :repository_deployment_credential, @credential,
                       :url  => repository_deployment_credential_path(@repository, @credential),
                       :html => { :method => :put, :class => 'tabular', :remote => @is_xhr } do |f| %>
 

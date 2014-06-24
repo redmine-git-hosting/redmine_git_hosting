@@ -27,7 +27,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
 
   def create
-    @protected_branch = RepositoryProtectedBranche.new(params[:repository_protected_branches])
+    @protected_branch = RepositoryProtectedBranche.new(params[:repository_protected_branche])
     @protected_branch.repository = @repository
 
     respond_to do |format|
@@ -49,7 +49,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def update
     respond_to do |format|
-      if @protected_branch.update_attributes(params[:repository_protected_branches])
+      if @protected_branch.update_attributes(params[:repository_protected_branche])
         flash[:notice] = l(:notice_protected_branch_updated)
 
         format.html { redirect_to success_url }
