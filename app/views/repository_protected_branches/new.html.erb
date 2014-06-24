@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_protected_branches, @protected_branch,
-                      :url  => { :controller => 'repository_protected_branches', :action => 'create', :repository_id => @repository.id, :id => @protected_branch.id },
+                      :url  => repository_protected_branches_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>

@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_git_config_keys, @git_config_key,
-                      :url  => { :controller => 'repository_git_config_keys', :action => 'create', :repository_id => @repository.id, :id => @git_config_key.id },
+                      :url  => repository_git_config_keys_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>

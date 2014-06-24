@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_post_receive_urls, @post_receive_url,
-                      :url  => { :controller => 'repository_post_receive_urls', :action => 'create', :repository_id => @repository.id, :id => @post_receive_url.id },
+                      :url  => repository_post_receive_urls_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>

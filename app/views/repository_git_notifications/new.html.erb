@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_git_notifications, @git_notification,
-                      :url  => { :controller => 'repository_git_notifications', :action => 'create', :repository_id => @repository.id, :id => @git_notification.id },
+                      :url  => repository_git_notifications_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>

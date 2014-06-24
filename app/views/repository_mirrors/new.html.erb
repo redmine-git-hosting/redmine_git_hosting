@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_mirrors, @mirror,
-                      :url  => { :controller => 'repository_mirrors', :action => 'create', :repository_id => @repository.id, :id => @mirror.id },
+                      :url  => repository_mirrors_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>

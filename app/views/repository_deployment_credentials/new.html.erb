@@ -3,7 +3,7 @@
 <% end %>
 
 <%= labelled_form_for :repository_deployment_credentials, @credential,
-                      :url  => { :controller => 'repository_deployment_credentials', :action => 'create', :repository_id => @repository.id, :id => @credential.id },
+                      :url  => repository_deployment_credentials_path(@repository),
                       :html => { :method => :post, :class => 'tabular', :remote => @is_xhr } do |f| %>
 
   <%= render :partial => 'form', :locals => { :f => f } %>
