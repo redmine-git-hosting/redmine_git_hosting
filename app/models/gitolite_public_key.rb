@@ -16,7 +16,7 @@ class GitolitePublicKey < ActiveRecord::Base
   validates :user_id,     :presence => true
 
   validates :title,       :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id },
-                          :length => { :maximum => TITLE_LENGTH_LIMIT }
+                          :length => { :maximum => TITLE_LENGTH_LIMIT }, :format => /\A[a-z0-9_\-]*\z/i
 
   validates :identifier,  :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
   validates :key,         :presence => true

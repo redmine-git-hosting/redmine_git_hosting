@@ -102,6 +102,19 @@ describe GitolitePublicKey do
   end
 
 
+  ## Test format validation
+  describe "when title format is invalid" do
+    invalid_format = [
+      'toto@toto',
+      'ma_clé'
+    ]
+    invalid_format.each do |format|
+      before { @ssh_key.title = format }
+      it { should_not be_valid }
+    end
+  end
+
+
   ## Test change validation
   describe "test change validation" do
 
