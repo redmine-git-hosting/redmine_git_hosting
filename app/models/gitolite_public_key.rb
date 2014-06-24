@@ -8,6 +8,8 @@ class GitolitePublicKey < ActiveRecord::Base
 
   DEPLOY_PSEUDO_USER = "deploy_key"
 
+  attr_accessible :title, :key, :key_type, :delete_when_unused
+
   ## Relations
   belongs_to :user
   has_many   :repository_deployment_credentials, :dependent => :destroy

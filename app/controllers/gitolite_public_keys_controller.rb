@@ -14,7 +14,8 @@ class GitolitePublicKeysController < ApplicationController
 
 
   def create
-    @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key].merge(:user => @user))
+    @gitolite_public_key = GitolitePublicKey.new(params[:gitolite_public_key])
+    @gitolite_public_key.user = @user
 
     if params[:create_button]
       if @gitolite_public_key.save
