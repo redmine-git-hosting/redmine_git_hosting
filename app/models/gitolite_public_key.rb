@@ -3,9 +3,6 @@ class GitolitePublicKey < ActiveRecord::Base
 
   TITLE_LENGTH_LIMIT = 255
 
-  STATUS_ACTIVE = true
-  STATUS_LOCKED = false
-
   KEY_TYPE_USER   = 0
   KEY_TYPE_DEPLOY = 1
 
@@ -30,9 +27,6 @@ class GitolitePublicKey < ActiveRecord::Base
   validate :key_uniqueness
 
   ## Scopes
-  scope :active,   -> { where active: STATUS_ACTIVE }
-  scope :inactive, -> { where active: STATUS_LOCKED }
-
   scope :user_key,   -> { where key_type: KEY_TYPE_USER }
   scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
 

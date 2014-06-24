@@ -22,7 +22,6 @@ describe GitolitePublicKey do
   it { should respond_to(:identifier) }
   it { should respond_to(:fingerprint) }
   it { should respond_to(:key) }
-  it { should respond_to(:active) }
   it { should respond_to(:delete_when_unused) }
 
   it "can render as string" do
@@ -47,10 +46,6 @@ describe GitolitePublicKey do
 
   it "is not a deploy key" do
     expect(@ssh_key.deploy_key?).to be false
-  end
-
-  it "is a active key" do
-    expect(@ssh_key.active?).to be true
   end
 
   it "must be deleted when unused" do
@@ -109,13 +104,6 @@ describe GitolitePublicKey do
 
   ## Test change validation
   describe "test change validation" do
-
-    describe "when active is false" do
-      before { @ssh_key.active = false }
-      it 'shoud be inactive' do
-        expect(@ssh_key.active?).to be false
-      end
-    end
 
     describe "when delete_when_unused is false" do
       before { @ssh_key.delete_when_unused = false }
@@ -213,26 +201,19 @@ describe GitolitePublicKey do
   describe "when many keys are saved" do
     ACTIVE_SSH_KEY_1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz0pLXcQWS4gLUimUSLwDOvEmQF8l8EKoj0LjxOyM3y2dpLsn0aiqS0ecA0G/ROomaawop8EZGFetoJKJM468OZlx2aKoQemzvFIq0Mn1ZhcrlA1alAsDYqzZI8iHO4JIS3YbeLLkVGAlYA+bmA5enXN9mGhC9cgoMC79EZiLD9XvOw4iXDjqXaCzFZHU1shMWwaJfpyxBm+Mxs2vtZzwETDqeu9rohNMl60dODf6+JoXYiahP+B+P2iKlL7ORb1YsAH/4ZMsVgRckj8snb4uc3XgwLRNNw+oB78ApZGr0j3Zc32U9rpmulbHIroWO07OV4Xsplnu8lhGvfodA2gjb nicolas@tchoum'
     ACTIVE_SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5+JfM82k03J98GWL6ghJ4TYM8DbvDnVh1s1rUDNlM/1U5rwbgXHOR4xV3lulgYEYRtYeMoL3rt4ZpEyXWkOreOVsUlkW66SZJR5aGVTNJOLX7HruEDqj7RWlt0u0MH6DgBVAJimQrxYN50jYD4XnDUjb/qv55EhPvbJ3jcAb3zuyRXMKZYGNVzVFLUagbvVaOwR23csWSLDTsAEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pRHOqRcZHcOgIhKiaLX nicolas@tchoum'
-
-    INACTIVE_SSH_KEY_1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/VG05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9yUxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3omd297/zzcQm3p nicolas@tchoum'
-    INACTIVE_SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zVI35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4C8cGYljjUWkx3v nicolas@tchoum'
+    ACTIVE_SSH_KEY_3 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/VG05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9yUxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3omd297/zzcQm3p nicolas@tchoum'
+    ACTIVE_SSH_KEY_4 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zVI35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4C8cGYljjUWkx3v nicolas@tchoum'
 
     before do
-      active_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active1', key: ACTIVE_SSH_KEY_1, :active => true, :key_type => 1)
-      active_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active2', key: ACTIVE_SSH_KEY_2, :active => true, :key_type => 1)
-
-      inactive_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'inactive1', key: INACTIVE_SSH_KEY_1, :active => false)
-      inactive_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'inactive2', key: INACTIVE_SSH_KEY_2, :active => false)
+      active_ssh_key_1 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active1', key: ACTIVE_SSH_KEY_1, :key_type => 1)
+      active_ssh_key_2 = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :title => 'active2', key: ACTIVE_SSH_KEY_2, :key_type => 1)
+      active_ssh_key_3 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'active3', key: ACTIVE_SSH_KEY_3)
+      active_ssh_key_4 = FactoryGirl.create(:gitolite_public_key, :user_id => @user2.id, :title => 'active4', key: ACTIVE_SSH_KEY_4)
     end
 
-    it "should have 3 active keys" do
-      expect(GitolitePublicKey.active.length).to be == 3
+    it "should have 5 keys" do
+      expect(GitolitePublicKey.all.length).to be == 5
     end
-
-    it "should have 2 inactive keys" do
-      expect(GitolitePublicKey.inactive.length).to be == 2
-    end
-
 
     it "should have 3 user keys" do
       expect(GitolitePublicKey.user_key.length).to be == 3
@@ -241,7 +222,6 @@ describe GitolitePublicKey do
     it "should have 2 deploy keys" do
       expect(GitolitePublicKey.deploy_key.length).to be == 2
     end
-
 
     it "user1 should have 3 keys" do
       expect(GitolitePublicKey.by_user(@user1).length).to be == 3
