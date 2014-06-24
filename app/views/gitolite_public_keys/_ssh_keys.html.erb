@@ -22,9 +22,6 @@
         <% end %>
 
         <td style="width:10%;" class="buttons">
-          <%= link_to l(:button_edit), { :public_key_id => key.id, :tab => params[:id]&&'keys'},
-                                       :class => 'icon icon-edit' %>
-
           <%= link_to l(:button_delete), public_key_path(key, :user_id => params[:id]),
                                          :method  => 'delete',
                                          :class   => 'icon icon-del',

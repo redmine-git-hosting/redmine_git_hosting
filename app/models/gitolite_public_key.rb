@@ -222,7 +222,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
     valid = true
 
-    %w(identifier key user_id key_type).each do |attribute|
+    %w(identifier key user_id key_type title fingerprint).each do |attribute|
       method = "#{attribute}_changed?"
       if self.send(method)
         errors.add(attribute, 'cannot be changed')

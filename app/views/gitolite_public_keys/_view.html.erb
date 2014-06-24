@@ -17,63 +17,11 @@
 
   <br/>
 
-  <% @new_key = @gitolite_public_key.new_record? %>
-
   <fieldset class="public_key_view">
-    <legend><%= @new_key ? l(:label_public_key_new) : l(:label_public_key_edit) %></legend>
-
-    <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
-
-    <%= labelled_form_for @gitolite_public_key,
-        :as   => :gitolite_public_key,
-        :url  => {:controller => 'gitolite_public_keys', :action => @new_key ? 'create' : 'update', :id => @gitolite_public_key.id, :user_id => params[:id], :tab => params[:id]&&'keys'},
-        :html => {:method => (@new_key ? :post : :put)} do |f| %>
-
-      <p><%= f.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width: 97%;' %></p>
-
-      <% if @gitolite_public_key.key_type == 1 || can_create_deployment_keys_for_some_project(@user) %>
-        <p>
-          <%= f.select :key_type, options_for_select(
-                                    [
-                                      [ l(:label_user_key), 0 ],
-                                      [ l(:label_deploy_key), 1 ]
-                                    ],
-                                    :selected => @gitolite_public_key.key_type,
-                                    :disabled => (@new_key ? [] : [0, 1])
-                                  ),
-                                  { :required => true, :label => :label_key_type },
-                                  { :class    => 'select_key_type' } %>
-
-
-        </p>
-
-        <div id="key_type_options" style="display: <%= (@new_key || @gitolite_public_key.key_type == 0) ? 'none' : '' %>;">
-          <p>
-            <%= f.check_box :delete_when_unused, :required => true, :label => :label_deployment_credential_delete_when_unused %>
-          </p>
-        </div>
-      <% end %>
-
-      <p>
-        <%= f.text_area :key, :label => :label_public_key, :required => true, :disabled => !@new_key,
-              :style => "width: 97%; height: 200px; overflow: auto;",
-              :cols => nil,
-              :rows => nil %>
-      </p>
-
-      <% if !@new_key %>
-        <em><%= l(:label_key_cannot_be_changed_please_create_new_key) %></em><br /><br />
-        <%= submit_tag l(:button_save),   :name => 'save_button' %>
-        <%= submit_tag l(:button_cancel), :name => 'cancel_button' %>
-      <% else %>
-        <em><%= l(:label_cut_and_paste) %></em><br /><br />
-        <%= submit_tag l(:button_create), :name => 'create_button' %>
-        <%= submit_tag l(:button_cancel), :name => 'cancel_button' %>
-      <% end %>
-
-    <% end %>
-
+    <legend><%= l(:label_public_key_new) %></legend>
+    <%= render :partial => 'gitolite_public_keys/form', :locals => {:gitolite_public_key => @gitolite_public_key, :user => @user} %>
   </fieldset>
+
 </fieldset>
 
 
