@@ -17,7 +17,7 @@ namespace :redmine_git_hosting do
       puts "  - Delete SSH key #{ssh_key.identifier}"
       RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, repo_key)
 
-      ssh_key.reset_identifier
+      ssh_key.reset_identifiers
     end
     puts ""
 
@@ -35,14 +35,10 @@ namespace :redmine_git_hosting do
     end
     puts ""
 
-    puts "Update projects repositories permissions"
-    projects = Project.active_or_archived.find(:all, :include => :repositories)
-    if projects.length > 0
-      RedmineGitolite::GitHosting.logger.info "Gitolite configuration has been modified, resync all projects..."
-      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
-    end
-    puts ""
+    RedmineGitolite::GitHosting.logger.info "Gitolite configuration has been modified, resync all projects..."
+    RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
 
+    puts "Done!"
   end
 
 end

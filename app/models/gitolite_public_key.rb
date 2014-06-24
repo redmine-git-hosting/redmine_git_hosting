@@ -90,15 +90,16 @@ class GitolitePublicKey < ActiveRecord::Base
 
   # Make sure that current identifier is consistent with current user login.
   # This method explicitly overrides the static nature of the identifier
-  def reset_identifier
+  def reset_identifiers
     # Fix identifier
     self.identifier = nil
+    self.fingerprint = nil
+
     set_identifier
+    set_fingerprint
 
     # Need to override the "never change identifier" constraint
     self.save(:validate => false)
-
-    self.identifier
   end
 
 
