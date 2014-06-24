@@ -40,7 +40,7 @@ module RedmineGitHosting
 
               if (normalizedFile == "/" || stripped[0,1] != "/")
                 # Don't allow either root-level (absolute) or relative
-                valuehash[:gitolite_temp_dir] = RedmineGitolite::Scripts.gitolite_admin_dir
+                valuehash[:gitolite_temp_dir] = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
               else
                 # Add trailing '/'
                 valuehash[:gitolite_temp_dir] = normalizedFile + "/"
@@ -251,6 +251,7 @@ module RedmineGitHosting
             end
 
 
+            ## If we don't auto-create repository, we cannot create README file
             if valuehash[:all_projects_use_git] == 'false'
               valuehash[:init_repositories_on_create] = 'false'
             end
