@@ -306,14 +306,15 @@ module RedmineGitHosting
             if @@old_valuehash[:gitolite_global_storage_dir] != valuehash[:gitolite_global_storage_dir] ||
                @@old_valuehash[:gitolite_redmine_storage_dir] != valuehash[:gitolite_redmine_storage_dir] ||
                @@old_valuehash[:hierarchical_organisation] != valuehash[:hierarchical_organisation]
-                # Need to update everyone!
-                # We take all root projects (even those who are closed) and move each hierarchy individually
-                projects = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
-                if projects.length > 0
-                  RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
-                  RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
-                  RedmineGitolite::GitHosting.resync_gitolite(:move_repositories_tree, projects.length, {:flush_cache => true})
-                end
+
+              # Need to update everyone!
+              # We take all root projects (even those who are closed) and move each hierarchy individually
+              projects = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
+              if projects.length > 0
+                RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
+                RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
+                RedmineGitolite::GitHosting.resync_gitolite(:move_repositories_tree, projects.length, {:flush_cache => true})
+              end
             end
 
 
