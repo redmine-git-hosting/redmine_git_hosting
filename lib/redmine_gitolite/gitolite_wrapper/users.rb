@@ -6,40 +6,31 @@ module RedmineGitolite
 
 
       def add_ssh_key
-        user = User.find_by_id(@object_id)
+        ssh_key = GitolitePublicKey.find_by_id(@object_id)
+        logger.info { "Adding SSH key #{ssh_key.identifier}" }
         @admin.transaction do
-          handle_user_update(user)
-          gitolite_admin_repo_commit("#{user.login}")
-        end
-      end
-
-
-      def update_ssh_keys
-        user = User.find_by_id(@object_id)
-        @admin.transaction do
-          handle_user_update(user)
-          gitolite_admin_repo_commit("#{user.login}")
+          add_gitolite_key(ssh_key)
+          gitolite_admin_repo_commit("Add SSH key : #{ssh_key.identifier}")
         end
       end
 
 
       def delete_ssh_key
-        ssh_key = @object_id
+        ssh_key = @object_id.symbolize_keys
+        logger.info { "Deleting SSH key #{ssh_key[:identifier]}" }
         @admin.transaction do
-          handle_ssh_key_delete(ssh_key)
-          gitolite_admin_repo_commit("#{ssh_key['title']}")
+          remove_gitolite_key(ssh_key)
+          gitolite_admin_repo_commit("Delete SSH key : #{ssh_key[:identifier]}")
         end
       end
 
 
-      def update_all_ssh_keys_forced
-        users = User.includes(:gitolite_public_keys).all
+      def resync_all_ssh_keys
+        ssh_keys = GitolitePublicKey.all
         @admin.transaction do
-          users.each do |user|
-            if user.gitolite_public_keys.any?
-              handle_user_update(user)
-              gitolite_admin_repo_commit("#{user.login}")
-            end
+          ssh_keys.each do |ssh_key|
+            add_gitolite_key(ssh_key)
+            gitolite_admin_repo_commit("Add SSH key : #{ssh_key.identifier}")
           end
         end
       end
@@ -48,59 +39,31 @@ module RedmineGitolite
       private
 
 
-      def handle_user_update(user)
-        add_active_keys(user.gitolite_public_keys.active)
-        remove_inactive_keys(user.gitolite_public_keys.inactive)
-      end
+      def add_gitolite_key(key)
+        parts     = key.key.split
+        repo_keys = @admin.ssh_keys[key.owner]
+        repo_key  = repo_keys.find_all{|k| k.location == key.location && k.owner == key.owner}.first
 
-
-      def handle_ssh_key_delete(ssh_key)
-        remove_inactive_key(ssh_key)
-      end
-
-
-      def add_active_keys(keys)
-        keys.each do |key|
-          parts = key.key.split
-          repo_keys = @admin.ssh_keys[key.owner]
-          repo_key = repo_keys.find_all{|k| k.location == key.location && k.owner == key.owner}.first
-          if repo_key
-            logger.info { "#{@action} : SSH key '#{key.owner}@#{key.location}' already exists in Gitolite, update it ..." }
-            repo_key.type, repo_key.blob, repo_key.email = parts
-            repo_key.owner = key.owner
-            repo_key.location = key.location
-          else
-            logger.info { "#{@action} : SSH key '#{key.owner}@#{key.location}' does not exist in Gitolite, create it ..." }
-            repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2])
-            repo_key.location = key.location
-            repo_key.owner = key.owner
-            @admin.add_key(repo_key)
-          end
+        unless repo_key
+          repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2], key.owner, key.location)
+          @admin.add_key(repo_key)
+        else
+          logger.info { "#{@action} : SSH key '#{key.owner}@#{key.location}' already exists in Gitolite, update it ..." }
+          repo_key.type, repo_key.blob, repo_key.email = parts
+          repo_key.owner = key.owner
+          repo_key.location = key.location
         end
       end
 
 
-      def remove_inactive_keys(keys)
-        keys.each do |key|
-          ssh_key = {}
-          ssh_key['owner']    = key.owner
-          ssh_key['location'] = key.location
-          logger.info { "#{@action} : removing inactive SSH key of '#{key.owner}'" }
-          remove_inactive_key(ssh_key)
-        end
-      end
-
-
-      def remove_inactive_key(key)
-        repo_keys = @admin.ssh_keys[key['owner']]
-        repo_key  = repo_keys.find_all{|k| k.location == key['location'] && k.owner == key['owner']}.first
+      def remove_gitolite_key(key)
+        repo_keys = @admin.ssh_keys[key[:owner]]
+        repo_key  = repo_keys.find_all{|k| k.location == key[:location] && k.owner == key[:owner]}.first
 
         if repo_key
-          logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' exists in Gitolite, delete it ..." }
           @admin.rm_key(repo_key)
         else
-          logger.info { "#{@action} : SSH key '#{key['owner']}@#{key['location']}' does not exits in Gitolite, exit !" }
-          return false
+          logger.info { "#{@action} : SSH key '#{key[:owner]}@#{key[:location]}' does not exits in Gitolite, exit !" }
         end
       end
 

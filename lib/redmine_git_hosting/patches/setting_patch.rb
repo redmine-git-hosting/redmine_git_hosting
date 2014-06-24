@@ -356,13 +356,8 @@ module RedmineGitHosting
 
             ## A resync has been asked within the interface, update all projects in force mode
             if @@resync_ssh_keys == true
-              # Need to update everyone!
-              users = User.all
-              if users.length > 0
-                RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys (#{users.length})..." }
-                RedmineGitolite::GitHosting.resync_gitolite(:update_all_ssh_keys_forced, users.length)
-              end
-
+              RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys..." }
+              RedmineGitolite::GitHosting.resync_gitolite(:resync_all_ssh_keys, 'all')
               @@resync_ssh_keys = false
             end
 

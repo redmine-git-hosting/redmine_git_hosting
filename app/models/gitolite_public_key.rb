@@ -57,6 +57,11 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
+  def to_yaml
+    { :title => self.identifier , :key => self.key, :location => self.location, :owner => self.owner }
+  end
+
+
   # Returns the path to this key under the gitolite keydir
   # resolves to <user.gitolite_identifier>/<location>/<owner>.pub
   #
@@ -129,21 +134,13 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def add_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
-    RedmineGitolite::GitHosting.resync_gitolite(:add_ssh_key, self.user.id)
+    RedmineGitolite::GitHosting.resync_gitolite(:add_ssh_key, self.id)
   end
 
 
   def destroy_ssh_key
     RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
-
-    ssh_key = {}
-    ssh_key['title']    = self.identifier
-    ssh_key['key']      = self.key
-    ssh_key['location'] = self.location
-    ssh_key['owner']    = self.owner
-
-    RedmineGitolite::GitHosting.logger.info { "Delete SSH key #{self.identifier}" }
-    RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, ssh_key)
+    RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, self.to_yaml)
   end
 
 
