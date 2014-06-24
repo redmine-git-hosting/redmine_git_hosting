@@ -7,3 +7,8 @@
   <label><%= l(:label_resync_all_ssh_keys) %></label>
   <%= check_box_tag "settings[gitolite_resync_all_ssh_keys]", true, false %>
 </p>
+
+<p>
+  <label><%= l(:label_flush_cache) %></label>
+  <%= check_box_tag "settings[gitolite_flush_cache]", true, false %>
+</p>

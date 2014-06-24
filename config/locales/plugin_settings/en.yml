@@ -170,6 +170,7 @@ en:
 
   label_resync_all_projects: Resync all projects ?
   label_resync_all_ssh_keys: Resync all SSH keys ?
+  label_flush_cache: Flush Git Cache?
 
   # Misc
   label_select_all: Select all

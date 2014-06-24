@@ -19,6 +19,7 @@ module RedmineGitHosting
         @@old_valuehash = ((Setting.plugin_redmine_git_hosting).clone rescue {})
         @@resync_projects = false
         @@resync_ssh_keys = false
+        @@flush_cache     = false
         @@delete_trash_repo = []
 
         def save_git_hosting_values
@@ -236,6 +237,14 @@ module RedmineGitHosting
             end
 
 
+            ## Flush Gitolite Cache
+            if valuehash[:gitolite_flush_cache] == 'true'
+              @@flush_cache = true
+              valuehash[:gitolite_flush_cache] = 'false'
+            end
+
+
+            ## Empty Recycle Bin
             if valuehash.has_key?(:gitolite_purge_repos) && !valuehash[:gitolite_purge_repos].empty?
               @@delete_trash_repo = valuehash[:gitolite_purge_repos]
               valuehash[:gitolite_purge_repos] = []
@@ -365,6 +374,13 @@ module RedmineGitHosting
                 # Need to update our .gitconfig
                 hooks = RedmineGitolite::Hooks.new
                 hooks.hook_params_installed?
+            end
+
+
+            ## A cache flush has been asked within the interface
+            if @@flush_cache == true
+              ActiveRecord::Base.connection.execute("TRUNCATE git_caches")
+              @@flush_cache = false
             end
 
 
