@@ -9,7 +9,7 @@
       <a href="http://git-scm.com/download" target="_blank"><%= l(:label_download_and_install_git) %></a>
       git config --global user.name "<%= User.current.name(:firstname_lastname) %>"
       git config --global user.email <%= User.current.mail ? User.current.mail : "mail@example.com" %>
-      <% if !User.current.anonymous? && User.current.gitolite_public_keys.active.length == 0 %>
+      <% if !User.current.anonymous? && User.current.gitolite_public_keys.length == 0 %>
       <%= link_to "Upload SSH Public Key", {:controller => 'my', :action => 'account'} %>
       <% end %>
     </pre>
