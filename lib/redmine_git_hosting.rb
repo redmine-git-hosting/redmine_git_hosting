@@ -1,9 +1,6 @@
 # Set up autoload of patches
-def apply_patch(&block)
-  ActionDispatch::Callbacks.to_prepare(&block)
-end
+Rails.configuration.to_prepare do
 
-apply_patch do
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/cache'
   require_dependency 'redmine_gitolite/config'
