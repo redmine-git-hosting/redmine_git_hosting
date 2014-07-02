@@ -136,6 +136,15 @@ module RedmineGitolite
     end
 
 
+    def hook_dir_exists?(hook_dir)
+      begin
+        GitoliteWrapper.sudo_dir_exists?(hook_dir)
+      rescue GitHosting::GitHostingException => e
+        return false
+      end
+    end
+
+
     ###############################
     ##                           ##
     ##         HOOK FILES        ##
@@ -283,13 +292,11 @@ module RedmineGitolite
     end
 
 
-    def hook_dir_exists?(hook_dir)
-      begin
-        GitoliteWrapper.sudo_dir_exists?(hook_dir)
-      rescue GitHosting::GitHostingException => e
-        return false
-      end
-    end
+    ###############################
+    ##                           ##
+    ##         GIT PARAMS        ##
+    ##                           ##
+    ###############################
 
 
     # Return a hash with global config parameters.
