@@ -33,18 +33,6 @@
   <% hooks_manager = RedmineGitolite::Hooks.new %>
 
   <tr>
-    <td><%= l(:label_gitolite_hooks_params_installed) %></td>
-    <td>
-      <% params_installed = hooks_manager.hook_params_installed? %>
-      <% params_installed.each do |param, installed| %>
-        <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
-        <em><%= param %></em>
-        <br />
-      <% end %>
-    </td>
-  </tr>
-
-  <tr>
     <td><%= l(:label_gitolite_hooks_installed) %></td>
     <td>
       <% hooks_installed  = hooks_manager.hooks_installed? %>
@@ -55,6 +43,18 @@
         <% if !tip.blank? %>
           <em>(<%= tip %>)</em>
         <% end %>
+        <br />
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <td><%= l(:label_gitolite_hooks_params_installed) %></td>
+    <td>
+      <% params_installed = hooks_manager.hook_params_installed? %>
+      <% params_installed.each do |param, installed| %>
+        <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+        <em><%= param %></em>
         <br />
       <% end %>
     </td>
