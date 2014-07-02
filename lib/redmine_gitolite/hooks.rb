@@ -29,13 +29,15 @@ module RedmineGitolite
       @gitolite_hooks_dir    = File.join('$HOME', '.gitolite', 'hooks', 'common')
       @post_receive_hook_dir = File.join(@gitolite_hooks_dir, 'post-receive.d')
 
-      @global_hook_params = get_git_config_params(GITOLITE_HOOKS_NAMESPACE)
+      @global_hook_params   = get_git_config_params(GITOLITE_HOOKS_NAMESPACE)
+      @multimailhook_params = get_git_config_params('multimailhook')
+
       @gitolite_hooks_namespace = GITOLITE_HOOKS_NAMESPACE
     end
 
 
     def check_install
-      return [ hooks_installed?, hook_params_installed? ]
+      return [ hooks_installed?, hook_params_installed?, mailer_params_installed? ]
     end
 
 
@@ -77,11 +79,56 @@ module RedmineGitolite
     end
 
 
+    def mailer_params_installed?
+      params = %w(mailer environment smtpAuth smtpServer smtpPort smtpUser smtpPass)
+      current_params = get_mailer_params
+      installed = {}
+
+      params.each do |param|
+        if @multimailhook_params[param] != current_params[param]
+          installed[param] = set_git_config_param(param, current_params[param].to_s, "multimailhook")
+        else
+          installed[param] = true
+        end
+      end
+
+      return installed
+    end
+
+
     private
 
 
     def logger
       RedmineGitolite::Log.get_logger(:global)
+    end
+
+
+    def get_mailer_params
+      params = {}
+
+      params['environment'] = 'gitolite'
+
+      if ActionMailer::Base.delivery_method == :smtp
+        params['mailer'] = 'smtp'
+      else
+        params['mailer'] = 'sendmail'
+      end
+
+      auth = ActionMailer::Base.smtp_settings[:authentication]
+
+      if auth != nil && auth != '' && auth != :none
+        params['smtpAuth'] = true
+      else
+        params['smtpAuth'] = false
+      end
+
+      params['smtpServer'] = ActionMailer::Base.smtp_settings[:address]
+      params['smtpPort']   = ActionMailer::Base.smtp_settings[:port]
+      params['smtpUser']   = ActionMailer::Base.smtp_settings[:user_name] || ''
+      params['smtpPass']   = ActionMailer::Base.smtp_settings[:password] || ''
+
+      params
     end
 
 

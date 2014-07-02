@@ -7,40 +7,15 @@ class GitNotifier
   attr_reader :default_list
   attr_reader :mail_mapping
 
-  attr_reader :mailer
-  attr_reader :smtp_auth
-  attr_reader :smtp_server
-  attr_reader :smtp_port
-  attr_reader :smtp_user
-  attr_reader :smtp_pass
-
 
   def initialize(repository)
     @repository     = repository
     @project        = repository.project
+
     @email_prefix   = ''
     @sender_address = ''
     @default_list   = []
     @mail_mapping   = {}
-
-    if ActionMailer::Base.delivery_method == :smtp
-      @mailer = 'smtp'
-    else
-      @mailer = 'sendmail'
-    end
-
-    @smtp_auth =
-    if ActionMailer::Base.smtp_settings.has_key?(:authentication) &&
-      ActionMailer::Base.smtp_settings[:authentication] != :none
-      true
-    else
-      false
-    end
-
-    @smtp_server = ActionMailer::Base.smtp_settings[:address]
-    @smtp_port   = ActionMailer::Base.smtp_settings[:port]
-    @smtp_user   = ActionMailer::Base.smtp_settings[:user_name]
-    @smtp_pass   = ActionMailer::Base.smtp_settings[:password]
 
     build_notifier
   end

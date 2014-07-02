@@ -61,6 +61,18 @@
   </tr>
 
   <tr>
+    <td><%= l(:label_gitolite_mailer_params_installed) %></td>
+    <td>
+      <% params_installed = hooks_manager.mailer_params_installed? %>
+      <% params_installed.each do |param, installed| %>
+        <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+        <em><%= param %></em>
+        <br />
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
     <td><%= l(:label_mirroring_keys_installed) %></td>
     <td><%= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png') %></td>
   </tr>
