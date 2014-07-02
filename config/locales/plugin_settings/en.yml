@@ -152,6 +152,7 @@ en:
   label_gitolite_banner: Gitolite banner
   label_path_directories: PATH directories
   label_gitolite_hooks_params_installed: Hooks parameters installed?
+  label_gitolite_mailer_params_installed: Mailer parameters installed?
   label_gitolite_hooks_installed: Hooks installed?
   label_redmine_user: Redmine username
   label_git_version: Git version
