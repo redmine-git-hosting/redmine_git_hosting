@@ -1,35 +1,3 @@
-#
-# Tasks in this namespace (redmine_git_hosting) are for administrative tasks
-#
-# TOP-LEVEL TARGETS:
-#
-# 1) Repopulate settings in the database with defaults from init.rb
-#
-# rake redmine_git_hosting:restore_defaults RAILS_ENV=xxx
-#
-# 2) Resynchronize/repair gitolite configuration (fix keys directory and configuration).
-#    Also, expire repositories in the recycle_bin if necessary.
-#
-# rake redmine_git_hosting:update_repositories RAILS_ENV=xxx
-#
-# 3) Fetch all changesets for repositories and then rescynronize gitolite configuration (as in #1)
-#
-# rake redmine_git_hosting:fetch_changsets RAILS_ENV=xxx
-#
-# 4) Install custom scripts to the script directory.  The optional argument
-#    'READ_ONLY=true' requests that the resulting scripts and script directory
-#    be made read-only to the web server.  The optional argument WEB_USER=xxx
-#    states that scripts should be owned by user "xxx".  If omitted, the
-#    script attempts to figure out the web user by using "ps" and looking
-#    for httpd.
-#
-# rake redmine_git_hosting:install_scripts [READ_ONLY=true] [WEB_USER=xxx] RAILS_ENV=yyy
-#
-# 5) Remove the custom scripts directory (and the enclosed scripts)
-#
-# rake redmine_git_hosting:remove_scripts RAILS_ENV=xxxx
-#
-
 namespace :redmine_git_hosting do
 
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
@@ -85,7 +53,7 @@ namespace :redmine_git_hosting do
 
   desc "Show library version"
   task :version do
-    puts "#{name} #{version}"
+    puts "Redmine Git Hosting #{version("plugins/redmine_git_hosting/init.rb")}"
   end
 
 
@@ -107,21 +75,10 @@ namespace :redmine_git_hosting do
     Rake::Task["spec"].invoke
   end
 
-end
 
+  def version(path)
+    line = File.read(Rails.root.join(path))[/^\s*version\s*.*/]
+    line.match(/.*version\s*['"](.*)['"]/)[1]
+  end
 
-# Produce date string of form used by redmine logs
-def my_date
-  Time.now.strftime("%Y-%m-%d %H:%M:%S")
-end
-
-
-def name
-  "Redmine Git Hosting"
-end
-
-
-def version
-  line = File.read(Rails.root.join("plugins/redmine_git_hosting/init.rb"))[/^\s*version\s*.*/]
-  line.match(/.*version\s*['"](.*)['"]/)[1]
 end
