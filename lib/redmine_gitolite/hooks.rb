@@ -262,6 +262,15 @@ module RedmineGitolite
     end
 
 
+    def hook_file_exists?(hook_path)
+      begin
+        GitoliteWrapper.sudo_file_exists?(hook_path)
+      rescue GitHosting::GitHostingException => e
+        return false
+      end
+    end
+
+
     def hook_digest(hook_data)
       hook_name   = hook_data[:source]
       source_path = File.join(PACKAGE_HOOKS_DIR, hook_data[:source])
@@ -277,15 +286,6 @@ module RedmineGitolite
       begin
         GitoliteWrapper.sudo_shell(*@gitolite_command)
         return true
-      rescue GitHosting::GitHostingException => e
-        return false
-      end
-    end
-
-
-    def hook_file_exists?(hook_path)
-      begin
-        GitoliteWrapper.sudo_file_exists?(hook_path)
       rescue GitHosting::GitHostingException => e
         return false
       end
