@@ -29,7 +29,7 @@ module RedmineGitolite
       @gitolite_hooks_dir    = File.join('$HOME', '.gitolite', 'hooks', 'common')
       @post_receive_hook_dir = File.join(@gitolite_hooks_dir, 'post-receive.d')
 
-      @global_hook_params = get_global_hooks_params
+      @global_hook_params = get_git_config_params(GITOLITE_HOOKS_NAMESPACE)
       @gitolite_hooks_namespace = GITOLITE_HOOKS_NAMESPACE
     end
 
@@ -300,25 +300,21 @@ module RedmineGitolite
 
 
     # Return a hash with global config parameters.
-    def get_global_hooks_params
+    def get_git_config_params(namespace)
       begin
-        hooks_params = GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', GITOLITE_HOOKS_NAMESPACE).split("\n")
+        params = GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
       rescue GitHosting::GitHostingException => e
-        logger.error { "Problems to retrieve Gitolite hook parameters in Gitolite config" }
-        hooks_params = []
+        logger.error { "Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'" }
+        params = []
       end
 
       value_hash = {}
 
-      hooks_params.each do |value_pair|
+      params.each do |value_pair|
         global_key = value_pair.split(' ')[0]
-        namespace  = global_key.split('.')[0]
-        key        = global_key.split('.')[1]
         value      = value_pair.split(' ')[1]
-
-        if namespace == GITOLITE_HOOKS_NAMESPACE
-          value_hash[key] = value
-        end
+        key        = global_key.split('.')[1]
+        value_hash[key] = value
       end
 
       return value_hash
