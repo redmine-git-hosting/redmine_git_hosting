@@ -56,19 +56,19 @@ module RedmineGitolite
       installed = {}
 
       if @global_hook_params["redmineurl"] != @gitolite_hooks_url
-        installed['redmineurl'] = set_hook_param("redmineurl", @gitolite_hooks_url)
+        installed['redmineurl'] = set_git_config_param("redmineurl", @gitolite_hooks_url)
       else
         installed['redmineurl'] = true
       end
 
       if @global_hook_params["debugmode"] != @debug_mode.to_s
-        installed['debugmode'] = set_hook_param("debugmode", @debug_mode.to_s)
+        installed['debugmode'] = set_git_config_param("debugmode", @debug_mode.to_s)
       else
         installed['debugmode'] = true
       end
 
       if @global_hook_params["asyncmode"] != @async_mode.to_s
-        installed['asyncmode'] = set_hook_param("asyncmode", @async_mode.to_s)
+        installed['asyncmode'] = set_git_config_param("asyncmode", @async_mode.to_s)
       else
         installed['asyncmode'] = true
       end
@@ -321,25 +321,48 @@ module RedmineGitolite
     end
 
 
+    def set_git_config_param(key, value, namespace = GITOLITE_HOOKS_NAMESPACE)
+      key = gitconfig_prefix(key, namespace)
+
+      return unset_git_config_param(key) if value == ''
+
+      logger.info { "Set Git hooks global parameter : #{key} (#{value})" }
+
+      begin
+        GitoliteWrapper.sudo_capture('git', 'config', '--global', key, value)
+        return true
+      rescue GitHosting::GitHostingException => e
+        logger.error { "Error while setting Git hooks global parameter : #{key} (#{value})" }
+        logger.error { e.output }
+        return false
+      end
+    end
+
+
+    def unset_git_config_param(key)
+      logger.info { "Unset Git hooks global parameter : #{key}" }
+
+      begin
+        _, _, code = GitoliteWrapper.sudo_shell('git', 'config', '--global', '--unset', key)
+        return true
+      rescue GitHosting::GitHostingException => e
+        if code == 5
+          return true
+        else
+          logger.error { "Error while removing Git hooks global parameter : #{key}" }
+          logger.error { e.output }
+          return false
+        end
+      end
+    end
+
+
     # Returns the global gitconfig prefix for
     # a config with that given key under the
     # hooks namespace.
     #
-    def gitconfig_prefix(key)
-      [GITOLITE_HOOKS_NAMESPACE, '.', key].join
-    end
-
-
-    def set_hook_param(name, value)
-      logger.info { "Set Git hooks global parameter : #{name} (#{value})" }
-
-      begin
-        GitoliteWrapper.sudo_capture('git', 'config', '--global', gitconfig_prefix(name), value)
-        return true
-      rescue GitHosting::GitHostingException => e
-        logger.error { "Error while setting Git hooks global parameter : #{name} (#{value})" }
-        return false
-      end
+    def gitconfig_prefix(key, namespace)
+      [namespace, '.', key].join
     end
 
   end
