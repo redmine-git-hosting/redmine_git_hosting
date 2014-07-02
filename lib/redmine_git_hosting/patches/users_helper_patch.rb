@@ -1,3 +1,5 @@
+require_dependency 'users_helper'
+
 module RedmineGitHosting
   module Patches
     module UsersHelperPatch

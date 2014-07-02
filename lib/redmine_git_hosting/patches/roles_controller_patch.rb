@@ -1,3 +1,5 @@
+require_dependency 'roles_controller'
+
 module RedmineGitHosting
   module Patches
     module RolesControllerPatch

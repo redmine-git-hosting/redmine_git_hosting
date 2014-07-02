@@ -1,3 +1,5 @@
+require_dependency 'member'
+
 module RedmineGitHosting
   module Patches
     module MemberPatch

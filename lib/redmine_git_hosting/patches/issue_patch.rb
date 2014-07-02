@@ -1,3 +1,5 @@
+require_dependency 'issue'
+
 module RedmineGitHosting
   module Patches
     module IssuePatch

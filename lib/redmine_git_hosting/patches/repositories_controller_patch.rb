@@ -1,3 +1,5 @@
+require_dependency 'repositories_controller'
+
 module RedmineGitHosting
   module Patches
     module RepositoriesControllerPatch

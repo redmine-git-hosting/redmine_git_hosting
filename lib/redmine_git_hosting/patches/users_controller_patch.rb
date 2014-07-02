@@ -1,3 +1,5 @@
+require_dependency 'users_controller'
+
 module RedmineGitHosting
   module Patches
     module UsersControllerPatch

@@ -4,33 +4,6 @@ def apply_patch(&block)
 end
 
 apply_patch do
-  ## Redmine dependencies
-  # require project first!
-  require_dependency 'project'
-  require_dependency 'projects_controller'
-
-  require_dependency 'setting'
-  require_dependency 'settings_controller'
-
-  require_dependency 'user'
-  require_dependency 'users_controller'
-  require_dependency 'users_helper'
-
-  require_dependency 'repository'
-  require_dependency 'repository/git'
-  require_dependency 'repositories_controller'
-  require_dependency 'redmine/scm/adapters/git_adapter'
-
-  require_dependency 'member'
-  require_dependency 'roles_controller'
-
-  require_dependency 'issue'
-  require_dependency 'journal'
-
-  require_dependency 'my_controller'
-
-  require_dependency 'sys_controller'
-
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/cache'
   require_dependency 'redmine_gitolite/config'

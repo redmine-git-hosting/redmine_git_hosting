@@ -1,3 +1,5 @@
+require_dependency 'project'
+
 module RedmineGitHosting
   module Patches
     module ProjectPatch

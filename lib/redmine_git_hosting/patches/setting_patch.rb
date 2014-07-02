@@ -1,3 +1,5 @@
+require_dependency 'setting'
+
 module RedmineGitHosting
   module Patches
     module SettingPatch

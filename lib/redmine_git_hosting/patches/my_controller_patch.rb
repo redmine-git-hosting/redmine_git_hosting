@@ -1,3 +1,5 @@
+require_dependency 'my_controller'
+
 module RedmineGitHosting
   module Patches
     module MyControllerPatch

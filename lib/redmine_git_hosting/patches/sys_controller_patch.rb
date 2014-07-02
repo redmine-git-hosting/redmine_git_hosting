@@ -1,3 +1,5 @@
+require_dependency 'sys_controller'
+
 module RedmineGitHosting
   module Patches
     module SysControllerPatch

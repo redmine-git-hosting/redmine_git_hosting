@@ -1,3 +1,5 @@
+require_dependency 'settings_controller'
+
 module RedmineGitHosting
   module Patches
     module SettingsControllerPatch

@@ -1,3 +1,5 @@
+require_dependency 'redmine/scm/adapters/git_adapter'
+
 module RedmineGitHosting
   module Patches
     module GitAdapterPatch

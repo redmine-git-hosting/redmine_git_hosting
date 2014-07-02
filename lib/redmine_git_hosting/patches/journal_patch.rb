@@ -1,3 +1,5 @@
+require_dependency 'journal'
+
 module RedmineGitHosting
   module Patches
     module JournalPatch
