@@ -106,6 +106,8 @@ module RedmineGitolite
     ###############################
 
     def self.find_version(output)
+      return 0 if output.blank?
+
       version = nil
 
       line = output.split("\n")[0]
