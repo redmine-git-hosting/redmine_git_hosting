@@ -1,183 +1,32 @@
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_bootstrap_kit' %>
-  <%= stylesheet_link_tag 'jquery_tag_it',                    :plugin => 'redmine_bootstrap_kit' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_bootstrap_kit' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_bootstrap_kit' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_switch',       :plugin => 'redmine_bootstrap_kit' %>
-  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_bootstrap_kit' %>
-
-  <%= javascript_include_tag 'jquery_tag_it',                 :plugin => 'redmine_bootstrap_kit' %>
-  <%= javascript_include_tag 'plugins/bootstrap_switch',      :plugin => 'redmine_bootstrap_kit' %>
-  <%= javascript_include_tag 'plugins/bootstrap_transitions', :plugin => 'redmine_bootstrap_kit' %>
-  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_bootstrap_kit' %>
-
-  <%= stylesheet_link_tag 'git_urls',                         :plugin => 'redmine_git_hosting' %>
-  <%= javascript_include_tag 'plugins/zero_clipboard_min',    :plugin => 'redmine_git_hosting' %>
-
-  <%= javascript_tag do %>
-    $(document).ready(function() {
-      $('.bootstrap-switch').each(function(index, element) {
-        installBootstrapSwitch(element);
-      });
-    });
-  <% end %>
-<% end %>
-
 <%= error_messages_for 'repository' %>
 
-<div id="git_hosting_settings" class="box tabular">
+<div class="box tabular">
+<p>
+<%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
+<% if @repository && ! @repository.class.scm_available %>
+  <em class="info error"><%= l(:text_scm_command_not_available) %></em>
+<% end %>
+</p>
 
-  <div class="split">
-    <p>
-      <% if @repository.new_record? %>
-        <%= label_tag('repository_scm', l(:label_scm)) %><%= scm_select_tag(@repository) %>
-      <% else %>
-        <%= label_tag('repository_scm', l(:label_scm)) %><span class="label label-info"><%= @repository.class.to_s.split('::')[1] %></span>
-      <% end %>
+<p><%= f.check_box :is_default, :label => :field_repository_is_default %></p>
+<p>
+<%= f.text_field :identifier, :disabled => @repository.identifier_frozen? %>
+<% unless @repository.identifier_frozen? %>
+  <em class="info">
+    <%= l(:text_length_between, :min => 1, :max => Repository::IDENTIFIER_MAX_LENGTH) %> <%= l(:text_repository_identifier_info).html_safe %>
+  </em>
+<% end %>
+</p>
 
-      <% if @repository && !@repository.class.scm_available %>
-        <em class="info error"><%= l(:text_scm_command_not_available_git_hosting) %></em>
-      <% end %>
-    </p>
+<% button_disabled = true %>
+<% if @repository %>
+  <%  button_disabled = ! @repository.class.scm_available %>
+  <%= repository_field_tags(f, @repository) %>
+<% end %>
+<%= call_hook(:view_repository_form) %>
+</div>
 
-    <% if @project.repository.nil? %>
-      <p>
-        <%= hidden_field_tag "repository[is_default]", "0" %>
-        <label><%= l(:field_repository_is_default) %></label>
-        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-          <%= check_box_tag "repository[is_default]", @repository.is_default, @repository.is_default, disabled: !@repository.new_record? %>
-        </span>
-      </p>
-    <% elsif @project.repository == @repository %>
-      <p>
-        <%= hidden_field_tag "repository[is_default]", "1" %>
-        <label><%= l(:field_repository_is_default) %></label>
-        <span class="label label-success"><%= l(:label_yes) %></span>
-      </p>
-    <% else %>
-      <%= hidden_field_tag "repository[is_default]", "0" %>
-    <% end %>
-
-    <% if @repository && @repository.is_a?(Repository::Git) %>
-      <% if @repository.new_record? %>
-        <p><%= f.text_field :identifier, :label => :field_identifier %></p>
-        <p>
-          <label><%= l(:label_init_repo_with_readme) %></label>
-          <%= hidden_field_tag "repository[create_readme]", "false" %>
-          <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) %>
-        </p>
-      <% elsif @project.repository != @repository %>
-        <p>
-          <label><%= l(:field_identifier) %></label>
-          <span class="label label-info"><%= @repository.identifier %></span>
-        </p>
-      <% end %>
-    <% else %>
-      <p><%= f.text_field :identifier %></p>
-    <% end %>
-
-    <% if @repository && @repository.is_a?(Repository::Git) && !@repository.new_record? %>
-      <p>
-        <label><%= l(:label_browse_repository) %></label>
-        <%= link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
-      </p>
-
-      <p>
-        <%= label_tag  "", l(:label_repository_exists_in_gitolite) %>
-        <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
-      </p>
-    <% end %>
-
-    <%= content_tag('p', f.select(
-                          :path_encoding, [nil] + Setting::ENCODINGS,
-                          :label => l(:field_scm_path_encoding)
-                         ) + '<br />'.html_safe + l(:text_scm_path_encoding_note)) +
-
-        content_tag('p', f.check_box(
-                          :extra_report_last_commit,
-                          :label => l(:label_git_report_last_commit)
-                         )) if @repository.is_a?(Repository::Git) %>
-  </div>
-
-  <div class="split">
-    <% button_disabled = true %>
-    <% if @repository %>
-      <% button_disabled = !@repository.class.scm_available %>
-    <% end %>
-
-    <% if @repository && @repository.is_a?(Repository::Git) %>
-      <h3><%= l(:label_repository_options) %></h3>
-
-      <%
-        selected = "false"
-        if @repository.extra[:git_daemon]
-          selected = "true"
-        elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
-          selected = "true"
-        end
-      %>
-
-      <p>
-        <label><%= l(:label_enable_git_daemon) %></label>
-        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-          <%= hidden_field_tag "extra[git_daemon]", "false" %>
-          <%= check_box_tag "extra[git_daemon]", selected, (selected == "true" ? true : false), disabled: !@project.is_public %>
-        </span>
-      </p>
-
-      <% if user_allowed_to(:create_repository_git_notifications, @repository.project) %>
-        <p>
-          <label><%= l(:label_enable_git_notify) %></label>
-          <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-            <%= hidden_field_tag "extra[git_notify]", "false" %>
-            <%= check_box_tag "extra[git_notify]", @repository.extra[:git_notify], @repository.extra[:git_notify] %>
-          </span>
-        </p>
-      <% end %>
-
-      <% if user_allowed_to(:create_repository_protected_branches, @repository.project) %>
-        <p>
-          <label><%= l(:label_enable_protected_branches) %></label>
-          <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-            <%= hidden_field_tag "extra[protected_branch]", "false" %>
-            <%= check_box_tag "extra[protected_branch]", @repository.extra[:protected_branch], @repository.extra[:protected_branch] %>
-          </span>
-        </p>
-      <% end %>
-
-      <p>
-        <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
-        <%= select_tag "extra[git_http]", options_for_select([
-                                                                [l(:label_disabled), "0"],
-                                                                [l(:label_http_only), "3"],
-                                                                [l(:label_https_only), "1"],
-                                                                [l(:label_https_and_http), "2"]
-                                                              ], :selected => @repository.extra[:git_http].to_s) %>
-      </p>
-
-      <p>
-        <%= label_tag  "", l(:label_repository_default_branch) %>
-        <% if !@repository.new_record? && !@repository.branches.empty? %>
-          <%= select_tag "extra[default_branch]", options_for_select(@repository.branches.collect{ |b| [b.to_s, b.to_s] }, :selected => @repository.branches.find{ |b| b.is_default}.to_s) %>
-        <% else %>
-          <span class="label label-info"><%= @repository.extra[:default_branch] %></span>
-        <% end %>
-      </p>
-
-      <p>
-        <%= label_tag  "", l(:label_mirroring_keys_installed) %>
-        <%= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
-      </p>
-
-    <% else %>
-      <%= repository_field_tags(f, @repository) if @repository %>
-    <% end %>
-
-  </div>
-
-  <div style="display: block; clear: both;"></div>
-
+<p>
   <%= submit_tag(@repository.new_record? ? l(:button_create) : l(:button_save), :disabled => button_disabled) %>
   <%= link_to l(:button_cancel), settings_project_path(@project, :tab => 'repositories') %>
-
-</div>
+</p>

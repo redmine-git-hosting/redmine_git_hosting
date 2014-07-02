@@ -75,7 +75,11 @@ apply_patch do
   require_dependency 'redmine_git_hosting/patches/sys_controller_patch'
 
   ## Redmine Git Hosting Hooks
-  require_dependency 'redmine_git_hosting/hooks/show_git_urls_on_project'
   require_dependency 'redmine_git_hosting/hooks/add_plugin_icon'
+  require_dependency 'redmine_git_hosting/hooks/display_git_urls_on_project'
+  require_dependency 'redmine_git_hosting/hooks/display_git_urls_on_repository_edit'
+  require_dependency 'redmine_git_hosting/hooks/display_repository_extras'
+  require_dependency 'redmine_git_hosting/hooks/display_repository_options'
   require_dependency 'redmine_git_hosting/hooks/display_repository_readme'
+  require_dependency 'redmine_git_hosting/hooks/display_repository_sidebar'
 end

@@ -47,7 +47,7 @@
                        :id => @project, :page => nil, :key => User.current.rss_key})) %>
    <% end %>
 
-   <%= call_hook(:view_repositories_show_bottom, { :repository => @repository, :project => @project }) %>
+   <%= call_hook(:view_repositories_show_bottom) %>
 
    <% other_formats_links do |f| %>
     <%= f.link_to 'Atom',
@@ -58,24 +58,20 @@
   <% end %>
 <% end %>
 
-<% content_for :sidebar do %>
-  <h3><%= l(:label_repository_plural) %></h3>
-  <ul class="repository git">
-    <% @repositories.sort.each do |repo| %>
-        <li class="repository git"><%= link_to h(repo.name), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                                      :class => 'repository' + (@repository.is_a?(Repository::Git) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
-        </li>
-    <% end %>
-  </ul>
+<% if @repositories.size > 1 %>
+  <% content_for :sidebar do %>
+    <h3><%= l(:label_repository_plural) %></h3>
+    <p>
+      <%= @repositories.sort.collect {|repo|
+          link_to h(repo.name),
+                  {:controller => 'repositories', :action => 'show',
+                   :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
+                  :class => 'repository' + (repo == @repository ? ' selected' : '')
+        }.join('<br />').html_safe %>
+    </p>
 
-  <% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:show_repositories_url) %>
-    <div class="git_hosting_urls">
-      <h3><%= l(:label_repository_access_url) %></h3>
-      <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>
-    </div>
+    <%= call_hook(:view_repositories_show_sidebar) %>
   <% end %>
-
-  <%= render :partial => 'repositories/download_revision' %>
 <% end %>
 
 <% content_for :header_tags do %>

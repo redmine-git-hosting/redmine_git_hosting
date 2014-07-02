@@ -1,0 +1,22 @@
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#sidebar p').remove();
+  });
+<% end %>
+
+<ul class="repository git">
+  <% @repositories.sort.each do |repo| %>
+      <li class="repository git"><%= link_to h(repo.name), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
+                                    :class => [ 'repository', (repo == @repository ? 'selected' : ''), @repository.type.split('::')[1].downcase ].join(' ') %>
+      </li>
+  <% end %>
+</ul>
+
+<% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:show_repositories_url) %>
+  <div class="git_hosting_urls">
+    <h3><%= l(:label_repository_access_url) %></h3>
+    <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>
+  </div>
+<% end %>
+
+<%= render :partial => 'repositories/download_revision' %>

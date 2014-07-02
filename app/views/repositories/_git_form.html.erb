@@ -1,0 +1,165 @@
+<%= javascript_tag do %>
+
+  $(document).ready(function() {
+
+    var default_checkbox = $('#repository_is_default').parent();
+
+    <% if @project.repository.nil? %>
+      var content = $('<%= content_tag :p do -%>
+        <%= hidden_field_tag "repository[is_default]", "0" -%>
+        <%= content_tag :label, l(:field_repository_is_default) -%>
+        <%= check_box_tag "repository[is_default]", @repository.is_default, @repository.is_default, disabled: !@repository.new_record? -%>
+      <% end -%>');
+
+      content.insertAfter(default_checkbox);
+      default_checkbox.remove();
+    <% elsif @project.repository == @repository %>
+      var content = $('<%= content_tag :p do -%>
+        <%= hidden_field_tag "repository[is_default]", "1" -%>
+        <%= content_tag :label, l(:field_repository_is_default) -%>
+        <%= content_tag :span,  l(:label_yes), :class => 'label label-success' -%>
+      <% end -%>');
+
+      content.insertAfter(default_checkbox);
+      default_checkbox.remove();
+      $('#repository_identifier').parent().remove();
+    <% else %>
+      var content = $('<%= content_tag :p do -%>
+        <%= hidden_field_tag "repository[is_default]", "0" -%>
+        <%= content_tag :label, l(:field_repository_is_default) -%>
+        <%= content_tag :span,  l(:label_no), :class => 'label' -%>
+      <% end -%>');
+
+      content.insertAfter(default_checkbox);
+      default_checkbox.remove();
+    <% end %>
+
+  });
+
+<% end %>
+
+<% if @repository.is_a?(Repository::Git) %>
+
+  <%= javascript_tag do %>
+
+    function moveGitOptionsDiv(){
+      if ( $('#git_hosting_settings').length == 0 ) {
+        // Set selectors
+        var original_div = $('#repository_git_options').parent();
+        var new_div      = $('#repository_git_options');
+
+        // Wrap the original_div in a new div
+        original_div.wrap('<div id="git_hosting_settings" class="box tabular">');
+
+        // Remove original css class
+        original_div.removeClass('box tabular');
+
+        // Add new css class
+        original_div.addClass('split');
+
+        // Insert our div after the original one
+        new_div.insertAfter(original_div);
+
+        $('<div style="display: block; clear: both;"></div>').insertAfter(new_div);
+
+        new_div.show();
+      }
+    }
+
+    $(document).ready(function() {
+      $('#repository_url').parent().remove();
+      moveGitOptionsDiv();
+    });
+  <% end %>
+
+  <div id="repository_git_options" class="split" style="display: none;">
+
+    <h3><%= l(:label_repository_options) %></h3>
+
+    <%
+      selected = "false"
+      if @repository.extra[:git_daemon]
+        selected = "true"
+      elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
+        selected = "true"
+      end
+    %>
+
+    <p>
+      <label><%= l(:label_enable_git_daemon) %></label>
+      <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+        <%= hidden_field_tag "extra[git_daemon]", "false" %>
+        <%= check_box_tag "extra[git_daemon]", selected, (selected == "true" ? true : false), disabled: !@project.is_public %>
+      </span>
+    </p>
+
+    <% if user_allowed_to(:create_repository_git_notifications, @repository.project) %>
+      <p>
+        <label><%= l(:label_enable_git_notify) %></label>
+        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+          <%= hidden_field_tag "extra[git_notify]", "false" %>
+          <%= check_box_tag "extra[git_notify]", @repository.extra[:git_notify], @repository.extra[:git_notify] %>
+        </span>
+      </p>
+    <% end %>
+
+    <% if user_allowed_to(:create_repository_protected_branches, @repository.project) %>
+      <p>
+        <label><%= l(:label_enable_protected_branches) %></label>
+        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
+          <%= hidden_field_tag "extra[protected_branch]", "false" %>
+          <%= check_box_tag "extra[protected_branch]", @repository.extra[:protected_branch], @repository.extra[:protected_branch] %>
+        </span>
+      </p>
+    <% end %>
+
+    <p>
+      <%= label_tag  "extra[git_http]", l(:label_enable_smart_http) %>
+      <%= select_tag "extra[git_http]", options_for_select([
+                                                              [l(:label_disabled), "0"],
+                                                              [l(:label_http_only), "3"],
+                                                              [l(:label_https_only), "1"],
+                                                              [l(:label_https_and_http), "2"]
+                                                            ], :selected => @repository.extra[:git_http].to_s) %>
+    </p>
+
+    <p>
+      <%= label_tag  "", l(:label_repository_default_branch) %>
+      <% if !@repository.new_record? && !@repository.branches.empty? %>
+        <%= select_tag "extra[default_branch]", options_for_select(@repository.branches.collect{ |b| [b.to_s, b.to_s] }, :selected => @repository.branches.find{ |b| b.is_default}.to_s) %>
+      <% else %>
+        <span class="label label-info"><%= @repository.extra[:default_branch] %></span>
+      <% end %>
+    </p>
+
+    <p>
+      <%= label_tag  "", l(:label_mirroring_keys_installed) %>
+      <%= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
+    </p>
+
+    <% if !@repository.new_record? %>
+      <p>
+        <%= label_tag  "", l(:label_repository_exists_in_gitolite) %>
+        <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
+      </p>
+      <p>
+        <label><%= l(:label_browse_repository) %></label>
+        <%= link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
+      </p>
+    <% else %>
+      <%= javascript_tag do %>
+        $(document).ready(function() {
+          var content = $('<%= content_tag :p do -%>
+            <%= hidden_field_tag "repository[create_readme]", "false" -%>
+            <%= content_tag :label, l(:label_init_repo_with_readme) -%>
+            <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) -%>
+          <% end -%>');
+
+          content.insertAfter($('#repository_identifier').parent());
+        });
+      <% end %>
+    <% end %>
+
+  </div>
+
+<% end %>
