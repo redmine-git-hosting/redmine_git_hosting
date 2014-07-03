@@ -10,8 +10,8 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          has_one  :git_extra,        :foreign_key => 'repository_id', :class_name => 'RepositoryGitExtra', :dependent => :destroy
-          has_one  :git_notification, :foreign_key => 'repository_id', :class_name => 'RepositoryGitNotification', :dependent => :destroy
+          has_one  :git_extra,              :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryGitExtra'
+          has_one  :git_notification,       :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryGitNotification'
 
           has_many :mirrors,                :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryMirror'
           has_many :post_receive_urls,      :dependent => :destroy, :foreign_key => 'repository_id', :class_name => 'RepositoryPostReceiveUrl'
