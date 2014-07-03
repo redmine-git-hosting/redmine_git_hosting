@@ -13,7 +13,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   attr_accessible :perm, :active
 
-  validates_presence_of :repository, :gitolite_public_key, :user, :perm
+  validates_presence_of :repository_id, :gitolite_public_key_id, :user, :perm
 
   validate :correct_key_type, :owner_matches_key
 
