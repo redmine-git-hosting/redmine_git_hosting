@@ -1,5 +1,5 @@
 function createZeroClipBoard(object){
-  ZeroClipboard.config({ moviePath: object.movie_path });
+  ZeroClipboard.config({ swfPath: object.movie_path });
   var client = new ZeroClipboard($(object.target));
 
   $('#global-zeroclipboard-html-bridge').tooltip({
