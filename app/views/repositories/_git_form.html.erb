@@ -2,17 +2,18 @@
 
   $(document).ready(function() {
 
+    // Actually this takes the parent <p> mark
     var default_checkbox = $('#repository_is_default').parent();
 
     <% if @project.repository.nil? %>
-      var content = $('<%= content_tag :p do -%>
-        <%= hidden_field_tag "repository[is_default]", "0" -%>
-        <%= content_tag :label, l(:field_repository_is_default) -%>
-        <%= check_box_tag "repository[is_default]", @repository.is_default, @repository.is_default, disabled: !@repository.new_record? -%>
-      <% end -%>');
+      // Hide identifier input field since is_default is checked
+      $('#repository_identifier').parent().hide();
 
-      content.insertAfter(default_checkbox);
-      default_checkbox.remove();
+      // Toggle identifier input field if is_default is unchecked
+      $('#repository_is_default').on('click', function(){
+        $('#repository_identifier').parent().toggle();
+      });
+
     <% elsif @project.repository == @repository %>
       var content = $('<%= content_tag :p do -%>
         <%= hidden_field_tag "repository[is_default]", "1" -%>
