@@ -298,8 +298,6 @@ en:
   label_disabled: Disabled
   label_true: True
   label_false: False
-  label_yes: "Yes"
-  label_no: "No"
   label_backup_in_progress: Saving...
   label_delete_in_progress: Deleting...
   label_url: URL
