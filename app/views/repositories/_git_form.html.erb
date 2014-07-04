@@ -156,7 +156,9 @@
             <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) -%>
           <% end -%>');
 
-          content.insertAfter($('#repository_identifier').parent());
+          if ($('#repository_create_readme').length == 0) {
+            content.insertAfter($('#repository_identifier').parent());
+          }
         });
       <% end %>
     <% end %>
