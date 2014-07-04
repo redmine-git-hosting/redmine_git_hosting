@@ -7,19 +7,19 @@
       <ul>
         <li>
           <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar'),
-                      download_git_revision_path(@repository.id, @rev, :download_format => 'tar'),
+                      download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar'),
                       :class => 'button' %>
         </li>
 
         <li>
           <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar.gz'),
-                      download_git_revision_path(@repository.id, @rev, :download_format => 'tar.gz'),
+                      download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar.gz'),
                       :class => 'button' %>
         </li>
 
         <li>
           <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.zip'),
-                      download_git_revision_path(@repository.id, @rev, :download_format => 'zip'),
+                      download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'zip'),
                       :class => 'button' %>
         </li>
       </ul>
