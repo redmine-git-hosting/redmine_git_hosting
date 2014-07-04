@@ -6,19 +6,19 @@
     <div id="git_hosting_download_buttons">
       <ul>
         <li>
-          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar'),
+          <%= link_to label_with_icon(l(:label_download_format, :archive_format => '.tar'), 'fa-download'),
                       download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar'),
                       :class => 'button' %>
         </li>
 
         <li>
-          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.tar.gz'),
+          <%= link_to label_with_icon(l(:label_download_format, :archive_format => '.tar.gz'), 'fa-download'),
                       download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar.gz'),
                       :class => 'button' %>
         </li>
 
         <li>
-          <%= link_to "<i class=\"fa fa-download\"></i>".html_safe + l(:label_download_format, :archive_format => '.zip'),
+          <%= link_to label_with_icon(l(:label_download_format, :archive_format => '.zip'), 'fa-download'),
                       download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'zip'),
                       :class => 'button' %>
         </li>
