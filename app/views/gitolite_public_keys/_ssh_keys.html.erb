@@ -13,9 +13,9 @@
   <% else %>
     <% ssh_keys.each do |key| %>
       <tr class="<%= curcycle = cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
-        <td style="width: 15%; text-align: left;"><%= h(key) %></td>
+        <td style="text-align: left;"><%= h(key) %></td>
 
-        <td style="width: 25%; text-align: left;"><%= key.fingerprint %><i class="fa fa-check" style="color: green; margin-left: 5px;"></i></td>
+        <td style="text-align: left;"><i class="fa fa-check" style="color: green; margin-left: 5px; margin-right: 5px;"></i><%= key.fingerprint %></td>
 
         <% if params[:id] %>
           <td style="text-align: left;"><%= key.gitolite_path %></td>

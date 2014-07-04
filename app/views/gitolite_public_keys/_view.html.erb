@@ -20,14 +20,7 @@
   </fieldset>
 
 <%= javascript_tag do %>
-  function load_form_actions() {
-    $('#gitolite_public_key_key_type').on('change', function() {
-      key_type_change(this)
-    });
-  }
-
   function key_type_change(element) {
-    if (!element) return;
     var idx = element.selectedIndex;
     if (idx == 0) {
       $('#key_type_options').hide();
@@ -38,6 +31,8 @@
   }
 
   $(document).ready(function() {
-    load_form_actions();
+    $('#gitolite_public_key_key_type').on('change', function() {
+      key_type_change(this)
+    });
   });
 <% end %>
