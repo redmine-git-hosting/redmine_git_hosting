@@ -1,8 +1,5 @@
 <%= stylesheet_link_tag 'application', :plugin => 'redmine_git_hosting' %>
 
-<fieldset class="box">
-  <legend><%= l(:label_public_keys) %></legend>
-
   <fieldset class="public_key_view">
     <legend><%= l(:label_current_user_keys) %></legend>
     <%= render :partial => 'gitolite_public_keys/ssh_keys', :locals => {:ssh_keys => @gitolite_user_keys} %>
@@ -21,9 +18,6 @@
     <legend><%= l(:label_public_key_new) %></legend>
     <%= render :partial => 'gitolite_public_keys/form', :locals => {:gitolite_public_key => @gitolite_public_key, :user => @user} %>
   </fieldset>
-
-</fieldset>
-
 
 <%= javascript_tag do %>
   function load_form_actions() {

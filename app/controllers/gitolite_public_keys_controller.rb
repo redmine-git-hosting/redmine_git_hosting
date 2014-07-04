@@ -3,14 +3,16 @@ class GitolitePublicKeysController < ApplicationController
 
   before_filter :require_login
   before_filter :set_user_variable
-  before_filter :set_users_keys, :except => [:index, :new, :reset_rss_key]
-  before_filter :find_gitolite_public_key, :except => [:index, :new, :reset_rss_key, :create]
-
-  helper :issues
-  helper :users
-  helper :custom_fields
+  before_filter :find_gitolite_public_key, :only => [:destroy]
 
   helper :gitolite_public_keys
+
+
+  def index
+    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
+    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
+    @gitolite_public_key  = GitolitePublicKey.new
+  end
 
 
   def create
@@ -33,7 +35,7 @@ class GitolitePublicKeysController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to @redirect_url }
+        format.html { redirect_to @cancel_url }
       end
     end
   end
@@ -56,20 +58,19 @@ class GitolitePublicKeysController < ApplicationController
     if params[:user_id]
       @user = (params[:user_id] == 'current') ? User.current : User.find_by_id(params[:user_id])
       if @user
-        @redirect_url = url_for(:controller => 'users', :action => 'edit', :id => params[:user_id], :tab => 'keys')
+        @cancel_url = @redirect_url = url_for(:controller => 'users', :action => 'edit', :id => params[:user_id], :tab => 'keys')
       else
         render_404
       end
     else
-      @user = User.current
-      @redirect_url = url_for(:controller => 'my', :action => 'account')
+      if User.current.allowed_to?(:create_gitolite_ssh_key, nil, :global => true)
+        @user = User.current
+        @redirect_url = url_for(:controller => 'gitolite_public_keys', :action => 'index')
+        @cancel_url = url_for(:controller => 'my', :action => 'account')
+      else
+        render_403
+      end
     end
-  end
-
-
-  def set_users_keys
-    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
-    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
   end
 
 

@@ -1,9 +1,8 @@
 <div id="validation_messages"><%= error_messages_for 'gitolite_public_key' %></div>
 
-<%= labelled_form_for gitolite_public_key,
-    :as   => :gitolite_public_key,
-    :url  => {:controller => 'gitolite_public_keys', :action => 'create', :id => gitolite_public_key.id, :user_id => params[:id], :tab => params[:id]&&'keys'},
-    :html => {:method => :post} do |f| %>
+<%= labelled_form_for :gitolite_public_key, gitolite_public_key,
+                      :url  => {:controller => 'gitolite_public_keys', :action => 'create', :user_id => params[:id], :tab => params[:id]&&'keys'},
+                      :html => {:method => :post} do |f| %>
 
   <p><%= f.text_field :title, :label => :label_identifier_can_be_arbitrary, :required => true, :style => 'width: 97%;' %></p>
 

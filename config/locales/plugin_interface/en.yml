@@ -180,6 +180,7 @@ en:
   field_key: this key
 
   # User SSH keys (labels)
+  label_my_public_keys: My public keys
   label_public_keys: Public keys
   label_public_key: Public key
   label_public_key_edit: Edit existing public key

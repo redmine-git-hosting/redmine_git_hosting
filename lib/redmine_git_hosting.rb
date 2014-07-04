@@ -40,12 +40,11 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_git_hosting/patches/issue_patch'
   require_dependency 'redmine_git_hosting/patches/journal_patch'
 
-  require_dependency 'redmine_git_hosting/patches/my_controller_patch'
-
   require_dependency 'redmine_git_hosting/patches/sys_controller_patch'
 
   ## Redmine Git Hosting Hooks
   require_dependency 'redmine_git_hosting/hooks/add_plugin_icon'
+  require_dependency 'redmine_git_hosting/hooks/add_public_keys_link'
   require_dependency 'redmine_git_hosting/hooks/display_git_urls_on_project'
   require_dependency 'redmine_git_hosting/hooks/display_git_urls_on_repository_edit'
   require_dependency 'redmine_git_hosting/hooks/display_repository_extras'
