@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'lockfile'
 gem 'gitolite-rugged', :github => 'n-rodriguez/gitolite-rugged', :branch => 'devel'
-gem 'rugged', :github => 'libgit2/rugged', :tag => 'v0.21.0', :submodules => true
 
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'
