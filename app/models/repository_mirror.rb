@@ -123,12 +123,12 @@ class RepositoryMirror < ActiveRecord::Base
       return true
 
     elsif include_all_branches && include_all_tags
-      errors.add(:base, "Cannot #{l(:field_include_all_branches)} and #{l(:field_include_all_tags)} at the same time.")
-      errors.add(:explicit_refspec, "cannot be used with #{l(:field_include_all_branches)} or #{l(:field_include_all_tags)}") unless explicit_refspec.blank?
+      errors.add(:base, "Cannot #{l(:label_mirror_include_all_branches)} and #{l(:label_mirror_include_all_tags)} at the same time.")
+      errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)} or #{l(:label_mirror_include_all_tags)}") unless explicit_refspec.blank?
       return false
 
     elsif !explicit_refspec.blank?
-      errors.add(:explicit_refspec, "cannot be used with #{l(:field_include_all_branches)}.") if include_all_branches
+      errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)}.") if include_all_branches
 
       # Check format of refspec
       if !(refspec_parse = explicit_refspec.match(/^\+?([^:]*)(:([^:]*))?$/)) || !refcomp_valid(refspec_parse[1]) || !refcomp_valid(refspec_parse[3])
