@@ -1,8 +1,12 @@
 require 'codeclimate-test-reporter'
+
+require 'rubygems'
+require 'rake'
+require 'rails/all'
+
 require 'database_cleaner'
 require 'factory_girl_rails'
-require 'rake'
-require 'rubygems'
+
 require 'simplecov'
 require 'simplecov-rcov'
 
@@ -22,6 +26,8 @@ end
 ## Load Redmine App
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
+
+require 'rspec/rails'
 
 ## Load FactoryGirls factories
 Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each {|f| require f}
