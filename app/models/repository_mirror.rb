@@ -113,8 +113,6 @@ class RepositoryMirror < ActiveRecord::Base
 
 
   def check_refspec
-    self.explicit_refspec = explicit_refspec.strip
-
     if push_mode == PUSHMODE_MIRROR
       # clear out all extra parameters.. (we use javascript to hide them anyway)
       self.include_all_branches = false
