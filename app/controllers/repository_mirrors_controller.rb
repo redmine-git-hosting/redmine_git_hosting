@@ -37,7 +37,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
       else
         format.html {
           flash[:error] = l(:notice_mirror_create_failed)
-          render :action => "create"
+          render :action => "new"
         }
         format.js { render "form_error", :layout => false }
       end
