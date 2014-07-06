@@ -89,7 +89,7 @@ class RepositoryMirror < ActiveRecord::Base
       push_args << "--tags"  if self.include_all_tags?
     end
 
-    push_args << "#{dequote(self.url)}"
+    push_args << self.url
     push_args << "#{dequote(self.explicit_refspec)}" unless self.explicit_refspec.blank?
 
     return push_args
