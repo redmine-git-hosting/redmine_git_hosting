@@ -48,6 +48,7 @@ describe RepositoryMirror do
     it { should_not be_valid }
   end
 
+  ## Test presence conflicts
   describe "when include_all_branches && include_all_tags" do
     before do
       @mirror.push_mode = 1
@@ -58,6 +59,18 @@ describe RepositoryMirror do
     it { should_not be_valid }
   end
 
+  describe "when include_all_branches && explicit_refspec" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.include_all_branches = true
+      @mirror.include_all_tags = false
+      @mirror.explicit_refspec = 'devel'
+    end
+
+    it { should_not be_valid }
+  end
+
+  ## Validate push mode : forced
   describe "when push_mode forced without params" do
     before do
       @mirror.push_mode = 1
@@ -66,6 +79,16 @@ describe RepositoryMirror do
     it { should_not be_valid }
   end
 
+  describe "when push_mode forced with params" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.explicit_refspec = 'devel'
+    end
+
+    it { should be_valid }
+  end
+
+  ## Validate push mode : fast forward
   describe "when push_mode fast forward without params" do
     before do
       @mirror.push_mode = 2
@@ -74,16 +97,101 @@ describe RepositoryMirror do
     it { should_not be_valid }
   end
 
+  describe "when push_mode fast forward with params" do
+    before do
+      @mirror.push_mode = 2
+      @mirror.explicit_refspec = 'devel'
+    end
+
+    it { should be_valid }
+  end
+
+
+  ## Validate push args : mirror mode
+  describe "when push_mode is mirror" do
+    before do
+      @mirror.push_mode = 0
+    end
+
+    it { should be_valid }
+    it "should have push_args" do
+      valid_args = ["--mirror", "ssh://host.xz/path/to/repo.git"]
+      expect(@mirror.push_args).to eq valid_args
+    end
+  end
+
+  ## Validate push args : force mode
+  describe "when push_mode is force" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.explicit_refspec = 'devel'
+    end
+
+    it { should be_valid }
+    it "should have push_args" do
+      valid_args = ["--force", "ssh://host.xz/path/to/repo.git", "devel"]
+      expect(@mirror.push_args).to eq valid_args
+    end
+  end
+
+  ## Validate push args : fast forward mode
+  describe "when push_mode is fast forward" do
+    before do
+      @mirror.push_mode = 2
+      @mirror.explicit_refspec = 'devel'
+    end
+
+    it { should be_valid }
+    it "should have push_args" do
+      valid_args = ["ssh://host.xz/path/to/repo.git", "devel"]
+      expect(@mirror.push_args).to eq valid_args
+    end
+  end
+
+  ## Validate push args : all tags mode
+  describe "when push_mode is all tags" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.include_all_tags = true
+      @mirror.explicit_refspec = ""
+    end
+
+    it { should be_valid }
+    it "should have push_args" do
+      valid_args = ["--force", "--tags", "ssh://host.xz/path/to/repo.git"]
+      expect(@mirror.push_args).to eq valid_args
+    end
+  end
+
+  ## Validate push args : all branches mode
+  describe "when push_mode is all branches" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.include_all_branches = true
+      @mirror.explicit_refspec = ""
+    end
+
+    it { should be_valid }
+    it "should have push_args" do
+      valid_args = ["--force", "--all", "ssh://host.xz/path/to/repo.git"]
+      expect(@mirror.push_args).to eq valid_args
+    end
+  end
+
+
+  ## Test changes
   describe "when active is true" do
     before { @mirror.active = true }
-    it { should be_valid }
-    it { expect(@mirror.active).to be true }
+    it "shoud be active" do
+      expect(@mirror.active).to be true
+    end
   end
 
   describe "when active is false" do
     before { @mirror.active = false }
-    it { should be_valid }
-    it { expect(@mirror.active).to be false }
+    it "should be inactive" do
+      expect(@mirror.active).to be false
+    end
   end
 
   ## Test format validation
@@ -107,6 +215,17 @@ describe RepositoryMirror do
         expect(@mirror).to be_valid
       end
     end
+  end
+
+  describe "when explicit_refspec is invalid" do
+    before do
+      @mirror.push_mode = 1
+      @mirror.include_all_branches = false
+      @mirror.include_all_tags = false
+      @mirror.explicit_refspec = ':/devel'
+    end
+
+    it { should_not be_valid }
   end
 
   ## Test uniqueness validation
