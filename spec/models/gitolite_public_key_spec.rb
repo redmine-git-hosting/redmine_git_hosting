@@ -23,6 +23,10 @@ describe GitolitePublicKey do
   it { should respond_to(:fingerprint) }
   it { should respond_to(:key) }
   it { should respond_to(:delete_when_unused) }
+  it { should respond_to(:owner) }
+  it { should respond_to(:location) }
+  it { should respond_to(:gitolite_path) }
+  it { should respond_to(:to_yaml) }
 
   it "can render as string" do
     expect(@ssh_key.to_s).to eq "test-key"
@@ -50,6 +54,23 @@ describe GitolitePublicKey do
 
   it "must be deleted when unused" do
     expect(@ssh_key.delete_when_unused?).to be true
+  end
+
+  it "has a owner" do
+    expect(@ssh_key.owner).to eq "redmine_user1_1"
+  end
+
+  it "has a location" do
+    expect(@ssh_key.location).to eq "redmine_test_key"
+  end
+
+  it "has a gitolite_path" do
+    expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/redmine_user1_1/redmine_test_key/redmine_user1_1.pub"
+  end
+
+  it "can be rendered as yaml" do
+    valid_hash = { :key => SSH_KEY, :location => 'redmine_test_key', :owner => 'redmine_user1_1', :title => 'redmine_user1_1@redmine_test_key' }
+    expect(@ssh_key.to_yaml).to eq valid_hash
   end
 
   # Test data integrity
