@@ -43,11 +43,6 @@ class RepositoryMirror < ActiveRecord::Base
   include GitoliteHooksHelper
 
 
-  def to_s
-    return "#{repository.project.identifier}-#{url}"
-  end
-
-
   def push
     begin
       push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe("sh") do
