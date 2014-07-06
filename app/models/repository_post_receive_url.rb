@@ -36,11 +36,6 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   include GitoliteHooksHelper
 
 
-  def to_s
-    return "#{repository.project.identifier}-#{url}"
-  end
-
-
   def mode
     read_attribute(:mode).to_sym
   end
