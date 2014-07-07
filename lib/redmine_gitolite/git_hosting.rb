@@ -93,6 +93,10 @@ module RedmineGitolite
 
         return output
       end
+    rescue => e
+      error_msg = "Exception occured executing `#{command} #{params.join(" ")}` : #{e.message}"
+      logger.debug { error_msg }
+      raise GitHostingException.new(command, error_msg)
     end
 
   end

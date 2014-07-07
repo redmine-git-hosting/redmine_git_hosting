@@ -592,9 +592,6 @@ module RedmineGitolite
         rescue GitHosting::GitHostingException => e
           logger.error { "Failed installing Redmine Gitolite mirroring SSH keys ! (#{e.output})" }
           @@mirroring_keys_installed = false
-        rescue => e
-          logger.error { "Failed installing Redmine Gitolite mirroring SSH keys ! (#{e.message})" }
-          @@mirroring_keys_installed = false
         end
       end
 
