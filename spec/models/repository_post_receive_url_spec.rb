@@ -154,7 +154,7 @@ describe RepositoryPostReceiveUrl do
       inactive_post_receive_url4 = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository_git.id, :url => INACTIVE_POST_RECEIVE_URL4, :active => false)
     end
 
-    it { expect(RepositoryPostReceiveUrl.active.length).to be == 2 }
+    it { expect(RepositoryPostReceiveUrl.active.length).to be == 3 }
     it { expect(RepositoryPostReceiveUrl.inactive.length).to be == 2 }
   end
 
