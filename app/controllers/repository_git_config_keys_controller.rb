@@ -68,8 +68,6 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
       if @git_config_key.destroy
         flash[:notice] = l(:notice_git_config_key_deleted)
         format.js { render :js => "window.location = #{success_url.to_json};" }
-      else
-        format.js { render :layout => false }
       end
     end
   end

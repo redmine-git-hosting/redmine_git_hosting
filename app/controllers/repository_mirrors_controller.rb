@@ -68,8 +68,6 @@ class RepositoryMirrorsController < RedmineGitHostingController
       if @mirror.destroy
         flash[:notice] = l(:notice_mirror_deleted)
         format.js { render :js => "window.location = #{success_url.to_json};" }
-      else
-        format.js { render :layout => false }
       end
     end
   end

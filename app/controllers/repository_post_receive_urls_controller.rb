@@ -68,8 +68,6 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
       if @post_receive_url.destroy
         flash[:notice] = l(:notice_post_receive_url_deleted)
         format.js { render :js => "window.location = #{success_url.to_json};" }
-      else
-        format.js { render :layout => false }
       end
     end
   end
