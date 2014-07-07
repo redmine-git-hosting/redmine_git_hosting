@@ -113,17 +113,41 @@ describe RepositoryMirrorsController do
 
 
   describe "GET #edit" do
-    before do
-      request.session[:user_id] = @user.id
-      get :edit, :repository_id => @repository_git.id, :id => @mirror.id
+    context "with existing mirror" do
+      before do
+        request.session[:user_id] = @user.id
+        get :edit, :repository_id => @repository_git.id, :id => @mirror.id
+      end
+
+      it "assigns the requested mirror to @mirror" do
+        expect(assigns(:mirror)).to eq @mirror
+      end
+
+      it "renders the :edit template" do
+        expect(response).to render_template(:edit)
+      end
     end
 
-    it "assigns the requested mirror to @mirror" do
-      expect(assigns(:mirror)).to eq @mirror
+    context "with non-existing mirror" do
+      before do
+        request.session[:user_id] = @user.id
+        get :edit, :repository_id => @repository_git.id, :id => 100
+      end
+
+      it "renders 404" do
+        expect(response.status).to eq 404
+      end
     end
 
-    it "renders the :edit template" do
-      expect(response).to render_template(:edit)
+    context "with unsufficient permissions" do
+      before do
+        request.session[:user_id] = FactoryGirl.create(:user).id
+        get :edit, :repository_id => @repository_git.id, :id => @mirror.id
+      end
+
+      it "renders 403" do
+        expect(response.status).to eq 403
+      end
     end
   end
 
@@ -171,7 +195,7 @@ describe RepositoryMirrorsController do
 
       it "does not change @mirror's attributes" do
         @mirror.reload
-        expect(@mirror.url).to eq 'ssh://host.xz/path/to/repo.git'
+        expect(@mirror.url).to eq 'ssh://host.xz/path/to/repo1.git'
       end
 
       it "re-renders the :edit template" do
@@ -180,4 +204,21 @@ describe RepositoryMirrorsController do
     end
   end
 
+  describe 'DELETE destroy' do
+    before :each do
+      request.session[:user_id] = @user.id
+      @mirror = FactoryGirl.create(:repository_mirror, :repository_id => @repository_git.id)
+    end
+
+    it "deletes the mirror" do
+      expect{
+        delete :destroy, :repository_id => @repository_git.id, :id => @mirror.id, :format => 'js'
+      }.to change(RepositoryMirror, :count).by(-1)
+    end
+
+    it "redirects to repositories#edit" do
+      delete :destroy, :repository_id => @repository_git.id, :id => @mirror.id, :format => 'js'
+      expect(response.status).to eq 200
+    end
+  end
 end
