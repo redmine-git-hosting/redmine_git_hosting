@@ -37,7 +37,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
       else
         format.html {
           flash[:error] = l(:notice_git_config_key_create_failed)
-          render :action => "create"
+          render :action => "new"
         }
         format.js { render "form_error", :layout => false }
       end
