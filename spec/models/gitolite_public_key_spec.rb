@@ -4,6 +4,8 @@ describe GitolitePublicKey do
 
   SSH_KEY = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpqFJzsx3wTi3t3X/eOizU6rdtNQoqg5uSjL89F+Ojjm2/sah3ouzx+3E461FDYaoJL58Qs9eRhL+ev0BY7khYXph8nIVDzNEjhLqjevX+YhpaW9Ll7V807CwAyvMNm08aup/NrrlI/jO+At348/ivJrfO7ClcPhq4+Id9RZfvbrKaitGOURD7q6Bd7xjUjELUN8wmYxu5zvx/2n/5woVdBUMXamTPxOY5y6DxTNJ+EYzrCr+bNb7459rWUvBHUQGI2fXDGmFpGiv6ShKRhRtwob1JHI8QC9OtxonrIUesa2dW6RFneUaM7tfRfffC704Uo7yuSswb7YK+p1A9QIt5 nicolas@tchoum'
 
+  TEST_USER = 'redmine_user7_7'
+
   before(:all) do
     users = FactoryGirl.create_list(:user, 2)
     @user1 = users[0]
@@ -37,7 +39,7 @@ describe GitolitePublicKey do
   end
 
   it "has an identifier" do
-    expect(@ssh_key.identifier).to eq "redmine_user3_3@redmine_test_key"
+    expect(@ssh_key.identifier).to eq "#{TEST_USER}@redmine_test_key"
   end
 
   it "has a fingerprint" do
@@ -57,7 +59,7 @@ describe GitolitePublicKey do
   end
 
   it "has a owner" do
-    expect(@ssh_key.owner).to eq "redmine_user3_3"
+    expect(@ssh_key.owner).to eq "#{TEST_USER}"
   end
 
   it "has a location" do
@@ -65,11 +67,11 @@ describe GitolitePublicKey do
   end
 
   it "has a gitolite_path" do
-    expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/redmine_user3_3/redmine_test_key/redmine_user3_3.pub"
+    expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/#{TEST_USER}/redmine_test_key/#{TEST_USER}.pub"
   end
 
   it "can be rendered as yaml" do
-    valid_hash = { :key => SSH_KEY, :location => 'redmine_test_key', :owner => 'redmine_user3_3', :title => 'redmine_user3_3@redmine_test_key' }
+    valid_hash = { :key => SSH_KEY, :location => 'redmine_test_key', :owner => TEST_USER, :title => "#{TEST_USER}@redmine_test_key" }
     expect(@ssh_key.to_yaml).to eq valid_hash
   end
 
