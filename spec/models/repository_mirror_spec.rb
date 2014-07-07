@@ -5,7 +5,7 @@ describe RepositoryMirror do
   before do
     @project        = FactoryGirl.create(:project)
     @repository_git = FactoryGirl.create(:repository, :project_id => @project.id)
-    @mirror         = FactoryGirl.build(:repository_mirror, :repository_id => @repository_git.id)
+    @mirror         = FactoryGirl.build(:repository_mirror, :repository_id => @repository_git.id, :url => "ssh://host.xz/path/to/repo.git")
   end
 
   subject { @mirror }
