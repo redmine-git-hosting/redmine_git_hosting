@@ -43,6 +43,18 @@ describe RepositoryMirrorsController do
   end
 
 
+  describe "GET #push" do
+    before do
+      request.session[:user_id] = @user.id
+      get :push, :repository_id => @repository_git.id, :id => @mirror.id
+    end
+
+    it "renders the :push view" do
+      expect(response).to render_template(:push)
+    end
+  end
+
+
   describe "GET #new" do
     before do
       request.session[:user_id] = @user.id
