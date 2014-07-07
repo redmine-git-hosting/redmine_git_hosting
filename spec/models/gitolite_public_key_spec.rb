@@ -37,7 +37,7 @@ describe GitolitePublicKey do
   end
 
   it "has an identifier" do
-    expect(@ssh_key.identifier).to eq "redmine_user1_1@redmine_test_key"
+    expect(@ssh_key.identifier).to eq "redmine_user3_3@redmine_test_key"
   end
 
   it "has a fingerprint" do
@@ -57,7 +57,7 @@ describe GitolitePublicKey do
   end
 
   it "has a owner" do
-    expect(@ssh_key.owner).to eq "redmine_user1_1"
+    expect(@ssh_key.owner).to eq "redmine_user3_3"
   end
 
   it "has a location" do
@@ -65,11 +65,11 @@ describe GitolitePublicKey do
   end
 
   it "has a gitolite_path" do
-    expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/redmine_user1_1/redmine_test_key/redmine_user1_1.pub"
+    expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/redmine_user3_3/redmine_test_key/redmine_user3_3.pub"
   end
 
   it "can be rendered as yaml" do
-    valid_hash = { :key => SSH_KEY, :location => 'redmine_test_key', :owner => 'redmine_user1_1', :title => 'redmine_user1_1@redmine_test_key' }
+    valid_hash = { :key => SSH_KEY, :location => 'redmine_test_key', :owner => 'redmine_user3_3', :title => 'redmine_user3_3@redmine_test_key' }
     expect(@ssh_key.to_yaml).to eq valid_hash
   end
 
