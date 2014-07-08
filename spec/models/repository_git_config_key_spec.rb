@@ -68,7 +68,9 @@ describe RepositoryGitConfigKey do
       @git_config_key.save
     end
 
-    it { expect(@git_config_key).to be_valid }
+    it "should be valid" do
+      expect(@git_config_key).to be_valid
+    end
   end
 
 

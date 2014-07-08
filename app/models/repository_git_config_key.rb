@@ -27,11 +27,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   def create_or_update_config_key
     options = {}
-
-    if self.key_changed?
-      options = {:delete_git_config_key => self.key_change[0]}
-    end
-
+    options = {:delete_git_config_key => self.key_change[0]} if self.key_changed?
     update_repository(options)
   end
 
