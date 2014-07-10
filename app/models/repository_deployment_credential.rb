@@ -7,6 +7,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   VALID_PERMS  = [ "R", "RW+" ]
   DEFAULT_PERM = "RW+"
 
+  ## Attributes
   attr_accessible :perm, :active
 
   ## Relations

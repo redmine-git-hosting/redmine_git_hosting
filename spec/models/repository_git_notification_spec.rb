@@ -2,88 +2,92 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitNotification do
 
-  before do
-    @project          = FactoryGirl.create(:project)
-    @repository_git   = FactoryGirl.create(:repository, :project_id => @project.id)
-    @git_notification = FactoryGirl.build(:repository_git_notification, :repository_id => @repository_git.id)
+  before(:all) do
+    @project    = FactoryGirl.create(:project)
+    @repository = FactoryGirl.create(:repository, :project_id => @project.id)
   end
 
-  subject { @git_notification }
+  VALID_MAIL   = [ 'user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn' ]
+  INVALID_MAIL = [ 'user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com' ]
 
-  it { should respond_to(:repository) }
-  it { should respond_to(:include_list) }
-  it { should respond_to(:exclude_list) }
-  it { should respond_to(:prefix) }
-  it { should respond_to(:sender_address) }
-
-  it { should be_valid }
-
-  it { expect(@git_notification.prefix).to eq "[TEST PROJECT]" }
-  it { expect(@git_notification.sender_address).to eq "redmine@example.com" }
-  it { expect(@git_notification.include_list).to eq [ 'foo@bar.com', 'bar@foo.com'] }
-  it { expect(@git_notification.exclude_list).to eq [ 'far@boo.com', 'boo@far.com'] }
-
-
-  ## Test presence validation
-  describe "when repository_id is not present" do
-    before { @git_notification.repository_id = "" }
-    it { should_not be_valid }
+  def build_git_notification(opts = {})
+    opts = opts.merge(:repository_id => @repository.id)
+    FactoryGirl.build(:repository_git_notification, opts)
   end
 
-  describe "when sender address is not present" do
-    before { @git_notification.sender_address = "" }
+
+  describe "Valid Mirror creation" do
+    before do
+      @git_notification = build_git_notification
+    end
+
+    subject { @git_notification }
+
+    ## Attributes
+    it { should allow_mass_assignment_of(:prefix) }
+    it { should allow_mass_assignment_of(:sender_address) }
+    it { should allow_mass_assignment_of(:include_list) }
+    it { should allow_mass_assignment_of(:exclude_list) }
+
+    ## Relations
+    it { should belong_to(:repository) }
+
+    ## Validations
     it { should be_valid }
-  end
 
-  describe "when include_list is not present" do
-    before { @git_notification.include_list = [] }
-    it { should be_valid }
-  end
+    it { should validate_presence_of(:repository_id) }
 
-  describe "when exclude_list is not present" do
-    before { @git_notification.exclude_list = [] }
-    it { should be_valid }
-  end
+    it { should validate_uniqueness_of(:repository_id) }
 
+    it {
+      should allow_value(*VALID_MAIL).
+      for(:sender_address)
+    }
 
-  ## Test format validation
-  describe "when sender address format is valid" do
-    it "should be valid" do
-      addresses = [
-        'user@foo.COM',
-        'A_US-ER@f.b.org',
-        'frst.lst@foo.jp',
-        'a+b@baz.cn'
-      ]
+    it {
+      should_not allow_value(*INVALID_MAIL).
+      for(:sender_address)
+    }
 
-      addresses.each do |valid_address|
-        @git_notification.sender_address = valid_address
+    ## Serializations
+    it { should serialize(:include_list) }
+    it { should serialize(:exclude_list) }
+
+    ## Attributes content
+    it { expect(@git_notification.prefix).to eq "[TEST PROJECT]" }
+    it { expect(@git_notification.sender_address).to eq "redmine@example.com" }
+    it { expect(@git_notification.include_list).to eq [ 'foo@bar.com', 'bar@foo.com'] }
+    it { expect(@git_notification.exclude_list).to eq [ 'far@boo.com', 'boo@far.com'] }
+
+    context "when include_list contains emails with valid format" do
+      before { @git_notification.include_list = VALID_MAIL }
+      it "should be valid" do
         expect(@git_notification).to be_valid
       end
     end
-  end
 
-  describe "when sender address format is invalid" do
-    it "should be invalid" do
-      addresses = [
-        'user@foo,com',
-        'user_at_foo.org',
-        'example.user@foo.',
-        'foo@bar_baz.com',
-        'foo@bar+baz.com',
-        'foo@bar..com'
-      ]
-
-      addresses.each do |invalid_address|
-        @git_notification.sender_address = invalid_address
+    context "when include_list contains emails with invalid format" do
+      before { @git_notification.include_list = INVALID_MAIL }
+      it "should be valid" do
         expect(@git_notification).not_to be_valid
       end
     end
-  end
 
+    context "when exclude_list contains emails with valid format" do
+      before { @git_notification.exclude_list = VALID_MAIL }
+      it "should be valid" do
+        expect(@git_notification).to be_valid
+      end
+    end
 
-  describe "when include_list contains emails with valid format" do
-    it "should be valid" do
+    context "when exclude_list contains emails with invalid format" do
+      before { @git_notification.exclude_list = INVALID_MAIL }
+      it "should be valid" do
+        expect(@git_notification).not_to be_valid
+      end
+    end
+
+    describe "when emails is in both list" do
       addresses = [
         'user@foo.COM',
         'A_US-ER@f.b.org',
@@ -91,69 +95,14 @@ describe RepositoryGitNotification do
         'a+b@baz.cn'
       ]
 
-      @git_notification.include_list = addresses
-      expect(@git_notification).to be_valid
-    end
-  end
+      before do
+        @git_notification.include_list = addresses
+        @git_notification.exclude_list = addresses
+      end
 
-  describe "when include_list contains emails with invalid format" do
-    it "should be invalid" do
-      addresses = [
-        'user@foo,com',
-        'user_at_foo.org',
-        'example.user@foo.',
-        'foo@bar_baz.com',
-        'foo@bar+baz.com',
-        'foo@bar..com'
-      ]
-
-      @git_notification.include_list = addresses
-      expect(@git_notification).not_to be_valid
-    end
-  end
-
-  describe "when exclude_list contains emails with valid format" do
-    it "should be valid" do
-      addresses = [
-        'user@foo.COM',
-        'A_US-ER@f.b.org',
-        'frst.lst@foo.jp',
-        'a+b@baz.cn'
-      ]
-
-      @git_notification.exclude_list = addresses
-      expect(@git_notification).to be_valid
-    end
-  end
-
-  describe "when exclude_list contains emails with invalid format" do
-    it "should be invalid" do
-      addresses = [
-        'user@foo,com',
-        'user_at_foo.org',
-        'example.user@foo.',
-        'foo@bar_baz.com',
-        'foo@bar+baz.com',
-        'foo@bar..com'
-      ]
-
-      @git_notification.exclude_list = addresses
-      expect(@git_notification).not_to be_valid
-    end
-  end
-
-  describe "when emails is in both list" do
-    it "should be invalid" do
-      addresses = [
-        'user@foo.COM',
-        'A_US-ER@f.b.org',
-        'frst.lst@foo.jp',
-        'a+b@baz.cn'
-      ]
-
-      @git_notification.include_list = addresses
-      @git_notification.exclude_list = addresses
-      expect(@git_notification).not_to be_valid
+      it "should be invalid" do
+        expect(@git_notification).not_to be_valid
+      end
     end
   end
 end

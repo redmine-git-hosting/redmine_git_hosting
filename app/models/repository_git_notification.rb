@@ -3,13 +3,16 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   VALID_EMAIL_REGEX  = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
 
+  ## Attributes
   attr_accessible :prefix, :sender_address, :include_list, :exclude_list
 
   ## Relations
   belongs_to :repository
 
   ## Validations
-  validates :repository_id,  :presence => true
+  validates :repository_id,  :presence   => true,
+                             :uniqueness => true
+
   validates :sender_address, :format => { :with => VALID_EMAIL_REGEX, :allow_blank => true }
 
   validate :validate_mailing_list

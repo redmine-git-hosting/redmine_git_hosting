@@ -2,241 +2,198 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryMirror do
 
-  before do
-    @project        = FactoryGirl.create(:project)
-    @repository_git = FactoryGirl.create(:repository, :project_id => @project.id)
-    @mirror         = FactoryGirl.build(:repository_mirror, :repository_id => @repository_git.id, :url => "ssh://host.xz/path/to/repo.git")
+  MIRROR_URL = 'ssh://host.xz/path/to/repo.git'
+
+  VALID_URLS = [
+    'ssh://user@host.xz:2222/path/to/repo.git',
+    'ssh://user@host.xz/path/to/repo.git',
+    'ssh://host.xz:2222/path/to/repo.git',
+    'ssh://host.xz/path/to/repo.git',
+    'ssh://user@host.xz/path/to/repo.git',
+    'ssh://host.xz/path/to/repo.git',
+    'ssh://user@host.xz/~user/path/to/repo.git',
+    'ssh://host.xz/~user/path/to/repo.git',
+    'ssh://user@host.xz/~/path/to/repo.git',
+    'ssh://host.xz/~/path/to/repo.git'
+  ]
+
+  before(:all) do
+    @project    = FactoryGirl.create(:project)
+    @repository = FactoryGirl.create(:repository, :project_id => @project.id)
   end
 
-  subject { @mirror }
 
-  it { should respond_to(:repository) }
-  it { should respond_to(:url) }
-  it { should respond_to(:push_mode) }
-  it { should respond_to(:include_all_branches) }
-  it { should respond_to(:include_all_tags) }
-  it { should respond_to(:explicit_refspec) }
-  it { should respond_to(:active) }
-
-  it { should be_valid }
-
-  it { expect(@mirror.active).to be true }
-  it { expect(@mirror.include_all_branches).to be false }
-  it { expect(@mirror.include_all_tags).to be false }
-  it { expect(@mirror.explicit_refspec).to eq "" }
-  it { expect(@mirror.push_mode).to eq 0 }
-  it { expect(@mirror.push_mode).to be_a(Integer) }
-
-  ## Test presence validation
-  describe "when repository_id is not present" do
-    before { @mirror.repository_id = "" }
-    it { should_not be_valid }
+  def build_mirror(opts = {})
+    opts = opts.merge(:repository_id => @repository.id)
+    FactoryGirl.build(:repository_mirror, opts)
   end
 
-  describe "when url is not present" do
-    before { @mirror.url = "" }
-    it { should_not be_valid }
+
+  def create_mirror(opts = {})
+    opts = opts.merge(:repository_id => @repository.id)
+    FactoryGirl.create(:repository_mirror, opts)
   end
 
-  describe "when push_mode is not present" do
-    before { @mirror.push_mode = "" }
-    it { should_not be_valid }
-  end
 
-  describe "when push_mode is out of range" do
-    before { @mirror.push_mode = 3 }
-    it { should_not be_valid }
-  end
-
-  ## Test presence conflicts
-  describe "when include_all_branches && include_all_tags" do
+  describe "Valid Mirror creation" do
     before do
-      @mirror.push_mode = 1
-      @mirror.include_all_branches = true
-      @mirror.include_all_tags = true
+      @mirror = build_mirror
     end
 
-    it { should_not be_valid }
-  end
+    subject { @mirror }
 
-  describe "when include_all_branches && explicit_refspec" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.include_all_branches = true
-      @mirror.include_all_tags = false
-      @mirror.explicit_refspec = 'devel'
-    end
+    ## Attributes
+    it { should allow_mass_assignment_of(:url) }
+    it { should allow_mass_assignment_of(:push_mode) }
+    it { should allow_mass_assignment_of(:include_all_branches) }
+    it { should allow_mass_assignment_of(:include_all_tags) }
+    it { should allow_mass_assignment_of(:explicit_refspec) }
+    it { should allow_mass_assignment_of(:active) }
 
-    it { should_not be_valid }
-  end
+    ## Relations
+    it { should belong_to(:repository) }
 
-  ## Validate push mode : forced
-  describe "when push_mode forced without params" do
-    before do
-      @mirror.push_mode = 1
-    end
-
-    it { should_not be_valid }
-  end
-
-  describe "when push_mode forced with params" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.explicit_refspec = 'devel'
-    end
-
+    ## Validations
     it { should be_valid }
-  end
 
-  ## Validate push mode : fast forward
-  describe "when push_mode fast forward without params" do
-    before do
-      @mirror.push_mode = 2
+    it { should validate_presence_of(:repository_id) }
+    it { should validate_presence_of(:url) }
+    it { should validate_presence_of(:push_mode) }
+
+    it { should validate_uniqueness_of(:url).scoped_to(:repository_id) }
+
+    it {
+      should allow_value(*VALID_URLS).
+      for(:url)
+    }
+
+    it { should validate_numericality_of(:push_mode) }
+
+    it {
+      should ensure_inclusion_of(:push_mode).
+      in_array(%w(0 1 2))
+    }
+
+    ## Attributes content
+    it { expect(@mirror.active).to be true }
+    it { expect(@mirror.include_all_branches).to be false }
+    it { expect(@mirror.include_all_tags).to be false }
+    it { expect(@mirror.explicit_refspec).to eq "" }
+    it { expect(@mirror.push_mode).to eq 0 }
+    it { expect(@mirror.push_mode).to be_a(Integer) }
+
+    ## Test changes
+    describe "when active is true" do
+      before { @mirror.active = true }
+      it "shoud be active" do
+        expect(@mirror.active).to be true
+      end
     end
 
-    it { should_not be_valid }
-  end
-
-  describe "when push_mode fast forward with params" do
-    before do
-      @mirror.push_mode = 2
-      @mirror.explicit_refspec = 'devel'
-    end
-
-    it { should be_valid }
-  end
-
-
-  ## Validate push args : mirror mode
-  describe "when push_mode is mirror" do
-    before do
-      @mirror.push_mode = 0
-    end
-
-    it { should be_valid }
-    it "should have push_args" do
-      valid_args = ["--mirror", "ssh://host.xz/path/to/repo.git"]
-      expect(@mirror.push_args).to eq valid_args
-    end
-  end
-
-  ## Validate push args : force mode
-  describe "when push_mode is force" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.explicit_refspec = 'devel'
-    end
-
-    it { should be_valid }
-    it "should have push_args" do
-      valid_args = ["--force", "ssh://host.xz/path/to/repo.git", "devel"]
-      expect(@mirror.push_args).to eq valid_args
-    end
-  end
-
-  ## Validate push args : fast forward mode
-  describe "when push_mode is fast forward" do
-    before do
-      @mirror.push_mode = 2
-      @mirror.explicit_refspec = 'devel'
-    end
-
-    it { should be_valid }
-    it "should have push_args" do
-      valid_args = ["ssh://host.xz/path/to/repo.git", "devel"]
-      expect(@mirror.push_args).to eq valid_args
-    end
-  end
-
-  ## Validate push args : all tags mode
-  describe "when push_mode is all tags" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.include_all_tags = true
-      @mirror.explicit_refspec = ""
-    end
-
-    it { should be_valid }
-    it "should have push_args" do
-      valid_args = ["--force", "--tags", "ssh://host.xz/path/to/repo.git"]
-      expect(@mirror.push_args).to eq valid_args
-    end
-  end
-
-  ## Validate push args : all branches mode
-  describe "when push_mode is all branches" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.include_all_branches = true
-      @mirror.explicit_refspec = ""
-    end
-
-    it { should be_valid }
-    it "should have push_args" do
-      valid_args = ["--force", "--all", "ssh://host.xz/path/to/repo.git"]
-      expect(@mirror.push_args).to eq valid_args
-    end
-  end
-
-
-  ## Test changes
-  describe "when active is true" do
-    before { @mirror.active = true }
-    it "shoud be active" do
-      expect(@mirror.active).to be true
-    end
-  end
-
-  describe "when active is false" do
-    before { @mirror.active = false }
-    it "should be inactive" do
-      expect(@mirror.active).to be false
-    end
-  end
-
-  ## Test format validation
-  describe "when git url is valid" do
-    it "should be valid" do
-      addresses = [
-        'ssh://user@host.xz:2222/path/to/repo.git',
-        'ssh://user@host.xz/path/to/repo.git',
-        'ssh://host.xz:2222/path/to/repo.git',
-        'ssh://host.xz/path/to/repo.git',
-        'ssh://user@host.xz/path/to/repo.git',
-        'ssh://host.xz/path/to/repo.git',
-        'ssh://user@host.xz/~user/path/to/repo.git',
-        'ssh://host.xz/~user/path/to/repo.git',
-        'ssh://user@host.xz/~/path/to/repo.git',
-        'ssh://host.xz/~/path/to/repo.git'
-      ]
-
-      addresses.each do |valid_address|
-        @mirror.url = valid_address
-        expect(@mirror).to be_valid
+    describe "when active is false" do
+      before { @mirror.active = false }
+      it "should be inactive" do
+        expect(@mirror.active).to be false
       end
     end
   end
 
-  describe "when explicit_refspec is invalid" do
-    before do
-      @mirror.push_mode = 1
-      @mirror.include_all_branches = false
-      @mirror.include_all_tags = false
-      @mirror.explicit_refspec = ':/devel'
+
+  describe "Push args" do
+    ## Validate push args : forced mode
+    context "when push_mode forced with params" do
+      before do
+        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :explicit_refspec => 'devel')
+      end
+
+      it "should have push_args" do
+        expect(@mirror.push_args).to eq ["--force", MIRROR_URL, "devel"]
+      end
     end
 
-    it { should_not be_valid }
+    ## Validate push args : fast_forward mode
+    context "when push_mode fast_forward with params" do
+      before do
+        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 2, :explicit_refspec => 'devel')
+      end
+
+      it "should have push_args" do
+        expect(@mirror.push_args).to eq [MIRROR_URL, "devel"]
+      end
+    end
+
+    ## Validate push args : mirror mode
+    context "when push_mode is mirror" do
+      before do
+        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 0)
+      end
+
+      it "should have push_args" do
+        expect(@mirror.push_args).to eq ["--mirror", MIRROR_URL]
+      end
+    end
+
+    ## Validate push args : all tags mode
+    context "when push_mode is all tags" do
+      before do
+        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :include_all_tags => true)
+      end
+
+      it "should have push_args" do
+        expect(@mirror.push_args).to eq ["--force", "--tags", MIRROR_URL]
+      end
+    end
+
+    ## Validate push args : all branches mode
+    context "when push_mode is all branches" do
+      before do
+        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :include_all_branches => true)
+      end
+
+      it "should have push_args" do
+        expect(@mirror.push_args).to eq ["--force", "--all", MIRROR_URL]
+      end
+    end
   end
 
-  ## Test uniqueness validation
-  describe "when mirror url is already taken" do
-    before do
-      @mirror.save
-      @mirror_with_same_url = @mirror.dup
-      @mirror_with_same_url.save
+
+  describe "Invalid Mirror creation" do
+    ## Test presence conflicts
+    it "is invalid when include_all_branches && include_all_tags" do
+      expect(build_mirror(:push_mode => 1, :include_all_branches => true, :include_all_tags => true)).not_to be_valid
     end
 
-    it { expect(@mirror_with_same_url).not_to be_valid }
+    it "is invalid when include_all_branches && explicit_refspec" do
+      expect(build_mirror(:push_mode => 1, :include_all_branches => true, :explicit_refspec => 'devel')).not_to be_valid
+    end
+
+    ## Validate push mode : forced
+    it "is invalid when push_mode forced without params" do
+      expect(build_mirror(:push_mode => 1)).not_to be_valid
+    end
+
+    ## Validate push mode : fast_forward
+    it "is invalid when push_mode fast_forward without params" do
+      expect(build_mirror(:push_mode => 2)).not_to be_valid
+    end
+
+    ## Validate explicit_refspec
+    it "is invalid when explicit_refspec is invalid" do
+      expect(build_mirror(:push_mode => 1, :explicit_refspec => ':/devel')).not_to be_valid
+    end
+  end
+
+
+  context "when many mirror are saved" do
+    before do
+      create_mirror(:active => true)
+      create_mirror(:active => true)
+      create_mirror(:active => false)
+      create_mirror(:active => false)
+    end
+
+    it { expect(RepositoryMirror.active.length).to be == 3 }
+    it { expect(RepositoryMirror.inactive.length).to be == 2 }
   end
 
 end

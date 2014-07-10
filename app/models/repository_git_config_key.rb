@@ -1,6 +1,7 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
+  ## Attributes
   attr_accessible :key, :value
 
   ## Relations
@@ -9,12 +10,11 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   ## Validations
   validates :repository_id, :presence => true
 
-  validates :key,           :presence => true,
-                            :uniqueness => { :case_sensitive => false, :scope => :repository_id }
+  validates :key,           :presence   => true,
+                            :uniqueness => { :case_sensitive => false, :scope => :repository_id },
+                            :format     => { :with => /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/ }
 
   validates :value,         :presence => true
-
-  validate :check_key_format
 
   ## Callbacks
   after_commit ->(obj) { obj.create_or_update_config_key }, :on => :create
@@ -39,14 +39,6 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
 
   private
-
-
-  def check_key_format
-    if !self.key.include?('.')
-      errors.add(:key, :error_wrong_config_key_format)
-      return false
-    end
-  end
 
 
   def update_repository(options)

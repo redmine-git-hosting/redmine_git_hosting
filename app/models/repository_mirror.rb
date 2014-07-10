@@ -8,6 +8,7 @@ class RepositoryMirror < ActiveRecord::Base
   PUSHMODE_FORCE        = 1
   PUSHMODE_FAST_FORWARD = 2
 
+  ## Attributes
   attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
 
   ## Relations
@@ -21,7 +22,7 @@ class RepositoryMirror < ActiveRecord::Base
   ## ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
   validates :url, :presence   => true,
                   :uniqueness => { :case_sensitive => false, :scope => :repository_id },
-                  :format     => { :with => /^(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-~]+)(\.git)?$/i }
+                  :format     => { :with => /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-~]+)(\.git)?\z/i }
 
   validates :push_mode, :presence     => true,
                         :numericality => { :only_integer => true },
@@ -101,8 +102,8 @@ class RepositoryMirror < ActiveRecord::Base
 
   # Strip leading and trailing whitespace
   def strip_whitespace
-    self.url = url.strip
-    self.explicit_refspec = explicit_refspec.strip
+    self.url = url.strip rescue ''
+    self.explicit_refspec = explicit_refspec.strip rescue ''
   end
 
 

@@ -6,6 +6,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   HTTPS    = 2
   BOTH     = 3
 
+  ## Attributes
   attr_accessible :git_http, :git_daemon, :git_notify, :default_branch, :protected_branch
 
   ## Relations

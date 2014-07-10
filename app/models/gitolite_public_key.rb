@@ -1,13 +1,14 @@
 class GitolitePublicKey < ActiveRecord::Base
   unloadable
 
-  TITLE_LENGTH_LIMIT = 255
+  TITLE_LENGTH_LIMIT = 60
 
   KEY_TYPE_USER   = 0
   KEY_TYPE_DEPLOY = 1
 
   DEPLOY_PSEUDO_USER = "deploy_key"
 
+  ## Attributes
   attr_accessible :title, :key, :key_type, :delete_when_unused
 
   ## Relations
@@ -21,8 +22,12 @@ class GitolitePublicKey < ActiveRecord::Base
                           :length => { :maximum => TITLE_LENGTH_LIMIT }, :format => /\A[a-z0-9_\-]*\z/i
 
   validates :identifier,  :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
+
   validates :key,         :presence => true
-  validates :key_type,    :presence => true, :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
+
+  validates :key_type,    :presence => true,
+                          :numericality => { :only_integer => true },
+                          :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
   validate :has_not_been_changed
   validate :key_correctness
@@ -145,11 +150,11 @@ class GitolitePublicKey < ActiveRecord::Base
 
   # Strip leading and trailing whitespace
   def strip_whitespace
-    self.title = title.strip
+    self.title = title.strip rescue ''
 
     # Don't mess with existing keys (since cannot change key text anyway)
     if new_record?
-      self.key = key.strip
+      self.key = key.strip rescue ''
     end
   end
 
@@ -231,9 +236,10 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def key_correctness
+    return false if self.key.nil?
     # Test correctness of fingerprint from output
     # and general ssh-(r|d|ecd)sa <key> <id> structure
-    (self.fingerprint =~ /^(\w{2}:?)+$/i) && (self.key.match(/^(\S+)\s+(\S+)/))
+    (self.key.match(/^(\S+)\s+(\S+)/)) && (self.fingerprint =~ /^(\w{2}:?)+$/i)
   end
 
 

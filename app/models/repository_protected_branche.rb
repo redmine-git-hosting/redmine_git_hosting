@@ -4,9 +4,10 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   VALID_PERMS  = [ "RW+", "RW" ]
   DEFAULT_PERM = "RW+"
 
-  attr_accessible :path, :permissions, :position, :user_list
-
   acts_as_list
+
+  ## Attributes
+  attr_accessible :path, :permissions, :position, :user_list
 
   ## Relations
   belongs_to :repository
@@ -64,7 +65,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
 
   def remove_blank_items
-    self.user_list = user_list.select{ |user| !user.blank? }
+    self.user_list = user_list.select{ |user| !user.blank? } rescue []
   end
 
 end

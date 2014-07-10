@@ -6,6 +6,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
+  ## Attributes
   attr_accessible :url, :mode, :active, :use_triggers, :triggers, :split_payloads
 
   ## Relations
@@ -14,7 +15,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   ## Validations
   validates :repository_id, :presence => true
 
-  ## Only allow HTTP(s) format
+  # Only allow HTTP(s) format
   validates :url, :presence   => true,
                   :uniqueness => { :case_sensitive => false, :scope => :repository_id },
                   :format     => { :with => URI::regexp(%w(http https)) }
@@ -73,7 +74,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
   # Strip leading and trailing whitespace
   def strip_whitespace
-    self.url = url.strip
+    self.url = url.strip rescue ''
   end
 
 end
