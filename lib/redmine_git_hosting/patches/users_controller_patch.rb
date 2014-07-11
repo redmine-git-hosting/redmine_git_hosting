@@ -9,7 +9,6 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          alias_method_chain :update, :git_hosting
           alias_method_chain :edit,   :git_hosting
 
           helper :gitolite_public_keys
@@ -18,14 +17,6 @@ module RedmineGitHosting
 
 
       module InstanceMethods
-
-        def update_with_git_hosting(&block)
-          # Set public key values for view
-          set_public_key_values
-
-          # Previous routine
-          update_without_git_hosting(&block)
-        end
 
 
         def edit_with_git_hosting(&block)
