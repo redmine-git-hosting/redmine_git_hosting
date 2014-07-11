@@ -9,7 +9,7 @@ describe RepositoryPostReceiveUrlsController do
 
   before(:all) do
     @project          = FactoryGirl.create(:project)
-    @repository_git   = FactoryGirl.create(:repository, :project_id => @project.id)
+    @repository_git   = FactoryGirl.create(:repository_git, :project_id => @project.id)
     @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository_git.id)
     @user             = FactoryGirl.create(:user, :admin => true)
   end

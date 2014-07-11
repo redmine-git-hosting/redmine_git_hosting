@@ -4,7 +4,7 @@ describe RepositoryGitNotification do
 
   before(:all) do
     @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository, :project_id => @project.id)
+    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
   end
 
   VALID_MAIL   = [ 'user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn' ]

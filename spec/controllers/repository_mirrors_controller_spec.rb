@@ -9,7 +9,7 @@ describe RepositoryMirrorsController do
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository_git = FactoryGirl.create(:repository, :project_id => @project.id)
+    @repository_git = FactoryGirl.create(:repository_git, :project_id => @project.id)
     @mirror         = FactoryGirl.create(:repository_mirror, :repository_id => @repository_git.id)
     @user           = FactoryGirl.create(:user, :admin => true)
   end

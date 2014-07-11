@@ -8,7 +8,7 @@ describe RepositoryPostReceiveUrl do
 
   before(:all) do
     @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository, :project_id => @project.id)
+    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
   end
 
 

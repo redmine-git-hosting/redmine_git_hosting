@@ -7,7 +7,7 @@ describe RepositoryDeploymentCredential do
 
   before(:all) do
     @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository, :project_id => @project.id)
+    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
 
     users = FactoryGirl.create_list(:user, 2)
     @user1 = users[0]
