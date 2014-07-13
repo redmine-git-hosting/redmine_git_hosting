@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe  RedmineGitolite::GitoliteWrapper do
+describe RedmineGitolite::GitoliteWrapper do
 
   GITOLITE_VERSION_2 = [
     'hello redmine_gitolite_admin_id_rsa, this is gitolite v2.3.1-0-g912a8bd-dt running on git 1.7.2.5',
