@@ -3,22 +3,24 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryGitConfigKeysController do
 
   def success_url
-    "/repositories/#{@repository_git.id}/edit?tab=repository_git_config_keys"
+    "/repositories/#{@repository.id}/edit?tab=repository_git_config_keys"
   end
 
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository_git = FactoryGirl.create(:repository_git, :project_id => @project.id)
-    @git_config_key = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository_git.id)
+    @repository     = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @git_config_key = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository.id)
     @user           = FactoryGirl.create(:user, :admin => true)
+
+    @repository2    = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'gck-test')
   end
 
 
   describe "GET #index" do
     before do
       request.session[:user_id] = @user.id
-      get :index, :repository_id => @repository_git.id
+      get :index, :repository_id => @repository.id
     end
 
     it "populates an array of repository_git_config_keys" do
@@ -34,7 +36,7 @@ describe RepositoryGitConfigKeysController do
   describe "GET #show" do
     before do
       request.session[:user_id] = @user.id
-      get :show, :repository_id => @repository_git.id, :id => @git_config_key.id
+      get :show, :repository_id => @repository.id, :id => @git_config_key.id
     end
 
     it "renders 404" do
@@ -46,7 +48,7 @@ describe RepositoryGitConfigKeysController do
   describe "GET #new" do
     before do
       request.session[:user_id] = @user.id
-      get :new, :repository_id => @repository_git.id
+      get :new, :repository_id => @repository.id
     end
 
     it "assigns a new RepositoryGitConfigKey to @git_config_key" do
@@ -67,7 +69,7 @@ describe RepositoryGitConfigKeysController do
 
       it "saves the new git_config_key in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_git_config_key => {
                           :key   => 'foo.bar1',
                           :value => 0
@@ -76,7 +78,7 @@ describe RepositoryGitConfigKeysController do
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_git_config_key => {
                         :key   => 'foo.bar2',
                         :value => 0
@@ -92,16 +94,16 @@ describe RepositoryGitConfigKeysController do
 
       it "does not save the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_git_config_key => {
                           :key   => 'foo',
                           :value => 0
                         }
-        }.to_not change(RepositoryMirror, :count)
+        }.to_not change(RepositoryGitConfigKey, :count)
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_git_config_key => {
                         :key   => 'foo',
                         :value => 0
@@ -116,7 +118,7 @@ describe RepositoryGitConfigKeysController do
     context "with existing git_config_key" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => @git_config_key.id
+        get :edit, :repository_id => @repository.id, :id => @git_config_key.id
       end
 
       it "assigns the requested git_config_key to @git_config_key" do
@@ -131,7 +133,7 @@ describe RepositoryGitConfigKeysController do
     context "with non-existing git_config_key" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => 100
+        get :edit, :repository_id => @repository.id, :id => 100
       end
 
       it "renders 404" do
@@ -139,10 +141,21 @@ describe RepositoryGitConfigKeysController do
       end
     end
 
+    context "with non-matching repository" do
+      before do
+        request.session[:user_id] = @user.id
+        get :edit, :repository_id => @repository2.id, :id => @git_config_key.id
+      end
+
+      it "renders 403" do
+        expect(response.status).to eq 403
+      end
+    end
+
     context "with unsufficient permissions" do
       before do
         request.session[:user_id] = FactoryGirl.create(:user).id
-        get :edit, :repository_id => @repository_git.id, :id => @git_config_key.id
+        get :edit, :repository_id => @repository.id, :id => @git_config_key.id
       end
 
       it "renders 403" do
@@ -159,7 +172,7 @@ describe RepositoryGitConfigKeysController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @git_config_key.id,
                      :repository_git_config_key => {
                         :key   => 'foo.bar1',
@@ -183,7 +196,7 @@ describe RepositoryGitConfigKeysController do
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @git_config_key.id,
                      :repository_git_config_key => {
                         :key   => 'foo',
@@ -209,17 +222,17 @@ describe RepositoryGitConfigKeysController do
   describe 'DELETE destroy' do
     before :each do
       request.session[:user_id] = @user.id
-      @mirror = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository_git.id)
+      @git_config_key_delete = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository.id)
     end
 
     it "deletes the git_config_key" do
       expect{
-        delete :destroy, :repository_id => @repository_git.id, :id => @git_config_key.id, :format => 'js'
+        delete :destroy, :repository_id => @repository.id, :id => @git_config_key_delete.id, :format => 'js'
       }.to change(RepositoryGitConfigKey, :count).by(-1)
     end
 
     it "redirects to repositories#edit" do
-      delete :destroy, :repository_id => @repository_git.id, :id => @git_config_key.id, :format => 'js'
+      delete :destroy, :repository_id => @repository.id, :id => @git_config_key_delete.id, :format => 'js'
       expect(response.status).to eq 200
     end
   end

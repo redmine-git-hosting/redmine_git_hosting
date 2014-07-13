@@ -3,22 +3,24 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryMirrorsController do
 
   def success_url
-    "/repositories/#{@repository_git.id}/edit?tab=repository_mirrors"
+    "/repositories/#{@repository.id}/edit?tab=repository_mirrors"
   end
 
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository_git = FactoryGirl.create(:repository_git, :project_id => @project.id)
-    @mirror         = FactoryGirl.create(:repository_mirror, :repository_id => @repository_git.id)
+    @repository     = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @mirror         = FactoryGirl.create(:repository_mirror, :repository_id => @repository.id)
     @user           = FactoryGirl.create(:user, :admin => true)
+
+    @repository2    = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'mirror-test')
   end
 
 
   describe "GET #index" do
     before do
       request.session[:user_id] = @user.id
-      get :index, :repository_id => @repository_git.id
+      get :index, :repository_id => @repository.id
     end
 
     it "populates an array of mirrors" do
@@ -34,7 +36,7 @@ describe RepositoryMirrorsController do
   describe "GET #show" do
     before do
       request.session[:user_id] = @user.id
-      get :show, :repository_id => @repository_git.id, :id => @mirror.id
+      get :show, :repository_id => @repository.id, :id => @mirror.id
     end
 
     it "renders 404" do
@@ -46,7 +48,7 @@ describe RepositoryMirrorsController do
   describe "GET #push" do
     before do
       request.session[:user_id] = @user.id
-      get :push, :repository_id => @repository_git.id, :id => @mirror.id
+      get :push, :repository_id => @repository.id, :id => @mirror.id
     end
 
     it "renders the :push view" do
@@ -58,7 +60,7 @@ describe RepositoryMirrorsController do
   describe "GET #new" do
     before do
       request.session[:user_id] = @user.id
-      get :new, :repository_id => @repository_git.id
+      get :new, :repository_id => @repository.id
     end
 
     it "assigns a new RepositoryMirror to @mirror" do
@@ -79,7 +81,7 @@ describe RepositoryMirrorsController do
 
       it "saves the new mirror in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_mirror => {
                           :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4.git',
                           :push_mode => 0
@@ -88,7 +90,7 @@ describe RepositoryMirrorsController do
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_mirror => {
                         :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4/repo1.git',
                         :push_mode => 0
@@ -104,7 +106,7 @@ describe RepositoryMirrorsController do
 
       it "does not save the new mirror in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_mirror => {
                           :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
                           :push_mode => 0
@@ -113,7 +115,7 @@ describe RepositoryMirrorsController do
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_mirror => {
                         :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
                         :push_mode => 0
@@ -128,7 +130,7 @@ describe RepositoryMirrorsController do
     context "with existing mirror" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => @mirror.id
+        get :edit, :repository_id => @repository.id, :id => @mirror.id
       end
 
       it "assigns the requested mirror to @mirror" do
@@ -143,7 +145,7 @@ describe RepositoryMirrorsController do
     context "with non-existing mirror" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => 100
+        get :edit, :repository_id => @repository.id, :id => 100
       end
 
       it "renders 404" do
@@ -151,10 +153,21 @@ describe RepositoryMirrorsController do
       end
     end
 
+    context "with non-matching repository" do
+      before do
+        request.session[:user_id] = @user.id
+        get :edit, :repository_id => @repository2.id, :id => @mirror.id
+      end
+
+      it "renders 403" do
+        expect(response.status).to eq 403
+      end
+    end
+
     context "with unsufficient permissions" do
       before do
         request.session[:user_id] = FactoryGirl.create(:user).id
-        get :edit, :repository_id => @repository_git.id, :id => @mirror.id
+        get :edit, :repository_id => @repository.id, :id => @mirror.id
       end
 
       it "renders 403" do
@@ -171,7 +184,7 @@ describe RepositoryMirrorsController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @mirror.id,
                      :repository_mirror => {
                        :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4.git'
@@ -194,7 +207,7 @@ describe RepositoryMirrorsController do
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @mirror.id,
                      :repository_mirror => {
                        :url => 'git@redmine.example.org/project1/project2/project3/project4.git'
@@ -219,17 +232,17 @@ describe RepositoryMirrorsController do
   describe 'DELETE destroy' do
     before :each do
       request.session[:user_id] = @user.id
-      @mirror = FactoryGirl.create(:repository_mirror, :repository_id => @repository_git.id)
+      @mirror_delete = FactoryGirl.create(:repository_mirror, :repository_id => @repository.id)
     end
 
     it "deletes the mirror" do
       expect{
-        delete :destroy, :repository_id => @repository_git.id, :id => @mirror.id, :format => 'js'
+        delete :destroy, :repository_id => @repository.id, :id => @mirror_delete.id, :format => 'js'
       }.to change(RepositoryMirror, :count).by(-1)
     end
 
     it "redirects to repositories#edit" do
-      delete :destroy, :repository_id => @repository_git.id, :id => @mirror.id, :format => 'js'
+      delete :destroy, :repository_id => @repository.id, :id => @mirror_delete.id, :format => 'js'
       expect(response.status).to eq 200
     end
   end

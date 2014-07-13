@@ -3,22 +3,24 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryPostReceiveUrlsController do
 
   def success_url
-    "/repositories/#{@repository_git.id}/edit?tab=repository_post_receive_urls"
+    "/repositories/#{@repository.id}/edit?tab=repository_post_receive_urls"
   end
 
 
   before(:all) do
     @project          = FactoryGirl.create(:project)
-    @repository_git   = FactoryGirl.create(:repository_git, :project_id => @project.id)
-    @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository_git.id)
+    @repository       = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository.id)
     @user             = FactoryGirl.create(:user, :admin => true)
+
+    @repository2      = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'pru-test')
   end
 
 
   describe "GET #index" do
     before do
       request.session[:user_id] = @user.id
-      get :index, :repository_id => @repository_git.id
+      get :index, :repository_id => @repository.id
     end
 
     it "populates an array of post_receive_urls" do
@@ -34,7 +36,7 @@ describe RepositoryPostReceiveUrlsController do
   describe "GET #show" do
     before do
       request.session[:user_id] = @user.id
-      get :show, :repository_id => @repository_git.id, :id => @post_receive_url.id
+      get :show, :repository_id => @repository.id, :id => @post_receive_url.id
     end
 
     it "renders 404" do
@@ -46,7 +48,7 @@ describe RepositoryPostReceiveUrlsController do
   describe "GET #new" do
     before do
       request.session[:user_id] = @user.id
-      get :new, :repository_id => @repository_git.id
+      get :new, :repository_id => @repository.id
     end
 
     it "assigns a new RepositoryPostReceiveUrl to @post_receive_url" do
@@ -67,7 +69,7 @@ describe RepositoryPostReceiveUrlsController do
 
       it "saves the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_post_receive_url => {
                           :url  => 'http://example.com',
                           :mode => :github
@@ -76,7 +78,7 @@ describe RepositoryPostReceiveUrlsController do
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_post_receive_url => {
                         :url  => 'http://example2.com',
                         :mode => :github
@@ -92,7 +94,7 @@ describe RepositoryPostReceiveUrlsController do
 
       it "does not save the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository_git.id,
+          post :create, :repository_id => @repository.id,
                         :repository_post_receive_url => {
                           :url  => 'example.com',
                           :mode => :github
@@ -101,7 +103,7 @@ describe RepositoryPostReceiveUrlsController do
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository_git.id,
+        post :create, :repository_id => @repository.id,
                       :repository_post_receive_url => {
                         :url  => 'example.com',
                         :mode => :github
@@ -116,7 +118,7 @@ describe RepositoryPostReceiveUrlsController do
     context "with existing post_receive_url" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => @post_receive_url.id
+        get :edit, :repository_id => @repository.id, :id => @post_receive_url.id
       end
 
       it "assigns the requested post_receive_url to @post_receive_url" do
@@ -131,7 +133,7 @@ describe RepositoryPostReceiveUrlsController do
     context "with non-existing post_receive_url" do
       before do
         request.session[:user_id] = @user.id
-        get :edit, :repository_id => @repository_git.id, :id => 100
+        get :edit, :repository_id => @repository.id, :id => 100
       end
 
       it "renders 404" do
@@ -139,10 +141,21 @@ describe RepositoryPostReceiveUrlsController do
       end
     end
 
+    context "with non-matching repository" do
+      before do
+        request.session[:user_id] = @user.id
+        get :edit, :repository_id => @repository2.id, :id => @post_receive_url.id
+      end
+
+      it "renders 403" do
+        expect(response.status).to eq 403
+      end
+    end
+
     context "with unsufficient permissions" do
       before do
         request.session[:user_id] = FactoryGirl.create(:user).id
-        get :edit, :repository_id => @repository_git.id, :id => @post_receive_url.id
+        get :edit, :repository_id => @repository.id, :id => @post_receive_url.id
       end
 
       it "renders 403" do
@@ -159,7 +172,7 @@ describe RepositoryPostReceiveUrlsController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @post_receive_url.id,
                      :repository_post_receive_url => {
                        :url => 'http://example.com/titi.php'
@@ -182,7 +195,7 @@ describe RepositoryPostReceiveUrlsController do
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository_git.id,
+        put :update, :repository_id => @repository.id,
                      :id => @post_receive_url.id,
                      :repository_post_receive_url => {
                        :url => 'example.com'
@@ -208,17 +221,17 @@ describe RepositoryPostReceiveUrlsController do
   describe 'DELETE destroy' do
     before :each do
       request.session[:user_id] = @user.id
-      @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository_git.id)
+      @post_receive_url_delete = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository.id)
     end
 
     it "deletes the post_receive_url" do
       expect{
-        delete :destroy, :repository_id => @repository_git.id, :id => @post_receive_url.id, :format => 'js'
+        delete :destroy, :repository_id => @repository.id, :id => @post_receive_url_delete.id, :format => 'js'
       }.to change(RepositoryPostReceiveUrl, :count).by(-1)
     end
 
     it "redirects to repositories#edit" do
-      delete :destroy, :repository_id => @repository_git.id, :id => @post_receive_url.id, :format => 'js'
+      delete :destroy, :repository_id => @repository.id, :id => @post_receive_url_delete.id, :format => 'js'
       expect(response.status).to eq 200
     end
   end
