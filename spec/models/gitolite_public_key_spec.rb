@@ -8,7 +8,7 @@ describe GitolitePublicKey do
   SSH_KEY_3 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/VG05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9yUxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3omd297/zzcQm3p nicolas@tchoum'
   SSH_KEY_4 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zVI35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4C8cGYljjUWkx3v nicolas@tchoum'
 
-  TEST_USER = 'redmine_user10_11'
+  TEST_USER = 'redmine_user13_14'
 
   before(:all) do
     users = FactoryGirl.create_list(:user, 2)
@@ -262,16 +262,16 @@ describe GitolitePublicKey do
       create_ssh_key(:user_id => @user2.id, :title => 'active4', key: SSH_KEY_4)
     end
 
-    it "should have 7 keys" do
-      expect(GitolitePublicKey.all.length).to be == 7
+    it "should have 8 keys" do
+      expect(GitolitePublicKey.all.length).to be == 8
     end
 
     it "should have 3 user keys" do
       expect(GitolitePublicKey.user_key.length).to be == 3
     end
 
-    it "should have 4 deploy keys" do
-      expect(GitolitePublicKey.deploy_key.length).to be == 4
+    it "should have 5 deploy keys" do
+      expect(GitolitePublicKey.deploy_key.length).to be == 5
     end
 
     it "user1 should have 2 keys" do
