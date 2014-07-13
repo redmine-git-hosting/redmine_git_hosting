@@ -24,7 +24,7 @@ describe RepositoryPostReceiveUrl do
   end
 
 
-  describe "Valid PostReceiveUrl creation" do
+  describe "Valid RepositoryPostReceiveUrl creation" do
     before do
       @post_receive_url = build_post_receive_url
     end

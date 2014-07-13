@@ -35,7 +35,7 @@ describe RepositoryMirror do
   end
 
 
-  describe "Valid Mirror creation" do
+  describe "Valid RepositoryMirror creation" do
     before do
       @mirror = build_mirror
     end

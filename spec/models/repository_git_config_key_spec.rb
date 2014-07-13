@@ -14,7 +14,7 @@ describe RepositoryGitConfigKey do
   end
 
 
-  describe "Valid GitConfigKey creation" do
+  describe "Valid RepositoryGitConfigKey creation" do
     before do
       @git_config_key = build_git_config_key
     end

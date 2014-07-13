@@ -24,7 +24,7 @@ describe RepositoryDeploymentCredential do
   end
 
 
-  describe "Valid DeploymentCredential creation" do
+  describe "Valid RepositoryDeploymentCredential creation" do
     before do
       @deployment_credential = build_deployment_credential(:user_id => @user1.id, :gitolite_public_key_id => @deploy_key.id)
     end

@@ -16,7 +16,7 @@ describe RepositoryGitNotification do
   end
 
 
-  describe "Valid Mirror creation" do
+  describe "Valid RepositoryGitNotification creation" do
     before do
       @git_notification = build_git_notification
     end
