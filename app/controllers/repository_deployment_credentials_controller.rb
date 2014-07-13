@@ -51,7 +51,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       else
         format.html {
           flash[:error] = l(:error_deployment_credential_create_failed)
-          render :action => "create"
+          render :action => "new"
         }
         format.js { render "form_error", :layout => false }
       end
@@ -117,7 +117,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   def find_deployment_credential
     credential = RepositoryDeploymentCredential.find_by_id(params[:id])
 
-    if credential && credential.user && credential.repository && (User.current.admin? || credential.user == User.current)
+    if credential && credential.user && credential.repository_id == @repository.id && (User.current.admin? || credential.user == User.current)
       @credential = credential
     elsif credential
       render_403
