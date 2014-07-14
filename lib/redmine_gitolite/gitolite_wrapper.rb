@@ -630,6 +630,7 @@ module RedmineGitolite
         Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
       rescue => e
         logger.error { e.message }
+        return nil
       end
     end
 
