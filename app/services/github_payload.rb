@@ -1,5 +1,3 @@
-include Rails.application.routes.url_helpers
-
 class GithubPayload
   unloadable
 
@@ -59,9 +57,11 @@ class GithubPayload
         revision = @repository.find_changeset_by_name(rev.strip)
         next if revision.nil?
 
-        revision_url = url_for(:controller => 'repositories', :action => 'revision',
-                               :id => @project, :repository_id => @repository.identifier_param, :rev => rev,
-                               :only_path => false, :host => Setting['host_name'], :protocol => Setting['protocol'])
+        revision_url = Rails.application.routes.url_helpers.url_for(
+                         :controller => 'repositories', :action => 'revision',
+                         :id => @project, :repository_id => @repository.identifier_param, :rev => rev,
+                         :only_path => false, :host => Setting['host_name'], :protocol => Setting['protocol']
+                       )
 
         commit = {
           :id        => revision.revision,
@@ -90,9 +90,11 @@ class GithubPayload
         commits << commit
       end
 
-      repository_url = url_for(:controller => 'repositories', :action => 'show',
-                               :id => @project, :repository_id => @repository.identifier_param,
-                               :only_path => false, :host => Setting["host_name"], :protocol => Setting["protocol"])
+      repository_url = Rails.application.routes.url_helpers.url_for(
+                         :controller => 'repositories', :action => 'show',
+                         :id => @project, :repository_id => @repository.identifier_param,
+                         :only_path => false, :host => Setting['host_name'], :protocol => Setting['protocol']
+                       )
 
       payload << {
         :before     => oldhead,
