@@ -22,7 +22,7 @@ module RedmineGitHosting
 
         # Find all repositories owned by project which are Repository::Git
         def gitolite_repos
-          repositories.select{|x| x.is_a?(Repository::Git)}.sort{|x, y| x.id <=> x.id}
+          repositories.select{|x| x.is_a?(Repository::Git)}.sort{|x, y| x.id <=> y.id}
         end
 
         # Return first repo with a blank identifier (should be only one!)
