@@ -22,7 +22,7 @@ describe Project do
   end
 
   it "should have 2 Git repositories" do
-    expect(@project.gitolite_repos).to eq [@git_repo_1, @git_repo_2 ]
+    expect(@project.gitolite_repos).to eq [@git_repo_1, @git_repo_2]
   end
 
   it "should not match existing repository identifier" do
