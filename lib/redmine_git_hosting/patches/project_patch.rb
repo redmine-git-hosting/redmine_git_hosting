@@ -35,6 +35,10 @@ module RedmineGitHosting
           if new_record? && !identifier.blank? && Repository.find_by_identifier_and_type(identifier, "Repository::Git")
             errors.add(:identifier, :ident_not_unique)
           end
+
+          if new_record? && !identifier.blank? && identifier == 'gitolite-admin'
+            errors.add(:identifier, :ident_invalid)
+          end
         end
 
       end
