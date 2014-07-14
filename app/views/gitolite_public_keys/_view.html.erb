@@ -1,5 +1,7 @@
 <%= stylesheet_link_tag 'application', :plugin => 'redmine_git_hosting' %>
 
+  <h3><%= l(:label_my_public_keys) %></h3>
+
   <fieldset class="public_key_view">
     <legend><%= l(:label_current_user_keys) %></legend>
     <%= render :partial => 'gitolite_public_keys/ssh_keys', :locals => {:ssh_keys => @gitolite_user_keys} %>
