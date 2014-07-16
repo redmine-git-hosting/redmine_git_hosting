@@ -14,7 +14,11 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   ## Validations
   validates :repository_id,    :presence  => true, :uniqueness => true
-  validates :git_http,         :presence  => true, :inclusion => { :in => [DISABLED, HTTP, HTTPS, BOTH] }
+
+  validates :git_http,         :presence     => true,
+                               :numericality => { :only_integer => true },
+                               :inclusion    => { :in => [DISABLED, HTTP, HTTPS, BOTH] }
+
   validates :git_daemon,       :inclusion => { :in => [true, false] }
   validates :git_notify,       :inclusion => { :in => [true, false] }
   validates :default_branch,   :presence  => true
