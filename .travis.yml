@@ -42,4 +42,3 @@ before_script:
   - bundle exec rake db:test:prepare
 script:
   - bundle exec rake redmine_git_hosting:test
-  - bundle exec rake redmine_git_hosting:check_unit_tests_results

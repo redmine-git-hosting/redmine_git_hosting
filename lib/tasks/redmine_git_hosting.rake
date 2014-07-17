@@ -80,22 +80,32 @@ namespace :redmine_git_hosting do
   desc "Check unit tests results"
   task :check_unit_tests_results do
     gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
-    repo = Rugged::Repository.new(gitolite_admin_dir)
+    gitolite_temp_dir  = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
 
     puts "#####################"
     puts "TESTS RESULTS"
     puts ""
     puts "gitolite_admin_dir : #{gitolite_admin_dir}"
-    puts "git repo work dir  : #{repo.workdir}"
-    puts "git repo path      : #{repo.path}"
-    puts ""
-    puts "GIT STATUS :"
-    puts "------------"
-    puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
-    puts ""
-    puts "GIT LOG :"
-    puts "---------"
-    puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
+    puts "gitolite_temp_dir  : #{gitolite_temp_dir}"
+
+    puts %x[ ls -hal #{gitolite_temp_dir} ]
+
+    begin
+      repo = Rugged::Repository.new(gitolite_admin_dir)
+      puts "git repo work dir  : #{repo.workdir}"
+      puts "git repo path      : #{repo.path}"
+      puts ""
+      puts "GIT STATUS :"
+      puts "------------"
+      puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
+      puts ""
+      puts "GIT LOG :"
+      puts "---------"
+      puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
+    rescue => e
+      puts "Error while getting tests results"
+      puts e.message
+    end
   end
 
 
