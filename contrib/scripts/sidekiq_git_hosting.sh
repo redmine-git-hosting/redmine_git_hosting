@@ -22,7 +22,6 @@
 # redmine$ sidekiq_git_hosting.sh start
 # redmine$ sidekiq_git_hosting.sh stop
 # redmine$ sidekiq_git_hosting.sh restart
-#
 
 WORKER_NAME="redmine_git_hosting"
 
@@ -32,7 +31,7 @@ REDMINE_PATH="$HOME/redmine"
 LOG_FILE="$REDMINE_PATH/log/worker_${WORKER_NAME}.log"
 PID_FILE="$REDMINE_PATH/tmp/pids/worker_${WORKER_NAME}.pid"
 
-# Do not change this value !
+# Do not change these values !
 # See here for more details :
 # https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-notes#sidekiq--concurrency
 CONCURRENCY=1
@@ -49,7 +48,10 @@ function start () {
 
 function stop () {
   echo "Stop Sidekiq..."
-  kill $(cat $PID_FILE) 2>/dev/null
+  if [ -f $PID_FILE ] ; then
+    kill $(cat $PID_FILE) 2>/dev/null
+    rm -f $PID_FILE
+  fi
   echo "Done"
 }
 
