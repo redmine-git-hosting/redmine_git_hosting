@@ -668,7 +668,7 @@ module RedmineGitolite
 
       if options.has_key?(:flush_cache) && options[:flush_cache] == true
         logger.info { "Flush Settings Cache !" }
-        Setting.check_cache
+        Setting.check_cache if Setting.respond_to?(:check_cache)
       end
 
       WRAPPERS.each do |wrappermod|

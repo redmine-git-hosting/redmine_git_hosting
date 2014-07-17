@@ -299,10 +299,9 @@ module RedmineGitHosting
             # callback will be outdated.... True for at least some versions of redmine plugin...
             #
             # John Kubiatowicz 12/21/2011
-            if Setting.respond_to?(:check_cache)
-              # Clear out all cached settings.
-              Setting.check_cache
-            end
+            # Clear out all cached settings.
+            Setting.check_cache if Setting.respond_to?(:check_cache)
+            RedmineGitolite::GitHosting.resync_gitolite(:flush_settings_cache, 'flush!', {:flush_cache => true})
 
 
             ## Storage infos has changed, move repositories!

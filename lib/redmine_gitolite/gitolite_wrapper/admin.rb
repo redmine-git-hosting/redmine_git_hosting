@@ -20,6 +20,11 @@ module RedmineGitolite
       end
 
 
+      def flush_settings_cache
+        logger.info { "Settings cache flushed!" }
+      end
+
+
       private
 
 
