@@ -31,7 +31,7 @@ describe RepositoryGitExtra do
     it { should validate_presence_of(:default_branch) }
     it { should validate_presence_of(:key) }
 
-    it { should validate_uniqueness_of(:repository_id) }
+    # it { should validate_uniqueness_of(:repository_id) }
 
     it { should validate_numericality_of(:git_http) }
 
