@@ -24,7 +24,7 @@ describe RepositoryGitExtra do
     it { should belong_to(:repository) }
 
     ## Validations
-    # it { should be_valid }
+    it { should_not be_valid }
 
     it { should validate_presence_of(:repository_id) }
     it { should validate_presence_of(:git_http) }
@@ -39,6 +39,30 @@ describe RepositoryGitExtra do
       should ensure_inclusion_of(:git_http).
       in_array(%w(0 1 2 3))
     }
+
+    it "should have default values for git_http" do
+      expect(@git_extra.git_http).to eq 0
+    end
+
+    it "should have default values for git_daemon" do
+      expect(@git_extra.git_daemon).to be true
+    end
+
+    it "should have default values for git_notify" do
+      expect(@git_extra.git_notify).to be true
+    end
+
+    it "should have default values for default_branch" do
+      expect(@git_extra.default_branch).to eq 'master'
+    end
+
+    it "should have default values for protected_branch" do
+      expect(@git_extra.protected_branch).to be false
+    end
+
+    it "should have default values for key" do
+      expect(@git_extra.key).to match /\A[A-Z]+\z/
+    end
   end
 
 end
