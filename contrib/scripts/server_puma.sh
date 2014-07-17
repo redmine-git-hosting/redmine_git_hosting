@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # You should place this script in user's home bin dir like :
-# /home/redmine/bin/service_sidekiq.sh
+# /home/redmine/bin/server_puma.sh
 #
 # Normally the user's bin directory should be in the PATH.
 # If not, add this in /home/redmine/.profile :
@@ -19,25 +19,32 @@
 # root$ su - redmine
 #
 # Then :
-# redmine$ service_sidekiq start
-# redmine$ service_sidekiq stop
-# redmine$ service_sidekiq restart
+# redmine$ server_puma.sh start
+# redmine$ server_puma.sh stop
+# redmine$ server_puma.sh restart
 #
 
+SERVER_NAME="redmine"
+
+RAILS_ENV="production"
+
 REDMINE_PATH="$HOME/redmine"
-CONFIG_FILE="$HOME/redmine/plugins/redmine_git_hosting/config/sidekiq-worker.yml"
-PID_FILE="$HOME/redmine/tmp/pids/worker_redmine_git_hosting.pid"
+BIND_URI="unix://$REDMINE_PATH/tmp/sockets/redmine.sock"
+PID_FILE="$REDMINE_PATH/tmp/pids/puma.pid"
+CONFIG_FILE="$HOME/etc/puma.rb"
 
 function start () {
-  echo "Start Sidekiq..."
-  export RAILS_ENV=production
-  cd $REDMINE_PATH && sidekiq -C $CONFIG_FILE
+  echo "Start Puma Server..."
+  puma --daemon --preload --bind $BIND_URI \
+       --environment $RAILS_ENV --dir $REDMINE_PATH \
+       --pidfile $PID_FILE --tag $SERVER_NAME \
+       --config $CONFIG_FILE
   echo "Done"
 }
 
 function stop () {
-  echo "Stop Sidekiq..."
-  kill $(cat $PID_FILE)
+  echo "Stop Puma Server..."
+  kill $(cat $PID_FILE) 2>/dev/null
   echo "Done"
 }
 
@@ -50,10 +57,9 @@ case "$1" in
   ;;
   restart)
     stop
-    sleep1
     start
   ;;
   *)
-    echo "Usage : service_sidekiq.sh {start|stop|restart}"
+    echo "Usage : server_puma.sh {start|stop|restart}"
   ;;
 esac
