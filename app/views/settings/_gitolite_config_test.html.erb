@@ -92,6 +92,12 @@
     </td>
   </tr>
 
+  <tr>
+    <td><%= l(:label_gitolite_repository_count) %></td>
+    <td>
+      <span class="label label-success"><%= RedmineGitolite::GitoliteWrapper.gitolite_repository_count %></span>
+    </td>
+  </tr>
 </table>
 
 <p><%= label_tag  "", l(:label_gitolite_banner) %></p>

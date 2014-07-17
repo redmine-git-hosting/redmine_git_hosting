@@ -156,6 +156,7 @@ en:
   label_gitolite_hooks_installed: Hooks installed?
   label_redmine_user: Redmine username
   label_git_version: Git version
+  label_gitolite_repository_count: Count of physical repositories in Gitolite
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin
