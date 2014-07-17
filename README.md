@@ -52,6 +52,7 @@ Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket
 
 Thanks for their contribution to :
 
+* Oliver Günther
 * Akasch
 * Alexander Meindl
 * Soeren Helbig
