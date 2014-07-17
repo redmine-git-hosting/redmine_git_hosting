@@ -64,6 +64,7 @@ namespace :redmine_git_hosting do
       config.rspec_opts = "plugins/redmine_git_hosting/spec --color --format nested --fail-fast"
     end
     Rake::Task["spec"].invoke
+    Rake::Task["redmine_git_hosting:check_unit_tests_results"].invoke
   end
 
 
@@ -73,6 +74,28 @@ namespace :redmine_git_hosting do
       config.rspec_opts = "plugins/redmine_git_hosting/spec --format RspecJunitFormatter --out junit/rspec.xml"
     end
     Rake::Task["spec"].invoke
+  end
+
+
+  desc "Check unit tests results"
+  task :check_unit_tests_results do
+    gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
+    repo = Rugged::Repository.new(gitolite_admin_dir)
+
+    puts "#####################"
+    puts "TESTS RESULTS"
+    puts ""
+    puts "gitolite_admin_dir : #{gitolite_admin_dir}"
+    puts "git repo work dir  : #{repo.workdir}"
+    puts "git repo path      : #{repo.path}"
+    puts ""
+    puts "GIT STATUS :"
+    puts "------------"
+    puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
+    puts ""
+    puts "GIT LOG :"
+    puts "---------"
+    puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
   end
 
 
