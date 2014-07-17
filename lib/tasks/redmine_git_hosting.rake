@@ -87,8 +87,15 @@ namespace :redmine_git_hosting do
     puts ""
     puts "gitolite_admin_dir : #{gitolite_admin_dir}"
     puts "gitolite_temp_dir  : #{gitolite_temp_dir}"
+    puts ""
 
+    puts "ls -hal #{gitolite_temp_dir}"
     puts %x[ ls -hal #{gitolite_temp_dir} ]
+    puts ""
+
+    puts "ls -hal #{gitolite_temp_dir}/git"
+    puts %x[ ls -hal #{gitolite_temp_dir}/git ]
+    puts ""
 
     begin
       repo = Rugged::Repository.new(gitolite_admin_dir)
