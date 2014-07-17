@@ -73,7 +73,7 @@ git clone "${REDMINE_SIDEKIQ_PLUGIN}" "redmine/plugins/redmine_sidekiq"
 echo "Done !"
 echo ""
 
-echo "#### INSTALL REDMINE SIDEKIQ PLUGIN"
+echo "#### INSTALL REDMINE BOOTSTRAP PLUGIN"
 git clone "${REDMINE_BOOTSTRAP_PLUGIN}" "redmine/plugins/redmine_bootstrap_kit"
 echo "Done !"
 echo ""
@@ -91,3 +91,15 @@ echo ""
 
 ls -l "${REDMINE_NAME}/plugins"
 echo ""
+
+echo "######################"
+echo "INSTALL GITOLITE V3"
+echo ""
+
+sudo useradd --create-home git
+sudo -n -u git -i git clone https://github.com/sitaramc/gitolite.git
+sudo -n -u git -i mkdir bin
+sudo -n -u git -i gitolite/install -to /home/git/bin
+sudo cp "redmine/plugins/${PLUGIN_NAME}/ssh_keys/redmine_gitolite_admin_id_rsa.pub" /home/git/
+sudo chown git.git /home/git/redmine_gitolite_admin_id_rsa.pub
+sudo -n -u git -i gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
