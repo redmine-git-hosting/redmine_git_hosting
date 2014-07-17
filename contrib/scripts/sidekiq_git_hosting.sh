@@ -25,9 +25,9 @@
 
 WORKER_NAME="redmine_git_hosting"
 
-RAILS_ENV="production"
+RAILS_ENV=${RAILS_ENV:-production}
 
-REDMINE_PATH="$HOME/redmine"
+REDMINE_PATH=${REDMINE_PATH:-$HOME/redmine}
 LOG_FILE="$REDMINE_PATH/log/worker_${WORKER_NAME}.log"
 PID_FILE="$REDMINE_PATH/tmp/pids/worker_${WORKER_NAME}.pid"
 
@@ -37,11 +37,14 @@ PID_FILE="$REDMINE_PATH/tmp/pids/worker_${WORKER_NAME}.pid"
 CONCURRENCY=1
 QUEUE="git_hosting,1"
 
+if [ "$RAILS_ENV" = "production" ] ; then
+  DAEMON_OPTS="--daemon --logfile $LOG_FILE --pidfile $PID_FILE"
+fi
+
 function start () {
   echo "Start Sidekiq..."
-  sidekiq --daemon --verbose --concurrency $CONCURRENCY \
+  sidekiq $DAEMON_OPTS --verbose --concurrency $CONCURRENCY \
           --environment $RAILS_ENV --require $REDMINE_PATH \
-          --logfile $LOG_FILE --pidfile $PID_FILE \
           --queue $QUEUE --tag $WORKER_NAME
   echo "Done"
 }
