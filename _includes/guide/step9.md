@@ -10,4 +10,4 @@ Keys should be unique, that is, the keys you set in Redmine **should not** alrea
 
 >In particular, **do not re-use** the key you set as the Gitolite admin key.
 
-At this point, the plugin should work. If not, take a look here : [Troubleshooting](/configuration/troubleshooting).
+At this point, the plugin should work. If not, take a look here : [Troubleshooting]({{ site.baseurl }}/configuration/troubleshooting).

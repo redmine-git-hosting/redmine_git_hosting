@@ -9,26 +9,6 @@ title: Redmine Git Hosting
   <p><a class="btn btn-lg btn-success" href="{{ site.baseurl }}/download/" role="button">Download it now!</a></p>
 </div>
 
-<div class="container centered">
-  <ul class="list-inline">
-    <li>
-      <p><a href="https://codeclimate.com/github/jbox-web/redmine_git_hosting"><img src="https://codeclimate.com/github/jbox-web/redmine_git_hosting.png" alt="Code Climate" /></a></p>
-    </li>
-
-    <li>
-      <p><a href="https://travis-ci.org/jbox-web/redmine_git_hosting"><img src="https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel" alt="Build Status" /></a></p>
-    </li>
-
-    <li>
-      <p><a href="https://gemnasium.com/jbox-web/redmine_git_hosting"><img src="https://gemnasium.com/jbox-web/redmine_git_hosting.svg" alt="Dependency Status" /></a></p>
-    </li>
-
-    <li>
-      <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate" /></a></p>
-    </li>
-  </ul>
-</div>
-
 <div class="row marketing">
   <div class="col-lg-6">
     <h4>Manage your Git repositories</h4>
@@ -55,4 +35,32 @@ title: Redmine Git Hosting
 
 <div class="container centered">
   <p><a class="btn btn-primary" href="{{ site.baseurl }}/features/" role="button">And more &raquo;</a></p>
+</div>
+
+<div class="row marketing">
+  <div class="col-lg-4">
+
+    <h4>Code status</h4>
+
+* [![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
+* [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
+* [![Dependency Status](https://gemnasium.com/jbox-web/redmine_git_hosting.svg)](https://gemnasium.com/jbox-web/redmine_git_hosting)
+
+  </div>
+
+  <div class="col-lg-4">
+
+### Contribute
+
+You can contribute to this plugin in many ways such as :
+* Helping with documentation
+* Contributing code (features or bugfixes)
+* Reporting a bug
+* Submitting translations
+
+You can also donate :)
+
+
+
+  </div>
 </div>

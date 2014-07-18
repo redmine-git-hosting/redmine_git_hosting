@@ -9,7 +9,7 @@ weight: 1
 
 The **0.7.6** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.6) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-076).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.6) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-076).
 
 ***
 
@@ -17,7 +17,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 
 The **0.7.5** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.5) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-075).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.5) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-075).
 
 ***
 
@@ -25,7 +25,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 
 The **0.7.4** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.4) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-074).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.4) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-074).
 
 ***
 
@@ -33,7 +33,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 
 The **0.7.3** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.3) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-073).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.3) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-073).
 
 ***
 
@@ -77,7 +77,7 @@ then
 
 The **0.7.2** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.2) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-072).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.2) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-072).
 
 ***
 
@@ -85,7 +85,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 
 The **0.7.1** version is out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.1) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-071).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.1) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-071).
 
 ***
 
@@ -93,7 +93,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 
 The **0.7** version is finally out!
 
-You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.0) or see the changelog [here](/redmine_git_hosting/about/release-notes/#release-070).
+You can download it [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.0) or see the changelog [here]({{ site.baseurl }}/about/release-notes/#release-070).
 
 ***
 

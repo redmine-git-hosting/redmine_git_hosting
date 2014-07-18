@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Licence
+title: License
 ---
 
 ### Copyrights & License

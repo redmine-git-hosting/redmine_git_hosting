@@ -20,7 +20,7 @@ weight: 3
     <li><a href="#git_daemon">Git Daemon</a></li>
     <li><a href="#caching_options">Caching Options</a></li>
     <li><a href="#git_mailing_lists">Git mailing lists</a></li>
-    <li><a href="#sidekiq_async_jobs">Sidekiq async jobs</a></li>
+    <li><a href="#sidekiq_asynchronous_jobs">Sidekiq asynchronous jobs</a></li>
     <li><a href="#default_branch_selection">Default branch selection</a></li>
     <li><a href="#git_revision_download">Git Revision Download</a></li>
     <li><a href="#readme_preview">README Preview</a></li>
@@ -51,7 +51,7 @@ With this option enabled you can automatically initialize a new Git repository w
 
 This plugin can handle repositories deletion by puting them in a Recycle Bin for a configurable amount of time (defaulting to 24 hours). It can also handle repositories recovery.
 
-Pleaser refer to [Configuration variables](/configuration/variables/#redmine_config) for Repository Deletion configuration.
+Pleaser refer to [Configuration variables]({{ site.baseurl }}/configuration/variables/#redmine_config) for Repository Deletion configuration.
 
 #### Deployment Credentials
 ***
@@ -97,7 +97,7 @@ Also note that you will need to ensure that Basic Auth headers are being passed 
 
 Further, if you are proxying requests through a third-party (such as Nginx), you need to make sure that you pass the protocol information onto Redmine so that it can distinguish between HTTP and HTTPS. One way to do this is to use the X-Forwarded-Proto header (which should be set to 'https' when https is in use from the client to the proxy).
 
-Pleaser refer to [Configuration variables](/configuration/variables/#gitolite_access_config) for Git Smart HTTP configuration.
+Pleaser refer to [Configuration variables]({{ site.baseurl }}/configuration/variables/#gitolite_access_config) for Git Smart HTTP configuration.
 
 This plugin is patched against [CVE-2013-4663](http://www.sec-1.com/blog/2013/redmine-git-hosting-plugin-remote-command-execution).
 
@@ -114,7 +114,7 @@ A repository will be exported via the Git daemon only if its corresponding proje
 
 Note that the act of changing a project from public to private will set the GitDaemon flag to false automatically (to prevent accidental export of the project via the Git daemon later).
 
-Pleaser refer to [Configuration variables](/configuration/variables/#gitolite_access_config) for Git Daemon configuration.
+Pleaser refer to [Configuration variables]({{ site.baseurl }}/configuration/variables/#gitolite_access_config) for Git Daemon configuration.
 
 #### Caching Options
 ***
@@ -123,18 +123,18 @@ This plugin includes code for caching output of the Git command, which is called
 
 This plugin caches the output of Git commands to dramatically improve page load times, roughly a 10x speed increase.
 
-Pleaser refer to [Configuration variables](/configuration/variables/#gitolite_cache_config) for Cache configuration.
+Pleaser refer to [Configuration variables]({{ site.baseurl }}/configuration/variables/#gitolite_cache_config) for Cache configuration.
 
 
 #### Git mailing lists
 ***
 
-Pleaser refer to [Configuration variables](/configuration/variables/#git_mailing_list_config) for Git Mailing List configuration.
+Pleaser refer to [Configuration variables]({{ site.baseurl }}/configuration/variables/#git_mailing_list_config) for Git Mailing List configuration.
 
 #### Sidekiq asynchronous jobs
 ***
 
-Pleaser refer to [Step by Step installation](/guide/installation/#step_1_install_redis_server) for Sidekiq asynchronous jobs configuration.
+Pleaser refer to [Step by Step installation]({{ site.baseurl }}/guide/installation/#step_1_install_redis_server) for Sidekiq asynchronous jobs configuration.
 
 #### Default branch selection
 ***

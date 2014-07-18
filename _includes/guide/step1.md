@@ -20,8 +20,8 @@ redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migr
 ## After install the plugin, start Redmine!
 ```
 
-Otherwise you can install Redmine by following the wiki : [Redmine Installation](/guide/redmine-installation)
+Otherwise you can install Redmine by following the wiki : [Redmine Installation]({{ site.baseurl }}/guide/redmine-installation)
 
 If you're running Redmine with the ```www-data``` user, you should read the wiki and think about changing your configuration.
 
-If you still want to run Redmine with ```www-data``` user, take a look at [this](/configuration/troubleshooting#a_note_about_path_variable).
+If you still want to run Redmine with ```www-data``` user, take a look at [this]({{ site.baseurl }}/configuration/troubleshooting#a_note_about_path_variable).
