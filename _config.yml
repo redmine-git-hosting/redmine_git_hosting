@@ -35,4 +35,3 @@ compress_html:
 
 gems:
 - jekyll-sitemap
-- jekyll-plugins
