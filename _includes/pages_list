@@ -1,9 +1,9 @@
 {% for node in pages_list %}
   {% if group == null or group == node.group %}
     {% if page.url == node.url %}
-      <li class="active"><a href="{{ site.baseurl }}{{node.url}}" class="active">{{node.title}}</a></li>
+      <li class="active"><a href="{{ site.baseurl }}{{ node.url }}" class="active">{{ node.title }}</a></li>
     {% else %}
-      <li class=""><a href="{{ site.baseurl }}{{node.url}}">{{node.title}}</a></li>
+      <li class=""><a href="{{ site.baseurl }}{{ node.url }}">{{ node.title }}</a></li>
     {% endif %}
   {% endif %}
 {% endfor %}
