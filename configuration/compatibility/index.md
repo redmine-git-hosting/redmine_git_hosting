@@ -27,4 +27,4 @@ title: Compatibility
 
 #### Important!
 
-There is a known issue with Gitolite 3 and SmartHTTP access. Take a look [here](/configuration/troubleshooting#hook_errors_while_pushing_over_https) to fix it.
+There is a known issue with Gitolite 3 and SmartHTTP access. Take a look [here](/redmine_git_hosting/configuration/troubleshooting#hook_errors_while_pushing_over_https) to fix it.

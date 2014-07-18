@@ -16,6 +16,18 @@ Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (http://www.rocket
 
 Thanks for their contribution to :
 
-{% for contributor in site.github.contributors %}
-* {{ contributor }}
-{% endfor %}
+* Oliver Günther
+* Akasch
+* Alexander Meindl
+* Soeren Helbig
+* Aleksander Palyan
+* wvolz
+* bberawk
+* Thomas Debesse
+* Philip Schiffer
+* Daniel Dehennin
+* Lukas Mika
+* Nicholas Clark
+* Robert Chady
+* Sébastien Dinot
+* and others :)

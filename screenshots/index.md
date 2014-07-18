@@ -23,52 +23,52 @@ weight: 4
 
 #### Repository List
 
-![Repository List](/images/screenshots/repo_list.png)
+![Repository List](/redmine_git_hosting/images/screenshots/repo_list.png)
 
 ***
 
 #### Repository New
 
-![Repository New](/images/screenshots/repo_new.png)
+![Repository New](/redmine_git_hosting/images/screenshots/repo_new.png)
 
 ***
 
 #### Repository Config
 
-![Repository Config](/images/screenshots/repo_config.png)
+![Repository Config](/redmine_git_hosting/images/screenshots/repo_config.png)
 
 ***
 
 #### Repository Config2
 
-![Repository Config2](/images/screenshots/repo_config2.png)
+![Repository Config2](/redmine_git_hosting/images/screenshots/repo_config2.png)
 
 ***
 
 #### Repository Init Instructions
 
-![Repository Init Instructions](/images/screenshots/repo_init_instructions.png)
+![Repository Init Instructions](/redmine_git_hosting/images/screenshots/repo_init_instructions.png)
 
 ***
 
 #### Repository Browse
 
-![Repository Browse](/images/screenshots/repo_browse.png)
+![Repository Browse](/redmine_git_hosting/images/screenshots/repo_browse.png)
 
 ***
 
 #### Repository Stats1
 
-![Repository Stats1](/images/screenshots/repo_stats1.png)
+![Repository Stats1](/redmine_git_hosting/images/screenshots/repo_stats1.png)
 
 ***
 
 #### Repository Stats2
 
-![Repository Stats2](/images/screenshots/repo_stats2.png)
+![Repository Stats2](/redmine_git_hosting/images/screenshots/repo_stats2.png)
 
 ***
 
 #### Repository Stats3
 
-![Repository Stats3](/images/screenshots/repo_stats3.png)
+![Repository Stats3](/redmine_git_hosting/images/screenshots/repo_stats3.png)
