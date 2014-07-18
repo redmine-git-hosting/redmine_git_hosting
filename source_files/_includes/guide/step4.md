@@ -11,4 +11,4 @@ GIT_CONFIG_KEYS                 =>  '.*',
 
 **Optional :**
 
-If you plan to use [Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#automatic-repository-initialization) take a look at [this](https://github.com/jbox-web/redmine_git_hosting/wiki/Troubleshooting#initialization-of-the-repo-with-readme-file-does-not-work).
+If you plan to use [Automatic Repository Initialization](/features/#automatic_repository_initialization) take a look at [this](/configuration/troubleshooting/#initialization_of_the_repo_with_readme_file_does_not_work).

@@ -85,8 +85,7 @@ Thanks to user Tronix117 for helping to track down this issue and provide a solu
 #### A note about HOME variable
 ***
 
-As we need to commit and push modifications in Gitolite configuration file, the ```.gitconfig``` must be properly configure ([Installation instructions, step 7](https://github.com/jbox-web/redmine_git_hosting/wiki/Step-by-step-installation-instructions#step-7-configure-gitconfig-file)).
-This file must be located in ```$HOME``` directory and the ```git``` command will automatically lookup in this directory. That means that the HOME variable must be properly set in the execution environment.
+The HOME variable must be properly set in the execution environment.
 
 It seems that it's not the case for Nginx + Thin.
 
