@@ -1,0 +1,45 @@
+source: ./source_files
+
+data:
+  project:
+    name: Redmine Git Hosting
+    description: A Redmine plugin which makes configuring your own Git hosting easy ;)
+    repository: https://github.com/jbox-web/redmine_git_hosting
+    release:
+      year: 2014
+      version: v0.7.6
+
+    author:
+      name: JBox Web
+      url: http://www.jbox-web.com/
+
+    licence:
+      name: MIT
+      url: http://opensource.org/licenses/MIT
+
+  lang: en
+
+  favicons:
+    - /assets/2014/04/21/favicon-152.png
+
+  theme:
+    stylesheets:
+      - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css
+      - /stylesheets/custom.css
+    javascripts:
+      - //code.jquery.com/jquery-1.11.1.min.js
+      - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
+      - /javascripts/toc.min.js
+
+  topbar:
+    toggle: Menu
+    right:
+      - name: Home
+        url: /
+      - name: Repository
+        url:
+        class: small button
+
+compress_html:
+  clippings: [html, head, title, base, link, meta, style, body, article, section, nav, aside, h1, h2, h3, h4, h5, h6, hgroup, header, footer, address, p, hr, blockquote, ol, ul, li, dl, dt, dd, figure, figcaption, main, div, table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th]
+  endings: [html, head, body, li, dt, dd, p, rt, rp, optgroup, option, colgroup, caption, thead, tbody, tfoot, tr, td, th]
