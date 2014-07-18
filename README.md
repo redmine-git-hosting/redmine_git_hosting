@@ -26,7 +26,7 @@ It provides these functionalities :
 * [*(new)* Github Issues Sync](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#github-issues-sync)
 * [*(new)* Browse Archived Repositories](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#browse-archived-repositories)
 
-You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
+You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosting/news/) or take a look at the [roadmap](https://jbox-web.github.io/redmine_git_hosting/about/roadmap/).
 
 ## Code status
 
@@ -36,7 +36,7 @@ You can follow announcements [here](https://github.com/jbox-web/redmine_git_host
 
 ## Installation
 
-Read the documentation and more in the [Wiki](https://github.com/jbox-web/redmine_git_hosting/wiki).
+Read the documentation and more in the [Wiki](https://jbox-web.github.io/redmine_git_hosting/guide/installation/).
 
 
 ## Copyrights & License
