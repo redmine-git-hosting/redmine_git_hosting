@@ -102,6 +102,7 @@ You can download it [here](https://github.com/jbox-web/redmine_git_hosting/relea
 A new '**devel**' branch has been pushed to Github.
 
 This new version of the plugin brings a lot of changes :
+
 * remove Redmine 1.x support
 * remove Rails 2.x support
 * remove Ruby 1.8.x support

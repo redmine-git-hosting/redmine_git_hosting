@@ -3,48 +3,46 @@
 
 Assuming that you have Gitolite installed :
 
-```
-repo    gitolite-admin
-        RW+     =       redmine_gitolite_admin_id_rsa
-```
+    repo    gitolite-admin
+            RW+     =       redmine_gitolite_admin_id_rsa
+
 
 Otherwise you can install Gitolite (v3) by following this :
 
-```
-  Server requirements:
+    Server requirements:
 
-    * any unix system
-    * sh
-    * git 1.6.6+
-    * perl 5.8.8+
-    * openssh 5.0+
-    * a dedicated userid to host the repos (in this document, we assume it
-      is 'git'), with shell access ONLY by 'su - git' from some other userid
-      on the same server.
+      * any unix system
+      * sh
+      * git 1.6.6+
+      * perl 5.8.8+
+      * openssh 5.0+
+      * a dedicated userid to host the repos (in this document, we assume it
+        is 'git'), with shell access ONLY by 'su - git' from some other userid
+        on the same server.
 
-  Steps to install:
+    Steps to install:
 
-    * login as 'git' as described above
+      * login as 'git' as described above
 
-    * make sure ~/.ssh/authorized_keys is empty or non-existent
+      * make sure ~/.ssh/authorized_keys is empty or non-existent
 
-    * make sure **Redmine SSH public key** is available at $HOME/redmine_gitolite_admin_id_rsa.pub
+      * make sure **Redmine SSH public key** is available at $HOME/redmine_gitolite_admin_id_rsa.pub
 
-    * add this in ~/.profile
+      * add this in ~/.profile
 
-          # set PATH so it includes user private bin if it exists
-          if [ -d "$HOME/bin" ] ; then
-            PATH="$PATH:$HOME/bin"
-          fi
+            # set PATH so it includes user private bin if it exists
+            if [ -d "$HOME/bin" ] ; then
+              PATH="$PATH:$HOME/bin"
+            fi
 
-    * run the following commands:
+      * run the following commands:
 
-          root$ su - git
-          git$ mkdir $HOME/bin
-          git$ source $HOME/.profile
-          git$ git clone git://github.com/sitaramc/gitolite
-          git$ gitolite/install -to $HOME/bin
-          git$ gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
-```
+            root$ su - git
+            git$ mkdir $HOME/bin
+            git$ source $HOME/.profile
+            git$ git clone git://github.com/sitaramc/gitolite
+            git$ gitolite/install -to $HOME/bin
+            git$ gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
+
 
 If you are running Gitolite 3 don't forget to [patch it!]({{ site.baseurl }}/configuration/troubleshooting/#hook_errors_while_pushing_over_https).

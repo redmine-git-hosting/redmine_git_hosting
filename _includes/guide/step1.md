@@ -3,22 +3,20 @@
 
 Assuming that you have Redmine installed :
 
-```sh
-## Before install the plugin, stop Redmine!
+    ## Before install the plugin, stop Redmine!
 
-root$ su - redmine
-redmine$ cd REDMINE_ROOT/plugins
-redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
-redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
-redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
-redmine$ cd redmine_git_hosting/
-redmine$ git checkout {{ site.data.project.release.version }}
-redmine$ cd REDMINE_ROOT
-redmine$ bundle install --without development test
-redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
+    root$ su - redmine
+    redmine$ cd REDMINE_ROOT/plugins
+    redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
+    redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
+    redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
+    redmine$ cd redmine_git_hosting/
+    redmine$ git checkout {{ site.data.project.release.version }}
+    redmine$ cd REDMINE_ROOT
+    redmine$ bundle install --without development test
+    redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
 
-## After install the plugin, start Redmine!
-```
+    ## After install the plugin, start Redmine!
 
 Otherwise you can install Redmine by following the wiki : [Redmine Installation]({{ site.baseurl }}/guide/redmine-installation)
 

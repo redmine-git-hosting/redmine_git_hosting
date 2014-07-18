@@ -114,9 +114,7 @@ Normally the Redmine user's bin directory should be in the PATH.
 
 If not, add this in /home/redmine/.profile :
 
-```
-#set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-  PATH="$HOME/bin:$PATH"
-fi
-```
+    # Set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/bin" ] ; then
+      PATH="$HOME/bin:$PATH"
+    fi
