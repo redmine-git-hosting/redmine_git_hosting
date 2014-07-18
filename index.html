@@ -1,44 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Redmine Git Hosting by jbox-web</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Redmine Git Hosting : A Redmine plugin which makes configuring your own Git hosting easy :)" />
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Redmine Git Hosting</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/jbox-web/redmine_git_hosting">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/jbox-web/redmine_git_hosting/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/jbox-web/redmine_git_hosting/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jbox-web/redmine_git_hosting">View on GitHub</a>
 
-      <section>
-        <div id="title">
-          <h1>Redmine Git Hosting</h1>
-          <p>A Redmine plugin which makes configuring your own Git hosting easy :)</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/jbox-web">jbox-web</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+          <h1 id="project_title">Redmine Git Hosting</h1>
+          <h2 id="project_tagline">A Redmine plugin which makes configuring your own Git hosting easy :)</h2>
 
-        <p>This plugin allows straightforward management of Gitolite within Redmine.</p>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jbox-web/redmine_git_hosting/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jbox-web/redmine_git_hosting/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a name="a-redmine-plugin-which-makes-configuring-your-own-git-hosting-easy-" class="anchor" href="#a-redmine-plugin-which-makes-configuring-your-own-git-hosting-easy-"><span class="octicon octicon-link"></span></a>A Redmine plugin which makes configuring your own Git hosting easy ;)</h3>
+
+<p>This plugin allows straightforward management of Gitolite within Redmine.</p>
 
 <p>It provides these functionalities :</p>
 
@@ -71,6 +67,8 @@
 
 <ul>
 <li><a href="https://codeclimate.com/github/jbox-web/redmine_git_hosting"><img src="https://codeclimate.com/github/jbox-web/redmine_git_hosting.png" alt="Code Climate"></a></li>
+<li><a href="https://travis-ci.org/jbox-web/redmine_git_hosting"><img src="https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel" alt="Build Status"></a></li>
+<li><a href="https://gemnasium.com/jbox-web/redmine_git_hosting"><img src="https://gemnasium.com/jbox-web/redmine_git_hosting.svg" alt="Dependency Status"></a></li>
 </ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
@@ -89,7 +87,25 @@
 
 <p>Copyright (c) 2009-2010 Jan Schulz-Hofen, Rocket Rentals GmbH (<a href="http://www.rocket-rentals.de">http://www.rocket-rentals.de</a>)</p>
 
-<h2>
+<p>Thanks for their contribution to :</p>
+
+<ul>
+<li>Oliver Günther</li>
+<li>Akasch</li>
+<li>Alexander Meindl</li>
+<li>Soeren Helbig</li>
+<li>Aleksander Palyan</li>
+<li>wvolz</li>
+<li>bberawk</li>
+<li>Thomas Debesse</li>
+<li>Philip Schiffer</li>
+<li>Daniel Dehennin</li>
+<li>Lukas Mika</li>
+<li>Nicholas Clark</li>
+<li>Robert Chady</li>
+<li>Sébastien Dinot</li>
+<li>and others :)</li>
+</ul><h2>
 <a name="contribute" class="anchor" href="#contribute"><span class="octicon octicon-link"></span></a>Contribute</h2>
 
 <p>You can contribute to this plugin in many ways such as :</p>
@@ -103,9 +119,16 @@
 
 <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=FBT7E7DAVVEEU"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate"></a></p>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Redmine Git Hosting maintained by <a href="https://github.com/jbox-web">jbox-web</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -116,6 +139,7 @@
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
