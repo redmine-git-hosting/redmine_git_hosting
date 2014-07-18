@@ -88,3 +88,7 @@ h6:hover .header-link {
   background: #336699;
   box-shadow: inset -5px 0px 10px -5px #000;
 }
+
+.centered {
+  text-align: center;
+}

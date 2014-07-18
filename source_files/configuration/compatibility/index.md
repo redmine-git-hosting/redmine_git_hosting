@@ -3,6 +3,8 @@ layout: default
 title: Compatibility
 ---
 
+### Compatibility
+
 #### v0.8 (beta)
 * **Redmine :** This plugin only work with Redmine **2.x**, including sub-versions. (Tested with latest stable : **2.5.2**)
 * **Ruby :** This plugin is compatible with Ruby 1.9.3, 2.0 and 2.1
