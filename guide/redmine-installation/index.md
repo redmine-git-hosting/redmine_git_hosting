@@ -4,28 +4,19 @@ title: Redmine installation
 ---
 
 <div id="toc">
-  <h3>Redmine installation</h3>
-
-  <ul>
-    <li><strong>(step 1)</strong> <a href="#step-1-create-the-redmine-user">Create the <code>redmine</code> user</a></li>
-    <li><strong>(step 2)</strong> <a href="#step-2-install-rvm-ruby-version-manager">Install RVM (Ruby Version Manager)</a></li>
-    <li><strong>(step 3)</strong> <a href="#step-3-install-ruby">Install Ruby</a></li>
-    <li><strong>(step 4)</strong> <a href="#step-4-install-redmine">Install Redmine</a></li>
-    <li><strong>(step 5)</strong> <a href="#step-5-install-and-configure-puma">Install and configure Puma</a></li>
-    <li><strong>(step 6)</strong> <a href="#step-6-create-the-puma-start-script">Create the Puma start script :</a></li>
-    <li><strong>(step 7)</strong> <a href="#step-7-configure-nginx">Configure Nginx</a></li>
-    <li><strong>(step 8)</strong> <a href="#step-8-create-debian-init-script-if-youre-using-debian">Create Debian init script (if you’re using Debian)</a></li>
-  </ul>
+  <h1>Redmine installation</h1>
 </div>
 
 
 You should not use ```www-data``` account to run Redmine. This is a common mistake.
+
 The best way to run Rails apps is to create a separate standard user, lets say ```redmine```, and install Redmine within the user's home. In that case, you should use Nginx and Puma (or other webservers) to serve Redmine.
 
 #### **(step 1)** Create the ```redmine``` user
 
     root$ adduser --disabled-password redmine
 
+***
 
 #### **(step 2)** Install RVM (Ruby Version Manager)
 
@@ -53,12 +44,14 @@ Be sure to have this in ```/home/redmine/.profile``` :
       source "$HOME/.rvm/scripts/completion"
     fi
 
+***
 
 #### **(step 3)** Install Ruby
 
     root$ su - redmine
     redmine$ rvm install 2.1.1
 
+***
 
 #### **(step 4)** Install Redmine
 
@@ -84,6 +77,7 @@ The symbolic link is here to make Redmine upgrades easy.
 * The ```etc``` dir will contain the services config file
 * The ```.ssh``` dir will contain the Gitolite admin key
 
+***
 
 #### **(step 5)** Install and configure Puma
 
@@ -94,11 +88,13 @@ Install Puma gem :
 
 Then create the config file [```/home/redmine/etc/puma.rb```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/puma.rb)
 
+***
 
 #### **(step 6)** Create the Puma start script
 
 This goes in [```/home/redmine/bin/server_puma.sh```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh)
 
+***
 
 #### **(step 7)** Configure Nginx
 
@@ -130,6 +126,7 @@ This is a sample conf for Nginx :
       }
     }
 
+***
 
 #### **(step 8)** Create Debian init script (if you're using Debian)
 
