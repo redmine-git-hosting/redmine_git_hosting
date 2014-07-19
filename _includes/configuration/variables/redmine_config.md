@@ -1,5 +1,4 @@
 #### Redmine Config
-***
 
 * **:all_projects_use_git (Automatic Repository Creation)**
 

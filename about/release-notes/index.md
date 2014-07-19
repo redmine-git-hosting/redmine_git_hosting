@@ -4,9 +4,11 @@ title: Release Notes
 ---
 
 <div id="toc">
-  <h1>Release Notes</h1>
 </div>
 
+
+### Release Notes
+***
 
 #### Release 0.8
 
@@ -28,7 +30,7 @@ title: Release Notes
 * Fix [#199](https://github.com/jbox-web/redmine_git_hosting/issues/199) (unique_repo_identifier and hierarchical_organisation are now combined)
 * Fix [#223](https://github.com/jbox-web/redmine_git_hosting/pull/223) (fix https:// notifications if TLSvX is mandatory)
 * [Support for branch permission / protected branches](https://github.com/jbox-web/redmine_git_hosting/issues/86)
-* Purge RecycleBin on fetch_changesets ([Configuration notes](https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-notes#empty-recycle-bin-periodically))
+* Purge RecycleBin on fetch_changesets ([Configuration notes]({{ site.baseurl }}/configuration/notes/#empty-recycle-bin-periodically))
 * Bump to last version of Git Multimail hook
 * Bump ZeroClipboard to version v2.1.1
 * Bump Highcharts to version 4.0.3
@@ -259,16 +261,16 @@ You're invited to take a look at this [post](https://github.com/jbox-web/redmine
 * replace 'Gitolite home made interface' by Gitolite gem (https://github.com/jbox-web/gitolite)
 * lots of code cleanup
 * lots of bug fixes
-* add [Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
-* add [Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
-* add [Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
-* add [Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#automatic-repository-initialization)
-* add [Git Revision Download](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#git-revision-download)
-* add [README preview](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#readme-preview)
-* add [Repository “config” keys management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#git-config-keys-management)
-* add [Improved Repository Statistics](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#improved-repository-statistics)
-* add [Github Issues Sync](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#github-issues-sync)
-* add [Browse Archived Repositories](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#browse-archived-repositories)
+* add [Sidekiq async jobs]({{ site.baseurl }}/features/#sidekiq-asynchronous-jobs)
+* add [Git mailing lists]({{ site.baseurl }}/features/#git-mailing-lists)
+* add [Default branch selection]({{ site.baseurl }}/features/#default-branch-selection)
+* add [Automatic Repository Initialization]({{ site.baseurl }}/features/#automatic-repository-initialization)
+* add [Git Revision Download]({{ site.baseurl }}/features/#git-revision-download)
+* add [README preview]({{ site.baseurl }}/features/#readme-preview)
+* add [Repository “config” keys management]({{ site.baseurl }}/features/#git-config-keys-management)
+* add [Improved Repository Statistics]({{ site.baseurl }}/features/#improved-repository-statistics)
+* add [Github Issues Sync]({{ site.baseurl }}/features/#github-issues-sync)
+* add [Browse Archived Repositories]({{ site.baseurl }}/features/#browse-archived-repositories)
 * add Bootstrap CSS
 * add Font Awesome icons
 

@@ -1,5 +1,4 @@
 #### Gitolite Access Config
-***
 
 * **:ssh_server_domain**
 
@@ -57,3 +56,5 @@ Enable Smart HTTP for new projects.
 
     # Default
     :gitolite_http_by_default         => 1
+
+***

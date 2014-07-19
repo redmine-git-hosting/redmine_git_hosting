@@ -4,9 +4,11 @@ title: Redmine installation
 ---
 
 <div id="toc">
-  <h1>Redmine installation</h1>
 </div>
 
+
+### Redmine installation
+***
 
 You should not use ```www-data``` account to run Redmine. This is a common mistake.
 

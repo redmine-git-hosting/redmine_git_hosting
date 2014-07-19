@@ -1,5 +1,4 @@
 #### **(step 9)** Enjoy!
-***
 
 Unless you want to access your repositories exclusively via Smart HTTP, users will need to set a public key to connect via SSH.
 

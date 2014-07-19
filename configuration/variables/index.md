@@ -4,8 +4,11 @@ title: Configuration variables
 ---
 
 <div id="toc">
-  <h1>Configuration variables</h1>
 </div>
+
+
+### Configuration variables
+***
 
 {% include configuration/variables/gitolite_ssh_config.md %}
 {% include configuration/variables/gitolite_storage_config.md %}

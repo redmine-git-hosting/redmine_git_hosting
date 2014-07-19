@@ -3,7 +3,7 @@ layout: default
 title: Roadmap
 ---
 
-### This is the roadmap for the next releases of Redmine Git Hosting
+### Roadmap
 ***
 
 #### v0.9 (next release)

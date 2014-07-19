@@ -1,5 +1,4 @@
 #### Gitolite Global Config
-***
 
 * **:gitolite_temp_dir**
 
@@ -42,3 +41,5 @@ When set to *true* split logs into different files, one by 'service' (Redmine, S
 
     # Default
     :gitolite_log_split                    => false
+
+***

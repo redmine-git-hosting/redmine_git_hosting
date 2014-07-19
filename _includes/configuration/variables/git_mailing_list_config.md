@@ -1,5 +1,4 @@
 #### Git Mailing List Config
-***
 
 * **:gitolite_notify_by_default**
 
@@ -35,3 +34,5 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
     # Default
     :gitolite_notify_global_exclude        => []
+
+***

@@ -76,12 +76,9 @@ h6:hover .header-link {
   display: block;
 }
 
-#toc .toc-h1 {
-  font-size: 20px;
-}
-
-#toc .toc-h2 {
+#toc .toc-h3 {
   padding-left: 10px;
+  font-size: 20px;
 }
 
 #toc .toc-h4 {

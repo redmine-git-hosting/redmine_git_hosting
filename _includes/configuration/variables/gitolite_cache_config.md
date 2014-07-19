@@ -1,5 +1,4 @@
 #### Gitolite Cache Config
-***
 
 * **:gitolite_cache_max_time**
 
@@ -33,3 +32,5 @@ max_allowed_packet = 32M
 ```
 
 The above example should allow **:gitolite_cache_max_size** == 32M.
+
+***

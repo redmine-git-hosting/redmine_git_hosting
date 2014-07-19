@@ -1,5 +1,4 @@
 #### **(step 6)** Add Gitolite server in known_hosts list
-***
 
 Make sure that Redmine user has Gitolite server in his known_hosts list. This is also a good check to see if Gitolite works.
 
@@ -21,3 +20,5 @@ Or
     hello redmine_gitolite_admin_id_rsa, this is git@dev running gitolite3 v3.3-11-ga1aba93 on git 1.7.2.5
         R W  gitolite-admin
         R W  testing
+
+***

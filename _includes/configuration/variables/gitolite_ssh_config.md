@@ -1,5 +1,4 @@
 #### Gitolite SSH Config
-***
 
 * **:gitolite_user**
 
@@ -28,3 +27,5 @@ Path to the public key files for accessing the Gitolite admin repository.
 
     # Default
     :gitolite_ssh_public_key        => File.join(ENV['HOME'], '.ssh', 'redmine_gitolite_admin_id_rsa.pub').to_s
+
+***

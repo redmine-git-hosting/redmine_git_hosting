@@ -4,11 +4,13 @@ title: Troubleshooting
 ---
 
 <div id="toc">
-  <h1>Troubleshooting</h1>
 </div>
 
-#### Resynchronization of Gitolite configuration
+
+### Troubleshooting
 ***
+
+#### Resynchronization of Gitolite configuration
 
 **Note that it is very important that these commands be run as *redmine***
 
@@ -36,8 +38,9 @@ To purge expired repositories from Recycle Bin, execute :
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:purge_recycle_bin
 
-#### A note about PATH variable
 ***
+
+#### A note about PATH variable
 
 One major source of issues with this plugin is that Redmine needs to be able to run both sudo and git commands. Specifically, these programs need to be in one of the directories specified by the PATH variable, in your Rails environment. This requirement has been known to cause problems, particularly when installing on FreeBSD.
 
@@ -61,8 +64,9 @@ Note that this may be an issue for configurations other than Apache + Passenger,
 
 Thanks to user Tronix117 for helping to track down this issue and provide a solution for Apache + Passenger.
 
-#### A note about HOME variable
 ***
+
+#### A note about HOME variable
 
 The HOME variable must be properly set in the execution environment.
 
@@ -80,11 +84,11 @@ to
 
 Thanks to user overmind88 for providing a solution for Nginx + Thin.
 
-
-#### Hook errors while pushing over HTTPS
 ***
 
-    git push origin master
+#### Hook errors while pushing over HTTPS
+
+    user$ git push origin master
     Password for 'https://xxx@xxx':
     Counting objects: 743, done.
     Delta compression using up to 2 threads.
@@ -123,17 +127,17 @@ use warnings;
 
 You must do this every time you update Gitolite.
 
+***
 
 #### Error : no suitable markdown gem found
-***
 
 If you installed Redmine with the Debian package, a dependency is missing :
 
     root$ apt-get install ruby-redcarpet
 
+***
 
 #### Initialization of the repo with README file does not work
-***
 
 To make it work you must allow Redmine Admin key to write on every repo :
 

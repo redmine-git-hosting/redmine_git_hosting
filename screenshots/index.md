@@ -6,9 +6,11 @@ weight: 4
 ---
 
 <div id="toc">
-  <h1>Screenshots</h1>
 </div>
 
+
+### Screenshots
+***
 
 #### Repository List
 

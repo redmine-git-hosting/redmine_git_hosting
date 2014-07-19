@@ -1,5 +1,4 @@
 #### **(step 1)** Clone the plugin
-***
 
 Assuming that you have Redmine installed :
 
@@ -22,4 +21,6 @@ Otherwise you can install Redmine by following the wiki : [Redmine Installation]
 
 If you're running Redmine with the ```www-data``` user, you should read the wiki and think about changing your configuration.
 
-If you still want to run Redmine with ```www-data``` user, take a look at [this]({{ site.baseurl }}/configuration/troubleshooting#a_note_about_path_variable).
+If you still want to run Redmine with ```www-data``` user, take a look at [this]({{ site.baseurl }}/configuration/troubleshooting#a-note-about-path-variable).
+
+***

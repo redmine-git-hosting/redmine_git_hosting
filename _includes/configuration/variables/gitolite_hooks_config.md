@@ -1,5 +1,4 @@
 #### Gitolite Hooks Config
-***
 
 * **:gitolite_hooks_are_asynchronous**
 
@@ -21,3 +20,5 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
     # Default
     :gitolite_hooks_debug             => false
+
+***

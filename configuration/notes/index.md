@@ -5,6 +5,7 @@ title: Configuration notes
 
 
 ### Configuration notes
+***
 
 #### Repositories Storage Configuration Strategy
 
