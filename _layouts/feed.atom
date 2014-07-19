@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.noita.lang }}">
+  <title>{{ site.noita.name }}</title>
+  <subtitle>{{ site.noita.description }}</subtitle>
+
+{% if site.noita.url %}
+  {% assign base = site.noita.url %}
+{% elsif site.github.url %}
+  {% assign base = site.github.url %}
+{% else %}
+  {% assign base = '' %}
+{% endif %}
+
+  <id>{{ base }}{{ page.url }}</id>
+  <author>
+    <name>{{ site.noita.author.name }}</name>
+    <uri>{{ site.noita.author.url }}</uri>
+  </author>
+  <link
+    rel="alternate"
+    type="text/html"
+    href="{{ base }}/" />
+  <link
+    rel="self"
+    type="application/atom+xml"
+    href="{{ base }}{{ page.url }}" />
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+
+  {% for post in site.posts limit: page.limit %}
+  <entry>
+    <content type="html">{{ post.content | xml_escape }}</content>
+    <title type="html">{{ post.title | xml_escape }}</title>
+    <id>{{ base }}{{ post.url }}</id>
+    <link
+      rel="alternate"
+      type="text/html"
+      href="{{ base }}{{ post.url }}" />
+    <published>{{ post.date | date_to_xmlschema }}</published>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+  </entry>
+  {% endfor %}
+</feed>
