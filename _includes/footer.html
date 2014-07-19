@@ -10,27 +10,43 @@
 <script src="{{ site.baseurl }}/javascripts/toc.min.js"></script>
 
 <script type="text/javascript">
-$(function() {
-  $('#toc').toc({
-    'selectors': 'h1,h2,h3,h4', //elements to use as headings
-  });
+  $(function() {
+    if ($('#toc').length != 0){
+      $("#main-container")
+        .wrap('<div id="main-row" class="row"></div>')
+        .addClass('col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main')
+        .removeClass('container');
 
-  return $("h4").each(function(i, el) {
-    var $el, icon, id;
-    $el = $(el);
-    id = $el.attr('id');
-    icon = '<i class="glyphicon glyphicon-link glyphicon-fixed"></i>';
-    if (id) {
-      return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      $('#toc')
+        .toc({
+          'selectors': 'h1,h2,h3,h4', //elements to use as headings
+        })
+        .insertBefore('#main-container')
+        .addClass('col-sm-3 col-md-2 sidebar');
+
+      $('#toc ul')
+        .addClass('nav nav-sidebar');
+
+      $('#main-row')
+        .wrap('<div class="container-fluid"></div>')
     }
+
+    return $("h4").each(function(i, el) {
+      var $el, icon, id;
+      $el = $(el);
+      id = $el.attr('id');
+      icon = '<i class="glyphicon glyphicon-link glyphicon-fixed"></i>';
+      if (id) {
+        return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
+      }
+    });
+
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+    try {
+      var pageTracker = _gat._getTracker("UA-36504891-3");
+      pageTracker._trackPageview();
+    } catch(err) {}
   });
-
-  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-
-  try {
-    var pageTracker = _gat._getTracker("UA-36504891-3");
-    pageTracker._trackPageview();
-  } catch(err) {}
-});
 </script>
