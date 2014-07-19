@@ -18,7 +18,9 @@ The best way to run Rails apps is to create a separate standard user, lets say `
 
 ***
 
-#### **(step 2)** Install RVM (Ruby Version Manager)
+#### **(step 2)** Install RVM
+
+[Ruby Version Manager](https://rvm.io/) (RVM) is a command-line tool which allows you to easily install, manage, and work with multiple ruby environments from interpreters to sets of gems.
 
     root$ su - redmine
     redmine$ curl -L https://get.rvm.io | bash
@@ -48,18 +50,16 @@ Be sure to have this in ```/home/redmine/.profile``` :
 
 #### **(step 3)** Install Ruby
 
-    root$ su - redmine
     redmine$ rvm install 2.1.1
 
 ***
 
 #### **(step 4)** Install Redmine
 
-Change current user then follow the Redmine installation tutorial with this user
+Change current user then follow the [Redmine installation tutorial](http://www.redmine.org/projects/redmine/wiki/RedmineInstall) with this user :
 
     root$ su - redmine
 
-http://www.redmine.org/projects/redmine/wiki/RedmineInstall
 
 At the end of the Redmine installation, be sure to have :
 
@@ -79,24 +79,19 @@ The symbolic link is here to make Redmine upgrades easy.
 
 ***
 
-#### **(step 5)** Install and configure Puma
+#### **(step 5)** Install Puma
 
 Install Puma gem :
 
-    root$ su - redmine
     redmine$ gem install puma
 
-Then create the config file [```/home/redmine/etc/puma.rb```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/puma.rb)
+Create the Puma config file ```/home/redmine/etc/puma.rb``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/puma.rb).
+
+Then create the Puma start script ```/home/redmine/bin/server_puma.sh``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh).
 
 ***
 
-#### **(step 6)** Create the Puma start script
-
-This goes in [```/home/redmine/bin/server_puma.sh```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh)
-
-***
-
-#### **(step 7)** Configure Nginx
+#### **(step 6)** Configure Nginx
 
 This is a sample conf for Nginx :
 
@@ -128,9 +123,9 @@ This is a sample conf for Nginx :
 
 ***
 
-#### **(step 8)** Create Debian init script (if you're using Debian)
+#### **(step 7)** Create Debian init script
 
-This goes in [```/etc/init.d/redmine```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/redmine)
+If you're using Debian you can create the file ```/etc/init.d/redmine``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/redmine).
 
 This way, you can manage Redmine independantly of Nginx :
 
