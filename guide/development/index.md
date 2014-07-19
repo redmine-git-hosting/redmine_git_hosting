@@ -3,7 +3,7 @@ layout: default
 title: Development Guide
 ---
 
-### Development Guide
+### {{ page.title }}
 ***
 
 **Do this in a test environment ! I won't be responsible if you break things on your production installation !**

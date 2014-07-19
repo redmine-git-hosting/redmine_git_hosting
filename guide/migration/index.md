@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Step By Step migration
+title: Step by Step migration
 ---
 
-### Step By Step migration
+### {{ page.title }}
 ***
 
 If you're upgrading from 0.6 version (or older) you should follow these steps :

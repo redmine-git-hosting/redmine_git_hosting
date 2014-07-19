@@ -5,7 +5,7 @@ group: navigation
 weight: 1
 ---
 
-### News
+### {{ page.title }}
 ***
 
 <ul>

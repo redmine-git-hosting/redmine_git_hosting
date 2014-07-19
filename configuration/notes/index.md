@@ -3,8 +3,7 @@ layout: default
 title: Configuration notes
 ---
 
-
-### Configuration notes
+### {{ page.title }}
 ***
 
 #### Repositories Storage Configuration Strategy

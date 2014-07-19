@@ -3,11 +3,7 @@ layout: default
 title: Troubleshooting
 ---
 
-<div id="toc">
-</div>
-
-
-### Troubleshooting
+### {{ page.title }}
 ***
 
 #### Resynchronization of Gitolite configuration
@@ -172,3 +168,7 @@ You can now remove the temp dir and the SSH config file
 
     redmine$ rm -rf /tmp/gitolite-admin-temp
     redmine$ rm .ssh/config
+
+
+<div id="toc">
+</div>

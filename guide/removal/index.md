@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Step By Step removal
+title: Step by Step removal
 ---
 
-### Step By Step removal
+### {{ page.title }}
 ***
 
 I'm sorry you didn't find any satisfaction in this plugin.

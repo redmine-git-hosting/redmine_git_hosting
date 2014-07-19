@@ -3,7 +3,7 @@ layout: default
 title: Compatibility
 ---
 
-### Compatibility
+### {{ page.title }}
 ***
 
 #### v0.8 (beta)

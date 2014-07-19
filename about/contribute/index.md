@@ -1,9 +1,9 @@
 ---
 layout: default
-title: How to contribute?
+title: How to contribute ?
 ---
 
-### How to contribute ?
+### {{ page.title }}
 ***
 
 You can contribute to this plugin in many ways such as :

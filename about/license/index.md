@@ -1,9 +1,9 @@
 ---
 layout: default
-title: License
+title: Copyrights & License
 ---
 
-### Copyrights & License
+### {{ page.title }}
 ***
 
 Redmine Git Hosting is completely free and open source and released under the [MIT License](https://github.com/jbox-web/redmine_git_hosting/blob/devel/LICENSE).

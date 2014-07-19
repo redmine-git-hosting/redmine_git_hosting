@@ -5,11 +5,7 @@ group: navigation
 weight: 3
 ---
 
-<div id="toc">
-</div>
-
-
-### Features
+### {{ page.title }}
 ***
 
 #### SSH Public Keys Management
@@ -201,3 +197,7 @@ Et voila!
 #### Browse Archived Repositories
 
 If you are Admin in Redmine you can browse archived repositories by clicking on *Archived repositories* in the top menu.
+
+
+<div id="toc">
+</div>

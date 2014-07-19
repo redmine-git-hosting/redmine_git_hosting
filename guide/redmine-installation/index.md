@@ -3,11 +3,7 @@ layout: default
 title: Redmine installation
 ---
 
-<div id="toc">
-</div>
-
-
-### Redmine installation
+### {{ page.title }}
 ***
 
 You should not use ```www-data``` account to run Redmine. This is a common mistake.
@@ -139,3 +135,7 @@ or
     root$ su - redmine
     redmine$ server_puma.sh start
     redmine$ server_puma.sh stop
+
+
+<div id="toc">
+</div>

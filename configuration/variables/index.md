@@ -3,11 +3,7 @@ layout: default
 title: Configuration variables
 ---
 
-<div id="toc">
-</div>
-
-
-### Configuration variables
+### {{ page.title }}
 ***
 
 {% include configuration/variables/gitolite_ssh_config.md %}
@@ -18,3 +14,6 @@ title: Configuration variables
 {% include configuration/variables/gitolite_access_config.md %}
 {% include configuration/variables/git_mailing_list_config.md %}
 {% include configuration/variables/redmine_config.md %}
+
+<div id="toc">
+</div>

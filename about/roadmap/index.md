@@ -3,7 +3,7 @@ layout: default
 title: Roadmap
 ---
 
-### Roadmap
+### {{ page.title }}
 ***
 
 #### v0.9 (next release)

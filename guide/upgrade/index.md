@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Step By Step upgrade
+title: Step by Step upgrade
 ---
 
-### Step By Step upgrade
+### {{ page.title }}
 ***
 
     ## Before update the plugin, stop Redmine!

@@ -5,7 +5,6 @@ group: navigation
 weight: 2
 ---
 
-<!-- Example row of columns -->
 <div class="row">
   <div class="col-lg-6">
     <h2>Stable version</h2>

@@ -5,11 +5,7 @@ group: navigation
 weight: 4
 ---
 
-<div id="toc">
-</div>
-
-
-### Screenshots
+### {{ page.title }}
 ***
 
 #### Repository List
@@ -63,3 +59,7 @@ weight: 4
 #### Repository Stats3
 
 ![Repository Stats3]({{ site.baseurl }}/images/screenshots/repo_stats3.png)
+
+
+<div id="toc">
+</div>

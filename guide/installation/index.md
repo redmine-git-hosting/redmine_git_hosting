@@ -1,13 +1,9 @@
 ---
 layout: default
-title: Step By Step installation
+title: Step by Step installation
 ---
 
-<div id="toc">
-</div>
-
-
-### Basic install
+### {{ page.title }}
 ***
 
 {% include guide/step1.md %}
@@ -64,3 +60,7 @@ If not, add this in /home/redmine/.profile :
     if [ -d "$HOME/bin" ] ; then
       PATH="$HOME/bin:$PATH"
     fi
+
+
+<div id="toc">
+</div>

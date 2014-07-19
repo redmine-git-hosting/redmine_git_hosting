@@ -1,6 +1,6 @@
 ---
 title: The new website is out!
-layout: post
+layout: post-news
 category: news
 ---
 
