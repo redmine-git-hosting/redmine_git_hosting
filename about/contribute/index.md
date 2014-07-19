@@ -4,6 +4,7 @@ title: How to contribute?
 ---
 
 ### How to contribute ?
+***
 
 You can contribute to this plugin in many ways such as :
 
