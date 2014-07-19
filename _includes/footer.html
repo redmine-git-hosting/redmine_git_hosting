@@ -35,7 +35,7 @@
       var $el, icon, id;
       $el = $(el);
       id = $el.attr('id');
-      icon = '<i class="glyphicon glyphicon-link glyphicon-fixed"></i>';
+      icon = '<i class="glyphicon glyphicon-link"></i>';
       if (id) {
         return $el.prepend($("<a />").addClass("header-link").attr("href", "#" + id).html(icon));
       }
