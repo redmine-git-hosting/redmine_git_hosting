@@ -13,7 +13,7 @@ weight: 1
     <li>
       <p>
         {{ post.date | date: "%-d %B %Y" }} :
-        <a href="{{ post.url }}">{{ post.title }}</a>
+        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
       </p>
       {{ post.excerpt }}
       <hr>
