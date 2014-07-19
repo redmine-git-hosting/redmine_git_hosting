@@ -141,6 +141,7 @@ By default, your default branch is called ```master```. If you have admin rights
 #### Git Revision Download
 
 This feature adds a download link to the Git repository browser, allowing users to download a snapshot at a given revision. You can download the generated archive in 3 formats :
+
 * tar
 * tar.gz
 * zip
@@ -154,6 +155,7 @@ The major code comes from [Git Revision Download](https://github.com/chantra/red
 This feature allows to display the content of README file at repository tab.
 The README file can be in various format and must have the appropriate extension to be displayed correctly.
 Supported format are :
+
 * .markdown, .mdown, .md
 * .textile
 * .rdoc
@@ -169,6 +171,7 @@ The major code comes from [README at Repositories](https://github.com/simeji/rea
 #### Git Config Keys Management
 
 You can manage Git config key/value pairs for each repository.
+
 You are responsible of enabling them in [gitolite.rc](http://gitolite.com/gitolite/gitolite.html#s3).
 
 ***
@@ -185,7 +188,7 @@ Keep your Github issues synchronized with Redmine !!
 
 Go in your repository settings on Github, then in *Webhooks and Services*, clik on *Add webhook*.
 
-In *Payload URL* field, put Redmine Post Receive url : ```http://redmine.example.com/githooks/post-receive/github/<project-name> ```.
+In *Payload URL* field, put Redmine Post Receive url : ```http://redmine.example.com/githooks/post-receive/github/<project-name>```.
 
 The ```<project-name>``` value is the name of the project for which issues will be associated with.
 
@@ -195,4 +198,4 @@ Et voila!
 
 #### Browse Archived Repositories
 
-If you are Admin in Redmine you can browse archived repositories by clicking on 'Archived repositories' in the top menu.
+If you are Admin in Redmine you can browse archived repositories by clicking on *Archived repositories* in the top menu.

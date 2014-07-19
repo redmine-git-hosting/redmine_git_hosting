@@ -4,18 +4,7 @@ title: Configuration variables
 ---
 
 <div id="toc">
-  <h3>Configuration variables</h3>
-
-  <ul>
-    <li><a href="#gitolite_ssh_config">Gitolite SSH Config</a></li>
-    <li><a href="#gitolite_storage_config">Gitolite Storage Config</a></li>
-    <li><a href="#gitolite_global_config">Gitolite Global Config</a></li>
-    <li><a href="#gitolite_hooks_config">Gitolite Hooks Config</a></li>
-    <li><a href="#gitolite_cache_config">Gitolite Cache Config</a></li>
-    <li><a href="#gitolite_access_config">Gitolite Access Config</a></li>
-    <li><a href="#git_mailing_list_config">Git Mailing List Config</a></li>
-    <li><a href="#redmine_config">Redmine Config</a></li>
-  </ul>
+  <h1>Configuration variables</h1>
 </div>
 
 {% include configuration/variables/gitolite_ssh_config.md %}

@@ -4,16 +4,7 @@ title: Troubleshooting
 ---
 
 <div id="toc">
-  <h3>Troubleshooting</h3>
-
-  <ul>
-    <li><a href="#resynchronization_of_gitolite_configuration">Resynchronization of Gitolite configuration</a></li>
-    <li><a href="#a_note_about_path_variable">A note about PATH variable</a></li>
-    <li><a href="#a_note_about_home_variable">A note about HOME variable</a></li>
-    <li><a href="#hook_errors_while_pushing_over_https">Hook errors while pushing over HTTPS</a></li>
-    <li><a href="#error__no_suitable_markdown_gem_found">Error : no suitable markdown gem found</a></li>
-    <li><a href="#initialization_of_the_repo_with_readme_file_does_not_work">Initialization of the repo with README file does not work</a></li>
-  </ul>
+  <h1>Troubleshooting</h1>
 </div>
 
 #### Resynchronization of Gitolite configuration
@@ -117,20 +108,18 @@ The trick is to add the following code at the bottom of the files :
 * ```/<git user home dir>/gitolite/src/lib/Gitolite/Hooks/Update.pm```
 * ```/<git user home dir>/.gitolite/hooks/common/update```
 
+```
+__DATA__
+#!/usr/bin/perl
 
-`
+BEGIN {
+  exit 0 if exists $ENV{GL_BYPASS_UPDATE_HOOK};
+}
 
-    __DATA__
-    #!/usr/bin/perl
-
-    BEGIN {
-      exit 0 if exists $ENV{GL_BYPASS_UPDATE_HOOK};
-    }
-
-    use strict;
-    use warnings;
-    ...
-`
+use strict;
+use warnings;
+...
+```
 
 You must do this every time you update Gitolite.
 
