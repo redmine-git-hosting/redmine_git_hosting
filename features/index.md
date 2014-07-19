@@ -8,27 +8,25 @@ weight: 3
 <div id="toc">
   <h3>Features</h3>
 
-  <ul>
-    <li><a href="#ssh_public_keys_management">SSH Public Keys Management</a></li>
-    <li><a href="#automatic_repository_creation">Automatic Repository Creation</a></li>
-    <li><a href="#automatic_repository_initialization">Automatic Repository Initialization</a></li>
-    <li><a href="#repository_deletion">Repository Deletion</a></li>
-    <li><a href="#deployment_credentials">Deployment Credentials</a></li>
-    <li><a href="#postreceive_urls">Post-Receive URLs</a></li>
-    <li><a href="#automatic_mirror_updates">Automatic Mirror Updates</a></li>
-    <li><a href="#git_smart_http">Git Smart HTTP</a></li>
-    <li><a href="#git_daemon">Git Daemon</a></li>
-    <li><a href="#caching_options">Caching Options</a></li>
-    <li><a href="#git_mailing_lists">Git mailing lists</a></li>
-    <li><a href="#sidekiq_asynchronous_jobs">Sidekiq asynchronous jobs</a></li>
-    <li><a href="#default_branch_selection">Default branch selection</a></li>
-    <li><a href="#git_revision_download">Git Revision Download</a></li>
-    <li><a href="#readme_preview">README Preview</a></li>
-    <li><a href="#git_config_keys_management">Git Config Keys Management</a></li>
-    <li><a href="#improved_repository_statistics">Improved Repository Statistics</a></li>
-    <li><a href="#github_issues_sync">Github Issues Sync</a></li>
-    <li><a href="#browse_archived_repositories">Browse Archived Repositories</a></li>
-  </ul>
+  <h3><a href="#ssh_public_keys_management">SSH Public Keys Management</a></h3>
+  <h3><a href="#automatic_repository_creation">Automatic Repository Creation</a></h3>
+  <h3><a href="#automatic_repository_initialization">Automatic Repository Initialization</a></h3>
+  <h3><a href="#repository_deletion">Repository Deletion</a></h3>
+  <h3><a href="#deployment_credentials">Deployment Credentials</a></h3>
+  <h3><a href="#postreceive_urls">Post-Receive URLs</a></h3>
+  <h3><a href="#automatic_mirror_updates">Automatic Mirror Updates</a></h3>
+  <h3><a href="#git_smart_http">Git Smart HTTP</a></h3>
+  <h3><a href="#git_daemon">Git Daemon</a></h3>
+  <h3><a href="#caching_options">Caching Options</a></h3>
+  <h3><a href="#git_mailing_lists">Git mailing lists</a></h3>
+  <h3><a href="#sidekiq_asynchronous_jobs">Sidekiq asynchronous jobs</a></h3>
+  <h3><a href="#default_branch_selection">Default branch selection</a></h3>
+  <h3><a href="#git_revision_download">Git Revision Download</a></h3>
+  <h3><a href="#readme_preview">README Preview</a></h3>
+  <h3><a href="#git_config_keys_management">Git Config Keys Management</a></h3>
+  <h3><a href="#improved_repository_statistics">Improved Repository Statistics</a></h3>
+  <h3><a href="#github_issues_sync">Github Issues Sync</a></h3>
+  <h3><a href="#browse_archived_repositories">Browse Archived Repositories</a></h3>
 </div>
 
 #### SSH Public Keys Management

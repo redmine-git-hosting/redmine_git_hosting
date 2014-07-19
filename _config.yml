@@ -27,6 +27,7 @@ data:
       - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css
     javascripts:
       - //code.jquery.com/jquery-1.11.1.min.js
+      - //code.jquery.com/ui/1.10.4/jquery-ui.min.js
       - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
 
 compress_html:

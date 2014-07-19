@@ -76,11 +76,15 @@ h6:hover .header-link {
   display: block;
 }
 
+#toc .toc-h1 {
+  font-size: 20px;
+}
+
 #toc .toc-h2 {
   padding-left: 10px;
 }
 
-#toc .toc-h3 {
+#toc .toc-h4 {
   padding-left: 20px;
 }
 

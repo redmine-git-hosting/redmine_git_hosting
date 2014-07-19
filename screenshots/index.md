@@ -6,20 +6,9 @@ weight: 4
 ---
 
 <div id="toc">
-  <h3>Screenshots</h3>
-
-  <ul>
-    <li><a href="#repository-list">Repository List</a></li>
-    <li><a href="#repository-new">Repository New</a></li>
-    <li><a href="#repository-config">Repository Config</a></li>
-    <li><a href="#repository-config2">Repository Config2</a></li>
-    <li><a href="#repository-init_instructions">Repository Init Instructions</a></li>
-    <li><a href="#repository-browse">Repository Browse</a></li>
-    <li><a href="#repository-stats1">Repository Stats1</a></li>
-    <li><a href="#repository-stats2">Repository Stats2</a></li>
-    <li><a href="#repository-stats3">Repository Stats3</a></li>
-  </ul>
+  <h1>Screenshots</h1>
 </div>
+
 
 #### Repository List
 
