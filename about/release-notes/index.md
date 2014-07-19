@@ -4,34 +4,15 @@ title: Release Notes
 ---
 
 <div id="toc">
-  <h3>Release Notes</h3>
-
-  <ul>
-    <li><a href="#release_080">Release 0.8</a></li>
-    <li><a href="#release_076">Release 0.7.6</a></li>
-    <li><a href="#release_075">Release 0.7.5</a></li>
-    <li><a href="#release_074">Release 0.7.4</a></li>
-    <li><a href="#release_073">Release 0.7.3</a></li>
-    <li><a href="#release_072">Release 0.7.2</a></li>
-    <li><a href="#release_071">Release 0.7.1</a></li>
-    <li><a href="#release_070">Release 0.7.0</a></li>
-    <li><a href="#release_063">Release 0.6.3</a></li>
-    <li><a href="#release_062">Release 0.6.2</a></li>
-    <li><a href="#release_052x">Release 0.5.2x</a></li>
-    <li><a href="#release_051x">Release 0.5.1x</a></li>
-    <li><a href="#release_050x">Release 0.5.0x</a></li>
-    <li><a href="#release_046x">Release 0.4.6x</a></li>
-    <li><a href="#release_045x">Release 0.4.5x</a></li>
-    <li><a href="#release_044x">Release 0.4.4x</a></li>
-    <li><a href="#release_043x">Release 0.4.3x</a></li>
-    <li><a href="#release_042x">Release 0.4.2x</a></li>
-  </ul>
+  <h1>Release Notes</h1>
 </div>
 
 
-#### [Release 0.8](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.8.0)
-***
+#### Release 0.8
+
 **Date   :** Pending
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.8.0)
 
 **Status :** Beta
 
@@ -56,8 +37,11 @@ title: Release Notes
 **Notes :**
 
 Thanks to the work of Oliver Günther (really thank you), the plugin is now a lot more simple in many ways :
+
 * the plugin is scriptless : no more need of ```gitolite_scripts_dir``` and shell scripts to wrap calls to sudo. Now, the only required dir is the ```gitolite_temp_dir``` to clone the Gitolite admin repository.
-* SSH keys are stored in Gitolite in a directory tree under ```ssh_keys```. No more need of timestamped key name :) Example :
+* SSH keys are stored in Gitolite in a directory tree under ```ssh_keys```. No more need of timestamped key name :)
+
+Example :
 
 
     gitolite-admin.git/
@@ -82,7 +66,7 @@ I need testers for testing this version and specially the migration from 0.7.x. 
 
 *You can use a Virtual Machine to clone your production environment then play the migration.*
 
-But don't afraid, the plugin is (I think) very stable and at least I can say that it works for me in an awesome way :)
+But don't afraid, the plugin is very stable and at least I can say that it works for me in an awesome way :)
 
 This is my configuration :
 
@@ -117,14 +101,15 @@ To test the devel branch :
     redmine$ cd redmine_git_hosting/
     redmine$ git checkout devel
     redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development
+    redmine$ bundle install --without nothing
 
-    ## Do this before any Rails migration!
-    ## Some migration files had been renumbered (missing digit)
+    ## IMPORTANT !
+    ## Do this before any Rails migration !
+    ## Some migration files has been renumbered (missing digit)
     redmine$ RAILS_ENV=production rake redmine_git_hosting:fix_migration_numbers
 
     ## Then do last migrations
-    redmine$ RAILS_ENV=production rake redmine:plugins:migrate
+    redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
 
     ## Then reset SSH keys identifier (yes, again)
     redmine$ RAILS_ENV=production rake redmine_git_hosting:rename_ssh_keys
@@ -152,10 +137,13 @@ You can also play RSpec tests :
     ## To generate SimpleCov reports (or to test without installing Zeus) :
     redmine$ rspec plugins/redmine_git_hosting/spec/
 
-
-#### [Release 0.7.6](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.6)
 ***
+
+#### Release 0.7.6
+
 **Date :** Jul 17, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.6)
 
 **Status :** Stable
 
@@ -164,10 +152,13 @@ You can also play RSpec tests :
 * Bump to jbox-gitolite 1.2.3 which depends on [gitlab-grit 2.7.0](https://github.com/gitlabhq/grit/blob/master/History.txt)
 * Fix [#207](https://github.com/jbox-web/redmine_git_hosting/issues/207) (gitolite-admin doesn't sync anymore) and his brothers
 
-
-#### [Release 0.7.5](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.5)
 ***
+
+#### Release 0.7.5
+
 **Date :** Jul 14, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.5)
 
 **Status :** Stable
 
@@ -176,10 +167,13 @@ You can also play RSpec tests :
 * Fix [#226](https://github.com/jbox-web/redmine_git_hosting/issues/226) (unable to download revision if branch has a '/' in the name)
 * Fix [#230](https://github.com/jbox-web/redmine_git_hosting/issues/230) (Unwanted access to gitolite-admin repository)
 
-
-#### [Release 0.7.4](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.4)
 ***
+
+#### Release 0.7.4
+
 **Date :** Jul 4, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.4)
 
 **Status :** Stable
 
@@ -191,10 +185,13 @@ You can also play RSpec tests :
 * Fix [#225](https://github.com/jbox-web/redmine_git_hosting/issues/225) (unable to set new repository deployment credentials)
 * Set extra_info field when auto-creating repo with project
 
-
-#### [Release 0.7.3](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.3)
 ***
+
+#### Release 0.7.3
+
 **Date :** June 11, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.3)
 
 **Changelog :**
 
@@ -212,20 +209,26 @@ You can also play RSpec tests :
 
 You're invited to take a look at this [post](https://github.com/jbox-web/redmine_git_hosting/issues/199).
 
-
-#### [Release 0.7.2](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.2)
 ***
+
+#### Release 0.7.2
+
 **Date :** April 16, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.2)
 
 **Changelog :**
 
 * Fix [#160](https://github.com/jbox-web/redmine_git_hosting/issues/160)
 * Fix [#169](https://github.com/jbox-web/redmine_git_hosting/issues/169)
 
-
-#### [Release 0.7.1](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.1)
 ***
+
+#### Release 0.7.1
+
 **Date :** April 14, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.1)
 
 **Changelog :**
 
@@ -239,10 +242,13 @@ You're invited to take a look at this [post](https://github.com/jbox-web/redmine
 * Various small fixes
 * Use last version of [jbox-gitolite](http://rubygems.org/gems/jbox-gitolite) gem (1.1.11)
 
-
-#### [Release 0.7.0](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.0)
 ***
+
+#### Release 0.7.0
+
 **Date :** April 2, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.7.0)
 
 **Changelog :**
 
@@ -266,10 +272,13 @@ You're invited to take a look at this [post](https://github.com/jbox-web/redmine
 * add Bootstrap CSS
 * add Font Awesome icons
 
-
-#### [Release 0.6.3](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.6.3)
 ***
+
+#### Release 0.6.3
+
 **Date :** February 23, 2014
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.6.3)
 
 **Changelog :**
 
@@ -279,10 +288,13 @@ This is the last release of the 0.6.x branch.
 
 The 'v0.6' is kept as archive and will be no longer supported.
 
-
-#### [Release 0.6.2](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.6.2)
 ***
+
+#### Release 0.6.2
+
 **Date :** July 28, 2013
+
+**Download :** [here](https://github.com/jbox-web/redmine_git_hosting/releases/tag/0.6.2)
 
 **Changelog :**
 
@@ -292,10 +304,13 @@ This releases fixes a high risk vulnerability, allowing an attacker to gain shel
 
 We strongly advise you to update your plugin!
 
-
-#### [Release 0.5.2x](https://github.com/kubitron/redmine_git_hosting/)
 ***
+
+#### Release 0.5.2x
+
 **Date :** never released
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/)
 
 **Changelog :**
 
@@ -308,10 +323,13 @@ This is a bug-fix release.
 * Fix to preserve other administrative keys in the gitolite configuration file.  Previously, the plugin would delete all but the first one.  This fix is useful for people who want to have separate administrative keys for access to the gitolite config file.
 * Fixed weird behavior on Repository page when using multiple repos/project.  Showed up when on non-default repo when trying to switch to branch other than master.  Would switch back to default repository.
 
-
-#### [Release 0.5.1x](https://github.com/kubitron/redmine_git_hosting/tree/0.5.1x)
 ***
+
+#### Release 0.5.1x
+
 **Date:** October 31, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.5.1x)
 
 **Changelog :**
 
@@ -323,10 +341,13 @@ This is a bug-fix release.
 * Patched installation so that can install Redmine from *scratch* (i.e. run `rake db:migrate` on empty DB) with plugin already in place.
 * Latest migration should now work with PostGreSQL.  This was broken in 0.5.0x.
 
-
-#### [Release 0.5.0x](https://github.com/kubitron/redmine_git_hosting/tree/0.5.0x)
 ***
+
+#### Release 0.5.0x
+
 **Date :** October 3, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.5.0x)
 
 **Changelog :**
 
@@ -336,10 +357,13 @@ This is a feature release.
 * Fix : Uninstall of plugin should work properly now.
 * Fix : Problems with patching on some installations should be fixed now (introduced in a recent revision).
 
-
-#### [Release 0.4.6x](https://github.com/kubitron/redmine_git_hosting/tree/0.4.6x)
 ***
+
+#### Release 0.4.6x
+
 **Date :** August 22, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.4.6x)
 
 **Changelog :**
 
@@ -364,10 +388,13 @@ that only **managers** (or **administrators**) can create deployment credentials
 
 Prior to this, repository module deselection was treated inconsistently.
 
-
-#### [Release 0.4.5x](https://github.com/kubitron/redmine_git_hosting/tree/0.4.5x)
 ***
+
+#### Release 0.4.5x
+
 **Date :** April 23, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.4.5x)
 
 **Changelog :**
 
@@ -376,10 +403,13 @@ This is a bug-fix release.
 * Fixed missed case for compatibility with Redmine 1.1-Stable.  This patch allows the mirror functionality to work.
 * Fixed bad interaction between cron cleanup of /tmp and access to gitolite-admin repository in /tmp.  Behavior could cause user keys to appear to be deleted, even though they remain in the redmine database.  This behavior has likely been a part of this plugin since before this branch was forked (pre 0.4.2).
 
-
-#### [Release 0.4.4x](https://github.com/kubitron/redmine_git_hosting/tree/0.4.4x)
 ***
+
+#### Release 0.4.4x
+
 **Date :** April 1, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.4.4x)
 
 **Changelog :**
 
@@ -399,10 +429,13 @@ Compatibility with Redmine 1.1-Stable. A couple of patches were included to perm
 * Fix : Better handling of null-buffer condition in smart-http.
 * Fix : Fixed language tags in localization files.
 
-
-#### [Release 0.4.3x](https://github.com/kubitron/redmine_git_hosting/tree/0.4.3x)
 ***
+
+#### Release 0.4.3x
+
 **Date :** February 1, 2012
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.4.3x)
 
 **Changelog :**
 
@@ -425,10 +458,13 @@ This code is now explicitly compatible with Redmine 1.3-stable.
 * Git Server parameter now supports a port specification.
 * Other bug fuxes: mirrors now report status properly.
 
-
-#### [Release 0.4.2x](https://github.com/kubitron/redmine_git_hosting/tree/0.4.2x)
 ***
+
+#### Release 0.4.2x
+
 **Date :** December 1, 2011
+
+**Download :** [here](https://github.com/kubitron/redmine_git_hosting/tree/0.4.2x)
 
 **Changelog :**
 
