@@ -36,6 +36,10 @@ body {
   margin-top: 0;
 }
 
+.list-group-item {
+  padding: 20px;
+}
+
 h4:hover .header-link {
   opacity: 1;
 }
