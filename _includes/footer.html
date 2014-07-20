@@ -17,7 +17,12 @@
 
 <script type="text/javascript">
   $(function() {
-    if ($('#toc').length != 0){
+    if ($('#roadmap').length != 0) {
+      $('#roadmap > ul').addClass('list-group');
+      $('#roadmap > ul > li').addClass('list-group-item');
+    }
+
+    if ($('#toc').length != 0) {
       $("#main-container")
         .wrap('<div id="main-row" class="row"></div>')
         .addClass('col-md-9')

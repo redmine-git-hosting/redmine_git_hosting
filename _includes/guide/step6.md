@@ -21,4 +21,9 @@ Or
         R W  gitolite-admin
         R W  testing
 
+
+<div class="alert alert-success" role="alert">
+  <p>If you get one these messages, you're on the right way ;)</a></p>
+</div>
+
 ***

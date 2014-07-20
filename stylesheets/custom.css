@@ -72,6 +72,11 @@ h4:hover .header-link {
   display: none;
 }
 
+.thumbnail {
+  padding: 15px;
+  border: 0;
+}
+
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
