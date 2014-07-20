@@ -17,6 +17,10 @@ weight: 1
         <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
       </p>
       {{ post.excerpt }}
+      <p>
+        <a class="twitter-share-button" data-text="{{ post.title }}" data-url="{{ site.baseurl }}{{ post.url }}" data-via="TchoumTux"
+          href="https://twitter.com/share">Tweet !</a>
+      </p>
     </li>
   {% endfor %}
 </ul>
