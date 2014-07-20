@@ -62,6 +62,16 @@ h6:hover .header-link {
   padding-left: 20px;
 }
 
+.release-downloads {
+  list-style-type: none;
+  margin: 15px -5px;
+}
+
+.release-downloads li {
+  display: inline-block;
+  margin: 5px;
+}
+
 /*
  * Sidebar
  */

@@ -15,11 +15,29 @@ title: Releases Notes
         <strong>Status :</strong>
         {% if post.status == 'latest stable' %}
           <span class="label label-success">{{ post.status }}</span>
+        {% elsif post.status == 'old stable' %}
+          <span class="label label-warning">{{ post.status }}</span>
+        {% elsif post.status == 'obsolete' %}
+          <span class="label label-default">{{ post.status }}</span>
         {% else %}
           <span class="label label-primary">{{ post.status }}</span>
         {% endif %}
-        </p>
-      <p><strong>Download :</strong> <a href="{{ post.download }}">here</a></p>
+      </p>
+      <p><strong>Download :</strong></p>
+      <ul class="release-downloads">
+        <li>
+          <a class="btn btn-primary" rel="nofollow" href="{{ post.download_zip }}">
+          <span class="glyphicon glyphicon-compressed"></span>
+          Source code (zip)
+          </a>
+        </li>
+          <li>
+          <a class="btn btn-primary" rel="nofollow" href="{{ post.download_tar }}">
+          <span class="glyphicon glyphicon-compressed"></span>
+          Source code (tar.gz)
+          </a>
+        </li>
+      </ul>
       <p><strong>Changelog :</strong></p>
       {{ post.excerpt }}
     </li>

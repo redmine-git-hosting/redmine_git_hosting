@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<div class="container">
+  <div class="row">
+    <div class="medium-8 columns">
+      <h4 class="subheader">{{ page.date | date: "%-d %B %Y" }} - {{ page.title }}</h4>
+      <hr>
+      <p>
+        <strong>Status :</strong>
+        {% if page.status == 'latest stable' %}
+          <span class="label label-success">{{ page.status }}</span>
+        {% elsif page.status == 'old stable' %}
+          <span class="label label-warning">{{ page.status }}</span>
+        {% elsif page.status == 'obsolete' %}
+          <span class="label label-default">{{ page.status }}</span>
+        {% else %}
+          <span class="label label-primary">{{ page.status }}</span>
+        {% endif %}
+      </p>
+      <p><strong>Download :</strong></p>
+      <ul class="release-downloads">
+        <li>
+          <a class="btn btn-primary" rel="nofollow" href="{{ page.download_zip }}">
+          <span class="glyphicon glyphicon-compressed"></span>
+          Source code (zip)
+          </a>
+        </li>
+          <li>
+          <a class="btn btn-primary" rel="nofollow" href="{{ page.download_tar }}">
+          <span class="glyphicon glyphicon-compressed"></span>
+          Source code (tar.gz)
+          </a>
+        </li>
+      </ul>
+      <p><strong>Changelog :</strong></p>
+      {{ content }}
+    </div>
+  </div>
+</div>
