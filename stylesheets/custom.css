@@ -134,3 +134,12 @@ h6:hover .header-link {
 .main .page-header {
   margin-top: 0;
 }
+
+.octocard {
+  border-radius: 2px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 1px 1px #ddd;
+  float: left;
+  padding: 10px;
+  margin: 10px;
+  width: 300px;
+}
