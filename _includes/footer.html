@@ -1,6 +1,11 @@
-<div class="footer">
-  <p>&copy; {{ site.data.project.release.year }} <a href="{{ site.data.project.author.url }}">{{ site.data.project.author.name }}</a>. Licensed under
-  the <a href="{{ site.data.project.licence.url }}">{{ site.data.project.licence.name }} License</a>.</p>
+<div class="footer row">
+  <div class="col-sm-8">
+    <p>&copy; {{ site.data.project.release.year }} <a href="{{ site.data.project.author.url }}">{{ site.data.project.author.name }}</a>. Licensed under
+    the <a href="{{ site.data.project.licence.url }}">{{ site.data.project.licence.name }} License</a>.</p>
+  </div>
+  <div class="col-sm-4">
+    <p class="text-right"><a href="#topbar">&#x25B2;</a></p>
+  </div>
 </div>
 
 {% for javascript in site.data.theme.javascripts %}
@@ -45,7 +50,7 @@
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 
     try {
-      var pageTracker = _gat._getTracker("UA-36504891-3");
+      var pageTracker = _gat._getTracker("{{ site.data.google_tracker }}");
       pageTracker._trackPageview();
     } catch(err) {}
   });
