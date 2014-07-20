@@ -6,7 +6,7 @@ title: Development Guide
 ### {{ page.title }}
 ***
 
-**Do this in a test environment ! I won't be responsible if you break things on your production installation !**
+<div class="alert alert-danger" role="alert">Do this in a test environment ! I won't be responsible if you break things on your production installation !</div>
 
 *You can use a Virtual Machine to clone your production environment then play the migration.*
 

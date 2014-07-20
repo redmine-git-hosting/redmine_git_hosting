@@ -8,15 +8,14 @@ weight: 1
 ### {{ page.title }}
 ***
 
-<ul>
+<ul class="list-group">
   {% for post in site.categories['news'] %}
-    <li>
+    <li class="list-group-item">
       <p>
-        {{ post.date | date: "%-d %B %Y" }} :
+        <strong>{{ post.date | date: "%-d %B %Y" }} :</strong>
         <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
       </p>
       {{ post.excerpt }}
-      <hr>
     </li>
   {% endfor %}
 </ul>

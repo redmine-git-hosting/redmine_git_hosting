@@ -8,7 +8,7 @@ title: Step by Step migration
 
 If you're upgrading from 0.6 version (or older) you should follow these steps :
 
-Before updating the plugin, stop Redmine!
+<div class="alert alert-warning" role="alert">Before update the plugin, stop Redmine!</div>
 
     root$ su - redmine
 

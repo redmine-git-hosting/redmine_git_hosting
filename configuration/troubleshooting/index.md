@@ -100,7 +100,7 @@ Thanks to user overmind88 for providing a solution for Nginx + Thin.
      ! [remote rejected] master -> master (hook declined)
     error: failed to push some refs to 'https://xxx@xxx/redmine/xxx.git'
 
-This is a known issue with Gitolite 3 and SmartHTTP access (https://github.com/gitlabhq/gitlabhq/issues/1495).
+This is a known issue with Gitolite 3 and SmartHTTP access ([https://github.com/gitlabhq/gitlabhq/issues/1495](https://github.com/gitlabhq/gitlabhq/issues/1495)).
 
 The trick is to add the following code at the bottom of the files :
 

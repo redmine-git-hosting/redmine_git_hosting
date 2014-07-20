@@ -6,6 +6,11 @@ title: Compatibility
 ### {{ page.title }}
 ***
 
+<div class="alert alert-warning" role="alert" markdown="1">
+There is a known issue with Gitolite 3 and SmartHTTP access. Take a look [here]({{ site.baseurl }}/configuration/troubleshooting#hook-errors-while-pushing-over-https) to fix it.
+</div>
+
+
 #### v0.8 (beta)
 
 * **Redmine :** This plugin only work with Redmine **2.x**, including sub-versions. (Tested with latest stable : **2.5.2**)
@@ -28,7 +33,3 @@ title: Compatibility
 * **Ruby :** This plugin is compatible with Ruby 1.8.7, 1.9.3 and 2.0
 * **Git :** This plugin is compatible with Git 1.7.2.5 to 1.9.1
 * **Gitolite :** This plugin is compatible with Gitolite 2.x and 3.x (Tested with latest stable : **v3.5.3.1-20-gc0e36b3**)
-
-#### Important!
-
-There is a known issue with Gitolite 3 and SmartHTTP access. Take a look [here]({{ site.baseurl }}/configuration/troubleshooting#hook-errors-while-pushing-over-https) to fix it.

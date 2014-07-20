@@ -6,7 +6,7 @@ title: Step by Step upgrade
 ### {{ page.title }}
 ***
 
-    ## Before update the plugin, stop Redmine!
+<div class="alert alert-warning" role="alert">Before update the plugin, stop Redmine!</div>
 
     root$ su - redmine
 
@@ -16,5 +16,3 @@ title: Step by Step upgrade
     redmine$ cd REDMINE_ROOT
     redmine$ bundle install --without development test
     redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
-
-    ## After update the plugin, start Redmine!

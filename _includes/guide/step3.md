@@ -44,6 +44,8 @@ Otherwise you can install Gitolite (v3) by following this :
             git$ gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
 
 
+<div class="alert alert-warning" role="alert" markdown="1">
 If you are running Gitolite 3 don't forget to [patch it!]({{ site.baseurl }}/configuration/troubleshooting/#hook-errors-while-pushing-over-https).
+</div>
 
 ***
