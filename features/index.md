@@ -67,9 +67,10 @@ You have the ability to selectively push branches to the mirror (using the git-p
 #### Git Smart HTTP
 
 Smart HTTP is an efficient way of communicating with the Git server over HTTP/HTTPS available in Git client version 1.6.6 and newer.
-A more detailed description of what Smart HTTP is all about can be found at : [http://git-scm.com/book/en/Git-Internals-Transfer-Protocols](http://git-scm.com/book/en/Git-Internals-Transfer-Protocols).
 
-Redmine Git Hosting plugin integrates code from Scott Schacon's "grack" utility to provide Git Smart HTTP access.
+A more detailed description of what Smart HTTP is all about can be found in [Git documentation](http://git-scm.com/book/en/Git-Internals-Transfer-Protocols).
+
+Redmine Git Hosting plugin integrates code from Scott Schacon's [grack](https://github.com/schacon/grack) utility to provide Git Smart HTTP access.
 
 This plugin allows you to automatically enable Smart HTTP access to your repositories.
 
