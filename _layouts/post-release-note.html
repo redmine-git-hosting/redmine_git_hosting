@@ -15,6 +15,8 @@ layout: default
           <span class="label label-warning">{{ page.status }}</span>
         {% elsif page.status == 'obsolete' %}
           <span class="label label-default">{{ page.status }}</span>
+        {% elsif page.status == 'beta' %}
+          <span class="label label-danger">{{ page.status }}</span>
         {% else %}
           <span class="label label-primary">{{ page.status }}</span>
         {% endif %}

@@ -20,6 +20,8 @@ title: Releases Notes
           <span class="label label-warning">{{ post.status }}</span>
         {% elsif post.status == 'obsolete' %}
           <span class="label label-default">{{ post.status }}</span>
+        {% elsif post.status == 'beta' %}
+          <span class="label label-danger">{{ post.status }}</span>
         {% else %}
           <span class="label label-primary">{{ post.status }}</span>
         {% endif %}

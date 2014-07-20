@@ -38,6 +38,7 @@ data:
       - //code.jquery.com/ui/1.10.4/jquery-ui.min.js
       - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
       - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.5/ZeroClipboard.min.js
+      - //platform.twitter.com/widgets.js
 
 markdown: kramdown
 
