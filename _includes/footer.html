@@ -4,7 +4,7 @@
     the <a href="{{ site.data.project.licence.url }}">{{ site.data.project.licence.name }} License</a>.</p>
   </div>
   <div class="col-sm-4">
-    <p class="text-right"><a href="#topbar">&#x25B2;</a></p>
+    <p class="text-right"><a href="#top">&#x25B2;</a></p>
   </div>
 </div>
 
@@ -35,8 +35,11 @@
       $('#toc ul')
         .addClass('nav bs-docs-sidenav');
 
+      $('<a class="back-to-top" href="#top">Back to top</a>')
+        .insertAfter('#toc ul');
+
       $('#main-row')
-        .wrap('<div class="container bs-docs-container"></div>')
+        .wrap('<div class="container bs-docs-container"></div>');
     }
 
     return $("h4").each(function(i, el) {

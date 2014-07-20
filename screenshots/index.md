@@ -10,55 +10,55 @@ weight: 4
 
 #### Repository List
 
-![Repository List]({{ site.baseurl }}/images/screenshots/repo_list.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_list.png" alt="Repository List" /></p>
 
 ***
 
 #### Repository New
 
-![Repository New]({{ site.baseurl }}/images/screenshots/repo_new.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_new.png" alt="Repository New" /></p>
 
 ***
 
 #### Repository Config
 
-![Repository Config]({{ site.baseurl }}/images/screenshots/repo_config.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_config.png" alt="Repository Config" /></p>
 
 ***
 
 #### Repository Config2
 
-![Repository Config2]({{ site.baseurl }}/images/screenshots/repo_config2.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_config2.png" alt="Repository Config2" /></p>
 
 ***
 
 #### Repository Init Instructions
 
-![Repository Init Instructions]({{ site.baseurl }}/images/screenshots/repo_init_instructions.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_init_instructions.png" alt="Repository Init Instructions" /></p>
 
 ***
 
 #### Repository Browse
 
-![Repository Browse]({{ site.baseurl }}/images/screenshots/repo_browse.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_browse.png" alt="Repository Browse" /></p>
 
 ***
 
 #### Repository Stats1
 
-![Repository Stats1]({{ site.baseurl }}/images/screenshots/repo_stats1.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_stats1.png" alt="Repository Stats1" /></p>
 
 ***
 
 #### Repository Stats2
 
-![Repository Stats2]({{ site.baseurl }}/images/screenshots/repo_stats2.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_stats2.png" alt="Repository Stats2" /></p>
 
 ***
 
 #### Repository Stats3
 
-![Repository Stats3]({{ site.baseurl }}/images/screenshots/repo_stats3.png)
+<p><img class="img-responsive" src="{{ site.baseurl }}/images/screenshots/repo_stats3.png" alt="Repository Stats3" /></p>
 
 
 <div id="toc">
