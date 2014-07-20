@@ -177,7 +177,7 @@ You are responsible of enabling them in [gitolite.rc](http://gitolite.com/gitoli
 
 #### Improved Repository Statistics
 
-Use Highcharts librairy to display nice graphs instead of poor SVG.
+Use Highcharts library to display nice graphs.
 
 ***
 

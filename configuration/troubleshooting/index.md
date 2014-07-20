@@ -6,36 +6,6 @@ title: Troubleshooting
 ### {{ page.title }}
 ***
 
-#### Resynchronization of Gitolite configuration
-
-**Note that it is very important that these commands be run as *redmine***
-
-To fixup the Gitolite configuration file, execute :
-
-    root$ su - redmine
-    redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:update_repositories
-
-To fetch changesets for all repositories manually, execute :
-
-    root$ su - redmine
-    redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:fetch_changesets
-
-To restore/update your plugin settings, set you current settings in ```init.rb``` file, then execute :
-
-    root$ su - redmine
-    redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:restore_default_settings
-
-To purge expired repositories from Recycle Bin, execute :
-
-    root$ su - redmine
-    redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:purge_recycle_bin
-
-***
-
 #### A note about PATH variable
 
 One major source of issues with this plugin is that Redmine needs to be able to run both sudo and git commands. Specifically, these programs need to be in one of the directories specified by the PATH variable, in your Rails environment. This requirement has been known to cause problems, particularly when installing on FreeBSD.

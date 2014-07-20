@@ -46,4 +46,17 @@ weight: 2
       </li>
     </ul>
   </div>
+  <div class="col-lg-12">
+    <h2>Requirements</h2>
+    <ul>
+      <li><strong>Redmine :</strong> This plugin only works with Redmine <strong>2.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>2.5.2</strong>)</li>
+      <li><strong>Ruby :</strong> works with Ruby 1.9.3, 2.0 and 2.1</li>
+      <li><strong>Git :</strong> works with Git from 1.7.2.5 to 1.9.1</li>
+      <li><strong>Gitolite :</strong> works with Gitolite 2.x and 3.x (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>v3.5.3.1-20-gc0e36b3</strong>)</li>
+      <li><strong>Database :</strong> works with MySQL and Postgres</li>
+    </ul>
+    <div class="alert alert-warning" role="alert">
+      <p>There is a known issue with Gitolite 3 and SmartHTTP access. <a href="{{ site.baseurl }}/configuration/troubleshooting#hook-errors-while-pushing-over-https">Take a look here to fix it.</a></p>
+    </div>
+  </div>
 </div>
