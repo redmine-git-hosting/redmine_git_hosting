@@ -109,11 +109,11 @@ h6:hover .header-link {
   padding-left: 20px;
 }
 
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav-sidebar > .toc-active > a,
+.nav-sidebar > .toc-active > a:hover,
+.nav-sidebar > .toc-active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #336699;
 }
 
 
