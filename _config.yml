@@ -5,6 +5,10 @@ data:
     name: Redmine Git Hosting
     description: A Redmine plugin which makes configuring your own Git hosting easy ;)
     repository: https://github.com/jbox-web/redmine_git_hosting
+
+    github_user: jbox-web
+    github_repository: redmine_git_hosting
+
     release:
       year: 2014
       version: v0.7.6
