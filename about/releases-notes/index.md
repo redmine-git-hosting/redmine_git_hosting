@@ -3,7 +3,8 @@ layout: default
 title: Releases Notes
 ---
 
-### {{ page.title }}
+<h3>{{ page.title }} <a href="{{ site.baseurl }}feed.atom"><i class="fa fa-rss"></i>&nbsp;</a></h3>
+
 ***
 
 <ul class="list-group">

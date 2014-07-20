@@ -1,4 +1,4 @@
 ---
-layout: feed
-limit: 5
+layout: feed-release-note
+limit: 10
 ---

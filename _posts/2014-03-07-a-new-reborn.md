@@ -1,6 +1,6 @@
 ---
 title: A new reborn
-layout: post
+layout: post-news
 category: news
 ---
 
