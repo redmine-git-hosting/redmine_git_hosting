@@ -8,7 +8,7 @@ title: Releases Notes
 ***
 
 <ul class="list-group">
-  {% for post in site.categories['release-notes'] %}
+  {% for post in site.categories['releases-notes'] %}
     <li class="list-group-item">
       <h4><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h4>
       <p><strong>Date :</strong> {{ post.date | date: "%-d %B %Y" }}</p>
