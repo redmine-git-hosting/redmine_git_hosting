@@ -13,27 +13,30 @@
 {% endfor %}
 
 <script src="{{ site.baseurl }}/javascripts/toc.min.js"></script>
+<script src="{{ site.baseurl }}/javascripts/doc.min.js"></script>
 
 <script type="text/javascript">
   $(function() {
     if ($('#toc').length != 0){
       $("#main-container")
         .wrap('<div id="main-row" class="row"></div>')
-        .addClass('col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main')
+        .addClass('col-md-9')
+        .attr('role', 'main')
         .removeClass('container');
 
       $('#toc')
         .toc({
           'selectors': 'h1,h2,h3,h4', //elements to use as headings
         })
-        .insertBefore('#main-container')
-        .addClass('col-sm-3 col-md-2 sidebar');
+        .insertAfter('#main-container')
+        .addClass('bs-docs-sidebar hidden-print hidden-xs hidden-sm affix')
+        .wrap('<div class="col-md-3"></div>');
 
       $('#toc ul')
-        .addClass('nav nav-sidebar');
+        .addClass('nav bs-docs-sidenav');
 
       $('#main-row')
-        .wrap('<div class="container-fluid"></div>')
+        .wrap('<div class="container bs-docs-container"></div>')
     }
 
     return $("h4").each(function(i, el) {

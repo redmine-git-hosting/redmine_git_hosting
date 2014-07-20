@@ -32,19 +32,11 @@ body {
   -ms-transition: opacity 0.2s ease-in-out 0.1s;
 }
 
-h4 {
-  margin-top: 25px;
-}
-
 .list-group h4 {
   margin-top: 0;
 }
 
-h2:hover .header-link,
-h3:hover .header-link,
-h4:hover .header-link,
-h5:hover .header-link,
-h6:hover .header-link {
+h4:hover .header-link {
   opacity: 1;
 }
 
@@ -52,14 +44,9 @@ h6:hover .header-link {
   text-align: center;
 }
 
-
-#toc .toc-h3 {
-  padding-left: 10px;
+#toc .toc-h3 > a {
+  padding-left: 0px;
   font-size: 20px;
-}
-
-#toc .toc-h4 {
-  padding-left: 20px;
 }
 
 .release-downloads {
@@ -97,26 +84,6 @@ h6:hover .header-link {
   }
 }
 
-/* Sidebar navigation */
-.nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
-  margin-bottom: 20px;
-  margin-left: -20px;
-}
-
-.nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
-}
-
-.nav-sidebar > .toc-active > a,
-.nav-sidebar > .toc-active > a:hover,
-.nav-sidebar > .toc-active > a:focus {
-  color: #fff;
-  background-color: #336699;
-}
-
-
 /*
  * Main content
  */
@@ -130,16 +97,4 @@ h6:hover .header-link {
     padding-right: 40px;
     padding-left: 40px;
   }
-}
-.main .page-header {
-  margin-top: 0;
-}
-
-.octocard {
-  border-radius: 2px;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 1px 1px #ddd;
-  float: left;
-  padding: 10px;
-  margin: 10px;
-  width: 300px;
 }
