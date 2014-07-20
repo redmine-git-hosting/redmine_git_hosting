@@ -17,7 +17,7 @@ Visit our website : [http://www.jbox-web.com](http://www.jbox-web.com).
   {% for member in site.github.organization_members %}
     {% if member.login == 'n-rodriguez' %}
       <div class="octocard">
-        <script data-name="{{ member.login }}" src="http://nodejs.in/octocard/bin/octocard.js"></script>
+        <script data-name="{{ member.login }}" src="{{ site.baseurl }}/javascripts/octocard.js"></script>
       </div>
     {% endif %}
   {% endfor %}
