@@ -1,3 +1,9 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag    'bootstrap/bootstrap_switch', :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'plugins/bootstrap_switch',   :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'bootstrap',                  :plugin => 'redmine_bootstrap_kit' %>
+<% end %>
+
 <%= javascript_tag do %>
 
   $(document).ready(function() {
@@ -70,6 +76,12 @@
     $(document).ready(function() {
       $('#repository_url').parent().remove();
       moveGitOptionsDiv();
+
+      $('.bootstrap-switch').each(function(index, element) {
+        if (!$(element).children('div').length > 0){
+          installBootstrapSwitch(element);
+        }
+      });
     });
   <% end %>
 
