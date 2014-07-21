@@ -4,29 +4,7 @@
 
 This plugin allows straightforward management of Gitolite within Redmine.
 
-It provides these functionalities :
-
-* [SSH Public Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-ssh-public-keys-management)
-* [Automatic Repository Creation](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-creation)
-* [Repository Deletion](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-repository-deletion)
-* [Deployment Credentials](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-deployment-credentials)
-* [Post-Receive URLs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-post-receive-urls)
-* [Automatic Mirror Updates](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-mirror-updates)
-* [Git Smart HTTP (with vulnerability patch)](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-smart-http)
-* [Git Daemon](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-daemon)
-* [Caching Options](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-caching-options)
-* [*(new)* Git mailing lists](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-mailing-lists)
-* [*(new)* Sidekiq async jobs](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-sidekiq-async-jobs)
-* [*(new)* Default branch selection](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-default-branch-selection)
-* [*(new)* Automatic Repository Initialization](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-automatic-repository-initialization)
-* [*(new)* Git Revision Download](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-revision-download) (from [Git Revision Download](https://github.com/chantra/redmine_gitrevision_download))
-* [*(new)* README Preview](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-readme-preview) (from [README at Repositories](https://github.com/simeji/readme_at_repositories))
-* [*(new)* Git Config Keys Management](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#wiki-git-config-keys-management)
-* [*(new)* Improved Repository Statistics](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#improved-repository-statistics)
-* [*(new)* Github Issues Sync](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#github-issues-sync)
-* [*(new)* Browse Archived Repositories](https://github.com/jbox-web/redmine_git_hosting/wiki/Features#browse-archived-repositories)
-
-You can follow announcements [here](https://github.com/jbox-web/redmine_git_hosting/wiki/Announcements) or take a look at the [roadmap](https://github.com/jbox-web/redmine_git_hosting/wiki/Roadmap).
+You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosting/news/) or take a look at the [roadmap](https://jbox-web.github.io/redmine_git_hosting/about/roadmap/).
 
 ## Code status
 
@@ -36,7 +14,7 @@ You can follow announcements [here](https://github.com/jbox-web/redmine_git_host
 
 ## Installation
 
-Read the documentation and more in the [Wiki](https://github.com/jbox-web/redmine_git_hosting/wiki).
+Read the documentation and more in the [Wiki](https://jbox-web.github.io/redmine_git_hosting/guide/installation/).
 
 
 ## Copyrights & License
