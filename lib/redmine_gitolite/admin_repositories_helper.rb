@@ -429,12 +429,12 @@ module RedmineGitolite
       temp_dir = Dir.mktmpdir
 
       command = ""
-      command << "env GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path} git clone #{repository.ssh_url} #{temp_dir} 2>&1"
+      command << "env GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path} git clone #{repository.ssh_url} #{temp_dir} >/dev/null 2>&1"
       command << " && cd #{temp_dir}"
       command << " && echo '## #{repository.gitolite_repository_name}' >> README.md"
       command << " && git add README.md"
-      command << " && git commit README.md -m 'Initialize repository'"
-      command << " && env GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path} git push -u origin #{repository.extra[:default_branch]}"
+      command << " && git commit README.md -m 'Initialize repository' --author='#{RedmineGitolite::Config.gitolite_commit_author}'"
+      command << " && env GIT_SSH=#{RedmineGitolite::Config.gitolite_admin_ssh_script_path} git push -u origin master"
 
       begin
         output = RedmineGitolite::GitHosting.execute_command(:local_cmd, command)
