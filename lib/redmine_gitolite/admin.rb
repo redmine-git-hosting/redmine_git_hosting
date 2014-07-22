@@ -110,7 +110,7 @@ module RedmineGitolite
     def gitolite_admin_repo_commit(message = '')
       logger.info { "#{@action} : commiting to Gitolite..." }
       begin
-        @gitolite_admin.save("#{@action} : #{message}", :author => @gitolite_author)
+        @gitolite_admin.save("'#{@action} : #{message}'", :author => @gitolite_author)
       rescue => e
         logger.error { "#{e.message}" }
       end
