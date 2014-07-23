@@ -139,6 +139,16 @@ You can now remove the temp dir and the SSH config file
     redmine$ rm -rf /tmp/gitolite-admin-temp
     redmine$ rm .ssh/config
 
+***
+
+#### My repository seems empty but I'm sure it is not!
+
+> A ```git clone``` of the repository gives me files!
+
+    root$ su - redmine
+    redmine$ cd REDMINE_ROOT
+    redmine$ RAILS_ENV=production rake redmine_git_hosting:fetch_changesets
+
 
 <div id="toc">
 </div>
