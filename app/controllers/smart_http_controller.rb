@@ -138,37 +138,17 @@ class SmartHttpController < ApplicationController
   end
 
 
-  class Streamer
-
-    def initialize(command, input)
-      @command = command
-      @input = input
-    end
-
-    def each
-      IO.popen(@command, File::RDWR) do |pipe|
-        pipe.write @input
-
-        while !pipe.eof?
-          yield pipe.read(8192)
-        end
-      end
-    end
-
-  end
-
-
   def service_rpc
     return render_no_access if !has_access(@rpc, true)
 
-    input = read_body
-
-    command = git_command("#{@rpc} --stateless-rpc .")
+    cmd_args = git_params.concat([@rpc, '--stateless-rpc', @repository.gitolite_repository_path])
 
     self.response.status = 200
     self.response.headers["Content-Type"]  = "application/x-git-%s-result" % @rpc
     self.response.headers["Last-Modified"] = Time.now.to_s
-    self.response_body = Streamer.new(command, input)
+    self.response_body = Enumerator.new do |y|
+      y << RedmineGitolite::GitoliteWrapper.sudo_pipe_capture(cmd_args, read_body)
+    end
   end
 
 
@@ -176,8 +156,7 @@ class SmartHttpController < ApplicationController
     service_name = get_service_type
 
     if has_access(service_name)
-      command = git_command("#{service_name} --stateless-rpc --advertise-refs .")
-      refs = %x[#{command}]
+      refs = git_command(service_name, '--stateless-rpc', '--advertise-refs', @repository.gitolite_repository_path)
 
       content_type = "application/x-git-#{service_name}-advertisement"
 
@@ -323,15 +302,18 @@ class SmartHttpController < ApplicationController
   end
 
 
-  ## Note: command must be terminated with a quote!
-  def git_command(command)
-    return "#{run_git_prefix} && env GL_BYPASS_UPDATE_HOOK=true git #{command}'"
+  def git_command(*params)
+    begin
+      RedmineGitolite::GitoliteWrapper.sudo_capture(*git_params.concat(params))
+    rescue => e
+      logger.error { "Problems while getting SmartHttp params" }
+      return nil
+    end
   end
 
 
-  ## Note: command must be started with a quote!
-  def run_git_prefix
-    return "#{RedmineGitolite::Config.shell_cmd_runner} 'cd #{@repository.gitolite_repository_path}"
+  def git_params
+    ['env', 'GL_BYPASS_UPDATE_HOOK=true', 'git', "--git-dir=#{@repository.gitolite_repository_path}"]
   end
 
 
@@ -361,8 +343,8 @@ class SmartHttpController < ApplicationController
 
   def get_config_setting(service_name)
     service_name = service_name.gsub('-', '')
-    setting = get_git_config("http.#{service_name}")
     if service_name == 'uploadpack'
+      setting = get_git_config("http.#{service_name}")
       return setting != 'false'
     else
       return @authenticated
@@ -371,14 +353,12 @@ class SmartHttpController < ApplicationController
 
 
   def get_git_config(config_name)
-    command = git_command("config #{config_name}")
-    %x[#{command}].chomp
+    git_command('config', config_name).chomp
   end
 
 
   def update_server_info
-    command = git_command("update-server-info")
-    %x[#{command}]
+    git_command('update-server-info')
   end
 
 

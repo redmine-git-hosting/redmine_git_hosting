@@ -246,6 +246,11 @@ module RedmineGitolite
     end
 
 
+    def self.sudo_pipe_capture(*params, stdin)
+      GitHosting.pipe_capture('sudo', *sudo_shell_params.concat(params), stdin)
+    end
+
+
     # Test if a file exists with size > 0
     def self.sudo_file_exists?(filename)
       sudo_test(filename, '-s')

@@ -74,6 +74,9 @@ module RedmineGitolite
     # Note that stdout and stderr must be merged by appending '2>&1' in the block command.
     # Raises an exception if the command does not exit with 0.
     #
+    # TODO: Use Ruby pipeline? || Enhance pipe_capture below ?
+    # http://www.ruby-doc.org/stdlib-2.1.2/libdoc/open3/rdoc/Open3.html#method-c-pipeline_rw
+    #
     def self.pipe(command, *params, &block)
       Open3.popen3(command, *params) do |stdin, stdout, stderr, thr|
         begin
@@ -97,6 +100,18 @@ module RedmineGitolite
       error_msg = "Exception occured executing `#{command} #{params.join(" ")}` : #{e.message}"
       logger.debug { error_msg }
       raise GitHostingException.new(command, error_msg)
+    end
+
+
+    def self.pipe_capture(*command, stdin)
+      begin
+        stdout, stderr, status = Open3.capture3(command.join(' '), :stdin_data => stdin, :binmode => true)
+      rescue => e
+        error_msg = "Exception occured executing `#{command} #{params.join(" ")}` : #{e.message}"
+        logger.info { error_msg }
+        raise GitHostingException.new(command, error_msg)
+      end
+      return stdout
     end
 
   end
