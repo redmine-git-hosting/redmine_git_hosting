@@ -103,11 +103,12 @@ module RedmineGitolite
     end
 
 
-    def self.pipe_capture(*command, stdin)
+    def self.pipe_capture(*params, stdin)
+      command = params.join(' ')
       begin
-        stdout, stderr, status = Open3.capture3(command.join(' '), :stdin_data => stdin, :binmode => true)
+        stdout, stderr, status = Open3.capture3(command, :stdin_data => stdin, :binmode => true)
       rescue => e
-        error_msg = "Exception occured executing `#{command} #{params.join(" ")}` : #{e.message}"
+        error_msg = "Exception occured executing `#{command}` : #{e.message}"
         logger.info { error_msg }
         raise GitHostingException.new(command, error_msg)
       end
