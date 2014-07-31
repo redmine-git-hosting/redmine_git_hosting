@@ -417,28 +417,17 @@ module RedmineGitolite
     # Clear the cache entries for given repository
     def self.clear_cache_for_repository(repository)
       repo_id = repository.git_cache_id
-
-      # Clear cache
-      old_cached = GitCache.find_all_by_repo_identifier(repo_id)
-      if old_cached != nil
-        old_ids = old_cached.collect(&:id)
-        GitCache.destroy(old_ids)
-        logger.info { "Removed '#{old_cached.count}' expired cache entries for repository '#{repo_id}'" }
-      end
+      deleted = GitCache.delete_all(["repo_identifier = ?", repo_id])
+      logger.info { "Removed '#{deleted}' expired cache entries for repository '#{repo_id}'" }
     end
 
 
     # After resetting cache timing parameters -- delete entries that no-longer match
     def self.clear_obsolete_cache_entries
       return if max_cache_time < 0  # No expiration needed
-
       target_limit = Time.now - max_cache_time
-      old_cached = GitCache.all(:conditions => ["created_at < ?", target_limit])
-      if old_cached != nil
-        old_ids = old_cached.collect(&:id)
-        GitCache.destroy(old_ids)
-        logger.info { "Removed '#{old_cached.count}' expired cache entries among all repositories" }
-      end
+      deleted = GitCache.delete_all(["created_at < ?", target_limit])
+      logger.info { "Removed '#{deleted}' expired cache entries among all repositories" }
     end
 
   end
