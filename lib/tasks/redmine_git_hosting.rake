@@ -33,6 +33,7 @@ namespace :redmine_git_hosting do
     puts "Performing manual fetch_changesets operation..."
     RedmineGitolite::GitHosting.logger.warn { "Performing manual fetch_changesets operation from command line" }
     Repository.fetch_changesets
+    RedmineGitolite::GitHosting.logger.warn { "Done!" }
     puts "Done!"
   end
 
