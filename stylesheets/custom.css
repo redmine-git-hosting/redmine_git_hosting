@@ -107,3 +107,7 @@ h4:hover .header-link {
     padding-left: 40px;
   }
 }
+
+blockquote {
+  font-size: 15.5px;
+}
