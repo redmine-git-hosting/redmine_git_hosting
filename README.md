@@ -14,7 +14,9 @@ You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosti
 
 ## Installation
 
-Read the documentation and more in the [Wiki](https://jbox-web.github.io/redmine_git_hosting/guide/installation/).
+The installation tutorial is [here](https://jbox-web.github.io/redmine_git_hosting/howtos/index.html).
+
+Read the documentation and more on the [project's website](https://jbox-web.github.io/redmine_git_hosting/).
 
 
 ## Copyrights & License
