@@ -34,12 +34,12 @@ describe Repository::Git do
 
 
   describe "common_tests" do
-    before do
+    before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
 
-      @repository_1 = create_git_repository(:project_id => @project_child.id, :is_default => true)
-      @repository_2 = create_git_repository(:project_id => @project_child.id, :identifier => 'repo-test')
+      @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
+      @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo-test')
     end
 
     subject { @repository_1 }
@@ -285,25 +285,25 @@ describe Repository::Git do
 
 
   def collection_of_unique_repositories
-    @repository_1 = create_git_repository(:project_id => @project_child.id, :is_default => true)
-    @repository_2 = create_git_repository(:project_id => @project_child.id, :identifier => 'repo1-test')
+    @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
+    @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo1-test')
 
-    @repository_3 = create_git_repository(:project_id => @project_parent.id, :is_default => true)
-    @repository_4 = create_git_repository(:project_id => @project_parent.id, :identifier => 'repo2-test')
+    @repository_3 = create_git_repository(:project => @project_parent, :is_default => true)
+    @repository_4 = create_git_repository(:project => @project_parent, :identifier => 'repo2-test')
   end
 
 
   def collection_of_non_unique_repositories
-    @repository_1 = create_git_repository(:project_id => @project_child.id, :is_default => true)
-    @repository_2 = create_git_repository(:project_id => @project_child.id, :identifier => 'repo-test')
+    @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
+    @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo-test')
 
-    @repository_3 = create_git_repository(:project_id => @project_parent.id, :is_default => true)
-    @repository_4 = create_git_repository(:project_id => @project_parent.id, :identifier => 'repo-test')
+    @repository_3 = create_git_repository(:project => @project_parent, :is_default => true)
+    @repository_4 = create_git_repository(:project => @project_parent, :identifier => 'repo-test')
   end
 
 
   context "when hierarchical_organisation with non_unique_identifier" do
-    before do
+    before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
       collection_of_non_unique_repositories
@@ -651,7 +651,7 @@ describe Repository::Git do
 
 
   context "when flat_organisation with unique_identifier" do
-    before do
+    before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = false
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
       collection_of_unique_repositories
