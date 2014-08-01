@@ -1,3 +1,6 @@
+require 'rspec'
+require 'rspec/core/rake_task'
+
 namespace :redmine_git_hosting do
 
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
@@ -60,7 +63,7 @@ namespace :redmine_git_hosting do
 
   desc "Start unit tests"
   task :test => :default
-  task :default do
+  task :default => [:environment] do
     RSpec::Core::RakeTask.new(:spec) do |config|
       config.rspec_opts = "plugins/redmine_git_hosting/spec --color"
     end
@@ -70,7 +73,7 @@ namespace :redmine_git_hosting do
 
 
   desc "Start unit tests in JUnit format"
-  task :test_junit do
+  task :test_junit => [:environment] do
     RSpec::Core::RakeTask.new(:spec) do |config|
       config.rspec_opts = "plugins/redmine_git_hosting/spec --format RspecJunitFormatter --out junit/rspec.xml"
     end
@@ -79,23 +82,27 @@ namespace :redmine_git_hosting do
 
 
   desc "Check unit tests results"
-  task :check_unit_tests_results do
+  task :check_unit_tests_results => [:environment] do
     gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
     gitolite_temp_dir  = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
 
     puts "#####################"
     puts "TESTS RESULTS"
     puts ""
-    puts "gitolite_admin_dir : #{gitolite_admin_dir}"
     puts "gitolite_temp_dir  : #{gitolite_temp_dir}"
+    puts "gitolite_admin_dir : #{gitolite_admin_dir}"
     puts ""
 
-    puts "ls -hal #{gitolite_temp_dir}"
+    puts "* ls -hal #{gitolite_temp_dir}"
     puts %x[ ls -hal #{gitolite_temp_dir} ]
     puts ""
 
-    puts "ls -hal #{gitolite_temp_dir}/git"
-    puts %x[ ls -hal #{gitolite_temp_dir}/git ]
+    puts "* ls -hal #{gitolite_temp_dir}git"
+    puts %x[ ls -hal #{gitolite_temp_dir}git ]
+    puts ""
+
+    puts "* ls -hal #{gitolite_temp_dir}git/gitolite-admin.git"
+    puts %x[ ls -hal #{gitolite_temp_dir}git/gitolite-admin.git ]
     puts ""
 
     begin
