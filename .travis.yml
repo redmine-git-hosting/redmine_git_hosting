@@ -23,7 +23,7 @@ env:
   # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.2.4"
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq libicu-dev
+  - sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
   - cd ../..
   - ./jbox-web/redmine_git_hosting/contrib/travis/install_redmine.sh
   - cd redmine
