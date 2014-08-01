@@ -59,7 +59,7 @@ So between the 2 Gitolite libs, no more need to ```exec()``` git commands :)
 
 libgit2 is bundled with gitolite-rugged so you don't have to install it at the system level. But you have to install it's dependencies :
 
-    root$ apt-get install libssh2-1 libssh2-1-dev cmake
+    root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
 
 Then you can install the plugin :
 
