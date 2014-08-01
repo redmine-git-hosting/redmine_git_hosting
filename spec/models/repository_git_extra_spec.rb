@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe RepositoryGitExtra do
 
   describe "Valid RepositoryGitExtra creation" do
-    before do
+    before(:each) do
       @git_extra = build(:repository_git_extra)
     end
 
