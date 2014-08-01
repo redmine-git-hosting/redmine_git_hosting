@@ -30,7 +30,13 @@ module RedmineGitolite
 
 
     def self.resync_gitolite(command, object, options = {})
-      if RedmineGitolite::Config.get_setting(:gitolite_use_sidekiq)
+      if options.has_key?(:bypass_sidekiq) && options[:bypass_sidekiq] == true
+        bypass = true
+      else
+        bypass = false
+      end
+
+      if RedmineGitolite::Config.get_setting(:gitolite_use_sidekiq) && !bypass
         GithostingShellWorker.perform_async(command, object, options)
       else
         RedmineGitolite::GitoliteWrapper.update(command, object, options)
