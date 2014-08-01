@@ -1,5 +1,5 @@
-require 'rspec'
-require 'rspec/core/rake_task'
+# require 'rspec'
+# require 'rspec/core/rake_task'
 
 namespace :redmine_git_hosting do
 
