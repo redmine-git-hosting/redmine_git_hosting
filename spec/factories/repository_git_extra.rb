@@ -1,8 +1,9 @@
 FactoryGirl.define do
 
-  factory :repository_git_extra do |git_extra|
-    git_extra.git_http        0
-    git_extra.default_branch  "master"
+  factory :repository_git_extra do |f|
+    f.git_http        0
+    f.default_branch  "master"
+    f.association     :repository, :factory => :repository_git
   end
 
 end

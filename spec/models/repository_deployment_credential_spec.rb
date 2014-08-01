@@ -6,27 +6,23 @@ describe RepositoryDeploymentCredential do
   USER_KEY   = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5+JfM82k03J98GWL6ghJ4TYM8DbvDnVh1s1rUDNlM/1U5rwbgXHOR4xV3lulgYEYRtYeMoL3rt4ZpEyXWkOreOVsUlkW66SZJR5aGVTNJOLX7HruEDqj7RWlt0u0MH6DgBVAJimQrxYN50jYD4XnDUjb/qv55EhPvbJ3jcAb3zuyRXMKZYGNVzVFLUagbvVaOwR23csWSLDTsAEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pRHOqRcZHcOgIhKiaLX nicolas@tchoum'
 
   before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-
-    users = FactoryGirl.create_list(:user, 2)
+    users = create_list(:user, 2)
     @user1 = users[0]
     @user2 = users[1]
 
-    @deploy_key = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :key_type => 1, :title => 'foo1', :key => DEPLOY_KEY)
-    @user_key   = FactoryGirl.create(:gitolite_public_key, :user_id => @user1.id, :key_type => 0, :title => 'foo2', :key => USER_KEY)
+    @deploy_key = create(:gitolite_public_key, :user => @user1, :key_type => 1, :title => 'foo1', :key => DEPLOY_KEY)
+    @user_key   = create(:gitolite_public_key, :user => @user1, :key_type => 0, :title => 'foo2', :key => USER_KEY)
   end
 
 
   def build_deployment_credential(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_deployment_credential, opts)
+    build(:repository_deployment_credential, opts)
   end
 
 
   describe "Valid RepositoryDeploymentCredential creation" do
-    before do
-      @deployment_credential = build_deployment_credential(:user_id => @user1.id, :gitolite_public_key_id => @deploy_key.id)
+    before(:each) do
+      @deployment_credential = build_deployment_credential(:user => @user1, :gitolite_public_key => @deploy_key)
     end
 
     subject { @deployment_credential }
@@ -68,13 +64,13 @@ describe RepositoryDeploymentCredential do
 
   context "when key is not a deployment key" do
     it 'should not be valid' do
-      expect(build_deployment_credential(:user_id => @user1.id, :gitolite_public_key_id => @user_key.id)).not_to be_valid
+      expect(build_deployment_credential(:user => @user1, :gitolite_public_key => @user_key)).not_to be_valid
     end
   end
 
   context "when user id is not the owner of deployment key" do
     it 'should not be valid' do
-      expect(build_deployment_credential(:user_id => @user2.id, :gitolite_public_key_id => @user_key.id)).not_to be_valid
+      expect(build_deployment_credential(:user => @user2, :gitolite_public_key => @user_key)).not_to be_valid
     end
   end
 

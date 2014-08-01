@@ -17,27 +17,15 @@ describe RepositoryMirror do
     'ssh://host.xz/~/path/to/repo.git'
   ]
 
-  before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-  end
-
 
   def build_mirror(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_mirror, opts)
-  end
-
-
-  def create_mirror(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.create(:repository_mirror, opts)
+    build(:repository_mirror, opts)
   end
 
 
   describe "Valid RepositoryMirror creation" do
-    before do
-      @mirror = build_mirror
+    before(:each) do
+      @mirror = build(:repository_mirror)
     end
 
     subject { @mirror }
@@ -186,10 +174,10 @@ describe RepositoryMirror do
 
   context "when many mirror are saved" do
     before do
-      create_mirror(:active => true)
-      create_mirror(:active => true)
-      create_mirror(:active => false)
-      create_mirror(:active => false)
+      create(:repository_mirror, :active => true)
+      create(:repository_mirror, :active => true)
+      create(:repository_mirror, :active => false)
+      create(:repository_mirror, :active => false)
     end
 
     it { expect(RepositoryMirror.active.length).to be == 3 }

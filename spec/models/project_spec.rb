@@ -3,12 +3,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Project do
 
   before(:all) do
-    @project    = FactoryGirl.create(:project)
+    @project    = create(:project)
 
-    @git_repo_1 = FactoryGirl.create(:repository_git, :project_id => @project.id, :is_default => true)
-    @git_repo_2 = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'git-repo-test')
+    @git_repo_1 = create(:repository_git, :project => @project, :is_default => true)
+    @git_repo_2 = create(:repository_git, :project => @project, :identifier => 'git-repo-test')
 
-    @svn_repo_1 = FactoryGirl.create(:repository_svn, :project_id => @project.id, :identifier => 'svn-repo-test', :url => 'http://svn-repo-test')
+    @svn_repo_1 = create(:repository_svn, :project => @project, :identifier => 'svn-repo-test', :url => 'http://svn-repo-test')
   end
 
   subject { @project }
@@ -26,11 +26,11 @@ describe Project do
   end
 
   it "should not match existing repository identifier" do
-    expect(FactoryGirl.build(:project, :identifier => 'git-repo-test')).to be_invalid
+    expect(build(:project, :identifier => 'git-repo-test')).to be_invalid
   end
 
   it "should not match Gitolite Admin repository identifier" do
-    expect(FactoryGirl.build(:project, :identifier => 'gitolite-admin')).to be_invalid
+    expect(build(:project, :identifier => 'gitolite-admin')).to be_invalid
   end
 
 end

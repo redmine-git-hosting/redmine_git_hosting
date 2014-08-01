@@ -2,21 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitConfigKey do
 
-  before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-  end
-
-
-  def build_git_config_key(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_git_config_key, opts)
-  end
-
-
   describe "Valid RepositoryGitConfigKey creation" do
-    before do
-      @git_config_key = build_git_config_key
+    before(:each) do
+      @git_config_key = build(:repository_git_config_key)
     end
 
     subject { @git_config_key }

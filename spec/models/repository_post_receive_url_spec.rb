@@ -6,27 +6,10 @@ describe RepositoryPostReceiveUrl do
   MASTER_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/master_payload.yml')))
   BRANCHES_PAYLOAD = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/branches_payload.yml')))
 
-  before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-  end
-
-
-  def build_post_receive_url(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_post_receive_url, opts)
-  end
-
-
-  def create_post_receive_url(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.create(:repository_post_receive_url, opts)
-  end
-
 
   describe "Valid RepositoryPostReceiveUrl creation" do
-    before do
-      @post_receive_url = build_post_receive_url
+    before(:each) do
+      @post_receive_url = build(:repository_post_receive_url)
     end
 
     subject { @post_receive_url }
@@ -105,10 +88,10 @@ describe RepositoryPostReceiveUrl do
 
   context "when many post receive url are saved" do
     before do
-      create_post_receive_url(:active => true)
-      create_post_receive_url(:active => true)
-      create_post_receive_url(:active => false)
-      create_post_receive_url(:active => false)
+      create(:repository_post_receive_url, :active => true)
+      create(:repository_post_receive_url, :active => true)
+      create(:repository_post_receive_url, :active => false)
+      create(:repository_post_receive_url, :active => false)
     end
 
     it { expect(RepositoryPostReceiveUrl.active.length).to be == 3 }
@@ -118,7 +101,7 @@ describe RepositoryPostReceiveUrl do
 
   describe "#needs_push" do
     before do
-      @post_receive_url = build_post_receive_url
+      @post_receive_url = build(:repository_post_receive_url)
     end
 
     subject { @post_receive_url }

@@ -30,8 +30,8 @@ describe GitolitePublicKey do
 
 
   describe "Valid SSH key build" do
-    before do
-      @ssh_key = build_ssh_key(:user_id => @user1.id)
+    before(:each) do
+      @ssh_key = build(:gitolite_public_key)
     end
 
     subject { @ssh_key }
@@ -208,7 +208,7 @@ describe GitolitePublicKey do
 
       ssh_keys.each do |valid_key|
         it "should be valid" do
-          expect(build_ssh_key(:user_id => @user1.id, :key => valid_key)).to be_valid
+          expect(build(:gitolite_public_key, :key => valid_key)).to be_valid
         end
       end
     end
@@ -258,10 +258,10 @@ describe GitolitePublicKey do
 
   context "when many keys are saved" do
     before do
-      create_ssh_key(:user_id => @user1.id, :title => 'active1', key: SSH_KEY_1, :key_type => 1)
-      create_ssh_key(:user_id => @user1.id, :title => 'active2', key: SSH_KEY_2, :key_type => 1)
-      create_ssh_key(:user_id => @user2.id, :title => 'active3', key: SSH_KEY_3)
-      create_ssh_key(:user_id => @user2.id, :title => 'active4', key: SSH_KEY_4)
+      create_ssh_key(:user => @user1, :title => 'active1', key: SSH_KEY_1, :key_type => 1)
+      create_ssh_key(:user => @user1, :title => 'active2', key: SSH_KEY_2, :key_type => 1)
+      create_ssh_key(:user => @user2, :title => 'active3', key: SSH_KEY_3)
+      create_ssh_key(:user => @user2, :title => 'active4', key: SSH_KEY_4)
     end
 
     it "should have 8 keys" do

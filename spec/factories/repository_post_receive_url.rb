@@ -1,7 +1,8 @@
 FactoryGirl.define do
 
-  factory :repository_post_receive_url do |post_receive_url|
-    post_receive_url.sequence(:url) { |n| "http://example.com/toto#{n}.php" }
+  factory :repository_post_receive_url do |f|
+    f.sequence(:url) { |n| "http://example.com/toto#{n}.php" }
+    f.association    :repository, :factory => :repository_git
   end
 
 end

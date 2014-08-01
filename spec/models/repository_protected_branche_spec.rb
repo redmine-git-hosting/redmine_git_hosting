@@ -2,20 +2,13 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryProtectedBranche do
 
-  before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-  end
-
-
   def build_protected_branch(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_protected_branche, opts)
+    build(:repository_protected_branche, opts)
   end
 
 
   describe "Valid RepositoryProtectedBranche creation" do
-    before do
+    before(:each) do
       @protected_branch = build_protected_branch(:path => 'devel', :permissions => 'RW', :user_list => %w(user1 user2))
     end
 

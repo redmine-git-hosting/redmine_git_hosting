@@ -2,13 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitExtra do
 
-  def build_git_extra(opts = {})
-    FactoryGirl.build(:repository_git_extra, opts)
-  end
-
   describe "Valid RepositoryGitExtra creation" do
     before do
-      @git_extra = build_git_extra
+      @git_extra = build(:repository_git_extra)
     end
 
     subject { @git_extra }
@@ -24,14 +20,14 @@ describe RepositoryGitExtra do
     it { should belong_to(:repository) }
 
     ## Validations
-    it { should_not be_valid }
+    it { should be_valid }
 
     it { should validate_presence_of(:repository_id) }
     it { should validate_presence_of(:git_http) }
     it { should validate_presence_of(:default_branch) }
     it { should validate_presence_of(:key) }
 
-    # it { should validate_uniqueness_of(:repository_id) }
+    it { should validate_uniqueness_of(:repository_id) }
 
     it { should validate_numericality_of(:git_http) }
 

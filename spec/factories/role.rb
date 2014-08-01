@@ -1,11 +1,11 @@
 FactoryGirl.define do
 
-  factory :role do |role|
-    role.name    "Manager"
-    role.builtin 0
-    role.issues_visibility "all"
-    role.position 1
-    role.permissions  [
+  factory :role do |f|
+    f.name    "Manager"
+    f.builtin 0
+    f.issues_visibility "all"
+    f.position 1
+    f.permissions  [
       :add_project,
       :edit_project,
       :close_project,

@@ -2,23 +2,13 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitNotification do
 
-  before(:all) do
-    @project    = FactoryGirl.create(:project)
-    @repository = FactoryGirl.create(:repository_git, :project_id => @project.id)
-  end
-
   VALID_MAIL   = [ 'user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn' ]
   INVALID_MAIL = [ 'user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com' ]
 
-  def build_git_notification(opts = {})
-    opts = opts.merge(:repository_id => @repository.id)
-    FactoryGirl.build(:repository_git_notification, opts)
-  end
-
 
   describe "Valid RepositoryGitNotification creation" do
-    before do
-      @git_notification = build_git_notification
+    before(:each) do
+      @git_notification = build(:repository_git_notification)
     end
 
     subject { @git_notification }
