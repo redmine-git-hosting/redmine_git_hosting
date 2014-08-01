@@ -62,7 +62,7 @@ namespace :redmine_git_hosting do
   task :test => :default
   task :default do
     RSpec::Core::RakeTask.new(:spec) do |config|
-      config.rspec_opts = "plugins/redmine_git_hosting/spec --color --format nested --fail-fast"
+      config.rspec_opts = "plugins/redmine_git_hosting/spec --color"
     end
     Rake::Task["spec"].invoke
     Rake::Task["redmine_git_hosting:check_unit_tests_results"].invoke
