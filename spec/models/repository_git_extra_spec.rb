@@ -4,7 +4,7 @@ describe RepositoryGitExtra do
 
   describe "Valid RepositoryGitExtra creation" do
     before(:each) do
-      @git_extra = build(:repository_git_extra)
+      @git_extra = create(:repository_git_extra)
     end
 
     subject { @git_extra }
