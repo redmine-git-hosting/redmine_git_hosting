@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'lockfile'
-gem 'gitolite-rugged', :github => 'n-rodriguez/gitolite-rugged', :branch => 'devel'
+gem 'gitolite-rugged', :git => 'https://github.com/n-rodriguez/gitolite-rugged.git', :branch => 'devel'
 
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'
