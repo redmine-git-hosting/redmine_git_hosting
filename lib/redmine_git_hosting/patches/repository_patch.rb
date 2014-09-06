@@ -132,23 +132,21 @@ module RedmineGitHosting
 
 
         def commits_per_month
-          @date_to = Date.today
-          @date_from = @date_to << 11
-          @date_from = Date.civil(@date_from.year, @date_from.month, 1)
+          date_to = Date.today
           commits_by_day = Changeset.
-            where("repository_id = ? AND commit_date BETWEEN ? AND ?", self.id, @date_from, @date_to).
+            where("repository_id = ?", self.id).
             group(:commit_date).
             count
           commits_by_month = [0] * 12
-          commits_by_day.each {|c| commits_by_month[(@date_to.month - c.first.to_date.month) % 12] += c.last }
+          commits_by_day.each {|c| commits_by_month[(date_to.month - c.first.to_date.month) % 12] += c.last }
 
           changes_by_day = Change.
             joins(:changeset).
-            where("#{Changeset.table_name}.repository_id = ? AND #{Changeset.table_name}.commit_date BETWEEN ? AND ?", self.id, @date_from, @date_to).
+            where("#{Changeset.table_name}.repository_id = ?", self.id).
             group(:commit_date).
             count
           changes_by_month = [0] * 12
-          changes_by_day.each {|c| changes_by_month[(@date_to.month - c.first.to_date.month) % 12] += c.last }
+          changes_by_day.each {|c| changes_by_month[(date_to.month - c.first.to_date.month) % 12] += c.last }
 
           fields = []
           12.times {|m| fields << month_name(((Date.today.month - 1 - m) % 12) + 1)}
