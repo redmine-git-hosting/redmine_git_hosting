@@ -111,3 +111,8 @@ h4:hover .header-link {
 blockquote {
   font-size: 15.5px;
 }
+
+.notes {
+  font-weight: bold;
+  margin-top: 10px;
+}
