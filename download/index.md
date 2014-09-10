@@ -13,13 +13,13 @@ weight: 2
 
     <ul class="release-downloads">
       <li>
-        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/0.7.6.zip">
+        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/{{ site.data.project.release.version }}.zip">
         <span class="glyphicon glyphicon-download-alt"></span>
         Download (zip)
         </a>
       </li>
         <li>
-        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/0.7.6.tar.gz">
+        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/{{ site.data.project.release.version }}.tar.gz">
         <span class="glyphicon glyphicon-download-alt"></span>
         Download (tar.gz)
         </a>
