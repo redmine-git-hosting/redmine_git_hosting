@@ -83,7 +83,6 @@ def run_http_query(git_config)
 
   if url.scheme == 'https'
     http.use_ssl = true
-    http.ssl_version = :SSLv3 if http.respond_to?(:ssl_version)
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
 
