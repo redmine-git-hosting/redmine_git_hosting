@@ -40,7 +40,8 @@ module RedmineGitHosting
           first_commit  = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').first
           last_commit   = Changeset.where("repository_id = ?", self.id).order('commit_date ASC').last
           active_for    = (last_commit.commit_date - first_commit.commit_date).to_i
-          committers    = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq.size
+          committers    = Changeset.where("repository_id = ?", self.id).where("user_id IS NOT NULL").select(:user_id).uniq.count
+          committers   += Changeset.where("repository_id = ?", self.id).where(user_id: nil).select(:committer).uniq.count
 
           data = {}
           data[l(:label_total_commits)]               = total_commits
@@ -131,23 +132,21 @@ module RedmineGitHosting
 
 
         def commits_per_month
-          @date_to = Date.today
-          @date_from = @date_to << 11
-          @date_from = Date.civil(@date_from.year, @date_from.month, 1)
+          date_to = Date.today
           commits_by_day = Changeset.
-            where("repository_id = ? AND commit_date BETWEEN ? AND ?", self.id, @date_from, @date_to).
+            where("repository_id = ?", self.id).
             group(:commit_date).
             count
           commits_by_month = [0] * 12
-          commits_by_day.each {|c| commits_by_month[(@date_to.month - c.first.to_date.month) % 12] += c.last }
+          commits_by_day.each {|c| commits_by_month[(date_to.month - c.first.to_date.month) % 12] += c.last }
 
           changes_by_day = Change.
             joins(:changeset).
-            where("#{Changeset.table_name}.repository_id = ? AND #{Changeset.table_name}.commit_date BETWEEN ? AND ?", self.id, @date_from, @date_to).
+            where("#{Changeset.table_name}.repository_id = ?", self.id).
             group(:commit_date).
             count
           changes_by_month = [0] * 12
-          changes_by_day.each {|c| changes_by_month[(@date_to.month - c.first.to_date.month) % 12] += c.last }
+          changes_by_day.each {|c| changes_by_month[(date_to.month - c.first.to_date.month) % 12] += c.last }
 
           fields = []
           12.times {|m| fields << month_name(((Date.today.month - 1 - m) % 12) + 1)}
@@ -161,30 +160,56 @@ module RedmineGitHosting
           return data
         end
 
+        def commits_per_author_with_aliases
+          commits_by_author = Changeset.where("repository_id = ?", self.id).group(:committer).count
+          changes_by_author = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:committer).count
+
+          # generate mappings from the registered users to the comitters
+          # user_committer_mapping = { name => [comitter, ...] }
+          # registered_committers = [ committer,... ]
+          registered_committers = []
+          user_committer_mapping = {}
+          Changeset.where(repository_id: self.id).where("user_id IS NOT NULL").group(:committer).includes(:user).each do |x|
+            name = "#{x.user.firstname} #{x.user.lastname}"
+            registered_committers << x.committer
+            user_committer_mapping[[name,x.user.mail]] ||= []
+            user_committer_mapping[[name,x.user.mail]] << x.committer
+          end
+
+          merged = []
+          commits_by_author.each do |committer, count|
+            # skip all registered users
+            next if registered_committers.include?(committer)
+
+            name = committer.gsub(%r{<.+@.+>}, '').strip
+            mail = committer[/<(.+@.+)>/,1]
+            merged << { name: name, mail: mail, commits: count, changes: changes_by_author[committer] || 0, committers: [committer] }
+          end
+          user_committer_mapping.each do |identity, committers|
+            count = 0
+            changes = 0
+            committers.each do |c|
+              count += commits_by_author[c] || 0
+              changes += changes_by_author[c] || 0
+            end
+            merged << { name: identity[0], mail: identity[1], commits: count, changes: changes, committers: committers }
+          end
+
+          # sort by name
+          merged.sort! {|x, y| x[:name] <=> y[:name]}
+
+          # merged = merged + [{name:"",commits:0,changes:0}]*(10 - merged.length) if merged.length < 10
+          return merged
+        end
 
         def commits_per_author_global
-          commits_by_author = Changeset.where("repository_id = ?", self.id).group(:committer).count
-          commits_by_author.to_a.sort! {|x, y| x.last <=> y.last}
-
-          changes_by_author = Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", self.id).group(:committer).count
-          h = changes_by_author.inject({}) {|o, i| o[i.first] = i.last; o}
-
-          fields = commits_by_author.collect {|r| r.first}
-          commits_data = commits_by_author.collect {|r| r.last}
-          changes_data = commits_by_author.collect {|r| h[r.first] || 0}
-
-          fields = fields + [""]*(10 - fields.length) if fields.length<10
-          commits_data = commits_data + [0]*(10 - commits_data.length) if commits_data.length<10
-          changes_data = changes_data + [0]*(10 - changes_data.length) if changes_data.length<10
-
-          # Remove email adress in usernames
-          fields = fields.collect {|c| c.gsub(%r{<.+@.+>}, '').strip }
+          merged = commits_per_author_with_aliases
 
           data = {}
-          data[:categories] = fields
+          data[:categories] = merged.map { |x| x[:name] }
           data[:series] = []
-          data[:series].push({:name => l(:label_commit_plural), :data => commits_data})
-          data[:series].push({:name => l(:label_change_plural), :data => changes_data})
+          data[:series].push({:name => l(:label_commit_plural), :data => merged.map { |x| x[:commits] }})
+          data[:series].push({:name => l(:label_change_plural), :data => merged.map { |x| x[:changes] }})
 
           return data
         end
@@ -192,19 +217,24 @@ module RedmineGitHosting
 
         def commits_per_author
           data = []
+          committers = commits_per_author_with_aliases
 
-          committers = Changeset.where("repository_id = ?", self.id).map(&:committer).uniq
+          # sort by commits (descending)
+          committers.sort! {|x, y| y[:commits] <=> x[:commits]}
 
-          committers.each do |committer|
-            commits = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).order(:commit_date).count
+          committers.each do |committer_hash|
+            commits = {}
 
-            committer_name = committer.split('<')[0].strip
-            committer_mail = committer.split('<')[1].gsub('>', '') rescue ''
+            committer_hash[:committers].each do |committer|
+              c = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).order(:commit_date).count
+              commits = commits.merge(c){|key, oldval, newval| newval + oldval}
+            end
 
+            commits = Hash[commits.sort]
             commits_data = {}
-            commits_data[:author_name]   = committer_name
-            commits_data[:author_mail]   = committer_mail
-            commits_data[:total_commits] = commits.values.map(&:to_i).reduce(:+)
+            commits_data[:author_name]   = committer_hash[:name]
+            commits_data[:author_mail]   = committer_hash[:mail]
+            commits_data[:total_commits] = committer_hash[:commits]
             commits_data[:categories]    = commits.keys
             commits_data[:series]        = []
             commits_data[:series].push({:name => l(:label_commit_plural), :data => commits.values})
