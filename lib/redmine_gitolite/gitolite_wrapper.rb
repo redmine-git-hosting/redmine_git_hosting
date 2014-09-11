@@ -185,21 +185,25 @@ module RedmineGitolite
     @@gitolite_repository_count_stamp  = nil
 
     def self.gitolite_repository_count
-      if !@@gitolite_repository_count_cached.nil? && (Time.new - @@gitolite_repository_count_stamp <= 1)
+      if gitolite_version == 3
+        if !@@gitolite_repository_count_cached.nil? && (Time.new - @@gitolite_repository_count_stamp <= 1)
+          return @@gitolite_repository_count_cached
+        end
+
+        logger.debug { "Getting Gitolite physical repositories list..." }
+
+        begin
+          @@gitolite_repository_count_cached = sudo_capture('gitolite', 'list-phy-repos').split("\n").length
+        rescue GitHosting::GitHostingException => e
+          logger.error { "Error while getting Gitolite physical repositories list" }
+          @@gitolite_repository_count_cached = "Error : #{e.message}"
+        end
+
+        @@gitolite_repository_count_stamp = Time.new
         return @@gitolite_repository_count_cached
+      else
+        return @@gitolite_repository_count_cached = 'This is Gitolite v2, not implemented...'
       end
-
-      logger.debug { "Getting Gitolite physical repositories list..." }
-
-      begin
-        @@gitolite_repository_count_cached = sudo_capture('gitolite', 'list-phy-repos').split("\n").length
-      rescue GitHosting::GitHostingException => e
-        logger.error { "Error while getting Gitolite physical repositories list" }
-        @@gitolite_repository_count_cached = "Error : #{e.message}"
-      end
-
-      @@gitolite_repository_count_stamp = Time.new
-      return @@gitolite_repository_count_cached
     end
 
 
