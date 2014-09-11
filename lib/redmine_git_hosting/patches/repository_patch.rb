@@ -197,7 +197,7 @@ module RedmineGitHosting
             commits = Changeset.where("repository_id = ? AND committer = ?", self.id, committer).group(:commit_date).order(:commit_date).count
 
             committer_name = committer.split('<')[0].strip
-            committer_mail = committer.split('<')[1].gsub('>', '')
+            committer_mail = committer.split('<')[1].gsub('>', '') rescue ''
 
             commits_data = {}
             commits_data[:author_name]   = committer_name
