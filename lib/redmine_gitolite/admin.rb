@@ -141,7 +141,7 @@ module RedmineGitolite
     def get_lock_file
       begin
         lock_file ||= File.new(@lock_file_path, File::CREAT|File::RDONLY)
-      rescue Exception => e
+      rescue => e
         lock_file = nil
       end
 
