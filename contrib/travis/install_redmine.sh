@@ -68,10 +68,12 @@ ssh-keygen -N '' -f "redmine/plugins/${PLUGIN_NAME}/ssh_keys/redmine_gitolite_ad
 echo "Done !"
 echo ""
 
-echo "#### INSTALL REDMINE SIDEKIQ PLUGIN"
-git clone "${REDMINE_SIDEKIQ_PLUGIN}" "redmine/plugins/redmine_sidekiq"
-echo "Done !"
-echo ""
+if [ "$TRAVIS_RUBY_VERSION" != "1.9.3" ] ; then
+  echo "#### INSTALL REDMINE SIDEKIQ PLUGIN"
+  git clone "${REDMINE_SIDEKIQ_PLUGIN}" "redmine/plugins/redmine_sidekiq"
+  echo "Done !"
+  echo ""
+fi
 
 echo "#### INSTALL REDMINE BOOTSTRAP PLUGIN"
 git clone "${REDMINE_BOOTSTRAP_PLUGIN}" "redmine/plugins/redmine_bootstrap_kit"
