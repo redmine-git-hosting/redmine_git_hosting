@@ -28,7 +28,7 @@
     href="{{ base }}{{ page.url }}" />
   <updated>{{ site.time | date_to_rfc822 }}</updated>
 
-  {% for post in site.categories['release-notes'] %}
+  {% for post in site.categories['releases-notes'] %}
   <entry>
     <content type="html">{{ post.content | xml_escape }}</content>
     <title type="html">{{ post.title | xml_escape }}</title>
