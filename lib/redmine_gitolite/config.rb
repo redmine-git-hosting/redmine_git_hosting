@@ -515,7 +515,7 @@ module RedmineGitolite
 
         begin
           File.open(gitolite_admin_ssh_script_path, "w") do |f|
-            f.puts "#!/bin/sh"
+            f.puts "#!/bin/bash"
             f.puts "exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -p #{gitolite_server_port} -i #{gitolite_ssh_private_key} \"$@\""
           end
 
@@ -542,7 +542,7 @@ module RedmineGitolite
 
         begin
           File.open(git_cmd_script_path, "w") do |f|
-            f.puts '#!/bin/sh'
+            f.puts '#!/bin/bash'
             f.puts "if [ \"\$(whoami)\" = \"#{gitolite_user}\" ] ; then"
             f.puts '  cmd=$(printf "\\"%s\\" " "$@")'
             f.puts '  cd ~'
@@ -674,7 +674,7 @@ module RedmineGitolite
 
           command = 'exec ssh -T -o BatchMode=yes -o StrictHostKeyChecking=no -i ' + "#{git_user_dir}/.ssh/#{GITOLITE_MIRRORING_KEYS_NAME}" + ' "$@"'
 
-          RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat > #{GITOLITE_MIRRORING_SCRIPT_PATH}'",  :pipe_data => "#!/bin/sh", :pipe_command => 'echo')
+          RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat > #{GITOLITE_MIRRORING_SCRIPT_PATH}'",  :pipe_data => "#!/bin/bash", :pipe_command => 'echo')
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'cat >> #{GITOLITE_MIRRORING_SCRIPT_PATH}'", :pipe_data => command, :pipe_command => 'echo')
 
           RedmineGitolite::GitHosting.execute_command(:shell_cmd, "'chmod 700 #{GITOLITE_MIRRORING_SCRIPT_PATH}'")
