@@ -97,3 +97,45 @@ To keep 750 permissions for new repositories, edit ```UMASK``` setting in ```.gi
     ## ESC, :x
 
 That's all!
+
+***
+
+#### Use Redmine to store Git Annex repositories
+
+**1)** Install ```git-annex``` on the Redmine server :
+
+    ## On Debian Wheezy (with backports)
+    root$ apt-get -t wheezy-backports install git-annex
+
+For others distributions please refer to [http://git-annex.branchable.com/install/](http://git-annex.branchable.com/install/).
+
+
+**2)** Edit ```~/.gitolite.rc``` to enable the git-annex-shell command. Find the ```ENABLE``` list and add this line in there somewhere :
+
+    'git-annex-shell ua',
+
+
+**3)** Create a repo within Redmine
+
+<div class="alert alert-warning" role="alert">
+  <p>
+    Be sure to be a project member with <strong>commit</strong> permission.
+  </p>
+</div>
+
+
+**4)** Install ```git-annex``` on your desktop (here's ArchLinux) and follow the [walkthrough](http://git-annex.branchable.com/walkthrough/), basically :
+
+    nicolas$ mkdir ~/annex
+    nicolas$ cd ~/annex
+    nicolas$ git init
+    nicolas$ git annex init "my desktop"
+    nicolas$ git remote add origin ssh://git@redmine.example.org/test.git ## The one created in Redmine
+    nicolas$ touch toto
+    nicolas$ git annex add .
+    nicolas$ git commit -a -m test
+    nicolas$ git annex sync
+
+
+<div id="toc">
+</div>
