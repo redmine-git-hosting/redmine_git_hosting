@@ -1,6 +1,3 @@
-# require 'rspec'
-# require 'rspec/core/rake_task'
-
 namespace :redmine_git_hosting do
 
   desc "Reload defaults from init.rb into the redmine_git_hosting settings."
@@ -61,67 +58,65 @@ namespace :redmine_git_hosting do
   end
 
 
-  desc "Start unit tests"
-  task :test => :default
-  task :default => [:environment] do
-    RSpec::Core::RakeTask.new(:spec) do |config|
-      config.rspec_opts = "plugins/redmine_git_hosting/spec --color"
+  namespace :ci do
+    require 'ci/reporter/rake/rspec'
+
+    ENV["CI_REPORTS"] = Rails.root.join('junit').to_s
+
+    RSpec::Core::RakeTask.new do |task|
+      task.rspec_opts = "plugins/redmine_git_hosting/spec --color"
     end
-    Rake::Task["spec"].invoke
-    Rake::Task["redmine_git_hosting:check_unit_tests_results"].invoke
-  end
 
+    desc "Check unit tests results"
+    task :check_unit_tests_results => [:environment] do
+      gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
+      gitolite_temp_dir  = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
 
-  desc "Start unit tests in JUnit format"
-  task :test_junit => [:environment] do
-    RSpec::Core::RakeTask.new(:spec) do |config|
-      config.rspec_opts = "plugins/redmine_git_hosting/spec --format RspecJunitFormatter --out junit/rspec.xml"
-    end
-    Rake::Task["spec"].invoke
-  end
-
-
-  desc "Check unit tests results"
-  task :check_unit_tests_results => [:environment] do
-    gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
-    gitolite_temp_dir  = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
-
-    puts "#####################"
-    puts "TESTS RESULTS"
-    puts ""
-    puts "gitolite_temp_dir  : #{gitolite_temp_dir}"
-    puts "gitolite_admin_dir : #{gitolite_admin_dir}"
-    puts ""
-
-    puts "* ls -hal #{gitolite_temp_dir}"
-    puts %x[ ls -hal #{gitolite_temp_dir} ]
-    puts ""
-
-    puts "* ls -hal #{gitolite_temp_dir}git"
-    puts %x[ ls -hal #{gitolite_temp_dir}git ]
-    puts ""
-
-    puts "* ls -hal #{gitolite_temp_dir}git/gitolite-admin.git"
-    puts %x[ ls -hal #{gitolite_temp_dir}git/gitolite-admin.git ]
-    puts ""
-
-    begin
-      repo = Rugged::Repository.new(gitolite_admin_dir)
-      puts "git repo work dir  : #{repo.workdir}"
-      puts "git repo path      : #{repo.path}"
+      puts "#####################"
+      puts "TESTS RESULTS"
       puts ""
-      puts "GIT STATUS :"
-      puts "------------"
-      puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
+      puts "gitolite_temp_dir  : #{gitolite_temp_dir}"
+      puts "gitolite_admin_dir : #{gitolite_admin_dir}"
       puts ""
-      puts "GIT LOG :"
-      puts "---------"
-      puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
-    rescue => e
-      puts "Error while getting tests results"
-      puts e.message
+
+      puts "* ls -hal #{gitolite_temp_dir}"
+      puts %x[ ls -hal #{gitolite_temp_dir} ]
+      puts ""
+
+      puts "* ls -hal #{gitolite_temp_dir}git"
+      puts %x[ ls -hal #{gitolite_temp_dir}git ]
+      puts ""
+
+      puts "* ls -hal #{gitolite_temp_dir}git/gitolite-admin.git"
+      puts %x[ ls -hal #{gitolite_temp_dir}git/gitolite-admin.git ]
+      puts ""
+
+      begin
+        repo = Rugged::Repository.new(gitolite_admin_dir)
+        puts "git repo work dir  : #{repo.workdir}"
+        puts "git repo path      : #{repo.path}"
+        puts ""
+        puts "GIT STATUS :"
+        puts "------------"
+        puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
+        puts ""
+        puts "GIT LOG :"
+        puts "---------"
+        puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
+      rescue => e
+        puts "Error while getting tests results"
+        puts e.message
+      end
     end
+
+    task :all => ['ci:setup:rspec', 'spec', 'check_unit_tests_results']
   end
+
+
+  task :default => "redmine_git_hosting:ci:all"
+  task :spec    => "redmine_git_hosting:ci:all"
+  task :rspec   => "redmine_git_hosting:ci:all"
+  task :test    => "redmine_git_hosting:ci:all"
 
 
   def version(path)
