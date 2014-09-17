@@ -8,7 +8,6 @@ gemfile:
 branches:
   only:
     - devel
-    - feat_jenkins
 env:
   global:
     - REDMINE_LANG=en
