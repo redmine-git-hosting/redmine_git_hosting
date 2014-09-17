@@ -3,8 +3,8 @@
     <% if RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, project) %>
 
       <div class="git_hosting box">
-        <h3><%= l(:label_main_git_repository) %></h3>
-        <%= render :partial => 'common/git_urls', :locals => {:repository => project.repository} %>
+        <h3><%= project.repositories.count > 1 ? l(:label_repository_plural) : l(:label_repository) %></h3>
+        <%= render :partial => 'common/git_urls', :locals => {:repositories => project.repositories} %>
 
         <% if project.repositories.count > 1 %>
           <div style="clear: both;"></div>
