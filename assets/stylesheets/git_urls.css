@@ -1,16 +1,16 @@
 /*
 ZERO CLIPBOARD
 */
-#clipboard_button,
+.clipboard_button,
 #mirror_clipboard_button { height: 25px; display: block; float: left; }
 
-#clipboard_button,
+.clipboard_button,
 #mirror_clipboard_button { position: relative; padding: 0; text-align: center; border-color: #BBBBBB; border-style: solid; border-width: 1px; width: 24px; height: 23px; }
 
-#clipboard_button img,
+.clipboard_button img,
 #mirror_clipboard_button img { padding-top: 4px; padding-left: 5px; display: block; }
 
-#clipboard_button.zeroclipboard-is-hover,
+.clipboard_button.zeroclipboard-is-hover,
 #mirror_clipboard_button.zeroclipboard-is-hover {
   background-color: #AAAAAA;
   background-image:  url('../images/button_selected.svg') 0 0 no-repeat;
@@ -22,7 +22,7 @@ ZERO CLIPBOARD
   background-image: linear-gradient(to bottom, #CCCCCC, #AAAAAA);
 }
 
-#clipboard_button.zeroclipboard-is-active,
+.clipboard_button.zeroclipboard-is-active,
 #mirror_clipboard_button.zeroclipboard-is-active {
   background-color: #DCDCDC;
   background-image: none;
@@ -30,17 +30,19 @@ ZERO CLIPBOARD
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset;
 }
 
+.repository_name { color: #505050; margin-top: 5px; }
+
 /*
 GIT_URL_BOX
 */
-#git_url_box         { height: 25px; padding: 10px 0 0; margin: 0px; }
-#git_url_desc        { color: #666666; display: block; font-size: 11px; line-height: 25px; padding-top: 5px; float: left; }
-#git_url_permissions { font-weight: bold; }
+.git_url_box         { height: 25px; padding: 0; margin: 0px; }
+.git_url_desc        { color: #666666; display: block; font-size: 11px; line-height: 25px; padding-top: 5px; }
+.git_url_permissions { font-weight: bold; }
 
-#git_url_list    { float: left; height: 23px; list-style-type: none; margin: 0px; padding: 0px; }
-#git_url_list li { float: left; }
+.git_url_list    { float: left; height: 23px; list-style-type: none; margin: 0px; padding: 0px; }
+.git_url_list li { float: left; }
 
-#git_url_text {
+.git_url_text {
   background-color: #FFFFFF;
   border-color: #BBBBBB;
   border-style: solid;
@@ -51,12 +53,12 @@ GIT_URL_BOX
   font-size: 10px;
   height: 18px;
   margin: 0;
-  min-width: 45%;
+  min-width: 55%;
   padding: 3px 5px 2px;
   width: auto;
 }
 
-#git_url_list li a {
+.git_url_list li a {
   background-color: #EEEEEE;
   background:  url(../images/button.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#F8F8F8), to(#DDDDDD)); /* Konquerer */
@@ -83,8 +85,8 @@ GIT_URL_BOX
 }
 
 
-#git_url_list li a:hover,
-#git_url_list li a:focus {
+.git_url_list li a:hover,
+.git_url_list li a:focus {
   background-color: #507AAA;
   background:  url(../images/button_focus.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#759FCF), to(#507AAA)); /* Konquerer */
@@ -100,7 +102,7 @@ GIT_URL_BOX
 }
 
 
-#git_url_list li.selected a {
+.git_url_list li.selected a {
   background-color: #BBBBBB;
   background:  url(../images/button_selected.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));  /* Konquerer */
