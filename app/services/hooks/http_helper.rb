@@ -9,7 +9,11 @@ module Hooks
     def post_data(url, payload, opts={})
       uri  = URI(url)
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = (uri.scheme == 'https')
+
+      if uri.scheme == 'https'
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
 
       if opts[:method] == :post
         request = Net::HTTP::Post.new(uri.request_uri)
