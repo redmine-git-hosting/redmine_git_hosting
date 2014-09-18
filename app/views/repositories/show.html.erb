@@ -58,8 +58,8 @@
   <% end %>
 <% end %>
 
-<% if @repositories.size > 1 %>
-  <% content_for :sidebar do %>
+<% content_for :sidebar do %>
+  <% if @repositories.size > 1 %>
     <h3><%= l(:label_repository_plural) %></h3>
     <p>
       <%= @repositories.sort.collect {|repo|
@@ -68,10 +68,12 @@
                    :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
                   :class => 'repository' + (repo == @repository ? ' selected' : '')
         }.join('<br />').html_safe %>
-    </p>
-
-    <%= call_hook(:view_repositories_show_sidebar) %>
+      </p>
+  <% else %>
+    <h3><%= l(:label_repository) %></h3>
   <% end %>
+
+  <%= call_hook(:view_repositories_show_sidebar) %>
 <% end %>
 
 <% content_for :header_tags do %>
