@@ -37,32 +37,42 @@ namespace :redmine_git_hosting do
     puts "Reloading defaults from init.rb..."
     RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
 
+    ## Get default config from init.rb
     default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
 
     if default_hash.nil? || default_hash.empty?
       puts "No defaults specified in init.rb!"
-    else
-      changes = 0
-      valuehash = (Setting.plugin_redmine_git_hosting).clone
-      default_hash.each do |key,value|
-        if valuehash[key] != value
-          puts "Changing '#{key}' : '#{valuehash[key]}' => '#{value}'\n"
-          valuehash[key] = value
-          changes += 1
-        end
-      end
-      if changes == 0
-        puts "No changes necessary.\n"
-      else
-        puts "Committing changes ... "
-        begin
-          Setting.plugin_redmine_git_hosting = valuehash
-          puts "Success!\n"
-        rescue => e
-          puts "Failure.\n"
-        end
+      exit 1
+    end
+
+    ## Refresh Settings cache
+    Setting.check_cache
+
+    ## Get actual values
+    valuehash = (Setting.plugin_redmine_git_hosting).clone
+
+    ## Update!
+    changes = 0
+    default_hash.each do |key, value|
+      if valuehash[key] != value
+        puts "Changing '#{key}' : '#{valuehash[key]}' => '#{value}'\n"
+        valuehash[key] = value
+        changes += 1
       end
     end
+
+    if changes == 0
+      puts "No changes necessary.\n"
+    else
+      puts "Committing changes ... "
+      begin
+        Setting.plugin_redmine_git_hosting = valuehash
+        puts "Success!\n"
+      rescue => e
+        puts "Failure.\n"
+      end
+    end
+
     puts "Done!"
   end
 
