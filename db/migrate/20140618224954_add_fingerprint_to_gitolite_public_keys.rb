@@ -7,7 +7,7 @@ class AddFingerprintToGitolitePublicKeys < ActiveRecord::Migration
          key.reset_identifiers
        end
     end
-    change_column :gitolite_public_keys, :fingeprint, :string, :null => false
+    change_column :gitolite_public_keys, :fingerprint, :string, :null => false
   end
 
 
