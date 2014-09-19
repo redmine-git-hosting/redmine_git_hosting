@@ -24,6 +24,9 @@ module RedmineGitHosting
 
         def scm_version_from_command_line_with_git_hosting
           RedmineGitolite::GitoliteWrapper.sudo_capture('git', '--version', '--no-color')
+        rescue => e
+          RedmineGitolite::GitHosting.logger.error { "Can't retrieve git version: #{e.output}" }
+          'unknown'
         end
 
       end
