@@ -16,6 +16,11 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_gitolite/hook_manager/global_params'
   require_dependency 'redmine_gitolite/hook_manager/mailer_params'
 
+  require_dependency 'redmine_gitolite/gitolite_modules/gitolite_config'
+  require_dependency 'redmine_gitolite/gitolite_modules/gitolite_infos'
+  require_dependency 'redmine_gitolite/gitolite_modules/mirroring'
+  require_dependency 'redmine_gitolite/gitolite_modules/ssh_wrapper'
+  require_dependency 'redmine_gitolite/gitolite_modules/sudo_wrapper'
 
   require_dependency 'redmine_gitolite/gitolite_wrapper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/admin'
