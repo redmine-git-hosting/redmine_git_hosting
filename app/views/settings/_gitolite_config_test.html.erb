@@ -30,12 +30,24 @@
     <td><%= image_tag (RedmineGitolite::GitoliteWrapper.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png') %></td>
   </tr>
 
-  <% hooks_manager = RedmineGitolite::Hooks.new %>
+  <% gitolite_checks = RedmineGitolite::HookManager.check_install! %>
+
+  <tr>
+    <td><%= l(:label_gitolite_hook_dirs_installed) %></td>
+    <td>
+      <% hook_dirs_installed  = gitolite_checks[:hook_dirs] %>
+      <% hook_dirs_installed.each do |hook, installed| %>
+        <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
+        <em><%= hook %></em>
+        <br />
+      <% end %>
+    </td>
+  </tr>
 
   <tr>
     <td><%= l(:label_gitolite_hooks_installed) %></td>
     <td>
-      <% hooks_installed  = hooks_manager.hooks_installed? %>
+      <% hooks_installed  = gitolite_checks[:hook_files] %>
       <% hooks_installed.each do |hook, installed| %>
         <% image, tip = render_hook_state(installed) %>
         <%= image_tag(image, :style => "vertical-align: bottom;") %>
@@ -51,7 +63,7 @@
   <tr>
     <td><%= l(:label_gitolite_hooks_params_installed) %></td>
     <td>
-      <% params_installed = hooks_manager.hook_params_installed? %>
+      <% params_installed = gitolite_checks[:global_params] %>
       <% params_installed.each do |param, installed| %>
         <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
         <em><%= param %></em>
@@ -63,7 +75,7 @@
   <tr>
     <td><%= l(:label_gitolite_mailer_params_installed) %></td>
     <td>
-      <% params_installed = hooks_manager.mailer_params_installed? %>
+      <% params_installed = gitolite_checks[:mailer_params] %>
       <% params_installed.each do |param, installed| %>
         <%= image_tag((installed ? 'true.png' : 'exclamation.png'), :style => "vertical-align: bottom;") %>
         <em><%= param %></em>

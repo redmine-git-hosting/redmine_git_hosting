@@ -113,7 +113,7 @@ module RedmineGitHosting
 
 
             # Normalize paths, should be relative and end in '/'
-            [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir ].each do |setting|
+            [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir, :gitolite_local_code_dir ].each do |setting|
               if valuehash[setting]
                 normalizedFile  = File.expand_path(valuehash[setting].lstrip.rstrip, "/")
                 if (normalizedFile != "/")

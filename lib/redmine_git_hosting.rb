@@ -6,9 +6,16 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_gitolite/config'
   require_dependency 'redmine_gitolite/extra_loading'
   require_dependency 'redmine_gitolite/git_hosting'
-  require_dependency 'redmine_gitolite/hooks'
   require_dependency 'redmine_gitolite/log'
   require_dependency 'redmine_gitolite/recycle'
+
+  require_dependency 'redmine_gitolite/hook_manager'
+  require_dependency 'redmine_gitolite/hook_manager/hook_file'
+  require_dependency 'redmine_gitolite/hook_manager/hook_dir'
+  require_dependency 'redmine_gitolite/hook_manager/hook_param'
+  require_dependency 'redmine_gitolite/hook_manager/global_params'
+  require_dependency 'redmine_gitolite/hook_manager/mailer_params'
+
 
   require_dependency 'redmine_gitolite/gitolite_wrapper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/admin'
