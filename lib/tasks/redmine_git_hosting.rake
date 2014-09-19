@@ -4,10 +4,10 @@ namespace :redmine_git_hosting do
   task :restore_default_settings => [:environment] do
     puts "Reloading defaults from init.rb..."
     RedmineGitolite::GitHosting.logger.warn { "Reloading defaults from init.rb from command line" }
-    RedmineGitolite::Config.reload!
+    RedmineGitolite::Config.reload_from_file!(console: true)
     puts "Done!"
   end
-
+  task :restore_defaults => [ :restore_default_settings ]
 
   desc "Purge expired repositories from Recycle Bin"
   task :purge_recycle_bin => [:environment] do
