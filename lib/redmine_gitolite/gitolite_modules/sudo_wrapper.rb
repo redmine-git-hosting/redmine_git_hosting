@@ -49,6 +49,22 @@ module RedmineGitolite::GitoliteModules
       end
 
 
+      # Pipe file content via sudo to dest_file.
+      # Expect file content to end with EOL (\n)
+      def sudo_install_file(content, dest_file, filemode)
+        stdin = [ 'cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
+
+        begin
+          sudo_pipe_capture('sh', stdin)
+          sudo_chmod(filemode, dest_file)
+          return true
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          logger.error { e.output }
+          return false
+        end
+      end
+
+
       # Test if a file exists with size > 0
       def sudo_file_exists?(filename)
         sudo_test(filename, '-s')
@@ -58,6 +74,18 @@ module RedmineGitolite::GitoliteModules
       # Test if a directory exists
       def sudo_dir_exists?(dirname)
         sudo_test(dirname, '-r')
+      end
+
+
+      def sudo_update_gitolite!
+        logger.info { "Running '#{gitolite_command.join(' ')}' on the Gitolite install ..." }
+        begin
+          sudo_shell(*gitolite_command)
+          return true
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          logger.error { e.output }
+          return false
+        end
       end
 
 

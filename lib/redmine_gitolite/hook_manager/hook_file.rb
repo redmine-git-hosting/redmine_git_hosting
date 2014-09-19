@@ -41,7 +41,6 @@ module RedmineGitolite::HookManager
       def do_install_file
         if install_hook_file
           logger.info { "Hook '#{name}' installed" }
-          logger.info { "Running '#{gitolite_command}' on the Gitolite install ..." }
           update_gitolite
         end
       end
@@ -68,11 +67,6 @@ module RedmineGitolite::HookManager
       end
 
 
-      def gitolite_command
-        RedmineGitolite::GitoliteWrapper.gitolite_command
-      end
-
-
       def exists?
         begin
           RedmineGitolite::GitoliteWrapper.sudo_file_exists?(destination_path)
@@ -84,28 +78,12 @@ module RedmineGitolite::HookManager
 
       def install_hook_file
         logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
-
-        stdin = [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
-
-        begin
-          RedmineGitolite::GitoliteWrapper.sudo_pipe_capture("sh", stdin)
-          RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
-          return true
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Problems installing hook from '#{source_path}' in '#{destination_path}'" }
-          logger.error { e.output }
-          return false
-        end
+        RedmineGitolite::GitoliteWrapper.sudo_install_file(File.read(source_path), destination_path, filemode)
       end
 
 
       def update_gitolite
-        begin
-          RedmineGitolite::GitoliteWrapper.sudo_shell(*gitolite_command)
-          return true
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          return false
-        end
+        RedmineGitolite::GitoliteWrapper.sudo_update_gitolite!
       end
 
   end
