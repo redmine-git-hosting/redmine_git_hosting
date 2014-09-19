@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Repository::Git do
 
+  GIT_USER = 'git'
+
   before(:all)  do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
     Setting.plugin_redmine_git_hosting[:http_server_subdir] = 'git/'
@@ -107,25 +109,52 @@ describe Repository::Git do
     it { expect(@repository_1.available_urls).to be_a(Hash) }
 
 
+    describe "invalid cases" do
+      it "should not allow identifier gitolite-admin" do
+        expect(build_git_repository(:project => @project_parent, :identifier => 'gitolite-admin')).to be_invalid
+      end
+
+      context "when blank identifier" do
+        before do
+          @repository_1.identifier = 'gitolite-admin'
+        end
+        it "should not allow identifier changes" do
+          expect(@repository_1).to be_invalid
+          expect(@repository_1.identifier).to eq 'gitolite-admin'
+        end
+      end
+
+      context "when non blank identifier" do
+        before do
+          @repository_2.identifier = 'gitolite-admin'
+        end
+        it "should not allow identifier changes" do
+          expect(@repository_2).to be_valid
+          expect(@repository_2.identifier).to eq 'repo-test'
+        end
+      end
+    end
+
+
     describe "Test uniqueness" do
       context "when blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(:project_id => @project_child.id, :identifier => '')).not_to be_valid }
+        it { expect(build_git_repository(:project => @project_child, :identifier => '')).to be_invalid }
       end
 
       context "when set as default and blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(:project_id => @project_child.id, :identifier => '', :is_default => true)).not_to be_valid }
+        it { expect(build_git_repository(:project => @project_child, :identifier => '', :is_default => true)).to be_invalid }
       end
 
       context "when identifier is already taken by a project" do
-        it { expect(build_git_repository(:project_id => @project_child.id, :identifier => 'project-child')).not_to be_valid }
+        it { expect(build_git_repository(:project => @project_child, :identifier => 'project-child')).to be_invalid }
       end
 
       context "when identifier is already taken by a repository with same project" do
-        it { expect(build_git_repository(:project_id => @project_child.id, :identifier => 'repo-test')).not_to be_valid }
+        it { expect(build_git_repository(:project => @project_child, :identifier => 'repo-test')).to be_invalid }
       end
 
       context "when identifier are not unique" do
-        it { expect(build_git_repository(:project_id => @project_parent.id, :identifier => 'repo-test')).to be_valid }
+        it { expect(build_git_repository(:project => @project_parent, :identifier => 'repo-test')).to be_valid }
       end
 
       context "when identifier are unique" do
@@ -133,7 +162,7 @@ describe Repository::Git do
           Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
         end
 
-        it { expect(build_git_repository(:project_id => @project_parent.id, :identifier => 'repo-test')).not_to be_valid }
+        it { expect(build_git_repository(:project => @project_parent, :identifier => 'repo-test')).to be_invalid }
       end
     end
 
@@ -164,7 +193,7 @@ describe Repository::Git do
         end
 
         my_hash = {
-          :ssh   => {:url => "ssh://git@localhost/redmine/project-parent/project-child.git",             :commiter => "false"},
+          :ssh   => {:url => "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",             :commiter => "false"},
           :https => {:url => "https://redmine-test-user@localhost/git/project-parent/project-child.git", :commiter => "false"},
           :http  => {:url => "http://redmine-test-user@localhost/git/project-parent/project-child.git",  :commiter => "false"},
           :git   => {:url => "git://localhost/redmine/project-parent/project-child.git",                 :commiter => "false"}
@@ -201,7 +230,7 @@ describe Repository::Git do
           @repository_1.save
         end
 
-        my_hash = { :ssh => {:url => "ssh://git@localhost/redmine/project-parent/project-child.git", :commiter => "false"}}
+        my_hash = { :ssh => {:url => "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", :commiter => "false"}}
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -360,7 +389,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_1.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child.git'
+        expect(@repository_1.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git"
       end
 
       it "should have a valid git_url" do
@@ -435,7 +464,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_2.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/project-child/repo-test.git'
+        expect(@repository_2.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child/repo-test.git"
       end
 
       it "should have a valid git_url" do
@@ -510,7 +539,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_3.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent.git'
+        expect(@repository_3.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent.git"
       end
 
       it "should have a valid git_url" do
@@ -585,7 +614,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_4.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent/repo-test.git'
+        expect(@repository_4.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/repo-test.git"
       end
 
       it "should have a valid git_url" do
@@ -728,7 +757,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_1.ssh_url).to eq 'ssh://git@localhost/redmine/project-child.git'
+        expect(@repository_1.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-child.git"
       end
 
       it "should have a valid git_url" do
@@ -803,7 +832,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_2.ssh_url).to eq 'ssh://git@localhost/redmine/repo1-test.git'
+        expect(@repository_2.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/repo1-test.git"
       end
 
       it "should have a valid git_url" do
@@ -878,7 +907,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_3.ssh_url).to eq 'ssh://git@localhost/redmine/project-parent.git'
+        expect(@repository_3.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent.git"
       end
 
       it "should have a valid git_url" do
@@ -953,7 +982,7 @@ describe Repository::Git do
       end
 
       it "should have a valid ssh_url" do
-        expect(@repository_4.ssh_url).to eq 'ssh://git@localhost/redmine/repo2-test.git'
+        expect(@repository_4.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/repo2-test.git"
       end
 
       it "should have a valid git_url" do
@@ -997,4 +1026,28 @@ describe Repository::Git do
     end
   end
 
+
+  describe "Gitolite specific tests" do
+    before do
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
+
+      @foo = create_git_repository(:project => @project_child, :identifier => 'foo')
+      @bar = create_git_repository(:project => @project_child, :identifier => 'bar')
+
+      RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @foo.id, :create_readme_file => true)
+      RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @bar.id, :create_readme_file => false)
+
+      @foo.fetch_changesets
+      @bar.fetch_changesets
+    end
+
+    it "should create repositories" do
+      expect(@foo.exists_in_gitolite?).to be true
+      expect(@foo.empty?).to be false
+
+      expect(@bar.exists_in_gitolite?).to be true
+      expect(@bar.empty?).to be true
+    end
+  end
 end

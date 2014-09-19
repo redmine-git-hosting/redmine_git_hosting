@@ -362,13 +362,14 @@ module RedmineGitHosting
             end
           end
 
-          unless new_record?
+          if new_record?
+            errors.add(:identifier, :ident_invalid) if identifier == 'gitolite-admin'
+          else
             # Make sure identifier hasn't changed.  Allow null and blank
             # Note that simply using identifier_changed doesn't seem to work
             # if the identifier was "NULL" but the new identifier is ""
-            if (identifier_was.blank? && !identifier.blank? ||
-              !identifier_was.blank? && identifier_changed?)
-              errors.add(:identifier, :cannot_change) if identifier_changed?
+            if (identifier_was.blank? && !identifier.blank? || !identifier_was.blank? && identifier_changed?)
+              errors.add(:identifier, :cannot_change)
             end
           end
 
