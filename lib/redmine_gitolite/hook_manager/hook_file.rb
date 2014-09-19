@@ -85,10 +85,10 @@ module RedmineGitolite::HookManager
       def install_hook_file
         logger.info { "Installing hook '#{source_path}' in '#{destination_path}'" }
 
+        stdin = [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
+
         begin
-          RedmineGitolite::GitoliteWrapper.sudo_pipe("sh") do
-            [ 'cat', '<<\EOF', '>' + destination_path, "\n" + File.read(source_path) + "EOF" ].join(' ')
-          end
+          RedmineGitolite::GitoliteWrapper.sudo_pipe_capture("sh", stdin)
           RedmineGitolite::GitoliteWrapper.sudo_chmod(filemode, destination_path)
           return true
         rescue RedmineGitolite::GitHosting::GitHostingException => e
