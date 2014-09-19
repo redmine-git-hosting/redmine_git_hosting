@@ -39,7 +39,8 @@ module RedmineGitolite
         begin
           current_value = Setting.plugin_redmine_git_hosting[setting]
         rescue => e
-          value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+          default_value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+          value = default_value == 'true' ? true : false
         else
           value = current_value == 'true' ? true : false
         end

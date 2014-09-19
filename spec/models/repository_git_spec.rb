@@ -35,8 +35,8 @@ describe Repository::Git do
 
   describe "common_tests" do
     before(:each) do
-      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
-      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
       @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
       @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo-test')
@@ -101,7 +101,7 @@ describe Repository::Git do
 
     it { expect(@repository_1.extra[:git_http]).to eq 1 }
     it { expect(@repository_1.extra[:git_daemon]).to be false }
-    it { expect(@repository_1.extra[:git_notify]).to be true }
+    it { expect(@repository_1.extra[:git_notify]).to be false }
     it { expect(@repository_1.extra[:default_branch]).to eq 'master' }
 
     it { expect(@repository_1.available_urls).to be_a(Hash) }
@@ -130,7 +130,7 @@ describe Repository::Git do
 
       context "when identifier are unique" do
         before do
-          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
         end
 
         it { expect(build_git_repository(:project_id => @project_parent.id, :identifier => 'repo-test')).not_to be_valid }
@@ -304,8 +304,8 @@ describe Repository::Git do
 
   context "when hierarchical_organisation with non_unique_identifier" do
     before(:each) do
-      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = true
-      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = false
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
       collection_of_non_unique_repositories
     end
 
@@ -652,8 +652,8 @@ describe Repository::Git do
 
   context "when flat_organisation with unique_identifier" do
     before(:each) do
-      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = false
-      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = true
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
       collection_of_unique_repositories
     end
 
