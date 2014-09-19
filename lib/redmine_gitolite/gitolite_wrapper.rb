@@ -36,16 +36,11 @@ module RedmineGitolite
       end
 
 
-      def admin
+      def gitolite_admin
         create_temp_dir
         admin_dir = gitolite_admin_dir
         logger.info { "Acessing gitolite-admin.git at '#{admin_dir}'" }
-        begin
-          Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
-        rescue => e
-          logger.error { e.message }
-          return nil
-        end
+        Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
       end
 
 
@@ -65,13 +60,18 @@ module RedmineGitolite
           Setting.check_cache if Setting.respond_to?(:check_cache)
         end
 
-        WRAPPERS.each do |wrappermod|
-          if wrappermod.method_defined?(action)
-            return wrappermod.new(action, object, options).send(action)
+        begin
+          gitolite_admin
+        rescue Rugged::SshError => e
+          logger.error { e.message }
+        else
+          WRAPPERS.each do |wrappermod|
+            if wrappermod.method_defined?(action)
+              return wrappermod.new(gitolite_admin, action, object, options).send(action)
+            end
           end
+          raise GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
         end
-
-        raise GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
       end
 
     end

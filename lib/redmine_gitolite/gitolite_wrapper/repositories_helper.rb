@@ -12,21 +12,21 @@ module RedmineGitolite
 
         repo_name = repository.gitolite_repository_name
         repo_path = repository.gitolite_repository_path
-        repo_conf = @gitolite_config.repos[repo_name]
+        repo_conf = gitolite_config.repos[repo_name]
 
         if !repo_conf
-          logger.info { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, create it ..." }
-          logger.debug { "#{@action} : repository path '#{repo_path}'" }
+          logger.info { "#{action} : repository '#{repo_name}' does not exist in Gitolite, create it ..." }
+          logger.debug { "#{action} : repository path '#{repo_path}'" }
           old_permissions = old_perms
         else
           if force
-            logger.warn { "#{@action} : repository '#{repo_name}' already exists in Gitolite, force mode !" }
-            logger.debug { "#{@action} : repository path '#{repo_path}'" }
+            logger.warn { "#{action} : repository '#{repo_name}' already exists in Gitolite, force mode !" }
+            logger.debug { "#{action} : repository path '#{repo_path}'" }
             old_permissions = get_old_permissions(repo_conf)
-            @gitolite_config.rm_repo(repo_name)
+            gitolite_config.rm_repo(repo_name)
           else
-            logger.warn { "#{@action} : repository '#{repo_name}' already exists in Gitolite, exit !" }
-            logger.debug { "#{@action} : repository path '#{repo_path}'" }
+            logger.warn { "#{action} : repository '#{repo_name}' already exists in Gitolite, exit !" }
+            logger.debug { "#{action} : repository path '#{repo_path}'" }
             return false
           end
         end
@@ -38,16 +38,16 @@ module RedmineGitolite
       def handle_repository_update(repository)
         repo_name = repository.gitolite_repository_name
         repo_path = repository.gitolite_repository_path
-        repo_conf = @gitolite_config.repos[repo_name]
+        repo_conf = gitolite_config.repos[repo_name]
 
         if repo_conf
-          logger.info { "#{@action} : repository '#{repo_name}' exists in Gitolite, update it ..." }
-          logger.debug { "#{@action} : repository path '#{repo_path}'" }
+          logger.info { "#{action} : repository '#{repo_name}' exists in Gitolite, update it ..." }
+          logger.debug { "#{action} : repository path '#{repo_path}'" }
           old_perms = get_old_permissions(repo_conf)
-          @gitolite_config.rm_repo(repo_name)
+          gitolite_config.rm_repo(repo_name)
         else
-          logger.warn { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
-          logger.debug { "#{@action} : repository path '#{repo_path}'" }
+          logger.warn { "#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
+          logger.debug { "#{action} : repository path '#{repo_path}'" }
           return false
         end
 
@@ -58,23 +58,23 @@ module RedmineGitolite
       def handle_repository_delete(repository_data)
         repo_name = repository_data['repo_name']
         repo_path = repository_data['repo_path']
-        repo_conf = @gitolite_config.repos[repo_name]
+        repo_conf = gitolite_config.repos[repo_name]
 
         if !repo_conf
-          logger.warn { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
-          logger.debug { "#{@action} : repository path '#{repo_path}'" }
+          logger.warn { "#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
+          logger.debug { "#{action} : repository path '#{repo_path}'" }
           return false
         else
-          logger.info { "#{@action} : repository '#{repo_name}' exists in Gitolite, delete it ..." }
-          logger.debug { "#{@action} : repository path '#{repo_path}'" }
-          @gitolite_config.rm_repo(repo_name)
+          logger.info { "#{action} : repository '#{repo_name}' exists in Gitolite, delete it ..." }
+          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          gitolite_config.rm_repo(repo_name)
         end
       end
 
 
       def do_update_repository(repository, old_permissions)
         repo_name = repository.gitolite_repository_name
-        repo_conf = @gitolite_config.repos[repo_name]
+        repo_conf = gitolite_config.repos[repo_name]
         project   = repository.project
 
         # Create new repo object
@@ -106,7 +106,7 @@ module RedmineGitolite
           repo_conf.set_git_config("multimailhook.enabled", 'false')
         end
 
-        @gitolite_config.add_repo(repo_conf)
+        gitolite_config.add_repo(repo_conf)
 
         current_permissions = build_permissions(repository)
         current_permissions = merge_permissions(current_permissions, old_permissions)
