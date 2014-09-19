@@ -41,7 +41,7 @@
 
     $(document).ready(function() {
       var git_url_client = Object();
-      git_url_client.movie_path    = '<%= plugin_asset_link('ZeroClipboard.swf') %>';
+      git_url_client.movie_path    = '<%= plugin_asset_link('redmine_git_hosting', 'ZeroClipboard.swf') %>';
       git_url_client.label_to_copy = '<%= l(:label_copy_to_clipboard) %>';
       git_url_client.label_copied  = '<%= l(:label_copied_to_clipboard) %>';
       git_url_client.target        = '#clipboard_button';
