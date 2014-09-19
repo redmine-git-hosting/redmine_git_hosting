@@ -37,7 +37,7 @@ module RedmineGitHosting
 
         # Repo ident unique
         def repo_ident_unique?
-          RedmineGitolite::Config.get_setting(:unique_repo_identifier)
+          RedmineGitolite::Config.get_setting(:unique_repo_identifier, true)
         end
 
 
@@ -129,8 +129,8 @@ module RedmineGitHosting
           if retval.nil?
             options = {
               :git_http       => RedmineGitolite::Config.get_setting(:gitolite_http_by_default),
-              :git_daemon     => RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default),
-              :git_notify     => RedmineGitolite::Config.get_setting(:gitolite_notify_by_default),
+              :git_daemon     => RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true),
+              :git_notify     => RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true),
               :default_branch => 'master'
             }
 
@@ -292,7 +292,7 @@ module RedmineGitHosting
 
 
         def get_full_parent_path
-          return "" if !RedmineGitolite::Config.get_setting(:hierarchical_organisation)
+          return "" if !RedmineGitolite::Config.get_setting(:hierarchical_organisation, true)
 
           parent_parts = []
 

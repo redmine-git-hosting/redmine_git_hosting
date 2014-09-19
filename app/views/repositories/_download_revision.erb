@@ -1,4 +1,4 @@
-<% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:download_revision_enabled) %>
+<% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:download_revision_enabled, true) %>
   <% if (@project.active? && User.current.allowed_to?(:download_git_revision, @project)) || (!@project.active? &&  User.current.allowed_to?(:download_git_revision, nil, :global => true)) %>
 
     <div style="clear: both;"></div>

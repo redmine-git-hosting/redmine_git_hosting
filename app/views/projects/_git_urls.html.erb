@@ -1,6 +1,6 @@
 <% if project.module_enabled?(:repository) %>
   <% if project.repository && project.repository.is_a?(Repository::Git) %>
-    <% if RedmineGitolite::Config.get_setting(:show_repositories_url) && User.current.allowed_to?(:view_changesets, project) %>
+    <% if RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, project) %>
 
       <div class="git_hosting box">
         <h3><%= l(:label_main_git_repository) %></h3>

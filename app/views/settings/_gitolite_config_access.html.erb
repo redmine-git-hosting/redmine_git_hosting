@@ -7,9 +7,9 @@
 
   gitolite_http_by_default   = RedmineGitolite::Config.get_setting(:gitolite_http_by_default)
 
-  show_repositories_url      = RedmineGitolite::Config.get_setting(:show_repositories_url)
-  gitolite_daemon_by_default = RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
-  download_revision_enabled  = RedmineGitolite::Config.get_setting(:download_revision_enabled)
+  show_repositories_url      = RedmineGitolite::Config.get_setting(:show_repositories_url, true)
+  gitolite_daemon_by_default = RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true)
+  download_revision_enabled  = RedmineGitolite::Config.get_setting(:download_revision_enabled, true)
 %>
 
 <h3><%= l(:label_gitolite_access_config) %></h3>

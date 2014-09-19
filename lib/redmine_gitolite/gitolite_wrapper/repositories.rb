@@ -74,7 +74,7 @@ module RedmineGitolite
             handle_repository_delete(repository_data)
 
             recycle = RedmineGitolite::Recycle.new
-            recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories)
+            recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories, true)
 
             gitolite_admin_repo_commit("#{repository_data['repo_name']}")
           end
