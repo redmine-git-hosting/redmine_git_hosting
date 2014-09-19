@@ -123,15 +123,16 @@ module RedmineGitolite::GitoliteModules
 
         begin
           output = sudo_capture('eval', 'find', path, '-type', 'f', '|', 'wc', '-l')
-          logger.debug { "#{@action} : counted objects in repository directory '#{path}' : '#{output}'" }
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          empty_repo = false
+        else
+          logger.debug { "Counted objects in repository directory '#{path}' : '#{output}'" }
 
           if output.to_i == 0
             empty_repo = true
           else
             empty_repo = false
           end
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          empty_repo = false
         end
 
         return empty_repo
@@ -145,82 +146,54 @@ module RedmineGitolite::GitoliteModules
       ###############################
 
       ## SUDO TEST1
-
-      @@sudo_gitolite_to_redmine_user_stamp = nil
-      @@sudo_gitolite_to_redmine_user_cached = nil
-
       def can_gitolite_sudo_to_redmine_user?
-        if !@@sudo_gitolite_to_redmine_user_cached.nil? && (Time.new - @@sudo_gitolite_to_redmine_user_stamp <= 1)
-          return @@sudo_gitolite_to_redmine_user_cached
-        end
-
         logger.info { "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..." }
 
         if gitolite_user == redmine_user
-          @@sudo_gitolite_to_redmine_user_cached = true
-          @@sudo_gitolite_to_redmine_user_stamp = Time.new
           logger.info { "OK!" }
-          return @@sudo_gitolite_to_redmine_user_cached
+          return true
         end
 
         begin
           test = sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          logger.warn { "Error while testing can_gitolite_sudo_to_redmine_user" }
+          return false
+        else
           if test.match(/#{redmine_user}/)
             logger.info { "OK!" }
-            @@sudo_gitolite_to_redmine_user_cached = true
-            @@sudo_gitolite_to_redmine_user_stamp = Time.new
+            return true
           else
-            logger.warn { "Error while testing sudo_git_to_redmine_user" }
-            @@sudo_gitolite_to_redmine_user_cached = false
-            @@sudo_gitolite_to_redmine_user_stamp = Time.new
+            logger.warn { "Error while testing can_gitolite_sudo_to_redmine_user" }
+            return false
           end
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while testing sudo_git_to_redmine_user" }
-          @@sudo_gitolite_to_redmine_user_cached = false
-          @@sudo_gitolite_to_redmine_user_stamp = Time.new
         end
-
-        return @@sudo_gitolite_to_redmine_user_cached
       end
 
 
       ## SUDO TEST2
-
-      @@sudo_redmine_to_gitolite_user_stamp = nil
-      @@sudo_redmine_to_gitolite_user_cached = nil
-
       def can_redmine_sudo_to_gitolite_user?
-        if !@@sudo_redmine_to_gitolite_user_cached.nil? && (Time.new - @@sudo_redmine_to_gitolite_user_stamp <= 1)
-          return @@sudo_redmine_to_gitolite_user_cached
-        end
-
         logger.info { "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..." }
 
         if gitolite_user == redmine_user
-          @@sudo_redmine_to_gitolite_user_cached = true
-          @@sudo_redmine_to_gitolite_user_stamp = Time.new
           logger.info { "OK!" }
-          return @@sudo_redmine_to_gitolite_user_cached
+          return true
         end
 
         begin
           test = sudo_capture('whoami')
+        rescue RedmineGitolite::GitHosting::GitHostingException => e
+          logger.error { "Error while testing can_redmine_sudo_to_gitolite_user" }
+          return false
+        else
           if test.match(/#{gitolite_user}/)
             logger.info { "OK!" }
-            @@sudo_redmine_to_gitolite_user_cached = true
-            @@sudo_redmine_to_gitolite_user_stamp = Time.new
+            return true
           else
-            logger.warn { "Error while testing sudo_web_to_gitolite_user" }
-            @@sudo_redmine_to_gitolite_user_cached = false
-            @@sudo_redmine_to_gitolite_user_stamp = Time.new
+            logger.warn { "Error while testing can_redmine_sudo_to_gitolite_user" }
+            return false
           end
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while testing sudo_web_to_gitolite_user" }
-          @@sudo_redmine_to_gitolite_user_cached = false
-          @@sudo_redmine_to_gitolite_user_stamp = Time.new
         end
-
-        return @@sudo_redmine_to_gitolite_user_cached
       end
 
     end
