@@ -59,15 +59,14 @@ namespace :redmine_git_hosting do
 
 
   namespace :ci do
-    require 'ci/reporter/rake/rspec'
-
-    ENV["CI_REPORTS"] = Rails.root.join('junit').to_s
-
     begin
+      require 'ci/reporter/rake/rspec'
       RSpec::Core::RakeTask.new do |task|
         task.rspec_opts = "plugins/redmine_git_hosting/spec --color"
       end
     rescue => e
+    else
+      ENV["CI_REPORTS"] = Rails.root.join('junit').to_s
     end
 
     desc "Check unit tests results"
