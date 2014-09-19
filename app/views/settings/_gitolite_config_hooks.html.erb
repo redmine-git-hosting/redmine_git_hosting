@@ -31,14 +31,12 @@
   </span>
 </p>
 
-<% hooks_manager = RedmineGitolite::Hooks.new %>
-
 <p>
   <label><%= l(:label_gitolite_hooks_url) %></label>
-  <span class="label label-info"><%= hooks_manager.gitolite_hooks_url %></span>
+  <span class="label label-info"><%= RedmineGitolite::HookManager.gitolite_hooks_url %></span>
 </p>
 
 <p>
   <label><%= l(:label_gitolite_hooks_namespace) %></label>
-  <span class="label label-info"><%= hooks_manager.gitolite_hooks_namespace %></span>
+  <span class="label label-info"><%= RedmineGitolite::HookManager.gitolite_hooks_namespace %></span>
 </p>

@@ -150,7 +150,7 @@ module RedmineGitHosting
 
 
             # Normalize paths, should be relative and end in '/'
-            [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir ].each do |setting|
+            [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir, :gitolite_local_code_dir ].each do |setting|
               if valuehash[setting]
                 normalizedFile  = File.expand_path(valuehash[setting].lstrip.rstrip, "/")
                 if (normalizedFile != "/")
@@ -359,8 +359,7 @@ module RedmineGitHosting
 
             ## Gitolite user has changed, check if this new one has our hooks!
             if @@old_valuehash[:gitolite_user] != valuehash[:gitolite_user]
-              hooks = RedmineGitolite::Hooks.new
-              hooks.check_install
+              RedmineGitolite::HookManager.check_install!
             end
 
 
@@ -397,8 +396,7 @@ module RedmineGitHosting
                @@old_valuehash[:gitolite_force_hooks_update] != valuehash[:gitolite_force_hooks_update] ||
                @@old_valuehash[:gitolite_hooks_are_asynchronous] != valuehash[:gitolite_hooks_are_asynchronous]
                 # Need to update our .gitconfig
-                hooks = RedmineGitolite::Hooks.new
-                hooks.hook_params_installed?
+                RedmineGitolite::HookManager.update_hook_params!
             end
 
 
