@@ -147,7 +147,11 @@ class SmartHttpController < ApplicationController
     self.response.headers["Content-Type"]  = "application/x-git-%s-result" % @rpc
     self.response.headers["Last-Modified"] = Time.now.to_s
     self.response_body = Enumerator.new do |y|
-      y << RedmineGitolite::GitoliteWrapper.sudo_pipe_capture(cmd_args, read_body)
+      begin
+        y << RedmineGitolite::GitoliteWrapper.sudo_pipe_capture(*cmd_args, read_body)
+      rescue RedmineGitolite::GitHosting::GitHostingException => e
+        logger.error { e.output }
+      end
     end
   end
 
