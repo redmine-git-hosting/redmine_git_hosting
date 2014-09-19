@@ -19,9 +19,9 @@ module RedmineGitolite
 
       def get_setting(setting, bool = false)
         if bool
-          return get_boolean_setting(setting)
+          return_bool do_get_setting(setting)
         else
-          return get_string_setting(setting)
+          return do_get_setting(setting)
         end
       end
 
@@ -34,32 +34,24 @@ module RedmineGitolite
       ### PRIVATE ###
 
 
-      def get_boolean_setting(setting)
-        setting = setting.to_sym
-        begin
-          current_value = Setting.plugin_redmine_git_hosting[setting]
-        rescue => e
-          default_value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
-          value = default_value == 'true' ? true : false
-        else
-          value = current_value == 'true' ? true : false
-        end
-
-        return value
+      def return_bool(value)
+        value == 'true' ? true : false
       end
 
 
-      def get_string_setting(setting)
+      def do_get_setting(setting)
         setting = setting.to_sym
-        begin
-          current_value = Setting.plugin_redmine_git_hosting[setting]
-        rescue => e
+
+        if Setting.plugin_redmine_git_hosting.nil?
           value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
         else
-          value = current_value
+          value = Setting.plugin_redmine_git_hosting[setting]
+          if value.nil?
+            value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+          end
         end
 
-        return value
+        value
       end
 
 
@@ -113,8 +105,8 @@ module RedmineGitolite
 
     end
 
-    private_class_method :get_boolean_setting,
-                         :get_string_setting,
+    private_class_method :return_bool,
+                         :do_get_setting,
                          :reload!
 
 
