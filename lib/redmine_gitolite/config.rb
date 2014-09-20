@@ -42,10 +42,11 @@ module RedmineGitolite
       def do_get_setting(setting)
         setting = setting.to_sym
 
-        if Setting.plugin_redmine_git_hosting.nil?
+        begin
+          value = Setting.plugin_redmine_git_hosting[setting]
+        rescue => e
           value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
         else
-          value = Setting.plugin_redmine_git_hosting[setting]
           if value.nil?
             value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
           end
