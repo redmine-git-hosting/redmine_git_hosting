@@ -119,7 +119,7 @@ class GitoliteHooksController < ApplicationController
           valid = true
         end
       end
-    rescue Exception => e
+    rescue => e
       logger.error { "Error in validate_encoded_time(): #{e.message}" }
     end
 

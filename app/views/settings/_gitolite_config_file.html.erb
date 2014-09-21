@@ -1,7 +1,7 @@
 <%
   # Gitolite Config File
   gitolite_config_file          = RedmineGitolite::Config.get_setting(:gitolite_config_file)
-  gitolite_config_has_admin_key = RedmineGitolite::Config.get_setting(:gitolite_config_has_admin_key)
+  gitolite_config_has_admin_key = RedmineGitolite::Config.get_setting(:gitolite_config_has_admin_key, true)
   gitolite_identifier_prefix    = RedmineGitolite::Config.get_setting(:gitolite_identifier_prefix)
 
   disable_button = (gitolite_config_file == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE ? true : false)

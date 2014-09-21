@@ -56,7 +56,7 @@
     <% end %>
   </ul>
 
-  <% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:show_repositories_url) && User.current.allowed_to?(:view_changesets, @project) %>
+  <% if @repository.is_a?(Repository::Git) && RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, @project) %>
     <div class="git_hosting_urls">
       <h3><%= l(:label_repository_access_url) %></h3>
       <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>

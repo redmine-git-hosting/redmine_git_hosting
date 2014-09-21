@@ -4,7 +4,7 @@
 
   gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
   gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
-  gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split)
+  gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split, true)
 
   git_config_username  = RedmineGitolite::Config.get_setting(:git_config_username)
   git_config_email     = RedmineGitolite::Config.get_setting(:git_config_email)

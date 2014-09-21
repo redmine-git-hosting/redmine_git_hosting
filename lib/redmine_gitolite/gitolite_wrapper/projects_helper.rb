@@ -14,7 +14,7 @@ module RedmineGitolite
             perform_repository_move(repository)
           end
 
-          gitolite_admin_repo_commit("#{@action} : #{project.identifier} | #{repo_list}")
+          gitolite_admin_repo_commit("#{action} : #{project.identifier} | #{repo_list}")
         end
       end
 
@@ -23,7 +23,7 @@ module RedmineGitolite
         repo_id   = repository.redmine_name
         repo_name = repository.old_repository_name
 
-        repo_conf = @gitolite_config.repos[repo_name]
+        repo_conf = gitolite_config.repos[repo_name]
 
         old_repo_name = repository.old_repository_name
         new_repo_name = repository.new_repository_name
@@ -34,7 +34,7 @@ module RedmineGitolite
         old_relative_parent_path = old_relative_path.gsub(repo_id + '.git', '')
         new_relative_parent_path = new_relative_path.gsub(repo_id + '.git', '')
 
-        logger.info { "#{@action} : Moving '#{repo_name}'..." }
+        logger.info { "#{action} : Moving '#{repo_name}'..." }
         logger.debug { "  Old repository name (for Gitolite)           : #{old_repo_name}" }
         logger.debug { "  New repository name (for Gitolite)           : #{new_repo_name}" }
         logger.debug { "-----" }
@@ -45,7 +45,7 @@ module RedmineGitolite
         logger.debug { "  New relative parent path (for Gitolite)      : #{new_relative_parent_path}" }
 
         if !repo_conf
-          logger.error { "#{@action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
+          logger.error { "#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
           return
         else
           if move_physical_repo(old_relative_path, new_relative_path, new_relative_parent_path)
@@ -56,7 +56,7 @@ module RedmineGitolite
 
             # update gitolite conf
             old_perms = get_old_permissions(repo_conf)
-            @gitolite_config.rm_repo(old_repo_name)
+            gitolite_config.rm_repo(old_repo_name)
             handle_repository_add(repository, :force => true, :old_perms => old_perms)
           else
             return false
@@ -68,7 +68,7 @@ module RedmineGitolite
       def move_physical_repo(old_path, new_path, new_parent_path)
         ## CASE 0
         if old_path == new_path
-          logger.info { "#{@action} : old repository and new repository are identical '#{old_path}', nothing to do, exit !" }
+          logger.info { "#{action} : old repository and new repository are identical '#{old_path}', nothing to do, exit !" }
           return true
         end
 
@@ -80,26 +80,26 @@ module RedmineGitolite
         if new_path_exists && old_path_exists
 
           if GitoliteWrapper.sudo_repository_empty?(new_path)
-            logger.warn { "#{@action} : target repository '#{new_path}' already exists and is empty, remove it ..." }
+            logger.warn { "#{action} : target repository '#{new_path}' already exists and is empty, remove it ..." }
             begin
               GitoliteWrapper.sudo_rmdir(new_path, true)
             rescue GitHosting::GitHostingException => e
-              logger.error { "#{@action} : removing existing target repository failed, exit !" }
+              logger.error { "#{action} : removing existing target repository failed, exit !" }
               return false
             end
           else
-            logger.warn { "#{@action} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove the old_path if empty" }
+            logger.warn { "#{action} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove the old_path if empty" }
 
             if GitoliteWrapper.sudo_repository_empty?(old_path)
               begin
                 GitoliteWrapper.sudo_rmdir(old_path, true)
                 return true
               rescue GitHosting::GitHostingException => e
-                logger.error { "#{@action} : removing source repository directory failed, exit !" }
+                logger.error { "#{action} : removing source repository directory failed, exit !" }
                 return false
               end
             else
-              logger.error { "#{@action} : the source repository directory is not empty, cannot remove it, exit ! (This repo will be orphan)" }
+              logger.error { "#{action} : the source repository directory is not empty, cannot remove it, exit ! (This repo will be orphan)" }
               return false
             end
           end
@@ -107,20 +107,20 @@ module RedmineGitolite
         ## CASE 2
         elsif !new_path_exists && old_path_exists
 
-          logger.debug { "#{@action} : really moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
+          logger.debug { "#{action} : really moving Gitolite repository from '#{old_path}' to '#{new_path}'" }
 
           if !GitoliteWrapper.sudo_dir_exists?(new_parent_path)
             begin
               GitoliteWrapper.sudo_mkdir('-p', new_parent_path)
             rescue GitHosting::GitHostingException => e
-              logger.error { "#{@action} : creation of parent path '#{new_parent_path}' failed, exit !" }
+              logger.error { "#{action} : creation of parent path '#{new_parent_path}' failed, exit !" }
               return false
             end
           end
 
           begin
             GitoliteWrapper.sudo_move(old_path, new_path)
-            logger.info { "#{@action} : done !" }
+            logger.info { "#{action} : done !" }
             return true
           rescue GitHosting::GitHostingException => e
             logger.error { "move_physical_repo(#{old_path}, #{new_path}) failed" }
@@ -129,12 +129,12 @@ module RedmineGitolite
 
         ## CASE 3
         elsif !new_path_exists && !old_path_exists
-          logger.error { "#{@action} : both old repository '#{old_path}' and new repository '#{new_path}' does not exist, cannot move it, exit but let Gitolite create the new repo !" }
+          logger.error { "#{action} : both old repository '#{old_path}' and new repository '#{new_path}' does not exist, cannot move it, exit but let Gitolite create the new repo !" }
           return true
 
         ## CASE 4
         elsif new_path_exists && !old_path_exists
-          logger.error { "#{@action} : old repository '#{old_path}' does not exist, but the new one does, use it !" }
+          logger.error { "#{action} : old repository '#{old_path}' does not exist, but the new one does, use it !" }
           return true
 
         end
@@ -144,10 +144,10 @@ module RedmineGitolite
       def clean_path(path_list)
         path_list.uniq.sort.reverse.each do |path|
           begin
-            logger.info { "#{@action} : cleaning repository path : '#{path}'" }
+            logger.info { "#{action} : cleaning repository path : '#{path}'" }
             GitoliteWrapper.sudo_rmdir(path)
           rescue GitHosting::GitHostingException => e
-            logger.error { "#{@action} : error while cleaning repository path '#{path}'" }
+            logger.error { "#{action} : error while cleaning repository path '#{path}'" }
           end
         end
       end

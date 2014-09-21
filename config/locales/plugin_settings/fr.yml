@@ -25,6 +25,8 @@ fr:
   label_gitolite_recycle_bin_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
   label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
   label_gitolite_redmine_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_local_code_dir: Répertoire de stockage des hooks non-core
+  label_gitolite_local_code_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
 
   # Gitolite Config File
   label_tab_config_file: Fichier de configuration
@@ -154,6 +156,7 @@ fr:
   label_gitolite_hooks_params_installed: Paramètres des hooks installés?
   label_gitolite_mailer_params_installed: Paramètres des notifications installés?
   label_gitolite_hooks_installed: Hooks installés?
+  label_gitolite_hook_dirs_installed: Répertoires des hooks installés?
   label_redmine_user: Nom d'utilisateur Redmine
   label_git_version: Version de Git
   label_gitolite_repository_count: Nombre de dépôts physiques dans Gitolite

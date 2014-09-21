@@ -18,69 +18,70 @@ Redmine::Plugin.register :redmine_git_hosting do
       # Gitolite SSH Config
       :gitolite_user                  => 'git',
       :gitolite_server_port           => '22',
-      :gitolite_ssh_private_key       => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
-      :gitolite_ssh_public_key        => File.join(Rails.root, 'plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
+      :gitolite_ssh_private_key       => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
+      :gitolite_ssh_public_key        => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
       # Gitolite Storage Config
       :gitolite_global_storage_dir    => 'repositories/',
       :gitolite_redmine_storage_dir   => '',
       :gitolite_recycle_bin_dir       => 'recycle_bin/',
+      :gitolite_local_code_dir        => 'local/',
 
       # Gitolite Config File
-      :gitolite_config_file                  => 'gitolite.conf',
-      :gitolite_config_has_admin_key         => true,
-      :gitolite_identifier_prefix            => 'redmine_',
+      :gitolite_config_file           => 'gitolite.conf',
+      :gitolite_config_has_admin_key  => 'true',
+      :gitolite_identifier_prefix     => 'redmine_',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting', '/').to_s,
-      :gitolite_recycle_bin_expiration_time  => 24.0,
+      :gitolite_temp_dir                     => Rails.root.join('tmp', 'redmine_git_hosting').to_s,
+      :gitolite_recycle_bin_expiration_time  => '24.0',
       :gitolite_log_level                    => 'info',
-      :gitolite_log_split                    => false,
+      :gitolite_log_split                    => 'false',
       :git_config_username                   => 'Redmine Git Hosting',
-      :git_config_email                      => 'redmine@example.com',
+      :git_config_email                      => 'redmine@example.net',
 
       # Gitolite Hooks Config
-      :gitolite_hooks_are_asynchronous  => false,
-      :gitolite_force_hooks_update      => true,
-      :gitolite_hooks_debug             => false,
+      :gitolite_hooks_are_asynchronous  => 'false',
+      :gitolite_force_hooks_update      => 'true',
+      :gitolite_hooks_debug             => 'false',
 
       # Gitolite Cache Config
-      :gitolite_cache_max_time          => 86400,
-      :gitolite_cache_max_size          => 16,
-      :gitolite_cache_max_elements      => 2000,
+      :gitolite_cache_max_time          => '86400',
+      :gitolite_cache_max_size          => '16',
+      :gitolite_cache_max_elements      => '2000',
 
       # Gitolite Access Config
       :ssh_server_domain                => 'localhost',
       :http_server_domain               => 'localhost',
       :https_server_domain              => 'localhost',
       :http_server_subdir               => '',
-      :show_repositories_url            => true,
-      :gitolite_daemon_by_default       => false,
-      :gitolite_http_by_default         => 1,
+      :show_repositories_url            => 'true',
+      :gitolite_daemon_by_default       => 'false',
+      :gitolite_http_by_default         => '1',
 
       # Redmine Config
-      :all_projects_use_git             => false,
-      :init_repositories_on_create      => false,
-      :delete_git_repositories          => true,
+      :all_projects_use_git             => 'false',
+      :init_repositories_on_create      => 'false',
+      :delete_git_repositories          => 'true',
 
       # This params work together!
       # When hierarchical_organisation = true, unique_repo_identifier MUST be false
       # When hierarchical_organisation = false, unique_repo_identifier MUST be true
-      :hierarchical_organisation        => true,
-      :unique_repo_identifier           => false,
+      :hierarchical_organisation        => 'true',
+      :unique_repo_identifier           => 'false',
 
       # Download Revision Config
-      :download_revision_enabled        => true,
+      :download_revision_enabled        => 'true',
 
       # Git Mailing List Config
-      :gitolite_notify_by_default            => true,
+      :gitolite_notify_by_default            => 'false',
       :gitolite_notify_global_prefix         => '[REDMINE]',
-      :gitolite_notify_global_sender_address => 'redmine@example.com',
+      :gitolite_notify_global_sender_address => 'redmine@example.net',
       :gitolite_notify_global_include        => [],
       :gitolite_notify_global_exclude        => [],
 
       # Sidekiq Config
-      :gitolite_use_sidekiq                  => false,
+      :gitolite_use_sidekiq                  => 'false',
     }
   })
 

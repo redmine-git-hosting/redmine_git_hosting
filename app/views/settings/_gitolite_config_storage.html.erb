@@ -3,6 +3,7 @@
   gitolite_global_storage_dir  = RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir)
   gitolite_redmine_storage_dir = RedmineGitolite::Config.get_setting(:gitolite_redmine_storage_dir)
   gitolite_recycle_bin_dir     = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_dir)
+  gitolite_local_code_dir      = RedmineGitolite::Config.get_setting(:gitolite_local_code_dir)
 %>
 
 <h3><%= l(:label_gitolite_storage_config) %></h3>
@@ -27,3 +28,12 @@
   <br />
   <em><%= l(:label_gitolite_redmine_storage_dir_desc) %></em>
 </p>
+
+<% if RedmineGitolite::GitoliteWrapper.gitolite_version == 3 %>
+<p>
+  <label><%= l(:label_gitolite_local_code_dir) %></label>
+  <%= text_field_tag("settings[gitolite_local_code_dir]", "./#{gitolite_local_code_dir}", :size => 60) %>
+  <br />
+  <em>(<%= l(:label_gitolite_local_code_dir_desc) %>, <%= link_to 'Gitolite non-core programs', 'http://gitolite.com/gitolite/non-core.html#localcode', :target => 'blank' %>)</em>
+</p>
+<% end %>

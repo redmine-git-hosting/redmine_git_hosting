@@ -9,18 +9,28 @@ branches:
   only:
     - devel
 env:
-  - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=mysql"
-  - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=postgresql"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.5.1"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.5.0"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.5"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.4"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.3"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.2"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.1"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.4.0"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.3.4"
-  # - "REDMINE_LANG=en CODECLIMATE_REPO_TOKEN=c59856fbb8844b03634d7d0bc408d159dcd007f65b33e0bb4dddb38c79ecd8c8 REDMINE_VERSION=2.2.4"
+  global:
+    - REDMINE_LANG=en
+    - MYSQL_DATABASE=redmine
+    - MYSQL_HOST=127.0.0.1
+    - MYSQL_PORT=3306
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=
+  matrix:
+    - REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=postgresql
+    # - REDMINE_VERSION=2.5.1
+    # - REDMINE_VERSION=2.5.0
+    - REDMINE_VERSION=2.4.6 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=2.4.6 DATABASE_ADAPTER=postgresql
+    # - REDMINE_VERSION=2.4.5
+    # - REDMINE_VERSION=2.4.4
+    # - REDMINE_VERSION=2.4.3
+    # - REDMINE_VERSION=2.4.2
+    # - REDMINE_VERSION=2.4.1
+    # - REDMINE_VERSION=2.4.0
+    # - REDMINE_VERSION=2.3.4
+    # - REDMINE_VERSION=2.2.4
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
@@ -32,13 +42,11 @@ before_install:
 before_script:
   - echo $(pwd)
   - mysql -e 'create database redmine;'
-  - mysql -e 'create database redmine_test;'
   - psql -c 'create database redmine;' -U postgres
-  - psql -c 'create database redmine_test;' -U postgres
   - bundle exec rake generate_secret_token
   - bundle exec rake db:migrate
   - bundle exec rake redmine:load_default_data
   - bundle exec rake redmine:plugins:migrate
   - bundle exec rake db:test:prepare
 script:
-  - bundle exec rake redmine_git_hosting:test
+  - bundle exec rake redmine_git_hosting:ci:all

@@ -11,7 +11,7 @@
   http_server_domain           = RedmineGitolite::GitoliteWrapper.http_root_url
   https_server_domain          = RedmineGitolite::GitoliteWrapper.https_root_url
 
-  hierarchical_organisation    = RedmineGitolite::Config.get_setting(:hierarchical_organisation)
+  hierarchical_organisation    = RedmineGitolite::Config.get_setting(:hierarchical_organisation, true)
 %>
 
 <div class="git_hosting_access_box">

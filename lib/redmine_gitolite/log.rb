@@ -12,7 +12,7 @@ module RedmineGitolite
 
     def self.get_logger(type)
       file = File.join(Rails.root, 'log', 'git_hosting.log').to_s
-      split_log = RedmineGitolite::Config.get_setting(:gitolite_log_split)
+      split_log = RedmineGitolite::Config.get_setting(:gitolite_log_split, true)
 
       if split_log && !File.directory?(File.join(Rails.root, 'log', 'git_hosting').to_s)
         FileUtils.mkdir_p(File.join(Rails.root, 'log', 'git_hosting').to_s)

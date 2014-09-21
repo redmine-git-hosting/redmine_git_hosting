@@ -93,7 +93,7 @@
       selected = "false"
       if @repository.extra[:git_daemon]
         selected = "true"
-      elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default)
+      elsif @project.is_public && RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true)
         selected = "true"
       end
     %>
@@ -165,7 +165,7 @@
           var content = $('<%= content_tag :p do -%>
             <%= hidden_field_tag "repository[create_readme]", "false" -%>
             <%= content_tag :label, l(:label_init_repo_with_readme) -%>
-            <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create) -%>
+            <%= check_box_tag "repository[create_readme]", "true", RedmineGitolite::Config.get_setting(:init_repositories_on_create, true) -%>
           <% end -%>');
 
           if ($('#repository_create_readme').length == 0) {

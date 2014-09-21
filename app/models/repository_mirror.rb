@@ -45,10 +45,9 @@ class RepositoryMirror < ActiveRecord::Base
 
 
   def push
+    stdin = [ 'cd', repository.gitolite_repository_path, '&&', 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', 'push', *push_args, '2>&1' ].join(' ')
     begin
-      push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe("sh") do
-        [ 'cd', repository.gitolite_repository_path, '&&', 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', 'push', *push_args, '2>&1' ].join(' ')
-      end
+      push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe_capture("sh", stdin)
       push_failed = false
     rescue RedmineGitolite::GitHosting::GitHostingException => e
       push_message = e.output

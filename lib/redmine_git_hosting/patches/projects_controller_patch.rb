@@ -118,7 +118,7 @@ module RedmineGitHosting
 
 
         def git_repo_init
-          if @project.module_enabled?('repository') && RedmineGitolite::Config.get_setting(:all_projects_use_git)
+          if @project.module_enabled?('repository') && RedmineGitolite::Config.get_setting(:all_projects_use_git, true)
             # Create new repository
             repository = Repository.factory("Git")
             repository.is_default = true
@@ -126,7 +126,7 @@ module RedmineGitHosting
             repository.extra_info['extra_report_last_commit'] = '1'
             @project.repositories << repository
 
-            options = { :create_readme_file => RedmineGitolite::Config.get_setting(:init_repositories_on_create) }
+            options = { :create_readme_file => RedmineGitolite::Config.get_setting(:init_repositories_on_create, true) }
 
             RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
             RedmineGitolite::GitHosting.resync_gitolite(:add_repository, repository.id, options)

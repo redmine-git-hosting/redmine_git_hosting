@@ -6,7 +6,7 @@ class AddSettingsToPlugin < ActiveRecord::Migration
       valuehash['gitRecycleBasePath'] ||= 'recycle_bin/'
       valuehash['gitRecycleExpireTime'] ||= '24.0'
       valuehash['gitLockWaitTime'] ||= '10'
-      valuehash['httpServer'] ||= RedmineGitolite::Config.my_root_url
+      valuehash['httpServer'] ||= RedmineGitolite::GitoliteWrapper.my_root_url
 
       if (Setting.plugin_redmine_git_hosting != valuehash)
         Setting.plugin_redmine_git_hosting = valuehash
