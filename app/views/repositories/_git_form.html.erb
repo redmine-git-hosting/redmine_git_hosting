@@ -12,13 +12,7 @@
     var default_checkbox = $('#repository_is_default').parent();
 
     <% if @project.repository.nil? %>
-      // Hide identifier input field since is_default is checked
-      $('#repository_identifier').parent().hide();
-
-      // Toggle identifier input field if is_default is unchecked
-      $('#repository_is_default').on('click', function(){
-        $('#repository_identifier').parent().toggle();
-      });
+      // The default repository is not set, nothing to do...
 
     <% elsif @project.repository == @repository %>
       var content = $('<%= content_tag :p do -%>
