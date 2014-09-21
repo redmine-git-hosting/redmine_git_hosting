@@ -9,56 +9,48 @@ module RedmineGitolite
     ###############################
 
 
-    def self.get_setting(setting, bool = false)
-      if bool
-        return get_boolean_setting(setting)
-      else
-        return get_string_setting(setting)
-      end
-    end
+    class << self
 
-
-    def self.get_boolean_setting(setting)
-      setting = setting.to_sym
-      begin
-        if Setting.plugin_redmine_git_hosting[setting] == 'true'
-          value = true
+      def get_setting(setting, bool = false)
+        if bool
+          return_bool do_get_setting(setting)
         else
-          value = false
+          return do_get_setting(setting)
         end
-      rescue => e
-        # puts e.message
-        value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
       end
 
-      if value.nil?
-        value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+
+      ### PRIVATE ###
+
+
+      def return_bool(value)
+        value == 'true' ? true : false
       end
 
-      # puts "#{setting} : '#{value}' : #{value.class.name}"
 
-      return value
+      def do_get_setting(setting)
+        setting = setting.to_sym
+
+        ## Wrap this in a begin/rescue statement because Setting table
+        ## may not exist on first migration
+        begin
+          value = Setting.plugin_redmine_git_hosting[setting]
+        rescue => e
+          value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+        else
+          ## The Setting table exist but does not contain the value yet, fallback to default
+          if value.nil?
+            value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+          end
+        end
+
+        value
+      end
+
     end
 
-
-    def self.get_string_setting(setting)
-      setting = setting.to_sym
-      begin
-        value = Setting.plugin_redmine_git_hosting[setting]
-      rescue => e
-        # puts e.message
-        value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
-      end
-
-      if value.nil?
-        value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
-      end
-
-      # puts "#{setting} : '#{value}' : #{value.class.name}"
-
-      return value
-    end
+    private_class_method :return_bool,
+                         :do_get_setting
 
   end
-
 end
