@@ -61,13 +61,13 @@ module RedmineGitolite
         end
 
         begin
-          gitolite_admin
+          admin = gitolite_admin
         rescue Rugged::SshError => e
           logger.error { e.message }
         else
           WRAPPERS.each do |wrappermod|
             if wrappermod.method_defined?(action)
-              return wrappermod.new(gitolite_admin, action, object, options).send(action)
+              return wrappermod.new(admin, action, object, options).send(action)
             end
           end
           raise GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
