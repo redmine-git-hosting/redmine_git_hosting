@@ -251,8 +251,8 @@ fr:
   label_help_repository_clone: Cloner un dépôt
   label_help_no_repo_rights: "Désolé, vous n'avez pas accès à ce dépôt. Vous ne pouvez rien faire."
   label_this_urls_has_permissions: "Cette URL est accessilbe en <span id=\"%{span_id}\"></span>."
-  label_read_write_permission: Lecture+Ecriture
-  label_read_only_permission: Lecture seule
+  label_read_write_permission: RW
+  label_read_only_permission: RO
 
   notice_empty_repository: Le dépôt est vide. Commencez en suivant les instructions ci-dessous.
 

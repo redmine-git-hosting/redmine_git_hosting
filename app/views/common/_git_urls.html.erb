@@ -19,17 +19,19 @@
           </li>
         <% end %>
       </ul>
+
       <input id="git_url_text_<%= el_name %>" class="git_url_text" readonly="readonly" />
+
+      <div class="git_url_permissions">
+        <span id="git_url_permissions_<%= el_name %>">
+        </span>
+      </div>
 
       <div id="clipboard_button_<%= el_name %>" class="clipboard_button" data-clipboard-target="git_url_text_<%= el_name %>">
         <%= image_tag 'paste.png', :plugin => 'redmine_git_hosting' %>
       </div>
     </div>
-    <div class="git_url_desc">
-      <span class="git_url_permissions" id="git_url_permissions_<%= el_name %>">
-        <%= l(:label_this_urls_has_permissions).html_safe %>
-      </span>
-    </div>
+
   <% end %>
 
 <% else %>

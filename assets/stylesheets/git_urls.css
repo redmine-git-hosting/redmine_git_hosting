@@ -37,7 +37,14 @@ GIT_URL_BOX
 */
 .git_url_box         { height: 25px; padding: 0; margin: 0px; }
 .git_url_desc        { color: #666666; display: block; font-size: 11px; line-height: 25px; padding-top: 5px; }
-.git_url_permissions { font-weight: bold; }
+.git_url_permissions { float: left; width: 33px; height: 23px; margin: 0; padding: 0; border-style: solid; border-width: 1px; border-right: 0; border-color: #BBBBBB; }
+.git_url_permissions span {
+  display: block;
+  font-weight: bold;
+  padding: 3px;
+  text-align: center;
+  vertical-align: middle;
+}
 
 .git_url_list    { float: left; height: 23px; list-style-type: none; margin: 0px; padding: 0px; }
 .git_url_list li { float: left; }
