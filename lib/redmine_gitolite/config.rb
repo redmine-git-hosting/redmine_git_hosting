@@ -42,11 +42,14 @@ module RedmineGitolite
       def do_get_setting(setting)
         setting = setting.to_sym
 
+        ## Wrap this in a begin/rescue statement because Setting table
+        ## may not exist on first migration
         begin
           value = Setting.plugin_redmine_git_hosting[setting]
         rescue => e
           value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
         else
+          ## The Setting table exist but does not contain the value yet, fallback to default
           if value.nil?
             value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
           end
@@ -114,6 +117,7 @@ module RedmineGitolite
     class ConsoleLogger
 
       attr_reader :console
+      attr_reader :logger
 
       def initialize(opts = {})
         @console = opts[:console] || false
@@ -122,17 +126,17 @@ module RedmineGitolite
 
       def info(&block)
         puts yield if console
-        @logger.info yield
+        logger.info yield
       end
 
       def error(&block)
         puts yield if console
-        @logger.error yield
+        logger.error yield
       end
 
       # Handle everything else with base object
       def method_missing(m, *args, &block)
-        @logger.send m, *args, &block
+        logger.send m, *args, &block
       end
 
     end
