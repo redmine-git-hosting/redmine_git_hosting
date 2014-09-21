@@ -64,7 +64,7 @@
         <% box_name    = "#git_url_box_#{el_name}" %>
 
         var <%= object_name %> = Object();
-        <%= object_name %>.movie_path    = '<%= plugin_asset_link('ZeroClipboard.swf') %>';
+        <%= object_name %>.movie_path    = '<%= plugin_asset_link('redmine_git_hosting', 'ZeroClipboard.swf') %>';
         <%= object_name %>.label_to_copy = '<%= l(:label_copy_to_clipboard) %>';
         <%= object_name %>.label_copied  = '<%= l(:label_copied_to_clipboard) %>';
         <%= object_name %>.target        = '#clipboard_button_<%= el_name %>';
