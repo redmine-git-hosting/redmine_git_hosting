@@ -7,7 +7,7 @@ namespace :redmine_git_hosting do
       RSpec::Core::RakeTask.new do |task|
         task.rspec_opts = "plugins/redmine_git_hosting/spec --color"
       end
-    rescue => e
+    rescue Exception => e
     else
       ENV["CI_REPORTS"] = Rails.root.join('junit').to_s
     end
