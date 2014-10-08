@@ -27,6 +27,7 @@ group :development, :test do
   # Code coverage
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'coveralls', require: false
 
   # Junit results
   gem 'ci_reporter_rspec', '~> 1.0.0'
