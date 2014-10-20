@@ -31,7 +31,7 @@ class SmartHttpController < ApplicationController
       logger.info { "user_name       : #{@user.login}" }
       @authenticated = true
     else
-      if @project.is_public
+      if !Setting.login_required? && @project.is_public
         logger.info { "user_name       : anonymous (project is public)" }
         @authenticated = true
       else
@@ -78,7 +78,7 @@ class SmartHttpController < ApplicationController
     end
 
     @project = @repository.project
-    @allow_anonymous_read = @project.is_public
+    @allow_anonymous_read = !Setting.login_required? && @project.is_public
 
     logger.info { "project name    : #{@project.identifier}" }
     logger.info { "public project  : #{@allow_anonymous_read}" }
