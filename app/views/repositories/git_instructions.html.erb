@@ -67,7 +67,7 @@
 <% content_for :header_tags do %>
   <%= javascript_tag do %>
     $(document).ready(function() {
-      var key = $('#git_url_list li').first().attr('id');
+      var key = $('.git_url_list li').first().attr('id');
       var access = access_list[key];
 
       $('.git_url_access').html(access.url);
