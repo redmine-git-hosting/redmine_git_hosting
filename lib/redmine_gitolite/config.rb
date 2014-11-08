@@ -3,7 +3,7 @@ module RedmineGitolite
   module Config
 
     GITHUB_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
-    GITHUB_WIKI  = 'https://github.com/jbox-web/redmine_git_hosting/wiki/Configuration-variables'
+    GITHUB_WIKI  = 'https://jbox-web.github.io/redmine_git_hosting/configuration/variables/'
 
     GITOLITE_DEFAULT_CONFIG_FILE       = 'gitolite.conf'
     GITOLITE_IDENTIFIER_DEFAULT_PREFIX = 'redmine_'
