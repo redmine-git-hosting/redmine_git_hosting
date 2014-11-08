@@ -25,4 +25,11 @@ The **:gitolite_recycle_bin_dir** is the path relative to the Git user root wher
     # Default
     :gitolite_recycle_bin_dir       => 'recycle_bin/'
 
+* **:gitolite_local_code_dir**
+
+The **:gitolite_local_code_dir** is the path relative to the Git user root where hook files are placed. This path should end in a path separator, e.g. '/'.
+
+    # Default
+    :gitolite_local_code_dir       => 'local/'
+
 ***
