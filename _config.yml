@@ -11,7 +11,7 @@ data:
 
     release:
       year: 2014
-      version: v0.7.7
+      version: v0.7.8
 
     author:
       name: JBox Web
