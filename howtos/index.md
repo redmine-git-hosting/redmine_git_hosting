@@ -35,9 +35,24 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
     root$ apt-get update
     root$ apt-get install redis-server
 
+
 ***
 
-#### **(step 2)** Switch mode
+#### **(step 2)** Install the Sidekiq plugin
+
+<div class="alert alert-warning" role="alert">This plugin <b>does not support Ruby 1.9 !</b></div>
+
+<div class="alert alert-warning" role="alert">Before install the plugin, stop Redmine!</div>
+
+    root$ su - redmine
+    redmine$ cd REDMINE_ROOT/plugins
+    redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
+    redmine$ cd REDMINE_ROOT
+    redmine$ bundle install --without development test
+
+***
+
+#### **(step 3)** Switch mode
 
 Go in *Administration -> Redmine Git Hosting -> Sidekiq tab* then enable Sidekiq mode.
 
@@ -47,7 +62,7 @@ To execute them you must now run the Sidekiq worker.
 
 ***
 
-#### **(step 3)** Run Sidekiq worker
+#### **(step 4)** Run Sidekiq worker
 
 A startup script [```contrib/scripts/sidekiq_git_hosting.sh```](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/sidekiq_git_hosting.sh) is provided by the plugin.
 

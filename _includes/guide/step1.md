@@ -6,7 +6,6 @@ Assuming that you have Redmine installed :
 
     root$ su - redmine
     redmine$ cd REDMINE_ROOT/plugins
-    redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
     redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
     redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
     redmine$ cd redmine_git_hosting/
