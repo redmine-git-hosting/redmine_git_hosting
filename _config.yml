@@ -30,14 +30,15 @@ data:
 
   theme:
     stylesheets:
-      - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css
-      - //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css
+      - //maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
+      - //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
+      - //cdnjs.cloudflare.com/ajax/libs/octicons/2.1.2/octicons.css
 
     javascripts:
       - //code.jquery.com/jquery-1.11.1.min.js
       - //code.jquery.com/ui/1.10.4/jquery-ui.min.js
-      - //maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
-      - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.5/ZeroClipboard.min.js
+      - //maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js
+      - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js
       - //platform.twitter.com/widgets.js
 
 markdown: kramdown

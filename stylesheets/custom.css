@@ -116,3 +116,24 @@ blockquote {
   font-weight: bold;
   margin-top: 10px;
 }
+
+
+/*
+ * LANDING PAGE
+ */
+
+.jbox-icons.round {
+  border-radius: 100px;
+}
+
+.jbox-icons {
+  background: none repeat scroll 0 0 #428bca;
+  color: #f7f7f7;
+  height: 50px;
+  margin: 0 auto;
+  width: 50px;
+}
+
+.jbox-icons i{
+  font-size: 24px;
+}
