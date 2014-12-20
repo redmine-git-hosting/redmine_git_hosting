@@ -40,7 +40,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   def check_key_format
     if !self.key.include?('.')
-      errors.add(:key, :error_wrong_config_key_format)
+      errors.add(:key, :invalid)
       return false
     end
   end

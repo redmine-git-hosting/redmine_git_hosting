@@ -413,17 +413,17 @@ module RedmineGitHosting
         def additional_ident_constraints
           if !identifier.blank? && (new_record? || identifier_changed?)
             if Project.find_by_identifier(identifier)
-              errors.add(:identifier, :ident_cannot_equal_project)
+              errors.add(:identifier, :cannot_equal_project)
             end
 
             # See if a repo for another project has the same identifier (existing validations already check for current project)
             if self.class.repo_ident_unique? && Repository.find_by_identifier(identifier, :conditions => ["project_id <> ?", project.id])
-              errors.add(:identifier, :ident_not_unique)
+              errors.add(:identifier, :taken)
             end
           end
 
           if new_record?
-            errors.add(:identifier, :ident_invalid) if identifier == 'gitolite-admin'
+            errors.add(:identifier, :invalid) if identifier == 'gitolite-admin'
           else
             # Make sure identifier hasn't changed.  Allow null and blank
             # Note that simply using identifier_changed doesn't seem to work
