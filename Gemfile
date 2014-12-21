@@ -16,7 +16,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0.1'
 
   gem 'shoulda', '~> 3.5.0'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '~> 2.7.0'
   gem 'shoulda-context'
 
   gem 'factory_girl'
