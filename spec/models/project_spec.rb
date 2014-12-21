@@ -25,6 +25,10 @@ describe Project do
     expect(@project.gitolite_repos).to eq [@git_repo_1, @git_repo_2]
   end
 
+  it "should have 3 repositories" do
+    expect(@project.repositories).to eq [@git_repo_1, @git_repo_2, @svn_repo_1]
+  end
+
   it "should not match existing repository identifier" do
     expect(build(:project, :identifier => 'git-repo-test')).to be_invalid
   end
