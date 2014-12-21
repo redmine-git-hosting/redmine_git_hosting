@@ -73,11 +73,17 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
+  # Return the first part of key identifier
+  # For redmine_nicolas_deploy_key_2@redmine_1419167701_730356
+  # return redmine_nicolas_deploy_key_2
   def owner
     self.identifier.split('@')[0]
   end
 
 
+  # Return the last part of key identifier
+  # For redmine_nicolas_deploy_key_2@redmine_1419167701_730356
+  # return redmine_1419167701_730356
   def location
     self.identifier.split('@')[1]
   end
@@ -226,24 +232,37 @@ class GitolitePublicKey < ActiveRecord::Base
       begin
         my_time = Time.now
         time_tag = "#{my_time.to_i.to_s}_#{my_time.usec.to_s}"
-        key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
         case key_type
           when KEY_TYPE_USER
-            # add "redmine_" as a prefix to the username, and then the current date
-            # this helps ensure uniqueness of each key identifier
-            #
-            # also, it ensures that it is very, very unlikely to conflict with any
-            # existing key name if gitolite config is also being edited manually
-            "#{self.user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            # KEY FORMAT : <user.gitolite_identifier>@redmine_<TIMESTAMP>
+            "#{user.gitolite_identifier}" << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           when KEY_TYPE_DEPLOY
-            # add "redmine_deploy_key_" as a prefix, and then the current date
-            # to help ensure uniqueness of each key identifier
-            # "redmine_#{DEPLOY_PSEUDO_USER}_#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
-            "#{self.user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_') << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
+            # KEY FORMAT : <user.gitolite_identifier>_<DEPLOY_PSEUDO_USER>_<KEY_COUNTER>@redmine_<TIMESTAMP>
+            deploy_key_identifier << "@redmine_" << "#{time_tag}".gsub(/[^0-9a-zA-Z\-]/, '_')
           else
             nil
           end
         end
+  end
+
+
+  def deploy_key_identifier
+    # Fix https://github.com/jbox-web/redmine_git_hosting/issues/288
+    # Getting user deployment keys count is not sufficient to assure uniqueness of
+    # deployment key identifier. So we need an 'external' counter to increment the global count
+    # while a key with this identifier exists.
+    count = 0
+    begin
+      key_id = generate_deploy_key_identifier(count)
+      count += 1
+    end while user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id)
+    key_id
+  end
+
+
+  def generate_deploy_key_identifier(count)
+    key_count = user.gitolite_public_keys.deploy_key.length + 1 + count
+    "#{user.gitolite_identifier}_#{DEPLOY_PSEUDO_USER}_#{key_count}".gsub(/[^0-9a-zA-Z\-]/, '_')
   end
 
 end
