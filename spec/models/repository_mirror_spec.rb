@@ -59,7 +59,7 @@ describe RepositoryMirror do
     it { should validate_numericality_of(:push_mode) }
 
     it {
-      should ensure_inclusion_of(:push_mode).
+      should validate_inclusion_of(:push_mode).
       in_array(%w(0 1 2))
     }
 
