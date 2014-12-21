@@ -318,7 +318,7 @@ module RedmineGitHosting
 
 
         def empty?
-          if extra_info.nil? || !extra_info.has_key?('heads')
+          if extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
             return true
           else
             return false
