@@ -1,6 +1,9 @@
 # Set up autoload of patches
 Rails.configuration.to_prepare do
 
+  ## Redmine SCM adapter
+  require_dependency 'redmine/scm/adapters/gitolite_adapter'
+
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/cache'
   require_dependency 'redmine_gitolite/config'
@@ -42,9 +45,9 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_git_hosting/patches/users_helper_patch'
 
   require_dependency 'redmine_git_hosting/patches/repository_patch'
-  require_dependency 'redmine_git_hosting/patches/repository_git_patch'
   require_dependency 'redmine_git_hosting/patches/repositories_controller_patch'
-  require_dependency 'redmine_git_hosting/patches/git_adapter_patch'
+  require_dependency 'redmine_git_hosting/patches/repositories_helper_patch'
+  require_dependency 'redmine_git_hosting/patches/gitolite_adapter_patch'
 
   require_dependency 'redmine_git_hosting/patches/member_patch'
   require_dependency 'redmine_git_hosting/patches/roles_controller_patch'

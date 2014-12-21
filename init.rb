@@ -124,4 +124,5 @@ Redmine::Plugin.register :redmine_git_hosting do
               :if => Proc.new { User.current.logged? && User.current.admin? }
   end
 
+  Redmine::Scm::Base.add "Gitolite"
 end

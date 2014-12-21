@@ -9,11 +9,11 @@ describe RepositoryGitConfigKeysController do
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository     = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @repository     = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)
     @git_config_key = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository.id)
     @user           = FactoryGirl.create(:user, :admin => true)
 
-    @repository2    = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'gck-test')
+    @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'gck-test')
   end
 
 

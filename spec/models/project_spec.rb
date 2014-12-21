@@ -5,8 +5,8 @@ describe Project do
   before(:all) do
     @project    = create(:project)
 
-    @git_repo_1 = create(:repository_git, :project => @project, :is_default => true)
-    @git_repo_2 = create(:repository_git, :project => @project, :identifier => 'git-repo-test')
+    @git_repo_1 = create(:repository_gitolite, :project => @project, :is_default => true)
+    @git_repo_2 = create(:repository_gitolite, :project => @project, :identifier => 'git-repo-test')
 
     @svn_repo_1 = create(:repository_svn, :project => @project, :identifier => 'svn-repo-test', :url => 'http://svn-repo-test')
   end

@@ -9,11 +9,11 @@ describe RepositoryPostReceiveUrlsController do
 
   before(:all) do
     @project          = FactoryGirl.create(:project)
-    @repository       = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @repository       = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)
     @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository.id)
     @user             = FactoryGirl.create(:user, :admin => true)
 
-    @repository2      = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'pru-test')
+    @repository2      = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'pru-test')
   end
 
 

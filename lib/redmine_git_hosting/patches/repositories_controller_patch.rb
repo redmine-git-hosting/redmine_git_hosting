@@ -23,7 +23,7 @@ module RedmineGitHosting
       module InstanceMethods
 
         def show_with_git_hosting(&block)
-          if @repository.is_a?(Repository::Git) && @repository.empty?
+          if @repository.is_a?(Repository::Gitolite) && @repository.empty?
             # Fake list of repos
             @repositories = @project.gitolite_repos
             render :action => 'git_instructions'
@@ -36,7 +36,7 @@ module RedmineGitHosting
         def create_with_git_hosting(&block)
           create_without_git_hosting(&block)
 
-          if @repository.is_a?(Repository::Git)
+          if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
 
               params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
@@ -56,7 +56,7 @@ module RedmineGitHosting
         def update_with_git_hosting(&block)
           update_without_git_hosting(&block)
 
-          if @repository.is_a?(Repository::Git)
+          if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
 
               params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
@@ -88,7 +88,7 @@ module RedmineGitHosting
         def destroy_with_git_hosting(&block)
           destroy_without_git_hosting(&block)
 
-          if @repository.is_a?(Repository::Git)
+          if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
               RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'" }
               repository_data = {}

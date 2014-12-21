@@ -1,4 +1,4 @@
-<% if @repository.is_a?(Repository::Git) %>
+<% if @repository.is_a?(Repository::Gitolite) %>
   <div class="git_hosting box">
     <h3><%= l(:label_repository_access_url) %></h3>
     <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>

@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Repository::Git do
+describe ::Repository::Gitolite do
 
-  GIT_USER = 'git'
+  GIT_USER = 'git-jbox'
 
   before(:all)  do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
@@ -15,12 +15,12 @@ describe Repository::Git do
 
 
   def build_git_repository(opts = {})
-    FactoryGirl.build(:repository_git, opts)
+    FactoryGirl.build(:repository_gitolite, opts)
   end
 
 
   def create_git_repository(opts = {})
-    FactoryGirl.create(:repository_git, opts)
+    FactoryGirl.create(:repository_gitolite, opts)
   end
 
 
@@ -66,8 +66,8 @@ describe Repository::Git do
     ## Methods
     it { should respond_to(:extra) }
 
-    it { should respond_to(:report_last_commit_with_git_hosting) }
-    it { should respond_to(:extra_report_last_commit_with_git_hosting) }
+    it { should respond_to(:report_last_commit) }
+    it { should respond_to(:extra_report_last_commit) }
 
     it { should respond_to(:git_cache_id) }
     it { should respond_to(:redmine_name) }
@@ -98,8 +98,8 @@ describe Repository::Git do
     it { should respond_to(:gitolite_hook_key) }
 
     ## Test attributes more specifically
-    it { expect(@repository_1.report_last_commit_with_git_hosting).to be true }
-    it { expect(@repository_1.extra_report_last_commit_with_git_hosting).to be true }
+    it { expect(@repository_1.report_last_commit).to be true }
+    it { expect(@repository_1.extra_report_last_commit).to be true }
 
     it { expect(@repository_1.extra[:git_http]).to eq 1 }
     it { expect(@repository_1.extra[:git_daemon]).to be false }
@@ -286,24 +286,24 @@ describe Repository::Git do
       end
     end
 
-    describe "Repository::Git class" do
-      it { expect(Repository::Git).to respond_to(:repo_ident_unique?) }
-      it { expect(Repository::Git).to respond_to(:have_duplicated_identifier?) }
-      it { expect(Repository::Git).to respond_to(:repo_path_to_git_cache_id) }
-      it { expect(Repository::Git).to respond_to(:find_by_path) }
+    describe "Repository::Gitolite class" do
+      it { expect(Repository::Gitolite).to respond_to(:repo_ident_unique?) }
+      it { expect(Repository::Gitolite).to respond_to(:have_duplicated_identifier?) }
+      it { expect(Repository::Gitolite).to respond_to(:repo_path_to_git_cache_id) }
+      it { expect(Repository::Gitolite).to respond_to(:find_by_path) }
 
       describe ".repo_ident_unique?" do
-        it { expect(Repository::Git.repo_ident_unique?).to be false }
+        it { expect(Repository::Gitolite.repo_ident_unique?).to be false }
       end
 
       describe ".have_duplicated_identifier?" do
-        it { expect(Repository::Git.have_duplicated_identifier?).to be false }
+        it { expect(Repository::Gitolite.have_duplicated_identifier?).to be false }
       end
 
       describe ".repo_path_to_git_cache_id" do
         describe "when repo path is not found" do
           before do
-            @git_cache_id = Repository::Git.repo_path_to_git_cache_id('foo.git')
+            @git_cache_id = Repository::Gitolite.repo_path_to_git_cache_id('foo.git')
           end
 
           it { expect(@git_cache_id).to be nil }
@@ -340,13 +340,13 @@ describe Repository::Git do
 
     describe ".repo_ident_unique?" do
       it "should be false" do
-        expect(Repository::Git.repo_ident_unique?).to be false
+        expect(Repository::Gitolite.repo_ident_unique?).to be false
       end
     end
 
     describe ".have_duplicated_identifier?" do
       it "should be true" do
-        expect(Repository::Git.have_duplicated_identifier?).to be true
+        expect(Repository::Gitolite.have_duplicated_identifier?).to be true
       end
     end
 
@@ -653,15 +653,15 @@ describe Repository::Git do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Gitolite.repo_path_to_object(@repository_1.url)
+        @repo2 = Repository::Gitolite.repo_path_to_object(@repository_2.url)
+        @repo3 = Repository::Gitolite.repo_path_to_object(@repository_3.url)
+        @repo4 = Repository::Gitolite.repo_path_to_object(@repository_4.url)
 
-        @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        @git_cache_id1 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_1.url)
+        @git_cache_id2 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_2.url)
+        @git_cache_id3 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_3.url)
+        @git_cache_id4 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_4.url)
       end
 
       describe "repositories should match" do
@@ -688,13 +688,13 @@ describe Repository::Git do
 
     describe ".repo_ident_unique?" do
       it "should be false" do
-        expect(Repository::Git.repo_ident_unique?).to be true
+        expect(Repository::Gitolite.repo_ident_unique?).to be true
       end
     end
 
     describe ".have_duplicated_identifier?" do
       it "should be true" do
-        expect(Repository::Git.have_duplicated_identifier?).to be false
+        expect(Repository::Gitolite.have_duplicated_identifier?).to be false
       end
     end
 
@@ -1001,15 +1001,15 @@ describe Repository::Git do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Git.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Git.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Git.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Git.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Gitolite.repo_path_to_object(@repository_1.url)
+        @repo2 = Repository::Gitolite.repo_path_to_object(@repository_2.url)
+        @repo3 = Repository::Gitolite.repo_path_to_object(@repository_3.url)
+        @repo4 = Repository::Gitolite.repo_path_to_object(@repository_4.url)
 
-        @git_cache_id1 = Repository::Git.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Git.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Git.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Git.repo_path_to_git_cache_id(@repository_4.url)
+        @git_cache_id1 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_1.url)
+        @git_cache_id2 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_2.url)
+        @git_cache_id3 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_3.url)
+        @git_cache_id4 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_4.url)
       end
 
       describe "repositories should match" do

@@ -11,7 +11,7 @@ describe RepositoryDeploymentCredentialsController do
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository     = FactoryGirl.create(:repository_git, :project_id => @project.id)
+    @repository     = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)
     @user           = FactoryGirl.create(:user, :admin => true)
 
     @credential     = FactoryGirl.create(:repository_deployment_credential,
@@ -20,7 +20,7 @@ describe RepositoryDeploymentCredentialsController do
       :gitolite_public_key_id => FactoryGirl.create(:gitolite_public_key, :user_id => @user.id, :key_type => 1, :title => 'foo1', :key => DEPLOY_KEY2).id
     )
 
-    @repository2    = FactoryGirl.create(:repository_git, :project_id => @project.id, :identifier => 'credential-test')
+    @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'credential-test')
   end
 
 
