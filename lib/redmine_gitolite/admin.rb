@@ -112,8 +112,11 @@ module RedmineGitolite
       begin
         @gitolite_admin.save("'#{@action} : #{message}'", :author => @gitolite_author)
       rescue => e
-        if !e.out.include?('nothing to commit')
+        if e.out.include?('nothing to commit') || e.out.include?('nothing added')
+          logger.warn { "#{@action} : nothing commited in Gitolite" }
+        else
           logger.error { "#{e.message}" }
+          logger.error { "#{e.out}" }
         end
       end
     end
