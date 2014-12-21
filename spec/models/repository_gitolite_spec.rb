@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe ::Repository::Gitolite do
 
-  GIT_USER = 'git-jbox'
+  GIT_USER = 'git'
 
   before(:all)  do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
