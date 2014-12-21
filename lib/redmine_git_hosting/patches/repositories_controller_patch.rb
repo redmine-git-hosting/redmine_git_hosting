@@ -35,19 +35,9 @@ module RedmineGitHosting
 
         def create_with_git_hosting(&block)
           create_without_git_hosting(&block)
-
           if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
-
-              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
-              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
-
-              @repository.extra.update_attributes(params[:extra])
-
-              options = params[:repository][:create_readme] == 'true' ? {:create_readme_file => true} : {:create_readme_file => false}
-
-              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @repository.id, options)
+              CreateRepository.new(@repository, params).call
             end
           end
         end
@@ -55,31 +45,9 @@ module RedmineGitHosting
 
         def update_with_git_hosting(&block)
           update_without_git_hosting(&block)
-
           if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
-
-              params[:extra][:git_daemon] = params[:extra][:git_daemon] == 'true' ? true : false
-              params[:extra][:git_notify] = params[:extra][:git_notify] == 'true' ? true : false
-
-              update_default_branch = false
-
-              if params[:extra].has_key?(:default_branch) && @repository.extra[:default_branch] != params[:extra][:default_branch]
-                update_default_branch = true
-              end
-
-              ## Update attributes
-              @repository.extra.update_attributes(params[:extra])
-
-              ## Update repository
-              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified repository '#{@repository.gitolite_repository_name}'" }
-              RedmineGitolite::GitHosting.resync_gitolite(:update_repository, @repository.id)
-
-              ## Update repository default branch
-              if update_default_branch
-                RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has modified default_branch of '#{@repository.gitolite_repository_name}' ('#{@repository.extra[:default_branch]}')" }
-                RedmineGitolite::GitHosting.resync_gitolite(:update_repository_default_branch, @repository.id)
-              end
+              UpdateRepository.new(@repository, params).call
             end
           end
         end
@@ -87,14 +55,9 @@ module RedmineGitHosting
 
         def destroy_with_git_hosting(&block)
           destroy_without_git_hosting(&block)
-
           if @repository.is_a?(Repository::Gitolite)
             if !@repository.errors.any?
-              RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'" }
-              repository_data = {}
-              repository_data['repo_name'] = @repository.gitolite_repository_name
-              repository_data['repo_path'] = @repository.gitolite_repository_path
-              RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, [repository_data])
+              DestroyRepository.new(@repository).call
             end
           end
         end
@@ -103,9 +66,9 @@ module RedmineGitHosting
         private
 
 
-        def set_current_tab
-          @tab = params[:tab] || ""
-        end
+          def set_current_tab
+            @tab = params[:tab] || ""
+          end
 
       end
 
