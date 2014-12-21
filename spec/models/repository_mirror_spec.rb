@@ -14,7 +14,8 @@ describe RepositoryMirror do
     'ssh://user@host.xz/~user/path/to/repo.git',
     'ssh://host.xz/~user/path/to/repo.git',
     'ssh://user@host.xz/~/path/to/repo.git',
-    'ssh://host.xz/~/path/to/repo.git'
+    'ssh://host.xz/~/path/to/repo.git',
+    'ssh://host.xz/~/path.to/repo.git'
   ]
 
 

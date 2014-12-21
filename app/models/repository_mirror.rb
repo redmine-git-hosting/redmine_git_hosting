@@ -22,7 +22,7 @@ class RepositoryMirror < ActiveRecord::Base
   ## ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
   validates :url, :presence   => true,
                   :uniqueness => { :case_sensitive => false, :scope => :repository_id },
-                  :format     => { :with => /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-~]+)(\.git)?\z/i }
+                  :format     => { :with => /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i }
 
   validates :push_mode, :presence     => true,
                         :numericality => { :only_integer => true },
