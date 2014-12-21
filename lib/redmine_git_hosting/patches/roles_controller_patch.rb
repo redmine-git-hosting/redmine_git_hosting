@@ -52,10 +52,10 @@ module RedmineGitHosting
         private
 
 
-        def resync_gitolite(message)
-          RedmineGitolite::GitHosting.logger.info { "Role has been #{message}, resync all projects (active or closed)..." }
-          RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'active_or_closed')
-        end
+          def resync_gitolite(message)
+            RedmineGitolite::GitHosting.logger.info { "Role has been #{message}, resync all projects (active or closed)..." }
+            RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'active_or_closed')
+          end
 
       end
 

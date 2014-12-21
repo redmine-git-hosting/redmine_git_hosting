@@ -7,6 +7,7 @@ module RedmineGitHosting
       def self.included(base)
         base.class_eval do
           unloadable
+
           alias :gitolite_field_tags :git_field_tags
         end
       end

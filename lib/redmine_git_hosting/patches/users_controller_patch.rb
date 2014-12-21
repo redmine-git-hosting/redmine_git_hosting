@@ -9,7 +9,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          alias_method_chain :edit,   :git_hosting
+          alias_method_chain :edit, :git_hosting
 
           helper :gitolite_public_keys
         end
@@ -31,15 +31,14 @@ module RedmineGitHosting
         private
 
 
-        # Add in values for viewing public keys:
-        def set_public_key_values
-          @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
-          @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
-          @gitolite_public_key  = GitolitePublicKey.new
-        end
+          # Add in values for viewing public keys:
+          def set_public_key_values
+            @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
+            @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
+            @gitolite_public_key  = GitolitePublicKey.new
+          end
 
       end
-
 
     end
   end

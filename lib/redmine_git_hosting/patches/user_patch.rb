@@ -24,8 +24,6 @@ module RedmineGitHosting
 
       module InstanceMethods
 
-
-        #
         # Returns a unique identifier for this user to use for gitolite keys.
         # As login names may change (i.e., user renamed), we use the user id
         # with its login name as a prefix for readibility.
@@ -37,34 +35,33 @@ module RedmineGitHosting
         protected
 
 
-        def update_repositories
-          if status_has_changed
-            git_projects = self.projects.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
+          def update_repositories
+            if status_has_changed
+              git_projects = self.projects.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
 
-            RedmineGitolite::GitHosting.logger.info { "User status has changed, update projects" }
-            RedmineGitolite::GitHosting.resync_gitolite(:update_projects, git_projects)
+              RedmineGitolite::GitHosting.logger.info { "User status has changed, update projects" }
+              RedmineGitolite::GitHosting.resync_gitolite(:update_projects, git_projects)
+            end
           end
-        end
 
 
         private
 
 
-        def delete_ssh_keys
-          RedmineGitolite::GitHosting.logger.info { "User '#{self.login}' has been deleted from Redmine delete membership and SSH keys !" }
-        end
-
-
-        def check_if_status_changed
-          if self.status_changed?
-            self.status_has_changed = true
-          else
-            self.status_has_changed = false
+          def delete_ssh_keys
+            RedmineGitolite::GitHosting.logger.info { "User '#{self.login}' has been deleted from Redmine delete membership and SSH keys !" }
           end
-        end
+
+
+          def check_if_status_changed
+            if self.status_changed?
+              self.status_has_changed = true
+            else
+              self.status_has_changed = false
+            end
+          end
 
       end
-
 
     end
   end
