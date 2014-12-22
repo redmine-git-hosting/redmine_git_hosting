@@ -8,7 +8,7 @@ gem 'redcarpet', '~> 2.3.0'
 gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
-gem 'wikicloth'
+# gem 'wikicloth'
 gem 'asciidoctor'
 
 group :development, :test do
@@ -27,8 +27,13 @@ group :development, :test do
   # Code coverage
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'coveralls', require: false
 
   # Junit results
   gem 'ci_reporter_rspec', '~> 1.0.0'
+
+  # Publish to Coveralls
+  gem 'coveralls', require: false
+
+  # Publish to CodeClimate
+  gem 'codeclimate-test-reporter', require: false
 end

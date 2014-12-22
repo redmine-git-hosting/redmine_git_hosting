@@ -1,13 +1,14 @@
-require 'coveralls'
-Coveralls.wear!
-
 require 'simplecov'
 require 'simplecov-rcov'
+require 'coveralls'
+require 'codeclimate-test-reporter'
 
 ## Configure SimpleCov
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,
-  SimpleCov::Formatter::RcovFormatter
+  SimpleCov::Formatter::RcovFormatter,
+  Coveralls::SimpleCov::Formatter,
+  CodeClimate::TestReporter::Formatter
 ]
 
 ## Start Simplecov
