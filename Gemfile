@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'lockfile'
 gem 'gitolite-rugged', :git => 'https://github.com/n-rodriguez/gitolite-rugged.git', :branch => 'devel'
+gem 'haml-rails'
 
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'
