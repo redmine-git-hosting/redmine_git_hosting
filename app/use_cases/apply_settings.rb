@@ -1,7 +1,5 @@
-class RestoreSettings
+class ApplySettings
   unloadable
-
-  include UseCaseBase
 
   attr_reader :old_valuehash
   attr_reader :valuehash
@@ -19,21 +17,18 @@ class RestoreSettings
     @resync_ssh_keys   = opts.delete(:resync_ssh_keys){ false }
     @flush_cache       = opts.delete(:flush_cache){ false }
     @delete_trash_repo = opts.delete(:delete_trash_repo){ [] }
-
-    super
   end
 
 
   def call
-    restore_settings
-    super
+    apply_settings
   end
 
 
   private
 
 
-    def restore_settings
+    def apply_settings
       check_repo_hierarchy
       check_gitolite_config
       check_gitolite_default_values
