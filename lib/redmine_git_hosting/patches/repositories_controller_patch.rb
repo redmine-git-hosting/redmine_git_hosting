@@ -35,31 +35,19 @@ module RedmineGitHosting
 
         def create_with_git_hosting(&block)
           create_without_git_hosting(&block)
-          if @repository.is_a?(Repository::Gitolite)
-            if !@repository.errors.any?
-              CreateRepository.new(@repository, params).call
-            end
-          end
+          call_use_cases
         end
 
 
         def update_with_git_hosting(&block)
           update_without_git_hosting(&block)
-          if @repository.is_a?(Repository::Gitolite)
-            if !@repository.errors.any?
-              UpdateRepository.new(@repository, params).call
-            end
-          end
+          call_use_cases
         end
 
 
         def destroy_with_git_hosting(&block)
           destroy_without_git_hosting(&block)
-          if @repository.is_a?(Repository::Gitolite)
-            if !@repository.errors.any?
-              DestroyRepository.new(@repository).call
-            end
-          end
+          call_use_cases
         end
 
 
@@ -68,6 +56,22 @@ module RedmineGitHosting
 
           def set_current_tab
             @tab = params[:tab] || ""
+          end
+
+
+          def call_use_cases
+            if @repository.is_a?(Repository::Gitolite)
+              if !@repository.errors.any?
+                case self.action_name
+                when 'create'
+                  CreateRepository.new(@repository, params).call
+                when 'update'
+                  UpdateRepository.new(@repository, params).call
+                when 'destroy'
+                  DestroyRepository.new(@repository).call
+                end
+              end
+            end
           end
 
       end
