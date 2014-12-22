@@ -51,12 +51,12 @@
   <ul class="repository git">
     <% @repositories.sort.each do |repo| %>
         <li class="repository git"><%= link_to h(repo.name), {:controller => 'archived_repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                                      :class => 'repository' + (@repository.is_a?(Repository::Gitolite) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
+                                      :class => 'repository' + (@repository.is_a?(Repository::Xitolite) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
         </li>
     <% end %>
   </ul>
 
-  <% if @repository.is_a?(Repository::Gitolite) && RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, @project) %>
+  <% if @repository.is_a?(Repository::Xitolite) && RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, @project) %>
     <div class="git_hosting_urls">
       <h3><%= l(:label_repository_access_url) %></h3>
       <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>

@@ -61,13 +61,13 @@ class SmartHttpController < ApplicationController
 
 
   def find_repository
-    @repository = Repository::Gitolite.find_by_path(@repo_path, :loose => true)
+    @repository = Repository::Xitolite.find_by_path(@repo_path, :loose => true)
 
     if !@repository
       logger.error { "Repository not found, exiting !" }
       logger.error { "############################" }
       return render_not_found
-    elsif !@repository.is_a?(Repository::Gitolite)
+    elsif !@repository.is_a?(Repository::Xitolite)
       logger.error { "Repository is not a Gitolite repository, exiting !" }
       logger.error { "############################" }
       return render_not_found

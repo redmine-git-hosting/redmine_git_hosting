@@ -55,7 +55,7 @@
   <ul class="repository git">
     <% @repositories.sort.each do |repo| %>
         <li class="repository git"><%= link_to h(repo.name), {:controller => 'archived_repositories', :action => 'show', :id => @project, :repository_id => repo.identifier_param, :rev => nil, :path => nil},
-                                      :class => 'repository' + (@repository.is_a?(Repository::Gitolite) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
+                                      :class => 'repository' + (@repository.is_a?(Repository::Xitolite) ? ' git' : '') + (repo == @repository ? ' selected' : '') %>
         </li>
     <% end %>
   </ul>

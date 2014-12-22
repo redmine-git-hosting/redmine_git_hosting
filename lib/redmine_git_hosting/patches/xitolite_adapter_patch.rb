@@ -1,8 +1,8 @@
-require_dependency 'redmine/scm/adapters/gitolite_adapter'
+require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
 module RedmineGitHosting
   module Patches
-    module GitoliteAdapterPatch
+    module XitoliteAdapterPatch
 
       def self.included(base)
         base.send(:extend, ClassMethods)
@@ -65,7 +65,7 @@ module RedmineGitHosting
             # If only we had access to the repo (we don't).
             RedmineGitolite::GitHosting.logger.debug { "Lookup for git_cache_id with repository path '#{repo_path}' ... " }
 
-            git_cache_id = Repository::Gitolite.repo_path_to_git_cache_id(repo_path)
+            git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
 
             if !git_cache_id.nil?
               # Insert cache between shell execution and caller
@@ -85,6 +85,6 @@ module RedmineGitHosting
   end
 end
 
-unless Redmine::Scm::Adapters::GitoliteAdapter.included_modules.include?(RedmineGitHosting::Patches::GitoliteAdapterPatch)
-  Redmine::Scm::Adapters::GitoliteAdapter.send(:include, RedmineGitHosting::Patches::GitoliteAdapterPatch)
+unless Redmine::Scm::Adapters::XitoliteAdapter.included_modules.include?(RedmineGitHosting::Patches::XitoliteAdapterPatch)
+  Redmine::Scm::Adapters::XitoliteAdapter.send(:include, RedmineGitHosting::Patches::XitoliteAdapterPatch)
 end

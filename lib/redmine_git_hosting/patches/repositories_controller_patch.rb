@@ -23,7 +23,7 @@ module RedmineGitHosting
       module InstanceMethods
 
         def show_with_git_hosting(&block)
-          if @repository.is_a?(Repository::Gitolite) && @repository.empty?
+          if @repository.is_a?(Repository::Xitolite) && @repository.empty?
             # Fake list of repos
             @repositories = @project.gitolite_repos
             render :action => 'git_instructions'
@@ -60,7 +60,7 @@ module RedmineGitHosting
 
 
           def call_use_cases
-            if @repository.is_a?(Repository::Gitolite)
+            if @repository.is_a?(Repository::Xitolite)
               if !@repository.errors.any?
                 case self.action_name
                 when 'create'

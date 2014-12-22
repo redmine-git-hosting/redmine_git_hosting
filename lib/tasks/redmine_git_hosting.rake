@@ -42,7 +42,7 @@ namespace :redmine_git_hosting do
   desc "Check repositories identifier uniqueness"
   task :check_repository_uniqueness => [:environment] do
     puts "Checking repositories identifier uniqueness..."
-    if Repository::Gitolite.have_duplicated_identifier?
+    if Repository::Xitolite.have_duplicated_identifier?
       # Oops -- have duplication.
       RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers!" }
       puts "Detected non-unique repository identifiers!"

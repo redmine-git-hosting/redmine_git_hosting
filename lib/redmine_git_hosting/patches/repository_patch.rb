@@ -21,7 +21,7 @@ module RedmineGitHosting
 
         def factory_with_git_hosting(klass_name, *args)
           new_repo = factory_without_git_hosting(klass_name, *args)
-          if new_repo.is_a?(::Repository::Gitolite)
+          if new_repo.is_a?(::Repository::Xitolite)
             if new_repo.extra.nil?
               # Note that this autoinitializes default values and hook key
               RedmineGitolite::GitHosting.logger.error { "Automatic initialization of RepositoryGitExtra failed for #{self.project.to_s}" }

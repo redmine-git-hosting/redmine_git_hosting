@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe ::Repository::Gitolite do
+describe ::Repository::Xitolite do
 
   GIT_USER = 'git'
 
@@ -286,24 +286,24 @@ describe ::Repository::Gitolite do
       end
     end
 
-    describe "Repository::Gitolite class" do
-      it { expect(Repository::Gitolite).to respond_to(:repo_ident_unique?) }
-      it { expect(Repository::Gitolite).to respond_to(:have_duplicated_identifier?) }
-      it { expect(Repository::Gitolite).to respond_to(:repo_path_to_git_cache_id) }
-      it { expect(Repository::Gitolite).to respond_to(:find_by_path) }
+    describe "Repository::Xitolite class" do
+      it { expect(Repository::Xitolite).to respond_to(:repo_ident_unique?) }
+      it { expect(Repository::Xitolite).to respond_to(:have_duplicated_identifier?) }
+      it { expect(Repository::Xitolite).to respond_to(:repo_path_to_git_cache_id) }
+      it { expect(Repository::Xitolite).to respond_to(:find_by_path) }
 
       describe ".repo_ident_unique?" do
-        it { expect(Repository::Gitolite.repo_ident_unique?).to be false }
+        it { expect(Repository::Xitolite.repo_ident_unique?).to be false }
       end
 
       describe ".have_duplicated_identifier?" do
-        it { expect(Repository::Gitolite.have_duplicated_identifier?).to be false }
+        it { expect(Repository::Xitolite.have_duplicated_identifier?).to be false }
       end
 
       describe ".repo_path_to_git_cache_id" do
         describe "when repo path is not found" do
           before do
-            @git_cache_id = Repository::Gitolite.repo_path_to_git_cache_id('foo.git')
+            @git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id('foo.git')
           end
 
           it { expect(@git_cache_id).to be nil }
@@ -340,13 +340,13 @@ describe ::Repository::Gitolite do
 
     describe ".repo_ident_unique?" do
       it "should be false" do
-        expect(Repository::Gitolite.repo_ident_unique?).to be false
+        expect(Repository::Xitolite.repo_ident_unique?).to be false
       end
     end
 
     describe ".have_duplicated_identifier?" do
       it "should be true" do
-        expect(Repository::Gitolite.have_duplicated_identifier?).to be true
+        expect(Repository::Xitolite.have_duplicated_identifier?).to be true
       end
     end
 
@@ -653,15 +653,15 @@ describe ::Repository::Gitolite do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Gitolite.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Gitolite.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Gitolite.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Gitolite.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Xitolite.repo_path_to_object(@repository_1.url)
+        @repo2 = Repository::Xitolite.repo_path_to_object(@repository_2.url)
+        @repo3 = Repository::Xitolite.repo_path_to_object(@repository_3.url)
+        @repo4 = Repository::Xitolite.repo_path_to_object(@repository_4.url)
 
-        @git_cache_id1 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_4.url)
+        @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
+        @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)
+        @git_cache_id3 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url)
+        @git_cache_id4 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url)
       end
 
       describe "repositories should match" do
@@ -688,13 +688,13 @@ describe ::Repository::Gitolite do
 
     describe ".repo_ident_unique?" do
       it "should be false" do
-        expect(Repository::Gitolite.repo_ident_unique?).to be true
+        expect(Repository::Xitolite.repo_ident_unique?).to be true
       end
     end
 
     describe ".have_duplicated_identifier?" do
       it "should be true" do
-        expect(Repository::Gitolite.have_duplicated_identifier?).to be false
+        expect(Repository::Xitolite.have_duplicated_identifier?).to be false
       end
     end
 
@@ -1001,15 +1001,15 @@ describe ::Repository::Gitolite do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Gitolite.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Gitolite.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Gitolite.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Gitolite.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Xitolite.repo_path_to_object(@repository_1.url)
+        @repo2 = Repository::Xitolite.repo_path_to_object(@repository_2.url)
+        @repo3 = Repository::Xitolite.repo_path_to_object(@repository_3.url)
+        @repo4 = Repository::Xitolite.repo_path_to_object(@repository_4.url)
 
-        @git_cache_id1 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Gitolite.repo_path_to_git_cache_id(@repository_4.url)
+        @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
+        @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)
+        @git_cache_id3 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url)
+        @git_cache_id4 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url)
       end
 
       describe "repositories should match" do

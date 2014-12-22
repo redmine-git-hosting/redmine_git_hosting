@@ -8,7 +8,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          alias :gitolite_field_tags :git_field_tags
+          alias :xitolite_field_tags :git_field_tags
         end
       end
 

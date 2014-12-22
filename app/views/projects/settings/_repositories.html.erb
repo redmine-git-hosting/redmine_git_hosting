@@ -17,7 +17,7 @@
       <td><%= repository.identifier.present? ? repository.identifier : '' %></td>
       <td><%= checked_image repository.is_default? %></td>
       <td>
-        <% if repository.is_a?(Repository::Gitolite) %>
+        <% if repository.is_a?(Repository::Xitolite) %>
           <span class="icon icon-git-logo"></span><%= h repository.scm_name %>
         <% else %>
           <%= h repository.scm_name %>
@@ -27,14 +27,14 @@
         <%= link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param} %>
       </td>
       <td>
-        <% if repository.is_a?(Repository::Gitolite) %>
+        <% if repository.is_a?(Repository::Xitolite) %>
           <span class="label label-info"><%= repository.extra[:default_branch] %></span>
         <% else %>
         -
         <% end %>
       </td>
       <td align="center">
-        <% if repository.is_a?(Repository::Gitolite) %>
+        <% if repository.is_a?(Repository::Xitolite) %>
           <%= render_feature(repository, :deployment_credentials) %>
           <%= render_feature(repository, :post_receive_urls) %>
           <%= render_feature(repository, :mirrors) %>

@@ -148,7 +148,7 @@ module RedmineGitHosting
 
             # Check duplication if we are switching from a mode to another
             if @@old_valuehash[:hierarchical_organisation] == true && valuehash[:hierarchical_organisation] == 'false'
-              if Repository::Gitolite.have_duplicated_identifier?
+              if Repository::Xitolite.have_duplicated_identifier?
                 # Oops -- have duplication.  Force to true.
                 RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to flat mode, setting hierarchical_organisation => 'true'" }
                 valuehash[:hierarchical_organisation] = 'true'

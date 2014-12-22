@@ -12,7 +12,7 @@
   <% end %>
 </ul>
 
-<% if @repository.is_a?(Repository::Gitolite) && RedmineGitolite::Config.get_setting(:show_repositories_url, true) %>
+<% if @repository.is_a?(Repository::Xitolite) && RedmineGitolite::Config.get_setting(:show_repositories_url, true) %>
   <div class="git_hosting_urls">
     <h3><%= l(:label_repository_access_url) %></h3>
     <%= render :partial => 'common/git_urls', :locals => {:repository => @repository} %>

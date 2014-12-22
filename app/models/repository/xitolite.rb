@@ -1,6 +1,6 @@
-require 'redmine/scm/adapters/gitolite_adapter'
+require 'redmine/scm/adapters/xitolite_adapter'
 
-class Repository::Gitolite < Repository::Git
+class Repository::Xitolite < Repository::Git
   unloadable
 
   # Relations
@@ -25,7 +25,7 @@ class Repository::Gitolite < Repository::Git
   class << self
 
     def scm_adapter_class
-      Redmine::Scm::Adapters::GitoliteAdapter
+      Redmine::Scm::Adapters::XitoliteAdapter
     end
 
 
@@ -121,7 +121,7 @@ class Repository::Gitolite < Repository::Git
 
 
   def sti_name
-    'Repository::Gitolite'
+    'Repository::Xitolite'
   end
 
 

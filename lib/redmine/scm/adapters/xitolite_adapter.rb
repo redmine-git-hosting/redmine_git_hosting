@@ -6,7 +6,7 @@ require 'redmine/scm/adapters/git_adapter'
 module Redmine
   module Scm
     module Adapters
-      class GitoliteAdapter < GitAdapter
+      class XitoliteAdapter < GitAdapter
       end
     end
   end

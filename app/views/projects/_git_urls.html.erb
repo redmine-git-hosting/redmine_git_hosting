@@ -1,5 +1,5 @@
 <% if project.module_enabled?(:repository) %>
-  <% if project.repository && project.repository.is_a?(Repository::Gitolite) %>
+  <% if project.repository && project.repository.is_a?(Repository::Xitolite) %>
     <% if RedmineGitolite::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, project) %>
 
       <div class="git_hosting box">
