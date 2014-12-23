@@ -53,6 +53,31 @@ namespace :redmine_git_hosting do
   end
 
 
+  desc "Install/update Gitolite hooks"
+  task :install_hook_files => [:environment] do
+    puts ""
+    puts "Installing/updating Gitolite hooks"
+    puts "----------------------------------"
+    puts "Results :"
+    result = RedmineGitolite::HookManager.check_install!
+    puts YAML::dump(result)
+    puts "Done!"
+  end
+
+
+  desc "Install/update Gitolite hook parameters"
+  task :install_hook_parameters => [:environment] do
+    puts ""
+    puts "Installing/updating Gitolite hook parameters"
+    puts "----------------------------------"
+    puts "Results :"
+    result = RedmineGitolite::HookManager.update_hook_params!
+    puts YAML::dump(result)
+    puts "Done!"
+  end
+
+  task :install_gitolite_hooks => [ :install_hook_files, :install_hook_parameters ]
+
   desc "Show library version"
   task :version do
     puts "Redmine Git Hosting #{version("plugins/redmine_git_hosting/init.rb")}"
