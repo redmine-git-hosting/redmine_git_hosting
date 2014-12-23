@@ -1,10 +1,8 @@
 module RedmineGitolite
-
   module GitoliteWrapper
-
     class Repositories < Admin
 
-      include RedmineGitolite::GitoliteWrapper::RepositoriesHelper
+      include RedmineGitolite::GitoliteWrapper::GitoliteRepositoriesHelper
 
 
       def add_repository
@@ -17,13 +15,9 @@ module RedmineGitolite
           end
 
           admin.transaction do
-
             handle_repository_add(repository)
-
             gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
-
             recycle = RedmineGitolite::Recycle.new
-
             @recovered = recycle.recover_repository_if_present?(repository)
 
             if !@recovered

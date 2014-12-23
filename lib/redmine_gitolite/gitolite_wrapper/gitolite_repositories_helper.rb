@@ -1,10 +1,8 @@
 require 'rugged'
 
 module RedmineGitolite
-
   module GitoliteWrapper
-
-    module RepositoriesHelper
+    module GitoliteRepositoriesHelper
 
       def handle_repository_add(repository, opts = {})
         force = (opts.has_key?(:force) && opts[:force] == true) || false

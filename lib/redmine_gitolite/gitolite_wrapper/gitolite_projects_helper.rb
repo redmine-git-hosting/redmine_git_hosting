@@ -1,9 +1,6 @@
 module RedmineGitolite
-
   module GitoliteWrapper
-
-    module ProjectsHelper
-
+    module GitoliteProjectsHelper
 
       def handle_repositories_move(git_projects)
         git_projects.reverse.each do |project|

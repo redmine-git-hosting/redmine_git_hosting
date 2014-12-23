@@ -28,9 +28,9 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_gitolite/gitolite_wrapper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/admin'
   require_dependency 'redmine_gitolite/gitolite_wrapper/projects'
-  require_dependency 'redmine_gitolite/gitolite_wrapper/projects_helper'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/gitolite_projects_helper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/repositories'
-  require_dependency 'redmine_gitolite/gitolite_wrapper/repositories_helper'
+  require_dependency 'redmine_gitolite/gitolite_wrapper/gitolite_repositories_helper'
   require_dependency 'redmine_gitolite/gitolite_wrapper/users'
 
   ## Redmine Git Hosting Patches

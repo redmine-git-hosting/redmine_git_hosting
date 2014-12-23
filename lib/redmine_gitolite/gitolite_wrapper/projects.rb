@@ -1,11 +1,9 @@
 module RedmineGitolite
-
   module GitoliteWrapper
-
     class Projects < Admin
 
-      include RedmineGitolite::GitoliteWrapper::ProjectsHelper
-      include RedmineGitolite::GitoliteWrapper::RepositoriesHelper
+      include RedmineGitolite::GitoliteWrapper::GitoliteProjectsHelper
+      include RedmineGitolite::GitoliteWrapper::GitoliteRepositoriesHelper
 
 
       def update_projects
@@ -60,28 +58,28 @@ module RedmineGitolite
       private
 
 
-      def perform_update(projects)
-        git_projects = projects.uniq.select{ |p| p.gitolite_repos.any? }
-        return if git_projects.empty?
+        def perform_update(projects)
+          git_projects = projects.uniq.select{ |p| p.gitolite_repos.any? }
+          return if git_projects.empty?
 
-        admin.transaction do
-          git_projects.each do |project|
-            handle_project_update(project)
-            gitolite_admin_repo_commit("#{project.identifier}")
+          admin.transaction do
+            git_projects.each do |project|
+              handle_project_update(project)
+              gitolite_admin_repo_commit("#{project.identifier}")
+            end
           end
         end
-      end
 
 
-      def handle_project_update(project)
-        project.gitolite_repos.each do |repository|
-          if options[:force] == true
-            handle_repository_add(repository, :force => true)
-          else
-            handle_repository_update(repository)
+        def handle_project_update(project)
+          project.gitolite_repos.each do |repository|
+            if options[:force] == true
+              handle_repository_add(repository, :force => true)
+            else
+              handle_repository_update(repository)
+            end
           end
         end
-      end
 
     end
   end
