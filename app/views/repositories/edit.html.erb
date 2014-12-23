@@ -2,8 +2,20 @@
 
 <%= call_hook(:view_repository_edit_top) %>
 
-<%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put, :id => 'repository-form'} do |f| %>
-  <%= render :partial => 'form', :locals => {:f => f} %>
-<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put, :id => 'repository-form'} do |f| %>
+        <%= render :partial => 'form', :locals => {:f => f} %>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put, :id => 'repository-options-form'} do |f| %>
+        <%= render :partial => 'git_form', :locals => {:f => f} %>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <%= call_hook(:view_repository_edit_bottom) %>

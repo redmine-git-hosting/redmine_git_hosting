@@ -17,8 +17,13 @@ module RedmineGitHosting
           before_filter :set_current_tab, :only => :edit
 
           helper :git_hosting
+
+          # Load ExtendRepositoriesHelper to we can call our
+          # additional methods.
+          helper :extend_repositories
         end
       end
+
 
       module InstanceMethods
 
@@ -64,14 +69,26 @@ module RedmineGitHosting
               if !@repository.errors.any?
                 case self.action_name
                 when 'create'
-                  CreateRepository.new(@repository, params).call
+                  CreateRepository.new(@repository, creation_options).call
                 when 'update'
-                  UpdateRepository.new(@repository, params).call
+                  UpdateRepository.new(@repository).call
                 when 'destroy'
                   DestroyRepository.new(@repository).call
                 end
               end
             end
+          end
+
+
+          def creation_options
+            create_readme =
+              if params[:repository].has_key?(:create_readme)
+                params[:repository][:create_readme] == 'true' ? true : false
+              else
+                false
+              end
+
+            {create_readme_file: create_readme}
           end
 
       end

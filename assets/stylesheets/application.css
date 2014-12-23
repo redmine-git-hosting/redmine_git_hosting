@@ -74,8 +74,6 @@ REPOSITORY EDIT
   padding-right: 10px;
 }
 
-#git_hosting_settings div.split { display: block; float: left; width: 42%; }
-
 
 /*
 REPOSITORY VIEW
@@ -270,4 +268,23 @@ ul, ol {
   color: #999999;
   font-weight: normal;
   line-height: 1;
+}
+
+/*BOOTSTRAP LIKE*/
+.container {
+  width: 100%;
+  display: table;
+}
+
+.row {
+  display: table-row;
+}
+
+.col-md-6 {
+  width: 45%;
+  display: table-cell;
+}
+
+.row > .col-md-6{
+  padding: 10px;
 }
