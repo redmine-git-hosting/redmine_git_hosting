@@ -1,9 +1,6 @@
 module RedmineGitolite
-
   module GitoliteWrapper
-
     class Users < Admin
-
 
       def add_ssh_key
         ssh_key = GitolitePublicKey.find_by_id(object_id)
@@ -39,33 +36,33 @@ module RedmineGitolite
       private
 
 
-      def add_gitolite_key(key)
-        parts     = key.key.split
-        repo_keys = admin.ssh_keys[key.owner]
-        repo_key  = repo_keys.find_all{|k| k.location == key.location && k.owner == key.owner}.first
+        def add_gitolite_key(key)
+          parts     = key.key.split
+          repo_keys = admin.ssh_keys[key.owner]
+          repo_key  = repo_keys.find_all{|k| k.location == key.location && k.owner == key.owner}.first
 
-        unless repo_key
-          repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2], key.owner, key.location)
-          admin.add_key(repo_key)
-        else
-          logger.info { "#{action} : SSH key '#{key.owner}@#{key.location}' already exists in Gitolite, update it ..." }
-          repo_key.type, repo_key.blob, repo_key.email = parts
-          repo_key.owner = key.owner
-          repo_key.location = key.location
+          unless repo_key
+            repo_key = Gitolite::SSHKey.new(parts[0], parts[1], parts[2], key.owner, key.location)
+            admin.add_key(repo_key)
+          else
+            logger.info { "#{action} : SSH key '#{key.owner}@#{key.location}' already exists in Gitolite, update it ..." }
+            repo_key.type, repo_key.blob, repo_key.email = parts
+            repo_key.owner = key.owner
+            repo_key.location = key.location
+          end
         end
-      end
 
 
-      def remove_gitolite_key(key)
-        repo_keys = admin.ssh_keys[key[:owner]]
-        repo_key  = repo_keys.find_all{|k| k.location == key[:location] && k.owner == key[:owner]}.first
+        def remove_gitolite_key(key)
+          repo_keys = admin.ssh_keys[key[:owner]]
+          repo_key  = repo_keys.find_all{|k| k.location == key[:location] && k.owner == key[:owner]}.first
 
-        if repo_key
-          admin.rm_key(repo_key)
-        else
-          logger.info { "#{action} : SSH key '#{key[:owner]}@#{key[:location]}' does not exits in Gitolite, exit !" }
+          if repo_key
+            admin.rm_key(repo_key)
+          else
+            logger.info { "#{action} : SSH key '#{key[:owner]}@#{key[:location]}' does not exits in Gitolite, exit !" }
+          end
         end
-      end
 
     end
   end
