@@ -25,25 +25,25 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   protected
 
 
-  def create_or_update_config_key
-    options = {}
-    options = {:delete_git_config_key => self.key_change[0]} if self.key_changed?
-    update_repository(options)
-  end
+    def create_or_update_config_key
+      options = {}
+      options = {:delete_git_config_key => self.key_change[0]} if self.key_changed?
+      update_repository(options)
+    end
 
 
-  def delete_config_key
-    options = {:delete_git_config_key => self.key}
-    update_repository(options)
-  end
+    def delete_config_key
+      options = {:delete_git_config_key => self.key}
+      update_repository(options)
+    end
 
 
   private
 
 
-  def update_repository(options)
-    RedmineGitolite::GitHosting.logger.info { "Rebuild Git config keys respository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id, options)
-  end
+    def update_repository(options)
+      RedmineGitolite::GitHosting.logger.info { "Rebuild Git config keys respository : '#{repository.gitolite_repository_name}'" }
+      RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id, options)
+    end
 
 end
