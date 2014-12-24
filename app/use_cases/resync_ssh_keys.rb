@@ -1,4 +1,4 @@
-class ResyncSshKey
+class ResyncSshKeys
   unloadable
 
   include UseCaseBase

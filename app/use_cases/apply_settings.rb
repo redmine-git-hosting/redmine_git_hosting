@@ -7,6 +7,7 @@ class ApplySettings
   attr_reader :resync_projects
   attr_reader :resync_ssh_keys
   attr_reader :flush_cache
+  attr_reader :delete_trash_repo
 
 
   def initialize(old_valuehash, valuehash, opts = {})
@@ -35,9 +36,11 @@ class ApplySettings
       check_hook_install
       check_hook_config
       check_cache_config
+
       do_resync_projects
       do_resync_ssh_keys
       do_flush_cache
+      do_delete_trash_repo
     end
 
 
@@ -121,7 +124,7 @@ class ApplySettings
     def do_resync_ssh_keys
       ## A resync has been asked within the interface, update all projects in force mode
       if resync_ssh_keys
-        ResyncSshKey.new().call
+        ResyncSshKeys.new().call
       end
     end
 
