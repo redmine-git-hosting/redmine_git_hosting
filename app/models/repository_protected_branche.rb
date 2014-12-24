@@ -13,20 +13,16 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id, :presence => true
-  validates :path,          :presence => true, :uniqueness => { :scope => :permissions }
-  validates :permissions,   :presence => true, :inclusion => { :in => VALID_PERMS }
-  validates :user_list,     :presence => true
+  validates :repository_id, presence: true
+  validates :path,          presence: true, uniqueness: { scope: :permissions }
+  validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
+  validates :user_list,     presence: true
 
   ## Serializations
   serialize :user_list, Array
 
   ## Callbacks
   before_validation :remove_blank_items
-
-  after_commit ->(obj) { obj.update_repository }, :on => :create
-  after_commit ->(obj) { obj.update_repository }, :on => :update
-  after_commit ->(obj) { obj.update_repository }, :on => :destroy
 
   ## Scopes
   default_scope order('position ASC')
@@ -56,15 +52,6 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   def allowed_users
     user_list.map{|u| User.find_by_login(u).gitolite_identifier}.sort
   end
-
-
-  protected
-
-
-    def update_repository
-      options = { message: "Update branch permissions for repository : '#{repository.gitolite_repository_name}'" }
-      UpdateRepository.new(repository, options).call
-    end
 
 
   private

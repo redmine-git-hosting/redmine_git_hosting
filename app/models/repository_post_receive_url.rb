@@ -13,14 +13,14 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id, :presence => true
+  validates :repository_id, presence: true
 
   # Only allow HTTP(s) format
-  validates :url, :presence   => true,
-                  :uniqueness => { :case_sensitive => false, :scope => :repository_id },
-                  :format     => { :with => URI::regexp(%w(http https)) }
+  validates :url, presence:   true,
+                  uniqueness: { case_sensitive: false, scope: :repository_id },
+                  format:     { with: URI::regexp(%w(http https)) }
 
-  validates :mode, :presence => true, :inclusion => { :in => [:github, :get] }
+  validates :mode, presence: true, inclusion: { in: [:github, :get] }
 
   validates_associated :repository
 
@@ -42,7 +42,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   end
 
 
-  def mode= (value)
+  def mode=(value)
     write_attribute(:mode, value.to_s)
   end
 
@@ -72,9 +72,9 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   private
 
 
-  # Strip leading and trailing whitespace
-  def strip_whitespace
-    self.url = url.strip rescue ''
-  end
+    # Strip leading and trailing whitespace
+    def strip_whitespace
+      self.url = url.strip rescue ''
+    end
 
 end

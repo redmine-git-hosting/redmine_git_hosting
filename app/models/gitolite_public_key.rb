@@ -16,26 +16,23 @@ class GitolitePublicKey < ActiveRecord::Base
   has_many   :repository_deployment_credentials, :dependent => :destroy
 
   ## Validations
-  validates :user_id,     :presence => true
+  validates :user_id,     presence: true
 
-  validates :title,       :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id },
-                          :length => { :maximum => TITLE_LENGTH_LIMIT }, :format => /\A[a-z0-9_\-]*\z/i
+  validates :title,       presence: true, uniqueness: { case_sensitive: false, scope: :user_id },
+                          length: { maximum: TITLE_LENGTH_LIMIT }, format: /\A[a-z0-9_\-]*\z/i
 
-  validates :identifier,  :presence => true, :uniqueness => { :case_sensitive => false, :scope => :user_id }
-
-  validates :key,         :presence => true
-
-  validates :key_type,    :presence => true,
-                          :numericality => { :only_integer => true },
-                          :inclusion => { :in => [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
+  validates :identifier,  presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates :key,         presence: true
+  validates :key_type,    presence: true, numericality: { only_integer: true },
+                          inclusion: { in: [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
   validate :has_not_been_changed
   validate :key_correctness
   validate :key_uniqueness
 
   ## Scopes
-  scope :user_key,   -> { where key_type: KEY_TYPE_USER }
-  scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
+  scope :user_key,   -> { where(key_type: KEY_TYPE_USER) }
+  scope :deploy_key, -> { where(key_type: KEY_TYPE_DEPLOY) }
 
   ## Callbacks
   before_validation :strip_whitespace
@@ -44,8 +41,8 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :set_identifier
   before_validation :set_fingerprint
 
-  after_commit ->(obj) { obj.add_ssh_key },     :on => :create
-  after_commit ->(obj) { obj.destroy_ssh_key }, :on => :destroy
+  after_commit ->(obj) { obj.add_ssh_key },     on: :create
+  after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
 
 
   def self.by_user(user)
@@ -105,7 +102,7 @@ class GitolitePublicKey < ActiveRecord::Base
     set_fingerprint
 
     # Need to override the "never change identifier" constraint
-    self.save(:validate => false)
+    self.save(validate: false)
   end
 
 

@@ -16,13 +16,13 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   belongs_to :user
 
   ## Validations
-  validates :repository_id,          :presence => true,
-                                     :uniqueness => { :scope => :gitolite_public_key_id }
+  validates :repository_id,          presence: true,
+                                     uniqueness: { scope: :gitolite_public_key_id }
 
-  validates :gitolite_public_key_id, :presence => true
-  validates :user_id,                :presence => true
-  validates :perm,                   :presence => true,
-                                     :inclusion => { :in => VALID_PERMS }
+  validates :gitolite_public_key_id, presence: true
+  validates :user_id,                presence: true
+  validates :perm,                   presence: true,
+                                     inclusion: { in: VALID_PERMS }
 
   validates_associated :repository
   validates_associated :gitolite_public_key
@@ -35,11 +35,6 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   scope :active,   -> { where active: STATUS_ACTIVE }
   scope :inactive, -> { where active: STATUS_LOCKED }
 
-  ## Callbacks
-  after_commit ->(obj) { obj.update_permissions }, :on => :create
-  after_commit ->(obj) { obj.update_permissions }, :on => :update
-  after_commit ->(obj) { obj.update_permissions }, :on => :destroy
-
 
   def to_s
     "#{repository.identifier}-#{gitolite_public_key.identifier} : #{perm}"
@@ -51,8 +46,8 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   @@equivalence = nil
   def allowed_to?( cred )
     @@equivalence ||= {
-      :view_changesets => ["R", "RW+"],
-      :commit_access   => ["RW+"]
+      view_changesets: ["R", "RW+"],
+      commit_access:   ["RW+"]
     }
     return false unless honored?
 
@@ -66,15 +61,6 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   def honored?
     user.admin? || user.allowed_to?(:create_deployment_keys, repository.project)
   end
-
-
-  protected
-
-
-    def update_permissions
-      options = { message: "Update deploy keys for repository : '#{repository.gitolite_repository_name}'" }
-      UpdateRepository.new(repository, options).call
-    end
 
 
   private

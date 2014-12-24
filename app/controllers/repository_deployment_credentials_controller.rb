@@ -43,6 +43,9 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       if @credential.save
         flash[:notice] = l(:notice_deployment_credential_created)
 
+        # Update Gitolite repository
+        call_use_case
+
         format.html { redirect_to success_url }
         format.js   { render :js => "window.location = #{success_url.to_json};" }
       else
@@ -60,6 +63,9 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
     respond_to do |format|
       if @credential.update_attributes(params[:repository_deployment_credential])
         flash[:notice] = l(:notice_deployment_credential_updated)
+
+        # Update Gitolite repository
+        call_use_case
 
         format.html { redirect_to success_url }
         format.js   { render :js => "window.location = #{success_url.to_json};" }
@@ -86,6 +92,9 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
     else
       flash[:notice] = l(:notice_deployment_credential_deleted)
     end
+
+    # Update Gitolite repository
+    call_use_case
 
     respond_to do |format|
       format.js { render :js => "window.location = #{success_url.to_json};" }
@@ -154,6 +163,12 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
         deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
         @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.order('title ASC')}.flatten
       end
+    end
+
+
+    def call_use_case
+      options = { message: "Update deploy keys for repository : '#{@repository.gitolite_repository_name}'" }
+      UpdateRepository.new(@repository, options).call
     end
 
 end

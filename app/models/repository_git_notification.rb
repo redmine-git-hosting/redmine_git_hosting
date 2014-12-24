@@ -10,10 +10,8 @@ class RepositoryGitNotification < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id,  :presence   => true,
-                             :uniqueness => true
-
-  validates :sender_address, :format => { :with => VALID_EMAIL_REGEX, :allow_blank => true }
+  validates :repository_id,  presence: true, uniqueness: true
+  validates :sender_address, format: { with: VALID_EMAIL_REGEX, allow_blank: true }
 
   validate :validate_mailing_list
 
@@ -24,9 +22,9 @@ class RepositoryGitNotification < ActiveRecord::Base
   ## Callbacks
   before_validation :remove_blank_items
 
-  after_commit ->(obj) { obj.update_repository }, :on => :create
-  after_commit ->(obj) { obj.update_repository }, :on => :update
-  after_commit ->(obj) { obj.update_repository }, :on => :destroy
+  after_commit ->(obj) { obj.update_repository }, on: :create
+  after_commit ->(obj) { obj.update_repository }, on: :update
+  after_commit ->(obj) { obj.update_repository }, on: :destroy
 
 
   protected

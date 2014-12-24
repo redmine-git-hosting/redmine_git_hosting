@@ -29,6 +29,9 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
       if @protected_branch.save
         flash[:notice] = l(:notice_protected_branch_created)
 
+        # Update Gitolite repository
+        call_use_case
+
         format.html { redirect_to success_url }
         format.js   { render :js => "window.location = #{success_url.to_json};" }
       else
@@ -47,6 +50,9 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
       if @protected_branch.update_attributes(params[:repository_protected_branche])
         flash[:notice] = l(:notice_protected_branch_updated)
 
+        # Update Gitolite repository
+        call_use_case
+
         format.html { redirect_to success_url }
         format.js   { render :js => "window.location = #{success_url.to_json};" }
       else
@@ -64,6 +70,10 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     respond_to do |format|
       if @protected_branch.destroy
         flash[:notice] = l(:notice_protected_branch_deleted)
+
+        # Update Gitolite repository
+        call_use_case
+
         format.js { render :js => "window.location = #{success_url.to_json};" }
       else
         format.js { render :layout => false }
@@ -82,6 +92,10 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     params[:repository_protected_branche].each_with_index do |id, index|
       @repository.protected_branches.update_all({position: index + 1}, {id: id})
     end
+
+    # Update Gitolite repository
+    call_use_case
+
     render :nothing => true
   end
 
@@ -113,6 +127,12 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
       @protected_branch = @repository.protected_branches.find(params[:id])
     rescue ActiveRecord::RecordNotFound => e
       render_404
+    end
+
+
+    def call_use_case
+      options = { message: "Update branch permissions for repository : '#{@repository.gitolite_repository_name}'" }
+      UpdateRepository.new(@repository, options).call
     end
 
 end

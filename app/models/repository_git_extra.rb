@@ -13,17 +13,18 @@ class RepositoryGitExtra < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id,    :presence  => true, :uniqueness => true
+  validates :repository_id,    presence: true, uniqueness: true
 
-  validates :git_http,         :presence     => true,
-                               :numericality => { :only_integer => true },
-                               :inclusion    => { :in => [DISABLED, HTTP, HTTPS, BOTH] }
+  validates :git_http,         presence: true,
+                               numericality: { only_integer: true },
+                               inclusion:    { in: [DISABLED, HTTP, HTTPS, BOTH] }
 
-  validates :git_daemon,       :inclusion => { :in => [true, false] }
-  validates :git_notify,       :inclusion => { :in => [true, false] }
-  validates :default_branch,   :presence  => true
-  validates :protected_branch, :inclusion => { :in => [true, false] }
-  validates :key,              :presence  => true
+  validates :default_branch,   presence: true
+  validates :key,              presence: true
+
+  validates :git_daemon,
+  validates :git_notify,
+  validates :protected_branch,
 
   validates_associated :repository
 
@@ -34,10 +35,10 @@ class RepositoryGitExtra < ActiveRecord::Base
   private
 
 
-  def set_values
-    if self.repository.nil? && self.key.nil?
-      self.key = (0...64+rand(64) ).map{65.+(rand(25)).chr}.join
+    def set_values
+      if self.repository.nil? && self.key.nil?
+        self.key = (0...64+rand(64) ).map{65.+(rand(25)).chr}.join
+      end
     end
-  end
 
 end
