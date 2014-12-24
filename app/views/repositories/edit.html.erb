@@ -10,10 +10,8 @@
       <% end %>
     </div>
 
-    <div class="col-md-6">
-      <%= labelled_form_for :repository, @repository, :url => repository_path(@repository), :html => {:method => :put, :id => 'repository-options-form'} do |f| %>
-        <%= render :partial => 'git_form', :locals => {:f => f} %>
-      <% end %>
+    <div class="col-md-6", id="xitolite-options">
+      <%= render partial: 'xitolite_options', locals: { repository: @repository } %>
     </div>
   </div>
 </div>

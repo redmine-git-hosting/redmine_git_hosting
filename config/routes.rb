@@ -11,6 +11,8 @@ RedmineApp::Application.routes.draw do
       get 'download_revision', to: 'download_git_revision#index', as: 'download_git_revision'
     end
 
+    resource  :git_extras,        controller: 'repository_git_extras', only: [:update]
+
     resources :post_receive_urls,      controller: 'repository_post_receive_urls'
     resources :deployment_credentials, controller: 'repository_deployment_credentials'
     resources :git_notifications,      controller: 'repository_git_notifications'

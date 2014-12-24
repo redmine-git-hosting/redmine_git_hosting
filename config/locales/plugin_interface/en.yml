@@ -230,6 +230,9 @@ en:
   label_browse_repository: Browse repository
   label_repository_exists_in_gitolite: Repository exists in Gitolite
 
+  notice_gitolite_extra_updated: Options successfully updated
+  notice_gitolite_extra_update_failed: Errors while updating options
+
   # Repository list view
   label_repository_enabled_capabilities: Repository Enabled Capabilities
 

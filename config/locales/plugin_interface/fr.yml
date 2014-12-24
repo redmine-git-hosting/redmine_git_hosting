@@ -230,6 +230,9 @@ fr:
   label_browse_repository: Parcourir les sources
   label_repository_exists_in_gitolite: Le dépôt existe dans Gitolite
 
+  notice_gitolite_extra_updated: Options mises à jour avec succès
+  notice_gitolite_extra_update_failed: Erreurs lors de la mise à jour des options
+
   # Repository list view
   label_repository_enabled_capabilities: Fonctionnalité activées du dépôt
 
