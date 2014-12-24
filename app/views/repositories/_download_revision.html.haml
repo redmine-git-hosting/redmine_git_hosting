@@ -7,17 +7,17 @@
       %ul
         %li
           = link_to label_with_icon(l(:label_download_format, :archive_format => '.tar'), 'fa-download'),
-                    download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar'),
+                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'tar'),
                     :class => 'button'
 
         %li
           = link_to label_with_icon(l(:label_download_format, :archive_format => '.tar.gz'), 'fa-download'),
-                    download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'tar.gz'),
+                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'tar.gz'),
                     :class => 'button'
 
         %li
           = link_to label_with_icon(l(:label_download_format, :archive_format => '.zip'), 'fa-download'),
-                    download_git_revision_path(@repository.id, :rev => @rev, :download_format => 'zip'),
+                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'zip'),
                     :class => 'button'
 
     - content_for :header_tags do
