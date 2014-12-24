@@ -156,4 +156,13 @@ module GitHostingHelper
     ]
   end
 
+
+  def mirrors_options
+    [
+      [l(:label_mirror_full_mirror), 0],
+      [l(:label_mirror_forced_update), 1],
+      [l(:label_mirror_fast_forward), 2]
+    ]
+  end
+
 end

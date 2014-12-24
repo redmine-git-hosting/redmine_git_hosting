@@ -1,26 +1,21 @@
-<div id="validation_messages_protected_branch"><%= error_messages_for 'protected_branch' %></div>
+#validation_messages_protected_branch= error_messages_for 'protected_branch'
 
-<div class="box">
-  <p><%= f.text_field :path,        :required => true, :size => 65, :label => l(:label_branch_path) %></p>
-  <p><%= f.select     :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions),
-                      :required => true,
-                      :label    => :label_permissions %>
-  </p>
+.box
+  %p= f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
+  %p= f.select :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions), required: true, label: :label_permissions
 
-  <%= hidden_field_tag "repository_protected_branche[user_list][]", "" %>
+  = hidden_field_tag "repository_protected_branche[user_list][]", ""
 
-  <p><label for="repository_protected_branche[user_list]"><%= l(:label_user_list) %> :</label></p>
-  <ul id="user_list">
-    <% if @protected_branch.user_list.any? %>
-      <% @protected_branch.user_list.each do |item| %>
-        <li><%= item %></li>
-      <% end %>
-    <% end %>
-  </ul>
-</div>
+  %p
+    %label{ for: "repository_protected_branche[user_list]" }= l(:label_user_list) + ' :'
 
-<%= javascript_tag do %>
-  var user_list = <%= raw @protected_branch.available_users.to_json %>;
+  %ul{ id: 'user_list' }
+    - if @protected_branch.user_list.any?
+      - @protected_branch.user_list.each do |item|
+        %li= item
+
+:javascript
+  var user_list = #{raw @protected_branch.available_users.to_json};
 
   function loadTagIt(target){
 
@@ -52,4 +47,3 @@
   $(document).ready(function() {
     loadTagIt('user_list');
   });
-<% end %>

@@ -1,0 +1,63 @@
+%div
+
+  - if user_allowed_to(:create_repository_protected_branches, @project)
+    .contextual= link_to l(:label_protected_branch_add), new_repository_protected_branch_path(@repository), class: 'icon icon-add modal-box'
+
+  %h3= l(:label_protected_branches)
+
+  - if @repository_protected_branches.any?
+
+    %table{ class: 'table table-hover', id: 'protected_branches', data: { 'update-url' => sort_repository_protected_branches_url } }
+      %thead
+        %tr
+          %th
+          %th= l(:label_branch_path)
+          %th= l(:label_permissions)
+          %th= l(:label_user_list)
+          %th
+
+      %tbody
+        - @repository_protected_branches.each do |protected_branch|
+          = content_tag_for(:tr, protected_branch) do
+            %td
+              %span{ class: 'handle' }
+                [drag]
+
+            %td{ style: 'font-family: Consolas;' }= protected_branch.path
+
+            %td
+              - color = protected_branch.permissions == '-' ? 'important' : 'success'
+              %span{ class: "label label-#{color}" }= protected_branch.permissions
+
+            %td
+              - protected_branch.user_list.each do |user|
+                %span{ class: 'label label-info' }= user
+
+            %td{ class: 'buttons' }
+              - if user_allowed_to(:edit_repository_protected_branches, @project)
+                = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-edit modal-box'
+                = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-clone modal-box'
+                = link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
+
+  - else
+    %p{ class: 'nodata' }= l(:label_no_data)
+
+:javascript
+  // Return a helper with preserved width of cells
+  var fixHelper = function(e, ui) {
+    ui.children().each(function() {
+      $(this).width($(this).width());
+    });
+    return ui;
+  };
+
+  $(document).ready(function() {
+    initModalBoxes(modals);
+    $('#protected_branches tbody').sortable({
+      helper: fixHelper,
+      axis: 'y',
+      update: function(event, ui) {
+        $.post($('#protected_branches').data('update-url'), $(this).sortable('serialize'));
+      }
+    });
+  });

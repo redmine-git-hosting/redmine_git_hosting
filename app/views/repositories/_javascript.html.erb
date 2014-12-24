@@ -1,0 +1,75 @@
+<div id="modal-box"></div>
+<div id="modal-box-close-only"></div>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'font_awesome',                     :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'jquery_tag_it',                    :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_custom',       :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_label',        :plugin => 'redmine_bootstrap_kit' %>
+  <%= stylesheet_link_tag 'bootstrap/bootstrap_tables',       :plugin => 'redmine_bootstrap_kit' %>
+
+  <%= javascript_include_tag 'jquery_tag_it',                 :plugin => 'redmine_bootstrap_kit' %>
+  <%= javascript_include_tag 'bootstrap',                     :plugin => 'redmine_bootstrap_kit' %>
+
+  <%= javascript_tag do %>
+
+    function post_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('#payload_options').show();
+      } else {
+        $('#payload_options').hide();
+      }
+    }
+
+    function push_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('#ref_spec_options').hide();
+      } else {
+        $('#ref_spec_options').show();
+      }
+    }
+
+    function key_mode_change(elem) {
+      if (!elem) return;
+      var idx = elem.selectedIndex;
+      if (idx == 0) {
+        $('#new_key_window').show();
+      } else {
+        $('#new_key_window').hide();
+      }
+    }
+
+    var modals           = Object();
+    modals.label_save    = '<%= l(:button_save) %>';
+    modals.label_cancel  = '<%= l(:button_cancel) %>';
+    modals.label_ok      = '<%= l(:button_ok) %>';
+    modals.modal_list    = [];
+    modals.modal_list[0] = {'source': '.modal-box', 'target': '#modal-box', 'mode': 'standard'};
+    modals.modal_list[1] = {'source': '.modal-box-close-only', 'target': '#modal-box-close-only', 'mode': 'close-only'};
+
+    $(document).ready(function() {
+      var all_tabs = $("#repository-tabs li");
+      var active_tab = '';
+
+      all_tabs.each(function(){
+        if ($(this).attr('id').replace('tab-', '') == '<%= @tab %>') {
+          active_tab = all_tabs.index(this);
+        }
+      });
+
+      $("#repository-tabs").tabs({
+        active: active_tab,
+        activate: function(event, ui) {
+          var new_tab_name = $(ui.newTab).attr('id').replace('tab-', '');
+          if ("replaceState" in window.history) {
+            window.history.replaceState(null, document.title, 'edit?tab=' + new_tab_name);
+          }
+        }
+      });
+    });
+  <% end %>
+<% end %>
