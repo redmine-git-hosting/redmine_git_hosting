@@ -9,7 +9,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          after_commit  :update_member
+          after_commit :update_member
         end
       end
 
@@ -17,10 +17,9 @@ module RedmineGitHosting
 
         private
 
-        def update_member
-          RedmineGitolite::GitHosting.logger.info { "Membership changes on project '#{self.project}', update!" }
-          RedmineGitolite::GitHosting.resync_gitolite(:update_projects, [self.project.id])
-        end
+          def update_member
+            UpdateProject.new(project, "Membership changes on project '#{project}', update!").call
+          end
 
       end
 
