@@ -351,7 +351,7 @@ class Repository::Xitolite < Repository::Git
 
     # Set up git urls for new repositories
     def set_git_urls
-      self.url = self.gitolite_repository_path if self.url.blank?
+      self.url = gitolite_repository_path if self.url.blank?
       self.root_url = self.url if self.root_url.blank?
     end
 

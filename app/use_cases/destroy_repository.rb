@@ -4,6 +4,7 @@ class DestroyRepository
   include UseCaseBase
 
   attr_reader :repositories
+  attr_reader :message
 
 
   def initialize(repositories, opts = {})
