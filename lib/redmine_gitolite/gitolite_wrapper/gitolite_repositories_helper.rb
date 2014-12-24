@@ -250,7 +250,7 @@ module RedmineGitolite
         permissions["RW"] = {}
         permissions["R"] = {}
 
-        if repository.extra[:protected_branch]
+        if project.active? && repository.extra[:protected_branch]
           ## http://gitolite.com/gitolite/rules.html
           ## The refex field is ignored for read check.
           ## (Git does not support distinguishing one ref from another for access control during read operations).
