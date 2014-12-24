@@ -1,4 +1,4 @@
-require 'redmine/scm/adapters/xitolite_adapter'
+require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
 class Repository::Xitolite < Repository::Git
   unloadable
