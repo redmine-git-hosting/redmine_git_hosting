@@ -18,7 +18,7 @@ module RedmineGitHosting
 
           helper :git_hosting
 
-          # Load ExtendRepositoriesHelper to we can call our
+          # Load ExtendRepositoriesHelper so we can call our
           # additional methods.
           helper :extend_repositories
         end

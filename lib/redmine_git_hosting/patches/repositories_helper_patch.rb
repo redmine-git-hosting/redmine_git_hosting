@@ -25,7 +25,7 @@ module RedmineGitHosting
         def xitolite_field_tags_with_git_hosting(form, repository)
           # Extending Helpers is a bit tricky.
           # These methods are defined in ExtendRepositoriesHelper module
-          # which in loaded in RepositoriesControllerPatch.
+          # which is loaded in RepositoriesControllerPatch.
           encoding_field(form, repository) +
           report_last_commit_field(form, repository) +
           create_readme_field(form, repository)
