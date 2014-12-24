@@ -9,15 +9,16 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
+          # Virtual attribute
           attr_accessor :status_has_changed
 
+          # Relations
           has_many :gitolite_public_keys, :dependent => :destroy
 
+          # Callbacks
           before_destroy :delete_ssh_keys, prepend: true
-
-          after_save :check_if_status_changed
-
-          after_commit ->(obj) { obj.update_repositories }, on: :update
+          after_save     :check_if_status_changed
+          after_commit   ->(obj) { obj.update_repositories }, on: :update
         end
       end
 
