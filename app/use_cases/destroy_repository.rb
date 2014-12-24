@@ -3,11 +3,17 @@ class DestroyRepository
 
   include UseCaseBase
 
-  attr_reader :repository
+  attr_reader :repositories
 
 
-  def initialize(repository)
-    @repository = repository
+  def initialize(repositories, opts = {})
+    if repositories.is_a?(Hash)
+      @repositories = [repositories]
+    elsif repositories.is_a?(Array)
+      @repositories = repositories
+    end
+
+    @message = opts.delete(:message){ ' ' }
     super
   end
 
@@ -22,11 +28,8 @@ class DestroyRepository
 
 
     def destroy_repository
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has removed repository '#{repository.gitolite_repository_name}'" }
-      repository_data = {}
-      repository_data['repo_name'] = repository.gitolite_repository_name
-      repository_data['repo_path'] = repository.gitolite_repository_path
-      RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, [repository_data])
+      RedmineGitolite::GitHosting.logger.info { message }
+      RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, repositories)
     end
 
 end

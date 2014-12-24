@@ -4,12 +4,12 @@ class UpdateProjectHierarchy
   include UseCaseBase
 
   attr_reader :project
-  attr_reader :message
+  attr_reader :options
 
 
-  def initialize(project, message)
+  def initialize(project, opts = {})
     @project = project
-    @message = message
+    @options = opts
     super
   end
 
@@ -24,13 +24,13 @@ class UpdateProjectHierarchy
 
 
     def update_project_hierarchy
-      projects = project.self_and_descendants
+      UpdateProjects.new(projects_to_update, options).call
+    end
 
+
+    def projects_to_update
       # Only take projects that have Git repos.
-      git_projects = projects.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
-
-      RedmineGitolite::GitHosting.logger.info { message }
-      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, git_projects)
+      project.self_and_descendants.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
     end
 
 end

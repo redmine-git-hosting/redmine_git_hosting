@@ -71,27 +71,27 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   protected
 
 
-  def update_permissions
-    RedmineGitolite::GitHosting.logger.info { "Update deploy keys for repository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id)
-  end
+    def update_permissions
+      options = { message: "Update deploy keys for repository : '#{repository.gitolite_repository_name}'" }
+      UpdateRepository.new(repository, options).call
+    end
 
 
   private
 
 
-  def correct_key_type
-    if gitolite_public_key && gitolite_public_key.key_type != GitolitePublicKey::KEY_TYPE_DEPLOY
-      errors.add(:base, "Public Key Must Be a Deployment Key")
+    def correct_key_type
+      if gitolite_public_key && gitolite_public_key.key_type != GitolitePublicKey::KEY_TYPE_DEPLOY
+        errors.add(:base, "Public Key Must Be a Deployment Key")
+      end
     end
-  end
 
 
-  def owner_matches_key
-    return if user.nil? || gitolite_public_key.nil?
-    if user != gitolite_public_key.user
-      errors.add(:base, "Credential owner cannot be different than owner of Key.")
+    def owner_matches_key
+      return if user.nil? || gitolite_public_key.nil?
+      if user != gitolite_public_key.user
+        errors.add(:base, "Credential owner cannot be different than owner of Key.")
+      end
     end
-  end
 
 end

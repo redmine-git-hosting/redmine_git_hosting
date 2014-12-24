@@ -32,34 +32,34 @@ class RepositoryGitNotification < ActiveRecord::Base
   protected
 
 
-  def update_repository
-    RedmineGitolite::GitHosting.logger.info { "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id)
-  end
+    def update_repository
+      options = { message: "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
+      UpdateRepository.new(repository, options).call
+    end
 
 
   private
 
 
-  def remove_blank_items
-    self.include_list = include_list.select{ |mail| !mail.blank? }
-    self.exclude_list = exclude_list.select{ |mail| !mail.blank? }
-  end
-
-
-  def validate_mailing_list
-    include_list.each do |item|
-      errors.add(:include_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+    def remove_blank_items
+      self.include_list = include_list.select{ |mail| !mail.blank? }
+      self.exclude_list = exclude_list.select{ |mail| !mail.blank? }
     end
 
-    exclude_list.each do |item|
-      errors.add(:exclude_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-    end
 
-    intersection = include_list & exclude_list
-    if intersection.length.to_i > 0
-      errors.add(:repository_git_notification, 'the same address is defined twice')
+    def validate_mailing_list
+      include_list.each do |item|
+        errors.add(:include_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+      end
+
+      exclude_list.each do |item|
+        errors.add(:exclude_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+      end
+
+      intersection = include_list & exclude_list
+      if intersection.length.to_i > 0
+        errors.add(:repository_git_notification, 'the same address is defined twice')
+      end
     end
-  end
 
 end

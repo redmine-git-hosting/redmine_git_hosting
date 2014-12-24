@@ -24,9 +24,9 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   ## Callbacks
   before_validation :remove_blank_items
 
-  after_commit ->(obj) { obj.update_permissions }, :on => :create
-  after_commit ->(obj) { obj.update_permissions }, :on => :update
-  after_commit ->(obj) { obj.update_permissions }, :on => :destroy
+  after_commit ->(obj) { obj.update_repository }, :on => :create
+  after_commit ->(obj) { obj.update_repository }, :on => :update
+  after_commit ->(obj) { obj.update_repository }, :on => :destroy
 
   ## Scopes
   default_scope order('position ASC')
@@ -48,24 +48,24 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
 
   def allowed_users
-    self.user_list.map{ |user| User.find_by_login(user).gitolite_identifier }.sort
+    user_list.map{ |user| User.find_by_login(user).gitolite_identifier }.sort
   end
 
 
   protected
 
 
-  def update_permissions
-    RedmineGitolite::GitHosting.logger.info { "Update branch permissions for repository : '#{repository.gitolite_repository_name}'" }
-    RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id)
-  end
+    def update_repository
+      options = { message: "Update branch permissions for repository : '#{repository.gitolite_repository_name}'" }
+      UpdateRepository.new(repository, options).call
+    end
 
 
   private
 
 
-  def remove_blank_items
-    self.user_list = user_list.select{ |user| !user.blank? } rescue []
-  end
+    def remove_blank_items
+      self.user_list = user_list.select{ |user| !user.blank? } rescue []
+    end
 
 end

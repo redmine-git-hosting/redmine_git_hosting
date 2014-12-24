@@ -338,6 +338,14 @@ class Repository::Xitolite < Repository::Git
   end
 
 
+  def data_for_destruction
+    {
+      'repo_name' => gitolite_repository_name,
+      'repo_path' => gitolite_repository_path
+    }
+  end
+
+
   private
 
 

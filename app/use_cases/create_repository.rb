@@ -4,12 +4,12 @@ class CreateRepository
   include UseCaseBase
 
   attr_reader :repository
-  attr_reader :opts
+  attr_reader :options
 
 
   def initialize(repository, opts = {})
     @repository = repository
-    @opts       = opts
+    @options    = opts
     super
   end
 
@@ -25,7 +25,7 @@ class CreateRepository
 
     def create_repository
       RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
-      RedmineGitolite::GitHosting.resync_gitolite(:add_repository, repository.id, opts)
+      RedmineGitolite::GitHosting.resync_gitolite(:add_repository, repository.id, options)
     end
 
 end

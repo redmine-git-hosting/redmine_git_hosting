@@ -13,7 +13,7 @@ class CreateProjectRepository
 
 
   def call
-    create_repository
+    create_project_repository
     super
   end
 
@@ -21,23 +21,25 @@ class CreateProjectRepository
   private
 
 
-    def create_repository
+    def create_project_repository
       if project.module_enabled?('repository') && RedmineGitolite::Config.get_setting(:all_projects_use_git, true)
         # Create new repository
-        repository = Repository.factory('Gitolite')
+        repository = Repository.factory('Xitolite')
         repository.is_default = true
         repository.extra_info = {}
         repository.extra_info['extra_report_last_commit'] = '1'
+
+        # Save it to database
         project.repositories << repository
 
-        RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
-        RedmineGitolite::GitHosting.resync_gitolite(:add_repository, repository.id, creation_options)
+        # Create it in Gitolite
+        CreateRepository.new(repository, creation_options).call
       end
     end
 
 
     def creation_options
-      { :create_readme_file => RedmineGitolite::Config.get_setting(:init_repositories_on_create, true) }
+      { create_readme_file: RedmineGitolite::Config.get_setting(:init_repositories_on_create, true) }
     end
 
 end

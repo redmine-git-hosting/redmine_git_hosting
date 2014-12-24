@@ -73,7 +73,7 @@ module RedmineGitHosting
                 when 'update'
                   UpdateRepository.new(@repository).call
                 when 'destroy'
-                  DestroyRepository.new(@repository).call
+                  DestroyRepository.new(@repository.data_for_destruction, destroy_options).call
                 end
               end
             end
@@ -89,6 +89,11 @@ module RedmineGitHosting
               end
 
             {create_readme_file: create_readme}
+          end
+
+
+          def destroy_options
+            {message: "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'"}
           end
 
       end

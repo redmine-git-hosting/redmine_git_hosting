@@ -9,7 +9,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          after_commit :update_member
+          after_commit :update_project
         end
       end
 
@@ -17,8 +17,9 @@ module RedmineGitHosting
 
         private
 
-          def update_member
-            UpdateProject.new(project, "Membership changes on project '#{project}', update!").call
+          def update_project
+            options = { message: "Membership changes on project '#{project}', update!" }
+            UpdateProject.new(project, options).call
           end
 
       end

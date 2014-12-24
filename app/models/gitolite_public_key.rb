@@ -134,14 +134,12 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     def add_ssh_key
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
-      RedmineGitolite::GitHosting.resync_gitolite(:add_ssh_key, self.id)
+      CreateSshKey.new(self).call
     end
 
 
     def destroy_ssh_key
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
-      RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, self.to_yaml)
+      DestroySshKey.new(self).call
     end
 
 

@@ -4,12 +4,12 @@ class UpdateProject
   include UseCaseBase
 
   attr_reader :project
-  attr_reader :message
+  attr_reader :options
 
 
-  def initialize(project, message = nil)
+  def initialize(project, opts = {})
     @project = project
-    @message = message || "Set Git daemon for repositories of project : '#{project}'"
+    @options = opts
     super
   end
 
@@ -42,8 +42,7 @@ class UpdateProject
 
 
     def resync
-      RedmineGitolite::GitHosting.logger.info { message }
-      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, [project.id])
+      UpdateProjects.new([project.id], options).call
     end
 
 end

@@ -57,7 +57,7 @@ module RedmineGitHosting
             # John Kubiatowicz 12/21/2011
             # Clear out all cached settings.
             Setting.check_cache if Setting.respond_to?(:check_cache)
-            RedmineGitolite::GitHosting.resync_gitolite(:flush_settings_cache, 'flush!', {:flush_cache => true})
+            FlushSettingsCache.new().call
 
             # Build options to pass to RestoreSettings object
             opts = {

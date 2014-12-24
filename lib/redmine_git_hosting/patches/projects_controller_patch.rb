@@ -39,7 +39,8 @@ module RedmineGitHosting
             # Hm... something about parent hierarchy changed.  Update us and our children
             MoveProjectHierarchy.new(@project).call
           else
-            UpdateProject.new(@project).call
+            options = { message: "Set Git daemon for repositories of project : '#{@project}'" }
+            UpdateProject.new(@project, options).call
           end
         end
 
@@ -48,36 +49,43 @@ module RedmineGitHosting
           repositories_list = repositories_to_destroy
           destroy_without_git_hosting(&block)
           if api_request? || params[:confirm]
-            RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, repositories_list)
+            DestroyRepository.new(repositories_list, destroy_options).call
           end
         end
 
 
         def archive_with_git_hosting(&block)
           archive_without_git_hosting(&block)
-          UpdateProjectHierarchy.new(@project, "Project has been archived, update it : '#{@project}'").call
+          update_project_hierarchy("User '#{User.current.login}' has archived project '#{@project}', update it !")
         end
 
 
         def unarchive_with_git_hosting(&block)
           unarchive_without_git_hosting(&block)
-          UpdateProject.new(@project, "Project has been unarchived, update it : '#{@project}'").call
+          options = { message: "User '#{User.current.login}' has unarchived project '#{@project}', update it !" }
+          UpdateProject.new(@project, options).call
         end
 
 
         def close_with_git_hosting(&block)
           close_without_git_hosting(&block)
-          UpdateProjectHierarchy.new(@project, "Project has been closed, update it : '#{@project}'").call
+          update_project_hierarchy("User '#{User.current.login}' has closed project '#{@project}', update it !")
         end
 
 
         def reopen_with_git_hosting(&block)
           reopen_without_git_hosting(&block)
-          UpdateProjectHierarchy.new(@project, "Project has been reopened, update it : '#{@project}'").call
+          update_project_hierarchy("User '#{User.current.login}' has reopened project '#{@project}', update it !")
         end
 
 
         private
+
+
+          def update_project_hierarchy(message)
+            options = { message: message }
+            UpdateProjectHierarchy.new(@project, options).call
+          end
 
 
           def repositories_to_destroy
@@ -91,14 +99,16 @@ module RedmineGitHosting
 
             git_projects.reverse.each do |project|
               project.gitolite_repos.reverse.each do |repository|
-                repository_data = {}
-                repository_data['repo_name']   = repository.gitolite_repository_name
-                repository_data['repo_path']   = repository.gitolite_repository_path
-                destroy_repositories << repository_data
+                destroy_repositories << repository.data_for_destruction
               end
             end
 
             destroy_repositories
+          end
+
+
+          def destroy_options
+            {message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !"}
           end
 
       end

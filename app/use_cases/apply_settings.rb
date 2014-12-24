@@ -49,11 +49,9 @@ class ApplySettings
 
         # Need to update everyone!
         # We take all root projects (even those who are closed) and move each hierarchy individually
-        projects = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }
-        if projects.length > 0
-          RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified : repositories hierarchy" }
-          RedmineGitolite::GitHosting.logger.info { "Resync all projects (root projects : '#{projects.length}')..." }
-          RedmineGitolite::GitHosting.resync_gitolite(:move_repositories_tree, projects.length, {:flush_cache => true})
+        count = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }.length
+        if count > 0
+          MoveRepositoriesTree.new(count).call
         end
       end
     end
@@ -64,8 +62,8 @@ class ApplySettings
       if old_valuehash[:gitolite_config_file] != valuehash[:gitolite_config_file] ||
          old_valuehash[:gitolite_config_has_admin_key] != valuehash[:gitolite_config_has_admin_key]
 
-        RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all projects (active, closed, archived)..." }
-        RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all')
+        options = { message: "Gitolite configuration has been modified, resync all projects (active, closed, archived)..." }
+        UpdateProjects.new('all', options).call
       end
     end
 
@@ -77,8 +75,8 @@ class ApplySettings
          old_valuehash[:gitolite_notify_global_include]        != valuehash[:gitolite_notify_global_include]        ||
          old_valuehash[:gitolite_notify_global_exclude]        != valuehash[:gitolite_notify_global_exclude]
 
-        RedmineGitolite::GitHosting.logger.info { "Gitolite configuration has been modified, resync all active projects..." }
-        RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'active')
+        options = { message: "Gitolite configuration has been modified, resync all active projects..." }
+        UpdateProjects.new('active', options).call
       end
     end
 
@@ -114,8 +112,8 @@ class ApplySettings
     def do_resync_projects
       ## A resync has been asked within the interface, update all projects in force mode
       if resync_projects
-        RedmineGitolite::GitHosting.logger.info { "Forced resync of all projects (active, closed, archived)..." }
-        RedmineGitolite::GitHosting.resync_gitolite(:update_projects, 'all', {:force => true})
+        options = { message: "Forced resync of all projects (active, closed, archived)...", force: true }
+        UpdateProjects.new('all', options).call
       end
     end
 
@@ -123,8 +121,7 @@ class ApplySettings
     def do_resync_ssh_keys
       ## A resync has been asked within the interface, update all projects in force mode
       if resync_ssh_keys
-        RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys..." }
-        RedmineGitolite::GitHosting.resync_gitolite(:resync_all_ssh_keys, 'all')
+        ResyncSshKey.new().call
       end
     end
 
@@ -132,15 +129,14 @@ class ApplySettings
     def do_flush_cache
       ## A cache flush has been asked within the interface
       if flush_cache
-        RedmineGitolite::GitHosting.logger.info { "Flush Git Cache" }
-        ActiveRecord::Base.connection.execute("TRUNCATE git_caches")
+        FlushGitCache.new().call
       end
     end
 
 
     def do_delete_trash_repo
       if !delete_trash_repo.empty?
-        RedmineGitolite::GitHosting.resync_gitolite(:purge_recycle_bin, delete_trash_repo)
+        PurgeRecycleBin.new(delete_trash_repo).call
       end
     end
 
