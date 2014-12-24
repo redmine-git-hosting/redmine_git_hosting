@@ -1,7 +1,6 @@
 class RepositoryMirrorsController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_mirrors,   :only => [:index]
   before_filter :can_create_mirrors, :only => [:new, :create]
   before_filter :can_edit_mirrors,   :only => [:edit, :update, :destroy]
@@ -10,8 +9,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def index
-    @repository_mirrors = RepositoryMirror.find_all_by_repository_id(@repository.id)
-
+    @repository_mirrors = @repository.mirrors.all
     respond_to do |format|
       format.html { render :layout => 'popup' }
       format.js
@@ -20,14 +18,12 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def new
-    @mirror = RepositoryMirror.new()
+    @mirror = @repository.mirrors.new()
   end
 
 
   def create
-    @mirror = RepositoryMirror.new(params[:repository_mirror])
-    @mirror.repository = @repository
-
+    @mirror = @repository.mirrors.new(params[:repository_mirror])
     respond_to do |format|
       if @mirror.save
         flash[:notice] = l(:notice_mirror_created)
@@ -83,36 +79,30 @@ class RepositoryMirrorsController < RedmineGitHostingController
   private
 
 
-  def can_view_mirrors
-    render_403 unless view_context.user_allowed_to(:view_repository_mirrors, @project)
-  end
+    def set_current_tab
+      @tab = 'repository_mirrors'
+    end
 
 
-  def can_create_mirrors
-    render_403 unless view_context.user_allowed_to(:create_repository_mirrors, @project)
-  end
+    def can_view_mirrors
+      render_403 unless view_context.user_allowed_to(:view_repository_mirrors, @project)
+    end
 
 
-  def can_edit_mirrors
-    render_403 unless view_context.user_allowed_to(:edit_repository_mirrors, @project)
-  end
+    def can_create_mirrors
+      render_403 unless view_context.user_allowed_to(:create_repository_mirrors, @project)
+    end
 
 
-  def find_repository_mirror
-    mirror = RepositoryMirror.find_by_id(params[:id])
+    def can_edit_mirrors
+      render_403 unless view_context.user_allowed_to(:edit_repository_mirrors, @project)
+    end
 
-    if mirror && mirror.repository_id == @repository.id
-      @mirror = mirror
-    elsif mirror
-      render_403
-    else
+
+    def find_repository_mirror
+      @mirror = @repository.mirrors.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
       render_404
     end
-  end
-
-
-  def set_current_tab
-    @tab = 'repository_mirrors'
-  end
 
 end

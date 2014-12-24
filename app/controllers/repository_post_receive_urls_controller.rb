@@ -1,7 +1,6 @@
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_post_receive_urls,   :only => [:index]
   before_filter :can_create_post_receive_urls, :only => [:new, :create]
   before_filter :can_edit_post_receive_urls,   :only => [:edit, :update, :destroy]
@@ -10,8 +9,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
 
   def index
-    @repository_post_receive_urls = RepositoryPostReceiveUrl.find_all_by_repository_id(@repository.id)
-
+    @repository_post_receive_urls = @repository.post_receive_urls.all
     respond_to do |format|
       format.html { render :layout => 'popup' }
       format.js
@@ -20,14 +18,12 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
 
   def new
-    @post_receive_url = RepositoryPostReceiveUrl.new()
+    @post_receive_url = @repository.post_receive_urls.new()
   end
 
 
   def create
-    @post_receive_url = RepositoryPostReceiveUrl.new(params[:repository_post_receive_url])
-    @post_receive_url.repository_id = @repository.id
-
+    @post_receive_url = @repository.post_receive_urls.new(params[:repository_post_receive_url])
     respond_to do |format|
       if @post_receive_url.save
         flash[:notice] = l(:notice_post_receive_url_created)
@@ -76,36 +72,30 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   private
 
 
-  def can_view_post_receive_urls
-    render_403 unless view_context.user_allowed_to(:view_repository_post_receive_urls, @project)
-  end
+    def set_current_tab
+      @tab = 'repository_post_receive_urls'
+    end
 
 
-  def can_create_post_receive_urls
-    render_403 unless view_context.user_allowed_to(:create_repository_post_receive_urls, @project)
-  end
+    def can_view_post_receive_urls
+      render_403 unless view_context.user_allowed_to(:view_repository_post_receive_urls, @project)
+    end
 
 
-  def can_edit_post_receive_urls
-    render_403 unless view_context.user_allowed_to(:edit_repository_post_receive_urls, @project)
-  end
+    def can_create_post_receive_urls
+      render_403 unless view_context.user_allowed_to(:create_repository_post_receive_urls, @project)
+    end
 
 
-  def find_repository_post_receive_url
-    post_receive_url = RepositoryPostReceiveUrl.find_by_id(params[:id])
+    def can_edit_post_receive_urls
+      render_403 unless view_context.user_allowed_to(:edit_repository_post_receive_urls, @project)
+    end
 
-    if post_receive_url && post_receive_url.repository_id == @repository.id
-      @post_receive_url = post_receive_url
-    elsif post_receive_url
-      render_403
-    else
+
+    def find_repository_post_receive_url
+      @post_receive_url = @repository.post_receive_urls.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
       render_404
     end
-  end
-
-
-  def set_current_tab
-    @tab = 'repository_post_receive_urls'
-  end
 
 end

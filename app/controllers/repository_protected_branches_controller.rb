@@ -1,7 +1,6 @@
 class RepositoryProtectedBranchesController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_protected_branches,   :only => [:index]
   before_filter :can_create_protected_branches, :only => [:new, :create]
   before_filter :can_edit_protected_branches,   :only => [:edit, :update, :destroy]
@@ -10,8 +9,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
 
   def index
-    @repository_protected_branches = RepositoryProtectedBranche.find_all_by_repository_id(@repository.id)
-
+    @repository_protected_branches = @repository.protected_branches.all
     respond_to do |format|
       format.html { render :layout => 'popup' }
       format.js
@@ -20,16 +18,13 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
 
   def new
-    @protected_branch = RepositoryProtectedBranche.new()
-    @protected_branch.repository = @repository
+    @protected_branch = @repository.protected_branches.new()
     @protected_branch.user_list  = []
   end
 
 
   def create
-    @protected_branch = RepositoryProtectedBranche.new(params[:repository_protected_branche])
-    @protected_branch.repository = @repository
-
+    @protected_branch = @repository.protected_branches.new(params[:repository_protected_branche])
     respond_to do |format|
       if @protected_branch.save
         flash[:notice] = l(:notice_protected_branch_created)
@@ -39,7 +34,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
       else
         format.html {
           flash[:error] = l(:notice_protected_branch_create_failed)
-          render :action => "create"
+          render :action => "new"
         }
         format.js { render "form_error", :layout => false }
       end
@@ -85,7 +80,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def sort
     params[:repository_protected_branche].each_with_index do |id, index|
-      RepositoryProtectedBranche.update_all({position: index + 1}, {id: id})
+      @repository.protected_branches.update_all({position: index + 1}, {id: id})
     end
     render :nothing => true
   end
@@ -94,36 +89,30 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   private
 
 
-  def can_view_protected_branches
-    render_403 unless view_context.user_allowed_to(:view_repository_protected_branches, @project)
-  end
+    def set_current_tab
+      @tab = 'repository_protected_branches'
+    end
 
 
-  def can_create_protected_branches
-    render_403 unless view_context.user_allowed_to(:create_repository_protected_branches, @project)
-  end
+    def can_view_protected_branches
+      render_403 unless view_context.user_allowed_to(:view_repository_protected_branches, @project)
+    end
 
 
-  def can_edit_protected_branches
-    render_403 unless view_context.user_allowed_to(:edit_repository_protected_branches, @project)
-  end
+    def can_create_protected_branches
+      render_403 unless view_context.user_allowed_to(:create_repository_protected_branches, @project)
+    end
 
 
-  def find_repository_protected_branch
-    protected_branch = RepositoryProtectedBranche.find_by_id(params[:id])
+    def can_edit_protected_branches
+      render_403 unless view_context.user_allowed_to(:edit_repository_protected_branches, @project)
+    end
 
-    if protected_branch && protected_branch.repository_id == @repository.id
-      @protected_branch = protected_branch
-    elsif protected_branch
-      render_403
-    else
+
+    def find_repository_protected_branch
+      @protected_branch = @repository.protected_branches.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
       render_404
     end
-  end
-
-
-  def set_current_tab
-    @tab = 'repository_protected_branches'
-  end
 
 end

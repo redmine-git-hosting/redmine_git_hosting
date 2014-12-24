@@ -1,7 +1,6 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_credentials,   :only => [:index]
   before_filter :can_create_credentials, :only => [:new, :create]
   before_filter :can_edit_credentials,   :only => [:edit, :update, :destroy]
@@ -14,8 +13,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
   def index
-    @repository_deployment_credentials = RepositoryDeploymentCredential.find_all_by_repository_id(@repository.id)
-
+    @repository_deployment_credentials = @repository.deployment_credentials.all
     respond_to do |format|
       format.html { render :layout => 'popup' }
       format.js
@@ -24,15 +22,14 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
   def new
-    @credential = RepositoryDeploymentCredential.new()
+    @credential = @repository.deployment_credentials.new()
   end
 
 
   def create
-    @credential = RepositoryDeploymentCredential.new(params[:repository_deployment_credential])
+    @credential = @repository.deployment_credentials.new(params[:repository_deployment_credential])
     key = GitolitePublicKey.find_by_id(params[:repository_deployment_credential][:gitolite_public_key_id])
 
-    @credential.repository = @repository
     @credential.gitolite_public_key = key if !key.nil?
 
     # If admin, let credential be owned by owner of key...
@@ -99,62 +96,64 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   private
 
 
-  def can_view_credentials
-    render_403 unless view_context.user_allowed_to(:view_deployment_keys, @project)
-  end
-
-
-  def can_create_credentials
-    render_403 unless view_context.user_allowed_to(:create_deployment_keys, @project)
-  end
-
-
-  def can_edit_credentials
-    render_403 unless view_context.user_allowed_to(:edit_deployment_keys, @project)
-  end
-
-
-  def find_deployment_credential
-    credential = RepositoryDeploymentCredential.find_by_id(params[:id])
-
-    if credential && credential.user && credential.repository_id == @repository.id && (User.current.admin? || credential.user == User.current)
-      @credential = credential
-    elsif credential
-      render_403
-    else
-      render_404
+    def set_current_tab
+      @tab = 'repository_deployment_credentials'
     end
-  end
 
 
-  def find_key
-    key = @credential.gitolite_public_key
-    if key && key.user && (User.current.admin? || key.user == User.current)
-      @key = key
-    elsif key
-      render_403
-    else
-      render_404
+    def can_view_credentials
+      render_403 unless view_context.user_allowed_to(:view_deployment_keys, @project)
     end
-  end
 
 
-  def find_all_keys
-    # display create_with_key view.  Find preexisting keys to offer to user
-    @user_keys = GitolitePublicKey.by_user(User.current).deploy_key.order('title ASC')
-    @disabled_keys = @repository.deployment_credentials.map(&:gitolite_public_key)
-
-    @other_keys = []
-    if User.current.admin?
-      # Admin can use other's deploy keys as well
-      deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
-      @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.order('title ASC')}.flatten
+    def can_create_credentials
+      render_403 unless view_context.user_allowed_to(:create_deployment_keys, @project)
     end
-  end
 
 
-  def set_current_tab
-    @tab = 'repository_deployment_credentials'
-  end
+    def can_edit_credentials
+      render_403 unless view_context.user_allowed_to(:edit_deployment_keys, @project)
+    end
+
+
+    def find_deployment_credential
+      begin
+        credential = @repository.deployment_credentials.find(params[:id])
+      rescue ActiveRecord::RecordNotFound => e
+        render_404
+      else
+        if credential.user && (User.current.admin? || credential.user == User.current)
+          @credential = credential
+        else
+          render_403
+        end
+      end
+    end
+
+
+    def find_key
+      key = @credential.gitolite_public_key
+      if key && key.user && (User.current.admin? || key.user == User.current)
+        @key = key
+      elsif key
+        render_403
+      else
+        render_404
+      end
+    end
+
+
+    def find_all_keys
+      # display create_with_key view.  Find preexisting keys to offer to user
+      @user_keys = User.current.gitolite_public_keys.deploy_key.order('title ASC')
+      @disabled_keys = @repository.deployment_credentials.map(&:gitolite_public_key)
+
+      @other_keys = []
+      if User.current.admin?
+        # Admin can use other's deploy keys as well
+        deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
+        @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.order('title ASC')}.flatten
+      end
+    end
 
 end

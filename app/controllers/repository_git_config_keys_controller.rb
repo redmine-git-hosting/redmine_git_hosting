@@ -1,7 +1,6 @@
 class RepositoryGitConfigKeysController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_config_keys,   :only => [:index]
   before_filter :can_create_config_keys, :only => [:new, :create]
   before_filter :can_edit_config_keys,   :only => [:edit, :update, :destroy]
@@ -10,8 +9,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
 
   def index
-    @repository_git_config_keys = RepositoryGitConfigKey.find_all_by_repository_id(@repository.id)
-
+    @repository_git_config_keys = @repository.git_config_keys.all
     respond_to do |format|
       format.html { render :layout => 'popup' }
       format.js
@@ -20,14 +18,12 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
 
   def new
-    @git_config_key = RepositoryGitConfigKey.new()
+    @git_config_key = @repository.git_config_keys.new()
   end
 
 
   def create
-    @git_config_key = RepositoryGitConfigKey.new(params[:repository_git_config_key])
-    @git_config_key.repository = @repository
-
+    @git_config_key = @repository.git_config_keys.new(params[:repository_git_config_key])
     respond_to do |format|
       if @git_config_key.save
         flash[:notice] = l(:notice_git_config_key_created)
@@ -76,36 +72,30 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   private
 
 
-  def can_view_config_keys
-    render_403 unless view_context.user_allowed_to(:view_repository_git_config_keys, @project)
-  end
+    def set_current_tab
+      @tab = 'repository_git_config_keys'
+    end
 
 
-  def can_create_config_keys
-    render_403 unless view_context.user_allowed_to(:create_repository_git_config_keys, @project)
-  end
+    def can_view_config_keys
+      render_403 unless view_context.user_allowed_to(:view_repository_git_config_keys, @project)
+    end
 
 
-  def can_edit_config_keys
-    render_403 unless view_context.user_allowed_to(:edit_repository_git_config_keys, @project)
-  end
+    def can_create_config_keys
+      render_403 unless view_context.user_allowed_to(:create_repository_git_config_keys, @project)
+    end
 
 
-  def find_repository_git_config_key
-    git_config_key = RepositoryGitConfigKey.find_by_id(params[:id])
+    def can_edit_config_keys
+      render_403 unless view_context.user_allowed_to(:edit_repository_git_config_keys, @project)
+    end
 
-    if git_config_key && git_config_key.repository_id == @repository.id
-      @git_config_key = git_config_key
-    elsif git_config_key
-      render_403
-    else
+
+    def find_repository_git_config_key
+      @git_config_key = @repository.git_config_keys.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
       render_404
     end
-  end
-
-
-  def set_current_tab
-    @tab = 'repository_git_config_keys'
-  end
 
 end
