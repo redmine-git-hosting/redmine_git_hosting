@@ -18,11 +18,12 @@ module RedmineGitHosting
 
         private
 
-        @@old_valuehash = ((Setting.plugin_redmine_git_hosting).clone rescue {})
-        @@resync_projects = false
-        @@resync_ssh_keys = false
-        @@flush_cache     = false
+        @@old_valuehash     = ((Setting.plugin_redmine_git_hosting).clone rescue {})
+        @@resync_projects   = false
+        @@resync_ssh_keys   = false
+        @@flush_cache       = false
         @@delete_trash_repo = []
+
 
         def save_git_hosting_values
           # Only validate settings for our plugin
