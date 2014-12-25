@@ -7,7 +7,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   before_filter :find_deployment_credential, :only => [:edit, :update, :destroy]
   before_filter :find_key,                   :only => [:edit, :update, :destroy]
-  before_filter :find_all_keys,              :only => [:index, :new]
+  before_filter :find_all_keys,              :only => [:index, :new, :create]
 
   helper :gitolite_public_keys
 
@@ -15,8 +15,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   def index
     @repository_deployment_credentials = @repository.deployment_credentials.all
     respond_to do |format|
-      format.html { render :layout => 'popup' }
-      format.js
+      format.html { render layout: false }
     end
   end
 
@@ -41,19 +40,13 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     respond_to do |format|
       if @credential.save
-        flash[:notice] = l(:notice_deployment_credential_created)
-
         # Update Gitolite repository
         call_use_case
 
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        flash[:notice] = l(:notice_deployment_credential_created)
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:error_deployment_credential_create_failed)
-          render :action => "new"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -62,19 +55,13 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   def update
     respond_to do |format|
       if @credential.update_attributes(params[:repository_deployment_credential])
-        flash[:notice] = l(:notice_deployment_credential_updated)
-
         # Update Gitolite repository
         call_use_case
 
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        flash[:notice] = l(:notice_deployment_credential_updated)
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:error_deployment_credential_update_failed)
-          render :action => "edit"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -97,7 +84,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
     call_use_case
 
     respond_to do |format|
-      format.js { render :js => "window.location = #{success_url.to_json};" }
+      format.js { render js: "window.location = #{success_url.to_json};" }
     end
   end
 

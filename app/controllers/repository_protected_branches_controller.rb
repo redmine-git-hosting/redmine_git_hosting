@@ -11,8 +11,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def index
     @repository_protected_branches = @repository.protected_branches.all
     respond_to do |format|
-      format.html { render :layout => 'popup' }
-      format.js
+      format.html { render layout: false }
     end
   end
 
@@ -27,19 +26,13 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     @protected_branch = @repository.protected_branches.new(params[:repository_protected_branche])
     respond_to do |format|
       if @protected_branch.save
-        flash[:notice] = l(:notice_protected_branch_created)
-
         # Update Gitolite repository
         call_use_case
 
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        flash[:notice] = l(:notice_protected_branch_created)
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_protected_branch_create_failed)
-          render :action => "new"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -48,19 +41,13 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def update
     respond_to do |format|
       if @protected_branch.update_attributes(params[:repository_protected_branche])
-        flash[:notice] = l(:notice_protected_branch_updated)
-
         # Update Gitolite repository
         call_use_case
 
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        flash[:notice] = l(:notice_protected_branch_updated)
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_protected_branch_update_failed)
-          render :action => "edit"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -69,14 +56,11 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def destroy
     respond_to do |format|
       if @protected_branch.destroy
-        flash[:notice] = l(:notice_protected_branch_deleted)
-
         # Update Gitolite repository
         call_use_case
 
-        format.js { render :js => "window.location = #{success_url.to_json};" }
-      else
-        format.js { render :layout => false }
+        flash[:notice] = l(:notice_protected_branch_deleted)
+        format.js { render js: "window.location = #{success_url.to_json};" }
       end
     end
   end

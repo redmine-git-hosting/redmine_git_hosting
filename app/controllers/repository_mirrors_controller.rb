@@ -11,8 +11,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
   def index
     @repository_mirrors = @repository.mirrors.all
     respond_to do |format|
-      format.html { render :layout => 'popup' }
-      format.js
+      format.html { render layout: false }
     end
   end
 
@@ -27,15 +26,9 @@ class RepositoryMirrorsController < RedmineGitHostingController
     respond_to do |format|
       if @mirror.save
         flash[:notice] = l(:notice_mirror_created)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_mirror_create_failed)
-          render :action => "new"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -45,15 +38,9 @@ class RepositoryMirrorsController < RedmineGitHostingController
     respond_to do |format|
       if @mirror.update_attributes(params[:repository_mirror])
         flash[:notice] = l(:notice_mirror_updated)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_mirror_update_failed)
-          render :action => "edit"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -63,7 +50,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
     respond_to do |format|
       if @mirror.destroy
         flash[:notice] = l(:notice_mirror_deleted)
-        format.js { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       end
     end
   end

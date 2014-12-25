@@ -11,8 +11,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def index
     @repository_git_config_keys = @repository.git_config_keys.all
     respond_to do |format|
-      format.html { render :layout => 'popup' }
-      format.js
+      format.html { render layout: false }
     end
   end
 
@@ -27,15 +26,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     respond_to do |format|
       if @git_config_key.save
         flash[:notice] = l(:notice_git_config_key_created)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_git_config_key_create_failed)
-          render :action => "new"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -45,15 +38,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     respond_to do |format|
       if @git_config_key.update_attributes(params[:repository_git_config_key])
         flash[:notice] = l(:notice_git_config_key_updated)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_git_config_key_update_failed)
-          render :action => "edit"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -63,7 +50,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     respond_to do |format|
       if @git_config_key.destroy
         flash[:notice] = l(:notice_git_config_key_deleted)
-        format.js { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       end
     end
   end

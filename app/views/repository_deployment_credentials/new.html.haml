@@ -1,12 +1,26 @@
-- if !@is_xhr
-  %h2= l(:label_deployment_credential_create)
-
 = labelled_form_for :repository_deployment_credential, @credential,
                     url:  repository_deployment_credentials_path(@repository),
                     html: { method: :post, class: 'tabular', remote: @is_xhr } do |f|
 
-  = render partial: 'form', locals: { f: f }
+  #validation_messages_deployment_credential= error_messages_for 'credential'
 
-  - if !@is_xhr
-    = submit_tag l(:button_save), disable_with: l(:label_backup_in_progress)
-    = link_to l(:button_cancel), url_for(controller: 'repositories', action: 'edit', id: @repository.id)
+  .box
+
+    - if !@user_keys.empty? || !@other_keys.empty?
+
+      - option_array = [ [l(:label_deployment_credential_select_deploy_key), -1] ]
+      - option_array += @user_keys.map{ |key| [ keylabel(key), key.id ] }
+
+      - if !@other_keys.empty?
+        - option_array2 = @other_keys.map{ |key| [ keylabel(key), key.id ] }
+        - maxlen = (option_array + option_array2).map{ |x| x.first.length }.max
+
+        - extra = ([maxlen - l(:select_other_keys).length - 2,6].max)/2
+        - option_array += [[("-" * extra) + " " + l(:select_other_keys) + " " + ("-" * extra), -2]]
+        - option_array += option_array2
+
+      %p= f.select :gitolite_public_key_id, options_for_select(option_array, :selected => -1, :disabled => [-2] + @disabled_keys.map(&:id)), required: true, label: :label_deployment_credential_select_deploy_key
+      %p= f.select :perm, options_for_select(RepositoryDeploymentCredential::VALID_PERMS, RepositoryDeploymentCredential::DEFAULT_PERM), required: true, label: :label_deployment_credential_permissions
+
+    - else
+      = link_to l(:label_deployment_credential_create_key_first), url_for(:controller => 'my', :action => 'account')
