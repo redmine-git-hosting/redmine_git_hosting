@@ -100,28 +100,30 @@ class GithubPayload
 
     def build_commits_list(revisions_in_range)
       commits_list = []
-
       revisions_in_range.split().each do |rev|
         logger.debug { "Revision : '#{rev.strip}'" }
         revision = repository.find_changeset_by_name(rev.strip)
         next if revision.nil?
-
-        commits_list << {
-          :id        => revision.revision,
-          :message   => revision.comments,
-          :timestamp => revision.committed_on,
-          :added     => revision.filechanges.select{|c| c.action == "A" }.map(&:path),
-          :modified  => revision.filechanges.select{|c| c.action == "M" }.map(&:path),
-          :removed   => revision.filechanges.select{|c| c.action == "D" }.map(&:path),
-          :url       => url_for_revision(rev),
-          :author    => {
-            :name  => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
-            :email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
-          }
-        }
+        commits_list << build_commit_entry(revision, rev)
       end
-
       commits_list
+    end
+
+
+    def build_commit_entry(revision, rev)
+      {
+        :id        => revision.revision,
+        :message   => revision.comments,
+        :timestamp => revision.committed_on,
+        :added     => revision.filechanges.select{|c| c.action == "A" }.map(&:path),
+        :modified  => revision.filechanges.select{|c| c.action == "M" }.map(&:path),
+        :removed   => revision.filechanges.select{|c| c.action == "D" }.map(&:path),
+        :url       => url_for_revision(rev),
+        :author    => {
+          :name  => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
+          :email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
+        }
+      }
     end
 
 
