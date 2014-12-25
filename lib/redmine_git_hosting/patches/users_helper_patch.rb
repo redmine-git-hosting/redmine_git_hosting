@@ -18,7 +18,7 @@ module RedmineGitHosting
         # Add a public_keys tab to the user administration page
         def user_settings_tabs_with_git_hosting(&block)
           tabs = user_settings_tabs_without_git_hosting(&block)
-          tabs << { :name => 'keys', :partial => 'gitolite_public_keys/view', :label => :label_public_keys }
+          tabs << { name: 'keys', partial: 'gitolite_public_keys/view', label: :label_public_keys }
           return tabs
         end
 

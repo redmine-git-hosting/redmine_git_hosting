@@ -14,7 +14,7 @@ module RedmineGitHosting
           alias_method_chain :update,  :git_hosting
           alias_method_chain :destroy, :git_hosting
 
-          before_filter :set_current_tab, :only => :edit
+          before_filter :set_current_tab, only: :edit
 
           helper :git_hosting
 
@@ -31,7 +31,7 @@ module RedmineGitHosting
           if @repository.is_a?(Repository::Xitolite) && @repository.empty?
             # Fake list of repos
             @repositories = @project.gitolite_repos
-            render :action => 'git_instructions'
+            render 'git_instructions'
           else
             show_without_git_hosting(&block)
           end
