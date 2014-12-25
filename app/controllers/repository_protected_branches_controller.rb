@@ -10,9 +10,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def index
     @repository_protected_branches = @repository.protected_branches.all
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
@@ -32,7 +30,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
         flash[:notice] = l(:notice_protected_branch_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -47,7 +45,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
         flash[:notice] = l(:notice_protected_branch_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -80,7 +78,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     # Update Gitolite repository
     call_use_case
 
-    render :nothing => true
+    render nothing: true
   end
 
 

@@ -13,9 +13,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   def show
     @git_notification = @repository.git_notification
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
@@ -31,7 +29,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
         flash[:notice] = l(:notice_git_notifications_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -43,7 +41,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
         flash[:notice] = l(:notice_git_notifications_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end

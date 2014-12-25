@@ -10,14 +10,12 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
   def index
     @repository_git_config_keys = @repository.git_config_keys.all
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
   def new
-    @git_config_key = @repository.git_config_keys.new()
+    @git_config_key = @repository.git_config_keys.new
   end
 
 
@@ -28,7 +26,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
         flash[:notice] = l(:notice_git_config_key_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -40,7 +38,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
         flash[:notice] = l(:notice_git_config_key_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end

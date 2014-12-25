@@ -6,7 +6,7 @@ class RedmineGitHostingController < ApplicationController
   before_filter :check_required_permissions
   before_filter :set_current_tab
 
-  layout Proc.new { |controller| controller.request.xhr? ? 'popup' : 'base' }
+  layout Proc.new { |controller| controller.request.xhr? ? false : 'base' }
 
   helper :git_hosting
 

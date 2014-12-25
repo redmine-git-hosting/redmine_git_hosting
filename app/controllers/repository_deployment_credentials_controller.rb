@@ -14,14 +14,12 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def index
     @repository_deployment_credentials = @repository.deployment_credentials.all
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
   def new
-    @credential = @repository.deployment_credentials.new()
+    @credential = @repository.deployment_credentials.new
   end
 
 
@@ -46,7 +44,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
         flash[:notice] = l(:notice_deployment_credential_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -61,7 +59,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
         flash[:notice] = l(:notice_deployment_credential_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end

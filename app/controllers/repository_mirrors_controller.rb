@@ -10,14 +10,12 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   def index
     @repository_mirrors = @repository.mirrors.all
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
   def new
-    @mirror = @repository.mirrors.new()
+    @mirror = @repository.mirrors.new
   end
 
 
@@ -28,7 +26,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
         flash[:notice] = l(:notice_mirror_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -40,7 +38,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
         flash[:notice] = l(:notice_mirror_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -57,9 +55,8 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def push
-    respond_to do |format|
-      format.html { (@push_failed, @shellout) = MirrorPush.new(@mirror).call }
-    end
+    @push_failed, @shellout = MirrorPush.new(@mirror).call
+    render layout: false
   end
 
 

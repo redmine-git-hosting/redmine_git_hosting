@@ -10,14 +10,12 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
   def index
     @repository_post_receive_urls = @repository.post_receive_urls.all
-    respond_to do |format|
-      format.html { render layout: false }
-    end
+    render layout: false
   end
 
 
   def new
-    @post_receive_url = @repository.post_receive_urls.new()
+    @post_receive_url = @repository.post_receive_urls.new
   end
 
 
@@ -28,7 +26,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
         flash[:notice] = l(:notice_post_receive_url_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end
@@ -40,7 +38,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
         flash[:notice] = l(:notice_post_receive_url_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.js { render layout: false }
+        format.js
       end
     end
   end

@@ -21,8 +21,6 @@ class RepositoryGitExtrasController < RedmineGitHostingController
     else
       flash.now[:error] = l(:notice_gitolite_extra_update_failed)
     end
-
-    render layout: false
   end
 
 
