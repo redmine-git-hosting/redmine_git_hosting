@@ -24,7 +24,7 @@ class GitoliteHooksController < ApplicationController
       ## Clear existing cache
       RedmineGitolite::Cache.clear_cache_for_repository(@repository)
 
-      self.response.headers["Content-Type"]  = "text/plain;"
+      self.response.headers['Content-Type']  = 'text/plain;'
       self.response.headers['Last-Modified'] = Time.now.to_s
       self.response.headers['Cache-Control'] = 'no-cache'
 
@@ -32,19 +32,19 @@ class GitoliteHooksController < ApplicationController
         ## First fetch changesets
         y << Hooks::Redmine.new(@repository).execute
 
-        ## Then build payload
-        payload = GithubPayload.new(@repository, params[:refs]).payload
+        ## Then build payloads
+        payloads = GithubPayload.new(@repository, params[:refs]).build
 
         ## Then call hooks
-        y << Hooks::GitMirrors.new(@repository, payload).execute
-        y << Hooks::Webservices.execute(@repository, payload)
+        y << Hooks::GitMirrors.execute(@repository, payloads)
+        y << Hooks::Webservices.execute(@repository, payloads)
       end
     end
 
 
     def post_receive_github
       Hooks::GithubIssuesSync.new(@project, params).execute
-      render :text => "OK!"
+      render text: 'OK!'
       return
     end
 
@@ -58,7 +58,7 @@ class GitoliteHooksController < ApplicationController
 
     def find_hook
       if !VALID_HOOKS.include?(params[:type])
-        render :text => "The hook name provided is not valid. Please let your server admin know about it"
+        render text: 'The hook name provided is not valid. Please let your server admin know about it'
         return
       else
         @hook_type = params[:type]
@@ -70,7 +70,7 @@ class GitoliteHooksController < ApplicationController
       @project = Project.find_by_identifier(params[:projectid])
 
       if @project.nil?
-        render :partial => 'gitolite_hooks/project_not_found'
+        render partial: 'gitolite_hooks/project_not_found'
         return
       end
     end
@@ -88,7 +88,7 @@ class GitoliteHooksController < ApplicationController
         end
 
         if @repository.nil?
-          render :partial => 'gitolite_hooks/repository_not_found'
+          render partial: 'gitolite_hooks/repository_not_found'
           return
         end
       end
@@ -98,7 +98,7 @@ class GitoliteHooksController < ApplicationController
     def validate_hook_key
       if @hook_type == 'redmine'
         if !validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
-          render :text => "The hook key provided is not valid. Please let your server admin know about it"
+          render text: 'The hook key provided is not valid. Please let your server admin know about it'
           return
         end
       end

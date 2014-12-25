@@ -3,13 +3,19 @@ class GithubPayload
 
   attr_reader :repository
   attr_reader :project
-  attr_reader :payload
+  attr_reader :refs
 
 
   def initialize(repository, refs)
     @repository = repository
     @project    = repository.project
-    @payload    = do_build_payload(refs)
+    @refs       = refs
+    @payloads   = []
+  end
+
+
+  def build
+    build_payloads
   end
 
 
@@ -23,15 +29,14 @@ class GithubPayload
 
     # Returns an array of GitHub post-receive hook style hashes
     # http://help.github.com/post-receive-hooks/
-    def do_build_payload(refs)
-      payload = []
+    def build_payloads
       refs.each do |ref|
         # Get revisions range
         range = get_revisions_from_ref(ref)
         next if range.nil?
-        payload << build_payload(ref, range)
+        @payloads << build_payload(ref, range)
       end
-      payload
+      @payloads
     end
 
 
@@ -101,16 +106,15 @@ class GithubPayload
     def build_commits_list(revisions_in_range)
       commits_list = []
       revisions_in_range.split().each do |rev|
-        logger.debug { "Revision : '#{rev.strip}'" }
         revision = repository.find_changeset_by_name(rev.strip)
         next if revision.nil?
-        commits_list << build_commit_entry(revision, rev)
+        commits_list << build_commit_entry(revision)
       end
       commits_list
     end
 
 
-    def build_commit_entry(revision, rev)
+    def build_commit_entry(revision)
       {
         :id        => revision.revision,
         :message   => revision.comments,
@@ -118,7 +122,7 @@ class GithubPayload
         :added     => revision.filechanges.select{|c| c.action == "A" }.map(&:path),
         :modified  => revision.filechanges.select{|c| c.action == "M" }.map(&:path),
         :removed   => revision.filechanges.select{|c| c.action == "D" }.map(&:path),
-        :url       => url_for_revision(rev),
+        :url       => url_for_revision(revision.revision),
         :author    => {
           :name  => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
           :email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
