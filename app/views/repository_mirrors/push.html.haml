@@ -1,0 +1,10 @@
+- if !@is_xhr
+  %h2=l(:label_mirror_push_title)
+
+%p{ style: 'white-space: nowrap;' }
+  = render_push_state(@push_failed)
+
+%span
+  %b= l(:label_mirror_push_output) + ' :'
+
+%pre{ class: "mirror-push-#{@push_failed == true ? 'error' : ''}" }= @shellout
