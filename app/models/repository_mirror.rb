@@ -1,8 +1,6 @@
 class RepositoryMirror < ActiveRecord::Base
   unloadable
 
-  include BranchParser
-
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
@@ -30,37 +28,16 @@ class RepositoryMirror < ActiveRecord::Base
                         numericality: { only_integer: true },
                         inclusion:    { in: [PUSHMODE_MIRROR, PUSHMODE_FORCE, PUSHMODE_FAST_FORWARD] }
 
+  ## Additional validations
   validate :check_refspec
 
-  validates_associated :repository
-
   ## Scopes
-  scope :active,   -> { where(active: STATUS_ACTIVE) }
-  scope :inactive, -> { where(active: STATUS_INACTIVE) }
-
-  scope :has_explicit_refspec, -> { where push_mode: '> 0' }
+  scope :active,               -> { where(active: STATUS_ACTIVE) }
+  scope :inactive,             -> { where(active: STATUS_INACTIVE) }
+  scope :has_explicit_refspec, -> { where(push_mode: '> 0') }
 
   ## Callbacks
   before_validation :strip_whitespace
-
-
-  # If we have an explicit refspec, check it against incoming payloads
-  # Special case: if we do not pass in any payloads, return true
-  def needs_push(payloads = [])
-    return true if payloads.empty?
-    return true if push_mode == PUSHMODE_MIRROR
-
-    refspec_parse = explicit_refspec.match(/^\+?([^:]*)(:[^:]*)?$/)
-    payloads.each do |payload|
-      if splitpath = refcomp_parse(payload[:ref])
-        return true if payload[:ref] == refspec_parse[1]  # Explicit Reference Spec complete path
-        return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
-        return true if include_all_branches && splitpath[:type] == "heads"
-        return true if include_all_tags && splitpath[:type] == "tags"
-      end
-    end
-    false
-  end
 
 
   private

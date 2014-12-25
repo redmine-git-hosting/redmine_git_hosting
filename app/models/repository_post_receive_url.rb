@@ -3,8 +3,6 @@ require 'uri'
 class RepositoryPostReceiveUrl < ActiveRecord::Base
   unloadable
 
-  include BranchParser
-
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
@@ -24,14 +22,12 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
   validates :mode, presence: true, inclusion: { in: [:github, :get] }
 
-  validates_associated :repository
-
   ## Serializations
   serialize :triggers, Array
 
   ## Scopes
-  scope :active,   -> { where active: STATUS_ACTIVE }
-  scope :inactive, -> { where active: STATUS_INACTIVE }
+  scope :active,   -> { where(active: STATUS_ACTIVE) }
+  scope :inactive, -> { where(active: STATUS_INACTIVE) }
 
   ## Callbacks
   before_validation :strip_whitespace
@@ -44,28 +40,6 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
   def mode=(value)
     write_attribute(:mode, value.to_s)
-  end
-
-
-  def needs_push(payloads)
-    return false if payloads.empty?
-    return payloads if !use_triggers
-    return payloads if triggers.empty?
-
-    new_payloads = []
-
-    payloads.each do |payload|
-      data = refcomp_parse(payload[:ref])
-      if data[:type] == 'heads' && triggers.include?(data[:name])
-        new_payloads.push(payload)
-      end
-    end
-
-    if new_payloads.empty?
-      return false
-    else
-      return new_payloads
-    end
   end
 
 

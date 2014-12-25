@@ -37,7 +37,7 @@ class GitoliteHooksController < ApplicationController
 
         ## Then call hooks
         y << Hooks::GitMirrors.new(@repository, payload).execute
-        y << Hooks::Webservices.new(@repository, payload).execute
+        y << Hooks::Webservices.execute(@repository, payload)
       end
     end
 
