@@ -8,7 +8,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          has_one  :github_comment, :foreign_key => 'journal_id', :class_name => 'GithubComment', :dependent => :destroy
+          has_one :github_comment, foreign_key: 'journal_id', class_name: 'GithubComment', dependent: :destroy
         end
       end
 
