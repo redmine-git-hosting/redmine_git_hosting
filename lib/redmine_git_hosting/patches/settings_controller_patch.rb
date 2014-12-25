@@ -8,7 +8,7 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          helper  :git_hosting
+          helper :gitolite_plugin_settings
         end
       end
 
