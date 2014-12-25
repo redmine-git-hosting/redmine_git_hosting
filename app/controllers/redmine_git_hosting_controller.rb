@@ -3,7 +3,6 @@ class RedmineGitHostingController < ApplicationController
 
   before_filter :require_login
   before_filter :set_repository
-  before_filter :check_xhr_request
   before_filter :check_required_permissions
   before_filter :set_current_tab
 
@@ -61,11 +60,6 @@ class RedmineGitHostingController < ApplicationController
 
     def success_url
       url_for(:controller => 'repositories', :action => 'edit', :id => @repository.id, :tab => @tab)
-    end
-
-
-    def check_xhr_request
-      @is_xhr ||= request.xhr?
     end
 
 end

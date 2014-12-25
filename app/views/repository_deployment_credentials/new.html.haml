@@ -1,6 +1,6 @@
 = labelled_form_for :repository_deployment_credential, @credential,
                     url:  repository_deployment_credentials_path(@repository),
-                    html: { method: :post, class: 'tabular', remote: @is_xhr } do |f|
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
 
   #validation_messages_deployment_credential= error_messages_for 'credential'
 
