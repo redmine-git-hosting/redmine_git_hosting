@@ -12,10 +12,10 @@ RedmineApp::Application.routes.draw do
     end
 
     resource  :git_extras,        controller: 'repository_git_extras', only: [:update]
+    resource  :git_notifications, controller: 'repository_git_notifications'
 
     resources :post_receive_urls,      controller: 'repository_post_receive_urls'
     resources :deployment_credentials, controller: 'repository_deployment_credentials'
-    resources :git_notifications,      controller: 'repository_git_notifications'
     resources :git_config_keys,        controller: 'repository_git_config_keys'
 
     resources :mirrors, controller: 'repository_mirrors' do

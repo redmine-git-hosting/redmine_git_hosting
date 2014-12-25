@@ -1,35 +1,31 @@
-<div id="validation_messages_git_notification"><%= error_messages_for 'git_notification' %></div>
+#validation_messages_git_notification= error_messages_for 'git_notification'
 
-<div class="box tabular">
+.box
 
-  <p><%= f.text_field :prefix, :label => :label_gitolite_notify_prefix %></p>
-  <p><%= f.text_field :sender_address, :label => :label_gitolite_notify_sender_address %></p>
+  %p= f.text_field :prefix, label: :label_gitolite_notify_prefix
+  %p= f.text_field :sender_address, label: :label_gitolite_notify_sender_address
 
-  <input type="hidden" name="repository_git_notifications[include_list][]" value="" style="display:none;">
-  <input type="hidden" name="repository_git_notifications[exclude_list][]" value="" style="display:none;">
+  = hidden_field_tag 'repository_git_notifications[include_list][]'
+  = hidden_field_tag 'repository_git_notifications[exclude_list][]'
 
-  <p><label for="repository_git_notifications[include_list]"><%= l(:label_git_notification_include_list) %> :</label></p>
-  <ul id="include_list">
-    <% if !@repository.git_notification.nil? && @repository.git_notification.include_list.any? %>
-      <% @repository.git_notification.include_list.each do |item| %>
-        <li><%= item %></li>
-      <% end %>
-    <% end %>
-  </ul>
+  %p
+    %label{ for: 'repository_git_notifications[include_list]' }= l(:label_git_notification_include_list) + ' :'
 
-  <p><label for="repository_git_notifications[exclude_list]"><%= l(:label_git_notification_exclude_list) %> :</label></p>
-  <ul id="exclude_list">
-    <% if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any? %>
-      <% @repository.git_notification.exclude_list.each do |item| %>
-        <li><%= item %></li>
-      <% end %>
-    <% end %>
-  </ul>
+  %ul{ id: 'include_list' }
+    - if !@repository.git_notification.nil? && @repository.git_notification.include_list.any?
+      - @repository.git_notification.include_list.each do |item|
+        %li= item
 
-</div>
+  %p
+    %label{ for: 'repository_git_notifications[exclude_list]' }= l(:label_git_notification_exclude_list) + ' :'
 
-<%= javascript_tag do %>
-  var mailing_list_default_users = <%= raw @repository.default_list.to_json %>;
+  %ul{ id: 'exclude_list' }
+    - if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any?
+      - @repository.git_notification.exclude_list.each do |item|
+        %li= item
+
+:javascript
+  var mailing_list_default_users = #{raw @repository.default_list.to_json};
 
   function loadTagIt(target, autocomplete){
     if (autocomplete == true){
@@ -69,4 +65,3 @@
     loadTagIt('include_list', false);
     loadTagIt('exclude_list', true);
   });
-<% end %>

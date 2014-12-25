@@ -1,0 +1,70 @@
+%div
+
+  - if @repository.extra[:git_notify]
+    - unless @git_notification.nil?
+      - if user_allowed_to(:edit_repository_git_notifications, @project)
+        .contextual
+          = link_to l(:label_git_notifications_edit), edit_repository_git_notifications_path(@repository), class: 'icon icon-edit modal-box'
+          = link_to l(:label_git_notifications_delete), repository_git_notifications_path(@repository), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
+    - else
+      - if user_allowed_to(:create_repository_git_notifications, @project)
+        .contextual= link_to l(:label_git_notifications_add), new_repository_git_notifications_path(@repository), class: 'icon icon-add modal-box'
+
+  %h3{ class: 'git' }= l(:label_git_notifications)
+
+  %div{ style: "opacity: #{@repository.extra[:git_notify] ? '1' : '0.5'};" }
+
+    - if !@git_notification.nil?
+      %p
+        %label= l(:label_gitolite_notify_prefix)
+        %span{ class: 'label label-info' }= @git_notification.prefix
+      %p
+        %label= l(:label_gitolite_notify_sender_address)
+        %span{ class: 'label label-info' }= @git_notification.sender_address
+
+    %div{ style: 'display:block;height:10px;clear:both;' }
+
+    %table{ class: 'list git_mailing_list' }
+      %thead
+        %tr
+          %th= l(:label_git_notification_default_list)
+          %th= l(:label_git_notification_include_list)
+          %th= l(:label_git_notification_exclude_list)
+          %th= l(:label_git_notification_effective_list)
+
+      %tbody
+        %tr
+          %td
+            - if @repository.default_list.any?
+              %ul
+                - @repository.default_list.each do |item|
+                  %li= item
+
+          %td
+            - if !@git_notification.nil? && @git_notification.include_list.any?
+              %ul
+                - @git_notification.include_list.sort.each do |item|
+                  %li= item
+
+          %td
+            - if !@git_notification.nil? && @git_notification.exclude_list.any?
+              %ul
+                - @git_notification.exclude_list.sort.each do |item|
+                  %li= item
+
+          %td
+            - if @repository.mail_mapping.any?
+              %ul
+                - @repository.mail_mapping.each do |item, from|
+                  %li
+                    = item
+                    (
+                    = from
+                    )
+
+
+
+:javascript
+  $(document).ready(function() {
+    initModalBoxes(modals);
+  });

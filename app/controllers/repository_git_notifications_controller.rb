@@ -1,45 +1,37 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
-  before_filter :set_current_tab
   before_filter :can_view_git_notifications,   :only => [:index]
   before_filter :can_create_git_notifications, :only => [:new, :create]
   before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
 
-  before_filter :find_repository_git_notification, :except => [:index, :new, :create]
-
 
   def index
-    @git_notification = RepositoryGitNotification.find_by_repository_id(@repository.id)
+    render_404
+  end
 
+
+  def show
+    @git_notification = @repository.git_notification
     respond_to do |format|
-      format.html { render :layout => 'popup' }
-      format.js
+      format.html { render layout: false }
     end
   end
 
 
   def new
-    @git_notification = RepositoryGitNotification.new()
+    @git_notification = @repository.build_git_notification
   end
 
 
   def create
-    @git_notification = RepositoryGitNotification.new(params[:repository_git_notification])
-    @git_notification.repository = @repository
-
+    @git_notification = @repository.build_git_notification(params[:repository_git_notification])
     respond_to do |format|
       if @git_notification.save
         flash[:notice] = l(:notice_git_notifications_created)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_git_notifications_create_failed)
-          render :action => "create"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -49,15 +41,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
     respond_to do |format|
       if @git_notification.update_attributes(params[:repository_git_notification])
         flash[:notice] = l(:notice_git_notifications_updated)
-
-        format.html { redirect_to success_url }
-        format.js   { render :js => "window.location = #{success_url.to_json};" }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       else
-        format.html {
-          flash[:error] = l(:notice_git_notifications_update_failed)
-          render :action => "edit"
-        }
-        format.js { render "form_error", :layout => false }
+        format.js { render layout: false }
       end
     end
   end
@@ -67,9 +53,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
     respond_to do |format|
       if @git_notification.destroy
         flash[:notice] = l(:notice_git_notifications_deleted)
-        format.js { render :js => "window.location = #{success_url.to_json};" }
-      else
-        format.js { render :layout => false }
+        format.js { render js: "window.location = #{success_url.to_json};" }
       end
     end
   end
@@ -78,36 +62,23 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
   private
 
 
-  def can_view_git_notifications
-    render_403 unless view_context.user_allowed_to(:view_repository_git_notifications, @project)
-  end
-
-
-  def can_create_git_notifications
-    render_403 unless view_context.user_allowed_to(:create_repository_git_notifications, @project)
-  end
-
-
-  def can_edit_git_notifications
-    render_403 unless view_context.user_allowed_to(:edit_repository_git_notifications, @project)
-  end
-
-
-  def find_repository_git_notification
-    git_notification = RepositoryGitNotification.find_by_id(params[:id])
-
-    if git_notification && git_notification.repository_id == @repository.id
-      @git_notification = git_notification
-    elsif git_notification
-      render_403
-    else
-      render_404
+    def set_current_tab
+      @tab = 'repository_git_notifications'
     end
-  end
 
 
-  def set_current_tab
-    @tab = 'repository_git_notifications'
-  end
+    def can_view_git_notifications
+      render_403 unless view_context.user_allowed_to(:view_repository_git_notifications, @project)
+    end
+
+
+    def can_create_git_notifications
+      render_403 unless view_context.user_allowed_to(:create_repository_git_notifications, @project)
+    end
+
+
+    def can_edit_git_notifications
+      render_403 unless view_context.user_allowed_to(:edit_repository_git_notifications, @project)
+    end
 
 end
