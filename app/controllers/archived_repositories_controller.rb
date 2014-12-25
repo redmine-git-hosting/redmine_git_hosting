@@ -15,8 +15,8 @@ class ArchivedRepositoriesController < RepositoriesController
   private
 
 
-  def can_view_archived_projects
-    render_403 unless User.current.admin?
-  end
+    def can_view_archived_projects
+      render_403 unless User.current.admin?
+    end
 
 end
