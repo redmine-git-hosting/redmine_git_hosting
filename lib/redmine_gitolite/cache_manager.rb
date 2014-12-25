@@ -29,7 +29,7 @@ module RedmineGitolite
         if max_cache_time == 0 || options[:uncached]
           # Disabled cache, simply launch shell, don't redirect
           logger.warn { "Cache is disabled : '#{repo_id}'" }
-          options.delete(:uncached)
+          options = options.delete(:uncached)
           retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
           status = $?
         elsif !options[:write_stdin] && out = check_cache(cmd_str)
@@ -41,7 +41,7 @@ module RedmineGitolite
           # Create redirector stream and call block
           redirector = RedmineGitolite::Cache.new(cmd_str, repo_id, options)
           block.call(redirector)
-          (retio, status) = redirector.exit_shell
+          retio, status = redirector.exit_shell
         end
 
         if status && status.exitstatus.to_i != 0
@@ -58,46 +58,57 @@ module RedmineGitolite
         logger.debug { compose_key(primary_key, secondary_key) }
 
         begin
-          gitc = GitCache.create(
-            :command         => compose_key(primary_key, secondary_key),
-            :command_output  => out_value,
-            :repo_identifier => repo_id
+          GitCache.create(
+            command:         compose_key(primary_key, secondary_key),
+            command_output:  out_value,
+            repo_identifier: repo_id
           )
-
-          gitc.save
-
-          if GitCache.count > max_cache_elements && max_cache_elements >= 0
-            oldest = GitCache.find(:last, :order => "created_at DESC")
-            GitCache.destroy(oldest.id)
-          end
         rescue => e
           logger.error "Could not insert in cache, this is the error : '#{e.message}'"
+        else
+          apply_cache_limit
         end
       end
 
 
       def check_cache(primary_key, secondary_key = nil)
-        logger.debug { "Probing cache entry" }
-        logger.debug { compose_key(primary_key, secondary_key) }
-
-        out = nil
-        cached = GitCache.find_by_command(compose_key(primary_key, secondary_key))
+        cached = get_cache_entry(primary_key, secondary_key)
 
         if cached
-          cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-          if (cached.created_at.to_i >= expire_at(cached.repo_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
-            # cached.touch # Update updated_at flag
-            out = cached.command_output == nil ? "" : cached.command_output
+          if valid_cache_entry?(cached)
+            # Update updated_at flag
+            cached.touch unless cached.command_output.nil?
+            out = cached.command_output
           else
-            GitCache.destroy(cached.id)
+            cached.destroy
+            out = nil
           end
-        end
-        if out
-          # Return result as a string stream
-          StringIO.new(out)
         else
-          nil
+          out = nil
         end
+
+        # Return result as a string stream
+        out.nil? ? nil : StringIO.new(out)
+      end
+
+
+      def get_cache_entry(primary_key, secondary_key)
+        GitCache.find_by_command(compose_key(primary_key, secondary_key))
+      end
+
+
+      def valid_cache_entry?(cached)
+        cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+        if (cached.created_at.to_i >= expire_at(cached.repo_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
+          true
+        else
+          false
+        end
+      end
+
+
+      def apply_cache_limit
+        GitCache.find(:last, order: 'created_at DESC').destroy if max_cache_elements >= 0 && GitCache.count > max_cache_elements
       end
 
 
