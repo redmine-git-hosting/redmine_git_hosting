@@ -4,6 +4,8 @@ class RepositoryGitExtrasController < RedmineGitHostingController
   skip_before_filter :set_current_tab
   before_filter      :set_git_extra
 
+  helper :extend_repositories
+
 
   def update
     if @git_extra.default_branch != params[:repository_git_extra][:default_branch]
