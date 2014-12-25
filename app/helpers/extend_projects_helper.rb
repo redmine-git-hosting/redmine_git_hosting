@@ -1,49 +1,76 @@
 module ExtendProjectsHelper
 
   def render_feature(repository, feature)
-    css_class = [ 'icon icon-git' ]
+    method = "#{feature}_feature"
+    label, css_class, enabled = self.send(method, repository)
 
-    case feature
-    when :deployment_credentials
-      label = [ l(:label_deployment_credentials) ]
-      css_class << 'icon-deployment-credentials'
-      enabled = repository.deployment_credentials.active.any?
+    # Get css class
+    base_class = [ 'icon icon-git' ]
+    base_class << css_class
+    base_class << 'icon-git-disabled' if !enabled
 
-    when :post_receive_urls
-      label = [ l(:label_post_receive_urls) ]
-      css_class << 'icon-post-receive-urls'
-      enabled = repository.post_receive_urls.active.any?
+    # Get label
+    base_label = []
+    base_label << label
+    base_label << "(#{l(:label_disabled)})" if !enabled
 
-    when :mirrors
-      label = [ l(:label_repository_mirrors) ]
-      css_class << 'icon-mirrors'
-      enabled = repository.mirrors.active.any?
+    content_tag(:span, '', title: base_label.join(' '), class: base_class.join(' '))
+  end
 
-    when :git_daemon
-      label = [ l(:label_git_daemon) ]
-      css_class << 'icon-git-daemon'
-      enabled = (repository.project.is_public && repository.extra[:git_daemon])
 
-    when :git_http
-      label = [ l(:label_smart_http) ]
-      css_class << 'icon-git-smarthttp'
-      enabled = repository.extra[:git_http] != 0
+  def deployment_credentials_feature(repository)
+    label     = l(:label_deployment_credentials)
+    css_class = 'icon-deployment-credentials'
+    enabled   = repository.deployment_credentials.active.any?
+    return label, css_class, enabled
+  end
 
-    when :git_notify
-      label = [ l(:label_git_notify) ]
-      css_class << 'icon-git-notify'
-      enabled = repository.extra[:git_notify]
 
-    when :protected_branch
-      label = [ l(:label_protected_branch) ]
-      css_class << 'icon-git-protected-branch'
-      enabled = repository.extra[:protected_branch]
-    end
+  def post_receive_urls_feature(repository)
+    label     = l(:label_post_receive_urls)
+    css_class = 'icon-post-receive-urls'
+    enabled   = repository.post_receive_urls.active.any?
+    return label, css_class, enabled
+  end
 
-    label << "(#{l(:label_disabled)})" if !enabled
-    css_class << 'icon-git-disabled' if !enabled
 
-    content_tag(:span, '', :title => label.join(' '), :class => css_class.join(' '))
+  def mirrors_feature(repository)
+    label     = l(:label_repository_mirrors)
+    css_class = 'icon-mirrors'
+    enabled   = repository.mirrors.active.any?
+    return label, css_class, enabled
+  end
+
+
+  def git_daemon_feature(repository)
+    label     = l(:label_git_daemon)
+    css_class = 'icon-git-daemon'
+    enabled   = (repository.project.is_public && repository.extra[:git_daemon])
+    return label, css_class, enabled
+  end
+
+
+  def git_http_feature(repository)
+    label     = l(:label_smart_http)
+    css_class = 'icon-git-smarthttp'
+    enabled   = repository.extra[:git_http] != 0
+    return label, css_class, enabled
+  end
+
+
+  def git_notify_feature(repository)
+    label     = l(:label_git_notify)
+    css_class = 'icon-git-notify'
+    enabled   = repository.extra[:git_notify]
+    return label, css_class, enabled
+  end
+
+
+  def protected_branch_feature(repository)
+    label     = l(:label_protected_branch)
+    css_class = 'icon-git-protected-branch'
+    enabled   = repository.extra[:protected_branch]
+    return label, css_class, enabled
   end
 
 end
