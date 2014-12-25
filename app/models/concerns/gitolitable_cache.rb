@@ -112,7 +112,7 @@ module GitolitableCache
 
     def clean_cache
       RedmineGitolite::Log.get_logger(:global).info { "Clean cache before delete repository '#{gitolite_repository_name}'" }
-      RedmineGitolite::Cache.clear_cache_for_repository(self)
+      RedmineGitolite::CacheManager.clear_cache_for_repository(self)
     end
 
 end

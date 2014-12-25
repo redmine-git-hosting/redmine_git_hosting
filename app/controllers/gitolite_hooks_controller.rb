@@ -22,7 +22,7 @@ class GitoliteHooksController < ApplicationController
 
     def post_receive_redmine
       ## Clear existing cache
-      RedmineGitolite::Cache.clear_cache_for_repository(@repository)
+      RedmineGitolite::CacheManager.clear_cache_for_repository(@repository)
 
       self.response.headers['Content-Type']  = 'text/plain;'
       self.response.headers['Last-Modified'] = Time.now.to_s

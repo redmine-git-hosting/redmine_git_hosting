@@ -86,7 +86,7 @@ module RedmineGitolite
             logger.error { "Error while updating default branch for repository '#{repository.gitolite_repository_name}'" }
           end
 
-          RedmineGitolite::Cache.clear_cache_for_repository(repository)
+          RedmineGitolite::CacheManager.clear_cache_for_repository(repository)
 
           logger.info { "Fetch changesets for repository '#{repository.gitolite_repository_name}'"}
           repository.fetch_changesets

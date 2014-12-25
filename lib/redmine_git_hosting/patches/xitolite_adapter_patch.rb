@@ -71,7 +71,7 @@ module RedmineGitHosting
               # Insert cache between shell execution and caller
               RedmineGitolite::GitHosting.logger.debug { "Found git_cache_id ('#{git_cache_id}'), call cache... " }
               RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }
-              RedmineGitolite::Cache.execute(cmd_str, git_cache_id, options, &block)
+              RedmineGitolite::CacheManager.execute(cmd_str, git_cache_id, options, &block)
             else
               RedmineGitolite::GitHosting.logger.debug { "Unable to find git_cache_id, bypass cache... " }
               RedmineGitolite::GitHosting.logger.debug { "Send GitCommand : #{cmd_str}" }

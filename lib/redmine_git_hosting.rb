@@ -6,6 +6,7 @@ Rails.configuration.to_prepare do
 
   ## Redmine Git Hosting Libs
   require_dependency 'redmine_gitolite/cache'
+  require_dependency 'redmine_gitolite/cache_manager'
   require_dependency 'redmine_gitolite/config'
   require_dependency 'redmine_gitolite/extra_loading'
   require_dependency 'redmine_gitolite/git_hosting'
