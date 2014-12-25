@@ -71,7 +71,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   def push
     respond_to do |format|
-      format.html { (@push_failed, @shellout) = @mirror.push }
+      format.html { (@push_failed, @shellout) = MirrorPush.new(@mirror).call }
     end
   end
 

@@ -1,4 +1,5 @@
-module GitoliteHooksHelper
+module BranchParser
+  extend ActiveSupport::Concern
 
   # Parse a reference component.  Three possibilities:
   #

@@ -2,7 +2,7 @@
   %h2=l(:label_mirror_push_title)
 
 %p{ style: 'white-space: nowrap;' }
-  = render_push_state(@push_failed)
+  = render_push_state(@mirror, @push_failed)
 
 %span
   %b= l(:label_mirror_push_output) + ' :'

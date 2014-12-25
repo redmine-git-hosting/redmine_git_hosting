@@ -1,6 +1,8 @@
 class RepositoryMirror < ActiveRecord::Base
   unloadable
 
+  include BranchParser
+
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
@@ -41,22 +43,6 @@ class RepositoryMirror < ActiveRecord::Base
   ## Callbacks
   before_validation :strip_whitespace
 
-  include GitoliteHooksHelper
-
-
-  def push
-    stdin = [ 'cd', repository.gitolite_repository_path, '&&', 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', 'push', *push_args, '2>&1' ].join(' ')
-    begin
-      push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe_capture("sh", stdin)
-      push_failed = false
-    rescue RedmineGitolite::GitHosting::GitHostingException => e
-      push_message = e.output
-      push_failed = true
-    end
-
-    return push_failed, push_message
-  end
-
 
   # If we have an explicit refspec, check it against incoming payloads
   # Special case: if we do not pass in any payloads, return true
@@ -77,25 +63,6 @@ class RepositoryMirror < ActiveRecord::Base
   end
 
 
-  def push_args
-    push_args = []
-
-    if self.push_mode == PUSHMODE_MIRROR
-      push_args << "--mirror"
-    else
-      # Not mirroring -- other possible push_args
-      push_args << "--force" if self.push_mode == PUSHMODE_FORCE
-      push_args << "--all"   if self.include_all_branches?
-      push_args << "--tags"  if self.include_all_tags?
-    end
-
-    push_args << self.url
-    push_args << "#{dequote(self.explicit_refspec)}" unless self.explicit_refspec.blank?
-
-    return push_args
-  end
-
-
   private
 
 
@@ -103,12 +70,6 @@ class RepositoryMirror < ActiveRecord::Base
     def strip_whitespace
       self.url = url.strip rescue ''
       self.explicit_refspec = explicit_refspec.strip rescue ''
-    end
-
-
-    # Put backquote in front of crucial characters
-    def dequote(in_string)
-      in_string.gsub(/[$,"\\\n]/) {|x| "\\" + x}
     end
 
 

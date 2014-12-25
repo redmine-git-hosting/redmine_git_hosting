@@ -37,7 +37,7 @@ module Hooks
             logger.info { "Pushing changes to #{mirror.url} ... " }
             y << "  - Pushing changes to #{mirror.url} ... "
 
-            push_failed, push_message = mirror.push
+            push_failed, push_message = MirrorPush.new(mirror).call
 
             if push_failed
               logger.error { "Failed!" }

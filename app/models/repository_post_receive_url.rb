@@ -3,6 +3,8 @@ require 'uri'
 class RepositoryPostReceiveUrl < ActiveRecord::Base
   unloadable
 
+  include BranchParser
+
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
@@ -33,8 +35,6 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
   ## Callbacks
   before_validation :strip_whitespace
-
-  include GitoliteHooksHelper
 
 
   def mode
