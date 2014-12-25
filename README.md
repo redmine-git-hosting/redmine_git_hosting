@@ -11,7 +11,7 @@ You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosti
 * [![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
 * [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
 * [![Dependency Status](https://gemnasium.com/jbox-web/redmine_git_hosting.svg)](https://gemnasium.com/jbox-web/redmine_git_hosting)
-* [![Coverage Status](https://img.shields.io/coveralls/jbox-web/redmine_git_hosting.svg)](https://coveralls.io/r/jbox-web/redmine_git_hosting)
+* [![Coverage Status](https://coveralls.io/repos/jbox-web/redmine_git_hosting/badge.png?branch=devel)](https://coveralls.io/r/jbox-web/redmine_git_hosting?branch=devel)
 
 ## Installation
 
