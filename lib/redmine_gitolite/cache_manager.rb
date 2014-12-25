@@ -98,12 +98,9 @@ module RedmineGitolite
 
 
       def valid_cache_entry?(cached)
-        cur_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-        if (cached.created_at.to_i >= expire_at(cached.repo_identifier)) && (cur_time.to_i - cached.created_at.to_i < max_cache_time || max_cache_time < 0)
-          true
-        else
-          false
-        end
+        current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+        expired = (current_time.to_i - cached.created_at.to_i < max_cache_time)
+        (!expired || max_cache_time < 0) ? true : false
       end
 
 
@@ -118,13 +115,6 @@ module RedmineGitolite
         else
           key1
         end
-      end
-
-
-      @@time_limits = nil
-
-      def expire_at(repo_id)
-        @@time_limits ? @@time_limits[repo_id] : 0
       end
 
 
