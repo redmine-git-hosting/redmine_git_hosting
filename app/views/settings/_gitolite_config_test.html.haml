@@ -1,0 +1,73 @@
+%h3= l(:label_permissions_header)
+
+%table{ class: 'table table-hover' }
+
+  %tr
+    %td= l(:label_temp_dir_writeable)
+    %td= render_temp_dir_writeable(RedmineGitolite::GitoliteWrapper.temp_dir_writeable?(reset: true), RedmineGitolite::GitoliteWrapper.gitolite_admin_dir)
+
+  %tr
+    %td= l(:label_redmine_user)
+    %td
+      %span{ class: 'label label-success' }= RedmineGitolite::GitoliteWrapper.redmine_user
+
+  %tr
+    %td= l(:label_gitolite_user)
+    %td
+      %span{ class: 'label label-success' }= RedmineGitolite::GitoliteWrapper.gitolite_user
+
+  %tr
+    %td= l(:label_sudo_gitolite_to_redmine_user)
+    %td= image_tag (RedmineGitolite::GitoliteWrapper.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png')
+
+  %tr
+    %td= l(:label_sudo_redmine_to_gitolite_user)
+    %td= image_tag (RedmineGitolite::GitoliteWrapper.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
+
+  - gitolite_checks = RedmineGitolite::HookManager.check_install!
+
+  %tr
+    %td= l(:label_gitolite_hook_dirs_installed)
+    %td= render_gitolite_params_status(gitolite_checks[:hook_dirs])
+
+  %tr
+    %td= l(:label_gitolite_hooks_installed)
+    %td= render_gitolite_params_status(gitolite_checks[:hook_files])
+
+  %tr
+    %td= l(:label_gitolite_hooks_params_installed)
+    %td= render_gitolite_params_status(gitolite_checks[:global_params])
+
+  %tr
+    %td= l(:label_gitolite_mailer_params_installed)
+    %td= render_gitolite_params_status(gitolite_checks[:mailer_params])
+
+  %tr
+    %td= l(:label_mirroring_keys_installed)
+    %td= image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png')
+
+  %tr
+    %td= l(:label_git_version)
+    %td
+      %span{ class: 'label label-success' }= Repository::Xitolite.scm_version_string
+
+  %tr
+    %td= l(:label_gitolite_version)
+    %td= render_gitolite_version(RedmineGitolite::GitoliteWrapper.gitolite_version)
+
+  %tr
+    %td= l(:label_gitolite_repository_count)
+    %td
+      %span{ class: 'label label-success' }= RedmineGitolite::GitoliteWrapper.gitolite_repository_count
+
+%p
+  %label= l(:label_gitolite_banner)
+
+.box
+  %pre= raw RedmineGitolite::GitoliteWrapper.gitolite_banner
+
+%p
+  %label= l(:label_path_directories)
+
+.box
+  %pre= raw (ENV['PATH']).gsub(/:/, "<br/>")

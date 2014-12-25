@@ -1,0 +1,22 @@
+/ Gitolite Cache Config
+- gitolite_cache_max_time     = RedmineGitolite::Config.get_setting(:gitolite_cache_max_time)
+- gitolite_cache_max_size     = RedmineGitolite::Config.get_setting(:gitolite_cache_max_size)
+- gitolite_cache_max_elements = RedmineGitolite::Config.get_setting(:gitolite_cache_max_elements)
+
+%h3= l(:label_gitolite_cache_config)
+
+%p
+  %label= l(:label_gitolite_cache_max_time)
+  = select_tag 'settings[gitolite_cache_max_time]', options_for_select(git_cache_options, gitolite_cache_max_time)
+  %br
+
+%p
+  %label= l(:label_gitolite_cache_max_size)
+  = text_field_tag 'settings[gitolite_cache_max_size]', gitolite_cache_max_size, size: 20
+  %em &nbsp;MB
+  %br
+
+%p
+  %label= l(:label_gitolite_cache_max_elements)
+  = text_field_tag 'settings[gitolite_cache_max_elements]', gitolite_cache_max_elements, size: 20
+  %br

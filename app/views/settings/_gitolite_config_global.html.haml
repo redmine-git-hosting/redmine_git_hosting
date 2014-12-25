@@ -1,0 +1,54 @@
+/ Gitolite Global Config
+- gitolite_recycle_bin_expiration_time = RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time)
+
+- gitolite_temp_dir    = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
+- gitolite_log_level   = RedmineGitolite::Config.get_setting(:gitolite_log_level)
+- gitolite_log_split   = RedmineGitolite::Config.get_setting(:gitolite_log_split, true)
+
+- git_config_username  = RedmineGitolite::Config.get_setting(:git_config_username)
+- git_config_email     = RedmineGitolite::Config.get_setting(:git_config_email)
+
+%h3= l(:label_gitolite_global_config)
+
+%p
+  %label= l(:label_gitolite_temp_dir)
+  = text_field_tag 'settings[gitolite_temp_dir]', gitolite_temp_dir, size: 60
+  %br
+  %em= l(:label_gitolite_temp_dir_desc)
+
+%p
+  %label= l(:label_gitolite_recycle_bin_expiration_time)
+  = text_field_tag 'settings[gitolite_recycle_bin_expiration_time]', gitolite_recycle_bin_expiration_time, size: 10
+  %br
+  %em= l(:label_gitolite_recycle_bin_expiration_time_desc)
+
+%p
+  %label= l(:label_gitolite_log_level)
+  = select_tag 'settings[gitolite_log_level]', options_for_select(log_level_options, gitolite_log_level)
+  %br
+  %em= l(:label_gitolite_log_split_desc)
+
+%p
+  %label= l(:label_gitolite_log_split)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_log_split]', 'false'
+    = check_box_tag 'settings[gitolite_log_split]', gitolite_log_split, gitolite_log_split
+  %br
+  %em= l(:label_gitolite_log_split_desc)
+  %br
+  - if gitolite_log_split
+    %em= l(:label_gitolite_log_split_on)
+  - else
+    %em= l(:label_gitolite_log_split_off)
+
+%p
+  %label= l(:label_git_config_username)
+  = text_field_tag 'settings[git_config_username]', "#{git_config_username}", size: 60
+  %br
+  %em= l(:label_git_config_username_desc)
+
+%p
+  %label= l(:label_git_config_email)
+  = text_field_tag 'settings[git_config_email]', "#{git_config_email}", size: 60
+  %br
+  %em= l(:label_git_config_email_desc)

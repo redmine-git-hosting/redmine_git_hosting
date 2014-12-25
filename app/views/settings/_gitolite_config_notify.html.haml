@@ -1,0 +1,56 @@
+/ Gitolite Notifications Config
+- gitolite_notify_by_default            = RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true)
+- gitolite_notify_global_prefix         = RedmineGitolite::Config.get_setting(:gitolite_notify_global_prefix)
+- gitolite_notify_global_sender_address = RedmineGitolite::Config.get_setting(:gitolite_notify_global_sender_address)
+- gitolite_notify_global_include        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_include)
+- gitolite_notify_global_exclude        = RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude)
+
+%h3= l(:label_gitolite_notify_config)
+
+%p
+  %label= l(:label_gitolite_notify_by_default)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_notify_by_default]', 'false'
+    = check_box_tag 'settings[gitolite_notify_by_default]', gitolite_notify_by_default, gitolite_notify_by_default
+
+%p
+  %label= l(:label_gitolite_notify_global_prefix)
+  = text_field_tag 'settings[gitolite_notify_global_prefix]', gitolite_notify_global_prefix, size: 60
+
+%p
+  %label= l(:label_gitolite_notify_global_sender_address)
+  = text_field_tag 'settings[gitolite_notify_global_sender_address]', gitolite_notify_global_sender_address, size: 60
+
+= hidden_field_tag 'settings[gitolite_notify_global_include][]', ''
+= hidden_field_tag 'settings[gitolite_notify_global_exclude][]', ''
+
+%p
+  %label= l(:label_gitolite_notify_global_include)
+
+%ul{ id: 'gitolite_notify_global_include' }
+  - if gitolite_notify_global_include.any?
+    - gitolite_notify_global_include.each do |item|
+      %li= item
+
+%p
+  %label= l(:label_gitolite_notify_global_exclude)
+
+%ul{ id: 'gitolite_notify_global_exclude' }
+  - if gitolite_notify_global_exclude.any?
+    - gitolite_notify_global_exclude.each do |item|
+      %li= item
+
+:javascript
+  function loadTagIt(target){
+    $('#' + target).gtagit({
+      placeholderText: '+ add email',
+      allowDuplicates: false,
+      caseSensitive: false,
+      fieldName: 'settings[' + target + '][]',
+    });
+  }
+
+  $(document).ready(function() {
+    loadTagIt('gitolite_notify_global_include');
+    loadTagIt('gitolite_notify_global_exclude');
+  });

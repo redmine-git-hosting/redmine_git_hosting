@@ -1,0 +1,32 @@
+/ Gitolite Hooks Config
+- gitolite_hooks_are_asynchronous = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
+- gitolite_force_hooks_update     = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update, true)
+- gitolite_hooks_debug            = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug, true)
+
+%h3= l(:label_gitolite_hooks_config)
+
+%p
+  %label= l(:label_gitolite_hooks_are_asynchronous)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_hooks_are_asynchronous]', 'false'
+    = check_box_tag 'settings[gitolite_hooks_are_asynchronous]', gitolite_hooks_are_asynchronous, gitolite_hooks_are_asynchronous
+
+%p
+  %label= l(:label_gitolite_force_hooks_update)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_force_hooks_update]', 'false'
+    = check_box_tag 'settings[gitolite_force_hooks_update]', gitolite_force_hooks_update, gitolite_force_hooks_update
+
+%p
+  %label= l(:label_gitolite_hooks_debug)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_hooks_debug]', 'false'
+    = check_box_tag 'settings[gitolite_hooks_debug]', gitolite_hooks_debug, gitolite_hooks_debug
+
+%p
+  %label= l(:label_gitolite_hooks_url)
+  %span{ class: 'label label-info' }= RedmineGitolite::HookManager.gitolite_hooks_url
+
+%p
+  %label= l(:label_gitolite_hooks_namespace)
+  %span{ class: 'label label-info' }= RedmineGitolite::HookManager.gitolite_hooks_namespace
