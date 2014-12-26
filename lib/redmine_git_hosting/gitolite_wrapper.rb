@@ -44,6 +44,14 @@ module RedmineGitHosting
       end
 
 
+      def flush_cache(options = {})
+        if options.has_key?(:flush_cache) && options[:flush_cache] == true
+          logger.info("Flush Settings Cache !")
+          Setting.check_cache if Setting.respond_to?(:check_cache)
+        end
+      end
+
+
       WRAPPERS = [
         GitoliteWrapper::Admin, GitoliteWrapper::Repositories,
         GitoliteWrapper::Users, GitoliteWrapper::Projects
@@ -54,21 +62,14 @@ module RedmineGitHosting
       # action: An API action defined in one of the gitolite/* classes.
       def update(action, object, options = {})
         options = options.symbolize_keys
-
-        if options.has_key?(:flush_cache) && options[:flush_cache] == true
-          logger.info("Flush Settings Cache !")
-          Setting.check_cache if Setting.respond_to?(:check_cache)
-        end
-
+        flush_cache(options)
         begin
           admin = gitolite_admin
         rescue Rugged::SshError => e
           logger.error(e.message)
         else
           WRAPPERS.each do |wrappermod|
-            if wrappermod.method_defined?(action)
-              return wrappermod.new(admin, action, object, options).send(action)
-            end
+            return wrappermod.new(admin, action, object, options).send(action) if wrappermod.method_defined?(action)
           end
           raise RedmineGitHosting::Error::GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
         end
