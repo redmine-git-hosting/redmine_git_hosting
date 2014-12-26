@@ -21,24 +21,33 @@ class GitoliteHooksController < ApplicationController
 
 
     def post_receive_redmine
-      ## Clear existing cache
+      # Clear existing cache
       RedmineGitHosting::CacheManager.clear_cache_for_repository(@repository)
 
-      self.response.headers['Content-Type']  = 'text/plain;'
-      self.response.headers['Last-Modified'] = Time.now.to_s
-      self.response.headers['Cache-Control'] = 'no-cache'
+      # Set response headers
+      set_response_headers
 
+      # Send body
       self.response_body = Enumerator.new do |y|
-        ## First fetch changesets
+        # First fetch changesets
         y << Hooks::Redmine.new(@repository).execute
 
-        ## Then build payloads
-        payloads = GithubPayload.new(@repository, params[:refs]).build
-
-        ## Then call hooks
+        # Then call hooks
         y << Hooks::GitMirrors.execute(@repository, payloads)
         y << Hooks::Webservices.execute(@repository, payloads)
       end
+    end
+
+
+    def set_response_headers
+      self.response.headers['Content-Type']  = 'text/plain;'
+      self.response.headers['Last-Modified'] = Time.now.to_s
+      self.response.headers['Cache-Control'] = 'no-cache'
+    end
+
+
+    def payloads
+      @payloads ||= GithubPayload.new(@repository, params[:refs]).build
     end
 
 
@@ -101,23 +110,26 @@ class GitoliteHooksController < ApplicationController
 
 
     def validate_encoded_time(clear_time, encoded_time, key)
+      cur_time  = Time.new.utc.to_i
+      test_time = clear_time.to_i
+
       valid = false
 
-      begin
-        cur_time_seconds  = Time.new.utc.to_i
-        test_time_seconds = clear_time.to_i
-
-        if cur_time_seconds - test_time_seconds < 5*60
-          test_encoded = Digest::SHA1.hexdigest(clear_time.to_s + key.to_s)
-          if test_encoded.to_s == encoded_time.to_s
-            valid = true
-          end
-        end
-      rescue => e
-        RedmineGitHosting.logger.error("Error in validate_encoded_time(): #{e.message}")
+      if not_to_late?(cur_time, test_time)
+        valid = true if encode_key(clear_time, key) == encoded_time.to_s
       end
 
-      return valid
+      valid
+    end
+
+
+    def not_to_late?(cur_time, test_time)
+      cur_time - test_time < 5*60
+    end
+
+
+    def encode_key(time, key)
+      Digest::SHA1.hexdigest(time.to_s + key.to_s).to_s
     end
 
 end
