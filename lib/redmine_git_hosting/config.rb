@@ -72,37 +72,42 @@ module RedmineGitHosting
         if default_hash.nil? || default_hash.empty?
           logger.info("No defaults specified in init.rb!")
         else
-          ## Refresh Settings cache
-          Setting.check_cache
+          do_reload_config(default_hash, logger)
+        end
+      end
 
-          ## Get actual values
-          valuehash = (Setting.plugin_redmine_git_hosting).clone
 
-          ## Update!
-          changes = 0
+      def do_reload_config(default_hash, logger)
+        ## Refresh Settings cache
+        Setting.check_cache
 
-          default_hash.each do |key, value|
-            if valuehash[key] != value
-              logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
-              valuehash[key] = value
-              changes += 1
-            end
+        ## Get actual values
+        valuehash = (Setting.plugin_redmine_git_hosting).clone
+
+        ## Update!
+        changes = 0
+
+        default_hash.each do |key, value|
+          if valuehash[key] != value
+            logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
+            valuehash[key] = value
+            changes += 1
           end
+        end
 
-          if changes == 0
-            logger.info("No changes necessary.")
-          else
-            logger.info("Committing changes ... ")
-            begin
-              ## Update Settings
-              Setting.plugin_redmine_git_hosting = valuehash
-              ## Refresh Settings cache
-              Setting.check_cache
-              logger.info("Success!")
-            rescue => e
-              logger.error("Failure.")
-              logger.error(e.message)
-            end
+        if changes == 0
+          logger.info("No changes necessary.")
+        else
+          logger.info("Committing changes ... ")
+          begin
+            ## Update Settings
+            Setting.plugin_redmine_git_hosting = valuehash
+            ## Refresh Settings cache
+            Setting.check_cache
+            logger.info("Success!")
+          rescue => e
+            logger.error("Failure.")
+            logger.error(e.message)
           end
         end
       end
@@ -111,7 +116,8 @@ module RedmineGitHosting
 
     private_class_method :return_bool,
                          :do_get_setting,
-                         :reload!
+                         :reload!,
+                         :do_reload_config
 
 
     class ConsoleLogger
