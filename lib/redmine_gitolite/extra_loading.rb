@@ -15,5 +15,8 @@ module RedmineGitolite
       end
     end
 
+    # HAML gem
+    Haml::Template.options[:attr_wrapper] = '"'
+
   end
 end
