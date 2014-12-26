@@ -47,39 +47,50 @@ module RedmineGitHosting
           end
 
 
-          def git_cmd_with_git_hosting(args, options = {}, &block)
-            repo_path = root_url || url
-
-            full_args = []
-            full_args << 'sudo'
-            full_args += RedmineGitHosting::GitoliteWrapper.sudo_shell_params
-            full_args << 'git'
-            full_args << '--git-dir'
-            full_args << repo_path
-
-            if self.class.client_version_above?([1, 7, 2])
-              full_args << '-c' << 'core.quotepath=false'
-              full_args << '-c' << 'log.decorate=no'
-            end
-
-            full_args += args
-
-            cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
-
-            # Compute string from repo_path that should be same as: repo.git_cache_id
-            # If only we had access to the repo (we don't).
+          # Compute string from repo_path that should be same as: repo.git_cache_id
+          # If only we had access to the repo (we don't).
+          def git_cache_id
             logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
+            @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
+          end
 
-            git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
+
+          def repo_path
+            root_url || url
+          end
+
+
+          def base_args
+            [ 'sudo', *RedmineGitHosting::GitoliteWrapper.sudo_shell_params, 'git', '--git-dir', repo_path, *git_args ].clone
+          end
+
+
+          def git_args
+            if self.class.client_version_above?([1, 7, 2])
+              ['-c', 'core.quotepath=false', '-c', 'log.decorate=no']
+            end
+          end
+
+
+          def prepare_command(args)
+            # Get our basics args
+            full_args = base_args
+            # Concat with Redmine args
+            full_args += args
+            # Quote args
+            cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
+          end
+
+
+          def git_cmd_with_git_hosting(args, options = {}, &block)
+            cmd_str = prepare_command(args)
 
             if !git_cache_id.nil?
               # Insert cache between shell execution and caller
               logger.debug("Found git_cache_id ('#{git_cache_id}'), call cache... ")
-              logger.debug("Send GitCommand : #{cmd_str}")
               RedmineGitHosting::CacheManager.execute(cmd_str, git_cache_id, options, &block)
             else
               logger.debug("Unable to find git_cache_id, bypass cache... ")
-              logger.debug("Send GitCommand : #{cmd_str}")
               Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
             end
           end
