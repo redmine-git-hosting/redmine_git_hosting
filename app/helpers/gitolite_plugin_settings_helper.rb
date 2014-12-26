@@ -88,14 +88,4 @@ module GitolitePluginSettingsHelper
     ]
   end
 
-
-  def smart_http_options
-    [
-      [l(:label_disabled), "0"],
-      [l(:label_http_only), "3"],
-      [l(:label_https_only), "1"],
-      [l(:label_https_and_http), "2"]
-    ]
-  end
-
 end

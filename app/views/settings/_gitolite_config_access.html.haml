@@ -39,7 +39,7 @@
 
 %p
   %label= l(:label_gitolite_http_by_default)
-  = select_tag 'settings[gitolite_http_by_default]', options_for_select(smart_http_options, gitolite_http_by_default)
+  = select_tag 'settings[gitolite_http_by_default]', options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, gitolite_http_by_default)
 
 %p
   %label= l(:label_show_repositories_url)

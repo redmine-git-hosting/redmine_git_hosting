@@ -22,12 +22,12 @@
 
       %p
         %label= l(:label_enable_smart_http)
-        = f.select :git_http, options_for_select(smart_http_options, :selected => repository.extra[:git_http].to_s)
+        = f.select :git_http, options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, selected: repository.extra[:git_http].to_s)
 
       %p
         %label= l(:label_repository_default_branch)
         - if !repository.branches.empty?
-          = f.select :default_branch, options_for_select(repository.branches.collect{ |b| [b.to_s, b.to_s] }, :selected => repository.branches.find{ |b| b.is_default}.to_s)
+          = f.select :default_branch, options_for_select(repository.branches.collect{ |b| [b.to_s, b.to_s] }, selected: repository.branches.find{ |b| b.is_default}.to_s)
         - else
           %span{ class: 'label label-info' }= repository.extra[:default_branch]
 
@@ -41,6 +41,6 @@
 
       %p
         %label= l(:label_browse_repository)
-        = link_to h(repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => repository.identifier_param}
+        = link_to h(repository.url), {controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param}
 
     = f.submit l(:button_save)
