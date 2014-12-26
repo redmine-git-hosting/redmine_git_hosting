@@ -31,10 +31,7 @@ describe RepositoryGitExtra do
 
     it { should validate_numericality_of(:git_http) }
 
-    it {
-      should ensure_inclusion_of(:git_http).
-      in_array(%w(0 1 2 3))
-    }
+    it { should validate_inclusion_of(:git_http).in_array(%w(0 1 2 3)) }
 
     it "should have default values for git_http" do
       expect(@git_extra.git_http).to eq 0

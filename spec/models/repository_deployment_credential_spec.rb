@@ -44,10 +44,7 @@ describe RepositoryDeploymentCredential do
     it { should validate_presence_of(:user_id) }
     it { should validate_presence_of(:perm) }
 
-    it {
-      should ensure_inclusion_of(:perm).
-      in_array(%w(R RW+))
-    }
+    it { should validate_inclusion_of(:perm).in_array(%w(R RW+)) }
 
     ## Attributes content
     it "is a active credential" do

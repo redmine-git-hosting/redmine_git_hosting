@@ -3,17 +3,20 @@ module Hooks
     unloadable
 
     include HttpHelper
-    include BranchParser
 
     attr_reader :post_receive_url
     attr_reader :payloads
     attr_reader :url
+    attr_reader :payloads_to_send
 
 
     def initialize(post_receive_url, payloads)
       @post_receive_url = post_receive_url
       @payloads         = payloads
       @url              = post_receive_url.url
+      @payloads_to_send = []
+
+      set_payloads_to_send
     end
 
 
@@ -48,27 +51,42 @@ module Hooks
     end
 
 
+    def call_webservice
+      if needs_push?
+        handle_webservice_call
+      end
+    end
+
+
+    def needs_push?
+      return false if payloads.empty?
+      return true unless use_triggers?
+      return false if post_receive_url.triggers.empty?
+      return !payloads_to_send.empty?
+    end
+
+
     private
 
 
-      def call_webservice
-        if needs_push?
-          if use_method == :post && split_payloads?
-            extract_payloads.each do |payload|
-              do_call_webservice(payload)
-            end
-          else
-            do_call_webservice(payloads)
-          end
+      def set_payloads_to_send
+        if use_triggers?
+          @payloads_to_send = extract_payloads
+        else
+          @payloads_to_send = payloads
         end
       end
 
 
-      def needs_push?
-        return false if payloads.empty?
-        return true if !post_receive_url.use_triggers
-        return true if post_receive_url.triggers.empty?
-        return extract_payloads.empty?
+      def extract_payloads
+        new_payloads = []
+        payloads.each do |payload|
+          data = RedmineGitolite::Utils.refcomp_parse(payload[:ref])
+          if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
+            new_payloads << payload
+          end
+        end
+        new_payloads
       end
 
 
@@ -77,20 +95,24 @@ module Hooks
       end
 
 
+      def use_triggers?
+        post_receive_url.use_triggers?
+      end
+
+
       def split_payloads?
         post_receive_url.split_payloads?
       end
 
 
-      def extract_payloads
-        new_payloads = []
-        payloads.each do |payload|
-          data = refcomp_parse(payload[:ref])
-          if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
-            new_payloads << payload
+      def handle_webservice_call
+        if use_method == :post && split_payloads?
+          payloads_to_send.each do |payload|
+            do_call_webservice(payload)
           end
+        else
+          do_call_webservice(payloads_to_send)
         end
-        new_payloads
       end
 
 

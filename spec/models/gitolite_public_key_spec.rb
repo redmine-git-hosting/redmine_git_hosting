@@ -56,17 +56,11 @@ describe GitolitePublicKey do
 
     it { should validate_numericality_of(:key_type) }
 
-    it {
-      should ensure_inclusion_of(:key_type).
-      in_array(%w(0 1))
-    }
+    it { should validate_inclusion_of(:key_type).in_array(%w(0 1)) }
 
     it { should ensure_length_of(:title).is_at_most(60) }
 
-    it {
-      should_not allow_value('toto@toto', 'ma_clé').
-      for(:title)
-    }
+    it { should_not allow_value('toto@toto', 'ma_clé').for(:title) }
 
     it { should respond_to(:identifier) }
     it { should respond_to(:fingerprint) }

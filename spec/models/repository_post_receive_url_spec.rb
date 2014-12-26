@@ -2,11 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryPostReceiveUrl do
 
-  GLOBAL_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/global_payload.yml')))
-  MASTER_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/master_payload.yml')))
-  BRANCHES_PAYLOAD = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../fixtures/branches_payload.yml')))
-
-
   describe "Valid RepositoryPostReceiveUrl creation" do
     before(:each) do
       @post_receive_url = build(:repository_post_receive_url)
@@ -34,15 +29,9 @@ describe RepositoryPostReceiveUrl do
 
     it { should validate_uniqueness_of(:url).scoped_to(:repository_id) }
 
-    it {
-      should ensure_inclusion_of(:mode).
-      in_array([:github, :get])
-    }
+    it { should validate_inclusion_of(:mode).in_array([:github, :get]) }
 
-    it {
-      should allow_value('http://foo.com', 'https://bar.com/baz').
-      for(:url)
-    }
+    it { should allow_value('http://foo.com', 'https://bar.com/baz').for(:url) }
 
     ## Serializations
     it { should serialize(:triggers) }
@@ -96,70 +85,6 @@ describe RepositoryPostReceiveUrl do
 
     it { expect(RepositoryPostReceiveUrl.active.length).to be == 3 }
     it { expect(RepositoryPostReceiveUrl.inactive.length).to be == 2 }
-  end
-
-
-  describe "#needs_push" do
-    before do
-      @post_receive_url = build(:repository_post_receive_url)
-    end
-
-    subject { @post_receive_url }
-
-    context "when payload is empty" do
-      before do
-        @needs_push = @post_receive_url.needs_push([])
-      end
-
-      it "shoud return false" do
-        expect(@needs_push).to be false
-      end
-    end
-
-    context "when triggers are not used" do
-      before do
-        @needs_push = @post_receive_url.needs_push(GLOBAL_PAYLOAD)
-      end
-
-      it "should return the global payload to push" do
-        expect(@needs_push).to eq GLOBAL_PAYLOAD
-      end
-    end
-
-    context "when triggers are empty" do
-      before do
-        @post_receive_url.use_triggers = true
-        @needs_push = @post_receive_url.needs_push(GLOBAL_PAYLOAD)
-      end
-
-      it "should return the global payload to push" do
-        expect(@needs_push).to eq GLOBAL_PAYLOAD
-      end
-    end
-
-    context "when triggers is set to master" do
-      before do
-        @post_receive_url.use_triggers = true
-        @post_receive_url.triggers = [ 'master' ]
-        @needs_push = @post_receive_url.needs_push(GLOBAL_PAYLOAD)
-      end
-
-      it "should return the master payload" do
-        expect(@needs_push).to eq MASTER_PAYLOAD
-      end
-    end
-
-    context "when triggers is set to master" do
-      before do
-        @post_receive_url.use_triggers = true
-        @post_receive_url.triggers = [ 'master' ]
-        @needs_push = @post_receive_url.needs_push(BRANCHES_PAYLOAD)
-      end
-
-      it "should not be found in branches payload and return false" do
-        expect(@needs_push).to be false
-      end
-    end
   end
 
 end

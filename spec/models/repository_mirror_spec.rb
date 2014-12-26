@@ -51,17 +51,11 @@ describe RepositoryMirror do
 
     it { should validate_uniqueness_of(:url).scoped_to(:repository_id) }
 
-    it {
-      should allow_value(*VALID_URLS).
-      for(:url)
-    }
+    it { should allow_value(*VALID_URLS).for(:url) }
 
     it { should validate_numericality_of(:push_mode) }
 
-    it {
-      should validate_inclusion_of(:push_mode).
-      in_array(%w(0 1 2))
-    }
+    it { should validate_inclusion_of(:push_mode).in_array(%w(0 1 2)) }
 
     ## Attributes content
     it { expect(@mirror.active).to be true }
@@ -83,64 +77,6 @@ describe RepositoryMirror do
       before { @mirror.active = false }
       it "should be inactive" do
         expect(@mirror.active).to be false
-      end
-    end
-  end
-
-
-  describe "Push args" do
-    ## Validate push args : forced mode
-    context "when push_mode forced with params" do
-      before do
-        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :explicit_refspec => 'devel')
-      end
-
-      it "should have push_args" do
-        expect(@mirror.push_args).to eq ["--force", MIRROR_URL, "devel"]
-      end
-    end
-
-    ## Validate push args : fast_forward mode
-    context "when push_mode fast_forward with params" do
-      before do
-        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 2, :explicit_refspec => 'devel')
-      end
-
-      it "should have push_args" do
-        expect(@mirror.push_args).to eq [MIRROR_URL, "devel"]
-      end
-    end
-
-    ## Validate push args : mirror mode
-    context "when push_mode is mirror" do
-      before do
-        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 0)
-      end
-
-      it "should have push_args" do
-        expect(@mirror.push_args).to eq ["--mirror", MIRROR_URL]
-      end
-    end
-
-    ## Validate push args : all tags mode
-    context "when push_mode is all tags" do
-      before do
-        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :include_all_tags => true)
-      end
-
-      it "should have push_args" do
-        expect(@mirror.push_args).to eq ["--force", "--tags", MIRROR_URL]
-      end
-    end
-
-    ## Validate push args : all branches mode
-    context "when push_mode is all branches" do
-      before do
-        @mirror = build_mirror(:url => MIRROR_URL, :push_mode => 1, :include_all_branches => true)
-      end
-
-      it "should have push_args" do
-        expect(@mirror.push_args).to eq ["--force", "--all", MIRROR_URL]
       end
     end
   end

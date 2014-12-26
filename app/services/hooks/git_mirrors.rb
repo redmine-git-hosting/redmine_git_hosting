@@ -2,8 +2,6 @@ module Hooks
   class GitMirrors
     unloadable
 
-    include BranchParser
-
     attr_reader :mirror
     attr_reader :payloads
     attr_reader :url
@@ -65,7 +63,7 @@ module Hooks
 
         refspec_parse = mirror.explicit_refspec.match(/^\+?([^:]*)(:[^:]*)?$/)
         payloads.each do |payload|
-          if splitpath = refcomp_parse(payload[:ref])
+          if splitpath = RedmineGitolite::Utils.refcomp_parse(payload[:ref])
             return true if payload[:ref] == refspec_parse[1]  # Explicit Reference Spec complete path
             return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
             return true if mirror.include_all_branches? && splitpath[:type] == "heads"
