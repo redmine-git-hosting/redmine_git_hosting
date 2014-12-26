@@ -24,7 +24,7 @@ class DownloadGitRevision
 
 
   def content
-    RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'archive', *@cmd_args, @commit_id)
+    RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'archive', *@cmd_args, @commit_id)
   end
 
 
@@ -44,10 +44,10 @@ class DownloadGitRevision
 
     # is the revision a tag?
     if commit_id.nil?
-      tags = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'tag').split
+      tags = RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'tag').split
       tags.each do |x|
         if x == @revision
-          commit_id = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-list', @revision).split[0]
+          commit_id = RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-list', @revision).split[0]
           break
         end
       end
@@ -58,7 +58,7 @@ class DownloadGitRevision
       commit_id = @revision
     end
 
-    valid_commit = RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-parse', '--quiet', '--verify', commit_id).chomp.strip
+    valid_commit = RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-parse', '--quiet', '--verify', commit_id).chomp.strip
 
     if valid_commit == ''
       @commit_valid = false

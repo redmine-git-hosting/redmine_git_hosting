@@ -1,6 +1,6 @@
 require 'stringio'
 
-module RedmineGitolite
+module RedmineGitHosting
   class Cache
 
     # Rewritten version of caching functionality to accommodate Redmine 1.4+
@@ -85,7 +85,7 @@ module RedmineGitolite
         @state = DEAD
         if !@my_buffer_overfull
           # Insert result into cache
-          RedmineGitolite::CacheManager.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
+          RedmineGitHosting::CacheManager.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
         end
       end
       return [@retio, @status]
@@ -118,7 +118,7 @@ module RedmineGitolite
 
     def close_write
       # Ok -- now have all the extra args...  Check cache
-      out = RedmineGitolite::CacheManager.check_cache(@my_cmd_str, @my_extra_args)
+      out = RedmineGitHosting::CacheManager.check_cache(@my_cmd_str, @my_extra_args)
       if out
         # Match in the cache!
         @state = STRING_IO
@@ -130,7 +130,7 @@ module RedmineGitolite
 
 
     def logger
-      RedmineGitolite::Log.get_logger(:git_cache)
+      RedmineGitHosting.logger
     end
 
 
@@ -166,7 +166,7 @@ module RedmineGitolite
 
       if @my_read_stream.nil?
         # Shouldn't happen, but might be problem
-        logger.error { "Call to #{my_method.to_s} before IO-handlers wrapped." }
+        logger.error("Call to #{my_method.to_s} before IO-handlers wrapped.")
         raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
       end
 
@@ -247,7 +247,7 @@ module RedmineGitolite
 
     def push_to_buffer(invalue)
       nextchunk = invalue.is_a?(Integer) ? invalue.chr : invalue
-      if @my_buffer.length + nextchunk.length <= RedmineGitolite::CacheManager.max_cache_size
+      if @my_buffer.length + nextchunk.length <= RedmineGitHosting::CacheManager.max_cache_size
         @my_buffer << nextchunk
       else
         @my_buffer_overfull = true

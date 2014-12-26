@@ -23,7 +23,7 @@ module Hooks
     class << self
 
       def logger
-        RedmineGitolite::Log.get_logger(:git_hooks)
+        RedmineGitHosting.logger
       end
 
 
@@ -32,7 +32,7 @@ module Hooks
 
         ## Post to each post-receive URL
         if repository.post_receive_urls.active.any?
-          logger.info { "Notifying post receive urls about changes to this repository :" }
+          logger.info("Notifying post receive urls about changes to this repository :")
           y << "\nNotifying post receive urls about changes to this repository :\n"
 
           repository.post_receive_urls.active.each do |post_receive_url|
@@ -81,7 +81,7 @@ module Hooks
       def extract_payloads
         new_payloads = []
         payloads.each do |payload|
-          data = RedmineGitolite::Utils.refcomp_parse(payload[:ref])
+          data = RedmineGitHosting::Utils.refcomp_parse(payload[:ref])
           if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
             new_payloads << payload
           end
@@ -119,17 +119,17 @@ module Hooks
       def do_call_webservice(payload)
         y = ''
 
-        logger.info { "Notifying #{url} ... " }
+        logger.info("Notifying #{url} ... ")
         y << "  - Notifying #{url} ... "
 
         post_failed, post_message = post_data(url, payload, method: use_method)
 
         if post_failed
-          logger.error { "Failed!" }
-          logger.error { "#{post_message}" }
+          logger.error("Failed!")
+          logger.error("#{post_message}")
           y << " [failure]\n"
         else
-          logger.info { "Succeeded!" }
+          logger.info("Succeeded!")
           y << " [success]\n"
         end
 
@@ -138,7 +138,7 @@ module Hooks
 
 
       def logger
-        RedmineGitolite::Log.get_logger(:git_hooks)
+        RedmineGitHosting.logger
       end
 
   end

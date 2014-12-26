@@ -1,4 +1,4 @@
-module RedmineGitolite
+module RedmineGitHosting
 
   module Config
 
@@ -70,7 +70,7 @@ module RedmineGitolite
         end
 
         if default_hash.nil? || default_hash.empty?
-          logger.info { "No defaults specified in init.rb!" }
+          logger.info("No defaults specified in init.rb!")
         else
           ## Refresh Settings cache
           Setting.check_cache
@@ -83,25 +83,25 @@ module RedmineGitolite
 
           default_hash.each do |key, value|
             if valuehash[key] != value
-              logger.info { "Changing '#{key}' : #{valuehash[key]} => #{value}" }
+              logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
               valuehash[key] = value
               changes += 1
             end
           end
 
           if changes == 0
-            logger.info { "No changes necessary." }
+            logger.info("No changes necessary.")
           else
-            logger.info { "Committing changes ... " }
+            logger.info("Committing changes ... ")
             begin
               ## Update Settings
               Setting.plugin_redmine_git_hosting = valuehash
               ## Refresh Settings cache
               Setting.check_cache
-              logger.info { "Success!" }
+              logger.info("Success!")
             rescue => e
-              logger.error { "Failure." }
-              logger.error { e.message }
+              logger.error("Failure.")
+              logger.error(e.message)
             end
           end
         end
@@ -121,17 +121,17 @@ module RedmineGitolite
 
       def initialize(opts = {})
         @console = opts[:console] || false
-        @logger ||= RedmineGitolite::GitHosting.logger
+        @logger ||= RedmineGitHosting.logger
       end
 
-      def info(&block)
-        puts yield if console
-        logger.info yield
+      def info(message)
+        puts message if console
+        logger.info(message)
       end
 
-      def error(&block)
-        puts yield if console
-        logger.error yield
+      def error(message)
+        puts message if console
+        logger.error(message)
       end
 
       # Handle everything else with base object

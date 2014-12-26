@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe ::Repository::Xitolite do
+describe Repository::Xitolite do
 
   GIT_USER = 'git'
 
@@ -1034,7 +1034,7 @@ describe ::Repository::Xitolite do
   #       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
   #       @foo = create_git_repository(:project => @project_child, :identifier => 'foo')
-  #       RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @foo.id, :create_readme_file => true)
+  #       RedmineGitHosting.resync_gitolite(:add_repository, @foo.id, :create_readme_file => true)
   #       @foo.fetch_changesets
   #     end
 
@@ -1050,7 +1050,7 @@ describe ::Repository::Xitolite do
   #       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
   #       @bar = create_git_repository(:project => @project_child, :identifier => 'bar')
-  #       RedmineGitolite::GitHosting.resync_gitolite(:add_repository, @bar.id, :create_readme_file => false)
+  #       RedmineGitHosting.resync_gitolite(:add_repository, @bar.id, :create_readme_file => false)
   #       @bar.fetch_changesets
   #     end
 

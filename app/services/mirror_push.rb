@@ -18,9 +18,9 @@ class MirrorPush
 
   def push!
     begin
-      push_message = RedmineGitolite::GitoliteWrapper.sudo_pipe_capture("sh", push_command)
+      push_message = RedmineGitHosting::GitoliteWrapper.sudo_pipe_capture("sh", push_command)
       push_failed = false
-    rescue RedmineGitolite::GitHosting::GitHostingException => e
+    rescue RedmineGitHosting::Error::GitoliteCommandException => e
       push_message = e.output
       push_failed = true
     end

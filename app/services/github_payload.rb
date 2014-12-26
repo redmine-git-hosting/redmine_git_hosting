@@ -23,7 +23,7 @@ class GithubPayload
 
 
     def logger
-      RedmineGitolite::Log.get_logger(:git_hooks)
+      RedmineGitHosting.logger
     end
 
 
@@ -51,11 +51,11 @@ class GithubPayload
 
       if newhead.match(/^0{40}$/)
         # Deleting a branch
-        logger.info { "Deleting branch '#{branch_name}'" }
+        logger.info("Deleting branch '#{branch_name}'")
         range = nil
       elsif oldhead.match(/^0{40}$/)
         # Creating a branch
-        logger.info { "Creating branch '#{branch_name}'" }
+        logger.info("Creating branch '#{branch_name}'")
         range = newhead
       else
         range = "#{oldhead}..#{newhead}"
@@ -67,7 +67,7 @@ class GithubPayload
 
     def build_payload(ref, range)
       revisions_in_range = get_revisions_in_range(range)
-      logger.debug { "Revisions in range : #{revisions_in_range.split().join(' ')}" }
+      logger.debug("Revisions in range : #{revisions_in_range.split().join(' ')}")
 
       # Get refs
       oldhead, newhead, refname = ref.split(',')
@@ -150,7 +150,7 @@ class GithubPayload
 
 
     def get_revisions_in_range(range)
-      RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'rev-list', '--reverse', range)
+      RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'rev-list', '--reverse', range)
     end
 
 end

@@ -53,9 +53,9 @@ module Gitolitable
 
     def default_extra_options
       {
-        git_http:       RedmineGitolite::Config.get_setting(:gitolite_http_by_default),
-        git_daemon:     RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true),
-        git_notify:     RedmineGitolite::Config.get_setting(:gitolite_notify_by_default, true),
+        git_http:       RedmineGitHosting::Config.get_setting(:gitolite_http_by_default),
+        git_daemon:     RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
+        git_notify:     RedmineGitHosting::Config.get_setting(:gitolite_notify_by_default, true),
         default_branch: 'master'
       }
     end

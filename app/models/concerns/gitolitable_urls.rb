@@ -12,27 +12,27 @@ module GitolitableUrls
 
 
   def http_access_path
-    "#{RedmineGitolite::Config.get_setting(:http_server_subdir)}#{redmine_repository_path}.git"
+    "#{RedmineGitHosting::Config.get_setting(:http_server_subdir)}#{redmine_repository_path}.git"
   end
 
 
   def ssh_url
-    "ssh://#{RedmineGitolite::Config.get_setting(:gitolite_user)}@#{RedmineGitolite::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
+    "ssh://#{RedmineGitHosting::Config.get_setting(:gitolite_user)}@#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
   end
 
 
   def git_url
-    "git://#{RedmineGitolite::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
+    "git://#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
   end
 
 
   def http_url
-    "http://#{http_user_login}#{RedmineGitolite::Config.get_setting(:http_server_domain)}/#{http_access_path}"
+    "http://#{http_user_login}#{RedmineGitHosting::Config.get_setting(:http_server_domain)}/#{http_access_path}"
   end
 
 
   def https_url
-    "https://#{http_user_login}#{RedmineGitolite::Config.get_setting(:https_server_domain)}/#{http_access_path}"
+    "https://#{http_user_login}#{RedmineGitHosting::Config.get_setting(:https_server_domain)}/#{http_access_path}"
   end
 
 

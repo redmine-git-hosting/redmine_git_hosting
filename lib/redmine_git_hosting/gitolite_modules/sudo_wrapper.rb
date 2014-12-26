@@ -1,4 +1,4 @@
-module RedmineGitolite::GitoliteModules
+module RedmineGitHosting::GitoliteModules
 
   module SudoWrapper
 
@@ -33,19 +33,19 @@ module RedmineGitolite::GitoliteModules
       # Will shell out to +sudo -n -u <gitolite_user> params+
       #
       def sudo_shell(*params)
-        RedmineGitolite::Utils.execute('sudo', sudo_shell_params.concat(params))
+        RedmineGitHosting::Utils.execute('sudo', sudo_shell_params.concat(params))
       end
 
 
       # Return only the output of the shell command
       # Throws an exception if the shell command does not exit with code 0.
       def sudo_capture(*params)
-        RedmineGitolite::Utils.capture('sudo', sudo_shell_params.concat(params))
+        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.concat(params))
       end
 
 
       def sudo_pipe_capture(*params, stdin)
-        RedmineGitolite::Utils.capture('sudo', sudo_shell_params.concat(params), {stdin_data: stdin, binmode: true})
+        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.concat(params), {stdin_data: stdin, binmode: true})
       end
 
 
@@ -58,8 +58,8 @@ module RedmineGitolite::GitoliteModules
           sudo_pipe_capture('sh', stdin)
           sudo_chmod(filemode, dest_file)
           return true
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { e.output }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error(e.output)
           return false
         end
       end
@@ -78,12 +78,12 @@ module RedmineGitolite::GitoliteModules
 
 
       def sudo_update_gitolite!
-        logger.info { "Running '#{gitolite_command.join(' ')}' on the Gitolite install ..." }
+        logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
         begin
           sudo_shell(*gitolite_command)
           return true
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { e.output }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error(e.output)
           return false
         end
       end
@@ -151,10 +151,10 @@ module RedmineGitolite::GitoliteModules
 
         begin
           output = sudo_capture('eval', 'find', path, '-type', 'f', '|', 'wc', '-l')
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
           empty_repo = false
         else
-          logger.debug { "Counted objects in repository directory '#{path}' : '#{output}'" }
+          logger.debug("Counted objects in repository directory '#{path}' : '#{output}'")
 
           if output.to_i == 0
             empty_repo = true
@@ -175,24 +175,24 @@ module RedmineGitolite::GitoliteModules
 
       ## SUDO TEST1
       def can_gitolite_sudo_to_redmine_user?
-        logger.info { "Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'..." }
+        logger.info("Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'...")
 
         if gitolite_user == redmine_user
-          logger.info { "OK!" }
+          logger.info("OK!")
           return true
         end
 
         begin
           test = sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.warn { "Error while testing can_gitolite_sudo_to_redmine_user" }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.warn("Error while testing can_gitolite_sudo_to_redmine_user")
           return false
         else
           if test.match(/#{redmine_user}/)
-            logger.info { "OK!" }
+            logger.info("OK!")
             return true
           else
-            logger.warn { "Error while testing can_gitolite_sudo_to_redmine_user" }
+            logger.warn("Error while testing can_gitolite_sudo_to_redmine_user")
             return false
           end
         end
@@ -201,24 +201,24 @@ module RedmineGitolite::GitoliteModules
 
       ## SUDO TEST2
       def can_redmine_sudo_to_gitolite_user?
-        logger.info { "Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'..." }
+        logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
 
         if gitolite_user == redmine_user
-          logger.info { "OK!" }
+          logger.info("OK!")
           return true
         end
 
         begin
           test = sudo_capture('whoami')
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while testing can_redmine_sudo_to_gitolite_user" }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Error while testing can_redmine_sudo_to_gitolite_user")
           return false
         else
           if test.match(/#{gitolite_user}/)
-            logger.info { "OK!" }
+            logger.info("OK!")
             return true
           else
-            logger.warn { "Error while testing can_redmine_sudo_to_gitolite_user" }
+            logger.warn("Error while testing can_redmine_sudo_to_gitolite_user")
             return false
           end
         end

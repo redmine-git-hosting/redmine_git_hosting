@@ -1,4 +1,4 @@
-module RedmineGitolite
+module RedmineGitHosting
   module GitoliteWrapper
 
     class Admin
@@ -22,13 +22,13 @@ module RedmineGitolite
 
 
       def purge_recycle_bin
-        RedmineGitolite::Recycle.new().delete_expired_files(object_id)
-        logger.info { "#{action} : done !" }
+        RedmineGitHosting::Recycle.new().delete_expired_files(object_id)
+        logger.info("#{action} : done !")
       end
 
 
       def flush_settings_cache
-        logger.info { "Settings cache flushed!" }
+        logger.info("Settings cache flushed!")
       end
 
 
@@ -36,15 +36,15 @@ module RedmineGitolite
 
 
         def logger
-          RedmineGitolite::Log.get_logger(:worker)
+          RedmineGitHosting.logger
         end
 
 
         def gitolite_admin_repo_commit(message = '')
-          logger.info { "#{action} : commiting to Gitolite..." }
+          logger.info("#{action} : commiting to Gitolite...")
           admin.save("#{action} : #{message}")
         rescue => e
-          logger.error { "#{e.message}" }
+          logger.error("#{e.message}")
         end
 
     end

@@ -87,7 +87,7 @@ class ApplySettings
     def check_hook_install
       ## Gitolite user has changed, check if this new one has our hooks!
       if old_valuehash[:gitolite_user] != valuehash[:gitolite_user]
-        RedmineGitolite::HookManager.check_install!
+        RedmineGitHosting::HookManager.check_install!
       end
     end
 
@@ -99,7 +99,7 @@ class ApplySettings
          old_valuehash[:gitolite_hooks_are_asynchronous] != valuehash[:gitolite_hooks_are_asynchronous]
 
         # Need to update our .gitconfig
-        RedmineGitolite::HookManager.update_hook_params!
+        RedmineGitHosting::HookManager.update_hook_params!
       end
     end
 
@@ -107,7 +107,7 @@ class ApplySettings
     def check_cache_config
       ## Gitolite cache has changed, clear cache entries!
       if old_valuehash[:gitolite_cache_max_time] != valuehash[:gitolite_cache_max_time]
-        RedmineGitolite::CacheManager.clear_obsolete_cache_entries
+        RedmineGitHosting::CacheManager.clear_obsolete_cache_entries
       end
     end
 

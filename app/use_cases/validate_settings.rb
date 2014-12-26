@@ -54,7 +54,7 @@ class ValidateSettings
       # Temp directory must be absolute and not-empty
       if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != old_valuehash[:gitolite_temp_dir])
         # Remove old tmp directory, since about to change
-        FileUtils.rm_rf(RedmineGitolite::GitoliteWrapper.gitolite_admin_dir)
+        FileUtils.rm_rf(RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
 
         stripped = valuehash[:gitolite_temp_dir].lstrip.rstrip
 
@@ -63,7 +63,7 @@ class ValidateSettings
 
         if (normalizedFile == "/" || stripped[0,1] != "/")
           # Don't allow either root-level (absolute) or relative
-          valuehash[:gitolite_temp_dir] = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
+          valuehash[:gitolite_temp_dir] = RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir
         else
           # Add trailing '/'
           valuehash[:gitolite_temp_dir] = normalizedFile + "/"
@@ -126,13 +126,13 @@ class ValidateSettings
           # Clobber leading '/'
           valuehash[:gitolite_config_file] = normalizedFile[1..-1]
         else
-          valuehash[:gitolite_config_file] = RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+          valuehash[:gitolite_config_file] = RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
         end
 
         # Repair key must be true if default path
-        if valuehash[:gitolite_config_file] == RedmineGitolite::Config::GITOLITE_DEFAULT_CONFIG_FILE
+        if valuehash[:gitolite_config_file] == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
           valuehash[:gitolite_config_has_admin_key] = 'true'
-          valuehash[:gitolite_identifier_prefix] = RedmineGitolite::Config::GITOLITE_IDENTIFIER_DEFAULT_PREFIX
+          valuehash[:gitolite_identifier_prefix] = RedmineGitHosting::Config::GITOLITE_IDENTIFIER_DEFAULT_PREFIX
         end
       end
     end
@@ -179,7 +179,7 @@ class ValidateSettings
       if old_valuehash[:hierarchical_organisation] == 'true' && valuehash[:hierarchical_organisation] == 'false'
         if Repository::Xitolite.have_duplicated_identifier?
           # Oops -- have duplication.  Force to true.
-          RedmineGitolite::GitHosting.logger.error { "Detected non-unique repository identifiers. Cannot switch to flat mode, setting hierarchical_organisation => 'true'" }
+          RedmineGitHosting.logger.error("Detected non-unique repository identifiers. Cannot switch to flat mode, setting hierarchical_organisation => 'true'")
           valuehash[:hierarchical_organisation] = 'true'
           valuehash[:unique_repo_identifier] = 'false'
         else

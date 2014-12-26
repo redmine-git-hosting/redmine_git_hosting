@@ -22,7 +22,7 @@ class GitoliteHooksController < ApplicationController
 
     def post_receive_redmine
       ## Clear existing cache
-      RedmineGitolite::CacheManager.clear_cache_for_repository(@repository)
+      RedmineGitHosting::CacheManager.clear_cache_for_repository(@repository)
 
       self.response.headers['Content-Type']  = 'text/plain;'
       self.response.headers['Last-Modified'] = Time.now.to_s
@@ -46,11 +46,6 @@ class GitoliteHooksController < ApplicationController
       Hooks::GithubIssuesSync.new(@project, params).execute
       render text: 'OK!'
       return
-    end
-
-
-    def logger
-      RedmineGitolite::Log.get_logger(:git_hooks)
     end
 
 
@@ -119,7 +114,7 @@ class GitoliteHooksController < ApplicationController
           end
         end
       rescue => e
-        logger.error { "Error in validate_encoded_time(): #{e.message}" }
+        RedmineGitHosting.logger.error("Error in validate_encoded_time(): #{e.message}")
       end
 
       return valid

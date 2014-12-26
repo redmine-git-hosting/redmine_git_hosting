@@ -1,4 +1,4 @@
-module RedmineGitolite::HookManager
+module RedmineGitHosting::HookManager
 
   class MailerParams < HookParam
 

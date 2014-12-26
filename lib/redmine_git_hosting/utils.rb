@@ -1,6 +1,6 @@
 require 'open3'
 
-module RedmineGitolite
+module RedmineGitHosting
   module Utils
 
     class << self
@@ -36,13 +36,13 @@ module RedmineGitolite
       # and returns the result.
       #
       # If the operation throws an exception or the operation yields a non-zero exit code
-      # we rethrow a +GitHostingException+ with a meaningful error message.
+      # we rethrow a +GitoliteCommandException+ with a meaningful error message.
       def capture(command, args = [], opts = {})
         output, err, code = execute(command, args, opts)
         if code != 0
           error_msg = "Non-zero exit code #{code} for `#{command} #{args.join(" ")}`"
-          RedmineGitolite::GitHosting.logger.debug { error_msg }
-          raise RedmineGitolite::GitHosting::GitHostingException.new(command, error_msg)
+          RedmineGitHosting.logger.debug(error_msg)
+          raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
         end
 
         output
@@ -53,13 +53,13 @@ module RedmineGitolite
       # and returns stdout, stderr, and the exit code.
       #
       # If the operation throws an exception or the operation we rethrow a
-      # +GitHostingException+ with a meaningful error message.
+      # +GitoliteCommandException+ with a meaningful error message.
       def execute(command, args = [], opts = {})
         Open3.capture3(command, *args, opts)
       rescue => e
         error_msg = "Exception occured executing `#{command} #{args.join(" ")}` : #{e.message}"
-        RedmineGitolite::GitHosting.logger.debug { error_msg }
-        raise RedmineGitolite::GitHosting::GitHostingException.new(command, error_msg)
+        RedmineGitHosting.logger.debug(error_msg)
+        raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
       end
 
     end

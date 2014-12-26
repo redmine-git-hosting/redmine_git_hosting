@@ -1,4 +1,4 @@
-module RedmineGitolite
+module RedmineGitHosting
   module ExtraLoading
 
     # Adds plugin locales

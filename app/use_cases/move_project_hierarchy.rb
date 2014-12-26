@@ -22,8 +22,8 @@ class MoveProjectHierarchy
 
 
     def move_project_hierarchy
-      RedmineGitolite::GitHosting.logger.info { "Move repositories of project : '#{project}'" }
-      RedmineGitolite::GitHosting.resync_gitolite(:move_repositories, project.id)
+      logger.info("Move repositories of project : '#{project}'")
+      resync_gitolite(:move_repositories, project.id)
     end
 
 end

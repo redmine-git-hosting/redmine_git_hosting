@@ -26,8 +26,8 @@ class UpdateProjects
 
 
     def update_projects
-      RedmineGitolite::GitHosting.logger.info { message }
-      RedmineGitolite::GitHosting.resync_gitolite(:update_projects, projects, options)
+      logger.info(message)
+      resync_gitolite(:update_projects, projects, options)
     end
 
 end

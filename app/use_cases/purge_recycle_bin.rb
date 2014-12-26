@@ -24,7 +24,7 @@ class PurgeRecycleBin
 
 
     def purge_trash_bin
-      RedmineGitolite::GitHosting.resync_gitolite(:purge_recycle_bin, repositories)
+      resync_gitolite(:purge_recycle_bin, repositories)
     end
 
 end

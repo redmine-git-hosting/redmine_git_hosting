@@ -1,13 +1,13 @@
 / Gitolite Access Config
-- ssh_server_domain   = RedmineGitolite::Config.get_setting(:ssh_server_domain)
-- http_server_domain  = RedmineGitolite::Config.get_setting(:http_server_domain)
-- https_server_domain = RedmineGitolite::Config.get_setting(:https_server_domain)
-- http_server_subdir  = RedmineGitolite::Config.get_setting(:http_server_subdir)
+- ssh_server_domain   = RedmineGitHosting::Config.get_setting(:ssh_server_domain)
+- http_server_domain  = RedmineGitHosting::Config.get_setting(:http_server_domain)
+- https_server_domain = RedmineGitHosting::Config.get_setting(:https_server_domain)
+- http_server_subdir  = RedmineGitHosting::Config.get_setting(:http_server_subdir)
 
-- gitolite_http_by_default   = RedmineGitolite::Config.get_setting(:gitolite_http_by_default)
-- show_repositories_url      = RedmineGitolite::Config.get_setting(:show_repositories_url, true)
-- gitolite_daemon_by_default = RedmineGitolite::Config.get_setting(:gitolite_daemon_by_default, true)
-- download_revision_enabled  = RedmineGitolite::Config.get_setting(:download_revision_enabled, true)
+- gitolite_http_by_default   = RedmineGitHosting::Config.get_setting(:gitolite_http_by_default)
+- show_repositories_url      = RedmineGitHosting::Config.get_setting(:show_repositories_url, true)
+- gitolite_daemon_by_default = RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true)
+- download_revision_enabled  = RedmineGitHosting::Config.get_setting(:download_revision_enabled, true)
 
 %h3= l(:label_gitolite_access_config)
 

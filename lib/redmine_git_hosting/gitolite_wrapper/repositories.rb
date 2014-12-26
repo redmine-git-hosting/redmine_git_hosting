@@ -1,8 +1,8 @@
-module RedmineGitolite
+module RedmineGitHosting
   module GitoliteWrapper
     class Repositories < Admin
 
-      include RedmineGitolite::GitoliteWrapper::GitoliteRepositoriesHelper
+      include RedmineGitHosting::GitoliteWrapper::GitoliteRepositoriesHelper
 
 
       def add_repository
@@ -17,27 +17,27 @@ module RedmineGitolite
           admin.transaction do
             handle_repository_add(repository)
             gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
-            recycle = RedmineGitolite::Recycle.new
+            recycle = RedmineGitHosting::Recycle.new
             @recovered = recycle.recover_repository_if_present?(repository)
 
             if !@recovered
-              logger.info { "#{action} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'" }
+              logger.info("#{action} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'")
             else
-              logger.info { "#{action} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update" }
+              logger.info("#{action} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update")
             end
           end
 
           if create_readme && !@recovered
-            if RedmineGitolite::GitoliteWrapper.sudo_repository_empty?(repository.gitolite_repository_path)
+            if RedmineGitHosting::GitoliteWrapper.sudo_repository_empty?(repository.gitolite_repository_path)
               create_readme_file(repository)
             else
-              logger.warn { "#{action} : repository not empty, cannot create README file in path '#{repository.gitolite_repository_path}'" }
+              logger.warn("#{action} : repository not empty, cannot create README file in path '#{repository.gitolite_repository_path}'")
             end
           end
 
           repository.fetch_changesets
         else
-          logger.error { "#{action} : repository does not exist anymore, object is nil, exit !" }
+          logger.error("#{action} : repository does not exist anymore, object is nil, exit !")
         end
       end
 
@@ -55,7 +55,7 @@ module RedmineGitolite
             delete_hook_param(repository, options[:delete_git_config_key])
           end
         else
-          logger.error { "#{action} : repository does not exist anymore, object is nil, exit !" }
+          logger.error("#{action} : repository does not exist anymore, object is nil, exit !")
         end
       end
 
@@ -67,8 +67,8 @@ module RedmineGitolite
           repositories_array.each do |repository_data|
             handle_repository_delete(repository_data)
 
-            recycle = RedmineGitolite::Recycle.new
-            recycle.move_repository_to_recycle(repository_data) if RedmineGitolite::Config.get_setting(:delete_git_repositories, true)
+            recycle = RedmineGitHosting::Recycle.new
+            recycle.move_repository_to_recycle(repository_data) if RedmineGitHosting::Config.get_setting(:delete_git_repositories, true)
 
             gitolite_admin_repo_commit("#{repository_data['repo_name']}")
           end
@@ -80,18 +80,18 @@ module RedmineGitolite
         if repository = Repository.find_by_id(object_id)
 
           begin
-            RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'symbolic-ref', 'HEAD', "refs/heads/#{repository.extra[:default_branch]}")
-            logger.info { "Default branch successfully updated for repository '#{repository.gitolite_repository_name}'" }
-          rescue RedmineGitolite::GitHosting::GitHostingException => e
-            logger.error { "Error while updating default branch for repository '#{repository.gitolite_repository_name}'" }
+            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'symbolic-ref', 'HEAD', "refs/heads/#{repository.extra[:default_branch]}")
+            logger.info("Default branch successfully updated for repository '#{repository.gitolite_repository_name}'")
+          rescue RedmineGitHosting::GitHosting::GitHostingException => e
+            logger.error("Error while updating default branch for repository '#{repository.gitolite_repository_name}'")
           end
 
-          RedmineGitolite::CacheManager.clear_cache_for_repository(repository)
+          RedmineGitHosting::CacheManager.clear_cache_for_repository(repository)
 
-          logger.info { "Fetch changesets for repository '#{repository.gitolite_repository_name}'"}
+          logger.info("Fetch changesets for repository '#{repository.gitolite_repository_name}'")
           repository.fetch_changesets
         else
-          logger.error { "#{action} : repository does not exist anymore, object is nil, exit !" }
+          logger.error("#{action} : repository does not exist anymore, object is nil, exit !")
         end
       end
 

@@ -24,22 +24,22 @@ class SmartHttpController < ApplicationController
     return render_method_not_allowed if command == 'not_allowed'
     return render_not_found if !command
 
-    logger.info { "###### AUTHENTICATED ######" }
-    logger.info { "command         : #{command}" }
-    logger.info { "rpc             : #{@rpc}" }
+    logger.info("###### AUTHENTICATED ######")
+    logger.info("command         : #{command}")
+    logger.info("rpc             : #{@rpc}")
     if !@user.nil?
-      logger.info { "user_name       : #{@user.login}" }
+      logger.info("user_name       : #{@user.login}")
       @authenticated = true
     else
       if @project.is_public
-        logger.info { "user_name       : anonymous (project is public)" }
+        logger.info("user_name       : anonymous (project is public)")
         @authenticated = true
       else
         @authenticated = false
       end
     end
 
-    logger.info { "##########################" }
+    logger.info("##########################")
 
     self.method(command).call()
   end
@@ -53,10 +53,10 @@ class SmartHttpController < ApplicationController
     @repo_path = params[:repo_path].gsub(params[:prefix], '')
     @is_push   = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
 
-    logger.info { "###### AUTHENTICATION ######" }
-    logger.info { "git_params      : #{git_params.join(', ')}" }
-    logger.info { "repo_path       : #{@repo_path}" }
-    logger.info { "is_push         : #{@is_push}" }
+    logger.info("###### AUTHENTICATION ######")
+    logger.info("git_params      : #{git_params.join(', ')}")
+    logger.info("repo_path       : #{@repo_path}")
+    logger.info("is_push         : #{@is_push}")
   end
 
 
@@ -64,26 +64,26 @@ class SmartHttpController < ApplicationController
     @repository = Repository::Xitolite.find_by_path(@repo_path, :loose => true)
 
     if !@repository
-      logger.error { "Repository not found, exiting !" }
-      logger.error { "############################" }
+      logger.error("Repository not found, exiting !")
+      logger.error("############################")
       return render_not_found
     elsif !@repository.is_a?(Repository::Xitolite)
-      logger.error { "Repository is not a Gitolite repository, exiting !" }
-      logger.error { "############################" }
+      logger.error("Repository is not a Gitolite repository, exiting !")
+      logger.error("############################")
       return render_not_found
     elsif @repository.extra[:git_http] == 0
-      logger.error { "SmartHttp is disabled for this repository '#{@repository.gitolite_repository_name}', exiting !" }
-      logger.error { "############################" }
+      logger.error("SmartHttp is disabled for this repository '#{@repository.gitolite_repository_name}', exiting !")
+      logger.error("############################")
       return render_no_access
     end
 
     @project = @repository.project
     @allow_anonymous_read = @project.is_public
 
-    logger.info { "project name    : #{@project.identifier}" }
-    logger.info { "public project  : #{@allow_anonymous_read}" }
-    logger.info { "repository name : #{@repository.gitolite_repository_name}" }
-    logger.info { "repository path : #{@repository.gitolite_repository_path}" }
+    logger.info("project name    : #{@project.identifier}")
+    logger.info("public project  : #{@allow_anonymous_read}")
+    logger.info("repository name : #{@repository.gitolite_repository_name}")
+    logger.info("repository path : #{@repository.gitolite_repository_path}")
   end
 
 
@@ -91,17 +91,17 @@ class SmartHttpController < ApplicationController
     # PUSH CASE
     if @is_push
       if !is_ssl?
-        logger.error { "Your are trying to push data without SSL!" }
-        logger.error { "############################" }
+        logger.error("Your are trying to push data without SSL!")
+        logger.error("############################")
         return render_no_access
       else
         if @repository.extra[:git_http] == 1
-          logger.info { "Valid push" }
+          logger.info("Valid push")
         elsif @repository.extra[:git_http] == 2
-          logger.info { "Valid push" }
+          logger.info("Valid push")
         elsif @repository.extra[:git_http] == 3
-          logger.info { "Invalid push, HTTPS is disabled for this repository (HTTP only)" }
-          logger.error { "############################" }
+          logger.info("Invalid push, HTTPS is disabled for this repository (HTTP only)")
+          logger.error("############################")
           return render_no_access
         end
       end
@@ -132,7 +132,7 @@ class SmartHttpController < ApplicationController
 
     end
 
-    logger.info { "##########################" }
+    logger.info("##########################")
 
     return authentication_valid
   end
@@ -148,9 +148,9 @@ class SmartHttpController < ApplicationController
     self.response.headers["Last-Modified"] = Time.now.to_s
     self.response_body = Enumerator.new do |y|
       begin
-        y << RedmineGitolite::GitoliteWrapper.sudo_pipe_capture(*cmd_args, read_body)
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
-        logger.error { e.output }
+        y << RedmineGitHosting::GitoliteWrapper.sudo_pipe_capture(*cmd_args, read_body)
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        logger.error(e.output)
       end
     end
   end
@@ -265,13 +265,13 @@ class SmartHttpController < ApplicationController
   def has_access(rpc, check_content_type = false)
     if check_content_type
       if request.content_type != "application/x-git-%s-request" % rpc
-        logger.error { "Invalid content type #{request.content_type}" }
+        logger.error("Invalid content type #{request.content_type}")
         return false
       end
     end
 
     if !VALID_SERVICE_TYPES.include? rpc
-      logger.error { "Invalid service type #{rpc}" }
+      logger.error("Invalid service type #{rpc}")
       return false
     end
 
@@ -280,22 +280,22 @@ class SmartHttpController < ApplicationController
 
 
   def internal_send_file(requested_file, content_type)
-    logger.info { "###### SEND FILE ######" }
-    logger.info { "requested_file : #{requested_file}" }
-    logger.info { "content_type   : #{content_type}" }
+    logger.info("###### SEND FILE ######")
+    logger.info("requested_file : #{requested_file}")
+    logger.info("content_type   : #{content_type}")
 
     if !File.exists?(requested_file)
-      logger.error { "error          : File not found!" }
-      logger.error { "#######################" }
+      logger.error("error          : File not found!")
+      logger.error("#######################")
       return render_not_found
     end
 
     last_modified = File.mtime(requested_file).httpdate
     file_size = File.size?(requested_file)
 
-    logger.info { "last_modified  : #{last_modified}" }
-    logger.info { "file_size      : #{file_size}" }
-    logger.info { "#######################" }
+    logger.info("last_modified  : #{last_modified}")
+    logger.info("file_size      : #{file_size}")
+    logger.info("#######################")
 
 
     self.response.status = 200
@@ -308,9 +308,9 @@ class SmartHttpController < ApplicationController
 
   def git_command(*params)
     begin
-      RedmineGitolite::GitoliteWrapper.sudo_capture(*git_params.concat(params))
+      RedmineGitHosting::GitoliteWrapper.sudo_capture(*git_params.concat(params))
     rescue => e
-      logger.error { "Problems while getting SmartHttp params" }
+      logger.error("Problems while getting SmartHttp params")
       return nil
     end
   end
@@ -371,15 +371,15 @@ class SmartHttpController < ApplicationController
   # --------------------------------------
 
   def render_method_not_allowed
-    logger.error { "###### HTTP ERRORS ######" }
+    logger.error("###### HTTP ERRORS ######")
     if request.env['SERVER_PROTOCOL'] == "HTTP/1.1"
-      logger.error { "method : not allowed" }
+      logger.error("method : not allowed")
       head :method_not_allowed
     else
-      logger.error { "method : bad request" }
+      logger.error("method : bad request")
       head :bad_request
     end
-    logger.error { "#########################" }
+    logger.error("#########################")
     return head
   end
 
@@ -428,7 +428,7 @@ class SmartHttpController < ApplicationController
 
 
   def logger
-    RedmineGitolite::Log.get_logger(:smart_http)
+    RedmineGitHosting.logger
   end
 
 end

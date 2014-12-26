@@ -1,4 +1,4 @@
-module RedmineGitolite
+module RedmineGitHosting
 
   class Recycle
 
@@ -16,11 +16,11 @@ module RedmineGitolite
 
 
     def initialize
-      @recycle_bin_dir     = File.join('$HOME', RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_dir))
-      @global_storage_dir  = File.join('$HOME', RedmineGitolite::Config.get_setting(:gitolite_global_storage_dir))
+      @recycle_bin_dir     = File.join('$HOME', RedmineGitHosting::Config.get_setting(:gitolite_recycle_bin_dir))
+      @global_storage_dir  = File.join('$HOME', RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir))
 
-      @redmine_storage_dir = RedmineGitolite::Config.get_setting(:gitolite_redmine_storage_dir)
-      @recycle_bin_expiration_time = (RedmineGitolite::Config.get_setting(:gitolite_recycle_bin_expiration_time).to_f*60).to_i
+      @redmine_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir)
+      @recycle_bin_expiration_time = (RedmineGitHosting::Config.get_setting(:gitolite_recycle_bin_expiration_time).to_f*60).to_i
     end
 
 
@@ -28,8 +28,8 @@ module RedmineGitolite
       return {} if !dir_exists?(@recycle_bin_dir)
 
       begin
-        directories = GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
-      rescue GitHosting::GitHostingException => e
+        directories = RedmineGitHosting::GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
         directories = {}
       end
 
@@ -45,38 +45,38 @@ module RedmineGitolite
 
     # Scan through the recyclebin and delete files older than 'preserve_time' minutes
     def delete_expired_files(repositories_array = [])
-      logger.info { "Nothing to do, exit !" } && return if !dir_exists?(@recycle_bin_dir)
+      logger.info("Nothing to do, exit !") && return if !dir_exists?(@recycle_bin_dir)
 
       if !repositories_array.empty?
         result = repositories_array
       else
         begin
-          result = GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{@recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
-        rescue GitHosting::GitHostingException => e
+          result = RedmineGitHosting::GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{@recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
           result = []
         end
       end
 
       if result.length > 0
-        logger.info { "Removing #{result.length} expired repositor#{(result.length != 1) ? "ies" : "y"} from Recycle Bin :" }
+        logger.info("Removing #{result.length} expired repositor#{(result.length != 1) ? "ies" : "y"} from Recycle Bin :")
 
         result.each do |dirname|
-          logger.info { "Deleting '#{dirname}'" }
+          logger.info("Deleting '#{dirname}'")
           begin
-            GitoliteWrapper.sudo_rmdir(dirname, true)
-          rescue GitHosting::GitHostingException => e
-            logger.error { "GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{dirname}' !" }
+            RedmineGitHosting::GitoliteWrapper.sudo_rmdir(dirname, true)
+          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+            logger.error("GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{dirname}' !")
           end
         end
 
-        logger.info { "Done !" }
+        logger.info("Done !")
 
         # Optionally remove recycle_bin (but only if empty).  Ignore error if non-empty
         delete_recycle_bin_dir
 
         return
       else
-        logger.info { "Nothing to do, exit !" }
+        logger.info("Nothing to do, exit !")
       end
     end
 
@@ -87,29 +87,29 @@ module RedmineGitolite
 
       # Only bother if actually exists!
       if !dir_exists?(repo_path)
-        logger.warn { "Repository does not exist #{repo_path}" }
+        logger.warn("Repository does not exist #{repo_path}")
         return false
       end
 
       trash_name = repo_name.gsub(/\//, TRASH_DIR_SEP)
       trash_path = File.join(@recycle_bin_dir, "#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{trash_name}.git")
 
-      logger.info { "Moving '#{repo_name}' to Recycle Bin..." }
-      logger.debug { "'#{repo_path}' => '#{trash_path}'" }
+      logger.info("Moving '#{repo_name}' to Recycle Bin...")
+      logger.debug("'#{repo_path}' => '#{trash_path}'")
 
       if create_recycle_bin
         begin
-          GitoliteWrapper.sudo_move(repo_path, trash_path)
-        rescue GitHosting::GitHostingException => e
-          logger.error { "Attempt to move repository '#{repo_path}' to Recycle Bin failed !" }
+          RedmineGitHosting::GitoliteWrapper.sudo_move(repo_path, trash_path)
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Attempt to move repository '#{repo_path}' to Recycle Bin failed !")
           return false
         end
       else
         return false
       end
 
-      logger.info { "Done !" }
-      logger.info { "Will remain for at least #{@recycle_bin_expiration_time/60.0} hours" }
+      logger.info("Done !")
+      logger.info("Will remain for at least #{@recycle_bin_expiration_time/60.0} hours")
 
       clean_path_tree(repo_name)
 
@@ -127,14 +127,14 @@ module RedmineGitolite
 
       # Pull up any matching repositories. Sort them (beginning is representation of time)
       begin
-        files = GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', myregex, '-prune', '-print').chomp.split("\n").sort {|x, y| y <=> x }
-      rescue GitHosting::GitHostingException => e
+        files = RedmineGitHosting::GitoliteWrapper.sudo_capture('eval', 'find', @recycle_bin_dir, '-type', 'd', '-regex', myregex, '-prune', '-print').chomp.split("\n").sort {|x, y| y <=> x }
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
         files = []
       end
 
       if files.length > 0
         # Found something!
-        logger.info { "Restoring '#{repo_name}.git'" }
+        logger.info("Restoring '#{repo_name}.git'")
 
         begin
           # Complete directory path (if exists) without trailing '/'
@@ -143,18 +143,18 @@ module RedmineGitolite
           if prefix
             repo_prefix = File.join(@global_storage_dir, @redmine_storage_dir, prefix)
 
-            logger.info { "Create parent path : '#{repo_prefix}'" }
+            logger.info("Create parent path : '#{repo_prefix}'")
 
             # Has subdirectory.  Must reconstruct directory
-            GitoliteWrapper.sudo_mkdir('-p', repo_prefix)
+            RedmineGitHosting::GitoliteWrapper.sudo_mkdir('-p', repo_prefix)
           end
 
-          logger.info { "Moving '#{files.first}' to '#{repo_path}'" }
+          logger.info("Moving '#{files.first}' to '#{repo_path}'")
 
-          GitoliteWrapper.sudo_move(files.first, repo_path)
+          RedmineGitHosting::GitoliteWrapper.sudo_move(files.first, repo_path)
           restored = true
-        rescue GitHosting::GitHostingException => e
-          logger.error { "Attempt to recover '#{repo_name}.git' from recycle bin failed" }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Attempt to recover '#{repo_name}.git' from recycle bin failed")
           restored = false
         end
 
@@ -172,22 +172,22 @@ module RedmineGitolite
 
 
     def logger
-      RedmineGitolite::Log.get_logger(:recycle_bin)
+      RedmineGitHosting.logger
     end
 
 
     def dir_exists?(dir_path)
-      GitoliteWrapper.sudo_dir_exists?(dir_path)
+      RedmineGitHosting::GitoliteWrapper.sudo_dir_exists?(dir_path)
     end
 
 
     def create_recycle_bin
       begin
-        GitoliteWrapper.sudo_mkdir('-p', @recycle_bin_dir)
-        GitoliteWrapper.sudo_chmod('770', @recycle_bin_dir)
+        RedmineGitHosting::GitoliteWrapper.sudo_mkdir('-p', @recycle_bin_dir)
+        RedmineGitHosting::GitoliteWrapper.sudo_chmod('770', @recycle_bin_dir)
         return true
-      rescue GitHosting::GitHostingException => e
-        logger.error { "Attempt to create recycle bin directory '#{@recycle_bin_dir}' failed !" }
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        logger.error("Attempt to create recycle bin directory '#{@recycle_bin_dir}' failed !")
         return false
       end
     end
@@ -195,9 +195,9 @@ module RedmineGitolite
 
     def delete_recycle_bin_dir
       begin
-        GitoliteWrapper.sudo_rmdir(@recycle_bin_dir)
+        RedmineGitHosting::GitoliteWrapper.sudo_rmdir(@recycle_bin_dir)
         return true
-      rescue GitHosting::GitHostingException => e
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
         return false
       end
     end
@@ -213,13 +213,13 @@ module RedmineGitolite
         redmine_storage = File.join(@global_storage_dir, @redmine_storage_dir)
 
         return if repo_subpath == redmine_storage || repo_subpath == ''
-        logger.info { "Attempting to clean path '#{repo_subpath}'" }
+        logger.info("Attempting to clean path '#{repo_subpath}'")
       end
 
       begin
-        GitoliteWrapper.sudo_rmdir(repo_subpath)
-      rescue GitHosting::GitHostingException => e
-        logger.error { "Attempt to clean path '#{repo_subpath}' failed" }
+        RedmineGitHosting::GitoliteWrapper.sudo_rmdir(repo_subpath)
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        logger.error("Attempt to clean path '#{repo_subpath}' failed")
       end
     end
 
@@ -227,7 +227,7 @@ module RedmineGitolite
     def get_directories_size(directories)
       data = {}
       directories.sort.each do |directory|
-        data[directory] = { :size => (GitoliteWrapper.sudo_capture('du', '-sh', directory).split(" ")[0] rescue '') }
+        data[directory] = { :size => (RedmineGitHosting::GitoliteWrapper.sudo_capture('du', '-sh', directory).split(" ")[0] rescue '') }
       end
       return data
     end

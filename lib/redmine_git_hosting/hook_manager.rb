@@ -1,4 +1,4 @@
-module RedmineGitolite
+module RedmineGitHosting
   module HookManager
 
     PACKAGE_HOOKS_DIR = File.join(File.dirname(File.dirname(File.dirname(__FILE__))), 'contrib', 'hooks')
@@ -15,7 +15,7 @@ module RedmineGitolite
     class << self
 
       def gitolite_hooks_url
-        RedmineGitolite::GitoliteWrapper.gitolite_hooks_url
+        RedmineGitHosting::GitoliteWrapper.gitolite_hooks_url
       end
 
 
@@ -85,8 +85,8 @@ module RedmineGitolite
 
 
       def gitolite_hooks_dir
-        if RedmineGitolite::GitoliteWrapper.gitolite_version == 3
-          File.join('~', RedmineGitolite::Config.get_setting(:gitolite_local_code_dir), 'hooks', 'common')
+        if RedmineGitHosting::GitoliteWrapper.gitolite_version == 3
+          File.join('~', RedmineGitHosting::Config.get_setting(:gitolite_local_code_dir), 'hooks', 'common')
         else
           File.join('~', '.gitolite', 'hooks', 'common')
         end

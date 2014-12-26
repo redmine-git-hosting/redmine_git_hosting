@@ -28,6 +28,18 @@ module UseCaseBase
       @errors.uniq
     end
 
+
+    private
+
+      def resync_gitolite(*args)
+        RedmineGitHosting.resync_gitolite(*args)
+      end
+
+
+      def logger
+        RedmineGitHosting.logger
+      end
+
   end
 
 end

@@ -1,4 +1,4 @@
-module RedmineGitolite::GitoliteModules
+module RedmineGitHosting::GitoliteModules
 
   module Mirroring
 
@@ -42,7 +42,7 @@ module RedmineGitolite::GitoliteModules
             public_key = File.read(gitolite_ssh_public_key).chomp.strip
             @@mirroring_public_key = public_key.split(/[\t ]+/)[0].to_s + " " + public_key.split(/[\t ]+/)[1].to_s
           rescue => e
-            logger.error { "Error while loading mirroring public key : #{e.output}" }
+            logger.error("Error while loading mirroring public key : #{e.output}")
             @@mirroring_public_key = nil
           end
         end
@@ -57,13 +57,13 @@ module RedmineGitolite::GitoliteModules
         @@mirroring_keys_installed = false if opts.has_key?(:reset) && opts[:reset] == true
 
         if !@@mirroring_keys_installed
-          logger.info { "Installing Redmine Gitolite mirroring SSH keys ..." }
+          logger.info("Installing Redmine Gitolite mirroring SSH keys ...")
 
           if (install_private_key && install_public_key && install_mirroring_script)
-            logger.info { "Done !" }
+            logger.info("Done !")
             @@mirroring_keys_installed = true
           else
-            logger.error { "Failed to install Redmine Gitolite mirroring SSH keys !" }
+            logger.error("Failed to install Redmine Gitolite mirroring SSH keys !")
             @@mirroring_keys_installed = false
           end
         end

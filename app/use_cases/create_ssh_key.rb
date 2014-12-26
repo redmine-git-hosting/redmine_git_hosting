@@ -24,8 +24,8 @@ class CreateSshKey
 
 
     def create_ssh_key
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has added a SSH key" }
-      RedmineGitolite::GitHosting.resync_gitolite(:add_ssh_key, ssh_key.id, options)
+      logger.info("User '#{User.current.login}' has added a SSH key")
+      resync_gitolite(:add_ssh_key, ssh_key.id, options)
     end
 
 end

@@ -1,9 +1,9 @@
-module RedmineGitolite
+module RedmineGitHosting
   module GitoliteWrapper
     class Projects < Admin
 
-      include RedmineGitolite::GitoliteWrapper::GitoliteProjectsHelper
-      include RedmineGitolite::GitoliteWrapper::GitoliteRepositoriesHelper
+      include RedmineGitHosting::GitoliteWrapper::GitoliteProjectsHelper
+      include RedmineGitHosting::GitoliteWrapper::GitoliteRepositoriesHelper
 
 
       def update_projects

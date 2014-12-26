@@ -14,8 +14,8 @@ class ResyncSshKeys
 
 
     def resync_ssh_key
-      RedmineGitolite::GitHosting.logger.info { "Forced resync of all ssh keys..." }
-      RedmineGitolite::GitHosting.resync_gitolite(:resync_all_ssh_keys, 'all')
+      logger.info("Forced resync of all ssh keys...")
+      resync_gitolite(:resync_all_ssh_keys, 'all')
     end
 
 end

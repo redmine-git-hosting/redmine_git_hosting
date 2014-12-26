@@ -1,4 +1,4 @@
-module RedmineGitolite::GitoliteModules
+module RedmineGitHosting::GitoliteModules
 
   module GitoliteConfig
 
@@ -12,7 +12,7 @@ module RedmineGitolite::GitoliteModules
     module ClassMethods
 
       def logger
-        RedmineGitolite::Log.get_logger(:global)
+        RedmineGitHosting.logger
       end
 
       # Puts Redmine user in cache as it should not change
@@ -24,27 +24,27 @@ module RedmineGitolite::GitoliteModules
 
 
       def gitolite_user
-        RedmineGitolite::Config.get_setting(:gitolite_user)
+        RedmineGitHosting::Config.get_setting(:gitolite_user)
       end
 
 
       def gitolite_server_port
-        RedmineGitolite::Config.get_setting(:gitolite_server_port)
+        RedmineGitHosting::Config.get_setting(:gitolite_server_port)
       end
 
 
       def gitolite_ssh_private_key
-        RedmineGitolite::Config.get_setting(:gitolite_ssh_private_key)
+        RedmineGitHosting::Config.get_setting(:gitolite_ssh_private_key)
       end
 
 
       def gitolite_ssh_public_key
-        RedmineGitolite::Config.get_setting(:gitolite_ssh_public_key)
+        RedmineGitHosting::Config.get_setting(:gitolite_ssh_public_key)
       end
 
 
       def gitolite_config_file
-        RedmineGitolite::Config.get_setting(:gitolite_config_file)
+        RedmineGitHosting::Config.get_setting(:gitolite_config_file)
       end
 
 
@@ -54,27 +54,27 @@ module RedmineGitolite::GitoliteModules
 
 
       def git_config_username
-        RedmineGitolite::Config.get_setting(:git_config_username)
+        RedmineGitHosting::Config.get_setting(:git_config_username)
       end
 
 
       def git_config_email
-        RedmineGitolite::Config.get_setting(:git_config_email)
+        RedmineGitHosting::Config.get_setting(:git_config_email)
       end
 
 
       def gitolite_temp_dir
-        RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
+        RedmineGitHosting::Config.get_setting(:gitolite_temp_dir)
       end
 
 
       def http_server_domain
-        RedmineGitolite::Config.get_setting(:http_server_domain)
+        RedmineGitHosting::Config.get_setting(:http_server_domain)
       end
 
 
       def https_server_domain
-        RedmineGitolite::Config.get_setting(:https_server_domain)
+        RedmineGitHosting::Config.get_setting(:https_server_domain)
       end
 
 
@@ -136,13 +136,13 @@ module RedmineGitolite::GitoliteModules
         end
 
         if !File.directory?(@@temp_dir_path)
-          logger.info { "Create tmp directory : '#{@@temp_dir_path}'" }
+          logger.info("Create tmp directory : '#{@@temp_dir_path}'")
 
           begin
             FileUtils.mkdir_p @@temp_dir_path
             FileUtils.chmod 0700, @@temp_dir_path
           rescue => e
-            logger.error { "Cannot create tmp directory : '#{@@temp_dir_path}'" }
+            logger.error("Cannot create tmp directory : '#{@@temp_dir_path}'")
           end
 
         end
@@ -158,7 +158,7 @@ module RedmineGitolite::GitoliteModules
 
         if !@@temp_dir_writeable
 
-          logger.debug { "Testing if temp directory '#{create_temp_dir}' is writeable ..." }
+          logger.debug("Testing if temp directory '#{create_temp_dir}' is writeable ...")
 
           mytestfile = File.join(create_temp_dir, "writecheck")
 

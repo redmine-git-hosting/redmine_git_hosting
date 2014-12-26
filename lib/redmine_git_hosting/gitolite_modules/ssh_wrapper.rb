@@ -1,4 +1,4 @@
-module RedmineGitolite::GitoliteModules
+module RedmineGitHosting::GitoliteModules
 
   module SshWrapper
 
@@ -22,13 +22,13 @@ module RedmineGitolite::GitoliteModules
       #
       # Returns stdout, stderr and the exit code
       def ssh_shell(*params)
-        RedmineGitolite::Utils.execute('ssh', ssh_shell_params.concat(params))
+        RedmineGitHosting::Utils.execute('ssh', ssh_shell_params.concat(params))
       end
 
 
       # Return only the output from the ssh command and checks
       def ssh_capture(*params)
-        RedmineGitolite::Utils.capture('ssh', ssh_shell_params.concat(params))
+        RedmineGitHosting::Utils.capture('ssh', ssh_shell_params.concat(params))
       end
 
       # Returns the ssh prefix arguments for all ssh_* commands

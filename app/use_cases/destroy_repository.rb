@@ -29,8 +29,8 @@ class DestroyRepository
 
 
     def destroy_repository
-      RedmineGitolite::GitHosting.logger.info { message }
-      RedmineGitolite::GitHosting.resync_gitolite(:delete_repositories, repositories)
+      logger.info(message)
+      resync_gitolite(:delete_repositories, repositories)
     end
 
 end

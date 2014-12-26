@@ -14,7 +14,7 @@ class FlushSettingsCache
 
 
     def flush_settings_cache
-      RedmineGitolite::GitHosting.resync_gitolite(:flush_settings_cache, 'flush!', {flush_cache: true})
+      resync_gitolite(:flush_settings_cache, 'flush!', {flush_cache: true})
     end
 
 end

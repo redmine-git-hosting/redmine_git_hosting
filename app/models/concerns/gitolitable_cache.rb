@@ -8,7 +8,7 @@ module GitolitableCache
 
       # Repo ident unique
       def repo_ident_unique?
-        RedmineGitolite::Config.get_setting(:unique_repo_identifier, true)
+        RedmineGitHosting::Config.get_setting(:unique_repo_identifier, true)
       end
 
 
@@ -111,8 +111,8 @@ module GitolitableCache
 
 
     def clean_cache
-      RedmineGitolite::Log.get_logger(:global).info { "Clean cache before delete repository '#{gitolite_repository_name}'" }
-      RedmineGitolite::CacheManager.clear_cache_for_repository(self)
+      RedmineGitHosting.logger.info("Clean cache before delete repository '#{gitolite_repository_name}'")
+      RedmineGitHosting::CacheManager.clear_cache_for_repository(self)
     end
 
 end

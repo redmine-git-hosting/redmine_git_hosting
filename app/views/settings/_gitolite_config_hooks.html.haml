@@ -1,7 +1,7 @@
 / Gitolite Hooks Config
-- gitolite_hooks_are_asynchronous = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
-- gitolite_force_hooks_update     = RedmineGitolite::Config.get_setting(:gitolite_force_hooks_update, true)
-- gitolite_hooks_debug            = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug, true)
+- gitolite_hooks_are_asynchronous = RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
+- gitolite_force_hooks_update     = RedmineGitHosting::Config.get_setting(:gitolite_force_hooks_update, true)
+- gitolite_hooks_debug            = RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true)
 
 %h3= l(:label_gitolite_hooks_config)
 
@@ -25,8 +25,8 @@
 
 %p
   %label= l(:label_gitolite_hooks_url)
-  %span{ class: 'label label-info' }= RedmineGitolite::HookManager.gitolite_hooks_url
+  %span{ class: 'label label-info' }= RedmineGitHosting::HookManager.gitolite_hooks_url
 
 %p
   %label= l(:label_gitolite_hooks_namespace)
-  %span{ class: 'label label-info' }= RedmineGitolite::HookManager.gitolite_hooks_namespace
+  %span{ class: 'label label-info' }= RedmineGitHosting::HookManager.gitolite_hooks_namespace

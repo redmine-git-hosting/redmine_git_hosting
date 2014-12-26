@@ -24,8 +24,8 @@ class DestroySshKey
 
 
     def destroy_ssh_key
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' has deleted a SSH key" }
-      RedmineGitolite::GitHosting.resync_gitolite(:delete_ssh_key, ssh_key.to_yaml, options)
+      logger.info("User '#{User.current.login}' has deleted a SSH key")
+      resync_gitolite(:delete_ssh_key, ssh_key.to_yaml, options)
     end
 
 end

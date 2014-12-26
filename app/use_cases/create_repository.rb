@@ -24,8 +24,8 @@ class CreateRepository
 
 
     def create_repository
-      RedmineGitolite::GitHosting.logger.info { "User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'" }
-      RedmineGitolite::GitHosting.resync_gitolite(:add_repository, repository.id, options)
+      logger.info("User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'")
+      resync_gitolite(:add_repository, repository.id, options)
     end
 
 end

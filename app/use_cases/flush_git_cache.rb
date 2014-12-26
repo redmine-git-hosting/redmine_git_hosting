@@ -14,7 +14,7 @@ class FlushGitCache
 
 
     def flush_git_cache
-      RedmineGitolite::GitHosting.logger.info { 'Flush Git Cache !' }
+      logger.info('Flush Git Cache !')
       ActiveRecord::Base.connection.execute('TRUNCATE git_caches')
     end
 

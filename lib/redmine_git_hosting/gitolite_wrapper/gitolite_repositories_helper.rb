@@ -1,6 +1,6 @@
 require 'rugged'
 
-module RedmineGitolite
+module RedmineGitHosting
   module GitoliteWrapper
     module GitoliteRepositoriesHelper
 
@@ -13,18 +13,18 @@ module RedmineGitolite
         repo_conf = gitolite_config.repos[repo_name]
 
         if !repo_conf
-          logger.info { "#{action} : repository '#{repo_name}' does not exist in Gitolite, create it ..." }
-          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          logger.info("#{action} : repository '#{repo_name}' does not exist in Gitolite, create it ...")
+          logger.debug("#{action} : repository path '#{repo_path}'")
           old_permissions = old_perms
         else
           if force
-            logger.warn { "#{action} : repository '#{repo_name}' already exists in Gitolite, force mode !" }
-            logger.debug { "#{action} : repository path '#{repo_path}'" }
+            logger.warn("#{action} : repository '#{repo_name}' already exists in Gitolite, force mode !")
+            logger.debug("#{action} : repository path '#{repo_path}'")
             old_permissions = get_old_permissions(repo_conf)
             gitolite_config.rm_repo(repo_name)
           else
-            logger.warn { "#{action} : repository '#{repo_name}' already exists in Gitolite, exit !" }
-            logger.debug { "#{action} : repository path '#{repo_path}'" }
+            logger.warn("#{action} : repository '#{repo_name}' already exists in Gitolite, exit !")
+            logger.debug("#{action} : repository path '#{repo_path}'")
             return false
           end
         end
@@ -39,13 +39,13 @@ module RedmineGitolite
         repo_conf = gitolite_config.repos[repo_name]
 
         if repo_conf
-          logger.info { "#{action} : repository '#{repo_name}' exists in Gitolite, update it ..." }
-          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          logger.info("#{action} : repository '#{repo_name}' exists in Gitolite, update it ...")
+          logger.debug("#{action} : repository path '#{repo_path}'")
           old_perms = get_old_permissions(repo_conf)
           gitolite_config.rm_repo(repo_name)
         else
-          logger.warn { "#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
-          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          logger.warn("#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !")
+          logger.debug("#{action} : repository path '#{repo_path}'")
           return false
         end
 
@@ -59,12 +59,12 @@ module RedmineGitolite
         repo_conf = gitolite_config.repos[repo_name]
 
         if !repo_conf
-          logger.warn { "#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !" }
-          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          logger.warn("#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !")
+          logger.debug("#{action} : repository path '#{repo_path}'")
           return false
         else
-          logger.info { "#{action} : repository '#{repo_name}' exists in Gitolite, delete it ..." }
-          logger.debug { "#{action} : repository path '#{repo_path}'" }
+          logger.info("#{action} : repository '#{repo_name}' exists in Gitolite, delete it ...")
+          logger.debug("#{action} : repository path '#{repo_path}'")
           gitolite_config.rm_repo(repo_name)
         end
       end
@@ -132,7 +132,7 @@ module RedmineGitolite
       SKIP_USERS = [ 'gitweb', 'daemon', 'DUMMY_REDMINE_KEY', 'REDMINE_ARCHIVED_PROJECT', 'REDMINE_CLOSED_PROJECT' ]
 
       def get_old_permissions(repo_conf)
-        gitolite_identifier_prefix = RedmineGitolite::Config.get_setting(:gitolite_identifier_prefix)
+        gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
 
         current_permissions = repo_conf.permissions[0]
         old_permissions = {}
@@ -276,20 +276,20 @@ module RedmineGitolite
 
 
       def create_readme_file(repository)
-        logger.info { "Create README file for repository '#{repository.gitolite_repository_name}'"}
+        logger.info("Create README file for repository '#{repository.gitolite_repository_name}'")
 
         temp_dir = Dir.mktmpdir
 
         ## Create credentials object
         credentials = Rugged::Credentials::SshKey.new(
-          :username   => RedmineGitolite::GitoliteWrapper.gitolite_user,
-          :publickey  => RedmineGitolite::GitoliteWrapper.gitolite_ssh_public_key,
-          :privatekey => RedmineGitolite::GitoliteWrapper.gitolite_ssh_private_key
+          :username   => RedmineGitHosting::GitoliteWrapper.gitolite_user,
+          :publickey  => RedmineGitHosting::GitoliteWrapper.gitolite_ssh_public_key,
+          :privatekey => RedmineGitHosting::GitoliteWrapper.gitolite_ssh_private_key
         )
 
         commit_author = {
-          :email => RedmineGitolite::GitoliteWrapper.git_config_username,
-          :name  => RedmineGitolite::GitoliteWrapper.git_config_email,
+          :email => RedmineGitHosting::GitoliteWrapper.git_config_username,
+          :name  => RedmineGitHosting::GitoliteWrapper.git_config_email,
           :time  => Time.now
         }
 
@@ -316,8 +316,8 @@ module RedmineGitolite
           ## Push
           repo.push('origin', [ "refs/heads/#{repository.extra[:default_branch]}" ], credentials: credentials)
         rescue => e
-          logger.error { "Error while creating README file for repository '#{repository.gitolite_repository_name}'"}
-          logger.error { e.message }
+          logger.error("Error while creating README file for repository '#{repository.gitolite_repository_name}'")
+          logger.error(e.message)
         ensure
           FileUtils.rm_rf temp_dir
         end
@@ -326,20 +326,20 @@ module RedmineGitolite
 
       def delete_hook_param(repository, parameter_name)
         begin
-          RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--unset', parameter_name)
-          logger.info { "Git config key '#{parameter_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'"}
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while deleting Git config key '#{parameter_name}' for repository '#{repository.gitolite_repository_name}'"}
+          RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--unset', parameter_name)
+          logger.info("Git config key '#{parameter_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'")
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Error while deleting Git config key '#{parameter_name}' for repository '#{repository.gitolite_repository_name}'")
         end
       end
 
 
       def delete_hook_section(repository, section_name)
         begin
-          RedmineGitolite::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--remove-section', section_name)
-          logger.info { "Git config section '#{section_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'"}
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while deleting Git config section '#{section_name}' for repository '#{repository.gitolite_repository_name}'"}
+          RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--remove-section', section_name)
+          logger.info("Git config section '#{section_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'")
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Error while deleting Git config section '#{section_name}' for repository '#{repository.gitolite_repository_name}'")
         end
       end
 

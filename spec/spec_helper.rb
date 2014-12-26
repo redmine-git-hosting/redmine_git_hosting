@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec/spec_helper')
 RSpec.configure do |config|
 
   config.before(:suite) do
-    RedmineGitolite::Config.reload_from_file!
+    RedmineGitHosting::Config.reload_from_file!
     Setting.enabled_scm = [ 'Git', 'Subversion', 'Xitolite' ]
   end
 

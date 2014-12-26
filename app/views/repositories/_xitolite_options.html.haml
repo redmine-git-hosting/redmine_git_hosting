@@ -33,7 +33,7 @@
 
       %p
         %label= l(:label_mirroring_keys_installed)
-        = image_tag (RedmineGitolite::GitoliteWrapper.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
+        = image_tag (RedmineGitHosting::GitoliteWrapper.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
 
       %p
         %label= l(:label_repository_exists_in_gitolite)

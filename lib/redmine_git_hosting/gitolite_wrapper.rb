@@ -1,6 +1,6 @@
 require 'gitolite'
 
-module RedmineGitolite
+module RedmineGitHosting
 
   module GitoliteWrapper
 
@@ -39,7 +39,7 @@ module RedmineGitolite
       def gitolite_admin
         create_temp_dir
         admin_dir = gitolite_admin_dir
-        logger.info { "Acessing gitolite-admin.git at '#{admin_dir}'" }
+        logger.info("Acessing gitolite-admin.git at '#{admin_dir}'")
         ::Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
       end
 
@@ -56,35 +56,24 @@ module RedmineGitolite
         options = options.symbolize_keys
 
         if options.has_key?(:flush_cache) && options[:flush_cache] == true
-          logger.info { "Flush Settings Cache !" }
+          logger.info("Flush Settings Cache !")
           Setting.check_cache if Setting.respond_to?(:check_cache)
         end
 
         begin
           admin = gitolite_admin
         rescue Rugged::SshError => e
-          logger.error { e.message }
+          logger.error(e.message)
         else
           WRAPPERS.each do |wrappermod|
             if wrappermod.method_defined?(action)
               return wrappermod.new(admin, action, object, options).send(action)
             end
           end
-          raise GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
+          raise RedmineGitHosting::Error::GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
         end
       end
 
-    end
-
-    # Used to register errors when pulling and pushing the conf file
-    class GitoliteWrapperException < StandardError
-      attr_reader :command
-      attr_reader :output
-
-      def initialize(command, output)
-        @command = command
-        @output  = output
-      end
     end
 
   end

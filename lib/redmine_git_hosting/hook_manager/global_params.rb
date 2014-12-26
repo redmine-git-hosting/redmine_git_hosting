@@ -1,4 +1,4 @@
-module RedmineGitolite::HookManager
+module RedmineGitHosting::HookManager
 
   class GlobalParams < HookParam
 
@@ -12,12 +12,12 @@ module RedmineGitolite::HookManager
 
     def initialize
       ## Params to set
-      @gitolite_hooks_url = RedmineGitolite::GitoliteWrapper.gitolite_hooks_url
-      @debug_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_debug, true).to_s
-      @async_mode         = RedmineGitolite::Config.get_setting(:gitolite_hooks_are_asynchronous, true).to_s
+      @gitolite_hooks_url = RedmineGitHosting::GitoliteWrapper.gitolite_hooks_url
+      @debug_mode         = RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true).to_s
+      @async_mode         = RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true).to_s
 
       ## Namespace where to set params
-      @namespace = RedmineGitolite::HookManager.gitolite_hooks_namespace
+      @namespace = RedmineGitHosting::HookManager.gitolite_hooks_namespace
 
       ## Get current params
       @current_params = get_git_config_params(@namespace)

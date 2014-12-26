@@ -84,7 +84,7 @@ class RepositoryMirror < ActiveRecord::Base
 
     def refcomp_valid(spec)
       # Allow null or empty components
-      if !spec || spec == "" || RedmineGitolite::Utils.refcomp_parse(spec)
+      if !spec || spec == "" || RedmineGitHosting::Utils.refcomp_parse(spec)
         true
       else
         false

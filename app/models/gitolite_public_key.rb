@@ -87,7 +87,7 @@ class GitolitePublicKey < ActiveRecord::Base
   # This is due to the new gitolite multi-keys organization
   # using folders. See http://gitolite.com/gitolite/users.html
   def gitolite_path
-    File.join('keydir', RedmineGitolite::GitoliteWrapper.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
+    File.join('keydir', RedmineGitHosting::GitoliteWrapper.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
   end
 
 
@@ -201,11 +201,11 @@ class GitolitePublicKey < ActiveRecord::Base
       file.close
 
       begin
-        output = RedmineGitolite::Utils.capture('ssh-keygen', ['-l', '-f', file.path])
+        output = RedmineGitHosting::Utils.capture('ssh-keygen', ['-l', '-f', file.path])
         if output
           self.fingerprint = output.split[1]
         end
-      rescue RedmineGitolite::GitHosting::GitHostingException => e
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
         errors.add(:key, l(:error_key_corrupted))
       ensure
         file.unlink

@@ -22,7 +22,7 @@ class CreateProjectRepository
 
 
     def create_project_repository
-      if project.module_enabled?('repository') && RedmineGitolite::Config.get_setting(:all_projects_use_git, true)
+      if project.module_enabled?('repository') && RedmineGitHosting::Config.get_setting(:all_projects_use_git, true)
         # Create new repository
         repository = Repository.factory('Xitolite')
         repository.is_default = true
@@ -39,7 +39,7 @@ class CreateProjectRepository
 
 
     def creation_options
-      { create_readme_file: RedmineGitolite::Config.get_setting(:init_repositories_on_create, true) }
+      { create_readme_file: RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true) }
     end
 
 end

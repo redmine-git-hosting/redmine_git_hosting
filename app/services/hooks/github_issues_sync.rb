@@ -22,7 +22,7 @@ module Hooks
 
 
     def logger
-      RedmineGitolite::Log.get_logger(:git_hooks)
+      RedmineGitHosting.logger
     end
 
 
@@ -71,7 +71,7 @@ module Hooks
 
 
     def create_redmine_issue
-      logger.info { "Github Issues Sync : create new issue" }
+      logger.info("Github Issues Sync : create new issue")
 
       issue = Issue.new
       issue.project_id = @project.id
@@ -91,7 +91,7 @@ module Hooks
 
 
     def create_issue_journal(issue)
-      logger.info { "Github Issues Sync : create new journal for issue '##{issue.id}'" }
+      logger.info("Github Issues Sync : create new journal for issue '##{issue.id}'")
 
       journal = Journal.new
       journal.journalized_id = issue.id
@@ -109,7 +109,7 @@ module Hooks
 
 
     def update_redmine_issue(issue)
-      logger.info { "Github Issues Sync : update issue '##{issue.id}'" }
+      logger.info("Github Issues Sync : update issue '##{issue.id}'")
 
       if @params[:issue][:state] == 'closed'
         issue.status_id = 5
@@ -133,7 +133,7 @@ module Hooks
       user = User.find_by_mail(user_data['email'])
 
       if user.nil?
-        logger.info { "Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous" }
+        logger.info("Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous")
         user = User.anonymous
         user.mail = user_data['email']
         user.firstname = user_data['name']

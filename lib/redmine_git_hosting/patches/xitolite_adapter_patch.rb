@@ -29,9 +29,9 @@ module RedmineGitHosting
 
 
         def scm_version_from_command_line_with_git_hosting
-          RedmineGitolite::GitoliteWrapper.sudo_capture('git', '--version', '--no-color')
+          RedmineGitHosting::GitoliteWrapper.sudo_capture('git', '--version', '--no-color')
         rescue => e
-          RedmineGitolite::GitHosting.logger.error { "Can't retrieve git version: #{e.output}" }
+          RedmineGitHosting.logger.error("Can't retrieve git version: #{e.output}")
           'unknown'
         end
 
@@ -43,7 +43,7 @@ module RedmineGitHosting
         private
 
           def logger
-            RedmineGitolite::GitHosting.logger
+            RedmineGitHosting.logger
           end
 
 
@@ -52,7 +52,7 @@ module RedmineGitHosting
 
             full_args = []
             full_args << 'sudo'
-            full_args += RedmineGitolite::GitoliteWrapper.sudo_shell_params
+            full_args += RedmineGitHosting::GitoliteWrapper.sudo_shell_params
             full_args << 'git'
             full_args << '--git-dir'
             full_args << repo_path
@@ -68,18 +68,18 @@ module RedmineGitHosting
 
             # Compute string from repo_path that should be same as: repo.git_cache_id
             # If only we had access to the repo (we don't).
-            logger.debug { "Lookup for git_cache_id with repository path '#{repo_path}' ... " }
+            logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
 
             git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
 
             if !git_cache_id.nil?
               # Insert cache between shell execution and caller
-              logger.debug { "Found git_cache_id ('#{git_cache_id}'), call cache... " }
-              logger.debug { "Send GitCommand : #{cmd_str}" }
-              RedmineGitolite::CacheManager.execute(cmd_str, git_cache_id, options, &block)
+              logger.debug("Found git_cache_id ('#{git_cache_id}'), call cache... ")
+              logger.debug("Send GitCommand : #{cmd_str}")
+              RedmineGitHosting::CacheManager.execute(cmd_str, git_cache_id, options, &block)
             else
-              logger.debug { "Unable to find git_cache_id, bypass cache... " }
-              logger.debug { "Send GitCommand : #{cmd_str}" }
+              logger.debug("Unable to find git_cache_id, bypass cache... ")
+              logger.debug("Send GitCommand : #{cmd_str}")
               Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
             end
           end

@@ -28,14 +28,14 @@ class UpdateRepository
 
 
     def update_repository
-      RedmineGitolite::GitHosting.logger.info { message }
-      RedmineGitolite::GitHosting.resync_gitolite(:update_repository, repository.id, options)
+      logger.info(message)
+      resync_gitolite(:update_repository, repository.id, options)
 
       ## Update repository default branch if asked
       if update_default_branch
         message = "User '#{User.current.login}' has modified default_branch of '#{repository.gitolite_repository_name}' ('#{repository.extra[:default_branch]}')"
-        RedmineGitolite::GitHosting.logger.info { message }
-        RedmineGitolite::GitHosting.resync_gitolite(:update_repository_default_branch, repository.id)
+        logger.info(message)
+        resync_gitolite(:update_repository_default_branch, repository.id)
       end
     end
 

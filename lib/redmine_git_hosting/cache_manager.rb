@@ -1,25 +1,25 @@
-module RedmineGitolite
+module RedmineGitHosting
   module CacheManager
 
     class << self
 
       def logger
-        RedmineGitolite::Log.get_logger(:git_cache)
+        RedmineGitHosting.logger
       end
 
 
       def max_cache_time
-        RedmineGitolite::Config.get_setting(:gitolite_cache_max_time).to_i
+        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_time).to_i
       end
 
 
       def max_cache_elements
-        RedmineGitolite::Config.get_setting(:gitolite_cache_max_elements).to_i
+        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_elements).to_i
       end
 
 
       def max_cache_size
-        RedmineGitolite::Config.get_setting(:gitolite_cache_max_size).to_i*1024*1024
+        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_size).to_i*1024*1024
       end
 
 
@@ -28,7 +28,7 @@ module RedmineGitolite
       def execute(cmd_str, repo_id, options = {}, &block)
         if max_cache_time == 0 || options[:uncached]
           # Disabled cache, simply launch shell, don't redirect
-          logger.warn { "Cache is disabled : '#{repo_id}'" }
+          logger.warn("Cache is disabled : '#{repo_id}'")
           options = options.delete(:uncached)
           retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
           status = $?
@@ -39,13 +39,13 @@ module RedmineGitolite
           status = nil
         else
           # Create redirector stream and call block
-          redirector = RedmineGitolite::Cache.new(cmd_str, repo_id, options)
+          redirector = RedmineGitHosting::Cache.new(cmd_str, repo_id, options)
           block.call(redirector)
           retio, status = redirector.exit_shell
         end
 
         if status && status.exitstatus.to_i != 0
-          logger.error { "Git exited with non-zero status : #{status.exitstatus}" }
+          logger.error("Git exited with non-zero status : #{status.exitstatus}")
           raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus}"
         end
 
@@ -54,8 +54,8 @@ module RedmineGitolite
 
 
       def set_cache(repo_id, out_value, primary_key, secondary_key = nil)
-        logger.debug { "Inserting cache entry for repository '#{repo_id}'" }
-        logger.debug { compose_key(primary_key, secondary_key) }
+        logger.debug("Inserting cache entry for repository '#{repo_id}'")
+        logger.debug(compose_key(primary_key, secondary_key))
 
         begin
           GitCache.create(
@@ -64,7 +64,7 @@ module RedmineGitolite
             repo_identifier: repo_id
           )
         rescue => e
-          logger.error "Could not insert in cache, this is the error : '#{e.message}'"
+          logger.error("Could not insert in cache, this is the error : '#{e.message}'")
         else
           apply_cache_limit
         end
@@ -123,7 +123,7 @@ module RedmineGitolite
         return if max_cache_time < 0  # No expiration needed
         target_limit = Time.now - max_cache_time
         deleted = GitCache.delete_all(["created_at < ?", target_limit])
-        logger.info { "Removed '#{deleted}' expired cache entries among all repositories" }
+        logger.info("Removed '#{deleted}' expired cache entries among all repositories")
       end
 
 
@@ -131,7 +131,7 @@ module RedmineGitolite
       def clear_cache_for_repository(repository)
         repo_id = repository.git_cache_id
         deleted = GitCache.delete_all(["repo_identifier = ?", repo_id])
-        logger.info { "Removed '#{deleted}' expired cache entries for repository '#{repo_id}'" }
+        logger.info("Removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
       end
 
     end

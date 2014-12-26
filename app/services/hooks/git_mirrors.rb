@@ -17,7 +17,7 @@ module Hooks
     class << self
 
       def logger
-        RedmineGitolite::Log.get_logger(:git_hooks)
+        RedmineGitHosting.logger
       end
 
 
@@ -26,7 +26,7 @@ module Hooks
 
         ## Post to each post-receive URL
         if repository.mirrors.active.any?
-          logger.info { "Notifying mirrors about changes to this repository :" }
+          logger.info("Notifying mirrors about changes to this repository :")
           y << "\nNotifying mirrors about changes to this repository :\n"
 
           repository.mirrors.active.each do |mirror|
@@ -63,7 +63,7 @@ module Hooks
 
         refspec_parse = mirror.explicit_refspec.match(/^\+?([^:]*)(:[^:]*)?$/)
         payloads.each do |payload|
-          if splitpath = RedmineGitolite::Utils.refcomp_parse(payload[:ref])
+          if splitpath = RedmineGitHosting::Utils.refcomp_parse(payload[:ref])
             return true if payload[:ref] == refspec_parse[1]  # Explicit Reference Spec complete path
             return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
             return true if mirror.include_all_branches? && splitpath[:type] == "heads"
@@ -77,17 +77,17 @@ module Hooks
       def do_call_mirror
         y = ''
 
-        logger.info { "Pushing changes to #{url} ... " }
+        logger.info("Pushing changes to #{url} ... ")
         y << "  - Pushing changes to #{url} ... "
 
         push_failed, push_message = MirrorPush.new(mirror).call
 
         if push_failed
-          logger.error { "Failed!" }
-          logger.error { "#{push_message}" }
+          logger.error("Failed!")
+          logger.error("#{push_message}")
           y << " [failure]\n"
         else
-          logger.info { "Succeeded!" }
+          logger.info("Succeeded!")
           y << " [success]\n"
         end
 
@@ -96,7 +96,7 @@ module Hooks
 
 
       def logger
-        RedmineGitolite::Log.get_logger(:git_hooks)
+        RedmineGitHosting.logger
       end
 
   end

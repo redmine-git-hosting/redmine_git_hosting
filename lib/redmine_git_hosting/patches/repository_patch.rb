@@ -24,7 +24,7 @@ module RedmineGitHosting
           if new_repo.is_a?(::Repository::Xitolite)
             if new_repo.extra.nil?
               # Note that this autoinitializes default values and hook key
-              RedmineGitolite::GitHosting.logger.error { "Automatic initialization of RepositoryGitExtra failed for #{self.project.to_s}" }
+              RedmineGitHosting.logger.error("Automatic initialization of RepositoryGitExtra failed for #{self.project.to_s}")
             end
           end
           return new_repo

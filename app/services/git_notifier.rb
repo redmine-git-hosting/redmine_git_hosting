@@ -42,13 +42,13 @@ class GitNotifier
 
 
     def set_email_prefix
-      @email_prefix = RedmineGitolite::Config.get_setting(:gitolite_notify_global_prefix)
+      @email_prefix = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_prefix)
       @email_prefix = git_notification.prefix unless (git_notification.nil? || git_notification.new_record?)
     end
 
 
     def set_sender_address
-      @sender_address = RedmineGitolite::Config.get_setting(:gitolite_notify_global_sender_address)
+      @sender_address = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_sender_address)
       @sender_address = git_notification.sender_address unless (git_notification.nil? || git_notification.new_record? || git_notification.sender_address.empty?)
     end
 
@@ -67,7 +67,7 @@ class GitNotifier
       default_users = default_list.map{ |mail| mail_mapping[mail] = :project }
 
       # Then add global include list
-      RedmineGitolite::Config.get_setting(:gitolite_notify_global_include).sort.map{ |mail| mail_mapping[mail] = :global }
+      RedmineGitHosting::Config.get_setting(:gitolite_notify_global_include).sort.map{ |mail| mail_mapping[mail] = :global }
 
       # Then filter
       mail_mapping = filter_list(mail_mapping)
@@ -86,7 +86,7 @@ class GitNotifier
       exclude_list = []
 
       # Build exclusion list
-      exclude_list = RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude) unless RedmineGitolite::Config.get_setting(:gitolite_notify_global_exclude).empty?
+      exclude_list = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_exclude) unless RedmineGitHosting::Config.get_setting(:gitolite_notify_global_exclude).empty?
 
       unless git_notification.nil? || git_notification.new_record? || git_notification.exclude_list.empty?
         exclude_list = exclude_list + git_notification.exclude_list

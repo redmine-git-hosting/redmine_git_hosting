@@ -14,8 +14,8 @@ namespace :redmine_git_hosting do
 
     desc "Check unit tests results"
     task :check_unit_tests_results => [:environment] do
-      gitolite_admin_dir = RedmineGitolite::GitoliteWrapper.gitolite_admin_dir
-      gitolite_temp_dir  = RedmineGitolite::Config.get_setting(:gitolite_temp_dir)
+      gitolite_admin_dir = RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir
+      gitolite_temp_dir  = RedmineGitHosting::Config.get_setting(:gitolite_temp_dir)
 
       puts "#####################"
       puts "TESTS RESULTS"

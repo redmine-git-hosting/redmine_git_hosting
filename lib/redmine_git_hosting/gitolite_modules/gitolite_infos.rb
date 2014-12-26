@@ -1,4 +1,4 @@
-module RedmineGitolite::GitoliteModules
+module RedmineGitHosting::GitoliteModules
 
   module GitoliteInfos
 
@@ -26,8 +26,8 @@ module RedmineGitolite::GitoliteModules
         end
         begin
           @@gitolite_infos_cached = ssh_shell('info')[0]
-        rescue RedmineGitolite::GitHosting::GitHostingException => e
-          logger.error { "Error while getting Gitolite version" }
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Error while getting Gitolite version")
           @@gitolite_infos_cached = ''
         end
         @@gitolite_info_stamp = Time.new
@@ -36,13 +36,13 @@ module RedmineGitolite::GitoliteModules
 
 
       def gitolite_version
-        logger.debug { "Getting Gitolite version..." }
+        logger.debug("Getting Gitolite version...")
         find_version(gitolite_infos)
       end
 
 
       def gitolite_banner
-        logger.debug { "Getting Gitolite banner..." }
+        logger.debug("Getting Gitolite banner...")
         gitolite_infos
       end
 
@@ -80,12 +80,12 @@ module RedmineGitolite::GitoliteModules
 
       def gitolite_repository_count
         if gitolite_version == 3
-          logger.debug { "Getting Gitolite physical repositories list..." }
+          logger.debug("Getting Gitolite physical repositories list...")
 
           begin
             count = sudo_capture('gitolite', 'list-phy-repos').split("\n").length
-          rescue RedmineGitolite::GitHosting::GitHostingException => e
-            logger.error { "Error while getting Gitolite physical repositories list" }
+          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+            logger.error("Error while getting Gitolite physical repositories list")
             count = 0
           end
 
