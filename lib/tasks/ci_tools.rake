@@ -28,12 +28,12 @@ namespace :redmine_git_hosting do
       puts %x[ ls -hal #{gitolite_temp_dir} ]
       puts ""
 
-      puts "* ls -hal #{gitolite_temp_dir}git"
-      puts %x[ ls -hal #{gitolite_temp_dir}git ]
+      puts "* ls -hal #{gitolite_temp_dir}/git"
+      puts %x[ ls -hal #{gitolite_temp_dir}/git ]
       puts ""
 
-      puts "* ls -hal #{gitolite_temp_dir}git/gitolite-admin.git"
-      puts %x[ ls -hal #{gitolite_temp_dir}git/gitolite-admin.git ]
+      puts "* ls -hal #{gitolite_temp_dir}/git/gitolite-admin.git"
+      puts %x[ ls -hal #{gitolite_temp_dir}/git/gitolite-admin.git ]
       puts ""
 
       begin
