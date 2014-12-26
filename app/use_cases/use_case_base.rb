@@ -2,7 +2,7 @@ module UseCaseBase
 
   class << self
     def included(receiver)
-      receiver.include(InstanceMethods)
+      receiver.send(:include, InstanceMethods)
     end
   end
 
