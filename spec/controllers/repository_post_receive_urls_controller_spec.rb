@@ -69,21 +69,21 @@ describe RepositoryPostReceiveUrlsController do
 
       it "saves the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_post_receive_url => {
-                          :url  => 'http://example.com',
-                          :mode => :github
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_post_receive_url => {
+                                :url  => 'http://example.com',
+                                :mode => :github
+                              }
         }.to change(RepositoryPostReceiveUrl, :count).by(1)
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository.id,
-                      :repository_post_receive_url => {
-                        :url  => 'http://example2.com',
-                        :mode => :github
-                      }
-        expect(response).to redirect_to(success_url)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_post_receive_url => {
+                              :url  => 'http://example2.com',
+                              :mode => :github
+                            }
+        expect(response.status).to eq 200
       end
     end
 
@@ -94,21 +94,21 @@ describe RepositoryPostReceiveUrlsController do
 
       it "does not save the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_post_receive_url => {
-                          :url  => 'example.com',
-                          :mode => :github
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_post_receive_url => {
+                                :url  => 'example.com',
+                                :mode => :github
+                              }
         }.to_not change(RepositoryPostReceiveUrl, :count)
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository.id,
-                      :repository_post_receive_url => {
-                        :url  => 'example.com',
-                        :mode => :github
-                      }
-        expect(response).to render_template(:new)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_post_receive_url => {
+                              :url  => 'example.com',
+                              :mode => :github
+                            }
+        expect(response).to render_template(:create)
       end
     end
   end
@@ -147,8 +147,8 @@ describe RepositoryPostReceiveUrlsController do
         get :edit, :repository_id => @repository2.id, :id => @post_receive_url.id
       end
 
-      it "renders 403" do
-        expect(response.status).to eq 403
+      it "renders 404" do
+        expect(response.status).to eq 404
       end
     end
 
@@ -172,11 +172,8 @@ describe RepositoryPostReceiveUrlsController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @post_receive_url.id,
-                     :repository_post_receive_url => {
-                       :url => 'http://example.com/titi.php'
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @post_receive_url.id,
+                           repository_post_receive_url: { url: 'http://example.com/titi.php' }
       end
 
       it "located the requested @post_receive_url" do
@@ -189,17 +186,14 @@ describe RepositoryPostReceiveUrlsController do
       end
 
       it "redirects to the repository page" do
-        expect(response).to redirect_to success_url
+        expect(response.status).to eq 200
       end
     end
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @post_receive_url.id,
-                     :repository_post_receive_url => {
-                       :url => 'example.com'
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @post_receive_url.id,
+                           repository_post_receive_url: { url: 'example.com' }
       end
 
       it "located the requested @post_receive_url" do
@@ -212,7 +206,7 @@ describe RepositoryPostReceiveUrlsController do
       end
 
       it "re-renders the :edit template" do
-        expect(response).to render_template(:edit)
+        expect(response).to render_template(:update)
       end
     end
   end

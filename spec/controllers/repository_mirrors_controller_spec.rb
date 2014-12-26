@@ -81,21 +81,21 @@ describe RepositoryMirrorsController do
 
       it "saves the new mirror in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_mirror => {
-                          :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4.git',
-                          :push_mode => 0
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_mirror => {
+                                :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4.git',
+                                :push_mode => 0
+                              }
         }.to change(RepositoryMirror, :count).by(1)
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository.id,
-                      :repository_mirror => {
-                        :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4/repo1.git',
-                        :push_mode => 0
-                      }
-        expect(response).to redirect_to(success_url)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_mirror => {
+                              :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4/repo1.git',
+                              :push_mode => 0
+                            }
+        expect(response.status).to eq 200
       end
     end
 
@@ -106,21 +106,21 @@ describe RepositoryMirrorsController do
 
       it "does not save the new mirror in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_mirror => {
-                          :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
-                          :push_mode => 0
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_mirror => {
+                                :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
+                                :push_mode => 0
+                              }
         }.to_not change(RepositoryMirror, :count)
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository.id,
-                      :repository_mirror => {
-                        :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
-                        :push_mode => 0
-                      }
-        expect(response).to render_template(:new)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_mirror => {
+                              :url => 'git@redmine.example.org/project1/project2/project3/project4.git',
+                              :push_mode => 0
+                            }
+        expect(response).to render_template(:create)
       end
     end
   end
@@ -159,8 +159,8 @@ describe RepositoryMirrorsController do
         get :edit, :repository_id => @repository2.id, :id => @mirror.id
       end
 
-      it "renders 403" do
-        expect(response.status).to eq 403
+      it "renders 404" do
+        expect(response.status).to eq 404
       end
     end
 
@@ -184,11 +184,8 @@ describe RepositoryMirrorsController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @mirror.id,
-                     :repository_mirror => {
-                       :url => 'ssh://git@redmine.example.org/project1/project2/project3/project4.git'
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @mirror.id,
+                     repository_mirror: { url: 'ssh://git@redmine.example.org/project1/project2/project3/project4.git' }
       end
 
       it "located the requested @mirror" do
@@ -201,17 +198,14 @@ describe RepositoryMirrorsController do
       end
 
       it "redirects to the repository page" do
-        expect(response).to redirect_to success_url
+        expect(response.status).to eq 200
       end
     end
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @mirror.id,
-                     :repository_mirror => {
-                       :url => 'git@redmine.example.org/project1/project2/project3/project4.git'
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @mirror.id,
+                     repository_mirror: { url: 'git@redmine.example.org/project1/project2/project3/project4.git' }
       end
 
       it "located the requested @mirror" do
@@ -224,7 +218,7 @@ describe RepositoryMirrorsController do
       end
 
       it "re-renders the :edit template" do
-        expect(response).to render_template(:edit)
+        expect(response).to render_template(:update)
       end
     end
   end

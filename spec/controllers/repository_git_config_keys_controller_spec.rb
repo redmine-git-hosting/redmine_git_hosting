@@ -69,21 +69,21 @@ describe RepositoryGitConfigKeysController do
 
       it "saves the new git_config_key in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_git_config_key => {
-                          :key   => 'foo.bar1',
-                          :value => 0
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_git_config_key => {
+                                :key   => 'foo.bar1',
+                                :value => 0
+                              }
         }.to change(RepositoryGitConfigKey, :count).by(1)
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository.id,
-                      :repository_git_config_key => {
-                        :key   => 'foo.bar2',
-                        :value => 0
-                      }
-        expect(response).to redirect_to(success_url)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_git_config_key => {
+                              :key   => 'foo.bar2',
+                              :value => 0
+                            }
+        expect(response.status).to eq 200
       end
     end
 
@@ -94,21 +94,21 @@ describe RepositoryGitConfigKeysController do
 
       it "does not save the new post_receive_url in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_git_config_key => {
-                          :key   => 'foo',
-                          :value => 0
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_git_config_key => {
+                                :key   => 'foo',
+                                :value => 0
+                              }
         }.to_not change(RepositoryGitConfigKey, :count)
       end
 
       it "re-renders the :new template" do
-        post :create, :repository_id => @repository.id,
-                      :repository_git_config_key => {
-                        :key   => 'foo',
-                        :value => 0
-                      }
-        expect(response).to render_template(:new)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_git_config_key => {
+                              :key   => 'foo',
+                              :value => 0
+                            }
+        expect(response).to render_template(:create)
       end
     end
   end
@@ -147,8 +147,8 @@ describe RepositoryGitConfigKeysController do
         get :edit, :repository_id => @repository2.id, :id => @git_config_key.id
       end
 
-      it "renders 403" do
-        expect(response.status).to eq 403
+      it "renders 404" do
+        expect(response.status).to eq 404
       end
     end
 
@@ -172,12 +172,8 @@ describe RepositoryGitConfigKeysController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @git_config_key.id,
-                     :repository_git_config_key => {
-                        :key   => 'foo.bar1',
-                        :value => 1
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @git_config_key.id,
+                           repository_git_config_key: { key: 'foo.bar1', value: 1 }
       end
 
       it "located the requested @git_config_key" do
@@ -190,18 +186,14 @@ describe RepositoryGitConfigKeysController do
       end
 
       it "redirects to the repository page" do
-        expect(response).to redirect_to success_url
+        expect(response.status).to eq 200
       end
     end
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @git_config_key.id,
-                     :repository_git_config_key => {
-                        :key   => 'foo',
-                        :value => 1
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @git_config_key.id,
+                           repository_git_config_key: { key: 'foo', value: 1 }
       end
 
       it "located the requested @git_config_key" do
@@ -214,7 +206,7 @@ describe RepositoryGitConfigKeysController do
       end
 
       it "re-renders the :edit template" do
-        expect(response).to render_template(:edit)
+        expect(response).to render_template(:update)
       end
     end
   end

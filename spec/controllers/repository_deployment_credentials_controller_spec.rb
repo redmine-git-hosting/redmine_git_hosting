@@ -11,8 +11,8 @@ describe RepositoryDeploymentCredentialsController do
 
   before(:all) do
     @project        = FactoryGirl.create(:project)
-    @repository     = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)
-    @user           = FactoryGirl.create(:user, :admin => true)
+    @repository     = FactoryGirl.create(:repository_gitolite, project_id: @project.id)
+    @user           = FactoryGirl.create(:user, admin: true)
 
     @credential     = FactoryGirl.create(:repository_deployment_credential,
       :repository_id          => @repository.id,
@@ -20,7 +20,7 @@ describe RepositoryDeploymentCredentialsController do
       :gitolite_public_key_id => FactoryGirl.create(:gitolite_public_key, :user_id => @user.id, :key_type => 1, :title => 'foo1', :key => DEPLOY_KEY2).id
     )
 
-    @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'credential-test')
+    @repository2    = FactoryGirl.create(:repository_gitolite, project_id: @project.id, identifier: 'credential-test')
   end
 
 
@@ -77,21 +77,21 @@ describe RepositoryDeploymentCredentialsController do
 
       it "saves the new credential in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_deployment_credential => {
-                          :gitolite_public_key_id => @public_key.id,
-                          :perm => 'RW+'
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_deployment_credential => {
+                                :gitolite_public_key_id => @public_key.id,
+                                :perm => 'RW+'
+                              }
         }.to change(RepositoryDeploymentCredential, :count).by(1)
       end
 
       it "redirects to the repository page" do
-        post :create, :repository_id => @repository.id,
-                      :repository_deployment_credential => {
-                        :gitolite_public_key_id => @public_key.id,
-                        :perm => 'RW+'
-                      }
-        expect(response).to redirect_to(success_url)
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_deployment_credential => {
+                              :gitolite_public_key_id => @public_key.id,
+                              :perm => 'RW+'
+                            }
+        expect(response.status).to eq 200
       end
     end
 
@@ -103,21 +103,21 @@ describe RepositoryDeploymentCredentialsController do
 
       it "does not save the new credential in the database" do
         expect{
-          post :create, :repository_id => @repository.id,
-                        :repository_deployment_credential => {
-                          :gitolite_public_key_id => @public_key.id,
-                          :perm => 'RW'
-                        }
+          xhr :post, :create, :repository_id => @repository.id,
+                              :repository_deployment_credential => {
+                                :gitolite_public_key_id => @public_key.id,
+                                :perm => 'RW'
+                              }
         }.to_not change(RepositoryDeploymentCredential, :count)
       end
 
-      it "re-renders the :new template" do
-        post :create, :repository_id => @repository.id,
-                      :repository_deployment_credential => {
-                        :gitolite_public_key_id => @public_key.id,
-                        :perm => 'RW'
-                      }
-        expect(response).to render_template(:new)
+      it "re-renders the :new template (through JS create)" do
+        xhr :post, :create, :repository_id => @repository.id,
+                            :repository_deployment_credential => {
+                              :gitolite_public_key_id => @public_key.id,
+                              :perm => 'RW'
+                            }
+        expect(response).to render_template(:create)
       end
     end
   end
@@ -156,8 +156,8 @@ describe RepositoryDeploymentCredentialsController do
         get :edit, :repository_id => @repository2.id, :id => @credential.id
       end
 
-      it "renders 403" do
-        expect(response.status).to eq 403
+      it "renders 404" do
+        expect(response.status).to eq 404
       end
     end
 
@@ -181,11 +181,8 @@ describe RepositoryDeploymentCredentialsController do
 
     context "with valid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @credential.id,
-                     :repository_deployment_credential => {
-                        :perm => 'R'
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @credential.id,
+                           repository_deployment_credential: { perm: 'R' }
       end
 
       it "located the requested @credential" do
@@ -198,17 +195,14 @@ describe RepositoryDeploymentCredentialsController do
       end
 
       it "redirects to the repository page" do
-        expect(response).to redirect_to success_url
+        expect(response.status).to eq 200
       end
     end
 
     context "with invalid attributes" do
       before do
-        put :update, :repository_id => @repository.id,
-                     :id => @credential.id,
-                     :repository_deployment_credential => {
-                        :perm => 'RW',
-                     }
+        xhr :put, :update, repository_id: @repository.id, id: @credential.id,
+                           repository_deployment_credential: { perm: 'RW' }
       end
 
       it "located the requested @credential" do
@@ -220,8 +214,8 @@ describe RepositoryDeploymentCredentialsController do
         expect(@credential.perm).to eq 'RW+'
       end
 
-      it "re-renders the :edit template" do
-        expect(response).to render_template(:edit)
+      it "re-renders the :edit template (through JS update)" do
+        expect(response).to render_template(:update)
       end
     end
   end
