@@ -1,7 +1,7 @@
 module RedmineGitolite
   module ExtraLoading
-    # Adds plugin locales if any
-    # YAML translation files should be found under <plugin>/config/locales/
+
+    # Adds plugin locales
     ::I18n.load_path += Dir.glob(Rails.root.join('plugins', 'redmine_git_hosting', 'config', 'locales', '**', '*.yml'))
 
     # Load Forms and Concerns objects
