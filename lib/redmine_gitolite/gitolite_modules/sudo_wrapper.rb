@@ -33,19 +33,19 @@ module RedmineGitolite::GitoliteModules
       # Will shell out to +sudo -n -u <gitolite_user> params+
       #
       def sudo_shell(*params)
-        RedmineGitolite::GitHosting.execute('sudo', sudo_shell_params.concat(params))
+        RedmineGitolite::Utils.execute('sudo', sudo_shell_params.concat(params))
       end
 
 
       # Return only the output of the shell command
       # Throws an exception if the shell command does not exit with code 0.
       def sudo_capture(*params)
-        RedmineGitolite::GitHosting.capture('sudo', sudo_shell_params.concat(params))
+        RedmineGitolite::Utils.capture('sudo', sudo_shell_params.concat(params))
       end
 
 
       def sudo_pipe_capture(*params, stdin)
-        RedmineGitolite::GitHosting.capture('sudo', sudo_shell_params.concat(params), {stdin_data: stdin, binmode: true})
+        RedmineGitolite::Utils.capture('sudo', sudo_shell_params.concat(params), {stdin_data: stdin, binmode: true})
       end
 
 

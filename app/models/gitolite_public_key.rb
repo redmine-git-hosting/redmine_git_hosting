@@ -201,7 +201,7 @@ class GitolitePublicKey < ActiveRecord::Base
       file.close
 
       begin
-        output = RedmineGitolite::GitHosting.capture('ssh-keygen', ['-l', '-f', file.path])
+        output = RedmineGitolite::Utils.capture('ssh-keygen', ['-l', '-f', file.path])
         if output
           self.fingerprint = output.split[1]
         end

@@ -12,6 +12,7 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine_gitolite/git_hosting'
   require_dependency 'redmine_gitolite/log'
   require_dependency 'redmine_gitolite/recycle'
+  require_dependency 'redmine_gitolite/utils'
 
   require_dependency 'redmine_gitolite/hook_manager'
   require_dependency 'redmine_gitolite/hook_manager/hook_file'
