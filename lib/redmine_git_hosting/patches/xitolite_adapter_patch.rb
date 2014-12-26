@@ -52,6 +52,8 @@ module RedmineGitHosting
           def git_cache_id
             logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
             @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
+            logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
+            @git_cache_id
           end
 
 
@@ -82,15 +84,23 @@ module RedmineGitHosting
           end
 
 
+          def git_cache_enabled?
+            max_cache_time > 0
+          end
+
+
+          def max_cache_time
+            RedmineGitHosting::Config.get_setting(:gitolite_cache_max_time).to_i
+          end
+
+
           def git_cmd_with_git_hosting(args, options = {}, &block)
             cmd_str = prepare_command(args)
 
-            if !git_cache_id.nil?
+            if !git_cache_id.nil? && git_cache_enabled?
               # Insert cache between shell execution and caller
-              logger.debug("Found git_cache_id ('#{git_cache_id}'), call cache... ")
               RedmineGitHosting::CacheManager.execute(cmd_str, git_cache_id, options, &block)
             else
-              logger.debug("Unable to find git_cache_id, bypass cache... ")
               Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
             end
           end

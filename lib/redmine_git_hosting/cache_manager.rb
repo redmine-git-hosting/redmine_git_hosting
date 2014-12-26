@@ -26,13 +26,7 @@ module RedmineGitHosting
       # Primary interface: execute given command and send IO to block
       # options[:write_stdin] will derive caching key from data that block writes to io stream
       def execute(cmd_str, repo_id, options = {}, &block)
-        if max_cache_time == 0 || options[:uncached]
-          # Disabled cache, simply launch shell, don't redirect
-          logger.warn("Cache is disabled : '#{repo_id}'")
-          options = options.delete(:uncached)
-          retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
-          status = $?
-        elsif !options[:write_stdin] && out = check_cache(cmd_str)
+        if !options[:write_stdin] && out = check_cache(cmd_str)
           # Simple case -- have cached result that depends only on cmd_str
           block.call(out)
           retio = out
