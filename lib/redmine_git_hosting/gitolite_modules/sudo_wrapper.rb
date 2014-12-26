@@ -175,50 +175,37 @@ module RedmineGitHosting::GitoliteModules
 
       ## SUDO TEST1
       def can_gitolite_sudo_to_redmine_user?
+        return true if gitolite_user == redmine_user
         logger.info("Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'...")
-
-        if gitolite_user == redmine_user
-          logger.info("OK!")
-          return true
+        result = execute_sudo_test(redmine_user) do
+          sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
         end
-
-        begin
-          test = sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.warn("Error while testing can_gitolite_sudo_to_redmine_user")
-          return false
-        else
-          if test.match(/#{redmine_user}/)
-            logger.info("OK!")
-            return true
-          else
-            logger.warn("Error while testing can_gitolite_sudo_to_redmine_user")
-            return false
-          end
-        end
+        result ? logger.info("OK!") : logger.error("Error while testing can_gitolite_sudo_to_redmine_user")
+        result
       end
 
 
       ## SUDO TEST2
       def can_redmine_sudo_to_gitolite_user?
+        return true if gitolite_user == redmine_user
         logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
-
-        if gitolite_user == redmine_user
-          logger.info("OK!")
-          return true
+        result = execute_sudo_test(gitolite_user) do
+          sudo_capture('whoami')
         end
+        result ? logger.info("OK!") : logger.error("Error while testing can_redmine_sudo_to_gitolite_user")
+        result
+      end
 
+
+      def execute_sudo_test(user, &block)
         begin
-          test = sudo_capture('whoami')
+          test = yield if block_given?
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Error while testing can_redmine_sudo_to_gitolite_user")
           return false
         else
-          if test.match(/#{gitolite_user}/)
-            logger.info("OK!")
+          if test.match(/#{user}/)
             return true
           else
-            logger.warn("Error while testing can_redmine_sudo_to_gitolite_user")
             return false
           end
         end
