@@ -53,10 +53,18 @@ class GitNotifier
     end
 
 
+    def project_users
+      project.member_principals.map(&:user).compact
+    end
+
+
+    def allowed_users
+      project_users.select{|u| u.allowed_to?(:receive_git_notifications, project)}
+    end
+
+
     def set_default_list
-      @default_list = project.member_principals.map(&:user).compact.uniq
-                                                            .select{|user| user.allowed_to?(:receive_git_notifications, project)}
-                                                            .map(&:mail).uniq.sort
+      @default_list = allowed_users.map(&:mail).uniq.sort
     end
 
 
