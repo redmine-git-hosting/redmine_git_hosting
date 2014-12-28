@@ -6,7 +6,6 @@ describe RepositoryPostReceiveUrlsController do
     "/repositories/#{@repository.id}/edit?tab=repository_post_receive_urls"
   end
 
-
   before(:all) do
     @project          = FactoryGirl.create(:project)
     @repository       = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)

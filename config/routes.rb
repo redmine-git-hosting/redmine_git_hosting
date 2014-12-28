@@ -5,7 +5,7 @@ RedmineApp::Application.routes.draw do
   end
 
   # Don't create routes for repositories resources with only: []
-  # to override Redmine's routes.
+  # to not override Redmine's routes.
   resources :repositories, only: [] do
     member do
       get 'download_revision', to: 'download_git_revision#index', as: 'download_git_revision'

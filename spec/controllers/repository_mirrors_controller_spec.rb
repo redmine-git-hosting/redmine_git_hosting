@@ -6,7 +6,6 @@ describe RepositoryMirrorsController do
     "/repositories/#{@repository.id}/edit?tab=repository_mirrors"
   end
 
-
   before(:all) do
     @project        = FactoryGirl.create(:project)
     @repository     = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)

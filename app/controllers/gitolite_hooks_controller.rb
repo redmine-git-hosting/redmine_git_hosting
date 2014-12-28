@@ -124,7 +124,7 @@ class GitoliteHooksController < ApplicationController
 
 
     def not_to_late?(cur_time, test_time)
-      cur_time - test_time < 5*60
+      cur_time - test_time < 5 * 60
     end
 
 

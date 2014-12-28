@@ -5,7 +5,6 @@ describe RepositoryGitNotification do
   VALID_MAIL   = [ 'user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn' ]
   INVALID_MAIL = [ 'user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com' ]
 
-
   describe "Valid RepositoryGitNotification creation" do
     before(:each) do
       @git_notification = build(:repository_git_notification)

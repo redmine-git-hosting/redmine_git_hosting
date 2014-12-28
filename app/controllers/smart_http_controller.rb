@@ -404,7 +404,7 @@ class SmartHttpController < ApplicationController
 
 
   def pkt_write(str)
-    (str.size + 4).to_s(base=16).rjust(4, '0') + str
+    (str.size + 4).to_s(base = 16).rjust(4, '0') + str
   end
 
 

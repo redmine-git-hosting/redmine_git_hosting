@@ -1,6 +1,6 @@
 module GitHostingHelper
 
-  def checked_image2(checked=true)
+  def checked_image2(checked = true)
     if checked
       image_tag 'toggle_check.png'
     else

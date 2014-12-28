@@ -9,7 +9,6 @@ describe UsersController do
     FactoryGirl.create(:gitolite_public_key, opts)
   end
 
-
   before(:all) do
     @user = FactoryGirl.create(:user, :admin => true)
     User.current = @user

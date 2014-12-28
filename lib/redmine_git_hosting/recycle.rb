@@ -227,7 +227,7 @@ module RedmineGitHosting
     def get_directories_size(directories)
       data = {}
       directories.sort.each do |directory|
-        data[directory] = { :size => (RedmineGitHosting::GitoliteWrapper.sudo_capture('du', '-sh', directory).split(" ")[0] rescue '') }
+        data[directory] = { size: (RedmineGitHosting::GitoliteWrapper.sudo_capture('du', '-sh', directory).split(' ')[0] rescue '') }
       end
       return data
     end

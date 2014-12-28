@@ -19,7 +19,7 @@ module RedmineGitHosting
 
 
       def max_cache_size
-        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_size).to_i*1024*1024
+        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_size).to_i * 1024 * 1024
       end
 
 
