@@ -73,14 +73,17 @@ class ValidateSettings
     def validate_settings
       validate_auto_create
       validate_tmp_dir
-      validate_domain_name
+      validate_mandatory_domain_name
+      validate_optional_domain_name
       validate_http_subdir
       validate_git_config_file
-      validate_storage_dir
+      validate_mandatory_storage_dir
+      validate_optional_storage_dir
       validate_storage_strategy
       validate_expiration_time
       validate_git_server_port
       validate_git_notifications
+      validate_emails
     end
 
 
@@ -111,7 +114,7 @@ class ValidateSettings
     end
 
 
-    def validate_domain_name
+    def validate_mandatory_domain_name
       # Server domain should not include any path components. Also, ports should be numeric.
       [ :ssh_server_domain, :http_server_domain ].each do |setting|
         if valuehash[setting]
@@ -127,7 +130,10 @@ class ValidateSettings
           end
         end
       end
+    end
 
+
+    def validate_optional_domain_name
       # HTTPS server should not include any path components. Also, ports should be numeric.
       if valuehash[:https_server_domain]
         if valuehash[:https_server_domain] != ''
@@ -177,7 +183,7 @@ class ValidateSettings
     end
 
 
-    def validate_storage_dir
+    def validate_mandatory_storage_dir
       # Normalize paths, should be relative and end in '/'
       [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir, :gitolite_local_code_dir ].each do |setting|
         if valuehash[setting]
@@ -190,8 +196,10 @@ class ValidateSettings
           end
         end
       end
+    end
 
 
+    def validate_optional_storage_dir
       # Normalize Redmine Subdirectory path, should be either empty or relative and end in '/'
       if valuehash[:gitolite_redmine_storage_dir]
         gitolite_redmine_storage_dir = normalize_path(valuehash[:gitolite_redmine_storage_dir])
@@ -261,15 +269,16 @@ class ValidateSettings
         end
       end
 
-
       # Validate intersection of global_include/global_exclude
       intersection = valuehash[:gitolite_notify_global_include] & valuehash[:gitolite_notify_global_exclude]
       if intersection.length.to_i > 0
         valuehash[:gitolite_notify_global_include] = old_valuehash[:gitolite_notify_global_include]
         valuehash[:gitolite_notify_global_exclude] = old_valuehash[:gitolite_notify_global_exclude]
       end
+    end
 
 
+    def validate_emails
       # Validate global sender address
       if valuehash[:gitolite_notify_global_sender_address].blank?
         valuehash[:gitolite_notify_global_sender_address] = default_mail
