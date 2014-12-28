@@ -14,9 +14,11 @@ module RedmineGitHosting
 
       def call
         if !configuration_exists?
+          logger.info("#{action} : repository '#{gitolite_repo_name}' does not exist in Gitolite, create it ...")
           add_repository
         elsif configuration_exists? && force
-          add_repository_forced
+          logger.warn("#{action} : repository '#{gitolite_repo_name}' already exists in Gitolite, force mode !")
+          add_repository(true)
         else
           logger.warn("#{action} : repository '#{gitolite_repo_name}' already exists in Gitolite, exit !")
           logger.debug("#{action} : repository path '#{gitolite_repo_path}'")
@@ -27,21 +29,16 @@ module RedmineGitHosting
       private
 
 
-        def add_repository
-          logger.info("#{action} : repository '#{gitolite_repo_name}' does not exist in Gitolite, create it ...")
+        def add_repository(force = false)
           logger.debug("#{action} : repository path '#{gitolite_repo_path}'")
 
-          # Create repository in Gitolite
-          create_repository_config
-        end
-
-
-        def add_repository_forced
-          logger.warn("#{action} : repository '#{gitolite_repo_name}' already exists in Gitolite, force mode !")
-          logger.debug("#{action} : repository path '#{gitolite_repo_path}'")
-
-          # Recreate repository in Gitolite
-          recreate_repository_config
+          if force
+            # Recreate repository in Gitolite
+            recreate_repository_config
+          else
+            # Create repository in Gitolite
+            create_repository_config
+          end
         end
 
     end
