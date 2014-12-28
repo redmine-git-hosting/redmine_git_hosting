@@ -36,14 +36,8 @@ module RedmineGitHosting
             # Update repository paths in database
             update_repository_fields
 
-            # Get old repository permissions
-            old_perms = PermissionsBuilder.get_permissions(repo_conf)
-
-            # Remove repository from Gitolite configuration
-            gitolite_config.rm_repo(old_repo_name)
-
-            # Recreate it
-            RedmineGitHosting::GitoliteHandlers::RepositoryAdder.new(repository, gitolite_config, action, old_perms: old_perms).call
+            # Update Gitolite configuration
+            update_gitolite
 
             # Return old path to delete it
             old_relative_parent_path
@@ -54,6 +48,18 @@ module RedmineGitHosting
         def update_repository_fields
           repository.update_column(:url, new_relative_path)
           repository.update_column(:root_url, new_relative_path)
+        end
+
+
+        def update_gitolite
+          # Get old repository permissions
+          old_perms = PermissionsBuilder.get_permissions(repo_conf)
+
+          # Remove repository from Gitolite configuration
+          gitolite_config.rm_repo(old_repo_name)
+
+          # Recreate it
+          RedmineGitHosting::GitoliteHandlers::RepositoryAdder.new(repository, gitolite_config, action, old_perms: old_perms).call
         end
 
 
