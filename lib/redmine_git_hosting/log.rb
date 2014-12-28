@@ -10,6 +10,9 @@ module RedmineGitHosting
         logger = new(logfile)
         logger.progname = 'RedmineGitHosting'
         logger.level = get_log_level
+        logger.formatter = proc do |severity, time, progname, msg|
+          "#{time} [#{severity}] #{msg}\n"
+        end
         logger
       end
 
