@@ -4,20 +4,26 @@ fr:
 
   activerecord:
     errors:
-
       models:
 
-        repository:
+        repository_git_config_key:
           attributes:
+            key:
+              invalid: "Mauvais format de clé (doit contenir au moin un '.')"
+
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
+              invalid_options: "Vous ne pouvez pas initialiser de fichier README dans un dépot GitAnnex"
             identifier:
-              ident_cannot_equal_project: ": ne peut pas correspondre à l'identifiant d'un projet existant"
+              cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
+              taken: "correspond à un identifiant de dépôt existant"
+              invalid: invalide
+              cannot_change: ne peut pas changer
 
         project:
           attributes:
             identifier:
-              ident_invalid: ": identifiant invalide"
-              ident_not_unique: ": correspond à un identifiant de dépôt existant"
-
-      messages:
-        cannot_change: "ne peut pas changer"
-        blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
+              invalid: "identifiant invalide"
+              taken: "correspond à un identifiant de dépôt existant"
