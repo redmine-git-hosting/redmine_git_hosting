@@ -5,12 +5,16 @@ module RedmineGitHosting
     class RepositoryReadmeCreator
 
       attr_reader :repository
+      attr_reader :gitolite_repo_name
+      attr_reader :gitolite_repo_path
       attr_reader :remote_branch
 
 
       def initialize(repository)
-        @repository    = repository
-        @remote_branch = "refs/heads/#{repository.extra[:default_branch]}"
+        @repository         = repository
+        @gitolite_repo_name = repository.gitolite_repository_name
+        @gitolite_repo_path = repository.gitolite_repository_path
+        @remote_branch      = "refs/heads/#{repository.extra[:default_branch]}"
       end
 
 
@@ -18,7 +22,7 @@ module RedmineGitHosting
         if repository_empty?
           create_readme_file
         else
-          logger.warn("Repository not empty, cannot create README file in path '#{repository.gitolite_repository_path}'")
+          logger.warn("Repository not empty, cannot create README file in path '#{gitolite_repo_path}'")
         end
       end
 
@@ -32,12 +36,12 @@ module RedmineGitHosting
 
 
         def repository_empty?
-          RedmineGitHosting::GitoliteWrapper.sudo_repository_empty?(repository.gitolite_repository_path)
+          RedmineGitHosting::GitoliteWrapper.sudo_repository_empty?(gitolite_repo_path)
         end
 
 
         def create_readme_file
-          logger.info("Create README file for repository '#{repository.gitolite_repository_name}'")
+          logger.info("Create README file for repository '#{gitolite_repo_name}'")
           temp_dir = Dir.mktmpdir
 
           begin
@@ -53,7 +57,7 @@ module RedmineGitHosting
             ## Push
             push_commit(repo)
           rescue => e
-            logger.error("Error while creating README file for repository '#{repository.gitolite_repository_name}'")
+            logger.error("Error while creating README file for repository '#{gitolite_repo_name}'")
             logger.error(e.message)
           ensure
             FileUtils.rm_rf temp_dir
@@ -67,7 +71,7 @@ module RedmineGitHosting
 
 
         def create_file(repo)
-          oid = repo.write("## #{repository.gitolite_repository_name}", :blob)
+          oid = repo.write("## #{gitolite_repo_name}", :blob)
           index = repo.index
           index.add(path: "README.md", oid: oid, mode: 0100644)
           index

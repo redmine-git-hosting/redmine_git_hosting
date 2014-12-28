@@ -38,20 +38,20 @@ module RedmineGitHosting
 
         def delete_hook_param
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--unset', delete_git_config_key)
-            logger.info("Git config key '#{delete_git_config_key}' successfully deleted for repository '#{repository.gitolite_repository_name}'")
+            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'config', '--local', '--unset', delete_git_config_key)
+            logger.info("Git config key '#{delete_git_config_key}' successfully deleted for repository '#{gitolite_repo_name}'")
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("Error while deleting Git config key '#{delete_git_config_key}' for repository '#{repository.gitolite_repository_name}'")
+            logger.error("Error while deleting Git config key '#{delete_git_config_key}' for repository '#{gitolite_repo_name}'")
           end
         end
 
 
         def delete_hook_section(section_name)
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'config', '--local', '--remove-section', section_name)
-            logger.info("Git config section '#{section_name}' successfully deleted for repository '#{repository.gitolite_repository_name}'")
+            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'config', '--local', '--remove-section', section_name)
+            logger.info("Git config section '#{section_name}' successfully deleted for repository '#{gitolite_repo_name}'")
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("Error while deleting Git config section '#{section_name}' for repository '#{repository.gitolite_repository_name}'")
+            logger.error("Error while deleting Git config section '#{section_name}' for repository '#{gitolite_repo_name}'")
           end
         end
 
