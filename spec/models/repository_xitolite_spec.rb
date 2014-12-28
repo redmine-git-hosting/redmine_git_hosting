@@ -193,10 +193,10 @@ describe Repository::Xitolite do
         end
 
         my_hash = {
-          :ssh   => {:url => "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",             :commiter => "false"},
-          :https => {:url => "https://redmine-test-user@localhost/git/project-parent/project-child.git", :commiter => "false"},
-          :http  => {:url => "http://redmine-test-user@localhost/git/project-parent/project-child.git",  :commiter => "false"},
-          :git   => {:url => "git://localhost/redmine/project-parent/project-child.git",                 :commiter => "false"}
+          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     commiter: "false" },
+          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", commiter: "false" },
+          http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  commiter: "false" },
+          git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 commiter: "false" }
         }
 
         it "should return a Hash of Git url" do

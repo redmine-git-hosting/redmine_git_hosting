@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitNotification do
 
-  VALID_MAIL   = [ 'user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn' ]
-  INVALID_MAIL = [ 'user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com' ]
+  VALID_MAIL   = ['user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn']
+  INVALID_MAIL = ['user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com']
 
   describe "Valid RepositoryGitNotification creation" do
     before(:each) do
@@ -45,8 +45,8 @@ describe RepositoryGitNotification do
     ## Attributes content
     it { expect(@git_notification.prefix).to eq "[TEST PROJECT]" }
     it { expect(@git_notification.sender_address).to eq "redmine@example.com" }
-    it { expect(@git_notification.include_list).to eq [ 'foo@bar.com', 'bar@foo.com'] }
-    it { expect(@git_notification.exclude_list).to eq [ 'far@boo.com', 'boo@far.com'] }
+    it { expect(@git_notification.include_list).to eq ['foo@bar.com', 'bar@foo.com'] }
+    it { expect(@git_notification.exclude_list).to eq ['far@boo.com', 'boo@far.com'] }
 
     context "when include_list contains emails with valid format" do
       before { @git_notification.include_list = VALID_MAIL }
