@@ -89,8 +89,7 @@ class ValidateSettings
       validate_git_server_port
       validate_git_notifications_list
       validate_git_notifications_intersection
-      validate_git_notification_sender_email
-      validate_gitolite_author_email
+      validate_emails
     end
 
 
@@ -288,22 +287,13 @@ class ValidateSettings
     end
 
 
-    def validate_git_notification_sender_email
-      # Validate global sender address
-      if valuehash[:gitolite_notify_global_sender_address].blank?
-        valuehash[:gitolite_notify_global_sender_address] = default_mail
-      elsif !valid_email?(valuehash[:gitolite_notify_global_sender_address])
-        valuehash[:gitolite_notify_global_sender_address] = old_valuehash[:gitolite_notify_global_sender_address]
-      end
-    end
-
-
-    def validate_gitolite_author_email
-      # Validate Gitolite author address
-      if valuehash[:git_config_email].blank?
-        valuehash[:git_config_email] = default_mail
-      elsif !valid_email?(valuehash[:git_config_email])
-        valuehash[:git_config_email] = old_valuehash[:git_config_email]
+    def validate_emails
+      [ :gitolite_notify_global_sender_address, :git_config_email ].each do |setting|
+        if valuehash[setting].blank?
+          valuehash[setting] = default_mail
+        elsif !valid_email?(valuehash[setting])
+          valuehash[setting] = old_valuehash[setting]
+        end
       end
     end
 
