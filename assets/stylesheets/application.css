@@ -285,6 +285,12 @@ ul, ol {
   display: table-cell;
 }
 
-.row > .col-md-6{
-  padding: 10px;
+.col-md-12 {
+  width: 90%;
+  display: table-cell;
+}
+
+.row > .col-md-6,
+.row > .col-md-12 {
+  padding: 10px 10px 0;
 }
