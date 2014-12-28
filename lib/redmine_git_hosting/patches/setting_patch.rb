@@ -57,7 +57,6 @@ module RedmineGitHosting
             #
             # John Kubiatowicz 12/21/2011
             # Clear out all cached settings.
-            Setting.check_cache if Setting.respond_to?(:check_cache)
             FlushSettingsCache.new().call
 
             # Build options to pass to RestoreSettings object
