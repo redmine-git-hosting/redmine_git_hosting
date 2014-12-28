@@ -35,6 +35,11 @@ class ValidateSettings
     end
 
 
+    def filter_list(list)
+      list.select{ |m| !m.blank? }.select{ |m| valid_email?(m) }
+    end
+
+
     def convert_time(time)
       (time.to_f * 10).to_i / 10.0
     end
@@ -82,8 +87,10 @@ class ValidateSettings
       validate_storage_strategy
       validate_expiration_time
       validate_git_server_port
-      validate_git_notifications
-      validate_emails
+      validate_git_notifications_list
+      validate_git_notifications_intersection
+      validate_git_notification_sender_email
+      validate_gitolite_author_email
     end
 
 
@@ -261,14 +268,17 @@ class ValidateSettings
     end
 
 
-    def validate_git_notifications
+    def validate_git_notifications_list
       # Validate gitolite_notify mail list
       [ :gitolite_notify_global_include, :gitolite_notify_global_exclude ].each do |setting|
         if !valuehash[setting].empty?
-          valuehash[setting] = valuehash[setting].select{ |m| !m.blank? }.select{ |m| valid_email?(m) }
+          valuehash[setting] = filter_list(valuehash[setting])
         end
       end
+    end
 
+
+    def validate_git_notifications_intersection
       # Validate intersection of global_include/global_exclude
       intersection = valuehash[:gitolite_notify_global_include] & valuehash[:gitolite_notify_global_exclude]
       if intersection.length.to_i > 0
@@ -278,16 +288,18 @@ class ValidateSettings
     end
 
 
-    def validate_emails
+    def validate_git_notification_sender_email
       # Validate global sender address
       if valuehash[:gitolite_notify_global_sender_address].blank?
         valuehash[:gitolite_notify_global_sender_address] = default_mail
       elsif !valid_email?(valuehash[:gitolite_notify_global_sender_address])
         valuehash[:gitolite_notify_global_sender_address] = old_valuehash[:gitolite_notify_global_sender_address]
       end
+    end
 
 
-      # Validate git author address
+    def validate_gitolite_author_email
+      # Validate Gitolite author address
       if valuehash[:git_config_email].blank?
         valuehash[:git_config_email] = default_mail
       elsif !valid_email?(valuehash[:git_config_email])
