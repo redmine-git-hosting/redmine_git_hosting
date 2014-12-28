@@ -80,10 +80,9 @@ class ValidateSettings
       validate_tmp_dir
       validate_mandatory_domain_name
       validate_optional_domain_name
-      validate_http_subdir
       validate_git_config_file
       validate_mandatory_storage_dir
-      validate_optional_storage_dir
+      validate_optional_subdirs
       validate_storage_strategy
       validate_expiration_time
       validate_git_server_port
@@ -154,20 +153,6 @@ class ValidateSettings
     end
 
 
-    def validate_http_subdir
-      # Normalize http repository subdirectory path, should be either empty or relative and end in '/'
-      if valuehash[:http_server_subdir]
-        http_server_subdir = normalize_path(valuehash[:http_server_subdir])
-        if http_server_subdir != '/'
-          # Clobber leading '/' add trailing '/'
-          valuehash[:http_server_subdir] = sanitize_path(http_server_subdir) + '/'
-        else
-          valuehash[:http_server_subdir] = ''
-        end
-      end
-    end
-
-
     def validate_git_config_file
       # Normalize Config File
       if valuehash[:gitolite_config_file]
@@ -205,15 +190,17 @@ class ValidateSettings
     end
 
 
-    def validate_optional_storage_dir
+    def validate_optional_subdirs
       # Normalize Redmine Subdirectory path, should be either empty or relative and end in '/'
-      if valuehash[:gitolite_redmine_storage_dir]
-        gitolite_redmine_storage_dir = normalize_path(valuehash[:gitolite_redmine_storage_dir])
-        if gitolite_redmine_storage_dir != '/'
-          # Clobber leading '/' add trailing '/'
-          valuehash[:gitolite_redmine_storage_dir] = sanitize_path(gitolite_redmine_storage_dir) + '/'
-        else
-          valuehash[:gitolite_redmine_storage_dir] = ''
+      [ :gitolite_redmine_storage_dir, :http_server_subdir ].each do |setting|
+        if valuehash[setting]
+          normalized_param = normalize_path(valuehash[setting])
+          if normalized_param != '/'
+            # Clobber leading '/' add trailing '/'
+            valuehash[setting] = sanitize_path(normalized_param) + '/'
+          else
+            valuehash[setting] = ''
+          end
         end
       end
     end
