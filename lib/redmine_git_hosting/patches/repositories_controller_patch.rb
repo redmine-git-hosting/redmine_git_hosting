@@ -69,6 +69,7 @@ module RedmineGitHosting
               if !@repository.errors.any?
                 case self.action_name
                 when 'create'
+                  set_repository_extras
                   CreateRepository.new(@repository, creation_options).call
                 when 'update'
                   UpdateRepository.new(@repository).call
@@ -80,20 +81,58 @@ module RedmineGitHosting
           end
 
 
-          def creation_options
-            create_readme =
-              if params[:repository].has_key?(:create_readme)
-                params[:repository][:create_readme] == 'true' ? true : false
-              else
-                false
-              end
+          def set_repository_extras
+            extra = @repository.build_git_extra(default_extra_options)
+            extra.save!
+          end
 
-            {create_readme_file: create_readme}
+
+          def creation_options
+            {create_readme_file: create_readme_file?, enable_git_annex: enable_git_annex?}
+          end
+
+
+          def create_readme_file?
+            @repository.create_readme == 'true' ? true : false
+          end
+
+
+          def enable_git_annex?
+            @repository.enable_git_annex == 'true' ? true : false
           end
 
 
           def destroy_options
             {message: "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'"}
+          end
+
+
+          def default_extra_options
+            enable_git_annex? ? git_annex_repository_options : standard_repository_options
+          end
+
+
+          def standard_repository_options
+            {
+              git_http:       RedmineGitHosting::Config.get_setting(:gitolite_http_by_default),
+              git_daemon:     RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
+              git_notify:     RedmineGitHosting::Config.get_setting(:gitolite_notify_by_default, true),
+              git_annex:      false,
+              default_branch: 'master',
+              key:            RedmineGitHosting::Utils.generate_secret(64)
+            }
+          end
+
+
+          def git_annex_repository_options
+            {
+              git_http:       0,
+              git_daemon:     false,
+              git_notify:     false,
+              git_annex:      true,
+              default_branch: 'git-annex',
+              key:            RedmineGitHosting::Utils.generate_secret(64)
+            }
           end
 
       end

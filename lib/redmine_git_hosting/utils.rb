@@ -1,4 +1,5 @@
 require 'open3'
+require 'securerandom'
 
 module RedmineGitHosting
   module Utils
@@ -60,6 +61,15 @@ module RedmineGitHosting
         error_msg = "Exception occured executing `#{command} #{args.join(" ")}` : #{e.message}"
         RedmineGitHosting.logger.debug(error_msg)
         raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
+      end
+
+
+      def generate_secret(length)
+        length = length.to_i
+        secret = SecureRandom.base64(length)
+        secret = secret.gsub(/[\=\_\-\+\/]/, '')
+        secret = secret.split(//).sample(length - 1).join('')
+        secret
       end
 
     end

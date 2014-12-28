@@ -24,13 +24,16 @@
               -
           %td{ align: 'center' }
             - if repository.is_a?(Repository::Xitolite)
-              = render_feature(repository, :deployment_credentials)
-              = render_feature(repository, :post_receive_urls)
-              = render_feature(repository, :mirrors)
-              = render_feature(repository, :git_daemon)
-              = render_feature(repository, :git_http)
-              = render_feature(repository, :git_notify)
-              = render_feature(repository, :protected_branch)
+              - if repository.extra[:git_annex]
+                = render_feature(repository, :git_annex)
+              - else
+                = render_feature(repository, :deployment_credentials)
+                = render_feature(repository, :post_receive_urls)
+                = render_feature(repository, :mirrors)
+                = render_feature(repository, :git_daemon)
+                = render_feature(repository, :git_http)
+                = render_feature(repository, :git_notify)
+                = render_feature(repository, :protected_branch)
 
           %td{ class: 'buttons' }
             - if User.current.allowed_to?(:manage_repository, @project)

@@ -36,8 +36,18 @@ module GitolitableUrls
   end
 
 
+  def git_annex_url
+    "#{RedmineGitHosting::Config.get_setting(:gitolite_user)}@#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}:#{git_access_path}"
+  end
+
+
   def allowed_to_commit?
     User.current.allowed_to?(:commit_access, project) ? 'true' : 'false'
+  end
+
+
+  def allowed_to_ssh?
+    !User.current.anonymous? && User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
   end
 
 
@@ -62,6 +72,11 @@ module GitolitableUrls
   end
 
 
+  def git_annex_access
+    { url: git_annex_url, commiter: allowed_to_commit? }
+  end
+
+
   def available_urls
     hash = {}
 
@@ -70,10 +85,11 @@ module GitolitableUrls
       hash[:http]  = http_access
     end
 
-    hash[:ssh]   = ssh_access if !User.current.anonymous? && User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
+    hash[:ssh]   = ssh_access if allowed_to_ssh? && !extra[:git_annex]
     hash[:https] = https_access if extra[:git_http] == 1
     hash[:http]  = http_access if extra[:git_http] == 3
     hash[:git]   = git_access if project.is_public && extra[:git_daemon]
+    hash[:git_annex] = git_annex_access if extra[:git_annex]
 
     hash
   end

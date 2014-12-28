@@ -25,4 +25,13 @@ module ExtendRepositoriesHelper
     end if repository.new_record?
   end
 
+
+  def enable_git_annex_field(form, repository)
+    content_tag(:p) do
+      hidden_field_tag("repository[enable_git_annex]", "false") +
+      content_tag(:label, l(:label_init_repo_with_git_annex)) +
+      check_box_tag("repository[enable_git_annex]", "true")
+    end if repository.new_record?
+  end
+
 end

@@ -22,22 +22,6 @@ module Gitolitable
   end
 
 
-  # New version of extra() -- construct extra association if missing
-  def extra
-    retval = self.git_extra
-    if retval.nil?
-      retval = RepositoryGitExtra.new(default_extra_options)
-      self.extra = retval  # Should save object...
-    end
-    retval
-  end
-
-
-  def extra=(extra)
-    self.git_extra = extra
-  end
-
-
   def gitolite_hook_key
     extra[:key]
   end
@@ -48,17 +32,23 @@ module Gitolitable
   end
 
 
-  private
+  def extra
+    git_extra
+  end
 
 
-    def default_extra_options
-      {
-        git_http:       RedmineGitHosting::Config.get_setting(:gitolite_http_by_default),
-        git_daemon:     RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
-        git_notify:     RedmineGitHosting::Config.get_setting(:gitolite_notify_by_default, true),
-        default_branch: 'master'
-      }
+  def downloadable?
+    if extra[:git_annex]
+      false
+    elsif project.active?
+      User.current.allowed_to?(:download_git_revision, project)
+    else
+      User.current.allowed_to?(:download_git_revision, nil, global: true)
     end
+  end
+
+
+  private
 
 
     # Set up git urls for new repositories

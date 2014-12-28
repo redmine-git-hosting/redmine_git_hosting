@@ -73,4 +73,12 @@ module ExtendProjectsHelper
     return label, css_class, enabled
   end
 
+
+  def git_annex_feature(repository)
+    label     = l(:label_git_annex)
+    css_class = 'icon-mirrors'
+    enabled   = repository.extra[:git_annex]
+    return label, css_class, enabled
+  end
+
 end

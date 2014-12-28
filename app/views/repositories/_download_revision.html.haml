@@ -1,5 +1,5 @@
 - if @repository.is_a?(Repository::Xitolite) && RedmineGitHosting::Config.get_setting(:download_revision_enabled, true)
-  - if (@project.active? && User.current.allowed_to?(:download_git_revision, @project)) || (!@project.active? && User.current.allowed_to?(:download_git_revision, nil, :global => true))
+  - if @repository.downloadable?
 
     %div{ style: 'clear: both;' }
 

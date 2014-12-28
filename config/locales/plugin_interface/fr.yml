@@ -215,7 +215,7 @@ fr:
 
   text_scm_command_not_available_git_hosting: Ce SCM n'est pas disponible. Vérifier les paramètres dans la section administration du plugin Redmine Git Hosting.
 
-  # Create Repository
+  # Edit Repository
   label_repository_options: Options du dépôt
   label_enable_git_notify: Activer la liste de diffusion
   label_enable_git_daemon: Activer le daemon Git
@@ -227,6 +227,7 @@ fr:
   label_protected_branch: Branches Protégées
   label_repository_default_branch: Branche par défaut
   label_init_repo_with_readme: Initialiser le dépôt avec un fichier README
+  label_init_repo_with_git_annex: Initialiser le dépôt avec GitAnnex
   label_browse_repository: Parcourir les sources
   label_repository_exists_in_gitolite: Le dépôt existe dans Gitolite
 
@@ -235,6 +236,7 @@ fr:
 
   # Repository list view
   label_repository_enabled_capabilities: Fonctionnalité activées du dépôt
+  label_git_annex: GitAnnex
 
   # Repository code browser
   label_download_format: Télécharger au format %{archive_format}

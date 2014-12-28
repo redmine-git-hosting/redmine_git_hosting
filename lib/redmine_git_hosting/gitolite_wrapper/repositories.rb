@@ -3,11 +3,13 @@ module RedmineGitHosting
     class Repositories < Admin
 
       attr_reader :create_readme_file
+      attr_reader :enable_git_annex
 
 
       def initialize(*args)
         super
         @create_readme_file = options.delete(:create_readme_file){ false }
+        @enable_git_annex   = options.delete(:enable_git_annex){ false }
         # Find object or raise error
         # find_repository
       end
@@ -28,8 +30,8 @@ module RedmineGitHosting
             end
           end
 
-          # Create README file if asked and not already recovered
-          RedmineGitHosting::GitoliteHandlers::RepositoryReadmeCreator.new(repository).call if create_readme_file? && !@recovered
+          # Create README file or initialize GitAnnex
+          execute_post_create_actions(repository, @recovered)
 
           # Fetch changeset
           repository.fetch_changesets
@@ -75,6 +77,18 @@ module RedmineGitHosting
 
         def create_readme_file?
           create_readme_file == true || create_readme_file == 'true'
+        end
+
+
+        def enable_git_annex?
+          enable_git_annex == true || enable_git_annex == 'true'
+        end
+
+
+        def execute_post_create_actions(repository, recovered)
+          # Create README file if asked and not already recovered
+          RedmineGitHosting::GitoliteHandlers::RepositoryReadmeCreator.new(repository).call if create_readme_file? && !recovered
+          RedmineGitHosting::GitoliteHandlers::RepositoryGitAnnexCreator.new(repository).call if enable_git_annex? && !recovered
         end
 
     end
