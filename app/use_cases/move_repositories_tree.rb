@@ -24,7 +24,7 @@ class MoveRepositoriesTree
     def move_repositories_tree
       logger.info("Gitolite configuration has been modified : repositories hierarchy")
       logger.info("Resync all projects (root projects : '#{count}')...")
-      resync_gitolite(:move_repositories_tree, count, {flush_cache: true})
+      resync_gitolite(:move_repositories_tree, count)
     end
 
 end
