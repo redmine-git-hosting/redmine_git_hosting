@@ -30,6 +30,46 @@ class ValidateSettings
     end
 
 
+    def default_mail
+      Setting.mail_from.to_s.strip.downcase
+    end
+
+
+    def convert_time(time)
+      (time.to_f * 10).to_i / 10.0
+    end
+
+
+    def valid_domain_name?(domain)
+      domain.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/i)
+    end
+
+
+    def valid_email?(email)
+      email.match(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i)
+    end
+
+
+    def value_has_changed?(params)
+      valuehash[params] != old_valuehash[params]
+    end
+
+
+    def strip_value(value)
+      value.lstrip.rstrip
+    end
+
+
+    def normalize_path(path)
+      File.expand_path(strip_value(path), '/')
+    end
+
+
+    def sanitize_path(path)
+      path[1..-1]
+    end
+
+
     def validate_settings
       validate_auto_create
       validate_tmp_dir
@@ -52,21 +92,20 @@ class ValidateSettings
 
     def validate_tmp_dir
       # Temp directory must be absolute and not-empty
-      if valuehash[:gitolite_temp_dir] && (valuehash[:gitolite_temp_dir] != old_valuehash[:gitolite_temp_dir])
+      if valuehash[:gitolite_temp_dir] && value_has_changed?(:gitolite_temp_dir)
         # Remove old tmp directory, since about to change
         FileUtils.rm_rf(RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
 
-        stripped = valuehash[:gitolite_temp_dir].lstrip.rstrip
-
         # Get rid of extra path components
-        normalizedFile = File.expand_path(stripped, "/")
+        stripped = strip_value(valuehash[:gitolite_temp_dir])
+        gitolite_temp_dir = normalize_path(valuehash[:gitolite_temp_dir])
 
-        if (normalizedFile == "/" || stripped[0,1] != "/")
+        if gitolite_temp_dir == '/' || stripped[0,1] != '/'
           # Don't allow either root-level (absolute) or relative
           valuehash[:gitolite_temp_dir] = RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir
         else
           # Add trailing '/'
-          valuehash[:gitolite_temp_dir] = normalizedFile + "/"
+          valuehash[:gitolite_temp_dir] = gitolite_temp_dir + '/'
         end
       end
     end
@@ -77,11 +116,11 @@ class ValidateSettings
       [ :ssh_server_domain, :http_server_domain ].each do |setting|
         if valuehash[setting]
           if valuehash[setting] != ''
-            normalizedServer = valuehash[setting].lstrip.rstrip.split('/').first
-            if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
+            normalized_param = strip_value(valuehash[setting])
+            if valid_domain_name?(normalized_param)
               valuehash[setting] = old_valuehash[setting]
             else
-              valuehash[setting] = normalizedServer
+              valuehash[setting] = normalized_param
             end
           else
             valuehash[setting] = old_valuehash[setting]
@@ -92,11 +131,11 @@ class ValidateSettings
       # HTTPS server should not include any path components. Also, ports should be numeric.
       if valuehash[:https_server_domain]
         if valuehash[:https_server_domain] != ''
-          normalizedServer = valuehash[:https_server_domain].lstrip.rstrip.split('/').first
-          if (!normalizedServer.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/))
+          domain_name = strip_value(valuehash[:https_server_domain])
+          if valid_domain_name?(domain_name)
             valuehash[:https_server_domain] = old_valuehash[:https_server_domain]
           else
-            valuehash[:https_server_domain] = normalizedServer
+            valuehash[:https_server_domain] = domain_name
           end
         end
       end
@@ -106,10 +145,10 @@ class ValidateSettings
     def validate_http_subdir
       # Normalize http repository subdirectory path, should be either empty or relative and end in '/'
       if valuehash[:http_server_subdir]
-        normalizedFile = File.expand_path(valuehash[:http_server_subdir].lstrip.rstrip, "/")
-        if (normalizedFile != "/")
+        http_server_subdir = normalize_path(valuehash[:http_server_subdir])
+        if http_server_subdir != '/'
           # Clobber leading '/' add trailing '/'
-          valuehash[:http_server_subdir] = normalizedFile[1..-1] + "/"
+          valuehash[:http_server_subdir] = sanitize_path(http_server_subdir) + '/'
         else
           valuehash[:http_server_subdir] = ''
         end
@@ -121,10 +160,10 @@ class ValidateSettings
       # Normalize Config File
       if valuehash[:gitolite_config_file]
         # Must be relative!
-        normalizedFile = File.expand_path(valuehash[:gitolite_config_file].lstrip.rstrip, "/")
-        if (normalizedFile != "/")
+        gitolite_config_file = normalize_path(valuehash[:gitolite_config_file])
+        if gitolite_config_file != '/'
           # Clobber leading '/'
-          valuehash[:gitolite_config_file] = normalizedFile[1..-1]
+          valuehash[:gitolite_config_file] = sanitize_path(gitolite_config_file)
         else
           valuehash[:gitolite_config_file] = RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
         end
@@ -142,10 +181,10 @@ class ValidateSettings
       # Normalize paths, should be relative and end in '/'
       [ :gitolite_global_storage_dir, :gitolite_recycle_bin_dir, :gitolite_local_code_dir ].each do |setting|
         if valuehash[setting]
-          normalizedFile = File.expand_path(valuehash[setting].lstrip.rstrip, "/")
-          if (normalizedFile != "/")
+          normalized_param = normalize_path(valuehash[setting])
+          if normalized_param != '/'
             # Clobber leading '/' add trailing '/'
-            valuehash[setting] = normalizedFile[1..-1] + "/"
+            valuehash[setting] = sanitize_path(normalized_param) + '/'
           else
             valuehash[setting] = old_valuehash[setting]
           end
@@ -155,10 +194,10 @@ class ValidateSettings
 
       # Normalize Redmine Subdirectory path, should be either empty or relative and end in '/'
       if valuehash[:gitolite_redmine_storage_dir]
-        normalizedFile = File.expand_path(valuehash[:gitolite_redmine_storage_dir].lstrip.rstrip, "/")
-        if (normalizedFile != "/")
+        gitolite_redmine_storage_dir = normalize_path(valuehash[:gitolite_redmine_storage_dir])
+        if gitolite_redmine_storage_dir != '/'
           # Clobber leading '/' add trailing '/'
-          valuehash[:gitolite_redmine_storage_dir] = normalizedFile[1..-1] + "/"
+          valuehash[:gitolite_redmine_storage_dir] = sanitize_path(gitolite_redmine_storage_dir) + '/'
         else
           valuehash[:gitolite_redmine_storage_dir] = ''
         end
@@ -194,7 +233,7 @@ class ValidateSettings
       # Exclude bad expire times (and exclude non-numbers)
       if valuehash[:gitolite_recycle_bin_expiration_time]
         if valuehash[:gitolite_recycle_bin_expiration_time].to_f > 0
-          valuehash[:gitolite_recycle_bin_expiration_time] = "#{(valuehash[:gitolite_recycle_bin_expiration_time].to_f * 10).to_i / 10.0}"
+          valuehash[:gitolite_recycle_bin_expiration_time] = convert_time(valuehash[:gitolite_recycle_bin_expiration_time])
         else
           valuehash[:gitolite_recycle_bin_expiration_time] = old_valuehash[:gitolite_recycle_bin_expiration_time]
         end
@@ -206,7 +245,7 @@ class ValidateSettings
       # Validate ssh port > 0 and < 65537 (and exclude non-numbers)
       if valuehash[:gitolite_server_port]
         if valuehash[:gitolite_server_port].to_i > 0 and valuehash[:gitolite_server_port].to_i < 65537
-          valuehash[:gitolite_server_port] = "#{valuehash[:gitolite_server_port].to_i}"
+          valuehash[:gitolite_server_port] = valuehash[:gitolite_server_port]
         else
           valuehash[:gitolite_server_port] = old_valuehash[:gitolite_server_port]
         end
@@ -218,16 +257,7 @@ class ValidateSettings
       # Validate gitolite_notify mail list
       [ :gitolite_notify_global_include, :gitolite_notify_global_exclude ].each do |setting|
         if !valuehash[setting].empty?
-          valuehash[setting] = valuehash[setting].select{|mail| !mail.blank?}
-          has_error = 0
-
-          valuehash[setting].each do |item|
-            has_error += 1 unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-          end unless valuehash[setting].empty?
-
-          if has_error > 0
-            valuehash[setting] = old_valuehash[setting]
-          end
+          valuehash[setting] = valuehash[setting].select{ |m| !m.blank? }.select{ |m| valid_email?(m) }
         end
       end
 
@@ -242,21 +272,17 @@ class ValidateSettings
 
       # Validate global sender address
       if valuehash[:gitolite_notify_global_sender_address].blank?
-        valuehash[:gitolite_notify_global_sender_address] = Setting.mail_from.to_s.strip.downcase
-      else
-        if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(valuehash[:gitolite_notify_global_sender_address])
-          valuehash[:gitolite_notify_global_sender_address] = old_valuehash[:gitolite_notify_global_sender_address]
-        end
+        valuehash[:gitolite_notify_global_sender_address] = default_mail
+      elsif !valid_email?(valuehash[:gitolite_notify_global_sender_address])
+        valuehash[:gitolite_notify_global_sender_address] = old_valuehash[:gitolite_notify_global_sender_address]
       end
 
 
       # Validate git author address
       if valuehash[:git_config_email].blank?
-        valuehash[:git_config_email] = Setting.mail_from.to_s.strip.downcase
-      else
-        if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(valuehash[:git_config_email])
-          valuehash[:git_config_email] = old_valuehash[:git_config_email]
-        end
+        valuehash[:git_config_email] = default_mail
+      elsif !valid_email?(valuehash[:git_config_email])
+        valuehash[:git_config_email] = old_valuehash[:git_config_email]
       end
     end
 
