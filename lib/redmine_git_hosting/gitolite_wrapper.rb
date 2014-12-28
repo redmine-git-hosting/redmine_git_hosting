@@ -82,7 +82,7 @@ module RedmineGitHosting
 
       def call_gitolite_wrapper(admin, action, object, options = {})
         klass = find_gitolite_wrapper(action)
-        unless klass.nil?
+        if !klass.nil?
           klass.new(admin, action, object, options).send(action)
         else
           raise RedmineGitHosting::Error::GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
