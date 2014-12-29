@@ -1,5 +1,6 @@
 require 'open3'
 require 'securerandom'
+require 'uri'
 
 module RedmineGitHosting
   module Utils
@@ -70,6 +71,14 @@ module RedmineGitHosting
         secret = secret.gsub(/[\=\_\-\+\/]/, '')
         secret = secret.split(//).sample(length - 1).join('')
         secret
+      end
+
+
+      def valid_url?(url)
+        uri = URI.parse(url)
+        uri.kind_of?(URI::HTTP)
+      rescue URI::InvalidURIError
+        false
       end
 
     end

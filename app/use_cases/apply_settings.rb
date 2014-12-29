@@ -90,6 +90,7 @@ class ApplySettings
       ## Gitolite hooks config has changed, update our .gitconfig!
       if value_has_changed?(:gitolite_hooks_debug)        ||
          value_has_changed?(:gitolite_force_hooks_update) ||
+         value_has_changed?(:gitolite_hooks_url)          ||
          value_has_changed?(:gitolite_hooks_are_asynchronous)
 
         # Need to update our .gitconfig

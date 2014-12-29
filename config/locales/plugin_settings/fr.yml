@@ -91,6 +91,7 @@ fr:
   label_gitolite_hooks_debug: Lancer les hooks en mode debug
   label_gitolite_hooks_url: URL des hooks
   label_gitolite_hooks_namespace: Espace de nom Git des hooks
+  label_default_gitolite_hooks_url: URL par défaut
 
   # Gitolite Cache Config
   label_tab_cache: Cache

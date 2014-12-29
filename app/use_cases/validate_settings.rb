@@ -89,6 +89,7 @@ class ValidateSettings
       validate_git_notifications_list
       validate_git_notifications_intersection
       validate_emails
+      validate_gitolite_hooks_url
     end
 
 
@@ -280,6 +281,15 @@ class ValidateSettings
           valuehash[setting] = default_mail
         elsif !valid_email?(valuehash[setting])
           valuehash[setting] = old_valuehash[setting]
+        end
+      end
+    end
+
+
+    def validate_gitolite_hooks_url
+      if valuehash[:gitolite_hooks_url]
+        if !RedmineGitHosting::Utils.valid_url?(valuehash[:gitolite_hooks_url])
+          valuehash[:gitolite_hooks_url] = old_valuehash[:gitolite_hooks_url]
         end
       end
     end

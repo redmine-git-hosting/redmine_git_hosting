@@ -84,7 +84,7 @@ module RedmineGitHosting::GitoliteModules
 
 
       def gitolite_hooks_url
-        [Setting.protocol, '://', Setting.host_name, '/githooks/post-receive/redmine'].join
+        [RedmineGitHosting::Config.get_setting(:gitolite_hooks_url), '/githooks/post-receive/redmine'].join
       end
 
 
