@@ -3,8 +3,8 @@ module RedmineGitHosting
     class AddPluginIcon < Redmine::Hook::ViewListener
 
       def view_layouts_base_html_head(context = {})
-        header = ""
-        header << stylesheet_link_tag(:application, :plugin => 'redmine_git_hosting') + "\n"
+        header = ''
+        header << stylesheet_link_tag(:application, plugin: 'redmine_git_hosting') + "\n"
         header
       end
 
