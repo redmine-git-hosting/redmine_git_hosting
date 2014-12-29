@@ -17,30 +17,29 @@ class SmartHttpController < ApplicationController
 
 
   def index
+    # Build a new request
     @request = Rack::Request.new(request.env)
 
+    # Get Git command to call from params
     command, @requested_file, @rpc = match_routing(@request)
 
+    # Handle errors
     return render_method_not_allowed if command == 'not_allowed'
     return render_not_found if !command
 
-    logger.info("###### AUTHENTICATED ######")
-    logger.info("command         : #{command}")
-    logger.info("rpc             : #{@rpc}")
+    # Log infos
+    debug_logs(command)
+
+    # Set authenticated.
     if !@user.nil?
-      logger.info("user_name       : #{@user.login}")
+      @authenticated = true
+    elsif @project.is_public
       @authenticated = true
     else
-      if @project.is_public
-        logger.info("user_name       : anonymous (project is public)")
-        @authenticated = true
-      else
-        @authenticated = false
-      end
+      @authenticated = false
     end
 
-    logger.info("##########################")
-
+    # Call the right method.
     self.method(command).call()
   end
 
@@ -48,37 +47,39 @@ class SmartHttpController < ApplicationController
   private
 
 
+    def debug_logs(command)
+      logger.info("###### AUTHENTICATED ######")
+      logger.info("command         : #{command}")
+      logger.info("rpc             : #{@rpc}")
+      logger.info("project name    : #{@project.identifier}")
+      logger.info("public project  : #{@allow_anonymous_read}")
+      logger.info("repository name : #{@repository.gitolite_repository_name}")
+      logger.info("repository path : #{@repository.gitolite_repository_path}")
+      logger.info("user_name       : #{@user.login}") if !@user.nil?
+      logger.info("user_name       : anonymous (project is public)") if @allow_anonymous_read
+      logger.info("##########################")
+    end
+
+
     def extract_parameters
       git_params = params[:git_params].split('/')
       @repo_path = params[:repo_path].gsub(params[:prefix], '')
       @is_push   = (git_params[0] == 'git-receive-pack' || params[:service] == 'git-receive-pack')
-
-      logger.info("###### AUTHENTICATION ######")
-      logger.info("git_params      : #{git_params.join(', ')}")
-      logger.info("repo_path       : #{@repo_path}")
-      logger.info("is_push         : #{@is_push}")
     end
 
 
     def find_repository
-      @repository = Repository::Xitolite.find_by_path(@repo_path, loose: true)
-
-      if !@repository
-        logger.error("Repository not found, exiting !")
-        logger.error("############################")
+      repository = Repository::Xitolite.find_by_path(@repo_path, loose: true)
+      if !repository
+        logger.error("SmartHttp : repository not found at '#{@repo_path}', exiting !")
         return render_not_found
-      elsif @repository.extra[:git_http] == 0
-        logger.error("SmartHttp is disabled for this repository '#{@repository.gitolite_repository_name}', exiting !")
-        logger.error("############################")
+      elsif repository.extra[:git_http] == 0
+        logger.error("SmartHttp is disabled for this repository '#{repository.gitolite_repository_name}', exiting !")
         return render_no_access
       else
-        @project = @repository.project
+        @repository = repository
+        @project    = @repository.project
         @allow_anonymous_read = @project.is_public
-
-        logger.info("project name    : #{@project.identifier}")
-        logger.info("public project  : #{@allow_anonymous_read}")
-        logger.info("repository name : #{@repository.gitolite_repository_name}")
-        logger.info("repository path : #{@repository.gitolite_repository_path}")
       end
     end
 
@@ -87,19 +88,11 @@ class SmartHttpController < ApplicationController
       # PUSH CASE
       if @is_push
         if !is_ssl?
-          logger.error("Your are trying to push data without SSL!")
-          logger.error("############################")
+          logger.error("SmartHttp : your are trying to push data without SSL!, exiting !")
           return render_no_access
-        else
-          if @repository.extra[:git_http] == 1
-            logger.info("Valid push")
-          elsif @repository.extra[:git_http] == 2
-            logger.info("Valid push")
-          elsif @repository.extra[:git_http] == 3
-            logger.info("Invalid push, HTTPS is disabled for this repository (HTTP only)")
-            logger.error("############################")
-            return render_no_access
-          end
+        elsif @repository.extra[:git_http] == 3
+          logger.info("SmartHttp: invalid push, HTTPS is disabled for this repository (HTTP only), exiting !")
+          return render_no_access
         end
       end
     end
@@ -112,9 +105,7 @@ class SmartHttpController < ApplicationController
       # Push requires valid SSL
       # Read is ok over HTTP for public projects
       if @is_push || !@allow_anonymous_read
-
         authentication_valid = false
-
         authenticate_or_request_with_http_basic do |login, password|
           @user = User.find_by_login(login)
           if !@user.nil?
@@ -125,23 +116,22 @@ class SmartHttpController < ApplicationController
 
           authentication_valid
         end
-
       end
-
-      logger.info("##########################")
-
-      return authentication_valid
+      authentication_valid
     end
 
 
     def service_rpc
-      return render_no_access if !has_access(@rpc, true)
+      # Check access
+      return render_no_access if !has_access?(@rpc, true)
 
+      # Build Git command
       cmd_args = git_params.concat([@rpc, '--stateless-rpc', @repository.gitolite_repository_path])
 
-      self.response.status = 200
-      self.response.headers["Content-Type"]  = "application/x-git-%s-result" % @rpc
-      self.response.headers["Last-Modified"] = Time.now.to_s
+      # Send headers
+      service_rpc_headers(@rpc)
+
+      # Send response
       self.response_body = Enumerator.new do |y|
         begin
           y << RedmineGitHosting::GitoliteWrapper.sudo_pipe_capture(*cmd_args, read_body)
@@ -152,28 +142,48 @@ class SmartHttpController < ApplicationController
     end
 
 
+    def service_rpc_headers(rpc)
+      self.response.status = 200
+      self.response.headers["Content-Type"]  = "application/x-git-#{rpc}-result"
+      self.response.headers["Last-Modified"] = Time.now.to_s
+    end
+
+
+    def get_info_refs_headers(rpc)
+      self.response.status = 200
+      self.response.headers["Content-Type"] = "application/x-git-#{rpc}-advertisement"
+      self.response.headers["Content-Transfer-Encoding"] = "binary"
+    end
+
+
     def get_info_refs
+      # Get service name (git-upload-pack or git-receive-pack)
       service_name = get_service_type
 
-      if has_access(service_name)
-        refs = git_command(service_name, '--stateless-rpc', '--advertise-refs', @repository.gitolite_repository_path)
-
-        content_type = "application/x-git-#{service_name}-advertisement"
-
-        self.response.status = 200
-        self.response.headers["Content-Type"] = content_type
-        self.response.headers["Content-Transfer-Encoding"] = "binary"
+      # Check access
+      if has_access?(service_name)
+        # Send headers
+        get_info_refs_headers(service_name)
         hdr_nocache
 
+        # Send response
         self.response_body = Enumerator.new do |y|
           y << pkt_write("# service=git-#{service_name}\n")
           y << pkt_flush
-          y << refs
+          y << git_command(service_name, '--stateless-rpc', '--advertise-refs', @repository.gitolite_repository_path)
         end
 
       else
         dumb_info_refs
       end
+    end
+
+
+    def get_service_type
+      service_type = params[:service]
+      return false if !service_type
+      return false if service_type[0, 4] != 'git-'
+      service_type.gsub('git-', '')
     end
 
 
@@ -259,47 +269,34 @@ class SmartHttpController < ApplicationController
     end
 
 
-    def has_access(rpc, check_content_type = false)
-      if check_content_type
-        if request.content_type != "application/x-git-%s-request" % rpc
-          logger.error("Invalid content type #{request.content_type}")
-          return false
-        end
+    def has_access?(rpc, check_content_type = false)
+      if check_content_type && request.content_type != "application/x-git-#{rpc}-request"
+        logger.error("Invalid content type #{request.content_type}")
+        return false
       end
 
-      if !VALID_SERVICE_TYPES.include? rpc
+      if !VALID_SERVICE_TYPES.include?(rpc)
         logger.error("Invalid service type #{rpc}")
         return false
       end
 
-      return get_config_setting(rpc)
+      get_config_setting(rpc)
     end
 
 
-    def internal_send_file(requested_file, content_type)
-      logger.info("###### SEND FILE ######")
-      logger.info("requested_file : #{requested_file}")
-      logger.info("content_type   : #{content_type}")
-
-      if !File.exists?(requested_file)
-        logger.error("error          : File not found!")
-        logger.error("#######################")
-        return render_not_found
+    def get_config_setting(service_name)
+      service_name = service_name.gsub('-', '')
+      if service_name == 'uploadpack'
+        setting = get_git_config("http.#{service_name}")
+        return setting != 'false'
+      else
+        return @authenticated
       end
-
-      last_modified = File.mtime(requested_file).httpdate
-      file_size = File.size?(requested_file)
-
-      logger.info("last_modified  : #{last_modified}")
-      logger.info("file_size      : #{file_size}")
-      logger.info("#######################")
+    end
 
 
-      self.response.status = 200
-      self.response.headers["Last-Modified"] = last_modified
-      self.response.headers["Content-Length"] = file_size.to_s
-
-      send_file requested_file, type: content_type
+    def get_git_config(config_name)
+      git_command('config', config_name).chomp
     end
 
 
@@ -318,8 +315,22 @@ class SmartHttpController < ApplicationController
     end
 
 
+    def internal_send_file(requested_file, content_type)
+      if !File.exists?(requested_file)
+        return render_not_found
+      else
+        last_modified = File.mtime(requested_file).httpdate
+        file_size = File.size?(requested_file)
+        self.response.status = 200
+        self.response.headers["Last-Modified"]  = last_modified
+        self.response.headers["Content-Length"] = file_size.to_s
+        send_file requested_file, type: content_type
+      end
+    end
+
+
     def is_ssl?
-      return request.ssl? || (request.env['HTTPS']).to_s == 'on' || (request.env['HTTP_X_FORWARDED_PROTO']).to_s == 'https' || (request.env['HTTP_X_FORWARDED_SSL']).to_s == 'on'
+      request.ssl? || (request.env['HTTPS']).to_s == 'on' || (request.env['HTTP_X_FORWARDED_PROTO']).to_s == 'https' || (request.env['HTTP_X_FORWARDED_SSL']).to_s == 'on'
     end
 
 
@@ -331,30 +342,6 @@ class SmartHttpController < ApplicationController
       else
         input = request.body.read
       end
-    end
-
-
-    def get_service_type
-      service_type = params[:service]
-      return false if !service_type
-      return false if service_type[0, 4] != 'git-'
-      service_type.gsub('git-', '')
-    end
-
-
-    def get_config_setting(service_name)
-      service_name = service_name.gsub('-', '')
-      if service_name == 'uploadpack'
-        setting = get_git_config("http.#{service_name}")
-        return setting != 'false'
-      else
-        return @authenticated
-      end
-    end
-
-
-    def get_git_config(config_name)
-      git_command('config', config_name).chomp
     end
 
 
