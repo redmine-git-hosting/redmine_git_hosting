@@ -45,6 +45,11 @@ class ValidateSettings
     end
 
 
+    def valid_server_port?(port)
+      port.to_i > 0 && port.to_i < 65537
+    end
+
+
     def valid_domain_name?(domain)
       domain.match(/^[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?$/i)
     end
@@ -76,6 +81,7 @@ class ValidateSettings
 
 
     def validate_settings
+      cleanup_tmp_dir
       validate_auto_create
       validate_tmp_dir
       validate_mandatory_domain_name
@@ -93,6 +99,16 @@ class ValidateSettings
     end
 
 
+    def cleanup_tmp_dir
+      if valuehash[:gitolite_temp_dir] && value_has_changed?(:gitolite_temp_dir) ||
+         valuehash[:gitolite_server_port] && value_has_changed?(:gitolite_server_port)
+
+        # Remove old tmp directory, since about to change
+        FileUtils.rm_rf(RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
+      end
+    end
+
+
     def validate_auto_create
       ## If we don't auto-create repository, we cannot create README file
       valuehash[:init_repositories_on_create] = 'false' if valuehash[:all_projects_use_git] == 'false'
@@ -102,9 +118,6 @@ class ValidateSettings
     def validate_tmp_dir
       # Temp directory must be absolute and not-empty
       if valuehash[:gitolite_temp_dir] && value_has_changed?(:gitolite_temp_dir)
-        # Remove old tmp directory, since about to change
-        FileUtils.rm_rf(RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
-
         # Get rid of extra path components
         stripped = strip_value(valuehash[:gitolite_temp_dir])
         gitolite_temp_dir = normalize_path(valuehash[:gitolite_temp_dir])
@@ -246,9 +259,7 @@ class ValidateSettings
     def validate_git_server_port
       # Validate ssh port > 0 and < 65537 (and exclude non-numbers)
       if valuehash[:gitolite_server_port]
-        if valuehash[:gitolite_server_port].to_i > 0 and valuehash[:gitolite_server_port].to_i < 65537
-          valuehash[:gitolite_server_port] = valuehash[:gitolite_server_port]
-        else
+        if !valid_server_port?(valuehash[:gitolite_server_port])
           valuehash[:gitolite_server_port] = old_valuehash[:gitolite_server_port]
         end
       end
