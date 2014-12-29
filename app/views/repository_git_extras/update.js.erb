@@ -1,2 +1,2 @@
-$('#xitolite-options').html("<%= escape_javascript(render partial: 'repositories/xitolite_options', locals: {repository: @repository}) %>");
+$('#xitolite-options').html("<%= escape_javascript(render 'repositories/xitolite_options', repository: @repository) %>");
 $('#xitolite-messages').html("<%= escape_javascript render_flash_messages %>");

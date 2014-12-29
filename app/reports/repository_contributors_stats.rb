@@ -15,14 +15,14 @@ class RepositoryContributorsStats
     committers = commits_per_author_with_aliases
 
     # sort by commits (descending)
-    committers.sort! {|x, y| y[:commits] <=> x[:commits]}
+    committers.sort! { |x, y| y[:commits] <=> x[:commits] }
 
     committers.each do |committer_hash|
       commits = {}
 
       committer_hash[:committers].each do |committer|
         c = Changeset.where("repository_id = ? AND committer = ?", repository.id, committer).group(:commit_date).order(:commit_date).count
-        commits = commits.merge(c){|key, oldval, newval| newval + oldval}
+        commits = commits.merge(c) { |key, oldval, newval| newval + oldval }
       end
 
       commits = Hash[commits.sort]
@@ -32,7 +32,7 @@ class RepositoryContributorsStats
       commits_data[:total_commits] = committer_hash[:commits]
       commits_data[:categories]    = commits.keys
       commits_data[:series]        = []
-      commits_data[:series].push({:name => l(:label_commit_plural), :data => commits.values})
+      commits_data[:series].push({ name: l(:label_commit_plural), data: commits.values })
       data.push(commits_data)
     end
 
@@ -45,8 +45,8 @@ class RepositoryContributorsStats
     data = {}
     data[:categories] = merged.map { |x| x[:name] }
     data[:series] = []
-    data[:series].push({name: l(:label_commit_plural), data: merged.map { |x| x[:commits] }})
-    data[:series].push({name: l(:label_change_plural), data: merged.map { |x| x[:changes] }})
+    data[:series].push({ name: l(:label_commit_plural), data: merged.map { |x| x[:commits] }})
+    data[:series].push({ name: l(:label_change_plural), data: merged.map { |x| x[:changes] }})
     data
   end
 
@@ -73,8 +73,8 @@ class RepositoryContributorsStats
       Changeset.where(repository_id: repository.id).where("user_id IS NOT NULL").group(:committer).includes(:user).each do |x|
         name = "#{x.user.firstname} #{x.user.lastname}"
         registered_committers << x.committer
-        user_committer_mapping[[name,x.user.mail]] ||= []
-        user_committer_mapping[[name,x.user.mail]] << x.committer
+        user_committer_mapping[[name, x.user.mail]] ||= []
+        user_committer_mapping[[name, x.user.mail]] << x.committer
       end
 
       merged = []
@@ -83,7 +83,7 @@ class RepositoryContributorsStats
         next if registered_committers.include?(committer)
 
         name = committer.gsub(%r{<.+@.+>}, '').strip
-        mail = committer[/<(.+@.+)>/,1]
+        mail = committer[/<(.+@.+)>/, 1]
         merged << { name: name, mail: mail, commits: count, changes: changes_by_author[committer] || 0, committers: [committer] }
       end
       user_committer_mapping.each do |identity, committers|
@@ -97,7 +97,7 @@ class RepositoryContributorsStats
       end
 
       # sort by name
-      merged.sort! {|x, y| x[:name] <=> y[:name]}
+      merged.sort! { |x, y| x[:name] <=> y[:name] }
 
       # merged = merged + [{name:"",commits:0,changes:0}]*(10 - merged.length) if merged.length < 10
       return merged

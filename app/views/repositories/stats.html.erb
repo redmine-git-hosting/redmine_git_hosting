@@ -16,15 +16,15 @@
   </ul>
 
   <div id="statistics-global">
-    <%= render partial: 'repositories/statistics/global', locals: { repository: @repository } %>
+    <%= render 'repositories/statistics/global', repository: @repository %>
   </div>
 
   <div id="statistics-commits">
-    <%= render partial: 'repositories/statistics/commits', locals: { repository: @repository } %>
+    <%= render 'repositories/statistics/commits', repository: @repository %>
   </div>
 
   <div id="statistics-contributors">
-    <%= render partial: 'repositories/statistics/contributors', locals: { repository: @repository } %>
+    <%= render 'repositories/statistics/contributors', repository: @repository %>
   </div>
 
 </div>

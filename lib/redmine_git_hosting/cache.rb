@@ -211,7 +211,7 @@ module RedmineGitHosting
         EOF
       end
       # Call new function once
-      self.send(my_method,*args,&block)
+      self.send(my_method, *args, &block)
     end
 
 

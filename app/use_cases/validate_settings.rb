@@ -122,7 +122,7 @@ class ValidateSettings
         stripped = strip_value(valuehash[:gitolite_temp_dir])
         gitolite_temp_dir = normalize_path(valuehash[:gitolite_temp_dir])
 
-        if gitolite_temp_dir == '/' || stripped[0,1] != '/'
+        if gitolite_temp_dir == '/' || stripped[0, 1] != '/'
           # Don't allow either root-level (absolute) or relative
           valuehash[:gitolite_temp_dir] = RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir
         else

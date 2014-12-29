@@ -2,4 +2,4 @@
                     url:  repository_git_notifications_path(@repository),
                     html: { method: :post, class: 'tabular', remote: true } do |f|
 
-  = render partial: 'form', locals: { f: f }
+  = render 'form', f: f

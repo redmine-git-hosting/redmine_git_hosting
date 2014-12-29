@@ -20,4 +20,4 @@
       - if user_allowed_to(:view_repository_protected_branches, @repository.project)
         %li{ id: 'tab-repository_protected_branches' }= link_to label_with_icon(l(:label_protected_branches), 'fa-shield'), repository_protected_branches_path(@repository)
 
-  = render partial: 'javascript'
+  = render 'javascript'

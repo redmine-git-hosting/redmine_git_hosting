@@ -54,7 +54,7 @@ module RedmineGitHosting
           repo_key = keys_for_owner(key.owner).find_all{|k| k.location == key.location && k.owner == key.owner}.first
 
           # Add it if not found
-          unless repo_key
+          if repo_key.nil?
             repo_key = build_gitolite_key(key)
             admin.add_key(repo_key)
           else
