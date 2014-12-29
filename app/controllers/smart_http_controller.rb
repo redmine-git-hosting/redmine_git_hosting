@@ -330,7 +330,22 @@ class SmartHttpController < ApplicationController
 
 
     def is_ssl?
-      request.ssl? || (request.env['HTTPS']).to_s == 'on' || (request.env['HTTP_X_FORWARDED_PROTO']).to_s == 'https' || (request.env['HTTP_X_FORWARDED_SSL']).to_s == 'on'
+      request.ssl? || https_headers? || x_forwarded_proto_headers? || x_forwarded_ssl_headers?
+    end
+
+
+    def https_headers?
+      request.env['HTTPS'].to_s == 'on'
+    end
+
+
+    def x_forwarded_proto_headers?
+      request.env['HTTP_X_FORWARDED_PROTO'].to_s == 'https'
+    end
+
+
+    def x_forwarded_ssl_headers?
+      request.env['HTTP_X_FORWARDED_SSL'].to_s == 'on'
     end
 
 
