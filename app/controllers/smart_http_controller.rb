@@ -67,23 +67,19 @@ class SmartHttpController < ApplicationController
       logger.error("Repository not found, exiting !")
       logger.error("############################")
       return render_not_found
-    elsif !@repository.is_a?(Repository::Xitolite)
-      logger.error("Repository is not a Gitolite repository, exiting !")
-      logger.error("############################")
-      return render_not_found
     elsif @repository.extra[:git_http] == 0
       logger.error("SmartHttp is disabled for this repository '#{@repository.gitolite_repository_name}', exiting !")
       logger.error("############################")
       return render_no_access
+    else
+      @project = @repository.project
+      @allow_anonymous_read = @project.is_public
+
+      logger.info("project name    : #{@project.identifier}")
+      logger.info("public project  : #{@allow_anonymous_read}")
+      logger.info("repository name : #{@repository.gitolite_repository_name}")
+      logger.info("repository path : #{@repository.gitolite_repository_path}")
     end
-
-    @project = @repository.project
-    @allow_anonymous_read = @project.is_public
-
-    logger.info("project name    : #{@project.identifier}")
-    logger.info("public project  : #{@allow_anonymous_read}")
-    logger.info("repository name : #{@repository.gitolite_repository_name}")
-    logger.info("repository path : #{@repository.gitolite_repository_path}")
   end
 
 
