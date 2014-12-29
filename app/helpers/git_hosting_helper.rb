@@ -9,24 +9,18 @@ module GitHostingHelper
   end
 
 
-  def label_with_icon(label, icon, inverse = false, fixed = false)
-    css_class = [ "fa", "fa-lg" ]
+  def label_with_icon(label, icon, opts = {})
+    inverse = opts.delete(:inverse){ false }
+    fixed   = opts.delete(:fixed){ false }
 
+    css_class = [ 'fa', 'fa-lg' ]
     css_class.push(icon)
+    css_class.push('fa-inverse') if inverse
+    css_class.push('fa-fw') if fixed
+    css_class.delete('fa-lg') if fixed
 
-    if inverse
-      css_class.push("fa-inverse")
-    end
-
-    if fixed
-      css_class.push("fa-fw")
-      css_class.delete("fa-lg")
-    end
-
-    css_class = css_class.join(" ")
-    content = content_tag(:i, "", class: css_class) + label
-
-    return content.html_safe
+    klass = [opts.delete(:class), css_class].flatten.compact
+    content_tag(:i, '', class: klass) + label
   end
 
 

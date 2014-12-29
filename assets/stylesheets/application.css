@@ -4,15 +4,7 @@ PLUGIN ICONS
 #admin-menu a.redmine-git-hosting { background-image: url(../images/git_icon.png); }
 
 .icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
-.icon-push { background-image: url("../images/icon-divide.png"); }
 .icon-clone { background-image: url("../images/clone.png"); }
-.icon-deployment-credentials { background-image: url("../images/textfield_key.png"); }
-.icon-post-receive-urls { background-image: url("../images/link.png"); }
-.icon-mirrors { background-image: url("../images/table_multiple.png"); }
-.icon-git-daemon { background-image: url("../images/changeset.png"); }
-.icon-git-smarthttp { background-image: url("../images/web.png"); }
-.icon-git-notify { background-image: url("../images/email.png"); }
-.icon-git-protected-branch { background-image: url("../images/locked.png"); }
 
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }
@@ -70,7 +62,7 @@ PLUGIN SETTINGS
 /*
 REPOSITORY EDIT
 */
-#repository-tabs i {
+#repository-tabs li i {
   padding-right: 10px;
 }
 
@@ -132,10 +124,6 @@ REPOSITORY VIEW
   vertical-align: middle;
   text-align: center;
   transition: background-color 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
-}
-
-div.flash.warning, .conflict {
-  background: url("../images/warning.png") no-repeat scroll 8px 18px #FFEBC1;
 }
 
 
@@ -293,4 +281,9 @@ ul, ol {
 .row > .col-md-6,
 .row > .col-md-12 {
   padding: 10px 10px 0;
+}
+
+/*FONT AWESOME*/
+.fa-align {
+ padding-right: 5px;
 }

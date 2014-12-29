@@ -52,28 +52,28 @@ module GitolitableUrls
 
 
   def ssh_access
-    { url: ssh_url, commiter: allowed_to_commit? }
+    { url: ssh_url, committer: allowed_to_commit? }
   end
 
 
   ## Unsecure channels (clear password), commit is disabled
   def http_access
-    { url: http_url, commiter: 'false' }
+    { url: http_url, committer: 'false' }
   end
 
 
   def https_access
-    { url: https_url, commiter: allowed_to_commit? }
+    { url: https_url, committer: allowed_to_commit? }
   end
 
 
   def git_access
-    { url: git_url, commiter: 'false' }
+    { url: git_url, committer: 'false' }
   end
 
 
   def git_annex_access
-    { url: git_annex_url, commiter: allowed_to_commit? }
+    { url: git_annex_url, committer: allowed_to_commit? }
   end
 
 

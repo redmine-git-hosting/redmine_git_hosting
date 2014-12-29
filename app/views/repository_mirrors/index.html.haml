@@ -26,7 +26,7 @@
 
             %td{ class: 'buttons' }
               - if user_allowed_to(:edit_repository_mirrors, @project)
-                = link_to l(:label_mirror_push), push_repository_mirror_path(@repository, mirror), title: l(:label_mirror_push_title), alt: l(:label_mirror_push_title), class: 'icon icon-push modal-box-close-only'
+                = link_to label_with_icon(l(:label_mirror_push), 'fa-rocket', class: 'fa-align'), push_repository_mirror_path(@repository, mirror), class: 'modal-box-close-only'
                 = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), class: 'icon icon-edit modal-box'
                 = link_to l(:button_delete), repository_mirror_path(@repository, mirror), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
 

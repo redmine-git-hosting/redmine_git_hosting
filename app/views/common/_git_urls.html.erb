@@ -53,7 +53,7 @@
 
     <% repositories.each do |repository| %>
       <% repository.available_urls.each do |key, value| %>
-        access_list["git_url_repository_<%= "#{repository.id}_#{key}" %>"] = { "url": encodeURI("<%= j value[:url] %>"), "commiter": <%= j value[:commiter] %> };
+        access_list["git_url_repository_<%= "#{repository.id}_#{key}" %>"] = { "url": encodeURI("<%= j value[:url] %>"), "committer": <%= j value[:committer] %> };
       <% end %>
     <% end %>
 
@@ -76,7 +76,7 @@
         var access = access_list[key];
 
         $('#git_url_text_<%= el_name %>').val(access.url);
-        $("#git_url_permissions_<%= el_name %>").html(access.commiter == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
+        $("#git_url_permissions_<%= el_name %>").html(access.committer == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
 
         $('<%= box_name %> .git_url_list li').on('click', function(){
           var key    = $(this).attr('id');
@@ -85,7 +85,7 @@
           $('<%= box_name %> .git_url_list li').removeClass('selected');
           $(this).addClass('selected');
           $('#git_url_text_<%= el_name %>').val(access.url);
-          $("#git_url_permissions_<%= el_name %>").html(access.commiter == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
+          $("#git_url_permissions_<%= el_name %>").html(access.committer == true ? "<%= l(:label_read_write_permission) %>" : "<%= l(:label_read_only_permission) %>");
         });
       <% end %>
     });
