@@ -61,7 +61,7 @@ class SmartHttpController < ApplicationController
 
 
     def find_repository
-      @repository = Repository::Xitolite.find_by_path(@repo_path, :loose => true)
+      @repository = Repository::Xitolite.find_by_path(@repo_path, loose: true)
 
       if !@repository
         logger.error("Repository not found, exiting !")
@@ -299,7 +299,7 @@ class SmartHttpController < ApplicationController
       self.response.headers["Last-Modified"] = last_modified
       self.response.headers["Content-Length"] = file_size.to_s
 
-      send_file requested_file, :type => content_type
+      send_file requested_file, type: content_type
     end
 
 
@@ -410,17 +410,17 @@ class SmartHttpController < ApplicationController
     # ------------------------
 
     def hdr_nocache
-      self.response.headers["Expires"] = "Fri, 01 Jan 1980 00:00:00 GMT"
-      self.response.headers["Pragma"] = "no-cache"
+      self.response.headers["Expires"]       = "Fri, 01 Jan 1980 00:00:00 GMT"
+      self.response.headers["Pragma"]        = "no-cache"
       self.response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
     end
 
 
     def hdr_cache_forever
       now = Time.now().to_i
-      self.response.headers["Date"] = now.to_s
-      self.response.headers["Expires"] = (now + 31536000).to_s;
-      self.response.headers["Cache-Control"] = "public, max-age=31536000";
+      self.response.headers["Date"]          = now.to_s
+      self.response.headers["Expires"]       = (now + 31536000).to_s
+      self.response.headers["Cache-Control"] = "public, max-age=31536000"
     end
 
 
