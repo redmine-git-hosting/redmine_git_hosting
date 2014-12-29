@@ -50,6 +50,11 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
+  def key_type_as_string
+    user_key? ? 'user_key' : 'deploy_key'
+  end
+
+
   def to_s
     title
   end
