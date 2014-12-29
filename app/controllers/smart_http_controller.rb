@@ -28,7 +28,7 @@ class SmartHttpController < ApplicationController
     return render_not_found if !command
 
     # Log infos
-    debug_logs(command)
+    # debug_logs(command)
 
     # Set authenticated.
     if !@user.nil?
@@ -47,18 +47,18 @@ class SmartHttpController < ApplicationController
   private
 
 
-    def debug_logs(command)
-      logger.info("###### AUTHENTICATED ######")
-      logger.info("command         : #{command}")
-      logger.info("rpc             : #{@rpc}")
-      logger.info("project name    : #{@project.identifier}")
-      logger.info("public project  : #{@allow_anonymous_read}")
-      logger.info("repository name : #{@repository.gitolite_repository_name}")
-      logger.info("repository path : #{@repository.gitolite_repository_path}")
-      logger.info("user_name       : #{@user.login}") if !@user.nil?
-      logger.info("user_name       : anonymous (project is public)") if @allow_anonymous_read
-      logger.info("##########################")
-    end
+    # def debug_logs(command)
+    #   logger.info("###### AUTHENTICATED ######")
+    #   logger.info("command         : #{command}")
+    #   logger.info("rpc             : #{@rpc}")
+    #   logger.info("project name    : #{@project.identifier}")
+    #   logger.info("public project  : #{@allow_anonymous_read}")
+    #   logger.info("repository name : #{@repository.gitolite_repository_name}")
+    #   logger.info("repository path : #{@repository.gitolite_repository_path}")
+    #   logger.info("user_name       : #{@user.login}") if !@user.nil?
+    #   logger.info("user_name       : anonymous (project is public)") if @allow_anonymous_read
+    #   logger.info("##########################")
+    # end
 
 
     def extract_parameters
