@@ -58,6 +58,11 @@ module Gitolitable
   end
 
 
+  def notifiable?
+    extra[:git_notify]
+  end
+
+
   private
 
 

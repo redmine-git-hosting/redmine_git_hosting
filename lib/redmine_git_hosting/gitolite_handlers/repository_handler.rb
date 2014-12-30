@@ -91,24 +91,15 @@ module RedmineGitHosting
           repo_conf = build_gitolite_repository
 
           # Set post-receive hook params
+          # TODO: set them only for active repositories?
           repo_conf = set_default_conf(repo_conf)
 
           if project.active?
-            # Set SmartHttp download params
-            repo_conf = set_smart_http_download_conf(repo_conf)
-
-            # Set SmartHttp push params
-            repo_conf = set_smart_http_upload_conf(repo_conf)
-
-            # Set mail-notifications hook params
-            repo_conf = set_mail_settings(repo_conf)
-
-            # Set Git config keys
-            repo_conf = set_repository_conf(repo_conf)
+            # Set repository config
+            repo_conf = set_active_project_conf(repo_conf)
           else
-            repo_conf.set_git_config('http.uploadpack', 'false')
-            repo_conf.set_git_config('http.receivepack', 'false')
-            repo_conf.set_git_config('multimailhook.enabled', 'false')
+            # Disable repository
+            repo_conf = set_disabled_conf(repo_conf)
           end
 
           # Return repository config
@@ -124,7 +115,24 @@ module RedmineGitHosting
         def set_default_conf(repo_conf)
           repo_conf.set_git_config('redminegitolite.projectid', project.identifier.to_s)
           repo_conf.set_git_config('redminegitolite.repositoryid', "#{repository.identifier || ''}")
-          repo_conf.set_git_config('redminegitolite.repositorykey', repository.extra[:key])
+          repo_conf.set_git_config('redminegitolite.repositorykey', repository.gitolite_hook_key)
+          repo_conf
+        end
+
+
+        def set_active_project_conf(repo_conf)
+          # Set SmartHttp download params
+          repo_conf = set_smart_http_download_conf(repo_conf)
+
+          # Set SmartHttp push params
+          repo_conf = set_smart_http_upload_conf(repo_conf)
+
+          # Set mail-notifications hook params
+          repo_conf = set_mail_settings(repo_conf)
+
+          # Set Git config keys
+          repo_conf = set_repository_conf(repo_conf)
+
           repo_conf
         end
 
@@ -152,7 +160,7 @@ module RedmineGitHosting
 
 
         def set_mail_settings(repo_conf)
-          if repository.extra[:git_notify] && !notifier.mailing_list.empty?
+          if repository.notifiable? && !notifier.mailing_list.empty?
             repo_conf.set_git_config('multimailhook.enabled', 'true')
             repo_conf.set_git_config('multimailhook.mailinglist', notifier.mailing_list.join(", "))
             repo_conf.set_git_config('multimailhook.from', notifier.sender_address)
@@ -165,11 +173,17 @@ module RedmineGitHosting
 
 
         def set_repository_conf(repo_conf)
-          if repository.git_config_keys.any?
-            repository.git_config_keys.each do |git_config_key|
-              repo_conf.set_git_config(git_config_key.key, git_config_key.value)
-            end
-          end
+          repository.git_config_keys.each do |git|
+            repo_conf.set_git_config(git.key, git.value)
+          end if repository.git_config_keys.any?
+          repo_conf
+        end
+
+
+        def set_disabled_conf(repo_conf)
+          repo_conf.set_git_config('http.uploadpack', 'false')
+          repo_conf.set_git_config('http.receivepack', 'false')
+          repo_conf.set_git_config('multimailhook.enabled', 'false')
           repo_conf
         end
 
