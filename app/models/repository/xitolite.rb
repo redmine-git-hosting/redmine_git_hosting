@@ -17,7 +17,7 @@ class Repository::Xitolite < Repository::Git
   safe_attributes 'create_readme', 'enable_git_annex'
 
   # Relations
-  has_one  :git_extra,              dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryGitExtra'
+  has_one  :extra,                  dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryGitExtra'
   has_one  :git_notification,       dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryGitNotification'
   has_many :mirrors,                dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryMirror'
   has_many :post_receive_urls,      dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryPostReceiveUrl'

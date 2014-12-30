@@ -32,11 +32,6 @@ module Gitolitable
   end
 
 
-  def extra
-    git_extra
-  end
-
-
   def downloadable?
     if extra[:git_annex]
       false
