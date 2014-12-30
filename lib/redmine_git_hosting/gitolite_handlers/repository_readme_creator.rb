@@ -98,17 +98,17 @@ module RedmineGitHosting
 
         def credentials
           Rugged::Credentials::SshKey.new(
-            :username   => RedmineGitHosting::GitoliteWrapper.gitolite_user,
-            :publickey  => RedmineGitHosting::GitoliteWrapper.gitolite_ssh_public_key,
-            :privatekey => RedmineGitHosting::GitoliteWrapper.gitolite_ssh_private_key
+            :username   => RedmineGitHosting::Config.gitolite_user,
+            :publickey  => RedmineGitHosting::Config.gitolite_ssh_public_key,
+            :privatekey => RedmineGitHosting::Config.gitolite_ssh_private_key
           )
         end
 
 
         def commit_author
           @commit_author ||= {
-            email: RedmineGitHosting::GitoliteWrapper.git_config_username,
-            name:  RedmineGitHosting::GitoliteWrapper.git_config_email,
+            email: RedmineGitHosting::Config.git_config_username,
+            name:  RedmineGitHosting::Config.git_config_email,
             time:  Time.now
           }
         end

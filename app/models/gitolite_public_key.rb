@@ -92,7 +92,7 @@ class GitolitePublicKey < ActiveRecord::Base
   # This is due to the new gitolite multi-keys organization
   # using folders. See http://gitolite.com/gitolite/users.html
   def gitolite_path
-    File.join('keydir', RedmineGitHosting::GitoliteWrapper.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
+    File.join('keydir', RedmineGitHosting::Config.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
   end
 
 

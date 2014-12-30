@@ -104,7 +104,7 @@ class ValidateSettings
          valuehash[:gitolite_server_port] && value_has_changed?(:gitolite_server_port)
 
         # Remove old tmp directory, since about to change
-        FileUtils.rm_rf(RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
+        FileUtils.rm_rf(RedmineGitHosting::Config.gitolite_admin_dir)
       end
     end
 
@@ -124,7 +124,7 @@ class ValidateSettings
 
         if gitolite_temp_dir == '/' || stripped[0, 1] != '/'
           # Don't allow either root-level (absolute) or relative
-          valuehash[:gitolite_temp_dir] = RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir
+          valuehash[:gitolite_temp_dir] = RedmineGitHosting::Config.gitolite_admin_dir
         else
           # Add trailing '/'
           valuehash[:gitolite_temp_dir] = gitolite_temp_dir + '/'
