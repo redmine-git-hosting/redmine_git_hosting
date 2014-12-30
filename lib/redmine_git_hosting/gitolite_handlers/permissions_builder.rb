@@ -24,9 +24,9 @@ module RedmineGitHosting
         @read       = []
 
         @permissions        = {}
-        @permissions["RW+"] = {}
-        @permissions["RW"]  = {}
-        @permissions["R"]   = {}
+        @permissions['RW+'] = {}
+        @permissions['RW']  = {}
+        @permissions['R']   = {}
         @old_permissions    = old_permissions
       end
 
@@ -92,7 +92,7 @@ module RedmineGitHosting
           build_users_list
 
           # Add protected_branches permissions if needed
-          build_protected_branch_permissions if project.active? && repository.extra[:protected_branch]
+          build_protected_branch_permissions if repository.protected_branches_enabled?
 
           # Add normal permissions
           build_standard_permissions
@@ -110,18 +110,18 @@ module RedmineGitHosting
             # Add other users
             set_dummy_keys
           elsif project.archived?
-            @read << "REDMINE_ARCHIVED_PROJECT"
+            @read << 'REDMINE_ARCHIVED_PROJECT'
           else
             @read = all_read
-            @read << "REDMINE_CLOSED_PROJECT"
+            @read << 'REDMINE_CLOSED_PROJECT'
           end
         end
 
 
         def build_standard_permissions
-          @permissions["RW+"][""] = rewind unless rewind.empty?
-          @permissions["RW"][""]  = write unless write.empty?
-          @permissions["R"][""]   = read unless read.empty?
+          @permissions['RW+'][''] = rewind unless rewind.empty?
+          @permissions['RW']['']  = write unless write.empty?
+          @permissions['R']['']   = read unless read.empty?
         end
 
 
@@ -133,13 +133,13 @@ module RedmineGitHosting
           repository.protected_branches.each do |branch|
             case branch.permissions
             when 'RW+'
-              @permissions["RW+"][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
+              @permissions['RW+'][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
             when 'RW'
-              @permissions["RW"][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
+              @permissions['RW'][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
             end
           end
 
-          @permissions["RW+"]['personal/USER/'] = developer_team.sort unless developer_team.empty?
+          @permissions['RW+']['personal/USER/'] = developer_team.sort unless developer_team.empty?
         end
 
 
@@ -171,9 +171,9 @@ module RedmineGitHosting
         def set_deploy_keys
           ## DEPLOY KEY
           repository.deployment_credentials.active.each do |cred|
-            if cred.perm == "RW+"
+            if cred.perm == 'RW+'
               @rewind << cred.gitolite_public_key.owner
-            elsif cred.perm == "R"
+            elsif cred.perm == 'R'
               @read << cred.gitolite_public_key.owner
             end
           end
@@ -181,9 +181,9 @@ module RedmineGitHosting
 
 
         def set_dummy_keys
-          @read << "DUMMY_REDMINE_KEY" if @read.empty? && @write.empty? && @rewind.empty?
-          @read << "gitweb" if User.anonymous.allowed_to?(:browse_repository, project) && repository.extra[:git_http] != 0
-          @read << "daemon" if User.anonymous.allowed_to?(:view_changesets, project) && repository.extra[:git_daemon]
+          @read << 'DUMMY_REDMINE_KEY' if @read.empty? && @write.empty? && @rewind.empty?
+          @read << 'gitweb' if repository.git_web_enable?
+          @read << 'daemon' if repository.git_daemon_enable?
         end
 
 

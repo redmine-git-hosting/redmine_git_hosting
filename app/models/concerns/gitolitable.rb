@@ -63,6 +63,21 @@ module Gitolitable
   end
 
 
+  def git_web_enable?
+    User.anonymous.allowed_to?(:browse_repository, project) && extra[:git_http] != 0
+  end
+
+
+  def git_daemon_enable?
+    User.anonymous.allowed_to?(:view_changesets, project) && extra[:git_daemon]
+  end
+
+
+  def protected_branches_enabled?
+    project.active? && extra[:protected_branch] && protected_branches.any?
+  end
+
+
   private
 
 
