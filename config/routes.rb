@@ -30,7 +30,7 @@ RedmineApp::Application.routes.draw do
 
   # SMART HTTP
   match 'go/:repo_path',          repo_path: /([^\/]+\/)*?[^\/]+/,      to: 'go_redirector#index'
-  match ':repo_path/*git_params', repo_path: /([^\/]+\/)*?[^\/]+\.git/, to: 'smart_http#index',    prefix: RedmineGitHosting::Config.get_setting(:http_server_subdir)
+  match ':repo_path/*git_params', repo_path: /([^\/]+\/)*?[^\/]+\.git/, to: 'smart_http#index', prefix: RedmineGitHosting::Config.http_server_subdir
 
   # POST RECEIVE
   match 'githooks/post-receive/:type/:projectid', to: 'gitolite_hooks#post_receive', via: [:post]

@@ -8,12 +8,12 @@ module GitolitablePaths
 
 
   def gitolite_repository_path
-    "#{RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir)}#{gitolite_repository_name}.git"
+    "#{RedmineGitHosting::Config.gitolite_global_storage_dir}#{gitolite_repository_name}.git"
   end
 
 
   def gitolite_repository_name
-    File.expand_path(File.join("./", RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir), get_full_parent_path, git_cache_id), "/")[1..-1]
+    File.expand_path(File.join("./", RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), "/")[1..-1]
   end
 
 
@@ -28,12 +28,12 @@ module GitolitablePaths
 
 
   def old_repository_name
-    "#{self.url.gsub(RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir), '').gsub('.git', '')}"
+    "#{self.url.gsub(RedmineGitHosting::Config.gitolite_global_storage_dir, '').gsub('.git', '')}"
   end
 
 
   def exists_in_gitolite?
-    RedmineGitHosting::GitoliteWrapper.sudo_dir_exists?(gitolite_repository_path)
+    RedmineGitHosting::Commands.sudo_dir_exists?(gitolite_repository_path)
   end
 
 
@@ -47,7 +47,7 @@ module GitolitablePaths
 
 
   def get_full_parent_path
-    return '' if !RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
+    return '' if !RedmineGitHosting::Config.hierarchical_organisation?
     parent_parts = []
     p = project
     while p.parent

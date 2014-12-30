@@ -12,12 +12,12 @@ module RedmineGitHosting::HookManager
 
     def initialize
       ## Params to set
-      @gitolite_hooks_url = RedmineGitHosting::GitoliteWrapper.gitolite_hooks_url
-      @debug_mode         = RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true).to_s
-      @async_mode         = RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true).to_s
+      @gitolite_hooks_url = RedmineGitHosting::Config.gitolite_hooks_url
+      @debug_mode         = RedmineGitHosting::Config.gitolite_hooks_debug.to_s
+      @async_mode         = RedmineGitHosting::Config.gitolite_hooks_are_asynchronous.to_s
 
       ## Namespace where to set params
-      @namespace = RedmineGitHosting::HookManager.gitolite_hooks_namespace
+      @namespace = RedmineGitHosting::Config.gitolite_hooks_namespace
 
       ## Get current params
       @current_params = get_git_config_params(@namespace)

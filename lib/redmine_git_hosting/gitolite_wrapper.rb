@@ -4,13 +4,6 @@ module RedmineGitHosting
 
   module GitoliteWrapper
 
-    include GitoliteModules::GitoliteConfig
-    include GitoliteModules::GitoliteInfos
-    include GitoliteModules::Mirroring
-    include GitoliteModules::SshWrapper
-    include GitoliteModules::SudoWrapper
-
-
     ##########################
     #                        #
     #   Gitolite Accessor    #
@@ -18,6 +11,56 @@ module RedmineGitHosting
     ##########################
 
     class << self
+
+      def logger
+        RedmineGitHosting.logger
+      end
+
+
+      def gitolite_user
+        RedmineGitHosting::Config.gitolite_user
+      end
+
+
+      def gitolite_server_port
+        RedmineGitHosting::Config.gitolite_server_port
+      end
+
+
+      def git_config_username
+        RedmineGitHosting::Config.git_config_username
+      end
+
+
+      def git_config_email
+        RedmineGitHosting::Config.git_config_email
+      end
+
+
+      def gitolite_ssh_public_key
+        RedmineGitHosting::Config.gitolite_ssh_public_key
+      end
+
+
+      def gitolite_ssh_private_key
+        RedmineGitHosting::Config.gitolite_ssh_private_key
+      end
+
+
+      def gitolite_key_subdir
+        RedmineGitHosting::Config.gitolite_key_subdir
+      end
+
+
+      def gitolite_config_file
+        RedmineGitHosting::Config.gitolite_config_file
+      end
+
+
+      def gitolite_admin_dir
+        RedmineGitHosting::Config.gitolite_admin_dir
+      end
+
 
       def gitolite_admin_settings
         {
@@ -37,10 +80,9 @@ module RedmineGitHosting
 
 
       def gitolite_admin
-        create_temp_dir
-        admin_dir = gitolite_admin_dir
-        logger.info("Acessing gitolite-admin.git at '#{admin_dir}'")
-        ::Gitolite::GitoliteAdmin.new(admin_dir, gitolite_admin_settings)
+        RedmineGitHosting::Config.create_temp_dir
+        logger.info("Accessing gitolite-admin.git at '#{gitolite_admin_dir}'")
+        ::Gitolite::GitoliteAdmin.new(gitolite_admin_dir, gitolite_admin_settings)
       end
 
 

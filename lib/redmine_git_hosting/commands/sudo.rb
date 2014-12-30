@@ -1,12 +1,6 @@
-module RedmineGitHosting::GitoliteModules
+module RedmineGitHosting::Commands
 
-  module SudoWrapper
-
-    ##########################
-    #                        #
-    #   SUDO Shell Wrapper   #
-    #                        #
-    ##########################
+  module Sudo
 
     class << self
       def included(receiver)
@@ -14,6 +8,12 @@ module RedmineGitHosting::GitoliteModules
       end
     end
 
+
+    ##########################
+    #                        #
+    #   SUDO Shell Wrapper   #
+    #                        #
+    ##########################
 
     module ClassMethods
 
@@ -24,7 +24,7 @@ module RedmineGitHosting::GitoliteModules
       # * (-n) non-interactive
       # * (-u `gitolite_user`) target user
       def sudo_shell_params
-        ['-n', '-u', gitolite_user, '-i']
+        ['-n', '-u', RedmineGitHosting::Config.gitolite_user, '-i']
       end
 
 
@@ -164,51 +164,6 @@ module RedmineGitHosting::GitoliteModules
         end
 
         return empty_repo
-      end
-
-
-      ###############################
-      ##                           ##
-      ##        SUDO TESTS         ##
-      ##                           ##
-      ###############################
-
-      ## SUDO TEST1
-      def can_gitolite_sudo_to_redmine_user?
-        return true if gitolite_user == redmine_user
-        logger.info("Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'...")
-        result = execute_sudo_test(redmine_user) do
-          sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
-        end
-        result ? logger.info("OK!") : logger.error("Error while testing can_gitolite_sudo_to_redmine_user")
-        result
-      end
-
-
-      ## SUDO TEST2
-      def can_redmine_sudo_to_gitolite_user?
-        return true if gitolite_user == redmine_user
-        logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
-        result = execute_sudo_test(gitolite_user) do
-          sudo_capture('whoami')
-        end
-        result ? logger.info("OK!") : logger.error("Error while testing can_redmine_sudo_to_gitolite_user")
-        result
-      end
-
-
-      def execute_sudo_test(user, &block)
-        begin
-          test = yield if block_given?
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          return false
-        else
-          if test.match(/#{user}/)
-            return true
-          else
-            return false
-          end
-        end
       end
 
     end

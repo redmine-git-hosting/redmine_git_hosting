@@ -12,7 +12,7 @@ module GitolitableUrls
 
 
   def http_access_path
-    "#{RedmineGitHosting::Config.get_setting(:http_server_subdir)}#{redmine_repository_path}.git"
+    "#{RedmineGitHosting::Config.http_server_subdir}#{redmine_repository_path}.git"
   end
 
 
@@ -22,27 +22,27 @@ module GitolitableUrls
 
 
   def ssh_url
-    "ssh://#{RedmineGitHosting::Config.get_setting(:gitolite_user)}@#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
+    "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}/#{git_access_path}"
   end
 
 
   def git_url
-    "git://#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}/#{git_access_path}"
+    "git://#{RedmineGitHosting::Config.ssh_server_domain}/#{git_access_path}"
   end
 
 
   def http_url
-    "http://#{http_user_login}#{RedmineGitHosting::Config.get_setting(:http_server_domain)}/#{http_access_path}"
+    "http://#{http_user_login}#{RedmineGitHosting::Config.http_server_domain}/#{http_access_path}"
   end
 
 
   def https_url
-    "https://#{http_user_login}#{RedmineGitHosting::Config.get_setting(:https_server_domain)}/#{http_access_path}"
+    "https://#{http_user_login}#{RedmineGitHosting::Config.https_server_domain}/#{http_access_path}"
   end
 
 
   def git_annex_url
-    "#{RedmineGitHosting::Config.get_setting(:gitolite_user)}@#{RedmineGitHosting::Config.get_setting(:ssh_server_domain)}:#{git_access_path}"
+    "#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}:#{git_access_path}"
   end
 
 
@@ -67,10 +67,10 @@ module GitolitableUrls
     # 1 : Only https is available, good :)
     # 2 : If both http and https are available, https is prefered
     when 1, 2
-      "#{RedmineGitHosting::Config.get_setting(:https_server_domain)}/#{go_access_path}"
+      "#{RedmineGitHosting::Config.https_server_domain}/#{go_access_path}"
     # 3 : Only http is available, that's okay for git clone
     when 3
-      "#{RedmineGitHosting::Config.get_setting(:http_server_domain)}/#{go_access_path}"
+      "#{RedmineGitHosting::Config.http_server_domain}/#{go_access_path}"
     # 0 : None is available, return empty string
     when 0
       ''

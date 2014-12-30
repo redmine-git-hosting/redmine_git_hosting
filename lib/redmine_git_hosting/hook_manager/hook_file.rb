@@ -15,7 +15,7 @@ module RedmineGitHosting::HookManager
       @source_path      = source_path
       @destination_path = destination_path
       @filemode         = executable ? '755' : '644'
-      @force_update     = RedmineGitHosting::Config.get_setting(:gitolite_force_hooks_update, true)
+      @force_update     = RedmineGitHosting::Config.gitolite_force_hooks_update?
     end
 
 
@@ -62,14 +62,14 @@ module RedmineGitHosting::HookManager
 
 
       def distant_md5
-        content = RedmineGitHosting::GitoliteWrapper.sudo_capture('eval', 'cat', destination_path) rescue ''
+        content = RedmineGitHosting::Commands.sudo_capture('eval', 'cat', destination_path) rescue ''
         Digest::MD5.hexdigest(content)
       end
 
 
       def exists?
         begin
-          RedmineGitHosting::GitoliteWrapper.sudo_file_exists?(destination_path)
+          RedmineGitHosting::Commands.sudo_file_exists?(destination_path)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           return false
         end
@@ -78,12 +78,12 @@ module RedmineGitHosting::HookManager
 
       def install_hook_file
         logger.info("Installing hook '#{source_path}' in '#{destination_path}'")
-        RedmineGitHosting::GitoliteWrapper.sudo_install_file(File.read(source_path), destination_path, filemode)
+        RedmineGitHosting::Commands.sudo_install_file(File.read(source_path), destination_path, filemode)
       end
 
 
       def update_gitolite
-        RedmineGitHosting::GitoliteWrapper.sudo_update_gitolite!
+        RedmineGitHosting::Commands.sudo_update_gitolite!
       end
 
   end

@@ -1,12 +1,6 @@
-module RedmineGitHosting::GitoliteModules
+module RedmineGitHosting::Commands
 
-  module SshWrapper
-
-    ##########################
-    #                        #
-    #       SSH Wrapper      #
-    #                        #
-    ##########################
+  module Ssh
 
     class << self
       def included(receiver)
@@ -14,6 +8,12 @@ module RedmineGitHosting::GitoliteModules
       end
     end
 
+
+    ##########################
+    #                        #
+    #       SSH Wrapper      #
+    #                        #
+    ##########################
 
     module ClassMethods
 
@@ -31,6 +31,7 @@ module RedmineGitHosting::GitoliteModules
         RedmineGitHosting::Utils.capture('ssh', ssh_shell_params.concat(params))
       end
 
+
       # Returns the ssh prefix arguments for all ssh_* commands
       #
       # These are as follows:
@@ -40,7 +41,12 @@ module RedmineGitHosting::GitoliteModules
       # * (-o BatchMode=yes) Never ask for a password
       # * <gitolite_user>@localhost (see +gitolite_url+)
       def ssh_shell_params
-        ['-T', '-o', 'BatchMode=yes', '-p', gitolite_server_port, '-i', gitolite_ssh_private_key, gitolite_url]
+        [
+          '-T', '-o', 'BatchMode=yes',
+          '-p', RedmineGitHosting::Config.gitolite_server_port,
+          '-i', RedmineGitHosting::Config.gitolite_ssh_private_key,
+          RedmineGitHosting::Config.gitolite_url
+        ]
       end
 
     end

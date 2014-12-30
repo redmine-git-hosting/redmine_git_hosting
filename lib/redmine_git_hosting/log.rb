@@ -18,7 +18,7 @@ module RedmineGitHosting
 
 
       def get_log_level
-        case RedmineGitHosting::Config.get_setting(:gitolite_log_level)
+        case RedmineGitHosting::Config.gitolite_log_level
         when 'debug' then
           Logger::DEBUG
         when 'info' then

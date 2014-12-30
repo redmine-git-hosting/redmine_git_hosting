@@ -42,9 +42,9 @@ class CreateRepository
 
     def standard_repository_options
       {
-        git_http:       RedmineGitHosting::Config.get_setting(:gitolite_http_by_default),
-        git_daemon:     RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
-        git_notify:     RedmineGitHosting::Config.get_setting(:gitolite_notify_by_default, true),
+        git_http:       RedmineGitHosting::Config.gitolite_http_by_default?,
+        git_daemon:     RedmineGitHosting::Config.gitolite_daemon_by_default?,
+        git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
         git_annex:      false,
         default_branch: 'master',
         key:            RedmineGitHosting::Utils.generate_secret(64)

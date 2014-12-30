@@ -9,17 +9,17 @@ module RedmineGitHosting
 
 
       def max_cache_time
-        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_time).to_i
+        RedmineGitHosting::Config.gitolite_cache_max_time
       end
 
 
       def max_cache_elements
-        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_elements).to_i
+        RedmineGitHosting::Config.gitolite_cache_max_elements
       end
 
 
       def max_cache_size
-        RedmineGitHosting::Config.get_setting(:gitolite_cache_max_size).to_i * 1024 * 1024
+        RedmineGitHosting::Config.gitolite_cache_max_size
       end
 
 

@@ -14,7 +14,7 @@ module RedmineGitHosting::HookManager
       # Return a hash with global config parameters.
       def get_git_config_params(namespace)
         begin
-          params = RedmineGitHosting::GitoliteWrapper.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
+          params = RedmineGitHosting::Commands.sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'")
           params = []
@@ -41,7 +41,7 @@ module RedmineGitHosting::HookManager
         logger.info("Set Git hooks global parameter : #{key} (#{value})")
 
         begin
-          RedmineGitHosting::GitoliteWrapper.sudo_capture('git', 'config', '--global', key, value)
+          RedmineGitHosting::Commands.sudo_capture('git', 'config', '--global', key, value)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Error while setting Git hooks global parameter : #{key} (#{value})")
@@ -55,7 +55,7 @@ module RedmineGitHosting::HookManager
         logger.info("Unset Git hooks global parameter : #{key}")
 
         begin
-          _, _, code = RedmineGitHosting::GitoliteWrapper.sudo_shell('git', 'config', '--global', '--unset', key)
+          _, _, code = RedmineGitHosting::Commands.sudo_shell('git', 'config', '--global', '--unset', key)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           if code == 5

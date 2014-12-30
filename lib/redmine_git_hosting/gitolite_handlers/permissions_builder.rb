@@ -36,8 +36,6 @@ module RedmineGitHosting
         SKIP_USERS = [ 'gitweb', 'daemon', 'DUMMY_REDMINE_KEY', 'REDMINE_ARCHIVED_PROJECT', 'REDMINE_CLOSED_PROJECT' ]
 
         def get_permissions(repo_conf)
-          gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
-
           current_permissions = repo_conf.permissions[0]
           old_permissions = {}
 
@@ -60,18 +58,19 @@ module RedmineGitHosting
                 next if SKIP_USERS.include?(user)
 
                 # backup users that are not Redmine users
-                if !user.include?(gitolite_identifier_prefix)
-                  new_user_list.push(user)
-                end
+                new_user_list.push(user) if !user.include?(gitolite_identifier_prefix)
               end
 
-              if new_user_list.any?
-                old_permissions[perm][branch] = new_user_list
-              end
+              old_permissions[perm][branch] = new_user_list if new_user_list.any?
             end
           end
 
           return old_permissions
+        end
+
+
+        def gitolite_identifier_prefix
+          RedmineGitHosting::Config.gitolite_identifier_prefix
         end
 
       end

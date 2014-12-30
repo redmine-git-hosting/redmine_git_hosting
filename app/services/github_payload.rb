@@ -150,7 +150,7 @@ class GithubPayload
 
 
     def get_revisions_in_range(range)
-      RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'rev-list', '--reverse', range)
+      RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'rev-list', '--reverse', range)
     end
 
 end

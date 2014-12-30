@@ -36,7 +36,7 @@ module RedmineGitHosting
 
 
         def repository_empty?
-          RedmineGitHosting::GitoliteWrapper.sudo_repository_empty?(gitolite_repo_path)
+          RedmineGitHosting::Commands.sudo_repository_empty?(gitolite_repo_path)
         end
 
 

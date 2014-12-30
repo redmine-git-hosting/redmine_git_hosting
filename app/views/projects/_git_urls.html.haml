@@ -1,6 +1,6 @@
 - if project.module_enabled?(:repository)
   - if project.repository && project.repository.is_a?(Repository::Xitolite)
-    - if RedmineGitHosting::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, project)
+    - if RedmineGitHosting::Config.show_repositories_url? && User.current.allowed_to?(:view_changesets, project)
 
       %div{ class: 'git_hosting box' }
         %h3= project.repositories.count > 1 ? l(:label_repository_plural) : l(:label_repository)
@@ -14,4 +14,3 @@
                                                           :repository_id => project.repository.identifier_param,
                                                           :rev           => nil,
                                                           :path          => nil }
-

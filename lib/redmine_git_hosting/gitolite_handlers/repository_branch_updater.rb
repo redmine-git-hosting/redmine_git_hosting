@@ -24,7 +24,7 @@ module RedmineGitHosting
 
         def update_default_branch
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'symbolic-ref', 'HEAD', "refs/heads/#{repository.extra[:default_branch]}")
+            RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{repository.gitolite_repository_path}", 'symbolic-ref', 'HEAD', "refs/heads/#{repository.extra[:default_branch]}")
             logger.info("Default branch successfully updated for repository '#{repository.gitolite_repository_name}'")
           rescue RedmineGitHosting::GitHosting::GitHostingException => e
             logger.error("Error while updating default branch for repository '#{repository.gitolite_repository_name}'")

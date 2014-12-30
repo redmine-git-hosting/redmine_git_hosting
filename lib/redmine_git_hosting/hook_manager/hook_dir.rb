@@ -34,7 +34,7 @@ module RedmineGitHosting::HookManager
 
       def exists?
         begin
-          RedmineGitHosting::GitoliteWrapper.sudo_dir_exists?(destination_path)
+          RedmineGitHosting::Commands.sudo_dir_exists?(destination_path)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           return false
         end
@@ -45,8 +45,8 @@ module RedmineGitHosting::HookManager
         logger.info("Installing hook directory '#{destination_path}'")
 
         begin
-          RedmineGitHosting::GitoliteWrapper.sudo_mkdir('-p', destination_path)
-          RedmineGitHosting::GitoliteWrapper.sudo_chmod('755', destination_path)
+          RedmineGitHosting::Commands.sudo_mkdir('-p', destination_path)
+          RedmineGitHosting::Commands.sudo_chmod('755', destination_path)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Problems installing hook directory '#{destination_path}'")

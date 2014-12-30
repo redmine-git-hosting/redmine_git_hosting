@@ -29,7 +29,7 @@ module RedmineGitHosting
 
 
         def scm_version_from_command_line_with_git_hosting
-          RedmineGitHosting::GitoliteWrapper.sudo_capture('git', '--version', '--no-color')
+          RedmineGitHosting::Commands.sudo_capture('git', '--version', '--no-color')
         rescue => e
           RedmineGitHosting.logger.error("Can't retrieve git version: #{e.output}")
           'unknown'
@@ -63,7 +63,7 @@ module RedmineGitHosting
 
 
           def base_args
-            [ 'sudo', *RedmineGitHosting::GitoliteWrapper.sudo_shell_params, 'git', '--git-dir', repo_path, *git_args ].clone
+            [ 'sudo', *RedmineGitHosting::Commands.sudo_shell_params, 'git', '--git-dir', repo_path, *git_args ].clone
           end
 
 
@@ -90,7 +90,7 @@ module RedmineGitHosting
 
 
           def max_cache_time
-            RedmineGitHosting::Config.get_setting(:gitolite_cache_max_time).to_i
+            RedmineGitHosting::Config.gitolite_cache_max_time
           end
 
 

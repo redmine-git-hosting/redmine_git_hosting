@@ -4,8 +4,8 @@
 - gitolite_global_storage_dir  = RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir)
 - gitolite_redmine_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir)
 - http_server_subdir           = RedmineGitHosting::Config.get_setting(:http_server_subdir)
-- http_server_domain           = RedmineGitHosting::GitoliteWrapper.http_root_url
-- https_server_domain          = RedmineGitHosting::GitoliteWrapper.https_root_url
+- http_server_domain           = RedmineGitHosting::Config.http_root_url
+- https_server_domain          = RedmineGitHosting::Config.https_root_url
 - hierarchical_organisation    = RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
 
 .git_hosting_access_box

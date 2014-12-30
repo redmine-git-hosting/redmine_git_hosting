@@ -4,25 +4,25 @@
 
   %tr
     %td= l(:label_temp_dir_writeable)
-    %td= render_temp_dir_writeable(RedmineGitHosting::GitoliteWrapper.temp_dir_writeable?(reset: true), RedmineGitHosting::GitoliteWrapper.gitolite_admin_dir)
+    %td= render_temp_dir_writeable(RedmineGitHosting::Config.temp_dir_writeable?(reset: true), RedmineGitHosting::Config.gitolite_admin_dir)
 
   %tr
     %td= l(:label_redmine_user)
     %td
-      %span{ class: 'label label-success' }= RedmineGitHosting::GitoliteWrapper.redmine_user
+      %span{ class: 'label label-success' }= RedmineGitHosting::Config.redmine_user
 
   %tr
     %td= l(:label_gitolite_user)
     %td
-      %span{ class: 'label label-success' }= RedmineGitHosting::GitoliteWrapper.gitolite_user
+      %span{ class: 'label label-success' }= RedmineGitHosting::Config.gitolite_user
 
   %tr
     %td= l(:label_sudo_gitolite_to_redmine_user)
-    %td= image_tag (RedmineGitHosting::GitoliteWrapper.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png')
+    %td= image_tag (RedmineGitHosting::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png')
 
   %tr
     %td= l(:label_sudo_redmine_to_gitolite_user)
-    %td= image_tag (RedmineGitHosting::GitoliteWrapper.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
+    %td= image_tag (RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
 
   - gitolite_checks = RedmineGitHosting::HookManager.check_install!
 
@@ -44,7 +44,7 @@
 
   %tr
     %td= l(:label_mirroring_keys_installed)
-    %td= image_tag (RedmineGitHosting::GitoliteWrapper.mirroring_keys_installed?(:reset => true) ? 'true.png' : 'exclamation.png')
+    %td= image_tag (RedmineGitHosting::Config.mirroring_keys_installed?(reset: true) ? 'true.png' : 'exclamation.png')
 
   %tr
     %td= l(:label_git_version)
@@ -53,18 +53,18 @@
 
   %tr
     %td= l(:label_gitolite_version)
-    %td= render_gitolite_version(RedmineGitHosting::GitoliteWrapper.gitolite_version)
+    %td= render_gitolite_version(RedmineGitHosting::Config.gitolite_version)
 
   %tr
     %td= l(:label_gitolite_repository_count)
     %td
-      %span{ class: 'label label-success' }= RedmineGitHosting::GitoliteWrapper.gitolite_repository_count
+      %span{ class: 'label label-success' }= RedmineGitHosting::Config.gitolite_repository_count
 
 %p
   %label= l(:label_gitolite_banner)
 
 .box
-  %pre= raw RedmineGitHosting::GitoliteWrapper.gitolite_banner
+  %pre= raw RedmineGitHosting::Config.gitolite_banner
 
 %p
   %label= l(:label_path_directories)

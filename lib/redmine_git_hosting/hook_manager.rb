@@ -14,16 +14,6 @@ module RedmineGitHosting
 
     class << self
 
-      def gitolite_hooks_url
-        RedmineGitHosting::GitoliteWrapper.gitolite_hooks_url
-      end
-
-
-      def gitolite_hooks_namespace
-        'redminegitolite'
-      end
-
-
       def check_install!
         installed = {
           hook_dirs: hook_dirs_installed?,
@@ -85,8 +75,8 @@ module RedmineGitHosting
 
 
       def gitolite_hooks_dir
-        if RedmineGitHosting::GitoliteWrapper.gitolite_version == 3
-          File.join('~', RedmineGitHosting::Config.get_setting(:gitolite_local_code_dir), 'hooks', 'common')
+        if RedmineGitHosting::Config.gitolite_version == 3
+          File.join('~', RedmineGitHosting::Config.gitolite_local_code_dir, 'hooks', 'common')
         else
           File.join('~', '.gitolite', 'hooks', 'common')
         end

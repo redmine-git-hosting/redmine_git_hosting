@@ -1,4 +1,4 @@
-module RedmineGitHosting::GitoliteModules
+module RedmineGitHosting::Config
 
   module Mirroring
 
@@ -73,14 +73,14 @@ module RedmineGitHosting::GitoliteModules
 
 
       def install_private_key
-        sudo_install_file(File.read(gitolite_ssh_private_key), gitolite_ssh_private_key_dest_path, '600')
+        RedmineGitHosting::Commands.sudo_install_file(File.read(gitolite_ssh_private_key), gitolite_ssh_private_key_dest_path, '600')
       rescue
         false
       end
 
 
       def install_public_key
-        sudo_install_file(File.read(gitolite_ssh_public_key), gitolite_ssh_public_key_dest_path, '644')
+        RedmineGitHosting::Commands.sudo_install_file(File.read(gitolite_ssh_public_key), gitolite_ssh_public_key_dest_path, '644')
       rescue
         false
       end
@@ -88,7 +88,7 @@ module RedmineGitHosting::GitoliteModules
 
       def install_mirroring_script
         command = ['#!/bin/sh', "\n", 'exec', 'ssh', '-T', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=no', '-i', gitolite_ssh_private_key_dest_path, '"$@"', "\n"].join(' ')
-        sudo_install_file(command, gitolite_mirroring_script_dest_path, '700')
+        RedmineGitHosting::Commands.sudo_install_file(command, gitolite_mirroring_script_dest_path, '700')
       rescue
         false
       end

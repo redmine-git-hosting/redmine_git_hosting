@@ -34,8 +34,8 @@
 
 %p
   %label= l(:label_gitolite_hooks_url)
-  %span{ class: 'label label-info' }= RedmineGitHosting::HookManager.gitolite_hooks_url
+  %span{ class: 'label label-info' }= RedmineGitHosting::Config.gitolite_hooks_url
 
 %p
   %label= l(:label_gitolite_hooks_namespace)
-  %span{ class: 'label label-info' }= RedmineGitHosting::HookManager.gitolite_hooks_namespace
+  %span{ class: 'label label-info' }= RedmineGitHosting::Config.gitolite_hooks_namespace

@@ -49,7 +49,7 @@ module Gitolitable
 
 
   def urls_are_viewable?
-    RedmineGitHosting::Config.get_setting(:show_repositories_url, true) && User.current.allowed_to?(:view_changesets, project)
+    RedmineGitHosting::Config.show_repositories_url? && User.current.allowed_to?(:view_changesets, project)
   end
 
 

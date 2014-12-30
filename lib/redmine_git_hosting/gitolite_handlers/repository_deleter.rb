@@ -49,7 +49,7 @@ module RedmineGitHosting
 
         def move_repository_to_recycle
           recycle = RedmineGitHosting::Recycle.new
-          recycle.move_repository_to_recycle(repository_data) if RedmineGitHosting::Config.get_setting(:delete_git_repositories, true)
+          recycle.move_repository_to_recycle(repository_data) if RedmineGitHosting::Config.delete_git_repositories?
         end
 
     end

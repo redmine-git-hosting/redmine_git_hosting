@@ -33,7 +33,7 @@ module RedmineGitHosting
 
         def install_git_annex
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'annex', 'init')
+            RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'annex', 'init')
             logger.info("GitAnnex successfully enabled for repository '#{gitolite_repo_name}'")
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("Error while enabling GitAnnex for repository '#{gitolite_repo_name}'")
@@ -47,7 +47,7 @@ module RedmineGitHosting
 
 
         def directory_exists?(dir)
-          RedmineGitHosting::GitoliteWrapper.sudo_dir_exists?(dir)
+          RedmineGitHosting::Commands.sudo_dir_exists?(dir)
         end
 
     end

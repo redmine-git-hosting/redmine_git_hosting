@@ -2,6 +2,17 @@ module RedmineGitHosting
 
   module Config
 
+    include Config::GitoliteAccess
+    include Config::GitoliteBase
+    include Config::GitoliteCache
+    include Config::GitoliteConfigTests
+    include Config::GitoliteHooks
+    include Config::GitoliteInfos
+    include Config::GitoliteNotifications
+    include Config::GitoliteStorage
+    include Config::Mirroring
+    include Config::RedmineConfig
+
     GITHUB_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'
     GITHUB_WIKI  = 'https://jbox-web.github.io/redmine_git_hosting/configuration/variables/'
 
@@ -16,6 +27,11 @@ module RedmineGitHosting
     ###############################
 
     class << self
+
+      def logger
+        RedmineGitHosting.logger
+      end
+
 
       def get_setting(setting, bool = false)
         if bool

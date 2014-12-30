@@ -173,7 +173,7 @@ module RedmineGitHosting
           create_parent_directory(new_parent_path) if !directory_exists?(new_parent_path)
 
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_move(old_path, new_path)
+            RedmineGitHosting::Commands.sudo_move(old_path, new_path)
             logger.info("#{action} : done !")
             return true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
@@ -185,7 +185,7 @@ module RedmineGitHosting
 
         def delete_directory!(dir, type)
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_rmdir(dir, true)
+            RedmineGitHosting::Commands.sudo_rmdir(dir, true)
             return true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("#{action} : removing existing #{type} repository failed, exit !")
@@ -195,18 +195,18 @@ module RedmineGitHosting
 
 
         def empty_repository?(dir)
-          RedmineGitHosting::GitoliteWrapper.sudo_repository_empty?(dir)
+          RedmineGitHosting::Commands.sudo_repository_empty?(dir)
         end
 
 
         def directory_exists?(dir)
-          RedmineGitHosting::GitoliteWrapper.sudo_dir_exists?(dir)
+          RedmineGitHosting::Commands.sudo_dir_exists?(dir)
         end
 
 
         def create_parent_directory(new_parent_path)
           begin
-            RedmineGitHosting::GitoliteWrapper.sudo_mkdir('-p', new_parent_path)
+            RedmineGitHosting::Commands.sudo_mkdir('-p', new_parent_path)
             return true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("#{action} : creation of parent path '#{new_parent_path}' failed, exit !")

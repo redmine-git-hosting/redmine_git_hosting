@@ -8,7 +8,7 @@ module GitolitableCache
 
       # Repo ident unique
       def repo_ident_unique?
-        RedmineGitHosting::Config.get_setting(:unique_repo_identifier, true)
+        RedmineGitHosting::Config.unique_repo_identifier?
       end
 
 

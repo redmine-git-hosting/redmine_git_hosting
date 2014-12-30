@@ -21,7 +21,7 @@ module ExtendRepositoriesHelper
     content_tag(:p) do
       hidden_field_tag("repository[create_readme]", "false") +
       content_tag(:label, l(:label_init_repo_with_readme)) +
-      check_box_tag("repository[create_readme]", "true", RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true))
+      check_box_tag("repository[create_readme]", "true", RedmineGitHosting::Config.init_repositories_on_create?)
     end if repository.new_record?
   end
 

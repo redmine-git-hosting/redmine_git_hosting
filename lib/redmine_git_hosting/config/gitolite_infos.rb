@@ -1,4 +1,4 @@
-module RedmineGitHosting::GitoliteModules
+module RedmineGitHosting::Config
 
   module GitoliteInfos
 
@@ -25,7 +25,7 @@ module RedmineGitHosting::GitoliteModules
           return @@gitolite_infos_cached
         end
         begin
-          @@gitolite_infos_cached = ssh_shell('info')[0]
+          @@gitolite_infos_cached = RedmineGitHosting::Commands.ssh_shell('info')[0]
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Error while getting Gitolite version")
           @@gitolite_infos_cached = ''
@@ -83,7 +83,7 @@ module RedmineGitHosting::GitoliteModules
           logger.debug("Getting Gitolite physical repositories list...")
 
           begin
-            count = sudo_capture('gitolite', 'list-phy-repos').split("\n").length
+            count = RedmineGitHosting::Commands.sudo_capture('gitolite', 'list-phy-repos').split("\n").length
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("Error while getting Gitolite physical repositories list")
             count = 0
