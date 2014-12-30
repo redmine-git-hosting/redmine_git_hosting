@@ -25,15 +25,9 @@ describe RepositoryGitConfigKey do
 
     it { should validate_uniqueness_of(:key).scoped_to(:repository_id) }
 
-    it {
-      should allow_value('hookfoo.foo', 'hookfoo.foo.bar').
-      for(:key)
-    }
+    it { should allow_value('hookfoo.foo', 'hookfoo.foo.bar').for(:key) }
 
-    it {
-      should_not allow_value('hookfoo').
-      for(:key)
-    }
+    it { should_not allow_value('hookfoo').for(:key) }
 
     context "when key is updated" do
       before do

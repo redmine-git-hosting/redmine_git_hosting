@@ -28,15 +28,9 @@ describe RepositoryGitNotification do
 
     it { should validate_uniqueness_of(:repository_id) }
 
-    it {
-      should allow_value(*VALID_MAIL).
-      for(:sender_address)
-    }
+    it { should allow_value(*VALID_MAIL).for(:sender_address) }
 
-    it {
-      should_not allow_value(*INVALID_MAIL).
-      for(:sender_address)
-    }
+    it { should_not allow_value(*INVALID_MAIL).for(:sender_address) }
 
     ## Serializations
     it { should serialize(:include_list) }

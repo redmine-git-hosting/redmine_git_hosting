@@ -9,8 +9,8 @@ describe Repository::Xitolite do
     Setting.plugin_redmine_git_hosting[:http_server_subdir] = 'git/'
     User.current = nil
 
-    @project_parent = FactoryGirl.create(:project, :identifier => 'project-parent')
-    @project_child  = FactoryGirl.create(:project, :identifier => 'project-child', :parent_id => @project_parent.id)
+    @project_parent = FactoryGirl.create(:project, identifier: 'project-parent')
+    @project_child  = FactoryGirl.create(:project, identifier: 'project-child', parent_id: @project_parent.id)
   end
 
 
@@ -26,9 +26,9 @@ describe Repository::Xitolite do
 
   def create_user_with_permissions(project)
     role = FactoryGirl.create(:role)
-    user = FactoryGirl.create(:user, :login => 'redmine-test-user')
+    user = FactoryGirl.create(:user, login: 'redmine-test-user')
 
-    members = Member.new(:role_ids => [role.id], :user_id => user.id)
+    members = Member.new(role_ids: [role.id], user_id: user.id)
     project.members << members
 
     return user
@@ -40,8 +40,8 @@ describe Repository::Xitolite do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
-      @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
-      @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo-test')
+      @repository_1 = create_git_repository(project: @project_child, is_default: true)
+      @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
     end
 
     subject { @repository_1 }
@@ -111,7 +111,7 @@ describe Repository::Xitolite do
 
     describe "invalid cases" do
       it "should not allow identifier gitolite-admin" do
-        expect(build_git_repository(:project => @project_parent, :identifier => 'gitolite-admin')).to be_invalid
+        expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
       end
 
       context "when blank identifier" do
@@ -138,23 +138,23 @@ describe Repository::Xitolite do
 
     describe "Test uniqueness" do
       context "when blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(:project => @project_child, :identifier => '')).to be_invalid }
+        it { expect(build_git_repository(project: @project_child, identifier: '')).to be_invalid }
       end
 
       context "when set as default and blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(:project => @project_child, :identifier => '', :is_default => true)).to be_invalid }
+        it { expect(build_git_repository(project: @project_child, identifier: '', is_default: true)).to be_invalid }
       end
 
       context "when identifier is already taken by a project" do
-        it { expect(build_git_repository(:project => @project_child, :identifier => 'project-child')).to be_invalid }
+        it { expect(build_git_repository(project: @project_child, identifier: 'project-child')).to be_invalid }
       end
 
       context "when identifier is already taken by a repository with same project" do
-        it { expect(build_git_repository(:project => @project_child, :identifier => 'repo-test')).to be_invalid }
+        it { expect(build_git_repository(project: @project_child, identifier: 'repo-test')).to be_invalid }
       end
 
       context "when identifier are not unique" do
-        it { expect(build_git_repository(:project => @project_parent, :identifier => 'repo-test')).to be_valid }
+        it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_valid }
       end
 
       context "when identifier are unique" do
@@ -162,7 +162,7 @@ describe Repository::Xitolite do
           Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
         end
 
-        it { expect(build_git_repository(:project => @project_parent, :identifier => 'repo-test')).to be_invalid }
+        it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid }
       end
     end
 
@@ -245,7 +245,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { :http => {:url => "http://localhost/git/project-parent/project-child.git", :commiter => "false"}}
+        my_hash = { http: { url: "http://localhost/git/project-parent/project-child.git", commiter: "false" } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -260,7 +260,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { :https => {:url => "https://localhost/git/project-parent/project-child.git", :commiter => "false"}}
+        my_hash = { https: { url: "https://localhost/git/project-parent/project-child.git", commiter: "false" } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -276,8 +276,8 @@ describe Repository::Xitolite do
         end
 
         my_hash = {
-          :https => {:url => "https://localhost/git/project-parent/project-child.git", :commiter => "false"},
-          :http  => {:url => "http://localhost/git/project-parent/project-child.git",  :commiter => "false"}
+          https: { url: "https://localhost/git/project-parent/project-child.git", commiter: "false" },
+          http:  { url: "http://localhost/git/project-parent/project-child.git",  commiter: "false" }
         }
 
         it "should return a Hash of Git url" do
@@ -314,20 +314,20 @@ describe Repository::Xitolite do
 
 
   def collection_of_unique_repositories
-    @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
-    @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo1-test')
+    @repository_1 = create_git_repository(project: @project_child, is_default: true)
+    @repository_2 = create_git_repository(project: @project_child, identifier: 'repo1-test')
 
-    @repository_3 = create_git_repository(:project => @project_parent, :is_default => true)
-    @repository_4 = create_git_repository(:project => @project_parent, :identifier => 'repo2-test')
+    @repository_3 = create_git_repository(project: @project_parent, is_default: true)
+    @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo2-test')
   end
 
 
   def collection_of_non_unique_repositories
-    @repository_1 = create_git_repository(:project => @project_child, :is_default => true)
-    @repository_2 = create_git_repository(:project => @project_child, :identifier => 'repo-test')
+    @repository_1 = create_git_repository(project: @project_child, is_default: true)
+    @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
 
-    @repository_3 = create_git_repository(:project => @project_parent, :is_default => true)
-    @repository_4 = create_git_repository(:project => @project_parent, :identifier => 'repo-test')
+    @repository_3 = create_git_repository(project: @project_parent, is_default: true)
+    @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo-test')
   end
 
 
