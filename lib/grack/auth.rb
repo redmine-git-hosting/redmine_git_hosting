@@ -1,7 +1,7 @@
 module Grack
   class Auth < Rack::Auth::Basic
 
-    attr_accessor :user, :project, :env
+    attr_accessor :user, :env
 
     def call(env)
       @env = env
@@ -61,7 +61,7 @@ module Grack
         case git_cmd
         when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
           if user
-            RedmineGitHosting::GitAccess.new.download_access_check(user, repository).allowed?
+            RedmineGitHosting::GitAccess.new.download_access_check(user, repository, is_ssl?).allowed?
           elsif repository.public_project?
             # Allow clone/fetch for public projects
             true
@@ -69,9 +69,11 @@ module Grack
             false
           end
         when *RedmineGitHosting::GitAccess::PUSH_COMMANDS
-          if user
-            # Skip user authorization on upload request.
-            # It will be done by the pre-receive hook in the repository.
+          # Push requires valid SSL
+          if !is_ssl?
+            logger.error("SmartHttp : your are trying to push data without SSL!, exiting !")
+            false
+          elsif user
             RedmineGitHosting::GitAccess.new.upload_access_check(user, repository).allowed?
           else
             false
@@ -106,8 +108,33 @@ module Grack
       end
 
 
+      def is_ssl?
+        @request.ssl? || https_headers? || x_forwarded_proto_headers? || x_forwarded_ssl_headers?
+      end
+
+
+      def https_headers?
+        @request.env['HTTPS'].to_s == 'on'
+      end
+
+
+      def x_forwarded_proto_headers?
+        @request.env['HTTP_X_FORWARDED_PROTO'].to_s == 'https'
+      end
+
+
+      def x_forwarded_ssl_headers?
+        @request.env['HTTP_X_FORWARDED_SSL'].to_s == 'on'
+      end
+
+
       def render_not_found
         [404, {"Content-Type" => "text/plain"}, ["Not Found"]]
+      end
+
+
+      def logger
+        RedmineGitHosting.logger
       end
 
   end

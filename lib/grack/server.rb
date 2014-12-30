@@ -15,7 +15,7 @@ module Grack
 
     # Override original *git_command* method to prefix the command with Sudo and other args.
     def git_command(params)
-      git_params.concat(params)
+      git_command_with_sudo(params)
     end
 
 
@@ -34,14 +34,14 @@ module Grack
     # passing 'chdir: @dir' option to IO.popen.
     # This is wrong as we can't chdir to Gitolite directory.
     def popen_options
-      {}
+      { unsetenv_others: true }
     end
 
 
     # Override original *popen_options* method.
-    # The original one passes (useless I think) args to IO.popen.
+    # The original one passes useless arg (GL_ID) to IO.popen.
     def popen_env
-      {}
+       { 'PATH' => ENV['PATH'] }
     end
 
 
@@ -55,6 +55,32 @@ module Grack
 
       def directory_exists?(dir)
         RedmineGitHosting::Commands.sudo_dir_exists?(dir)
+      end
+
+
+      # We sometimes need to add *--git-dir* arg to Git command otherwise
+      # Git looks for the repository in the current path.
+      def git_command_with_sudo(params)
+        if command_require_chdir?(params.last)
+          git_params_with_chdir.concat(params)
+        else
+          git_params_without_chdir.concat(params)
+        end
+      end
+
+
+      def command_require_chdir?(cmd)
+        cmd == 'update-server-info' || cmd == 'http.receivepack'  || cmd == 'http.uploadpack'
+      end
+
+
+      def git_params_without_chdir
+        git_params
+      end
+
+
+      def git_params_with_chdir
+        git_params.concat(['--git-dir', @dir])
       end
 
 
