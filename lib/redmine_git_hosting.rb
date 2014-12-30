@@ -10,6 +10,9 @@ Rails.configuration.to_prepare do
     require_dependency file
   end
 
+  require_dependency 'grack/auth'
+  require_dependency 'grack/server'
+
 end
 
 

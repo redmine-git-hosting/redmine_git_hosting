@@ -47,6 +47,11 @@ class Repository::Xitolite < Repository::Git
   end
 
 
+  def public_project?
+    project.is_public?
+  end
+
+
   private
 
 

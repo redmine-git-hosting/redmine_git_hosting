@@ -28,14 +28,16 @@ RedmineApp::Application.routes.draw do
     end
   end
 
-  # SMART HTTP
-  match 'go/:repo_path',          repo_path: /([^\/]+\/)*?[^\/]+/,      to: 'go_redirector#index'
-  match ':repo_path/*git_params', repo_path: /([^\/]+\/)*?[^\/]+\.git/, to: 'smart_http#index', prefix: RedmineGitHosting::Config.http_server_subdir
+  # Enable Redirector for Go Lang repositories
+  match 'go/:repo_path', repo_path: /([^\/]+\/)*?[^\/]+/, to: 'go_redirector#index'
 
-  # POST RECEIVE
+  # Enable SmartHTTP Grack support
+  mount Grack::Bundle.new({}), at: '/', constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
+
+  # Post Receive Hooks
   match 'githooks/post-receive/:type/:projectid', to: 'gitolite_hooks#post_receive', via: [:post]
 
-  # ARCHIVED REPOSITORIES
+  # Archived Repositories
   get 'archived_projects/index',                                                to: 'archived_repositories#index'
   get 'archived_projects/:id/repository/:repository_id/statistics',             to: 'archived_repositories#stats'
   get 'archived_projects/:id/repository/:repository_id/graph',                  to: 'archived_repositories#graph'
