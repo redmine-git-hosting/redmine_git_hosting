@@ -1,5 +1,5 @@
 module RedmineGitHosting
-  module GitoliteWrapper
+  module GitoliteWrappers
     class Repositories < Admin
 
       attr_reader :create_readme_file

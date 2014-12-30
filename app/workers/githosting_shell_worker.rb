@@ -5,6 +5,6 @@ class GithostingShellWorker
 
   def perform(command, object, options = {})
     logger.info("#{command} | #{object} | #{options}")
-    RedmineGitHosting::GitoliteWrapper.update(command, object, options)
+    RedmineGitHosting::GitoliteWrapper.resync_gitolite(command, object, options)
   end
 end

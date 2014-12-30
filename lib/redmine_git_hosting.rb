@@ -35,7 +35,7 @@ module RedmineGitHosting
       if RedmineGitHosting::Config.gitolite_use_sidekiq? && !bypass
         GithostingShellWorker.perform_async(command, object, options)
       else
-        RedmineGitHosting::GitoliteWrapper.update(command, object, options)
+        RedmineGitHosting::GitoliteWrapper.resync_gitolite(command, object, options)
       end
     end
 
