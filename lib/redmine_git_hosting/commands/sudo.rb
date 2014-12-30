@@ -166,6 +166,13 @@ module RedmineGitHosting::Commands
         return empty_repo
       end
 
+
+      # Send Git command with Sudo
+      #
+      def sudo_git_cmd(*params)
+        sudo_capture('git', *params)
+      end
+
     end
 
   end

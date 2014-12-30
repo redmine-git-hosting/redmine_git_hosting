@@ -2,14 +2,10 @@ module RedmineGitHosting
   module GitoliteWrappers
     class Repositories < Admin
 
-      attr_reader :create_readme_file
-      attr_reader :enable_git_annex
-
 
       def initialize(*args)
         super
-        @create_readme_file = options.delete(:create_readme_file){ false }
-        @enable_git_annex   = options.delete(:enable_git_annex){ false }
+
         # Find object or raise error
         # find_repository
       end
@@ -30,7 +26,7 @@ module RedmineGitHosting
             end
           end
 
-          # Create README file or initialize GitAnnex
+          # Call Gitolite plugins
           execute_post_create_actions(repository, @recovered)
 
           # Fetch changeset
@@ -47,9 +43,27 @@ module RedmineGitHosting
             RedmineGitHosting::GitoliteHandlers::RepositoryUpdater.new(repository, gitolite_config, action, options).call
             gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
           end
+
+          # Call Gitolite plugins
+          execute_post_update_actions(repository)
+
+          # Fetch changeset
+          repository.fetch_changesets
         else
           logger.error("#{action} : repository does not exist anymore, object is nil, exit !")
         end
+      end
+
+
+      def delete_repository
+        repository_data = object_id
+        admin.transaction do
+          RedmineGitHosting::GitoliteHandlers::RepositoryDeleter.new(repository_data, gitolite_config, action).call
+          gitolite_admin_repo_commit("#{repository_data['repo_name']}")
+        end
+
+        # Call Gitolite plugins
+        execute_post_delete_actions(repository_data)
       end
 
 
@@ -60,6 +74,9 @@ module RedmineGitHosting
             gitolite_admin_repo_commit("#{repository_data['repo_name']}")
           end
         end
+
+        # Call Gitolite plugins
+        execute_post_delete_actions(repository_data)
       end
 
 
@@ -75,20 +92,21 @@ module RedmineGitHosting
       private
 
 
-        def create_readme_file?
-          create_readme_file == true || create_readme_file == 'true'
+        def execute_post_create_actions(repository, recovered = false)
+          # Create README file or initialize GitAnnex
+          RedmineGitHosting::Plugins.execute(:post_create, repository, options.merge(recovered: recovered))
         end
 
 
-        def enable_git_annex?
-          enable_git_annex == true || enable_git_annex == 'true'
+        def execute_post_update_actions(repository)
+          # Delete Git Config Keys
+          RedmineGitHosting::Plugins.execute(:post_update, repository, options)
         end
 
 
-        def execute_post_create_actions(repository, recovered)
-          # Create README file if asked and not already recovered
-          RedmineGitHosting::GitoliteHandlers::RepositoryReadmeCreator.new(repository).call if create_readme_file? && !recovered
-          RedmineGitHosting::GitoliteHandlers::RepositoryGitAnnexCreator.new(repository).call if enable_git_annex? && !recovered
+        def execute_post_delete_actions(repository_data)
+          # Move repository to RecycleBin
+          RedmineGitHosting::Plugins.execute(:post_delete, repository_data)
         end
 
     end

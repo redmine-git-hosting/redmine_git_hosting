@@ -21,8 +21,11 @@ module RedmineGitHosting
 
 
       def call
-        handle_repository_delete
-        move_repository_to_recycle
+        if repo_conf
+          delete_repository
+        else
+          logger.warn("#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !")
+        end
       end
 
 
@@ -34,22 +37,9 @@ module RedmineGitHosting
         end
 
 
-        def handle_repository_delete
-          if !repo_conf
-            logger.warn("#{action} : repository '#{repo_name}' does not exist in Gitolite, exit !")
-            logger.debug("#{action} : repository path '#{repo_path}'")
-            return false
-          else
-            logger.info("#{action} : repository '#{repo_name}' exists in Gitolite, delete it ...")
-            logger.debug("#{action} : repository path '#{repo_path}'")
-            gitolite_config.rm_repo(repo_name)
-          end
-        end
-
-
-        def move_repository_to_recycle
-          recycle = RedmineGitHosting::Recycle.new
-          recycle.move_repository_to_recycle(repository_data) if RedmineGitHosting::Config.delete_git_repositories?
+        def delete_repository
+          logger.info("#{action} : repository '#{repo_name}' exists in Gitolite, delete it ...")
+          gitolite_config.rm_repo(repo_name)
         end
 
     end

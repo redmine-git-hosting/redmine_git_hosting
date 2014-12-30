@@ -73,7 +73,7 @@ module RedmineGitHosting
                 when 'update'
                   UpdateRepository.new(@repository).call
                 when 'destroy'
-                  DestroyRepository.new(@repository.data_for_destruction, destroy_options).call
+                  DestroyRepository.new(@repository).call
                 end
               end
             end

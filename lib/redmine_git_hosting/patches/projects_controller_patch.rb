@@ -50,7 +50,7 @@ module RedmineGitHosting
           repositories_list = repositories_to_destroy
           destroy_without_git_hosting(&block)
           if api_request? || params[:confirm]
-            DestroyRepository.new(repositories_list, destroy_options).call
+            DestroyRepositories.new(repositories_list, destroy_options).call
           end
         end
 
@@ -109,7 +109,7 @@ module RedmineGitHosting
 
 
           def destroy_options
-            {message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !"}
+            { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
           end
 
       end
