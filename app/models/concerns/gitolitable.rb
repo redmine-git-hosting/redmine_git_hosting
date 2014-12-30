@@ -53,6 +53,16 @@ module Gitolitable
   end
 
 
+  def clonable_via_http?
+    User.anonymous.allowed_to?(:view_changesets, project) || extra[:git_http] != 0
+  end
+
+
+  def pushable_via_http?
+    extra[:git_http] == 1 || extra[:git_http] == 2
+  end
+
+
   private
 
 

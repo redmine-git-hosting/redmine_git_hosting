@@ -130,7 +130,7 @@ module RedmineGitHosting
 
 
         def set_smart_http_download_conf(repo_conf)
-          if User.anonymous.allowed_to?(:view_changesets, project) || repository.extra[:git_http] != 0
+          if repository.clonable_via_http?
             repo_conf.set_git_config('http.uploadpack', 'true')
           else
             repo_conf.set_git_config('http.uploadpack', 'false')
@@ -142,7 +142,7 @@ module RedmineGitHosting
         def set_smart_http_upload_conf(repo_conf)
           # 1 = HTTPS only
           # 2 = both HTTPS and HTTP
-          if repository.extra[:git_http] == 1 || repository.extra[:git_http] == 2
+          if repository.pushable_via_http?
             repo_conf.set_git_config('http.receivepack', 'true')
           else
             repo_conf.set_git_config('http.receivepack', 'false')
