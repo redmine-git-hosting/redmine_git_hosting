@@ -7,14 +7,14 @@ module RedmineGitHosting
       attr_reader :repository
       attr_reader :gitolite_repo_name
       attr_reader :gitolite_repo_path
-      attr_reader :remote_branch
+      attr_reader :default_branch
 
 
       def initialize(repository)
         @repository         = repository
         @gitolite_repo_name = repository.gitolite_repository_name
         @gitolite_repo_path = repository.gitolite_repository_path
-        @remote_branch      = "refs/heads/#{repository.extra[:default_branch]}"
+        @default_branch     = repository.default_branch
       end
 
 
@@ -59,6 +59,8 @@ module RedmineGitHosting
           rescue => e
             logger.error("Error while creating README file for repository '#{gitolite_repo_name}'")
             logger.error(e.message)
+          else
+            logger.info('README file successfully created.')
           ensure
             FileUtils.rm_rf temp_dir
           end
@@ -93,6 +95,11 @@ module RedmineGitHosting
 
         def push_commit(repo)
           repo.push('origin', [ remote_branch ], credentials: credentials)
+        end
+
+
+        def remote_branch
+          "refs/heads/#{default_branch}"
         end
 
 

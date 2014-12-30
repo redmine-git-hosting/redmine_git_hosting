@@ -22,6 +22,11 @@ module Gitolitable
   end
 
 
+  def default_branch
+    extra[:default_branch]
+  end
+
+
   def gitolite_hook_key
     extra[:key]
   end

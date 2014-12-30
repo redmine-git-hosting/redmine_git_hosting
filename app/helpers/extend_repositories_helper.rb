@@ -34,4 +34,9 @@ module ExtendRepositoriesHelper
     end if repository.new_record?
   end
 
+
+  def repository_branches_list(branches)
+    options_for_select(branches.collect{ |b| [b.to_s, b.to_s] }, selected: branches.find{ |b| b.is_default}.to_s)
+  end
+
 end

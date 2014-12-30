@@ -33,7 +33,7 @@ class UpdateRepository
 
       ## Update repository default branch if asked
       if update_default_branch
-        message = "User '#{User.current.login}' has modified default_branch of '#{repository.gitolite_repository_name}' ('#{repository.extra[:default_branch]}')"
+        message = "User '#{User.current.login}' has modified default_branch of '#{repository.gitolite_repository_name}' ('#{repository.default_branch}')"
         logger.info(message)
         resync_gitolite(:update_repository_default_branch, repository.id)
       end

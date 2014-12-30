@@ -15,7 +15,7 @@ class CreateRepository
 
 
   def call
-    set_repository_extras
+    set_repository_extra
     create_repository
     super
   end
@@ -24,8 +24,8 @@ class CreateRepository
   private
 
 
-    def set_repository_extras
-      extra = repository.build_git_extra(default_extra_options)
+    def set_repository_extra
+      extra = repository.build_extra(default_extra_options)
       extra.save!
     end
 

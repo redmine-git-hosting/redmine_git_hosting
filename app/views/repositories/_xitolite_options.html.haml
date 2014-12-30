@@ -2,7 +2,7 @@
 
   #xitolite-messages
 
-  = form_for repository.git_extra, url: repository_git_extras_path(repository), html: { method: :put, remote: true } do |f|
+  = form_for repository.extra, url: repository_git_extras_path(repository), html: { method: :put, remote: true } do |f|
 
     %div{ class: 'box tabular' }
 
@@ -29,9 +29,9 @@
         %p
           %label= l(:label_repository_default_branch)
           - if !repository.branches.empty?
-            = f.select :default_branch, options_for_select(repository.branches.collect{ |b| [b.to_s, b.to_s] }, selected: repository.branches.find{ |b| b.is_default}.to_s)
+            = f.select :default_branch, repository_branches_list(repository.branches)
           - else
-            %span{ class: 'label label-info' }= repository.extra[:default_branch]
+            %span{ class: 'label label-info' }= repository.default_branch
 
         %p
           %label= l(:label_mirroring_keys_installed)
