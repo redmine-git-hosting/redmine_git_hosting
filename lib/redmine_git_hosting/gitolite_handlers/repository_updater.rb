@@ -38,21 +38,17 @@ module RedmineGitHosting
 
         def delete_hook_param
           begin
-            RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'config', '--local', '--unset', delete_git_config_key)
-            logger.info("Git config key '#{delete_git_config_key}' successfully deleted for repository '#{gitolite_repo_name}'")
+            RedmineGitHosting::Commands.sudo_capture(*git_command)
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("Error while deleting Git config key '#{delete_git_config_key}' for repository '#{gitolite_repo_name}'")
+          else
+            logger.info("Git config key '#{delete_git_config_key}' successfully deleted for repository '#{gitolite_repo_name}'")
           end
         end
 
 
-        def delete_hook_section(section_name)
-          begin
-            RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{gitolite_repo_path}", 'config', '--local', '--remove-section', section_name)
-            logger.info("Git config section '#{section_name}' successfully deleted for repository '#{gitolite_repo_name}'")
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("Error while deleting Git config section '#{section_name}' for repository '#{gitolite_repo_name}'")
-          end
+        def git_command
+          [ 'git', "--git-dir=#{gitolite_repo_path}", 'config', '--local', '--unset', delete_git_config_key ]
         end
 
     end

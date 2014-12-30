@@ -174,11 +174,12 @@ module RedmineGitHosting
 
           begin
             RedmineGitHosting::Commands.sudo_move(old_path, new_path)
-            logger.info("#{action} : done !")
-            return true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error("move_physical_repo(#{old_path}, #{new_path}) failed")
             return false
+          else
+            logger.info("#{action} : done !")
+            return true
           end
         end
 
