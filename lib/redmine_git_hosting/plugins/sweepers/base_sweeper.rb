@@ -4,13 +4,23 @@ module RedmineGitHosting::Plugins::Sweepers
     attr_reader :repository_data
     attr_reader :gitolite_repo_name
     attr_reader :gitolite_repo_path
+    attr_reader :delete_repository
 
 
     def initialize(repository_data, options = {})
       @repository_data    = repository_data
-      @gitolite_repo_name = repository_data['repo_name']
-      @gitolite_repo_path = repository_data['repo_path']
+      @gitolite_repo_name = repository_data[:repo_name]
+      @gitolite_repo_path = repository_data[:repo_path]
+      @delete_repository  = repository_data[:delete_repository]
     end
+
+
+    private
+
+
+      def delete_repository?
+        delete_repository == true || delete_repository == 'true'
+      end
 
   end
 end

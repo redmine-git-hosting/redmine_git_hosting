@@ -12,8 +12,8 @@ module RedmineGitHosting
 
       def initialize(repository_data, gitolite_config, action)
         @repository_data = repository_data
-        @repo_name       = repository_data['repo_name']
-        @repo_path       = repository_data['repo_path']
+        @repo_name       = repository_data[:repo_name]
+        @repo_path       = repository_data[:repo_path]
         @repo_conf       = gitolite_config.repos[repo_name]
         @gitolite_config = gitolite_config
         @action          = action

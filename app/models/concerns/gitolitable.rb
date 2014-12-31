@@ -33,7 +33,7 @@ module Gitolitable
 
 
   def data_for_destruction
-    { 'repo_name' => gitolite_repository_name, 'repo_path' => gitolite_repository_path }
+    { repo_name: gitolite_repository_name, repo_path: gitolite_repository_path, delete_repository: deletable? }
   end
 
 
@@ -80,6 +80,11 @@ module Gitolitable
 
   def protected_branches_enabled?
     project.active? && extra[:protected_branch] && protected_branches.any?
+  end
+
+
+  def deletable?
+    RedmineGitHosting::Config.delete_git_repositories?
   end
 
 
