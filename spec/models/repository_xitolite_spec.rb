@@ -41,6 +41,9 @@ describe Repository::Xitolite do
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
       @repository_1 = create_git_repository(project: @project_child, is_default: true)
+      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
+      extra.save!
+
       @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
     end
 
@@ -53,7 +56,7 @@ describe Repository::Xitolite do
     it { should have_many(:git_config_keys) }
     it { should have_many(:protected_branches) }
 
-    it { should have_one(:git_extra) }
+    it { should have_one(:extra) }
     it { should have_one(:git_notification) }
 
     it { should be_valid }
@@ -102,8 +105,8 @@ describe Repository::Xitolite do
     it { expect(@repository_1.extra_report_last_commit).to be true }
 
     it { expect(@repository_1.extra[:git_http]).to eq 1 }
-    it { expect(@repository_1.extra[:git_daemon]).to be false }
-    it { expect(@repository_1.extra[:git_notify]).to be false }
+    it { expect(@repository_1.extra[:git_daemon]).to be true }
+    it { expect(@repository_1.extra[:git_notify]).to be true }
     it { expect(@repository_1.extra[:default_branch]).to eq 'master' }
 
     it { expect(@repository_1.available_urls).to be_a(Hash) }

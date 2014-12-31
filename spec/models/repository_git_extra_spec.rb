@@ -4,7 +4,7 @@ describe RepositoryGitExtra do
 
   describe "Valid RepositoryGitExtra creation" do
     before(:each) do
-      @git_extra = create(:repository_git_extra)
+      @git_extra = build(:repository_git_extra)
     end
 
     subject { @git_extra }
@@ -54,7 +54,7 @@ describe RepositoryGitExtra do
     end
 
     it "should have default values for key" do
-      expect(@git_extra.key).to match /\A[A-Z]+\z/
+      expect(@git_extra.key).to match /\A[a-zA-Z0-9]+\z/
     end
   end
 
