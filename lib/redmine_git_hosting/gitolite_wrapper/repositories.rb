@@ -1,5 +1,5 @@
 module RedmineGitHosting
-  module GitoliteWrappers
+  module GitoliteWrapper
     class Repositories < Admin
 
 
