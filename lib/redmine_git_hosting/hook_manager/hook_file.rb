@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 module RedmineGitHosting::HookManager
 
   class HookFile
@@ -23,7 +21,7 @@ module RedmineGitHosting::HookManager
       if !exists?
         logger.info("Hook '#{name}' does not exist, installing it ...")
         do_install_file
-      elsif hook_are_different?
+      elsif hook_file_has_changed?
         logger.warn("Hook '#{name}' is already present but it's not ours!")
 
         if @force_update
@@ -51,28 +49,13 @@ module RedmineGitHosting::HookManager
       end
 
 
-      def hook_are_different?
-        local_md5 != distant_md5
-      end
-
-
-      def local_md5
-        Digest::MD5.hexdigest(File.read(source_path))
-      end
-
-
-      def distant_md5
-        content = RedmineGitHosting::Commands.sudo_capture('eval', 'cat', destination_path) rescue ''
-        Digest::MD5.hexdigest(content)
+      def hook_file_has_changed?
+        RedmineGitHosting::Commands.sudo_file_changed?(source_path, destination_path)
       end
 
 
       def exists?
-        begin
-          RedmineGitHosting::Commands.sudo_file_exists?(destination_path)
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          return false
-        end
+        RedmineGitHosting::Commands.sudo_file_exists?(destination_path)
       end
 
 

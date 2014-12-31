@@ -33,11 +33,7 @@ module RedmineGitHosting::HookManager
 
 
       def exists?
-        begin
-          RedmineGitHosting::Commands.sudo_dir_exists?(destination_path)
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          return false
-        end
+        RedmineGitHosting::Commands.sudo_dir_exists?(destination_path)
       end
 
 
