@@ -196,10 +196,10 @@ describe Repository::Xitolite do
         end
 
         my_hash = {
-          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     commiter: 'false' },
-          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", commiter: 'false' },
-          http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  commiter: 'false' },
-          git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 commiter: 'false' }
+          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'false' },
+          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", committer: 'false' },
+          http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  committer: 'false' },
+          git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 committer: 'false' }
         }
 
         it "should return a Hash of Git url" do
@@ -216,7 +216,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { git: { url: "git://localhost/redmine/project-parent/project-child.git", commiter: 'false' } }
+        my_hash = { git: { url: "git://localhost/redmine/project-parent/project-child.git", committer: 'false' } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -233,7 +233,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", commiter: 'false' } }
+        my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'false' } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -248,7 +248,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { http: { url: "http://localhost/git/project-parent/project-child.git", commiter: "false" } }
+        my_hash = { http: { url: "http://localhost/git/project-parent/project-child.git", committer: "false" } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -263,7 +263,7 @@ describe Repository::Xitolite do
           @repository_1.save
         end
 
-        my_hash = { https: { url: "https://localhost/git/project-parent/project-child.git", commiter: "false" } }
+        my_hash = { https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" } }
 
         it "should return a Hash of Git url" do
           expect(@repository_1.available_urls).to eq my_hash
@@ -279,8 +279,8 @@ describe Repository::Xitolite do
         end
 
         my_hash = {
-          https: { url: "https://localhost/git/project-parent/project-child.git", commiter: "false" },
-          http:  { url: "http://localhost/git/project-parent/project-child.git",  commiter: "false" }
+          https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" },
+          http:  { url: "http://localhost/git/project-parent/project-child.git",  committer: "false" }
         }
 
         it "should return a Hash of Git url" do

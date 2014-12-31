@@ -49,6 +49,7 @@ echo ""
 
 echo "#### CREATE SYMLINK"
 ln -s "${REDMINE_NAME}" "redmine"
+ln -s "redmine/plugins/redmine_git_hosting/.git" "redmine/.git"
 echo "Done !"
 echo ""
 
