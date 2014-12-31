@@ -1,8 +1,6 @@
-- recycle_bin = RedmineGitHosting::Recycle.new
-
 %h3= l(:label_empty_recycle_bin)
 
-- if !recycle_bin.content.empty?
+- if !RedmineGitHosting::Recycle.content.empty?
   %table{ class: 'table table-hover' }
     %tr
       %th= l(:label_recycle_bin_content)
@@ -13,7 +11,7 @@
         = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
         )
 
-    - recycle_bin.content.each do |repo_trash|
+    - RedmineGitHosting::Recycle.content.each do |repo_trash|
       %tr
         %td= repo_trash[0]
         %td= repo_trash[1][:size]

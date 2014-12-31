@@ -16,8 +16,7 @@ module RedmineGitHosting
           admin.transaction do
             RedmineGitHosting::GitoliteHandlers::RepositoryAdder.new(repository, gitolite_config, action, options).call
             gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
-            recycle = RedmineGitHosting::Recycle.new
-            @recovered = recycle.recover_repository_if_present?(repository)
+            @recovered = RedmineGitHosting::Recycle.recover_repository_if_present?(repository)
 
             if !@recovered
               logger.info("#{action} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'")

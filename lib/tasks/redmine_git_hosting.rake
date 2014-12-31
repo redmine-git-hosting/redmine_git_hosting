@@ -14,7 +14,7 @@ namespace :redmine_git_hosting do
   task :purge_recycle_bin => [:environment] do
     puts "Purging Recycle Bin..."
     RedmineGitHosting.logger.warn("Purging Recycle Bin from command line")
-    RedmineGitHosting::Recycle.new().delete_expired_files
+    RedmineGitHosting::Recycle.delete_expired_files
     puts "Done!"
   end
 

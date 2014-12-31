@@ -22,7 +22,7 @@ module RedmineGitHosting
 
 
       def purge_recycle_bin
-        RedmineGitHosting::Recycle.new().delete_expired_files(object_id)
+        RedmineGitHosting::Recycle.delete_expired_files(object_id)
         logger.info("#{action} : done !")
       end
 
