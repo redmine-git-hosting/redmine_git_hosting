@@ -50,7 +50,7 @@ module RedmineGitHosting
           result = repositories_array
         else
           begin
-            result = RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
+            result = get_expired_repositories
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             result = []
           end
@@ -82,7 +82,7 @@ module RedmineGitHosting
         return {} if !directory_exists?(recycle_bin_dir)
 
         begin
-          directories = RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
+          directories = get_recycle_bin_content
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           directories = {}
         end
@@ -107,7 +107,7 @@ module RedmineGitHosting
 
         # Pull up any matching repositories. Sort them (beginning is representation of time)
         begin
-          files = RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', myregex, '-prune', '-print').chomp.split("\n").sort {|x, y| y <=> x }
+          files = find_old_repositories(myregex)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           files = []
         end
@@ -191,6 +191,21 @@ module RedmineGitHosting
         def repository_trash_path(repo_name)
           trash_name = repo_name.gsub(/\//, TRASH_DIR_SEP)
           File.join(recycle_bin_dir, "#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{trash_name}.git")
+        end
+
+
+        def get_expired_repositories
+          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
+        end
+
+
+        def get_recycle_bin_content
+          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
+        end
+
+
+        def find_old_repositories(regex)
+          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', regex, '-prune', '-print').chomp.split("\n").sort { |x, y| y <=> x }
         end
 
 
