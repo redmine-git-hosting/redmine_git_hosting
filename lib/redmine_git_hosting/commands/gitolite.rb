@@ -9,11 +9,11 @@ module RedmineGitHosting::Commands
     end
 
 
-    ############################
-    #                          #
-    #  Sudo+Git Shell Wrapper  #
-    #                          #
-    ############################
+    #################################
+    #                               #
+    #  Sudo+Gitolite Shell Wrapper  #
+    #                               #
+    #################################
 
     module ClassMethods
 
