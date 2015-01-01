@@ -119,21 +119,44 @@ module GitolitableUrls
   end
 
 
+  def ssh_access_available?
+    allowed_to_ssh? && !extra[:git_annex]
+  end
+
+
+  def https_access_available?
+    extra[:git_http] == 1 || extra[:git_http] == 2
+  end
+
+
+  def http_access_available?
+    extra[:git_http] == 3 || extra[:git_http] == 2
+  end
+
+
+  def git_access_available?
+    project.is_public? && extra[:git_daemon]
+  end
+
+
+  def go_access_available?
+    project.is_public? && extra[:git_http] != 0
+  end
+
+
+  def git_annex_access_available?
+    extra[:git_annex]
+  end
+
+
   def available_urls
     hash = {}
-
-    if extra[:git_http] == 2
-      hash[:https] = https_access
-      hash[:http]  = http_access
-    end
-
-    hash[:ssh]   = ssh_access if allowed_to_ssh? && !extra[:git_annex]
-    hash[:https] = https_access if extra[:git_http] == 1
-    hash[:http]  = http_access if extra[:git_http] == 3
-    hash[:git]   = git_access if project.is_public? && extra[:git_daemon]
-    hash[:go]    = go_access if project.is_public? && extra[:git_http] != 0
-    hash[:git_annex] = git_annex_access if extra[:git_annex]
-
+    hash[:ssh]       = ssh_access if ssh_access_available?
+    hash[:https]     = https_access if https_access_available?
+    hash[:http]      = http_access if http_access_available?
+    hash[:git]       = git_access if git_access_available?
+    hash[:go]        = go_access if go_access_available?
+    hash[:git_annex] = git_annex_access if git_annex_access_available?
     hash
   end
 
