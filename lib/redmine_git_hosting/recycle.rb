@@ -17,13 +17,18 @@ module RedmineGitHosting
 
     class << self
 
+      def gitolite_home_dir
+        @gitolite_home_dir ||= RedmineGitHosting::Config.gitolite_home_dir
+      end
+
+
       def recycle_bin_dir
-        @recycle_bin_dir ||= File.join('$HOME', RedmineGitHosting::Config.gitolite_recycle_bin_dir)
+        @recycle_bin_dir ||= File.join(gitolite_home_dir, RedmineGitHosting::Config.gitolite_recycle_bin_dir)
       end
 
 
       def global_storage_dir
-        @global_storage_dir ||= File.join('$HOME', RedmineGitHosting::Config.gitolite_global_storage_dir)
+        @global_storage_dir ||= File.join(gitolite_home_dir, RedmineGitHosting::Config.gitolite_global_storage_dir)
       end
 
 
@@ -61,7 +66,7 @@ module RedmineGitHosting
 
       def move_repository_to_recycle(repository_data)
         repo_name = repository_data[:repo_name]
-        repo_path = File.join('$HOME', repository_data[:repo_path])
+        repo_path = File.join(gitolite_home_dir, repository_data[:repo_path])
 
         # Only bother if actually exists!
         if !directory_exists?(repo_path)
@@ -94,7 +99,7 @@ module RedmineGitHosting
 
       def recover_repository_if_present?(repository)
         repo_name = repository.gitolite_repository_name
-        repo_path = File.join('$HOME', repository.gitolite_repository_path)
+        repo_path = File.join(gitolite_home_dir, repository.gitolite_repository_path)
 
         trash_name = "#{repo_name}".gsub(/\//, "#{TRASH_DIR_SEP}")
 
@@ -191,7 +196,7 @@ module RedmineGitHosting
 
         def do_move_repository_to_recycle(repository_data)
           repo_name = repository_data[:repo_name]
-          repo_path = File.join('$HOME', repository_data[:repo_path])
+          repo_path = File.join(gitolite_home_dir, repository_data[:repo_path])
 
           trash_path = repository_trash_path(repo_name)
 
