@@ -2,7 +2,7 @@ module RedmineGitHosting
   class GitAccess
 
     DOWNLOAD_COMMANDS = %w{ git-upload-pack git-upload-archive }
-    PUSH_COMMANDS = %w{ git-receive-pack }
+    PUSH_COMMANDS     = %w{ git-receive-pack }
 
 
     def download_access_check(actor, repository, is_ssl = false)

@@ -10,7 +10,7 @@ module RedmineGitHosting
     end
 
     def to_json
-      {status: @status, message: @message}.to_json
+      { status: @status, message: @message }.to_json
     end
 
   end
