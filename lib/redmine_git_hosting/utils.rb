@@ -40,14 +40,15 @@ module RedmineGitHosting
       # If the operation throws an exception or the operation yields a non-zero exit code
       # we rethrow a +GitoliteCommandException+ with a meaningful error message.
       def capture(command, args = [], opts = {})
-        output, err, code = execute(command, args, opts)
+        merge_output = opts.delete(:merge_output){ false }
+        stdout, stderr, code = execute(command, args, opts)
         if code != 0
           error_msg = "Non-zero exit code #{code} for `#{command} #{args.join(" ")}`"
           RedmineGitHosting.logger.debug(error_msg)
           raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
         end
 
-        output
+        merge_output ? stdout + stderr : stdout
       end
 
 

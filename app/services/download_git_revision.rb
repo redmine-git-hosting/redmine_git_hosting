@@ -47,7 +47,7 @@ class DownloadGitRevision
       tags = RedmineGitHosting::Commands.sudo_git_tag(@repository.gitolite_repository_path)
       tags.each do |x|
         if x == @revision
-          commit_id = RedmineGitHosting::Commands.sudo_git_rev_list(@repository.gitolite_repository_path, @revision)[0]
+          commit_id = RedmineGitHosting::Commands.sudo_git_rev_list(@repository.gitolite_repository_path, @revision).split[0]
           break
         end
       end

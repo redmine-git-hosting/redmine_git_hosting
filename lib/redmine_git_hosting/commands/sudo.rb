@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 module RedmineGitHosting::Commands
 
   module Sudo
@@ -19,38 +17,6 @@ module RedmineGitHosting::Commands
 
     module ClassMethods
 
-      # Returns the sudo prefix to all sudo_* commands
-      #
-      # These are as follows:
-      # * (-i) login as `gitolite_user` (setting ENV['HOME')
-      # * (-n) non-interactive
-      # * (-u `gitolite_user`) target user
-      def sudo_shell_params
-        ['-n', '-u', RedmineGitHosting::Config.gitolite_user, '-i']
-      end
-
-
-      # Execute a command as the gitolite user defined in +GitoliteWrapper.gitolite_user+.
-      #
-      # Will shell out to +sudo -n -u <gitolite_user> params+
-      #
-      def sudo_shell(*params)
-        RedmineGitHosting::Utils.execute('sudo', sudo_shell_params.concat(params))
-      end
-
-
-      # Return only the output of the shell command
-      # Throws an exception if the shell command does not exit with code 0.
-      def sudo_capture(*params)
-        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.concat(params))
-      end
-
-
-      def sudo_pipe_data(stdin)
-        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.push('sh'), {stdin_data: stdin, binmode: true})
-      end
-
-
       # Pipe file content via sudo to dest_file.
       # Expect file content to end with EOL (\n)
       def sudo_install_file(content, dest_file, filemode)
@@ -58,11 +24,17 @@ module RedmineGitHosting::Commands
 
         begin
           sudo_pipe_data(stdin)
-          sudo_chmod(filemode, dest_file)
-          return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error(e.output)
           return false
+        else
+          begin
+            sudo_chmod(filemode, dest_file)
+            return true
+          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+            logger.error(e.output)
+            return false
+          end
         end
       end
 
@@ -83,7 +55,7 @@ module RedmineGitHosting::Commands
       #
       # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
       def sudo_test(path, testarg)
-        out, _ , code = sudo_shell('eval', 'test', testarg, path)
+        _, _ , code = sudo_shell('test', testarg, path)
         return code == 0
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.debug("File check for #{path} failed : #{e.message}")
@@ -96,7 +68,7 @@ module RedmineGitHosting::Commands
       # e.g., sudo_mkdir('-p', '/some/path')
       #
       def sudo_mkdir(*args)
-        sudo_shell('eval', 'mkdir', *args)
+        sudo_shell('mkdir', *args)
       end
 
 
@@ -111,7 +83,7 @@ module RedmineGitHosting::Commands
       # e.g., sudo_chmod('755', '/some/path')
       #
       def sudo_chmod(mode, file)
-        sudo_shell('eval', 'chmod', mode, file)
+        sudo_shell('chmod', mode, file)
       end
 
 
@@ -124,9 +96,9 @@ module RedmineGitHosting::Commands
       #
       def sudo_rmdir(path, force = false)
         if force
-          sudo_shell('eval', 'rm', '-rf', path)
+          sudo_shell('rm', '-rf', path)
         else
-          sudo_shell('eval', 'rmdir', path)
+          sudo_shell('rmdir', path)
         end
       end
 
@@ -141,7 +113,7 @@ module RedmineGitHosting::Commands
       # Moves a file/directory to a new target.
       #
       def sudo_move(old_path, new_path)
-        sudo_shell('eval', 'mv', old_path, new_path)
+        sudo_shell('mv', old_path, new_path)
       end
 
 
@@ -155,24 +127,6 @@ module RedmineGitHosting::Commands
       def sudo_file_changed?(source_file, dest_file)
         hash_content(local_content(source_file)) != hash_content(distant_content(dest_file))
       end
-
-
-      private
-
-
-        def hash_content(content)
-          Digest::MD5.hexdigest(content)
-        end
-
-
-        def local_content(source_file)
-          File.read(source_file)
-        end
-
-
-        def distant_content(destination_path)
-          sudo_capture('cat', destination_path) rescue ''
-        end
 
     end
 

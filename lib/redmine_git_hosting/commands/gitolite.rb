@@ -17,6 +17,11 @@ module RedmineGitHosting::Commands
 
     module ClassMethods
 
+      def gitolite_infos
+        ssh_capture('info')
+      end
+
+
       def sudo_update_gitolite!
         logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
         begin

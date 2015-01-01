@@ -19,50 +19,55 @@ module RedmineGitHosting::Commands
 
       # Send Git command with Sudo
       #
-      def sudo_git_cmd(*params)
-        sudo_capture('git', *params)
+      def sudo_git(*params)
+        cmd = sudo_git_cmd.concat(params)
+        capture(cmd)
       end
 
 
-      def sudo_git_args_for_repo(repo_path)
-        [ 'sudo', *sudo_shell_params, 'git' ].concat(git_args_for_repo(repo_path))
+      def sudo_git_cmd(args = [])
+        sudo.concat(git(args))
       end
 
 
-      def git_args_for_repo(repo_path)
-        [ '--git-dir', repo_path ]
+      def sudo_git_args_for_repo(repo_path, args = [])
+        sudo.concat(git(args)).concat(git_args_for_repo(repo_path))
       end
 
 
       def sudo_git_mirror_push(repo_path, mirror_url, branch = nil, args = [])
-        push_command = [ 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', '--git-dir', repo_path, 'push', *args, mirror_url, branch, '2>&1' ].compact.join(' ')
-        sudo_pipe_data(push_command)
+        cmd = sudo_git_args_for_repo(repo_path, git_push_args).concat(['push', *args, mirror_url, branch]).compact
+        capture(cmd, {merge_output: true})
       end
 
 
-      def sudo_git_tag(repo_path)
-        sudo_git_cmd(*git_args_for_repo(repo_path), 'tag').split
+      def sudo_git_tag(repo_path, args = [])
+        cmd = sudo_git_args_for_repo(repo_path).concat(['tag', *args])
+        capture(cmd).split
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         []
       end
 
 
       def sudo_git_rev_list(repo_path, revision, args = [])
-        sudo_git_cmd(*git_args_for_repo(repo_path), 'rev-list', *args, revision).split
+        cmd = sudo_git_args_for_repo(repo_path).concat(['rev-list', *args, revision])
+        capture(cmd)
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         []
       end
 
 
       def sudo_git_rev_parse(repo_path, revision, args = [])
-        sudo_git_cmd(*git_args_for_repo(repo_path), 'rev-parse', *args, revision).chomp.strip
+        cmd = sudo_git_args_for_repo(repo_path).concat(['rev-parse', *args, revision])
+        capture(cmd).chomp.strip
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         ''
       end
 
 
       def sudo_git_archive(repo_path, revision, args = [])
-        sudo_git_cmd(*git_args_for_repo(repo_path), 'archive', *args, revision)
+        cmd = sudo_git_args_for_repo(repo_path).concat(['archive', *args, revision])
+        capture(cmd)
       end
 
 
@@ -76,7 +81,7 @@ module RedmineGitHosting::Commands
           if code == 5
             return true
           else
-            logger.error("Error while removing Git hooks global parameter : #{key}")
+            logger.error("Error while removing Git global parameter : #{key}")
             logger.error(e.output)
             return false
           end
@@ -92,10 +97,10 @@ module RedmineGitHosting::Commands
         logger.info("Set Git global parameter : #{key} (#{value})")
 
         begin
-          sudo_capture('git', 'config', '--global', key, value)
+          sudo_git('config', '--global', key, value)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Error while setting Git hooks global parameter : #{key} (#{value})")
+          logger.error("Error while setting Git global parameter : #{key} (#{value})")
           logger.error(e.output)
           return false
         end
@@ -105,7 +110,7 @@ module RedmineGitHosting::Commands
       # Return a hash with global config parameters.
       def sudo_get_git_global_params(namespace)
         begin
-          params = sudo_capture('git', 'config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
+          params = sudo_git('config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'")
           params = []
@@ -117,15 +122,25 @@ module RedmineGitHosting::Commands
 
       def git_version
         begin
-          sudo_git_cmd('--version', '--no-color')
+          sudo_git('--version', '--no-color')
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Can't retrieve git version: #{e.output}")
+          logger.error("Can't retrieve Git version: #{e.output}")
           'unknown'
         end
       end
 
 
       private
+
+
+        def git_args_for_repo(repo_path)
+          [ '--git-dir', repo_path ]
+        end
+
+
+        def git_push_args
+          [ 'env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}" ]
+        end
 
 
         # Returns the global gitconfig prefix for

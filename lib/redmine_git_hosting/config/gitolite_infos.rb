@@ -17,21 +17,14 @@ module RedmineGitHosting::Config
 
     module ClassMethods
 
-      @@gitolite_infos_cached = nil
-      @@gitolite_info_stamp   = nil
-
       def gitolite_infos
-        if !@@gitolite_infos_cached.nil? && (Time.new - @@gitolite_info_stamp <= 1)
-          return @@gitolite_infos_cached
-        end
-        begin
-          @@gitolite_infos_cached = RedmineGitHosting::Commands.ssh_shell('info')[0]
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Error while getting Gitolite version")
-          @@gitolite_infos_cached = ''
-        end
-        @@gitolite_info_stamp = Time.new
-        return @@gitolite_infos_cached
+        @gitolite_infos ||=
+          begin
+            RedmineGitHosting::Commands.gitolite_infos
+          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+            logger.error("Error while getting Gitolite infos")
+            nil
+          end
       end
 
 
@@ -49,11 +42,8 @@ module RedmineGitHosting::Config
 
       def find_version(output)
         return 0 if output.blank?
-
         version = nil
-
         line = output.split("\n")[0]
-
         if line =~ /gitolite[ -]v?2./
           version = 2
         elsif line.include?('running gitolite3')
@@ -61,8 +51,7 @@ module RedmineGitHosting::Config
         else
           version = 0
         end
-
-        return version
+        version
       end
 
 
@@ -74,7 +63,7 @@ module RedmineGitHosting::Config
         else
           gitolite_command = nil
         end
-        return gitolite_command
+        gitolite_command
       end
 
 
@@ -87,8 +76,7 @@ module RedmineGitHosting::Config
           logger.error("Error while getting Gitolite physical repositories list")
           count = 0
         end
-
-        return count
+        count
       end
 
     end

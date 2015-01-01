@@ -62,9 +62,9 @@ module Grack
       # Git looks for the repository in the current path.
       def git_command_with_sudo(params)
         if command_require_chdir?(params.last)
-          git_params_with_chdir.concat(params)
+          git_command_with_chdir.concat(params)
         else
-          git_params_without_chdir.concat(params)
+          git_command_without_chdir.concat(params)
         end
       end
 
@@ -74,18 +74,18 @@ module Grack
       end
 
 
-      def git_params_without_chdir
-        git_params
+      def git_command_without_chdir
+        RedmineGitHosting::Commands.sudo_git_cmd(smart_http_args)
       end
 
 
-      def git_params_with_chdir
-        git_params.concat(['--git-dir', @dir])
+      def git_command_with_chdir
+        RedmineGitHosting::Commands.sudo_git_args_for_repo(@dir, smart_http_args)
       end
 
 
-      def git_params
-        [ 'sudo', *RedmineGitHosting::Commands.sudo_shell_params, 'env', 'GL_BYPASS_UPDATE_HOOK=true', 'git' ].clone
+      def smart_http_args
+        ['env', 'GL_BYPASS_UPDATE_HOOK=true']
       end
 
 

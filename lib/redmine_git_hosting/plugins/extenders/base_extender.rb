@@ -23,12 +23,23 @@ module RedmineGitHosting::Plugins::Extenders
 
 
       def sudo_git(*params)
-        RedmineGitHosting::Commands.sudo_git_cmd(*git_args.concat(params))
+        cmd = RedmineGitHosting::Commands.sudo_git_args_for_repo(gitolite_repo_path, git_args).concat(params)
+        RedmineGitHosting::Commands.capture(cmd, git_opts)
       end
 
 
+      # You may override this method to prepend args like environment variables
+      # to the git command.
+      #
       def git_args
-        [ "--git-dir=#{gitolite_repo_path}" ]
+        []
+      end
+
+
+      # You may override this method to pass opts to Open3.capture.
+      #
+      def git_opts
+        {}
       end
 
 

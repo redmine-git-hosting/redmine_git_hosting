@@ -18,7 +18,7 @@ module RedmineGitHosting::Config
 
 
       def gitolite_home_dir
-        RedmineGitHosting::Commands.sudo_capture('eval', 'echo', '$HOME').chomp.strip rescue '$HOME'
+        @gitolite_home_dir ||= RedmineGitHosting::Commands.sudo_capture('eval', 'echo', '$HOME').chomp.strip rescue '$HOME'
       end
 
 

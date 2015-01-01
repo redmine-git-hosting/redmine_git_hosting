@@ -18,7 +18,7 @@ module RedmineGitHosting
     class << self
 
       def gitolite_home_dir
-        @gitolite_home_dir ||= RedmineGitHosting::Config.gitolite_home_dir
+        RedmineGitHosting::Config.gitolite_home_dir
       end
 
 
@@ -195,17 +195,17 @@ module RedmineGitHosting
 
 
         def get_expired_repositories
-          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
+          RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{recycle_bin_expiration_time}", '-prune', '-print').chomp.split("\n")
         end
 
 
         def get_recycle_bin_content
-          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
+          RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
         end
 
 
         def find_old_repositories(regex)
-          RedmineGitHosting::Commands.sudo_capture('eval', 'find', recycle_bin_dir, '-type', 'd', '-regex', regex, '-prune', '-print').chomp.split("\n").sort { |x, y| y <=> x }
+          RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', regex, '-prune', '-print').chomp.split("\n").sort { |x, y| y <=> x }
         end
 
 
