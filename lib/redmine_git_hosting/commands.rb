@@ -2,6 +2,7 @@ module RedmineGitHosting
   module Commands
 
     include Commands::Git
+    include Commands::Gitolite
     include Commands::Sudo
     include Commands::Ssh
 

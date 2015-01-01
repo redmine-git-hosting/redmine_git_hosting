@@ -17,18 +17,6 @@ module RedmineGitHosting::Commands
 
     module ClassMethods
 
-      def sudo_update_gitolite!
-        logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
-        begin
-          sudo_shell(*gitolite_command)
-          return true
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error(e.output)
-          return false
-        end
-      end
-
-
       # Send Git command with Sudo
       #
       def sudo_git_cmd(*params)
@@ -137,11 +125,6 @@ module RedmineGitHosting::Commands
       end
 
 
-      def gitolite_repository_count
-        sudo_capture('gitolite', 'list-phy-repos').split("\n").length
-      end
-
-
       private
 
 
@@ -165,11 +148,6 @@ module RedmineGitHosting::Commands
           end
 
           value_hash
-        end
-
-
-        def gitolite_command
-          RedmineGitHosting::Config.gitolite_command
         end
 
     end
