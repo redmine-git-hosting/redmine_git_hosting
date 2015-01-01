@@ -145,31 +145,6 @@ module RedmineGitHosting::Commands
       end
 
 
-      # Test if repository is empty on Gitolite side
-      #
-      def sudo_repository_empty?(path)
-        empty_repo = false
-
-        path = File.join('$HOME', path, 'objects')
-
-        begin
-          output = sudo_capture('eval', 'find', path, '-type', 'f', '|', 'wc', '-l')
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          empty_repo = false
-        else
-          logger.debug("Counted objects in repository directory '#{path}' : '#{output}'")
-
-          if output.to_i == 0
-            empty_repo = true
-          else
-            empty_repo = false
-          end
-        end
-
-        return empty_repo
-      end
-
-
       def sudo_get_dir_size(directory)
         sudo_capture('du', '-sh', directory).split(' ')[0] rescue ''
       end

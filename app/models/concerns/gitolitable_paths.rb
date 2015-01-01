@@ -37,6 +37,16 @@ module GitolitablePaths
   end
 
 
+  def empty_in_gitolite?
+    RedmineGitHosting::Commands.sudo_repository_empty?(gitolite_repository_path)
+  end
+
+
+  def git_objects_count
+    RedmineGitHosting::Commands.sudo_git_objects_count(gitolite_repository_path)
+  end
+
+
   def empty?
     if extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
       true

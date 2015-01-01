@@ -42,6 +42,14 @@
         = image_tag (repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
 
       %p
+        - if repository.empty_in_gitolite?
+          %label= l(:label_empty_repository)
+          = image_tag('true.png')
+        - else
+          %label= l(:label_git_objects_count)
+          = repository.git_objects_count
+
+      %p
         %label= l(:label_browse_repository)
         = link_to h(repository.url), {controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param}
 

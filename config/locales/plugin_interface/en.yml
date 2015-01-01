@@ -230,6 +230,7 @@ en:
   label_init_repo_with_git_annex: Initialize this repository with GitAnnex
   label_browse_repository: Browse repository
   label_repository_exists_in_gitolite: Repository exists in Gitolite
+  label_git_objects_count: Git objects count
 
   notice_gitolite_extra_updated: Options successfully updated
   notice_gitolite_extra_update_failed: Errors while updating options

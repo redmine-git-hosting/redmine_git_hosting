@@ -33,6 +33,29 @@ module RedmineGitHosting::Commands
         sudo_capture('gitolite', 'list-phy-repos').split("\n").length
       end
 
+
+      # Test if repository is empty on Gitolite side
+      #
+      def sudo_repository_empty?(repo_path)
+        repo_path = File.join(gitolite_home_dir, repo_path, 'objects')
+        count = sudo_git_objects_count(repo_path)
+        if count.to_i == 0
+          true
+        else
+          false
+        end
+      end
+
+
+      def sudo_git_objects_count(repo_path)
+        begin
+          sudo_capture('eval', 'find', repo_path, '-type', 'f', '|', 'wc', '-l')
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Can't retrieve Git objects count : #{e.output}")
+          0
+        end
+      end
+
     end
 
   end
