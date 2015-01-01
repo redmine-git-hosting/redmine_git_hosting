@@ -11,11 +11,14 @@ module RedmineGitHosting::Config
 
     module ClassMethods
 
-      # Puts Redmine user in cache as it should not change
-      @@redmine_user = nil
+
       def redmine_user
-        @@redmine_user = (%x[whoami]).chomp.strip if @@redmine_user.nil?
-        @@redmine_user
+        @redmine_user ||= (%x[whoami]).chomp.strip
+      end
+
+
+      def gitolite_home_dir
+        RedmineGitHosting::Commands.sudo_capture('eval', 'echo', '$HOME').chomp.strip rescue '$HOME'
       end
 
 

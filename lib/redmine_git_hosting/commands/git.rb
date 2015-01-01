@@ -36,6 +36,48 @@ module RedmineGitHosting::Commands
       end
 
 
+      def sudo_git_args_for_repo(repo_path)
+        [ 'sudo', *sudo_shell_params, 'git' ].concat(git_args_for_repo(repo_path))
+      end
+
+
+      def git_args_for_repo(repo_path)
+        [ '--git-dir', repo_path ]
+      end
+
+
+      def sudo_git_mirror_push(repo_path, mirror_url, branch = nil, args = [])
+        push_command = [ 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', '--git-dir', repo_path, 'push', *args, mirror_url, branch, '2>&1' ].compact.join(' ')
+        sudo_pipe_data(push_command)
+      end
+
+
+      def sudo_git_tag(repo_path)
+        sudo_git_cmd(*git_args_for_repo(repo_path), 'tag').split
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        []
+      end
+
+
+      def sudo_git_rev_list(repo_path, revision, args = [])
+        sudo_git_cmd(*git_args_for_repo(repo_path), 'rev-list', *args, revision).split
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        []
+      end
+
+
+      def sudo_git_rev_parse(repo_path, revision, args = [])
+        sudo_git_cmd(*git_args_for_repo(repo_path), 'rev-parse', *args, revision).chomp.strip
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        ''
+      end
+
+
+      def sudo_git_archive(repo_path, revision, args = [])
+        sudo_git_cmd(*git_args_for_repo(repo_path), 'archive', *args, revision)
+      end
+
+
       def sudo_unset_git_global_param(key)
         logger.info("Unset Git global parameter : #{key}")
 
@@ -82,6 +124,21 @@ module RedmineGitHosting::Commands
         end
 
         git_config_as_hash(params)
+      end
+
+
+      def git_version
+        begin
+          sudo_git_cmd('--version', '--no-color')
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Can't retrieve git version: #{e.output}")
+          'unknown'
+        end
+      end
+
+
+      def gitolite_repository_count
+        sudo_capture('gitolite', 'list-phy-repos').split("\n").length
       end
 
 

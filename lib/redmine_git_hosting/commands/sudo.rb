@@ -46,8 +46,8 @@ module RedmineGitHosting::Commands
       end
 
 
-      def sudo_pipe_capture(*params, stdin)
-        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.concat(params), {stdin_data: stdin, binmode: true})
+      def sudo_pipe_data(stdin)
+        RedmineGitHosting::Utils.capture('sudo', sudo_shell_params.push('sh'), {stdin_data: stdin, binmode: true})
       end
 
 
@@ -57,7 +57,7 @@ module RedmineGitHosting::Commands
         stdin = [ 'cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
 
         begin
-          sudo_pipe_capture('sh', stdin)
+          sudo_pipe_data(stdin)
           sudo_chmod(filemode, dest_file)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
@@ -100,6 +100,12 @@ module RedmineGitHosting::Commands
       end
 
 
+      # Syntaxic sugar for 'mkdir -p'
+      def sudo_mkdir_p(path)
+        sudo_mkdir('-p', path)
+      end
+
+
       # Calls chmod with the given arguments on the git user's side.
       #
       # e.g., sudo_chmod('755', '/some/path')
@@ -122,6 +128,13 @@ module RedmineGitHosting::Commands
         else
           sudo_shell('eval', 'rmdir', path)
         end
+      end
+
+
+      # Syntaxic sugar for 'rm -rf' command
+      #
+      def sudo_rm_rf(path)
+        sudo_rmdir(path, true)
       end
 
 
@@ -154,6 +167,11 @@ module RedmineGitHosting::Commands
         end
 
         return empty_repo
+      end
+
+
+      def sudo_get_dir_size(directory)
+        sudo_capture('du', '-sh', directory).split(' ')[0] rescue ''
       end
 
 

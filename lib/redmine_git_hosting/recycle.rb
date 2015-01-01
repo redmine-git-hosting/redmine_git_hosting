@@ -121,7 +121,7 @@ module RedmineGitHosting
               logger.info("Create parent path : '#{repo_prefix}'")
 
               # Has subdirectory.  Must reconstruct directory
-              RedmineGitHosting::Commands.sudo_mkdir('-p', repo_prefix)
+              RedmineGitHosting::Commands.sudo_mkdir_p(repo_prefix)
             end
 
             logger.info("Moving '#{files.first}' to '#{repo_path}'")
@@ -168,7 +168,7 @@ module RedmineGitHosting
 
         def create_recycle_bin
           begin
-            RedmineGitHosting::Commands.sudo_mkdir('-p', recycle_bin_dir)
+            RedmineGitHosting::Commands.sudo_mkdir_p(recycle_bin_dir)
             RedmineGitHosting::Commands.sudo_chmod('770', recycle_bin_dir)
             return true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
@@ -237,9 +237,7 @@ module RedmineGitHosting
 
         def get_directories_size(directories)
           data = {}
-          directories.sort.each do |directory|
-            data[directory] = { size: (RedmineGitHosting::Commands.sudo_capture('du', '-sh', directory).split(' ')[0] rescue '') }
-          end
+          directories.sort.each { |dir| data[dir] = { size: RedmineGitHosting::Commands.sudo_get_dir_size(dir) } }
           data
         end
 

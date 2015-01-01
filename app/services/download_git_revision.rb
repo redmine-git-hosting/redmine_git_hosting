@@ -24,7 +24,7 @@ class DownloadGitRevision
 
 
   def content
-    RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'archive', *@cmd_args, @commit_id)
+    RedmineGitHosting::Commands.sudo_git_archive(@repository.gitolite_repository_path, @commit_id, @cmd_args)
   end
 
 
@@ -44,10 +44,10 @@ class DownloadGitRevision
 
     # is the revision a tag?
     if commit_id.nil?
-      tags = RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'tag').split
+      tags = RedmineGitHosting::Commands.sudo_git_tag(@repository.gitolite_repository_path)
       tags.each do |x|
         if x == @revision
-          commit_id = RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-list', @revision).split[0]
+          commit_id = RedmineGitHosting::Commands.sudo_git_rev_list(@repository.gitolite_repository_path, @revision)[0]
           break
         end
       end
@@ -58,7 +58,7 @@ class DownloadGitRevision
       commit_id = @revision
     end
 
-    valid_commit = RedmineGitHosting::Commands.sudo_capture('git', "--git-dir=#{@repository.gitolite_repository_path}", 'rev-parse', '--quiet', '--verify', commit_id).chomp.strip
+    valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(@repository.gitolite_repository_path, commit_id, ['--quiet', '--verify'])
 
     if valid_commit == ''
       @commit_valid = false

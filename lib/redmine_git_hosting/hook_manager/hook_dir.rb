@@ -41,7 +41,7 @@ module RedmineGitHosting::HookManager
         logger.info("Installing hook directory '#{destination_path}'")
 
         begin
-          RedmineGitHosting::Commands.sudo_mkdir('-p', destination_path)
+          RedmineGitHosting::Commands.sudo_mkdir_p(destination_path)
           RedmineGitHosting::Commands.sudo_chmod('755', destination_path)
           return true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e

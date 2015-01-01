@@ -79,20 +79,16 @@ module RedmineGitHosting::Config
 
 
       def gitolite_repository_count
-        if gitolite_version == 3
-          logger.debug("Getting Gitolite physical repositories list...")
-
-          begin
-            count = RedmineGitHosting::Commands.sudo_capture('gitolite', 'list-phy-repos').split("\n").length
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("Error while getting Gitolite physical repositories list")
-            count = 0
-          end
-
-          return count
-        else
-          return 'This is Gitolite v2, not implemented...'
+        return 'This is Gitolite v2, not implemented...' if gitolite_version != 3
+        logger.debug("Getting Gitolite physical repositories list...")
+        begin
+          count = RedmineGitHosting::Commands.gitolite_repository_count
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Error while getting Gitolite physical repositories list")
+          count = 0
         end
+
+        return count
       end
 
     end

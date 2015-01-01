@@ -29,10 +29,7 @@ module RedmineGitHosting
 
 
         def scm_version_from_command_line_with_git_hosting
-          RedmineGitHosting::Commands.sudo_capture('git', '--version', '--no-color')
-        rescue => e
-          RedmineGitHosting.logger.error("Can't retrieve git version: #{e.output}")
-          'unknown'
+          RedmineGitHosting::Commands.git_version
         end
 
       end
@@ -63,14 +60,12 @@ module RedmineGitHosting
 
 
           def base_args
-            [ 'sudo', *RedmineGitHosting::Commands.sudo_shell_params, 'git', '--git-dir', repo_path, *git_args ].clone
+            RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path).concat(git_args)
           end
 
 
           def git_args
-            if self.class.client_version_above?([1, 7, 2])
-              ['-c', 'core.quotepath=false', '-c', 'log.decorate=no']
-            end
+            [ '-c', 'core.quotepath=false', '-c', 'log.decorate=no' ] if self.class.client_version_above?([1, 7, 2])
           end
 
 

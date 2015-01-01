@@ -18,7 +18,7 @@ class MirrorPush
 
   def push!
     begin
-      push_message = RedmineGitHosting::Commands.sudo_pipe_capture("sh", push_command)
+      push_message = RedmineGitHosting::Commands.sudo_git_mirror_push(repository.gitolite_repository_path, mirror.url, branch, push_args)
       push_failed = false
     rescue RedmineGitHosting::Error::GitoliteCommandException => e
       push_message = e.output
@@ -30,11 +30,6 @@ class MirrorPush
 
 
   private
-
-
-    def push_command
-      [ 'cd', repository.gitolite_repository_path, '&&', 'env', 'GIT_SSH=$HOME/.ssh/run_gitolite_admin_ssh', 'git', 'push', *push_args, '2>&1' ].join(' ')
-    end
 
 
     def push_args
@@ -49,10 +44,12 @@ class MirrorPush
         push_args << "--tags"  if mirror.include_all_tags?
       end
 
-      push_args << mirror.url
-      push_args << "#{dequote(mirror.explicit_refspec)}" unless mirror.explicit_refspec.blank?
+      push_args
+    end
 
-      return push_args
+
+    def branch
+      "#{dequote(mirror.explicit_refspec)}" unless mirror.explicit_refspec.blank?
     end
 
 
