@@ -196,7 +196,7 @@ module RedmineGitHosting::Commands
 
 
         def distant_content(destination_path)
-          sudo_capture('eval', 'cat', destination_path) rescue ''
+          sudo_capture('cat', destination_path) rescue ''
         end
 
     end
