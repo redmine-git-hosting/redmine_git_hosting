@@ -94,11 +94,6 @@ module RedmineGitHosting
             @repository.enable_git_annex == 'true' ? true : false
           end
 
-
-          def destroy_options
-            {message: "User '#{User.current.login}' has removed repository '#{@repository.gitolite_repository_name}'"}
-          end
-
       end
 
     end
