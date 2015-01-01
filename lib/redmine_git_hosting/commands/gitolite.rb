@@ -33,14 +33,6 @@ module RedmineGitHosting::Commands
         sudo_capture('gitolite', 'list-phy-repos').split("\n").length
       end
 
-
-      private
-
-
-        def gitolite_command
-          RedmineGitHosting::Config.gitolite_command
-        end
-
     end
 
   end

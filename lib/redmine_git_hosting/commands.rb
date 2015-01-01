@@ -8,9 +8,22 @@ module RedmineGitHosting
 
     class << self
 
-      def logger
-        RedmineGitHosting.logger
-      end
+      private
+
+
+        def gitolite_home_dir
+          RedmineGitHosting::Config.gitolite_home_dir
+        end
+
+
+        def gitolite_command
+          RedmineGitHosting::Config.gitolite_command
+        end
+
+
+        def logger
+          RedmineGitHosting.logger
+        end
 
     end
 
