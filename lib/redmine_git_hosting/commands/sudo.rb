@@ -82,8 +82,8 @@ module RedmineGitHosting::Commands
       # Test properties of a path from the git user.
       #
       # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
-      def sudo_test(path, *testarg)
-        out, _ , code = sudo_shell('eval', 'test', *testarg, path)
+      def sudo_test(path, testarg)
+        out, _ , code = sudo_shell('eval', 'test', testarg, path)
         return code == 0
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.debug("File check for #{path} failed : #{e.message}")
