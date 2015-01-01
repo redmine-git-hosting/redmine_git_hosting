@@ -51,6 +51,11 @@ module RedmineGitHosting::Config
       end
 
 
+      def gitolite_mirroring_script
+        File.join(gitolite_home_dir, '.ssh', 'run_gitolite_admin_ssh')
+      end
+
+
       private
 
 
@@ -74,11 +79,6 @@ module RedmineGitHosting::Config
         end
 
 
-        def gitolite_mirroring_script_dest_path
-          File.join(gitolite_home_dir, '.ssh', 'run_gitolite_admin_ssh')
-        end
-
-
         def install_private_key
           RedmineGitHosting::Commands.sudo_install_file(gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600')
         rescue
@@ -94,7 +94,7 @@ module RedmineGitHosting::Config
 
 
         def install_mirroring_script
-          RedmineGitHosting::Commands.sudo_install_file(mirroring_script_content, gitolite_mirroring_script_dest_path, '700')
+          RedmineGitHosting::Commands.sudo_install_file(mirroring_script_content, gitolite_mirroring_script, '700')
         rescue
           false
         end
