@@ -33,7 +33,12 @@ module Gitolitable
 
 
   def data_for_destruction
-    { repo_name: gitolite_repository_name, repo_path: gitolite_repository_path, delete_repository: deletable? }
+    {
+      repo_name: gitolite_repository_name,
+      repo_path: gitolite_repository_path,
+      delete_repository: deletable?,
+      git_cache_id: git_cache_id
+    }
   end
 
 

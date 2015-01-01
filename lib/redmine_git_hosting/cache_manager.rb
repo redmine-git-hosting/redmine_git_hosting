@@ -121,9 +121,8 @@ module RedmineGitHosting
       end
 
 
-      # Clear the cache entries for given repository
-      def clear_cache_for_repository(repository)
-        repo_id = repository.git_cache_id
+      # Clear the cache entries for given repository / git_cache_id
+      def clear_cache_for_repository(repo_id)
         deleted = GitCache.delete_all(["repo_identifier = ?", repo_id])
         logger.info("Removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
       end

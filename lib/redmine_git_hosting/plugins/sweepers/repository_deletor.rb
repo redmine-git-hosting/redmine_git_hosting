@@ -4,6 +4,7 @@ module RedmineGitHosting::Plugins::Sweepers
     def post_delete
       # Delete hook param if needed
       move_repository_to_recycle if delete_repository?
+      remove_git_cache
     end
 
 
@@ -18,6 +19,12 @@ module RedmineGitHosting::Plugins::Sweepers
             RedmineGitHosting::Recycle.move_repository_to_recycle(repo)
           end
         end
+      end
+
+
+      def remove_git_cache
+        logger.info("Clean cache for repository '#{gitolite_repo_name}'")
+        RedmineGitHosting::CacheManager.clear_cache_for_repository(git_cache_id)
       end
 
   end

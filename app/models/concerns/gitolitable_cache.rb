@@ -2,8 +2,6 @@ module GitolitableCache
   extend ActiveSupport::Concern
 
   included do
-    before_destroy :clean_cache, prepend: true
-
     class << self
 
       # Repo ident unique
@@ -107,12 +105,9 @@ module GitolitableCache
   end
 
 
-  private
-
-
-    def clean_cache
-      RedmineGitHosting.logger.info("Clean cache before delete repository '#{gitolite_repository_name}'")
-      RedmineGitHosting::CacheManager.clear_cache_for_repository(self)
-    end
+  # Note: CacheManager doesn't know about repository object, it only know git_cache_id.
+  def empty_cache!
+    RedmineGitHosting::CacheManager.clear_cache_for_repository(git_cache_id)
+  end
 
 end

@@ -22,7 +22,7 @@ class GitoliteHooksController < ApplicationController
 
     def post_receive_redmine
       # Clear existing cache
-      RedmineGitHosting::CacheManager.clear_cache_for_repository(@repository)
+      @repository.empty_cache!
 
       # Set response headers
       set_response_headers

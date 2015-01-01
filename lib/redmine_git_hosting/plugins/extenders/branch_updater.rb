@@ -31,18 +31,13 @@ module RedmineGitHosting::Plugins::Extenders
           logger.error("Error while updating default branch for repository '#{gitolite_repo_name}'")
         else
           logger.info("Default branch successfully updated for repository '#{gitolite_repo_name}'")
-          clear_cache
+          repository.empty_cache!
         end
       end
 
 
       def new_default_branch
         "refs/heads/#{default_branch}"
-      end
-
-
-      def clear_cache
-        RedmineGitHosting::CacheManager.clear_cache_for_repository(repository)
       end
 
   end
