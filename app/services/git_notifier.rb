@@ -78,11 +78,29 @@ class GitNotifier
     end
 
 
+    def repository_include_list
+      if git_notification.nil? || git_notification.new_record?
+        []
+      else
+        git_notification.include_list
+      end
+    end
+
+
+    def repository_exclude_list
+      if git_notification.nil? || git_notification.new_record?
+        []
+      else
+        git_notification.exclude_list
+      end
+    end
+
+
     def set_mail_mapping
       mail_mapping = {}
 
       # First collect all project users
-      default_users = default_list.map{ |mail| mail_mapping[mail] = :project }
+      default_list.map{ |mail| mail_mapping[mail] = :project }
 
       # Then add global include list
       global_include_list.sort.map{ |mail| mail_mapping[mail] = :global }
@@ -91,9 +109,7 @@ class GitNotifier
       mail_mapping = filter_list(mail_mapping)
 
       # Then add local include list
-      unless git_notification.nil? || git_notification.new_record? || git_notification.include_list.empty?
-        git_notification.include_list.sort.map{ |mail| mail_mapping[mail] = :local }
-      end
+      repository_include_list.sort.map{ |mail| mail_mapping[mail] = :local }
 
       @mail_mapping = mail_mapping
     end
@@ -101,22 +117,18 @@ class GitNotifier
 
     def filter_list(merged_map)
       mail_mapping = {}
-      exclude_list = []
 
       # Build exclusion list
-      exclude_list = global_exclude_list unless global_exclude_list.empty?
-
-      unless git_notification.nil? || git_notification.new_record? || git_notification.exclude_list.empty?
-        exclude_list = exclude_list + git_notification.exclude_list
-      end
-
+      exclude_list = []
+      exclude_list = exclude_list.concat(global_exclude_list)
+      exclude_list = exclude_list.concat(repository_exclude_list)
       exclude_list = exclude_list.uniq.sort
 
       merged_map.each do |mail, from|
         mail_mapping[mail] = from unless exclude_list.include?(mail)
       end
 
-      return mail_mapping
+      mail_mapping
     end
 
 end
