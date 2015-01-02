@@ -26,9 +26,9 @@
             %td= credential.user.login
             %td
               - if credential.user == User.current
-                = link_to(credential.gitolite_public_key.title, url_for(:controller => 'my', :action => 'account', :public_key_id => credential.gitolite_public_key.id))
+                = link_to(credential.gitolite_public_key.title, url_for(controller: 'my', action: 'account', public_key_id: credential.gitolite_public_key.id))
               - elsif User.current.admin?
-                = link_to(credential.gitolite_public_key.title, url_for(:controller => 'users', :action => 'edit', :id => credential.gitolite_public_key.user.id, :public_key_id => credential.gitolite_public_key.id, :tab => 'keys'))
+                = link_to(credential.gitolite_public_key.title, url_for(controller: 'users', action: 'edit', id: credential.user.id, public_key_id: credential.gitolite_public_key.id, tab: 'keys'))
               - else
                 = credential.gitolite_public_key.title
 

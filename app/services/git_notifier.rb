@@ -59,7 +59,7 @@ class GitNotifier
 
 
     def allowed_users
-      project_users.select{|u| u.allowed_to?(:receive_git_notifications, project)}
+      project_users.select{ |u| u.allowed_to?(:receive_git_notifications, project) }
     end
 
 

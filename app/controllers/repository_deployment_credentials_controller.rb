@@ -145,8 +145,8 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       @other_keys = []
       if User.current.admin?
         # Admin can use other's deploy keys as well
-        deploy_users = @project.users.select {|x| x != User.current && x.allowed_to?(:create_deployment_keys, @project)}
-        @other_keys  = deploy_users.map {|user| user.gitolite_public_keys.deploy_key.order('title ASC')}.flatten
+        deploy_users = @project.users.select { |user| user != User.current && user.allowed_to?(:create_deployment_keys, @project) }
+        @other_keys  = deploy_users.map { |user| user.gitolite_public_keys.deploy_key.order('title ASC') }.flatten
       end
     end
 
