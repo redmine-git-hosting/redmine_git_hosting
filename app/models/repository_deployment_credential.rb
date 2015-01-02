@@ -4,8 +4,8 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   STATUS_ACTIVE   = true
   STATUS_INACTIVE = false
 
-  VALID_PERMS  = [ "R", "RW+" ]
-  DEFAULT_PERM = "RW+"
+  VALID_PERMS  = ['R', 'RW+']
+  DEFAULT_PERM = 'RW+'
 
   ## Attributes
   attr_accessible :perm, :active
@@ -38,22 +38,6 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   def to_s
     "#{repository.identifier}-#{gitolite_public_key.identifier} : #{perm}"
-  end
-
-
-  # Provide a role-like interface.
-  # Support :commit_access and :view_changesets
-  @@equivalence = nil
-  def allowed_to?( cred )
-    @@equivalence ||= {
-      view_changesets: ["R", "RW+"],
-      commit_access:   ["RW+"]
-    }
-    return false unless honored?
-
-    # Deployment Credentials equivalence matrix
-    return false unless @@equivalence[cred] && @@equivalence[cred].index(perm)
-    true
   end
 
 
