@@ -5,7 +5,9 @@ class Repository::Xitolite < Repository::Git
 
   include Gitolitable
   include GitolitableCache
+  include GitolitableFeatures
   include GitolitablePaths
+  include GitolitablePermissions
   include GitolitableUrls
   include GitolitableNotifications
 

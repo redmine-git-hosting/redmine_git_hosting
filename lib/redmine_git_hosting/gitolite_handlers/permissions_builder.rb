@@ -92,7 +92,7 @@ module RedmineGitHosting
           build_users_list
 
           # Add protected_branches permissions if needed
-          build_protected_branch_permissions if repository.protected_branches_enabled?
+          build_protected_branch_permissions if repository.protected_branches_available?
 
           # Add normal permissions
           build_standard_permissions
@@ -182,8 +182,8 @@ module RedmineGitHosting
 
         def set_dummy_keys
           @read << 'DUMMY_REDMINE_KEY' if @read.empty? && @write.empty? && @rewind.empty?
-          @read << 'gitweb' if repository.git_web_enable?
-          @read << 'daemon' if repository.git_daemon_enable?
+          @read << 'gitweb' if repository.git_web_available?
+          @read << 'daemon' if repository.git_daemon_available?
         end
 
 

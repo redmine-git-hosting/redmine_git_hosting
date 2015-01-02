@@ -39,28 +39,6 @@ module Gitolitable
   end
 
 
-  def report_last_commit
-    # Always true
-    true
-  end
-
-
-  def extra_report_last_commit
-    # Always true
-    true
-  end
-
-
-  def default_branch
-    extra[:default_branch]
-  end
-
-
-  def gitolite_hook_key
-    extra[:key]
-  end
-
-
   def data_for_destruction
     {
       repo_name: gitolite_repository_name,
@@ -68,57 +46,6 @@ module Gitolitable
       delete_repository: deletable?,
       git_cache_id: git_cache_id
     }
-  end
-
-
-  def downloadable?
-    if extra[:git_annex]
-      false
-    elsif project.active?
-      User.current.allowed_to?(:download_git_revision, project)
-    else
-      User.current.allowed_to?(:download_git_revision, nil, global: true)
-    end
-  end
-
-
-  def urls_are_viewable?
-    RedmineGitHosting::Config.show_repositories_url? && User.current.allowed_to?(:view_changesets, project)
-  end
-
-
-  def clonable_via_http?
-    User.anonymous.allowed_to?(:view_changesets, project) || extra[:git_http] != 0
-  end
-
-
-  def pushable_via_http?
-    extra[:git_http] == 1 || extra[:git_http] == 2
-  end
-
-
-  def notifiable?
-    extra[:git_notify]
-  end
-
-
-  def git_web_enable?
-    User.anonymous.allowed_to?(:browse_repository, project) && extra[:git_http] != 0
-  end
-
-
-  def git_daemon_enable?
-    User.anonymous.allowed_to?(:view_changesets, project) && extra[:git_daemon]
-  end
-
-
-  def protected_branches_enabled?
-    project.active? && extra[:protected_branch] && protected_branches.any?
-  end
-
-
-  def deletable?
-    RedmineGitHosting::Config.delete_git_repositories?
   end
 
 

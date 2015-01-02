@@ -8,7 +8,6 @@ module RedmineGitHosting
       attr_reader :opts
 
       attr_reader :project
-      attr_reader :notifier
 
       attr_reader :gitolite_repo_name
       attr_reader :gitolite_repo_path
@@ -16,12 +15,14 @@ module RedmineGitHosting
 
 
       def initialize(repository, gitolite_config, action, opts = {})
+        # Create accessors for the params passed
         @repository         = repository
         @gitolite_config    = gitolite_config
         @action             = action
         @opts               = opts
+
+        # Create syntaxic sugars
         @project            = repository.project
-        @notifier           = ::GitNotifier.new(repository)
         @gitolite_repo_name = repository.gitolite_repository_name
         @gitolite_repo_path = repository.gitolite_repository_path
         @gitolite_repo_conf = gitolite_config.repos[gitolite_repo_name]
@@ -148,8 +149,6 @@ module RedmineGitHosting
 
 
         def set_smart_http_upload_conf(repo_conf)
-          # 1 = HTTPS only
-          # 2 = both HTTPS and HTTP
           if repository.pushable_via_http?
             repo_conf.set_git_config('http.receivepack', 'true')
           else
@@ -160,11 +159,11 @@ module RedmineGitHosting
 
 
         def set_mail_settings(repo_conf)
-          if repository.notifiable? && !notifier.mailing_list.empty?
+          if repository.git_notification_available?
             repo_conf.set_git_config('multimailhook.enabled', 'true')
-            repo_conf.set_git_config('multimailhook.mailinglist', notifier.mailing_list.join(", "))
-            repo_conf.set_git_config('multimailhook.from', notifier.sender_address)
-            repo_conf.set_git_config('multimailhook.emailPrefix', notifier.email_prefix)
+            repo_conf.set_git_config('multimailhook.mailinglist', repository.mailing_list.join(", "))
+            repo_conf.set_git_config('multimailhook.from', repository.sender_address)
+            repo_conf.set_git_config('multimailhook.emailPrefix', repository.email_prefix)
           else
             repo_conf.set_git_config('multimailhook.enabled', 'false')
           end

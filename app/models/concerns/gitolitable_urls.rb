@@ -78,16 +78,6 @@ module GitolitableUrls
   end
 
 
-  def allowed_to_commit?
-    User.current.allowed_to?(:commit_access, project) ? 'true' : 'false'
-  end
-
-
-  def allowed_to_ssh?
-    !User.current.anonymous? && User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
-  end
-
-
   def ssh_access
     { url: ssh_url, committer: allowed_to_commit? }
   end
@@ -116,36 +106,6 @@ module GitolitableUrls
 
   def go_access
     { url: go_url, committer: 'false' }
-  end
-
-
-  def ssh_access_available?
-    allowed_to_ssh? && !extra[:git_annex]
-  end
-
-
-  def https_access_available?
-    extra[:git_http] == 1 || extra[:git_http] == 2
-  end
-
-
-  def http_access_available?
-    extra[:git_http] == 3 || extra[:git_http] == 2
-  end
-
-
-  def git_access_available?
-    project.is_public? && extra[:git_daemon]
-  end
-
-
-  def go_access_available?
-    project.is_public? && extra[:git_http] != 0
-  end
-
-
-  def git_annex_access_available?
-    extra[:git_annex]
   end
 
 
