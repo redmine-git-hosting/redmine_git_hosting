@@ -98,7 +98,7 @@ module Hooks
       end
 
 
-       do_call_webservice
+      def call_webservice
         if use_method == :post && split_payloads?
           payloads_to_send.each do |payload|
             do_call_webservice(payload)
