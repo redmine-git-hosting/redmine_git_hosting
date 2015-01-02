@@ -22,7 +22,7 @@ describe GitolitePublicKey do
   # Try to workaround it...
   def test_user
     if Redmine::VERSION.to_s.include?('2.6')
-      'redmine_user13_16'
+      'redmine_user13_15'
     else
       'redmine_user13_14'
     end
@@ -281,11 +281,11 @@ describe GitolitePublicKey do
     end
 
     it "user1 should have 2 keys" do
-      expect(GitolitePublicKey.by_user(@user1).length).to be == 2
+      expect(@user1.gitolite_public_keys.length).to be == 2
     end
 
     it "user2 should have 2 keys" do
-      expect(GitolitePublicKey.by_user(@user2).length).to be == 2
+      expect(@user2.gitolite_public_keys.length).to be == 2
     end
   end
 

@@ -10,7 +10,7 @@ describe Repository::Xitolite do
     User.current = nil
 
     @project_parent = FactoryGirl.create(:project, identifier: 'project-parent')
-    @project_child  = FactoryGirl.create(:project, identifier: 'project-child', parent_id: @project_parent.id)
+    @project_child  = FactoryGirl.create(:project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false)
   end
 
 
@@ -118,20 +118,16 @@ describe Repository::Xitolite do
       end
 
       context "when blank identifier" do
-        before do
-          @repository_1.identifier = 'gitolite-admin'
-        end
         it "should not allow identifier changes" do
+          @repository_1.identifier = 'gitolite-admin'
           expect(@repository_1).to be_invalid
           expect(@repository_1.identifier).to eq 'gitolite-admin'
         end
       end
 
       context "when non blank identifier" do
-        before do
-          @repository_2.identifier = 'gitolite-admin'
-        end
         it "should not allow identifier changes" do
+          @repository_2.identifier = 'gitolite-admin'
           expect(@repository_2).to be_valid
           expect(@repository_2.identifier).to eq 'repo-test'
         end
@@ -161,129 +157,103 @@ describe Repository::Xitolite do
       end
 
       context "when identifier are unique" do
-        before do
+        it "should refuse duplicated identifier" do
           Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+          expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid
         end
-
-        it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid }
       end
     end
 
 
     describe "#available_urls" do
       context "with no option" do
-        before do
-          @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 0
-          @repository_1.save
-        end
-
         my_hash = {}
 
         it "should return an empty Hash" do
+          @repository_1.extra[:git_daemon] = false
+          @repository_1.extra[:git_http]   = 0
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with all options" do
-        before do
-          @user = create_user_with_permissions(@project_child)
-          User.current = @user
-
-          @repository_1.extra[:git_daemon] = true
-          @repository_1.extra[:git_http]   = 2
-          @repository_1.save
-        end
-
         my_hash = {
           ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'false' },
           https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", committer: 'false' },
           http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  committer: 'false' },
+          go:    { url: "localhost/go/project-parent/project-child",                                committer: 'false' },
           git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 committer: 'false' }
         }
 
         it "should return a Hash of Git url" do
+          @user = create_user_with_permissions(@project_child)
+          User.current = @user
+          @project_child.is_public = true
+          @repository_1.extra[:git_daemon] = true
+          @repository_1.extra[:git_http]   = 2
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with git daemon" do
-        before do
-          User.current = nil
-
-          @repository_1.extra[:git_daemon] = true
-          @repository_1.extra[:git_http]   = 0
-          @repository_1.save
-        end
-
         my_hash = { git: { url: "git://localhost/redmine/project-parent/project-child.git", committer: 'false' } }
 
         it "should return a Hash of Git url" do
+          User.current = nil
+          @project_child.is_public = true
+          @repository_1.extra[:git_daemon] = true
+          @repository_1.extra[:git_http]   = 0
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with ssh" do
-        before do
-          @user = create_user_with_permissions(@project_child)
-          User.current = @user
-
-          @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 0
-          @repository_1.save
-        end
-
         my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'false' } }
 
         it "should return a Hash of Git url" do
+          @user = create_user_with_permissions(@project_child)
+          User.current = @user
+          @repository_1.extra[:git_daemon] = false
+          @repository_1.extra[:git_http]   = 0
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with http" do
-        before do
-          User.current = nil
-          @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 3
-          @repository_1.save
-        end
-
         my_hash = { http: { url: "http://localhost/git/project-parent/project-child.git", committer: "false" } }
 
         it "should return a Hash of Git url" do
+          User.current = nil
+          @project_child.is_public = false
+          @repository_1.extra[:git_daemon] = false
+          @repository_1.extra[:git_http]   = 3
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with https" do
-        before do
-          User.current = nil
-          @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 1
-          @repository_1.save
-        end
-
         my_hash = { https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" } }
 
         it "should return a Hash of Git url" do
+          User.current = nil
+          @project_child.is_public = false
+          @repository_1.extra[:git_daemon] = false
+          @repository_1.extra[:git_http]   = 1
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
       context "with http and https" do
-        before do
-          User.current = nil
-          @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 2
-          @repository_1.save
-        end
-
         my_hash = {
           https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" },
           http:  { url: "http://localhost/git/project-parent/project-child.git",  committer: "false" }
         }
 
         it "should return a Hash of Git url" do
+          User.current = nil
+          @project_child.is_public = false
+          @repository_1.extra[:git_daemon] = false
+          @repository_1.extra[:git_http]   = 2
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -305,11 +275,10 @@ describe Repository::Xitolite do
 
       describe ".repo_path_to_git_cache_id" do
         describe "when repo path is not found" do
-          before do
+          it "should return nil" do
             @git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id('foo.git')
+            expect(@git_cache_id).to be nil
           end
-
-          it { expect(@git_cache_id).to be nil }
         end
       end
     end
