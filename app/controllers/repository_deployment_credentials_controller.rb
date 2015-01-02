@@ -24,18 +24,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
   def create
-    @credential = @repository.deployment_credentials.new(params[:repository_deployment_credential])
-    key = GitolitePublicKey.find_by_id(params[:repository_deployment_credential][:gitolite_public_key_id])
-
-    @credential.gitolite_public_key = key if !key.nil?
-
-    # If admin, let credential be owned by owner of key...
-    if User.current.admin?
-      @credential.user = key.user if !key.nil?
-    else
-      @credential.user = User.current
-    end
-
+    @credential = build_new_credential
     respond_to do |format|
       if @credential.save
         # Update Gitolite repository
@@ -160,6 +149,23 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
     def call_use_case
       options = { message: "Update deploy keys for repository : '#{@repository.gitolite_repository_name}'" }
       UpdateRepository.new(@repository, options).call
+    end
+
+
+    def build_new_credential
+      credential = @repository.deployment_credentials.new(params[:repository_deployment_credential])
+      key = GitolitePublicKey.find_by_id(params[:repository_deployment_credential][:gitolite_public_key_id])
+
+      credential.gitolite_public_key = key if !key.nil?
+
+      # If admin, let credential be owned by owner of key...
+      if User.current.admin?
+        credential.user = key.user if !key.nil?
+      else
+        credential.user = User.current
+      end
+
+      credential
     end
 
 end
