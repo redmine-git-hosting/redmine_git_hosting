@@ -25,4 +25,27 @@ class RepositoryGitExtra < ActiveRecord::Base
   validates :default_branch, presence: true
   validates :key,            presence: true
 
+  ## Callbacks
+  after_save :check_if_default_branch_changed
+
+  ## Virtual attribute
+  attr_accessor :default_branch_has_changed
+
+
+  def default_branch_has_changed?
+    default_branch_has_changed
+  end
+
+
+  private
+
+
+    def check_if_default_branch_changed
+      if self.default_branch_changed?
+        self.default_branch_has_changed = true
+      else
+        self.default_branch_has_changed = false
+      end
+    end
+
 end
