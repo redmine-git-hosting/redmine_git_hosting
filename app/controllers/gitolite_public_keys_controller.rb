@@ -20,7 +20,7 @@ class GitolitePublicKeysController < ApplicationController
       @gitolite_public_key = @user.gitolite_public_keys.new(params[:gitolite_public_key])
       if @gitolite_public_key.save
         create_ssh_key(@gitolite_public_key)
-        flash[:notice] = l(:notice_public_key_created, :title => view_context.keylabel(@gitolite_public_key))
+        flash[:notice] = l(:notice_public_key_created, title: view_context.keylabel(@gitolite_public_key))
         redirect_to @redirect_url
       else
         flash[:error] = @gitolite_public_key.errors.full_messages.to_sentence
