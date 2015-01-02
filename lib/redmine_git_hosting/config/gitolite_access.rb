@@ -67,7 +67,7 @@ module RedmineGitHosting::Config
           server_domain = http_server_domain
         end
 
-        my_root_url = File.join(server_domain[/^[^\/]*/], my_root_path, "/")[0..-2]
+        my_root_url = File.join(server_domain[/^[^\/]*/], my_root_path, '/')[0..-2]
 
         return my_root_url
       end

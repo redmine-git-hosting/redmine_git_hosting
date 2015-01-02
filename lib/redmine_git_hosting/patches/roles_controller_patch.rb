@@ -42,10 +42,7 @@ module RedmineGitHosting
         def permissions_with_git_hosting(&block)
           # Do actual update
           permissions_without_git_hosting(&block)
-
-          if request.post?
-            call_gitolite('modified')
-          end
+          call_gitolite('modified') if request.post?
         end
 
 

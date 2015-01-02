@@ -30,7 +30,7 @@ class UpdateProjectHierarchy
 
     def projects_to_update
       # Only take projects that have Git repos.
-      project.self_and_descendants.uniq.select{|p| p.gitolite_repos.any?}.map{|project| project.id}
+      project.self_and_descendants.uniq.select{ |p| p.gitolite_repos.any? }.map{ |project| project.id }
     end
 
 end
