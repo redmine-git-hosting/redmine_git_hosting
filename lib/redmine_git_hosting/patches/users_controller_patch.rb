@@ -9,7 +9,8 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          alias_method_chain :edit, :git_hosting
+          alias_method_chain :edit,   :git_hosting
+          alias_method_chain :update, :git_hosting
 
           helper :gitolite_public_keys
         end
@@ -28,6 +29,13 @@ module RedmineGitHosting
         end
 
 
+        def update_with_git_hosting(&block)
+          # Previous routine
+          update_without_git_hosting(&block)
+          UpdateProjects.new(@user.gitolite_projects.map{ |p| p.id }, update_options).call if @user.status_has_changed?
+        end
+
+
         private
 
 
@@ -36,6 +44,11 @@ module RedmineGitHosting
             @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
             @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
             @gitolite_public_key  = GitolitePublicKey.new
+          end
+
+
+          def update_options
+            { message: "User status has changed, update projects" }
           end
 
       end

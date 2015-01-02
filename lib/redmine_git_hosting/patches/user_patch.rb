@@ -13,12 +13,11 @@ module RedmineGitHosting
           attr_accessor :status_has_changed
 
           # Relations
-          has_many :gitolite_public_keys, :dependent => :destroy
+          has_many :gitolite_public_keys, dependent: :destroy
 
           # Callbacks
           before_destroy :delete_ssh_keys, prepend: true
           after_save     :check_if_status_changed
-          after_commit   ->(obj) { obj.update_repositories }, on: :update
         end
       end
 
@@ -34,19 +33,13 @@ module RedmineGitHosting
 
 
         def gitolite_projects
-          projects.uniq.select{|p| p.gitolite_repos.any?}
+          projects.uniq.select{ |p| p.gitolite_repos.any? }
         end
 
 
-        protected
-
-
-          def update_repositories
-            if status_has_changed
-              options = { message: "User status has changed, update projects" }
-              UpdateProjects.new(gitolite_projects.map{|p| p.id}, options).call
-            end
-          end
+        def status_has_changed?
+          status_has_changed
+        end
 
 
         private
