@@ -5,10 +5,13 @@ class DownloadGitRevision
   attr_reader :revision
   attr_reader :format
   attr_reader :project
+  attr_reader :gitolite_repository_path
 
   attr_reader :commit_valid
+  attr_reader :commit_id
   attr_reader :content_type
   attr_reader :filename
+  attr_reader :cmd_args
 
 
   def initialize(repository, revision, format)
@@ -16,9 +19,10 @@ class DownloadGitRevision
     @revision   = revision
     @format     = format
     @project    = repository.project
+    @gitolite_repository_path = repository.gitolite_repository_path
 
     @commit_valid  = false
-    @commit_id     = ''
+    @commit_id     = nil
     @content_type  = ''
     @filename      = ''
     @cmd_args      = []
@@ -29,7 +33,7 @@ class DownloadGitRevision
 
 
   def content
-    RedmineGitHosting::Commands.sudo_git_archive(repository.gitolite_repository_path, @commit_id, @cmd_args)
+    RedmineGitHosting::Commands.sudo_git_archive(gitolite_repository_path, commit_id, cmd_args)
   end
 
 
@@ -49,10 +53,10 @@ class DownloadGitRevision
 
       # is the revision a tag?
       if commit.nil?
-        tags = RedmineGitHosting::Commands.sudo_git_tag(repository.gitolite_repository_path)
+        tags = RedmineGitHosting::Commands.sudo_git_tag(gitolite_repository_path)
         tags.each do |x|
           if x == revision
-            commit = RedmineGitHosting::Commands.sudo_git_rev_list(repository.gitolite_repository_path, revision).split[0]
+            commit = RedmineGitHosting::Commands.sudo_git_rev_list(gitolite_repository_path, revision).split[0]
             break
           end
         end
@@ -61,7 +65,7 @@ class DownloadGitRevision
       # well, let check if this is a valid commit
       commit = revision if commit.nil?
 
-      valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(repository.gitolite_repository_path, commit, ['--quiet', '--verify'])
+      valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(gitolite_repository_path, commit, ['--quiet', '--verify'])
 
       if valid_commit == ''
         @commit_valid = false
