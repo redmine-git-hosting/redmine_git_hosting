@@ -2,6 +2,16 @@ module Gitolitable
   extend ActiveSupport::Concern
 
   included do
+
+    # Include other concerns
+    include GitolitableCache
+    include GitolitableFeatures
+    include GitolitablePaths
+    include GitolitablePermissions
+    include GitolitableUrls
+    include GitolitableNotifications
+
+    # Set URL ourself as relative path.
     before_validation :set_git_urls
 
     # Validate that identifier does not match Gitolite Admin repository

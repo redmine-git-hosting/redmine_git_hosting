@@ -3,13 +3,8 @@ require_dependency 'redmine/scm/adapters/xitolite_adapter'
 class Repository::Xitolite < Repository::Git
   unloadable
 
+  # Include Gitolitable concern
   include Gitolitable
-  include GitolitableCache
-  include GitolitableFeatures
-  include GitolitablePaths
-  include GitolitablePermissions
-  include GitolitableUrls
-  include GitolitableNotifications
 
   # Virtual attributes
   attr_accessor :create_readme
