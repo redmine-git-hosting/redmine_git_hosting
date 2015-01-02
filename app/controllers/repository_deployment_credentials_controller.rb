@@ -1,13 +1,13 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
-  before_filter :can_view_credentials,   :only => [:index]
-  before_filter :can_create_credentials, :only => [:new, :create]
-  before_filter :can_edit_credentials,   :only => [:edit, :update, :destroy]
+  before_filter :can_view_credentials,   only: [:index]
+  before_filter :can_create_credentials, only: [:new, :create]
+  before_filter :can_edit_credentials,   only: [:edit, :update, :destroy]
 
-  before_filter :find_deployment_credential, :only => [:edit, :update, :destroy]
-  before_filter :find_key,                   :only => [:edit, :update, :destroy]
-  before_filter :find_all_keys,              :only => [:index, :new, :create]
+  before_filter :find_deployment_credential, only: [:edit, :update, :destroy]
+  before_filter :find_key,                   only: [:edit, :update, :destroy]
+  before_filter :find_all_keys,              only: [:index, :new, :create]
 
   helper :gitolite_public_keys
 
@@ -139,15 +139,21 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     def find_all_keys
       # display create_with_key view.  Find preexisting keys to offer to user
-      @user_keys = User.current.gitolite_public_keys.deploy_key.order('title ASC')
+      @user_keys     = User.current.gitolite_public_keys.deploy_key.order('title ASC')
       @disabled_keys = @repository.deployment_credentials.map(&:gitolite_public_key)
+      @other_keys    = []
+      # Admin can use other's deploy keys as well
+      @other_keys    = other_deployment_keys if User.current.admin?
+    end
 
-      @other_keys = []
-      if User.current.admin?
-        # Admin can use other's deploy keys as well
-        deploy_users = @project.users.select { |user| user != User.current && user.allowed_to?(:create_deployment_keys, @project) }
-        @other_keys  = deploy_users.map { |user| user.gitolite_public_keys.deploy_key.order('title ASC') }.flatten
-      end
+
+    def other_deployment_keys
+      users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order('title ASC') }.flatten
+    end
+
+
+    def users_allowed_to_create_deployment_keys
+      @project.users.select { |user| user != User.current && user.allowed_to?(:create_deployment_keys, @project) }
     end
 
 
