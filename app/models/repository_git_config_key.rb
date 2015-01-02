@@ -10,11 +10,11 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   ## Validations
   validates :repository_id, presence: true
 
-  validates :key,           presence: true,
-                            uniqueness: { case_sensitive: false, scope: :repository_id },
-                            format:     { with: /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/ }
+  validates :key, presence: true,
+                  uniqueness: { case_sensitive: false, scope: :repository_id },
+                  format:     { with: /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/ }
 
-  validates :value,         presence: true
+  validates :value, presence: true
 
   ## Callbacks
   after_save :check_if_key_changed
