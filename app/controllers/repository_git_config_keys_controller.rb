@@ -23,6 +23,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     @git_config_key = @repository.git_config_keys.new(params[:repository_git_config_key])
     respond_to do |format|
       if @git_config_key.save
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_config_key_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
@@ -35,6 +38,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def update
     respond_to do |format|
       if @git_config_key.update_attributes(params[:repository_git_config_key])
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_config_key_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
@@ -47,6 +53,9 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def destroy
     respond_to do |format|
       if @git_config_key.destroy
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_config_key_deleted)
         format.js { render js: "window.location = #{success_url.to_json};" }
       end
@@ -81,6 +90,22 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
       @git_config_key = @repository.git_config_keys.find(params[:id])
     rescue ActiveRecord::RecordNotFound => e
       render_404
+    end
+
+
+    def call_use_case
+      case self.action_name
+      when 'create', 'update'
+        if @git_config_key.key_has_changed?
+          options = { delete_git_config_key: @git_config_key.old_key }
+        else
+          options = {}
+        end
+      when 'destroy'
+        options = { delete_git_config_key: @git_config_key.key }
+      end
+      options = options.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
+      UpdateRepository.new(@repository, options).call
     end
 
 end

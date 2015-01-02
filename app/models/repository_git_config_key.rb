@@ -17,33 +17,29 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   validates :value,         presence: true
 
   ## Callbacks
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :create
-  after_commit ->(obj) { obj.create_or_update_config_key }, on: :update
-  after_commit ->(obj) { obj.delete_config_key },           on: :destroy
+  after_save :check_if_key_changed
+
+  ## Virtual attribute
+  attr_accessor :key_has_changed
+  attr_accessor :old_key
 
 
-  protected
-
-
-    def create_or_update_config_key
-      options = {}
-      options = {delete_git_config_key: self.key_change[0]} if self.key_changed?
-      update_repository(options)
-    end
-
-
-    def delete_config_key
-      options = {delete_git_config_key: self.key}
-      update_repository(options)
-    end
+  def key_has_changed?
+    key_has_changed
+  end
 
 
   private
 
 
-    def update_repository(options)
-      options = options.merge(message: "Rebuild Git config keys respository : '#{repository.gitolite_repository_name}'")
-      UpdateRepository.new(repository, options).call
+    def check_if_key_changed
+      if self.key_changed?
+        self.key_has_changed = true
+        self.old_key         = self.key_change[0]
+      else
+        self.key_has_changed = false
+        self.old_key         = ''
+      end
     end
 
 end
