@@ -44,8 +44,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def update
+    @git_notification = @repository.git_notification
     respond_to do |format|
-      if @repository.git_notification.update_attributes(params[:repository_git_notification])
+      if @git_notification.update_attributes(params[:repository_git_notification])
         # Update Gitolite repository
         call_use_case
 
@@ -59,8 +60,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
 
   def destroy
+    @git_notification = @repository.git_notification
     respond_to do |format|
-      if @repository.git_notification.destroy
+      if @git_notification.destroy
         # Update Gitolite repository
         call_use_case
 

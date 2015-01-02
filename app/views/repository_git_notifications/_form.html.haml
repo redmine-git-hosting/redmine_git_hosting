@@ -12,16 +12,16 @@
     %label{ for: 'repository_git_notification[include_list]' }= l(:label_git_notification_include_list) + ' :'
 
   %ul{ id: 'include_list' }
-    - if !@repository.git_notification.nil? && @repository.git_notification.include_list.any?
-      - @repository.git_notification.include_list.each do |item|
+    - if !@git_notification.nil? && @git_notification.include_list.any?
+      - @git_notification.include_list.each do |item|
         %li= item
 
   %p
     %label{ for: 'repository_git_notification[exclude_list]' }= l(:label_git_notification_exclude_list) + ' :'
 
   %ul{ id: 'exclude_list' }
-    - if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any?
-      - @repository.git_notification.exclude_list.each do |item|
+    - if !@git_notification.nil? && @git_notification.exclude_list.any?
+      - @git_notification.exclude_list.each do |item|
         %li= item
 
 :javascript
