@@ -26,6 +26,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
     @git_notification = @repository.build_git_notification(params[:repository_git_notification])
     respond_to do |format|
       if @git_notification.save
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_notifications_created)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
@@ -35,9 +38,17 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
   end
 
 
+  def edit
+    @git_notification = @repository.git_notification
+  end
+
+
   def update
     respond_to do |format|
-      if @git_notification.update_attributes(params[:repository_git_notification])
+      if @repository.git_notification.update_attributes(params[:repository_git_notification])
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_notifications_updated)
         format.js { render js: "window.location = #{success_url.to_json};" }
       else
@@ -49,7 +60,10 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   def destroy
     respond_to do |format|
-      if @git_notification.destroy
+      if @repository.git_notification.destroy
+        # Update Gitolite repository
+        call_use_case
+
         flash[:notice] = l(:notice_git_notifications_deleted)
         format.js { render js: "window.location = #{success_url.to_json};" }
       end
@@ -77,6 +91,12 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
     def can_edit_git_notifications
       render_403 unless view_context.user_allowed_to(:edit_repository_git_notifications, @project)
+    end
+
+
+    def call_use_case
+      options = { message: "Rebuild mailing list for respository : '#{@repository.gitolite_repository_name}'" }
+      UpdateRepository.new(@repository, options).call
     end
 
 end

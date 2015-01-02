@@ -22,19 +22,6 @@ class RepositoryGitNotification < ActiveRecord::Base
   ## Callbacks
   before_validation :remove_blank_items
 
-  after_commit ->(obj) { obj.update_repository }, on: :create
-  after_commit ->(obj) { obj.update_repository }, on: :update
-  after_commit ->(obj) { obj.update_repository }, on: :destroy
-
-
-  protected
-
-
-    def update_repository
-      options = { message: "Rebuild mailing list for respository : '#{repository.gitolite_repository_name}'" }
-      UpdateRepository.new(repository, options).call
-    end
-
 
   private
 
@@ -55,9 +42,7 @@ class RepositoryGitNotification < ActiveRecord::Base
       end
 
       intersection = include_list & exclude_list
-      if intersection.length.to_i > 0
-        errors.add(:repository_git_notification, 'the same address is defined twice')
-      end
+      errors.add(:repository_git_notification, 'the same address is defined twice') if intersection.length.to_i > 0
     end
 
 end
