@@ -41,26 +41,23 @@ module Hooks
 
 
     def execute
-      call_mirror
+      call_mirror if needs_push?
     end
 
 
     private
 
 
-      def call_mirror
-        if needs_push?
-          do_call_mirror
-        end
-      end
-
-
       # If we have an explicit refspec, check it against incoming payloads
       # Special case: if we do not pass in any payloads, return true
       def needs_push?
         return true if payloads.empty?
-        return true if mirror.push_mode == RepositoryMirror::PUSHMODE_MIRROR
+        return true if mirror.mirror_mode?
+        return check_ref_spec
+      end
 
+
+      def check_ref_spec
         refspec_parse = mirror.explicit_refspec.match(/^\+?([^:]*)(:[^:]*)?$/)
         payloads.each do |payload|
           if splitpath = RedmineGitHosting::Utils.refcomp_parse(payload[:ref])
@@ -74,7 +71,7 @@ module Hooks
       end
 
 
-      def do_call_mirror
+      def call_mirror
         y = ''
 
         logger.info("Pushing changes to #{url} ... ")
