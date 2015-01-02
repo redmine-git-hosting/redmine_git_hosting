@@ -16,8 +16,7 @@ module RedmineGitHosting
           has_many :gitolite_public_keys, dependent: :destroy
 
           # Callbacks
-          before_destroy :delete_ssh_keys, prepend: true
-          after_save     :check_if_status_changed
+          after_save :check_if_status_changed
         end
       end
 
@@ -43,11 +42,6 @@ module RedmineGitHosting
 
 
         private
-
-
-          def delete_ssh_keys
-            RedmineGitHosting.logger.info("User '#{self.login}' has been deleted from Redmine delete membership and SSH keys !")
-          end
 
 
           def check_if_status_changed

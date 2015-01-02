@@ -41,14 +41,6 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :set_identifier
   before_validation :set_fingerprint
 
-  after_commit ->(obj) { obj.add_ssh_key },     on: :create
-  after_commit ->(obj) { obj.destroy_ssh_key }, on: :destroy
-
-
-  def self.by_user(user)
-    where("user_id = ?", user.id)
-  end
-
 
   def key_type_as_string
     user_key? ? 'user_key' : 'deploy_key'
@@ -61,7 +53,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def to_yaml
-    { :title => self.identifier , :key => self.key, :location => self.location, :owner => self.owner }
+    { title: identifier , key: key, location: location, owner: owner }
   end
 
 
@@ -92,7 +84,7 @@ class GitolitePublicKey < ActiveRecord::Base
   # This is due to the new gitolite multi-keys organization
   # using folders. See http://gitolite.com/gitolite/users.html
   def gitolite_path
-    File.join('keydir', RedmineGitHosting::Config.gitolite_key_subdir, self.user.gitolite_identifier, self.location, self.owner) + '.pub'
+    File.join('keydir', RedmineGitHosting::Config.gitolite_key_subdir, user.gitolite_identifier, location, owner) + '.pub'
   end
 
 
@@ -123,26 +115,13 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
   def owner
-    self.identifier.split('@')[0]
+    identifier.split('@')[0]
   end
 
 
   def location
-    self.identifier.split('@')[1]
+    identifier.split('@')[1]
   end
-
-
-  protected
-
-
-    def add_ssh_key
-      CreateSshKey.new(self).call
-    end
-
-
-    def destroy_ssh_key
-      DestroySshKey.new(self).call
-    end
 
 
   private
@@ -153,9 +132,7 @@ class GitolitePublicKey < ActiveRecord::Base
       self.title = title.strip rescue ''
 
       # Don't mess with existing keys (since cannot change key text anyway)
-      if new_record?
-        self.key = key.strip rescue ''
-      end
+      self.key = key.strip rescue '' if new_record?
     end
 
 
@@ -184,7 +161,7 @@ class GitolitePublicKey < ActiveRecord::Base
     # For deployment keys, we use an incrementing number.
     def set_identifier
       if !self.user_id.nil?
-        key_count = GitolitePublicKey.by_user(self.user).deploy_key.length + 1
+        key_count = user.gitolite_public_keys.deploy_key.length + 1
 
         case key_type
           when KEY_TYPE_USER

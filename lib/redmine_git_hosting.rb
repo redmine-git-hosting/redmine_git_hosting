@@ -20,11 +20,9 @@ module RedmineGitHosting
 
   class << self
 
-    @@logger = nil
-
 
     def logger
-      @@logger ||= RedmineGitHosting::Log.init_logs!
+      @logger ||= RedmineGitHosting::Log.init_logs!
     end
 
 

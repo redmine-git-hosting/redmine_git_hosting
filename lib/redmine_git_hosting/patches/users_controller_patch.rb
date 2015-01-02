@@ -9,8 +9,9 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
-          alias_method_chain :edit,   :git_hosting
-          alias_method_chain :update, :git_hosting
+          alias_method_chain :edit,    :git_hosting
+          alias_method_chain :update,  :git_hosting
+          alias_method_chain :destroy, :git_hosting
 
           helper :gitolite_public_keys
         end
@@ -36,6 +37,16 @@ module RedmineGitHosting
         end
 
 
+        def destroy_with_git_hosting(&block)
+          # Build SSH keys list before user destruction.
+          ssh_keys_list = ssh_keys_to_destroy
+          # Destroy user
+          destroy_without_git_hosting(&block)
+          # Destroy SSH keys
+          destroy_ssh_keys(ssh_keys_list)
+        end
+
+
         private
 
 
@@ -49,6 +60,19 @@ module RedmineGitHosting
 
           def update_options
             { message: "User status has changed, update projects" }
+          end
+
+
+          def ssh_keys_to_destroy
+            @user.gitolite_public_keys.map(&:to_yaml)
+          end
+
+
+          def destroy_ssh_keys(ssh_keys_list)
+            RedmineGitHosting.logger.info("User '#{@user.login}' has been deleted from Redmine, delete membership and SSH keys !")
+            ssh_keys_list.each do |ssh_key|
+              DestroySshKey.new(ssh_key).call
+            end
           end
 
       end

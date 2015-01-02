@@ -4,12 +4,10 @@ class DestroySshKey
   include UseCaseBase
 
   attr_reader :ssh_key
-  attr_reader :options
 
 
-  def initialize(ssh_key, opts = {})
+  def initialize(ssh_key)
     @ssh_key = ssh_key
-    @options = opts
     super
   end
 
@@ -25,7 +23,7 @@ class DestroySshKey
 
     def destroy_ssh_key
       logger.info("User '#{User.current.login}' has deleted a SSH key")
-      resync_gitolite(:delete_ssh_key, ssh_key.to_yaml, options)
+      resync_gitolite(:delete_ssh_key, ssh_key)
     end
 
 end

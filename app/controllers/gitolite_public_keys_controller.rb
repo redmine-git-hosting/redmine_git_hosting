@@ -19,6 +19,7 @@ class GitolitePublicKeysController < ApplicationController
     if params[:create_button]
       @gitolite_public_key = @user.gitolite_public_keys.new(params[:gitolite_public_key])
       if @gitolite_public_key.save
+        create_ssh_key(@gitolite_public_key)
         flash[:notice] = l(:notice_public_key_created, :title => view_context.keylabel(@gitolite_public_key))
         redirect_to @redirect_url
       else
@@ -35,7 +36,8 @@ class GitolitePublicKeysController < ApplicationController
     if request.delete?
       if @gitolite_public_key.user == @user || @user.admin?
         if @gitolite_public_key.destroy
-          flash[:notice] = l(:notice_public_key_deleted, :title => view_context.keylabel(@gitolite_public_key))
+          destroy_ssh_key(@gitolite_public_key)
+          flash[:notice] = l(:notice_public_key_deleted, title: view_context.keylabel(@gitolite_public_key))
         end
         redirect_to @redirect_url
       else
@@ -82,6 +84,16 @@ class GitolitePublicKeysController < ApplicationController
       @gitolite_public_key = @user.gitolite_public_keys.find(params[:id])
     rescue ActiveRecord::RecordNotFound => e
       render_404
+    end
+
+
+    def create_ssh_key(ssh_key)
+      CreateSshKey.new(ssh_key).call
+    end
+
+
+    def destroy_ssh_key(ssh_key)
+      DestroySshKey.new(ssh_key.to_yaml).call
     end
 
 end
