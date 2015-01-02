@@ -27,7 +27,7 @@ module RedmineGitHosting
         # As login names may change (i.e., user renamed), we use the user id
         # with its login name as a prefix for readibility.
         def gitolite_identifier
-          [RedmineGitHosting::Config.gitolite_identifier_prefix, self.login.underscore.gsub(/[^0-9a-zA-Z]/, '_'), '_', self.id].join
+          [RedmineGitHosting::Config.gitolite_identifier_prefix, login.underscore.gsub(/[^0-9a-zA-Z]/, '_'), '_', id].join
         end
 
 
@@ -36,6 +36,7 @@ module RedmineGitHosting
         end
 
 
+        # Syntaxic sugar
         def status_has_changed?
           status_has_changed
         end
@@ -44,8 +45,12 @@ module RedmineGitHosting
         private
 
 
+          # This is Rails method : <attribute>_changed?
+          # However, the value is cleared before passing the object to the controller.
+          # We need to save it in virtual attribute to trigger Gitolite resync if changed.
+          #
           def check_if_status_changed
-            if self.status_changed?
+            if status_changed?
               self.status_has_changed = true
             else
               self.status_has_changed = false

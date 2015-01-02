@@ -81,7 +81,7 @@ module RedmineGitHosting
 
 
           def creation_options
-            {create_readme_file: create_readme_file?, enable_git_annex: enable_git_annex?}
+            { create_readme_file: create_readme_file?, enable_git_annex: enable_git_annex? }
           end
 
 

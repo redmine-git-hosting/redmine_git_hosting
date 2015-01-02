@@ -1,6 +1,8 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
+  VALID_CONFIG_KEY_REGEX = /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
+
   ## Attributes
   attr_accessible :key, :value
 
@@ -12,7 +14,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   validates :key, presence: true,
                   uniqueness: { case_sensitive: false, scope: :repository_id },
-                  format:     { with: /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/ }
+                  format:     { with: VALID_CONFIG_KEY_REGEX }
 
   validates :value, presence: true
 
@@ -24,6 +26,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   attr_accessor :old_key
 
 
+  # Syntaxic sugar
   def key_has_changed?
     key_has_changed
   end
@@ -31,9 +34,12 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   private
 
-
+    # This is Rails method : <attribute>_changed?
+    # However, the value is cleared before passing the object to the controller.
+    # We need to save it in virtual attribute to trigger Gitolite resync if changed.
+    #
     def check_if_key_changed
-      if self.key_changed?
+      if key_changed?
         self.key_has_changed = true
         self.old_key         = self.key_change[0]
       else

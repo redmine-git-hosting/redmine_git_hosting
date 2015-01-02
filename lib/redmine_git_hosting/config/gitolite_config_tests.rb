@@ -18,56 +18,52 @@ module RedmineGitHosting::Config
       ##                           ##
       ###############################
 
-      @@temp_dir_path = nil
-      @@previous_temp_dir_path = nil
+      @temp_dir_path = nil
+      @previous_temp_dir_path = nil
 
       def create_temp_dir
-        if (@@previous_temp_dir_path != gitolite_temp_dir)
-          @@previous_temp_dir_path = gitolite_temp_dir
-          @@temp_dir_path = gitolite_admin_dir
+        if @previous_temp_dir_path != gitolite_temp_dir
+          @previous_temp_dir_path = gitolite_temp_dir
+          @temp_dir_path = gitolite_admin_dir
         end
 
-        if !File.directory?(@@temp_dir_path)
-          logger.info("Create tmp directory : '#{@@temp_dir_path}'")
-
+        if !File.directory?(@temp_dir_path)
+          logger.info("Create tmp directory : '#{@temp_dir_path}'")
           begin
-            FileUtils.mkdir_p @@temp_dir_path
-            FileUtils.chmod 0700, @@temp_dir_path
+            FileUtils.mkdir_p @temp_dir_path
+            FileUtils.chmod 0700, @temp_dir_path
           rescue => e
-            logger.error("Cannot create tmp directory : '#{@@temp_dir_path}'")
+            logger.error("Cannot create tmp directory : '#{@temp_dir_path}'")
           end
-
         end
 
-        return @@temp_dir_path
+        @temp_dir_path
       end
 
 
-      @@temp_dir_writeable = false
+      @temp_dir_writeable = false
 
       def temp_dir_writeable?(opts = {})
-        @@temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
+        @temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
 
-        if !@@temp_dir_writeable
-
+        if !@temp_dir_writeable
           logger.debug("Testing if temp directory '#{create_temp_dir}' is writeable ...")
-
           mytestfile = File.join(create_temp_dir, "writecheck")
-
           if !File.directory?(create_temp_dir)
-            @@temp_dir_writeable = false
+            @temp_dir_writeable = false
           else
             begin
               FileUtils.touch mytestfile
               FileUtils.rm mytestfile
-              @@temp_dir_writeable = true
             rescue => e
-              @@temp_dir_writeable = false
+              @temp_dir_writeable = false
+            else
+              @temp_dir_writeable = true
             end
           end
         end
 
-        return @@temp_dir_writeable
+        @temp_dir_writeable
       end
 
 

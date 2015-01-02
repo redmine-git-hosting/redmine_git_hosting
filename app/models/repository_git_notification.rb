@@ -1,7 +1,8 @@
 class RepositoryGitNotification < ActiveRecord::Base
   unloadable
 
-  VALID_EMAIL_REGEX  = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
+  # VALID_EMAIL_REGEX = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
 
   ## Attributes
   attr_accessible :prefix, :sender_address, :include_list, :exclude_list
@@ -34,11 +35,11 @@ class RepositoryGitNotification < ActiveRecord::Base
 
     def validate_mailing_list
       include_list.each do |item|
-        errors.add(:include_list, :invalid) unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+        errors.add(:include_list, :invalid) unless item =~ VALID_EMAIL_REGEX
       end
 
       exclude_list.each do |item|
-        errors.add(:exclude_list, :invalid) unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+        errors.add(:exclude_list, :invalid) unless item =~ VALID_EMAIL_REGEX
       end
 
       intersection = include_list & exclude_list

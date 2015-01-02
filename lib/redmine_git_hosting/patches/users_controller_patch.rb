@@ -24,7 +24,6 @@ module RedmineGitHosting
         def edit_with_git_hosting(&block)
           # Set public key values for view
           set_public_key_values
-
           # Previous routine
           edit_without_git_hosting(&block)
         end
@@ -33,7 +32,8 @@ module RedmineGitHosting
         def update_with_git_hosting(&block)
           # Previous routine
           update_without_git_hosting(&block)
-          UpdateProjects.new(@user.gitolite_projects.map{ |p| p.id }, update_options).call if @user.status_has_changed?
+          # Update projects if needed
+          update_projects
         end
 
 
@@ -58,8 +58,8 @@ module RedmineGitHosting
           end
 
 
-          def update_options
-            { message: "User status has changed, update projects" }
+          def update_projects
+            UpdateProjects.new(@user.gitolite_projects.map{ |p| p.id }, { message: "User status has changed, update projects" }).call if @user.status_has_changed?
           end
 
 

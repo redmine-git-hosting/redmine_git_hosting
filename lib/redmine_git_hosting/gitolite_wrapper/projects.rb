@@ -92,8 +92,8 @@ module RedmineGitHosting
 
         def clean_path(path_list)
           path_list.compact.uniq.sort.reverse.each do |path|
+            logger.info("#{action} : cleaning repository path : '#{path}'")
             begin
-              logger.info("#{action} : cleaning repository path : '#{path}'")
               RedmineGitHosting::Commands.sudo_rmdir(path)
             rescue RedmineGitHosting::Error::GitoliteCommandException => e
               logger.error("#{action} : error while cleaning repository path '#{path}'")

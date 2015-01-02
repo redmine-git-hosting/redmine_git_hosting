@@ -8,6 +8,8 @@ class RepositoryMirror < ActiveRecord::Base
   PUSHMODE_FORCE        = 1
   PUSHMODE_FAST_FORWARD = 2
 
+  VALID_MIRROR_REGEX = /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i
+
   ## Attributes
   attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
 
@@ -22,7 +24,7 @@ class RepositoryMirror < ActiveRecord::Base
   ## ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
   validates :url, presence:   true,
                   uniqueness: { case_sensitive: false, scope: :repository_id },
-                  format:     { with: /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i }
+                  format:     { with: VALID_MIRROR_REGEX }
 
   validates :push_mode, presence:     true,
                         numericality: { only_integer: true },

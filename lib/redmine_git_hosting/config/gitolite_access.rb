@@ -56,20 +56,21 @@ module RedmineGitHosting::Config
       end
 
 
-      def my_root_url(ssl = false)
-        # Remove any path from httpServer in case they are leftover from previous installations.
-        # No trailing /.
-        my_root_path = Redmine::Utils::relative_url_root
+      def redmine_root_url
+        Redmine::Utils::relative_url_root
+      end
 
+
+      def my_root_url(ssl = false)
         if ssl && https_server_domain != ''
           server_domain = https_server_domain
         else
           server_domain = http_server_domain
         end
 
-        my_root_url = File.join(server_domain[/^[^\/]*/], my_root_path, '/')[0..-2]
-
-        return my_root_url
+        # Remove any path from httpServer.
+        # No trailing /.
+        File.join(server_domain[/^[^\/]*/], redmine_root_url, '/')[0..-2]
       end
 
     end

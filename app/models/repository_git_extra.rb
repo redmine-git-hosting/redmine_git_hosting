@@ -32,6 +32,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   attr_accessor :default_branch_has_changed
 
 
+  # Syntaxic sugar
   def default_branch_has_changed?
     default_branch_has_changed
   end
@@ -40,8 +41,12 @@ class RepositoryGitExtra < ActiveRecord::Base
   private
 
 
+    # This is Rails method : <attribute>_changed?
+    # However, the value is cleared before passing the object to the controller.
+    # We need to save it in virtual attribute to trigger Gitolite resync if changed.
+    #
     def check_if_default_branch_changed
-      if self.default_branch_changed?
+      if default_branch_changed?
         self.default_branch_has_changed = true
       else
         self.default_branch_has_changed = false
