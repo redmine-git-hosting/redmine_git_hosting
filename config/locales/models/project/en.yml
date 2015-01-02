@@ -1,0 +1,11 @@
+en:
+
+  activerecord:
+    errors:
+      models:
+
+        project:
+          attributes:
+            identifier:
+              invalid: invalid identifier
+              taken: matches existing repository identifier

@@ -1,0 +1,24 @@
+fr:
+
+  module_name: Redmine Git Hosting
+
+  ########### MISCELANOUS ###########
+  label_enabled: Activé
+  label_disabled: Désactivé
+  label_true: Vrai
+  label_false: Faux
+  label_backup_in_progress: Enregistrement...
+  label_delete_in_progress: Effacement...
+  label_url: URL
+  label_mode: Mode
+  label_hour: Heure
+  button_ok: OK
+  button_clone: Cloner
+
+  label_monday: Lundi
+  label_tuesday: Mardi
+  label_wednesday: Mercredi
+  label_thursday: Jeudi
+  label_friday: Vendredi
+  label_saturday: Samedi
+  label_sunday: Dimanche

@@ -1,0 +1,38 @@
+fr:
+
+  ########### GIT NOTIFICATIONS ###########
+  # Basics labels
+  label_git_notifications: Liste de diffusion
+  label_git_notifications_add: Ajouter une liste de diffusion
+  label_git_notifications_create: Créer une liste de diffusion
+  label_git_notifications_edit: Modifier la liste de diffusion
+  label_git_notifications_delete: Effacer la liste de diffusion
+
+  # Basics notices
+  notice_git_notifications_created: Liste de diffusion créée avec succès
+  notice_git_notifications_updated: Liste de diffusion modifiée avec succès
+  notice_git_notifications_deleted: Liste de diffusion effacée avec succès
+  notice_git_notifications_create_failed: Échec de création de la liste de diffusion
+  notice_git_notifications_update_failed: Échec de modification de la liste de diffusion
+
+  # Misc
+  label_git_notification_include_list: Liste d'inclusion
+  label_git_notification_exclude_list: Liste d'exclusion
+  label_git_notification_default_list: Liste par défaut
+  label_git_notification_effective_list: Liste effective
+
+  label_gitolite_notify_prefix: Préfixe de la liste de diffusion
+  label_gitolite_notify_sender_address: Adresse de l'expéditeur de la liste de diffusion
+
+  activerecord:
+    errors:
+      models:
+
+        repository_git_notification:
+          attributes:
+            base:
+              invalid: 'the same address is defined twice'
+            include_list:
+              invalid: invalide
+            exclude_list:
+              invalid: invalide

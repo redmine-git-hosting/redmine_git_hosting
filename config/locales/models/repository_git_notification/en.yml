@@ -1,0 +1,38 @@
+en:
+
+  ########### GIT NOTIFICATIONS ###########
+  # Basics labels
+  label_git_notifications: Mailing list
+  label_git_notifications_add: Add mailing list
+  label_git_notifications_create: Create mailing list
+  label_git_notifications_edit: Edit mailing list
+  label_git_notifications_delete: Delete mailing list
+
+  # Basics notices
+  notice_git_notifications_created: Mailing list was successfully created
+  notice_git_notifications_updated: Mailing list was successfully updated
+  notice_git_notifications_deleted: Mailing list was successfully deleted
+  notice_git_notifications_create_failed: Failed to create mailing list
+  notice_git_notifications_update_failed: Failed to update mailing list
+
+  # Misc
+  label_git_notification_include_list: Include list
+  label_git_notification_exclude_list: Exclude list
+  label_git_notification_default_list: Default list
+  label_git_notification_effective_list: Effective list
+
+  label_gitolite_notify_prefix: Mailing list prefix
+  label_gitolite_notify_sender_address: Mailing list sender address
+
+  activerecord:
+    errors:
+      models:
+
+        repository_git_notification:
+          attributes:
+            base:
+              invalid: 'the same address is defined twice'
+            include_list:
+              invalid: invalid
+            exclude_list:
+              invalid: invalid
