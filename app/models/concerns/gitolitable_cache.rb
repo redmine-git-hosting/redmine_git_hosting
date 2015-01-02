@@ -10,26 +10,6 @@ module GitolitableCache
       end
 
 
-      # Build a hash of repository identifier :
-      # <repo_1_identifier> => 1
-      # <repo_2_identifier> => 1
-      # etc...
-      # If the same repository identifier is found many times, increment the corresponding counter.
-      # Repository identifiers are unique if all values of the hash are 1.
-      #
-      def identifiers_to_hash
-        self.all.map(&:identifier).inject(Hash.new(0)) do |h, x|
-          h[x] += 1 unless x.blank?
-          h
-        end
-      end
-
-
-      def have_duplicated_identifier?
-        (identifiers_to_hash.values.max || 0) > 1
-      end
-
-
       # Translate repository path into a unique ID for use in caching of git commands.
       #
       def repo_path_to_git_cache_id(repo_path)
