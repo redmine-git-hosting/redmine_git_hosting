@@ -71,10 +71,7 @@ class DownloadGitRevision
 
     def fill_data
       project_name = @project.to_s.parameterize.to_s
-
-      if project_name.length == 0
-        project_name = "tarball"
-      end
+      project_name = "tarball" if project_name.length == 0
 
       case @format
         when 'tar' then
