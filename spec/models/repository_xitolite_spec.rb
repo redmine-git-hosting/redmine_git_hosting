@@ -625,10 +625,10 @@ describe Repository::Xitolite do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Xitolite.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Xitolite.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Xitolite.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Xitolite.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Xitolite.find_by_path(@repository_1.url, loose: true)
+        @repo2 = Repository::Xitolite.find_by_path(@repository_2.url, loose: true)
+        @repo3 = Repository::Xitolite.find_by_path(@repository_3.url, loose: true)
+        @repo4 = Repository::Xitolite.find_by_path(@repository_4.url, loose: true)
 
         @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
         @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)
@@ -973,10 +973,10 @@ describe Repository::Xitolite do
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Xitolite.repo_path_to_object(@repository_1.url)
-        @repo2 = Repository::Xitolite.repo_path_to_object(@repository_2.url)
-        @repo3 = Repository::Xitolite.repo_path_to_object(@repository_3.url)
-        @repo4 = Repository::Xitolite.repo_path_to_object(@repository_4.url)
+        @repo1 = Repository::Xitolite.find_by_path(@repository_1.url, loose: true)
+        @repo2 = Repository::Xitolite.find_by_path(@repository_2.url, loose: true)
+        @repo3 = Repository::Xitolite.find_by_path(@repository_3.url, loose: true)
+        @repo4 = Repository::Xitolite.find_by_path(@repository_4.url, loose: true)
 
         @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
         @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)

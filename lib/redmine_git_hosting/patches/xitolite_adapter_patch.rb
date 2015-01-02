@@ -68,6 +68,8 @@ module RedmineGitHosting
 
           # Compute string from repo_path that should be same as: repo.git_cache_id
           # If only we had access to the repo (we don't).
+          # We perform caching here to speed this up, since this function gets called
+          # many times during the course of a repository lookup.
           def git_cache_id
             logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
             @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)

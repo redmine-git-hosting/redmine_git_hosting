@@ -25,30 +25,9 @@ module GitolitableCache
 
       # Translate repository path into a unique ID for use in caching of git commands.
       #
-      # We perform caching here to speed this up, since this function gets called
-      # many times during the course of a repository lookup.
-      @@cached_path = nil
-      @@cached_id = nil
       def repo_path_to_git_cache_id(repo_path)
-        # Return cached value if pesent
-        return @@cached_id if @@cached_path == repo_path
-
-        repo = repo_path_to_object(repo_path)
-
-        if repo
-          # Cache translated id path, return id
-          @@cached_path = repo_path
-          @@cached_id = repo.git_cache_id
-        else
-          # Hm... clear cache, return nil
-          @@cached_path = nil
-          @@cached_id = nil
-        end
-      end
-
-
-      def repo_path_to_object(repo_path)
-        find_by_path(repo_path, loose: true)
+        repo = find_by_path(repo_path, loose: true)
+        repo ? repo.git_cache_id : nil
       end
 
 
