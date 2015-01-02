@@ -59,9 +59,7 @@ class DownloadGitRevision
       end
 
       # well, let check if this is a valid commit
-      if commit.nil?
-        commit = revision
-      end
+      commit = revision if commit.nil?
 
       valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(repository.gitolite_repository_path, commit, ['--quiet', '--verify'])
 
