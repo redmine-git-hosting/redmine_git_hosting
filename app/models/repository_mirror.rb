@@ -40,6 +40,16 @@ class RepositoryMirror < ActiveRecord::Base
   before_validation :strip_whitespace
 
 
+  def mirror_mode?
+    push_mode == PUSHMODE_MIRROR
+  end
+
+
+  def force_mode?
+    push_mode == PUSHMODE_FORCE
+  end
+
+
   private
 
 

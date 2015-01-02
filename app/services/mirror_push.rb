@@ -33,17 +33,20 @@ class MirrorPush
 
 
     def push_args
-      push_args = []
-
-      if mirror.push_mode == RepositoryMirror::PUSHMODE_MIRROR
-        push_args << "--mirror"
+      if mirror.mirror_mode?
+        ["--mirror"]
       else
         # Not mirroring -- other possible push_args
-        push_args << "--force" if mirror.push_mode == RepositoryMirror::PUSHMODE_FORCE
-        push_args << "--all"   if mirror.include_all_branches?
-        push_args << "--tags"  if mirror.include_all_tags?
+        mirror_args
       end
+    end
 
+
+    def mirror_args
+      push_args = []
+      push_args << "--force" if mirror.force_mode?
+      push_args << "--all"   if mirror.include_all_branches?
+      push_args << "--tags"  if mirror.include_all_tags?
       push_args
     end
 
@@ -55,7 +58,7 @@ class MirrorPush
 
     # Put backquote in front of crucial characters
     def dequote(in_string)
-      in_string.gsub(/[$,"\\\n]/) {|x| "\\" + x}
+      in_string.gsub(/[$,"\\\n]/) { |x| "\\" + x }
     end
 
 end
