@@ -6,6 +6,29 @@ fr:
     errors:
       models:
 
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: Must include at least one item to push
+            explicit_refspec:
+              bad_format: is badly formatted
+              have_null_component: cannot have null first component (will delete remote branch(es))
+
+        repository_deployment_credential:
+          attributes:
+            base:
+              invalid_key: Public Key Must Be a Deployment Key
+              invalid_user: Credential owner cannot be different than owner of Key
+
+        repository_git_notification:
+          attributes:
+            base:
+              invalid: 'the same address is defined twice'
+            include_list:
+              invalid: invalide
+            exclude_list:
+              invalid: invalide
+
         repository_git_config_key:
           attributes:
             key:

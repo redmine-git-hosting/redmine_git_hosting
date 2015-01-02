@@ -67,17 +67,13 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
 
     def correct_key_type
-      if gitolite_public_key && gitolite_public_key.key_type != GitolitePublicKey::KEY_TYPE_DEPLOY
-        errors.add(:base, "Public Key Must Be a Deployment Key")
-      end
+      errors.add(:base, :invalid_key) if gitolite_public_key && gitolite_public_key.key_type_as_string != 'deploy_key'
     end
 
 
     def owner_matches_key
       return if user.nil? || gitolite_public_key.nil?
-      if user != gitolite_public_key.user
-        errors.add(:base, "Credential owner cannot be different than owner of Key.")
-      end
+      errors.add(:base, :invalid_user) if user != gitolite_public_key.user
     end
 
 end

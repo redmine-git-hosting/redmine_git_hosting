@@ -66,28 +66,23 @@ class RepositoryMirror < ActiveRecord::Base
         self.include_all_branches = false
         self.include_all_tags     = false
         self.explicit_refspec     = ""
-        return true
 
       elsif include_all_branches && include_all_tags
         errors.add(:base, "Cannot #{l(:label_mirror_include_all_branches)} and #{l(:label_mirror_include_all_tags)} at the same time.")
         errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)} or #{l(:label_mirror_include_all_tags)}") unless explicit_refspec.blank?
-        return false
 
       elsif !explicit_refspec.blank?
         errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)}.") if include_all_branches
 
         # Check format of refspec
         if !(refspec_parse = explicit_refspec.match(/^\+?([^:]*)(:([^:]*))?$/)) || !refcomp_valid(refspec_parse[1]) || !refcomp_valid(refspec_parse[3])
-          errors.add(:explicit_refspec, "is badly formatted.")
+          errors.add(:explicit_refspec, :bad_format)
         elsif !refspec_parse[1] || refspec_parse[1] == ""
-          errors.add(:explicit_refspec, "cannot have null first component (will delete remote branch(s))")
+          errors.add(:explicit_refspec, :have_null_component)
         end
 
-        return false
-
       elsif !include_all_branches && !include_all_tags
-        errors.add(:base, "Must include at least one item to push.")
-        return false
+        errors.add(:base, :nothing_to_push)
       end
     end
 

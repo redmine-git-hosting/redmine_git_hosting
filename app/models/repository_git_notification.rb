@@ -34,15 +34,15 @@ class RepositoryGitNotification < ActiveRecord::Base
 
     def validate_mailing_list
       include_list.each do |item|
-        errors.add(:include_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+        errors.add(:include_list, :invalid) unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
       end
 
       exclude_list.each do |item|
-        errors.add(:exclude_list, 'not a valid email') unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+        errors.add(:exclude_list, :invalid) unless item =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
       end
 
       intersection = include_list & exclude_list
-      errors.add(:repository_git_notification, 'the same address is defined twice') if intersection.length.to_i > 0
+      errors.add(:base, :invalid) if intersection.length.to_i > 0
     end
 
 end
