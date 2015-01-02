@@ -5,11 +5,11 @@
   %p= f.text_field :prefix, label: :label_gitolite_notify_prefix
   %p= f.text_field :sender_address, label: :label_gitolite_notify_sender_address
 
-  = hidden_field_tag 'repository_git_notifications[include_list][]'
-  = hidden_field_tag 'repository_git_notifications[exclude_list][]'
+  = hidden_field_tag 'repository_git_notification[include_list][]'
+  = hidden_field_tag 'repository_git_notification[exclude_list][]'
 
   %p
-    %label{ for: 'repository_git_notifications[include_list]' }= l(:label_git_notification_include_list) + ' :'
+    %label{ for: 'repository_git_notification[include_list]' }= l(:label_git_notification_include_list) + ' :'
 
   %ul{ id: 'include_list' }
     - if !@repository.git_notification.nil? && @repository.git_notification.include_list.any?
@@ -17,7 +17,7 @@
         %li= item
 
   %p
-    %label{ for: 'repository_git_notifications[exclude_list]' }= l(:label_git_notification_exclude_list) + ' :'
+    %label{ for: 'repository_git_notification[exclude_list]' }= l(:label_git_notification_exclude_list) + ' :'
 
   %ul{ id: 'exclude_list' }
     - if !@repository.git_notification.nil? && @repository.git_notification.exclude_list.any?
@@ -49,14 +49,14 @@
         placeholderText: '+ add email',
         allowDuplicates: false,
         caseSensitive: false,
-        fieldName: 'repository_git_notifications[' + target + '][]',
+        fieldName: 'repository_git_notification[' + target + '][]',
       });
     } else {
       $('#' + target).gtagit({
         placeholderText: '+ add email',
         allowDuplicates: false,
         caseSensitive: false,
-        fieldName: 'repository_git_notifications[' + target + '][]',
+        fieldName: 'repository_git_notification[' + target + '][]',
       });
     }
   }
