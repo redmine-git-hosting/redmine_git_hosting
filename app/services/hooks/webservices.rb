@@ -47,14 +47,7 @@ module Hooks
 
 
     def execute
-      call_webservice
-    end
-
-
-    def call_webservice
-      if needs_push?
-        handle_webservice_call
-      end
+      call_webservice if needs_push?
     end
 
 
@@ -105,7 +98,7 @@ module Hooks
       end
 
 
-      def handle_webservice_call
+       do_call_webservice
         if use_method == :post && split_payloads?
           payloads_to_send.each do |payload|
             do_call_webservice(payload)
