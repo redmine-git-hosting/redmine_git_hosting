@@ -24,7 +24,7 @@ describe GitolitePublicKey do
     if Redmine::VERSION.to_s.include?('2.6')
       'redmine_user13_15'
     else
-      'redmine_user13_14'
+      'redmine_user13_13'
     end
   end
 
