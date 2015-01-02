@@ -28,30 +28,28 @@ module RedmineGitHosting
         def create_with_git_hosting(&block)
           create_without_git_hosting(&block)
           # Only create repo if project creation worked
-          if validate_parent_id && @project.save
-            CreateProjectRepository.new(@project).call
-          end
+          create_project_repository if validate_parent_id && @project.save
         end
 
 
         def update_with_git_hosting(&block)
           update_without_git_hosting(&block)
-          if @project.gitolite_repos.detect {|repo| repo.url != repo.gitolite_repository_path || repo.url != repo.root_url}
+          if @project.gitolite_repos.detect { |repo| repo.url != repo.gitolite_repository_path || repo.url != repo.root_url }
             # Hm... something about parent hierarchy changed.  Update us and our children
-            MoveProjectHierarchy.new(@project).call
+            move_project_hierarchy
           else
-            options = { message: "Set Git daemon for repositories of project : '#{@project}'" }
-            UpdateProject.new(@project, options).call
+            update_project("Set Git daemon for repositories of project : '#{@project}'")
           end
         end
 
 
         def destroy_with_git_hosting(&block)
+          # Build repositories list before project destruction.
           repositories_list = repositories_to_destroy
+          # Destroy project
           destroy_without_git_hosting(&block)
-          if api_request? || params[:confirm]
-            DestroyRepositories.new(repositories_list, destroy_options).call
-          end
+          # Destroy repositories
+          destroy_repositories(repositories_list) if api_request? || params[:confirm]
         end
 
 
@@ -63,8 +61,7 @@ module RedmineGitHosting
 
         def unarchive_with_git_hosting(&block)
           unarchive_without_git_hosting(&block)
-          options = { message: "User '#{User.current.login}' has unarchived project '#{@project}', update it !" }
-          UpdateProject.new(@project, options).call
+          update_project("User '#{User.current.login}' has unarchived project '#{@project}', update it !")
         end
 
 
@@ -83,9 +80,31 @@ module RedmineGitHosting
         private
 
 
+          def create_project_repository
+            CreateProjectRepository.new(@project).call
+          end
+
+
+          def move_project_hierarchy
+            MoveProjectHierarchy.new(@project).call
+          end
+
+
+          def update_project(message)
+            options = { message: message }
+            UpdateProject.new(@project, options).call
+          end
+
+
           def update_project_hierarchy(message)
             options = { message: message }
             UpdateProjectHierarchy.new(@project, options).call
+          end
+
+
+          def destroy_repositories(repositories_list)
+            options = { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
+            DestroyRepositories.new(repositories_list, options).call
           end
 
 
@@ -105,11 +124,6 @@ module RedmineGitHosting
             end
 
             destroy_repositories
-          end
-
-
-          def destroy_options
-            { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
           end
 
       end
