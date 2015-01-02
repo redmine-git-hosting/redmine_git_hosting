@@ -4,9 +4,14 @@ module Gitolitable
   included do
     before_validation :set_git_urls
 
+    # Validate that identifier does not match Gitolite Admin repository
+    validates_exclusion_of :identifier, in: %w(gitolite-admin)
+
     # Place additional constraints on repository identifiers
     # because of multi repos
-    validate :additional_ident_constraints
+    validate :additional_constraints_on_identifier
+    validate :identifier_dont_change
+    validate :default_repository_has_identifier
 
     class << self
 
@@ -131,35 +136,32 @@ module Gitolitable
     # 1) cannot equal identifier of any project
     # 2) if repo_ident_unique? make sure that repo identifier is globally unique
     # 3) cannot make this repo the default if there will be some other repo with blank identifier
-    def additional_ident_constraints
+    def additional_constraints_on_identifier
       if !identifier.blank? && (new_record? || identifier_changed?)
-        if Project.find_by_identifier(identifier)
-          errors.add(:identifier, :ident_cannot_equal_project)
-        end
+        errors.add(:identifier, :cannot_equal_project) if Project.find_by_identifier(identifier)
 
         # See if a repo for another project has the same identifier (existing validations already check for current project)
-        if self.class.repo_ident_unique? && Repository.find_by_identifier(identifier, :conditions => ["project_id <> ?", project.id])
-          errors.add(:identifier, :ident_not_unique)
-        end
+        errors.add(:identifier, :taken) if self.class.repo_ident_unique? && Repository.find_by_identifier(identifier, conditions: ["project_id <> ?", project.id])
       end
+    end
 
-      if new_record?
-        errors.add(:identifier, :ident_invalid) if identifier == 'gitolite-admin'
-      else
-        # Make sure identifier hasn't changed.  Allow null and blank
-        # Note that simply using identifier_changed doesn't seem to work
-        # if the identifier was "NULL" but the new identifier is ""
-        if (identifier_was.blank? && !identifier.blank? || !identifier_was.blank? && identifier_changed?)
-          errors.add(:identifier, :cannot_change)
-        end
-      end
 
+    # Make sure identifier hasn't changed.  Allow null and blank
+    # Note that simply using identifier_changed doesn't seem to work
+    # if the identifier was "NULL" but the new identifier is ""
+    #
+    def identifier_dont_change
+      return if new_record?
+      errors.add(:identifier, :cannot_change) if (identifier_was.blank? && !identifier.blank? || !identifier_was.blank? && identifier_changed?)
+    end
+
+
+    # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier
+    #
+    def default_repository_has_identifier
       if project && (is_default? || set_as_default?)
-        # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier
-        possibles = Repository.find_all_by_project_id(project.id, :conditions => ["identifier = '' or identifier is null"])
-        if possibles.any? && (new_record? || possibles.detect{|x| x.id != id})
-          errors.add(:base, :blank_default_exists)
-        end
+        possibles = Repository.find_all_by_project_id(project.id, conditions: ["identifier = '' or identifier is null"])
+        errors.add(:base, :blank_default_exists) if possibles.any? && (new_record? || possibles.detect{ |x| x.id != id })
       end
     end
 
