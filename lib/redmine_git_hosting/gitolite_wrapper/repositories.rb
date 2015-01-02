@@ -66,20 +66,6 @@ module RedmineGitHosting
       end
 
 
-      def delete_repositories
-        admin.transaction do
-          object_id.each do |repository_data|
-            repository_data = repository_data.symbolize_keys
-            RedmineGitHosting::GitoliteHandlers::RepositoryDeleter.new(repository_data, gitolite_config, action).call
-            gitolite_admin_repo_commit("#{repository_data[:repo_name]}")
-          end
-        end
-
-        # Call Gitolite plugins
-        execute_post_delete_actions(repository_data)
-      end
-
-
       private
 
 

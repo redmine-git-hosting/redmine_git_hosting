@@ -25,7 +25,9 @@ class DestroyRepositories
 
     def destroy_repositories
       logger.info(message)
-      resync_gitolite(:delete_repositories, repositories)
+      repositories.each do |repository|
+        resync_gitolite(:delete_repository, repository)
+      end
     end
 
 end
