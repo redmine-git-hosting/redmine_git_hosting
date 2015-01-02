@@ -37,33 +37,33 @@ class DownloadGitRevision
 
 
     def validate_revision
-      commit_id = nil
+      commit = nil
 
       # is the revision a branch?
       repository.branches.each do |x|
         if x.to_s == revision
-          commit_id = x.revision
+          commit = x.revision
           break
         end
       end
 
       # is the revision a tag?
-      if commit_id.nil?
+      if commit.nil?
         tags = RedmineGitHosting::Commands.sudo_git_tag(repository.gitolite_repository_path)
         tags.each do |x|
           if x == revision
-            commit_id = RedmineGitHosting::Commands.sudo_git_rev_list(repository.gitolite_repository_path, revision).split[0]
+            commit = RedmineGitHosting::Commands.sudo_git_rev_list(repository.gitolite_repository_path, revision).split[0]
             break
           end
         end
       end
 
-      # well, let check if this is a valid commit_id
-      if commit_id.nil?
-        commit_id = revision
+      # well, let check if this is a valid commit
+      if commit.nil?
+        commit = revision
       end
 
-      valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(repository.gitolite_repository_path, commit_id, ['--quiet', '--verify'])
+      valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(repository.gitolite_repository_path, commit, ['--quiet', '--verify'])
 
       if valid_commit == ''
         @commit_valid = false
