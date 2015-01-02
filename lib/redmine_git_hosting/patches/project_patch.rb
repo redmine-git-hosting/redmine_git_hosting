@@ -9,11 +9,11 @@ module RedmineGitHosting
         base.class_eval do
           unloadable
 
+          # Add custom scope
           scope :active_or_closed, -> { where "status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_CLOSED}" }
 
-          # Place additional constraints on repository identifiers
-          # because of multi repos
-          validate :additional_ident_constraints
+          # Place additional constraints on repository identifiers because of multi repos
+          validate :additional_constraints_on_identifier
         end
       end
 
@@ -25,21 +25,23 @@ module RedmineGitHosting
           repositories.select{ |x| x.is_a?(Repository::Xitolite)}.sort { |x, y| x.id <=> y.id }
         end
 
+
         # Return first repo with a blank identifier (should be only one!)
         def repo_blank_ident
-          Repository.find_by_project_id(id, :conditions => ["identifier = '' or identifier is null"])
+          Repository.find_by_project_id(id, conditions: ["identifier = '' or identifier is null"])
         end
+
 
         private
 
-          # Make sure that identifier does not match existing repository identifier
-          def additional_ident_constraints
-            if new_record? && !identifier.blank? && Repository.find_by_identifier_and_type(identifier, "Repository::Xitolite")
-              errors.add(:identifier, :taken)
-            end
 
-            if new_record? && !identifier.blank? && identifier == 'gitolite-admin'
-              errors.add(:identifier, :invalid)
+          def additional_constraints_on_identifier
+            if new_record? && !identifier.blank?
+              # Make sure that identifier does not match existing repository identifier
+              errors.add(:identifier, :taken) if Repository.find_by_identifier_and_type(identifier, "Repository::Xitolite")
+
+              # Make sure that identifier does not match Gitolite Admin repository
+              errors.add(:identifier, :invalid) if identifier == 'gitolite-admin'
             end
           end
 
