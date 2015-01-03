@@ -48,7 +48,7 @@ module RedmineGitHosting::Config
 
         if !@temp_dir_writeable
           logger.debug("Testing if temp directory '#{create_temp_dir}' is writeable ...")
-          mytestfile = File.join(create_temp_dir, "writecheck")
+          mytestfile = File.join(create_temp_dir, 'writecheck')
           if !File.directory?(create_temp_dir)
             @temp_dir_writeable = false
           else
@@ -80,7 +80,7 @@ module RedmineGitHosting::Config
         result = execute_sudo_test(redmine_user) do
           RedmineGitHosting::Commands.sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
         end
-        result ? logger.info("OK!") : logger.error("Error while testing can_gitolite_sudo_to_redmine_user")
+        result ? logger.info('OK!') : logger.error('Error while testing can_gitolite_sudo_to_redmine_user')
         result
       end
 
@@ -92,7 +92,7 @@ module RedmineGitHosting::Config
         result = execute_sudo_test(gitolite_user) do
           RedmineGitHosting::Commands.sudo_capture('whoami')
         end
-        result ? logger.info("OK!") : logger.error("Error while testing can_redmine_sudo_to_gitolite_user")
+        result ? logger.info('OK!') : logger.error('Error while testing can_redmine_sudo_to_gitolite_user')
         result
       end
 

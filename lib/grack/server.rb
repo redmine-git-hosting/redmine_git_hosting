@@ -24,7 +24,7 @@ module Grack
       begin
         IO.popen(popen_env, command, popen_options).read
       rescue => e
-        logger.error("Problems while getting SmartHttp params")
+        logger.error('Problems while getting SmartHttp params')
       end
     end
 

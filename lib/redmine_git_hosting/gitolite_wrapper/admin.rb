@@ -28,7 +28,7 @@ module RedmineGitHosting
 
 
       def flush_settings_cache
-        logger.info("Settings cache flushed!")
+        logger.info('Settings cache flushed!')
       end
 
 

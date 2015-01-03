@@ -71,7 +71,7 @@ module Grack
         when *RedmineGitHosting::GitAccess::PUSH_COMMANDS
           # Push requires valid SSL
           if !is_ssl?
-            logger.error("SmartHttp : your are trying to push data without SSL!, exiting !")
+            logger.error('SmartHttp : your are trying to push data without SSL!, exiting !')
             false
           elsif user
             RedmineGitHosting::GitAccess.new.upload_access_check(user, repository).allowed?
@@ -129,7 +129,7 @@ module Grack
 
 
       def render_not_found
-        [404, {"Content-Type" => "text/plain"}, ["Not Found"]]
+        [404, {'Content-Type' => 'text/plain'}, ['Not Found']]
       end
 
 
