@@ -32,16 +32,19 @@ module GitolitablePaths
   end
 
 
-  def get_full_parent_path
-    return '' if !RedmineGitHosting::Config.hierarchical_organisation?
-    parent_parts = []
-    p = project
-    while p.parent
-      parent_id = p.parent.identifier.to_s
-      parent_parts.unshift(parent_id)
-      p = p.parent
+  private
+
+
+    def get_full_parent_path
+      return '' if !RedmineGitHosting::Config.hierarchical_organisation?
+      parent_parts = []
+      p = project
+      while p.parent
+        parent_id = p.parent.identifier.to_s
+        parent_parts.unshift(parent_id)
+        p = p.parent
+      end
+      parent_parts.join("/")
     end
-    parent_parts.join("/")
-  end
 
 end
