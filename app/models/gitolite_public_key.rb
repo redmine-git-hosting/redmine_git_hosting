@@ -197,18 +197,10 @@ class GitolitePublicKey < ActiveRecord::Base
 
     def has_not_been_changed
       return if new_record?
-
-      valid = true
-
       %w(identifier key user_id key_type title fingerprint).each do |attribute|
         method = "#{attribute}_changed?"
-        if self.send(method)
-          errors.add(attribute, 'cannot be changed')
-          valid = false
-        end
+        errors.add(attribute, 'cannot be changed') if self.send(method)
       end
-
-      return valid
     end
 
 
@@ -222,24 +214,17 @@ class GitolitePublicKey < ActiveRecord::Base
 
     def key_uniqueness
       return if !new_record?
-
       existing = GitolitePublicKey.find_by_fingerprint(self.fingerprint)
-
       if existing
         # Hm.... have a duplicate key!
         if existing.user == User.current
           errors.add(:key, :taken_by_you, :name => existing.title)
-          return false
         elsif User.current.admin?
           errors.add(:key, :taken_by_other, :login => existing.user.login, :name => existing.title)
-          return false
         else
           errors.add(:key, :taken_by_someone)
-          return false
         end
       end
-
-      return true
     end
 
 end
