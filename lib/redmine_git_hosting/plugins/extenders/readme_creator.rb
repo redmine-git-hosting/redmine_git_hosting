@@ -69,7 +69,7 @@ module RedmineGitHosting::Plugins::Extenders
       def create_file(repo)
         oid = repo.write("## #{gitolite_repo_name}", :blob)
         index = repo.index
-        index.add(path: "README.md", oid: oid, mode: 0100644)
+        index.add(path: 'README.md', oid: oid, mode: 0100644)
         index
       end
 
@@ -79,7 +79,7 @@ module RedmineGitHosting::Plugins::Extenders
         Rugged::Commit.create(repo,
           author:     commit_author,
           committer:  commit_author,
-          message:    "Add README file",
+          message:    'Add README file',
           parents:    repo.empty? ? [] : [ repo.head.target ].compact,
           tree:       commit_tree,
           update_ref: 'HEAD'

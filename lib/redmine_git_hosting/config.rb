@@ -63,11 +63,11 @@ module RedmineGitHosting
         begin
           value = Setting.plugin_redmine_git_hosting[setting]
         rescue => e
-          value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+          value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting]
         else
           ## The Setting table exist but does not contain the value yet, fallback to default
           if value.nil?
-            value = Redmine::Plugin.find("redmine_git_hosting").settings[:default][setting]
+            value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting]
           end
         end
 
@@ -82,11 +82,11 @@ module RedmineGitHosting
           default_hash = config
         else
           ## Get default config from init.rb
-          default_hash = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
+          default_hash = Redmine::Plugin.find('redmine_git_hosting').settings[:default]
         end
 
         if default_hash.nil? || default_hash.empty?
-          logger.info("No defaults specified in init.rb!")
+          logger.info('No defaults specified in init.rb!')
         else
           do_reload_config(default_hash, logger)
         end
@@ -112,17 +112,17 @@ module RedmineGitHosting
         end
 
         if changes == 0
-          logger.info("No changes necessary.")
+          logger.info('No changes necessary.')
         else
-          logger.info("Committing changes ... ")
+          logger.info('Committing changes ... ')
           begin
             ## Update Settings
             Setting.plugin_redmine_git_hosting = valuehash
             ## Refresh Settings cache
             Setting.check_cache
-            logger.info("Success!")
+            logger.info('Success!')
           rescue => e
-            logger.error("Failure.")
+            logger.error('Failure.')
             logger.error(e.message)
           end
         end

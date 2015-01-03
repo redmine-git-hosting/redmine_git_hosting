@@ -12,7 +12,7 @@ module RedmineGitHosting
     # John Kubiatowicz, 11/21/11
 
     # Separator character(s) used to replace '/' in name
-    TRASH_DIR_SEP = "__"
+    TRASH_DIR_SEP = '__'
 
 
     class << self
@@ -44,7 +44,7 @@ module RedmineGitHosting
 
       # Scan through the recyclebin and delete files older than 'preserve_time' minutes
       def delete_expired_files(repositories_array = [])
-        logger.info("Nothing to do, exit !") && return if !directory_exists?(recycle_bin_dir)
+        logger.info('Nothing to do, exit !') && return if !directory_exists?(recycle_bin_dir)
 
         if !repositories_array.empty?
           result = repositories_array
@@ -59,7 +59,7 @@ module RedmineGitHosting
         if result.length > 0
           delete_old_directories(result)
         else
-          logger.info("Nothing to do, exit !")
+          logger.info('Nothing to do, exit !')
         end
       end
 
@@ -229,7 +229,7 @@ module RedmineGitHosting
             return false
           end
 
-          logger.info("Done !")
+          logger.info('Done !')
           logger.info("Will remain for at least #{recycle_bin_expiration_time / 60.0} hours")
 
           clean_path_tree(repo_name)
@@ -244,7 +244,7 @@ module RedmineGitHosting
           directories.each do |directory|
             logger.info("Deleting '#{directory}'")
             if delete_directory(directory, true)
-              logger.info("Done !")
+              logger.info('Done !')
             else
               logger.error("GitoliteRecycle.delete_expired_files() failed trying to delete repository '#{directory}' !")
             end

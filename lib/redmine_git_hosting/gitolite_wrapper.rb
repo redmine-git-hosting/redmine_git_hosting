@@ -55,7 +55,7 @@ module RedmineGitHosting
 
         def flush_cache(options = {})
           if options.has_key?(:flush_cache) && options[:flush_cache] == true
-            logger.info("Flush Settings Cache !")
+            logger.info('Flush Settings Cache !')
             Setting.check_cache if Setting.respond_to?(:check_cache)
           end
         end
