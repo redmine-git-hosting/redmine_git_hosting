@@ -20,7 +20,7 @@ module RedmineGitHosting
           # Previous routine
           fetch_changesets_without_git_hosting(&block)
 
-          RedmineGitHosting.logger.info("Purging Recycle Bin from fetch_changesets")
+          RedmineGitHosting.logger.info('Purging Recycle Bin from fetch_changesets')
           RedmineGitHosting::Recycle.delete_expired_files
         end
 

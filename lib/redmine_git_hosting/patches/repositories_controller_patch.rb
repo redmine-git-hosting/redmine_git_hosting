@@ -60,7 +60,7 @@ module RedmineGitHosting
 
 
           def set_current_tab
-            @tab = params[:tab] || ""
+            @tab = params[:tab] || ''
           end
 
 
