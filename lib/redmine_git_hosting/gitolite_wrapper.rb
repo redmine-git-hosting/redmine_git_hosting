@@ -40,8 +40,12 @@ module RedmineGitHosting
         rescue Rugged::SshError => e
           logger.error(e.message)
         else
-          # Call our wrapper passing the GitoliteAdmin object
-          call_gitolite_wrapper(admin, action, object, options)
+          begin
+            # Call our wrapper passing the GitoliteAdmin object
+            call_gitolite_wrapper(admin, action, object, options)
+          rescue RedmineGitHosting::Error::GitoliteWrapperException => e
+            logger.error(e.message)
+          end
         end
       end
 
@@ -74,7 +78,7 @@ module RedmineGitHosting
           if !klass.nil?
             klass.new(admin, action, object, options).send(action)
           else
-            raise RedmineGitHosting::Error::GitoliteWrapperException.new(action, "No available Wrapper for action '#{action}' found.")
+            raise RedmineGitHosting::Error::GitoliteWrapperException.new("No available Wrapper for action '#{action}' found.")
           end
         end
 
