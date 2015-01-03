@@ -128,15 +128,18 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     # Strip leading and trailing whitespace
+    #
     def strip_whitespace
-      self.title = title.strip rescue ''
-
       # Don't mess with existing keys (since cannot change key text anyway)
-      self.key = key.strip rescue '' if new_record?
+      return if !new_record?
+
+      self.title = title.strip rescue ''
+      self.key   = key.strip rescue ''
     end
 
 
     # Remove control characters from key
+    #
     def remove_control_characters
       # Don't mess with existing keys (since cannot change key text anyway)
       return if !new_record?
@@ -159,6 +162,7 @@ class GitolitePublicKey < ActiveRecord::Base
     #
     # For user public keys, this simply is the user's gitolite_identifier.
     # For deployment keys, we use an incrementing number.
+    #
     def set_identifier
       return nil if user_id.nil?
 
@@ -202,10 +206,11 @@ class GitolitePublicKey < ActiveRecord::Base
     end
 
 
+    # Test correctness of fingerprint from output
+    # and general ssh-(r|d|ecd)sa <key> <id> structure
+    #
     def key_correctness
       return false if key.nil?
-      # Test correctness of fingerprint from output
-      # and general ssh-(r|d|ecd)sa <key> <id> structure
       (key.match(/^(\S+)\s+(\S+)/)) && (fingerprint =~ /^(\w{2}:?)+$/i)
     end
 
@@ -214,7 +219,6 @@ class GitolitePublicKey < ActiveRecord::Base
       return if !new_record?
       existing = GitolitePublicKey.find_by_fingerprint(fingerprint)
       if existing
-        # Hm.... have a duplicate key!
         if existing.user == User.current
           errors.add(:key, :taken_by_you, name: existing.title)
         elsif User.current.admin?
