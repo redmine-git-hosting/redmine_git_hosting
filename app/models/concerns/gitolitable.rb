@@ -49,6 +49,30 @@ module Gitolitable
   end
 
 
+  def exists_in_gitolite?
+    RedmineGitHosting::Commands.sudo_dir_exists?(gitolite_repository_path)
+  end
+
+
+  def empty_in_gitolite?
+    RedmineGitHosting::Commands.sudo_repository_empty?(gitolite_repository_path)
+  end
+
+
+  def git_objects_count
+    RedmineGitHosting::Commands.sudo_git_objects_count(gitolite_repository_path)
+  end
+
+
+  def empty?
+    if extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
+      true
+    else
+      false
+    end
+  end
+
+
   def data_for_destruction
     {
       repo_name: gitolite_repository_name,
