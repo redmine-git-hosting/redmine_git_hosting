@@ -59,7 +59,7 @@ module RedmineGitHosting
 
 
           def update_projects
-            options = { message: "User status has changed, update projects" }
+            options = { message: "Status of '#{@user.login}' has changed, update projects" }
             GitoliteAccessor.update_projects(projects_to_update, options) if @user.status_has_changed?
           end
 
