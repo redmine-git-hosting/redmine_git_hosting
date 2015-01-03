@@ -160,19 +160,17 @@ class GitolitePublicKey < ActiveRecord::Base
     # For user public keys, this simply is the user's gitolite_identifier.
     # For deployment keys, we use an incrementing number.
     def set_identifier
-      if !self.user_id.nil?
-        key_count = user.gitolite_public_keys.deploy_key.length + 1
+      return nil if user_id.nil?
 
-        case key_type
-          when KEY_TYPE_USER
-            tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
-            self.identifier ||= [ self.user.gitolite_identifier, '@', 'redmine_', tag ].join
+      key_count = user.gitolite_public_keys.deploy_key.length + 1
 
-          when KEY_TYPE_DEPLOY
-            self.identifier ||= [ self.user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
-        end
-      else
-        nil
+      case key_type
+        when KEY_TYPE_USER
+          tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
+          self.identifier ||= [ self.user.gitolite_identifier, '@', 'redmine_', tag ].join
+
+        when KEY_TYPE_DEPLOY
+          self.identifier ||= [ self.user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
       end
     end
 
