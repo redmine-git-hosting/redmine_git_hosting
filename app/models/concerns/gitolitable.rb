@@ -14,7 +14,7 @@ module Gitolitable
     # Set URL ourself as relative path.
     before_validation :set_git_urls
 
-    # Validate that identifier does not match Gitolite Admin repository
+    # Make sure that identifier does not match Gitolite Admin repository
     validates_exclusion_of :identifier, in: %w(gitolite-admin)
 
     # Place additional constraints on repository identifiers
