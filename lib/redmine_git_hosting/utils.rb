@@ -4,5 +4,6 @@ module RedmineGitHosting
     include Utils::Git
     include Utils::Http
     include Utils::Password
+    include Utils::Ssh
   end
 end

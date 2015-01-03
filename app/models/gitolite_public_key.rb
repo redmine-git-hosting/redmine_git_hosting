@@ -180,19 +180,10 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     def set_fingerprint
-      file = Tempfile.new('keytest')
-      file.write(key)
-      file.close
-
       begin
-        output = RedmineGitHosting::Utils.capture('ssh-keygen', ['-l', '-f', file.path])
-        if output
-          self.fingerprint = output.split[1]
-        end
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        self.fingerprint = RedmineGitHosting::Utils.ssh_fingerprint(key)
+      rescue RedmineGitHosting::Error::InvalidSshKey => e
         errors.add(:key, :corrupted)
-      ensure
-        file.unlink
       end
     end
 
