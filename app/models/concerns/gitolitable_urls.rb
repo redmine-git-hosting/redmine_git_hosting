@@ -7,7 +7,7 @@ module GitolitableUrls
 
 
   def git_access_path
-    "#{gitolite_repository_name}.git"
+    gitolite_repository_name_with_extension
   end
 
 
