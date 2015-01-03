@@ -96,7 +96,6 @@ describe Repository::Xitolite do
     it { should respond_to(:default_list) }
     it { should respond_to(:mail_mapping) }
 
-    it { should respond_to(:get_full_parent_path) }
     it { should respond_to(:exists_in_gitolite?) }
     it { should respond_to(:gitolite_hook_key) }
 
