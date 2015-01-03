@@ -101,7 +101,7 @@ class GitoliteHooksController < ApplicationController
 
     def validate_hook_key
       if @hook_type == 'redmine'
-        if !validate_encoded_time(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
+        if !valid_encoded_time?(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
           render text: 'The hook key provided is not valid. Please let your server admin know about it'
           return
         end
@@ -109,17 +109,11 @@ class GitoliteHooksController < ApplicationController
     end
 
 
-    def validate_encoded_time(clear_time, encoded_time, key)
+    def valid_encoded_time?(clear_time, encoded_time, key)
       cur_time  = Time.new.utc.to_i
       test_time = clear_time.to_i
-
-      valid = false
-
-      if not_to_late?(cur_time, test_time)
-        valid = true if encode_key(clear_time, key) == encoded_time.to_s
-      end
-
-      valid
+      return true if not_to_late?(cur_time, test_time) && (encode_key(clear_time, key) == encoded_time.to_s)
+      return false
     end
 
 
