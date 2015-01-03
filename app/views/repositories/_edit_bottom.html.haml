@@ -1,4 +1,4 @@
-- if @repository.is_a?(Repository::Xitolite) && !@repository.extra[:git_annex]
+- if @repository.is_a?(Repository::Xitolite) && !@repository.git_annex_enabled?
 
   #repository-tabs
     %ul

@@ -47,34 +47,16 @@ module GitolitableUrls
 
 
   def go_access_url
-    case extra[:git_http]
-    # 1 : Only https is available, good :)
-    # 2 : If both http and https are available, https is prefered
-    when 1, 2
-      https_url
-    # 3 : Only http is available, that's okay for git clone
-    when 3
-      http_url
-    # 0 : None is available, return empty string
-    when 0
-      ''
-    end
+    return '' if !smart_http_enabled?
+    return https_url if https_access_available?
+    return http_url if http_access_available?
   end
 
 
   def go_url
-    case extra[:git_http]
-    # 1 : Only https is available, good :)
-    # 2 : If both http and https are available, https is prefered
-    when 1, 2
-      "#{RedmineGitHosting::Config.https_server_domain}/#{go_access_path}"
-    # 3 : Only http is available, that's okay for git clone
-    when 3
-      "#{RedmineGitHosting::Config.http_server_domain}/#{go_access_path}"
-    # 0 : None is available, return empty string
-    when 0
-      ''
-    end
+    return '' if !smart_http_enabled?
+    return "#{RedmineGitHosting::Config.https_server_domain}/#{go_access_path}" if https_access_available?
+    return "#{RedmineGitHosting::Config.http_server_domain}/#{go_access_path}" if http_access_available?
   end
 
 

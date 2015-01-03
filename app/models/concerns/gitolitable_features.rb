@@ -53,6 +53,16 @@ module GitolitableFeatures
   end
 
 
+  def only_https_access_enabled?
+    extra[:git_http] == 1
+  end
+
+
+  def only_http_access_enabled?
+    extra[:git_http] == 3
+  end
+
+
   def protected_branches_enabled?
     extra[:protected_branch]
   end

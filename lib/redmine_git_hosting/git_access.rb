@@ -68,11 +68,11 @@ module RedmineGitHosting
 
       def smart_http_enabled_for_download?(repository, is_ssl = false)
         # SmartHTTP is disabled
-        return false if repository.extra[:git_http] == 0
+        return false if !repository.smart_http_enabled?
         # HTTPS only but no SSL
-        return false if repository.extra[:git_http] == 1 && !is_ssl
+        return false if repository.only_https_access_enabled? && !is_ssl
         # HTTP only but have SSL (weird..)
-        return false if repository.extra[:git_http] == 3 && is_ssl
+        return false if repository.only_http_access_enabled? && is_ssl
         # Else return true
         return true
       end
@@ -80,9 +80,7 @@ module RedmineGitHosting
 
       def smart_http_enabled_for_upload?(repository)
         # HTTPS only
-        return true if repository.extra[:git_http] == 1
-        # HTTPS and HTTP
-        return true if repository.extra[:git_http] == 2
+        return true if repository.pushable_via_http?
         # Else
         return false
       end

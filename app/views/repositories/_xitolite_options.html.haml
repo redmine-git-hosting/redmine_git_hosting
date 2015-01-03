@@ -9,7 +9,7 @@
         .row
           .col-md-6
 
-            - unless repository.extra[:git_annex]
+            - unless repository.git_annex_enabled?
 
               %p
                 = label_tag 'repository_git_extra[git_daemon]', l(:label_enable_git_daemon)
@@ -38,7 +38,7 @@
 
           .col-md-6
 
-            - unless repository.extra[:git_annex]
+            - unless repository.git_annex_enabled?
               %p
                 %label= l(:label_mirroring_keys_installed)
                 = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
@@ -59,4 +59,4 @@
               %label= l(:label_browse_repository)
               = link_to h(repository.url), { controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param }
 
-    %p= f.submit l(:button_save) unless repository.extra[:git_annex]
+    %p= f.submit l(:button_save) unless repository.git_annex_enabled?

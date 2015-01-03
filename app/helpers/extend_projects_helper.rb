@@ -45,7 +45,7 @@ module ExtendProjectsHelper
   def git_daemon_feature(repository)
     label     = l(:label_git_daemon)
     css_class = 'fa-gear'
-    enabled   = (repository.project.is_public && repository.extra[:git_daemon])
+    enabled   = repository.git_access_available?
     return label, css_class, enabled
   end
 
@@ -53,7 +53,7 @@ module ExtendProjectsHelper
   def git_http_feature(repository)
     label     = l(:label_smart_http)
     css_class = 'fa-cloud-download'
-    enabled   = repository.extra[:git_http] != 0
+    enabled   = repository.smart_http_enabled?
     return label, css_class, enabled
   end
 
@@ -61,7 +61,7 @@ module ExtendProjectsHelper
   def git_notify_feature(repository)
     label     = l(:label_git_notify)
     css_class = 'fa-bullhorn'
-    enabled   = repository.extra[:git_notify]
+    enabled   = repository.git_notification_enabled?
     return label, css_class, enabled
   end
 
@@ -69,7 +69,7 @@ module ExtendProjectsHelper
   def protected_branch_feature(repository)
     label     = l(:label_protected_branch)
     css_class = 'fa-shield'
-    enabled   = repository.extra[:protected_branch]
+    enabled   = repository.protected_branches_available?
     return label, css_class, enabled
   end
 
@@ -77,7 +77,7 @@ module ExtendProjectsHelper
   def git_annex_feature(repository)
     label     = l(:label_git_annex)
     css_class = 'fa-cloud-upload'
-    enabled   = repository.extra[:git_annex]
+    enabled   = repository.git_annex_enabled?
     return label, css_class, enabled
   end
 

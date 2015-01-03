@@ -24,7 +24,7 @@
               -
           %td{ align: 'center' }
             - if repository.is_a?(Repository::Xitolite)
-              - if repository.extra[:git_annex]
+              - if repository.git_annex_enabled?
                 = render_feature(repository, :git_annex)
               - else
                 = render_feature(repository, :deployment_credentials)

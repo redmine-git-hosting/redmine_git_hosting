@@ -19,7 +19,7 @@ class GoRedirectorController < ApplicationController
       if repository.nil?
         logger.error("GoRedirector : repository not found at path : '#{repo_path}', exiting !")
         render_404
-      elsif repository.extra[:git_http] == 0
+      elsif !repository.smart_http_enabled?
         logger.error("GoRedirector : SmartHttp is disabled for this repository '#{repository.gitolite_repository_name}', exiting !")
         render_403
       else

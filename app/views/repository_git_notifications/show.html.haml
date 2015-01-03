@@ -1,6 +1,6 @@
 %div
 
-  - if @repository.extra[:git_notify]
+  - if @repository.git_notification_enabled?
     - unless @git_notification.nil?
       - if user_allowed_to(:edit_repository_git_notifications, @project)
         .contextual
@@ -12,7 +12,7 @@
 
   %h3{ class: 'git' }= l(:label_git_notifications)
 
-  %div{ style: "opacity: #{@repository.extra[:git_notify] ? '1' : '0.5'};" }
+  %div{ style: "opacity: #{@repository.git_notification_enabled? ? '1' : '0.5'};" }
 
     - if !@git_notification.nil?
       %p
