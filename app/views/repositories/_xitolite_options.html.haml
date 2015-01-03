@@ -5,52 +5,58 @@
   = form_for repository.extra, url: repository_git_extras_path(repository), html: { method: :put, remote: true } do |f|
 
     %div{ class: 'box tabular' }
+      .container
+        .row
+          .col-md-6
 
-      - unless repository.extra[:git_annex]
+            - unless repository.extra[:git_annex]
 
-        %p
-          %label= l(:label_enable_git_daemon)
-          = f.check_box :git_daemon, disabled: !@project.is_public
+              %p
+                = label_tag 'repository_git_extra[git_daemon]', l(:label_enable_git_daemon)
+                = f.check_box :git_daemon, disabled: !@project.is_public
 
-        - if user_allowed_to(:create_repository_git_notifications, repository.project)
-          %p
-            %label= l(:label_enable_git_notify)
-            = f.check_box :git_notify
+              - if user_allowed_to(:create_repository_git_notifications, repository.project)
+                %p
+                  = label_tag 'repository_git_extra[git_notify]', l(:label_enable_git_notify)
+                  = f.check_box :git_notify
 
-        - if user_allowed_to(:create_repository_protected_branches, repository.project)
-          %p
-            %label= l(:label_enable_protected_branches)
-            = f.check_box :protected_branch
+              - if user_allowed_to(:create_repository_protected_branches, repository.project)
+                %p
+                  = label_tag 'repository_git_extra[protected_branch]', l(:label_enable_protected_branches)
+                  = f.check_box :protected_branch
 
-        %p
-          %label= l(:label_enable_smart_http)
-          = f.select :git_http, options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, selected: repository.extra[:git_http].to_s)
+              %p
+                = label_tag 'repository_git_extra[git_http]', l(:label_enable_smart_http)
+                = f.select :git_http, options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, selected: repository.extra[:git_http].to_s)
 
-        %p
-          %label= l(:label_repository_default_branch)
-          - if !repository.branches.empty?
-            = f.select :default_branch, repository_branches_list(repository.branches)
-          - else
-            %span{ class: 'label label-info' }= repository.default_branch
+              %p
+                = label_tag 'repository_git_extra[default_branch]', l(:label_repository_default_branch)
+                - if !repository.branches.empty?
+                  = f.select :default_branch, repository_branches_list(repository.branches)
+                - else
+                  %span{ class: 'label label-info' }= repository.default_branch
 
-        %p
-          %label= l(:label_mirroring_keys_installed)
-          = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
+          .col-md-6
 
-      %p
-        %label= l(:label_repository_exists_in_gitolite)
-        = image_tag (repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
+            - unless repository.extra[:git_annex]
+              %p
+                %label= l(:label_mirroring_keys_installed)
+                = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
 
-      %p
-        - if repository.empty_in_gitolite?
-          %label= l(:label_empty_repository)
-          = image_tag('true.png')
-        - else
-          %label= l(:label_git_objects_count)
-          = repository.git_objects_count
+            %p
+              %label= l(:label_repository_exists_in_gitolite)
+              = image_tag (repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
 
-      %p
-        %label= l(:label_browse_repository)
-        = link_to h(repository.url), {controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param}
+            %p
+              - if repository.empty_in_gitolite?
+                %label= l(:label_empty_repository)
+                = image_tag('true.png')
+              - else
+                %label= l(:label_git_objects_count)
+                = repository.git_objects_count
 
-    = f.submit l(:button_save) unless repository.extra[:git_annex]
+            %p
+              %label= l(:label_browse_repository)
+              = link_to h(repository.url), { controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param }
+
+    %p= f.submit l(:button_save) unless repository.extra[:git_annex]
