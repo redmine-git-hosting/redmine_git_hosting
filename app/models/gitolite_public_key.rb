@@ -13,7 +13,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
   ## Relations
   belongs_to :user
-  has_many   :repository_deployment_credentials, :dependent => :destroy
+  has_many   :repository_deployment_credentials, dependent: :destroy
 
   ## Validations
   validates :user_id,     presence: true
@@ -218,9 +218,9 @@ class GitolitePublicKey < ActiveRecord::Base
       if existing
         # Hm.... have a duplicate key!
         if existing.user == User.current
-          errors.add(:key, :taken_by_you, :name => existing.title)
+          errors.add(:key, :taken_by_you, name: existing.title)
         elsif User.current.admin?
-          errors.add(:key, :taken_by_other, :login => existing.user.login, :name => existing.title)
+          errors.add(:key, :taken_by_other, login: existing.user.login, name: existing.title)
         else
           errors.add(:key, :taken_by_someone)
         end
