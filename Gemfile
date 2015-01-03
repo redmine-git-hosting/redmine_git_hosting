@@ -1,11 +1,15 @@
 source 'https://rubygems.org'
 
+# Gitolite Admin repository management
 gem 'gitolite-rugged', git: 'https://github.com/n-rodriguez/gitolite-rugged.git', branch: 'devel'
-gem 'haml-rails'
 
 # Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine still uses Rails 3 and Rack 1.4)
-gem 'gitlab-grack', require: 'grack', git: 'https://github.com/n-rodriguez/grack.git'
+gem 'gitlab-grack', git: 'https://github.com/n-rodriguez/grack.git', require: 'grack'
 
+# HAML views
+gem 'haml-rails'
+
+# Syntaxic coloration
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'
 gem 'RedCloth'
