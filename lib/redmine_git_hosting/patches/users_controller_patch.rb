@@ -59,19 +59,25 @@ module RedmineGitHosting
 
 
           def update_projects
-            UpdateProjects.new(@user.gitolite_projects.map{ |p| p.id }, { message: "User status has changed, update projects" }).call if @user.status_has_changed?
+            options = { message: "User status has changed, update projects" }
+            GitoliteAccessor.update_projects(projects_to_update, options) if @user.status_has_changed?
+          end
+
+
+          def projects_to_update
+            @user.gitolite_projects.map{ |p| p.id }
           end
 
 
           def ssh_keys_to_destroy
-            @user.gitolite_public_keys.map(&:to_yaml)
+            @user.gitolite_public_keys.map(&:data_for_destruction)
           end
 
 
           def destroy_ssh_keys(ssh_keys_list)
             RedmineGitHosting.logger.info("User '#{@user.login}' has been deleted from Redmine, delete membership and SSH keys !")
             ssh_keys_list.each do |ssh_key|
-              DestroySshKey.new(ssh_key).call
+              GitoliteAccessor.destroy_ssh_key(ssh_key)
             end
           end
 

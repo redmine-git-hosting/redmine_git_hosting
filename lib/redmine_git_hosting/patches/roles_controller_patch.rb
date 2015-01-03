@@ -51,7 +51,7 @@ module RedmineGitHosting
 
           def call_gitolite(message)
             options = { message: "Role has been #{message}, resync all projects (active or closed)..." }
-            UpdateProjects.new('active_or_closed', options).call
+            GitoliteAccessor.update_projects('active_or_closed', options)
           end
 
       end

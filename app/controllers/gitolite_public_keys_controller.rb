@@ -88,12 +88,12 @@ class GitolitePublicKeysController < ApplicationController
 
 
     def create_ssh_key(ssh_key)
-      CreateSshKey.new(ssh_key).call
+      GitoliteAccessor.create_ssh_key(ssh_key)
     end
 
 
     def destroy_ssh_key(ssh_key)
-      DestroySshKey.new(ssh_key.to_yaml).call
+      GitoliteAccessor.destroy_ssh_key(ssh_key)
     end
 
 end

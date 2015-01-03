@@ -1,8 +1,6 @@
 class CreateRepository
   unloadable
 
-  include UseCaseBase
-
   attr_reader :repository
   attr_reader :options
 
@@ -10,14 +8,12 @@ class CreateRepository
   def initialize(repository, opts = {})
     @repository = repository
     @options    = opts
-    super
   end
 
 
   def call
     set_repository_extra
     create_repository
-    super
   end
 
 
@@ -65,8 +61,7 @@ class CreateRepository
 
 
     def create_repository
-      logger.info("User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'")
-      resync_gitolite(:add_repository, repository.id, options)
+      GitoliteAccessor.create_repository(repository, options)
     end
 
 end

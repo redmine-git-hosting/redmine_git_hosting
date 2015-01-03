@@ -58,7 +58,7 @@ class ApplySettings
         # Need to update everyone!
         # We take all root projects (even those who are closed) and move each hierarchy individually
         count = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }.length
-        MoveRepositoriesTree.new(count).call if count > 0
+        GitoliteAccessor.move_repositories_tree(count) if count > 0
       end
     end
 
@@ -67,7 +67,7 @@ class ApplySettings
       ## Gitolite config file has changed, create a new one!
       if value_has_changed?(:gitolite_config_file) || value_has_changed?(:gitolite_config_has_admin_key)
         options = { message: "Gitolite configuration has been modified, resync all projects (active, closed, archived)..." }
-        UpdateProjects.new('all', options).call
+        GitoliteAccessor.update_projects('all', options)
       end
     end
 
@@ -81,7 +81,7 @@ class ApplySettings
 
         # Need to update everyone!
         options = { message: "Gitolite configuration has been modified, resync all active projects..." }
-        UpdateProjects.new('active', options).call
+        GitoliteAccessor.update_projects('active', options)
       end
     end
 
@@ -113,24 +113,25 @@ class ApplySettings
 
     def do_resync_projects
       ## A resync has been asked within the interface, update all projects in force mode
-      UpdateProjects.new('all', { message: "Forced resync of all projects (active, closed, archived)...", force: true }).call if resync_projects
+      options = { message: "Forced resync of all projects (active, closed, archived)...", force: true }
+      GitoliteAccessor.update_projects('all', options) if resync_projects
     end
 
 
     def do_resync_ssh_keys
       ## A resync has been asked within the interface, update all projects in force mode
-      ResyncSshKeys.new().call if resync_ssh_keys
+      GitoliteAccessor.resync_ssh_keys if resync_ssh_keys
     end
 
 
     def do_flush_cache
       ## A cache flush has been asked within the interface
-      FlushGitCache.new().call if flush_cache
+      GitoliteAccessor.flush_git_cache if flush_cache
     end
 
 
     def do_delete_trash_repo
-      PurgeRecycleBin.new(delete_trash_repo).call if !delete_trash_repo.empty?
+      GitoliteAccessor.purge_trash_bin(delete_trash_repo) if !delete_trash_repo.empty?
     end
 
 end

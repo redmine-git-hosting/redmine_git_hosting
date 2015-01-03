@@ -1,20 +1,16 @@
 class CreateProjectRepository
   unloadable
 
-  include UseCaseBase
-
   attr_reader :project
 
 
   def initialize(project)
     @project = project
-    super
   end
 
 
   def call
     create_project_repository
-    super
   end
 
 

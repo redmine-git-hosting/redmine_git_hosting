@@ -26,6 +26,7 @@ module RedmineGitHosting
           end
 
           # Call Gitolite plugins
+          logger.info('Execute Gitolite Plugins')
           execute_post_create_actions(repository, @recovered)
 
           # Fetch changeset
@@ -44,6 +45,7 @@ module RedmineGitHosting
           end
 
           # Call Gitolite plugins
+          logger.info('Execute Gitolite Plugins')
           execute_post_update_actions(repository)
 
           # Fetch changeset
@@ -62,6 +64,7 @@ module RedmineGitHosting
         end
 
         # Call Gitolite plugins
+        logger.info('Execute Gitolite Plugins')
         execute_post_delete_actions(repository_data)
       end
 

@@ -94,18 +94,15 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
 
     def call_use_case
+      options = {}
       case self.action_name
-      when 'create', 'update'
-        if @git_config_key.key_has_changed?
-          options = { delete_git_config_key: @git_config_key.old_key }
-        else
-          options = {}
-        end
+      when 'update'
+        options = { delete_git_config_key: @git_config_key.old_key } if @git_config_key.key_has_changed?
       when 'destroy'
         options = { delete_git_config_key: @git_config_key.key }
       end
       options = options.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
-      UpdateRepository.new(@repository, options).call
+      GitoliteAccessor.update_repository(@repository, options)
     end
 
 end

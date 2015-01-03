@@ -19,7 +19,7 @@ module RedmineGitHosting
 
           def update_project
             options = { message: "Membership changes on project '#{project}', update!" }
-            UpdateProject.new(project, options).call
+            GitoliteAccessor.update_projects([project.id], options)
           end
 
       end

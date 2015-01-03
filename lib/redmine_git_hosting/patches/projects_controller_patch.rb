@@ -80,13 +80,17 @@ module RedmineGitHosting
         private
 
 
+          # Call UseCase object that will complete Project repository creation :
+          # it will create the Repository::Xitolite association, the GitExtra association and then
+          # the repository in Gitolite.
+          #
           def create_project_repository
             CreateProjectRepository.new(@project).call
           end
 
 
           def move_project_hierarchy
-            MoveProjectHierarchy.new(@project).call
+            GitoliteAccessor.move_project_hierarchy(@project)
           end
 
 
@@ -98,13 +102,19 @@ module RedmineGitHosting
 
           def update_project_hierarchy(message)
             options = { message: message }
-            UpdateProjectHierarchy.new(@project, options).call
+            GitoliteAccessor.update_projects(hierarchy_to_update, options)
+          end
+
+
+          def hierarchy_to_update
+            # Only take projects that have Git repos.
+            @project.self_and_descendants.uniq.select{ |p| p.gitolite_repos.any? }.map{ |project| project.id }
           end
 
 
           def destroy_repositories(repositories_list)
             options = { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
-            DestroyRepositories.new(repositories_list, options).call
+            GitoliteAccessor.destroy_repositories(repositories_list, options)
           end
 
 

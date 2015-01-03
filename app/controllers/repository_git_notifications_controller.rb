@@ -98,7 +98,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
     def call_use_case
       options = { message: "Rebuild mailing list for respository : '#{@repository.gitolite_repository_name}'" }
-      UpdateRepository.new(@repository, options).call
+      GitoliteAccessor.update_repository(@repository, options)
     end
 
 end

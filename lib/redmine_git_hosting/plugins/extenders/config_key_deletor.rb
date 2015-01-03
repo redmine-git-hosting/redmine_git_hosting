@@ -12,7 +12,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def post_update
       # Delete hook param if needed
-      delete_hook_param unless delete_git_config_key.empty?
+      delete_hook_param unless delete_git_config_key.nil? || delete_git_config_key.empty?
     end
 
 

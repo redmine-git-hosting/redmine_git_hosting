@@ -148,7 +148,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     def call_use_case
       options = { message: "Update deploy keys for repository : '#{@repository.gitolite_repository_name}'" }
-      UpdateRepository.new(@repository, options).call
+      GitoliteAccessor.update_repository(@repository, options)
     end
 
 

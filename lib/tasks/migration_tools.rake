@@ -53,7 +53,7 @@ namespace :redmine_git_hosting do
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Delete SSH key #{ssh_key.identifier}"
-        DestroySshKey.new(ssh_key, bypass_sidekiq: true).call
+        GitoliteAccessor.destroy_ssh_key(ssh_key, bypass_sidekiq: true)
         ssh_key.reset_identifiers
       end
       puts ""
@@ -63,13 +63,13 @@ namespace :redmine_git_hosting do
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Add SSH key : #{ssh_key.identifier}"
-        CreateSshKey.new(ssh_key, bypass_sidekiq: true).call
+        GitoliteAccessor.create_ssh_key(ssh_key, bypass_sidekiq: true)
       end
 
       puts ""
 
       options = { message: "Gitolite configuration has been modified, resync all projects...", bypass_sidekiq: true }
-      UpdateProjects.new('all', options).call
+      GitoliteAccessor.update_projects('all', options)
 
       puts "Done!"
     end

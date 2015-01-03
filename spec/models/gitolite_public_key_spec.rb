@@ -77,7 +77,7 @@ describe GitolitePublicKey do
     it { should respond_to(:owner) }
     it { should respond_to(:location) }
     it { should respond_to(:gitolite_path) }
-    it { should respond_to(:to_yaml) }
+    it { should respond_to(:data_for_destruction) }
 
     ## Attributes content
     it "can render as string" do
@@ -155,9 +155,9 @@ describe GitolitePublicKey do
       expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/#{test_user}/redmine_test_key/#{test_user}.pub"
     end
 
-    it "can be rendered as yaml" do
-      valid_hash = { :key => SSH_KEY_0, :location => 'redmine_test_key', :owner => test_user, :title => "#{test_user}@redmine_test_key" }
-      expect(@ssh_key.to_yaml).to eq valid_hash
+    it "it has data hash for destruction" do
+      valid_hash = { key: SSH_KEY_0, location: 'redmine_test_key', owner: test_user, title: "#{test_user}@redmine_test_key" }
+      expect(@ssh_key.data_for_destruction).to eq valid_hash
     end
 
     context "when identifier is changed" do

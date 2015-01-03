@@ -69,11 +69,13 @@ module RedmineGitHosting
               if !@repository.errors.any?
                 case self.action_name
                 when 'create'
+                  # Call UseCase object that will complete Repository creation :
+                  # it will create GitExtra association and then the repository in Gitolite.
                   CreateRepository.new(@repository, creation_options).call
                 when 'update'
-                  UpdateRepository.new(@repository).call
+                  GitoliteAccessor.update_repository(@repository)
                 when 'destroy'
-                  DestroyRepository.new(@repository).call
+                  GitoliteAccessor.destroy_repository(@repository)
                 end
               end
             end

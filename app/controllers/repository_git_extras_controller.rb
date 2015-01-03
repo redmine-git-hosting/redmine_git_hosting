@@ -11,7 +11,7 @@ class RepositoryGitExtrasController < RedmineGitHostingController
     ## Update attributes
     if @git_extra.update_attributes(params[:repository_git_extra])
       flash.now[:notice] = l(:notice_gitolite_extra_updated)
-      UpdateRepository.new(@repository, { update_default_branch: @git_extra.default_branch_has_changed? }).call
+      GitoliteAccessor.update_repository(@repository, { update_default_branch: @git_extra.default_branch_has_changed? })
     else
       flash.now[:error] = l(:notice_gitolite_extra_update_failed)
     end

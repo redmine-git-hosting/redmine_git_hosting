@@ -1,8 +1,6 @@
 class UpdateProject
   unloadable
 
-  include UseCaseBase
-
   attr_reader :project
   attr_reader :options
 
@@ -10,13 +8,11 @@ class UpdateProject
   def initialize(project, opts = {})
     @project = project
     @options = opts
-    super
   end
 
 
   def call
     update_project
-    super
   end
 
 
@@ -31,7 +27,7 @@ class UpdateProject
 
 
     def disable_git_daemon_if_not_public
-      # Go through all gitolite repos and diable Git daemon if necessary
+      # Go through all gitolite repos and disable Git daemon if necessary
       project.gitolite_repos.each do |repository|
         if repository.extra[:git_daemon] && !project.is_public
           repository.extra[:git_daemon] = false
@@ -42,7 +38,7 @@ class UpdateProject
 
 
     def resync
-      UpdateProjects.new([project.id], options).call
+      GitoliteAccessor.update_projects([project.id], options)
     end
 
 end

@@ -23,7 +23,7 @@ namespace :redmine_git_hosting do
   task :update_repositories => [:environment] do
     puts "Performing manual update_repositories operation..."
     RedmineGitHosting.logger.warn("Performing manual update_repositories operation from command line")
-    UpdateProjects.new('all', { message: "Resync all projects (#{Project.all.length})..." }).call
+    GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
     puts "Done!"
   end
 

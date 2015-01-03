@@ -52,7 +52,7 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
-  def to_yaml
+  def data_for_destruction
     { title: identifier , key: key, location: location, owner: owner }
   end
 

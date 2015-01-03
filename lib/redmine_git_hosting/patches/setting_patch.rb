@@ -57,7 +57,7 @@ module RedmineGitHosting
             #
             # John Kubiatowicz 12/21/2011
             # Clear out all cached settings.
-            FlushSettingsCache.new().call
+            GitoliteAccessor.flush_settings_cache
 
             # Build options to pass to RestoreSettings object
             opts = {
