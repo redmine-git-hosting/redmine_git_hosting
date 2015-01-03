@@ -32,17 +32,17 @@ class RepositoryGlobalStats
 
 
     def total_commits
-      @total_commits ||= Changeset.where("repository_id = ?", repository.id).count
+      @total_commits ||= Changeset.where('repository_id = ?', repository.id).count
     end
 
 
     def first_commit
-      @first_commit ||= Changeset.where("repository_id = ?", repository.id).order('commit_date ASC').first
+      @first_commit ||= Changeset.where('repository_id = ?', repository.id).order('commit_date ASC').first
     end
 
 
     def last_commit
-      @last_commit ||= Changeset.where("repository_id = ?", repository.id).order('commit_date ASC').last
+      @last_commit ||= Changeset.where('repository_id = ?', repository.id).order('commit_date ASC').last
     end
 
 
@@ -67,12 +67,12 @@ class RepositoryGlobalStats
 
 
     def redmine_committers
-      @redmine_committers ||= Changeset.where("repository_id = ?", repository.id).where("user_id IS NOT NULL").select(:user_id).uniq.count
+      @redmine_committers ||= Changeset.where('repository_id = ?', repository.id).where('user_id IS NOT NULL').select(:user_id).uniq.count
     end
 
 
     def external_committers
-      @external_committers ||= Changeset.where("repository_id = ?", repository.id).where(user_id: nil).select(:committer).uniq.count
+      @external_committers ||= Changeset.where('repository_id = ?', repository.id).where(user_id: nil).select(:committer).uniq.count
     end
 
 end

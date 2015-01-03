@@ -66,7 +66,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def clone
     @protected_branch = RepositoryProtectedBranche.clone_from(params[:id])
-    render "new"
+    render 'new'
   end
 
 

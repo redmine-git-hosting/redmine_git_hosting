@@ -79,8 +79,8 @@ class GithubPayload
         :ref        => refname,
         :commits    => build_commits_list(revisions_in_range),
         :pusher     => {
-          :name  => Setting["app_title"],
-          :email => Setting["mail_from"]
+          :name  => Setting['app_title'],
+          :email => Setting['mail_from']
         },
         :repository => {
           :description => project.description,
@@ -93,8 +93,8 @@ class GithubPayload
           :private     => !project.is_public,
           :url         => repository_url,
           :owner       => {
-            :name  => Setting["app_title"],
-            :email => Setting["mail_from"]
+            :name  => Setting['app_title'],
+            :email => Setting['mail_from']
           }
         }
       }
@@ -119,9 +119,9 @@ class GithubPayload
         :id        => revision.revision,
         :message   => revision.comments,
         :timestamp => revision.committed_on,
-        :added     => revision.filechanges.select{|c| c.action == "A" }.map(&:path),
-        :modified  => revision.filechanges.select{|c| c.action == "M" }.map(&:path),
-        :removed   => revision.filechanges.select{|c| c.action == "D" }.map(&:path),
+        :added     => revision.filechanges.select{|c| c.action == 'A' }.map(&:path),
+        :modified  => revision.filechanges.select{|c| c.action == 'M' }.map(&:path),
+        :removed   => revision.filechanges.select{|c| c.action == 'D' }.map(&:path),
         :url       => url_for_revision(revision.revision),
         :author    => {
           :name  => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),

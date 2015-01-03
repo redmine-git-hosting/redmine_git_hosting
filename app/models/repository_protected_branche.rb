@@ -1,8 +1,8 @@
 class RepositoryProtectedBranche < ActiveRecord::Base
   unloadable
 
-  VALID_PERMS  = [ "RW+", "RW" ]
-  DEFAULT_PERM = "RW+"
+  VALID_PERMS  = ['RW+', 'RW']
+  DEFAULT_PERM = 'RW+'
 
   acts_as_list
 

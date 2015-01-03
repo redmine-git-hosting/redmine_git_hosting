@@ -6,7 +6,7 @@ class GitolitePublicKey < ActiveRecord::Base
   KEY_TYPE_USER   = 0
   KEY_TYPE_DEPLOY = 1
 
-  DEPLOY_PSEUDO_USER = "deploy_key"
+  DEPLOY_PSEUDO_USER = 'deploy_key'
 
   ## Attributes
   attr_accessible :title, :key, :key_type, :delete_when_unused

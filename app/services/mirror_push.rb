@@ -34,7 +34,7 @@ class MirrorPush
 
     def push_args
       if mirror.mirror_mode?
-        ["--mirror"]
+        ['--mirror']
       else
         # Not mirroring -- other possible push_args
         mirror_args
@@ -44,9 +44,9 @@ class MirrorPush
 
     def mirror_args
       push_args = []
-      push_args << "--force" if mirror.force_mode?
-      push_args << "--all"   if mirror.include_all_branches?
-      push_args << "--tags"  if mirror.include_all_tags?
+      push_args << '--force' if mirror.force_mode?
+      push_args << '--all'   if mirror.include_all_branches?
+      push_args << '--tags'  if mirror.include_all_tags?
       push_args
     end
 

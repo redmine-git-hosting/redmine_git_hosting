@@ -16,7 +16,7 @@ module RepositoryMirrorsHelper
       result << l(:all_tags) if mirror.include_all_tags
       result << mirror.explicit_refspec if (max_refspec == 0) || ((1..max_refspec) === mirror.explicit_refspec.length)
       result << l(:explicit) if (max_refspec > 0) && (mirror.explicit_refspec.length > max_refspec)
-      result.join(",<br />")
+      result.join(',<br />')
     end
   end
 

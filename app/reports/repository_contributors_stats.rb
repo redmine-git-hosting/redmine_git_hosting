@@ -21,7 +21,7 @@ class RepositoryContributorsStats
       commits = {}
 
       committer_hash[:committers].each do |committer|
-        c = Changeset.where("repository_id = ? AND committer = ?", repository.id, committer).group(:commit_date).order(:commit_date).count
+        c = Changeset.where('repository_id = ? AND committer = ?', repository.id, committer).group(:commit_date).order(:commit_date).count
         commits = commits.merge(c) { |key, oldval, newval| newval + oldval }
       end
 
@@ -55,7 +55,7 @@ class RepositoryContributorsStats
 
 
     def commits_by_author
-      @commits_by_author ||= Changeset.where("repository_id = ?", repository.id).group(:committer).count
+      @commits_by_author ||= Changeset.where('repository_id = ?', repository.id).group(:committer).count
     end
 
 
@@ -70,7 +70,7 @@ class RepositoryContributorsStats
       # registered_committers = [ committer,... ]
       registered_committers = []
       user_committer_mapping = {}
-      Changeset.where(repository_id: repository.id).where("user_id IS NOT NULL").group(:committer).includes(:user).each do |x|
+      Changeset.where(repository_id: repository.id).where('user_id IS NOT NULL').group(:committer).includes(:user).each do |x|
         name = "#{x.user.firstname} #{x.user.lastname}"
         registered_committers << x.committer
         user_committer_mapping[[name, x.user.mail]] ||= []

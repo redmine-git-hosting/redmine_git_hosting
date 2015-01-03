@@ -26,7 +26,7 @@ module Hooks
 
         ## Post to each post-receive URL
         if repository.mirrors.active.any?
-          logger.info("Notifying mirrors about changes to this repository :")
+          logger.info('Notifying mirrors about changes to this repository :')
           y << "\nNotifying mirrors about changes to this repository :\n"
 
           repository.mirrors.active.each do |mirror|
@@ -63,8 +63,8 @@ module Hooks
           if splitpath = RedmineGitHosting::Utils.refcomp_parse(payload[:ref])
             return true if payload[:ref] == refspec_parse[1]  # Explicit Reference Spec complete path
             return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
-            return true if mirror.include_all_branches? && splitpath[:type] == "heads"
-            return true if mirror.include_all_tags? && splitpath[:type] == "tags"
+            return true if mirror.include_all_branches? && splitpath[:type] == 'heads'
+            return true if mirror.include_all_tags? && splitpath[:type] == 'tags'
           end
         end
         false
@@ -80,11 +80,11 @@ module Hooks
         push_failed, push_message = MirrorPush.new(mirror).call
 
         if push_failed
-          logger.error("Failed!")
+          logger.error('Failed!')
           logger.error("#{push_message}")
           y << " [failure]\n"
         else
-          logger.info("Succeeded!")
+          logger.info('Succeeded!')
           y << " [success]\n"
         end
 

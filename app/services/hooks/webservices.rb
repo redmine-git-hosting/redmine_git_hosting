@@ -32,7 +32,7 @@ module Hooks
 
         ## Post to each post-receive URL
         if repository.post_receive_urls.active.any?
-          logger.info("Notifying post receive urls about changes to this repository :")
+          logger.info('Notifying post receive urls about changes to this repository :')
           y << "\nNotifying post receive urls about changes to this repository :\n"
 
           repository.post_receive_urls.active.each do |post_receive_url|
@@ -118,11 +118,11 @@ module Hooks
         post_failed, post_message = self.send(use_method, url, {data: { payload: payload }})
 
         if post_failed
-          logger.error("Failed!")
+          logger.error('Failed!')
           logger.error("#{post_message}")
           y << " [failure]\n"
         else
-          logger.info("Succeeded!")
+          logger.info('Succeeded!')
           y << " [success]\n"
         end
 

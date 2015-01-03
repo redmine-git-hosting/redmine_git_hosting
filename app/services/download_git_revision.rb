@@ -84,19 +84,19 @@ class DownloadGitRevision
         when 'tar' then
           extension     = 'tar'
           @content_type = 'application/x-tar'
-          @cmd_args << "--format=tar"
+          @cmd_args << '--format=tar'
 
         when 'tar.gz' then
           extension     = 'tar.gz'
           @content_type = 'application/x-gzip'
-          @cmd_args << "--format=tar.gz"
-          @cmd_args << "-7"
+          @cmd_args << '--format=tar.gz'
+          @cmd_args << '-7'
 
         when 'zip' then
           extension     = 'zip'
           @content_type = 'application/x-zip'
-          @cmd_args << "--format=zip"
-          @cmd_args << "-7"
+          @cmd_args << '--format=zip'
+          @cmd_args << '-7'
       end
 
       @filename = "#{project_name}-#{revision}.#{extension}"

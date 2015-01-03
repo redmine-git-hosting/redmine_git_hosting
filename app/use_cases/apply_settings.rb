@@ -66,7 +66,7 @@ class ApplySettings
     def check_gitolite_config
       ## Gitolite config file has changed, create a new one!
       if value_has_changed?(:gitolite_config_file) || value_has_changed?(:gitolite_config_has_admin_key)
-        options = { message: "Gitolite configuration has been modified, resync all projects (active, closed, archived)..." }
+        options = { message: 'Gitolite configuration has been modified, resync all projects (active, closed, archived)...' }
         GitoliteAccessor.update_projects('all', options)
       end
     end
@@ -80,7 +80,7 @@ class ApplySettings
          value_has_changed?(:gitolite_notify_global_exclude)
 
         # Need to update everyone!
-        options = { message: "Gitolite configuration has been modified, resync all active projects..." }
+        options = { message: 'Gitolite configuration has been modified, resync all active projects...' }
         GitoliteAccessor.update_projects('active', options)
       end
     end
@@ -113,7 +113,7 @@ class ApplySettings
 
     def do_resync_projects
       ## A resync has been asked within the interface, update all projects in force mode
-      options = { message: "Forced resync of all projects (active, closed, archived)...", force: true }
+      options = { message: 'Forced resync of all projects (active, closed, archived)...', force: true }
       GitoliteAccessor.update_projects('all', options) if resync_projects
     end
 

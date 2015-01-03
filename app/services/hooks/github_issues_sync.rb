@@ -71,7 +71,7 @@ module Hooks
 
 
     def create_redmine_issue
-      logger.info("Github Issues Sync : create new issue")
+      logger.info('Github Issues Sync : create new issue')
 
       issue = Issue.new
       issue.project_id = @project.id

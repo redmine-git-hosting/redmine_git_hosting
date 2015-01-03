@@ -58,7 +58,7 @@ class GitoliteHooksController < ApplicationController
     end
 
 
-    VALID_HOOKS = [ 'redmine', 'github' ]
+    VALID_HOOKS = ['redmine', 'github']
 
     def find_hook
       if !VALID_HOOKS.include?(params[:type])
