@@ -2,10 +2,17 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 
-module RedmineGitHosting
-  module HttpUtils
+module RedmineGitHosting::Utils
+  module Http
 
     class << self
+      def included(receiver)
+        receiver.send(:extend, ClassMethods)
+      end
+    end
+
+
+    module ClassMethods
 
       def http_post(url, opts = {})
         data = opts.delete(:data){ {} }
@@ -18,6 +25,14 @@ module RedmineGitHosting
       def http_get(url, opts = {})
         http, request = build_get_request(url)
         send_http_request(http, request)
+      end
+
+
+      def valid_url?(url)
+        uri = URI.parse(url)
+        uri.kind_of?(URI::HTTP)
+      rescue URI::InvalidURIError
+        false
       end
 
 
