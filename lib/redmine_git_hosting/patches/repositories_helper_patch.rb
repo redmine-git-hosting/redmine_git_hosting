@@ -27,7 +27,6 @@ module RedmineGitHosting
           # These methods are defined in ExtendRepositoriesHelper module
           # which is loaded in RepositoriesControllerPatch.
           encoding_field(form, repository) +
-          report_last_commit_field(form, repository) +
           create_readme_field(form, repository) +
           enable_git_annex_field(form, repository)
         end

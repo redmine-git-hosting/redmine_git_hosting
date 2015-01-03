@@ -10,13 +10,6 @@ module ExtendRepositoriesHelper
   end
 
 
-  def report_last_commit_field(form, repository)
-    content_tag(:p) do
-      form.check_box(:extra_report_last_commit, label: l(:label_git_report_last_commit))
-    end
-  end
-
-
   def create_readme_field(form, repository)
     content_tag(:p) do
       hidden_field_tag('repository[create_readme]', 'false') +
