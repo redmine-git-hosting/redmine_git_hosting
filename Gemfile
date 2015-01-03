@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'lockfile'
 gem 'gitolite-rugged', git: 'https://github.com/n-rodriguez/gitolite-rugged.git', branch: 'devel'
 gem 'haml-rails'
 
