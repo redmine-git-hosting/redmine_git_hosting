@@ -21,21 +21,19 @@ module RedmineGitHosting::Utils
       REF_COMPONENT_REGEX = /^(refs\/)?((#{REF_COMPONENT_PART})\/)?(#{REF_COMPONENT_PART}(\/#{REF_COMPONENT_PART})*)$/
 
       def refcomp_parse(spec)
-        if (refcomp_parse = spec.match(REF_COMPONENT_REGEX))
-          if refcomp_parse[1]
-            # Should be first class.  If no type component, return fail
-            if refcomp_parse[3]
-              { type: refcomp_parse[3], name: refcomp_parse[4] }
-            else
-              nil
-            end
-          elsif refcomp_parse[3]
-            { type: nil, name: "#{refcomp_parse[3]}/#{refcomp_parse[4]}" }
+        refcomp_parse = spec.match(REF_COMPONENT_REGEX)
+        return nil if refcomp_parse.nil?
+        if refcomp_parse[1]
+          # Should be first class.  If no type component, return fail
+          if refcomp_parse[3]
+            { type: refcomp_parse[3], name: refcomp_parse[4] }
           else
-            { type: nil, name: refcomp_parse[4] }
+            nil
           end
+        elsif refcomp_parse[3]
+          { type: nil, name: "#{refcomp_parse[3]}/#{refcomp_parse[4]}" }
         else
-          nil
+          { type: nil, name: refcomp_parse[4] }
         end
       end
 
