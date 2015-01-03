@@ -35,8 +35,17 @@ en:
   # User SSH keys (errors)
   error_public_key_create_failed: Failed to create public key.
   error_public_key_update_failed: Failed to update public key.
-  error_key_corrupted: seems to be corrupted.
-  error_key_in_use_by_you: 'is already in use by you as "%{name}".'
-  error_key_in_use_by_other: 'is already in use by user "%{login}" as "%{name}".'
-  error_key_in_use_by_gitolite_admin: is already in use as the Gitolite administrator key.
-  error_key_in_use_by_someone: is already in use. It belongs to another user (ask administrator for details).
+
+
+  activerecord:
+    errors:
+      models:
+
+        gitolite_public_key:
+          attributes:
+            key:
+              corrupted: seems to be corrupted.
+              taken_by_you: 'is already in use by you as "%{name}".'
+              taken_by_other: 'is already in use by user "%{login}" as "%{name}".'
+              taken_by_someone: is already in use. It belongs to another user (ask administrator for details).
+              taken_by_gitolite_admin: is already in use as the Gitolite administrator key.

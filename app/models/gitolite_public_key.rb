@@ -228,13 +228,13 @@ class GitolitePublicKey < ActiveRecord::Base
       if existing
         # Hm.... have a duplicate key!
         if existing.user == User.current
-          errors.add(:key, l(:error_key_in_use_by_you, :name => existing.title))
+          errors.add(:key, :taken_by_you, :name => existing.title)
           return false
         elsif User.current.admin?
-          errors.add(:key, l(:error_key_in_use_by_other, :login => existing.user.login, :name => existing.title))
+          errors.add(:key, :taken_by_other, :login => existing.user.login, :name => existing.title)
           return false
         else
-          errors.add(:key, l(:error_key_in_use_by_someone))
+          errors.add(:key, :taken_by_someone)
           return false
         end
       end
