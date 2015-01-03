@@ -188,7 +188,7 @@ class GitolitePublicKey < ActiveRecord::Base
           self.fingerprint = output.split[1]
         end
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        errors.add(:key, l(:error_key_corrupted))
+        errors.add(:key, :corrupted)
       ensure
         file.unlink
       end
@@ -199,7 +199,7 @@ class GitolitePublicKey < ActiveRecord::Base
       return if new_record?
       %w(identifier key user_id key_type title fingerprint).each do |attribute|
         method = "#{attribute}_changed?"
-        errors.add(attribute, 'cannot be changed') if self.send(method)
+        errors.add(attribute, :cannot_change) if self.send(method)
       end
     end
 
