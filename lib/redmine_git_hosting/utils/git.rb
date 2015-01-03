@@ -17,10 +17,11 @@ module RedmineGitHosting::Utils
       #
       # here, name can have many components.
 
-      @@refcomp = "[\\.\\-\\w_\\*]+"
+      REF_COMPONENT_PART = '[\\.\\-\\w_\\*]+'
+      REF_COMPONENT_REGEX = /^(refs\/)?((#{REF_COMPONENT_PART})\/)?(#{REF_COMPONENT_PART}(\/#{REF_COMPONENT_PART})*)$/
 
       def refcomp_parse(spec)
-        if (refcomp_parse = spec.match(/^(refs\/)?((#{@@refcomp})\/)?(#{@@refcomp}(\/#{@@refcomp})*)$/))
+        if (refcomp_parse = spec.match(REF_COMPONENT_REGEX))
           if refcomp_parse[1]
             # Should be first class.  If no type component, return fail
             if refcomp_parse[3]
