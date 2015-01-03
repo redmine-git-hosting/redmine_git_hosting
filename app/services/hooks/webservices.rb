@@ -84,7 +84,7 @@ module Hooks
 
 
       def use_method
-        post_receive_url.mode == :github ? :post : :get
+        post_receive_url.mode == :github ? :http_post : :http_get
       end
 
 
@@ -99,7 +99,7 @@ module Hooks
 
 
       def call_webservice
-        if use_method == :post && split_payloads?
+        if use_method == :http_post && split_payloads?
           payloads_to_send.each do |payload|
             do_call_webservice(payload)
           end
@@ -115,7 +115,7 @@ module Hooks
         logger.info("Notifying #{url} ... ")
         y << "  - Notifying #{url} ... "
 
-        post_failed, post_message = post_data(url, payload, method: use_method)
+        post_failed, post_message = self.send(use_method, url, {data: { payload: payload }})
 
         if post_failed
           logger.error("Failed!")
