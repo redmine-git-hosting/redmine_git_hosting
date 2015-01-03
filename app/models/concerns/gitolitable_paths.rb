@@ -47,7 +47,7 @@ module GitolitablePaths
   # (with 'repositories' the Gitolite storage directory).
   #
   def gitolite_repository_path
-    "#{RedmineGitHosting::Config.gitolite_global_storage_dir}#{gitolite_repository_name_with_extension}"
+    File.join(RedmineGitHosting::Config.gitolite_global_storage_dir, gitolite_repository_name_with_extension)
   end
 
 
