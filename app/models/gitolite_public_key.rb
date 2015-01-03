@@ -128,33 +128,21 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     # Strip leading and trailing whitespace
+    # Don't mess with existing keys (since cannot change key text anyway)
     #
     def strip_whitespace
-      # Don't mess with existing keys (since cannot change key text anyway)
       return if !new_record?
-
       self.title = title.strip rescue ''
       self.key   = key.strip rescue ''
     end
 
 
     # Remove control characters from key
+    # Don't mess with existing keys (since cannot change key text anyway)
     #
     def remove_control_characters
-      # Don't mess with existing keys (since cannot change key text anyway)
       return if !new_record?
-
-      # First -- let the first control char or space stand (to divide key type from key)
-      # Really, this is catching a special case in which there is a \n between type and key.
-      # Most common case turns first space back into space....
-      self.key = key.sub(/[ \r\n\t]/, ' ')
-
-      # Next, if comment divided from key by control char, let that one stand as well
-      # We can only tell this if there is an "=" in the key. So, won't help 1/3 times.
-      self.key = key.sub(/=[ \r\n\t]/, '= ')
-
-      # Delete any remaining control characters....
-      self.key = key.gsub(/[\a\r\n\t]/, '').strip
+      self.key = RedmineGitHosting::Utils.sanitize_ssh_key(key)
     end
 
 
