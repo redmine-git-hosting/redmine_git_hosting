@@ -153,17 +153,23 @@ class GitolitePublicKey < ActiveRecord::Base
     #
     def set_identifier
       return nil if user_id.nil?
-
-      key_count = user.gitolite_public_keys.deploy_key.length + 1
-
-      case key_type
-        when KEY_TYPE_USER
-          tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
-          self.identifier ||= [ user.gitolite_identifier, '@', 'redmine_', tag ].join
-
-        when KEY_TYPE_DEPLOY
-          self.identifier ||= [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
+      if key_type == KEY_TYPE_USER
+        set_identifier_for_user_key
+      elsif key_type == KEY_TYPE_DEPLOY
+        set_identifier_for_deploy_key
       end
+    end
+
+
+    def set_identifier_for_user_key
+      tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
+      self.identifier ||= [ user.gitolite_identifier, '@', 'redmine_', tag ].join
+    end
+
+
+    def set_identifier_for_deploy_key
+      key_count = user.gitolite_public_keys.deploy_key.length + 1
+      self.identifier ||= [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
     end
 
 
