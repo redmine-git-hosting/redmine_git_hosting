@@ -4,6 +4,7 @@ module RedmineGitHosting::HookManager
 
     attr_reader :namespace
     attr_reader :current_params
+    attr_reader :current_mailer_params
 
 
     def initialize
@@ -11,56 +12,55 @@ module RedmineGitHosting::HookManager
       @namespace = 'multimailhook'
 
       ## Get current params
-      @current_params = get_git_config_params(@namespace)
+      @current_params        = get_git_config_params(@namespace)
+      @current_mailer_params = get_mailer_params
+
+      # Build hash of installed params
+      @installed = {}
     end
 
 
     def installed?
-      params = %w(mailer environment smtpauth smtpserver smtpport smtpuser smtppass)
-      mailer_params = get_mailer_params
-
-      installed = {}
-
-      params.each do |param|
-        if current_params[param] != mailer_params[param]
-          installed[param] = set_git_config_param(namespace, param, mailer_params[param])
+      mailer_params.each do |param|
+        if current_params[param] != current_mailer_params[param]
+          @installed[param] = set_git_config_param(namespace, param, current_mailer_params[param])
         else
-          installed[param] = true
+          @installed[param] = true
         end
       end
-
-      return installed
+      @installed
     end
 
 
     private
 
 
+      def mailer_params
+        %w(mailer environment smtpauth smtpserver smtpport smtpuser smtppass)
+      end
+
+
       def get_mailer_params
         params = {}
-
         params['environment'] = 'gitolite'
-
-        if ActionMailer::Base.delivery_method == :smtp
-          params['mailer'] = 'smtp'
-        else
-          params['mailer'] = 'sendmail'
-        end
-
-        auth = ActionMailer::Base.smtp_settings[:authentication]
-
-        if auth != nil && auth != '' && auth != :none
-          params['smtpauth'] = 'true'
-        else
-          params['smtpauth'] = 'false'
-        end
-
-        params['smtpserver'] = ActionMailer::Base.smtp_settings[:address].to_s
-        params['smtpport']   = ActionMailer::Base.smtp_settings[:port].to_s
-        params['smtpuser']   = ActionMailer::Base.smtp_settings[:user_name] || ''
-        params['smtppass']   = ActionMailer::Base.smtp_settings[:password] || ''
-
+        params['mailer']      = mailer
+        params['smtpauth']    = smtpauth_enabled?.to_s
+        params['smtpserver']  = ActionMailer::Base.smtp_settings[:address].to_s
+        params['smtpport']    = ActionMailer::Base.smtp_settings[:port].to_s
+        params['smtpuser']    = ActionMailer::Base.smtp_settings[:user_name] || ''
+        params['smtppass']    = ActionMailer::Base.smtp_settings[:password] || ''
         params
+      end
+
+
+      def mailer
+        ActionMailer::Base.delivery_method == :smtp ? 'smtp' : 'sendmail'
+      end
+
+
+      def smtpauth_enabled?
+        auth = ActionMailer::Base.smtp_settings[:authentication]
+        auth != nil && auth != '' && auth != :none
       end
 
   end
