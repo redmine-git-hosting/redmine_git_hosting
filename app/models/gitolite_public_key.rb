@@ -167,17 +167,17 @@ class GitolitePublicKey < ActiveRecord::Base
       case key_type
         when KEY_TYPE_USER
           tag = self.title.gsub(/[^0-9a-zA-Z]/, '_')
-          self.identifier ||= [ self.user.gitolite_identifier, '@', 'redmine_', tag ].join
+          self.identifier ||= [ user.gitolite_identifier, '@', 'redmine_', tag ].join
 
         when KEY_TYPE_DEPLOY
-          self.identifier ||= [ self.user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
+          self.identifier ||= [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
       end
     end
 
 
     def set_fingerprint
       file = Tempfile.new('keytest')
-      file.write(self.key)
+      file.write(key)
       file.close
 
       begin
@@ -203,16 +203,16 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     def key_correctness
-      return false if self.key.nil?
+      return false if key.nil?
       # Test correctness of fingerprint from output
       # and general ssh-(r|d|ecd)sa <key> <id> structure
-      (self.key.match(/^(\S+)\s+(\S+)/)) && (self.fingerprint =~ /^(\w{2}:?)+$/i)
+      (key.match(/^(\S+)\s+(\S+)/)) && (fingerprint =~ /^(\w{2}:?)+$/i)
     end
 
 
     def key_uniqueness
       return if !new_record?
-      existing = GitolitePublicKey.find_by_fingerprint(self.fingerprint)
+      existing = GitolitePublicKey.find_by_fingerprint(fingerprint)
       if existing
         # Hm.... have a duplicate key!
         if existing.user == User.current
