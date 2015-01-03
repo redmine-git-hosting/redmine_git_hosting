@@ -13,7 +13,7 @@ module GitolitablePaths
 
 
   def gitolite_repository_name
-    File.expand_path(File.join("./", RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), "/")[1..-1]
+    File.expand_path(File.join('./', RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), '/')[1..-1]
   end
 
 
@@ -23,7 +23,7 @@ module GitolitablePaths
 
 
   def redmine_repository_path
-    File.expand_path(File.join("./", get_full_parent_path, git_cache_id), "/")[1..-1]
+    File.expand_path(File.join('./', get_full_parent_path, git_cache_id), '/')[1..-1]
   end
 
 
@@ -33,7 +33,7 @@ module GitolitablePaths
 
 
   def old_repository_name
-    "#{self.url.gsub(RedmineGitHosting::Config.gitolite_global_storage_dir, '').gsub('.git', '')}"
+    url.gsub(RedmineGitHosting::Config.gitolite_global_storage_dir, '').gsub('.git', '')
   end
 
 
@@ -49,7 +49,7 @@ module GitolitablePaths
         parent_parts.unshift(parent_id)
         p = p.parent
       end
-      parent_parts.join("/")
+      parent_parts.join('/')
     end
 
 end
