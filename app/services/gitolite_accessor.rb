@@ -12,7 +12,7 @@ module GitoliteAccessor
     def destroy_ssh_key(ssh_key, opts = {})
       ssh_key = ssh_key.data_for_destruction if ssh_key.is_a?(GitolitePublicKey)
       logger.info("User '#{User.current.login}' has deleted a SSH key")
-      resync_gitolite(:delete_ssh_key, ssh_key opts)
+      resync_gitolite(:delete_ssh_key, ssh_key, opts)
     end
 
 
