@@ -7,8 +7,8 @@ module GitolitablePaths
   end
 
 
-  def gitolite_repository_path
-    "#{RedmineGitHosting::Config.gitolite_global_storage_dir}#{gitolite_repository_name_with_extension}"
+  def redmine_repository_path
+    File.expand_path(File.join('./', get_full_parent_path, git_cache_id), '/')[1..-1]
   end
 
 
@@ -22,8 +22,8 @@ module GitolitablePaths
   end
 
 
-  def redmine_repository_path
-    File.expand_path(File.join('./', get_full_parent_path, git_cache_id), '/')[1..-1]
+  def gitolite_repository_path
+    "#{RedmineGitHosting::Config.gitolite_global_storage_dir}#{gitolite_repository_name_with_extension}"
   end
 
 
