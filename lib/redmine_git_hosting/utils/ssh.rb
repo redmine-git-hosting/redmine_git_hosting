@@ -18,7 +18,7 @@ module RedmineGitHosting::Utils
         begin
           output = capture('ssh-keygen', ['-l', '-f', file.path])
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          raise RedmineGitHosting::Error::InvalidSshKey
+          raise RedmineGitHosting::Error::InvalidSshKey.new("Invalid Ssh Key : #{key}")
         else
           output.split[1]
         ensure
