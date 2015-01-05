@@ -3,24 +3,59 @@ require 'stringio'
 module RedmineGitHosting
   class ShellRedirector
 
-    # Rewritten version of caching functionality to accommodate Redmine 1.4+
-    # When the shell is called with options[:write_stdin], then part of the
-    # argument on which caching is based is written to the input stream of the shell.
-    # Thus, we may need to wait for this write to occur before checking the cache.
-    #
-    # The basic mechanism here is a duck-typed IO stream (the CachedShellRedirector) which
-    # intercepts the output of git and places it in the cache.  In addition, this mechanism
-    # can intercept the stdin heading toward git so as to have a complete key for examining
-    # the cache.
-    #
-    # Primary calling sequence is to use the "execute" method which will allocate a new
-    # CachedShellRedirector only if required:
-
     # Redirector states
     WAIT_TO_CHECK = 0
     RUNNING_SHELL = 1
     STRING_IO     = 2
     DEAD          = 3
+
+
+    class << self
+
+      def logger
+        RedmineGitHosting.logger
+      end
+
+
+      # Rewritten version of caching functionality to accommodate Redmine 1.4+
+      # When the shell is called with options[:write_stdin], then part of the
+      # argument on which caching is based is written to the input stream of the shell.
+      # Thus, we may need to wait for this write to occur before checking the cache.
+      #
+      # The basic mechanism here is a duck-typed IO stream (the ShellRedirector) which
+      # intercepts the output of Git and places it in the cache. In addition, this mechanism
+      # can intercept the stdin heading toward Git so as to have a complete key for examining
+      # the cache.
+      #
+      # Primary calling sequence is to use the "execute" method which will allocate a new
+      # ShellRedirector only if required.
+      #
+      # This is the primary interface: execute given command and send IO to block.
+      #
+      # *options[:write_stdin]* will derive caching key from data that block writes to io stream.
+      #
+      def execute(cmd_str, repo_id, options = {}, &block)
+        if !options[:write_stdin] && out = RedmineGitHosting::Cache.check_cache(cmd_str)
+          # Simple case -- have cached result that depends only on cmd_str
+          block.call(out)
+          retio = out
+          status = nil
+        else
+          # Create redirector stream and call block
+          redirector = self.new(cmd_str, repo_id, options)
+          block.call(redirector)
+          retio, status = redirector.exit_shell
+        end
+
+        if status && status.exitstatus.to_i != 0
+          logger.error("Git exited with non-zero status : #{status.exitstatus}")
+          raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus}"
+        end
+
+        return retio
+      end
+
+    end
 
 
     def initialize(cmd_str, repo_id, options = {})
@@ -85,7 +120,7 @@ module RedmineGitHosting
         @state = DEAD
         if !@my_buffer_overfull
           # Insert result into cache
-          RedmineGitHosting::CacheManager.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
+          RedmineGitHosting::Cache.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
         end
       end
       return [@retio, @status]
@@ -118,7 +153,7 @@ module RedmineGitHosting
 
     def close_write
       # Ok -- now have all the extra args...  Check cache
-      out = RedmineGitHosting::CacheManager.check_cache(@my_cmd_str, @my_extra_args)
+      out = RedmineGitHosting::Cache.check_cache(@my_cmd_str, @my_extra_args)
       if out
         # Match in the cache!
         @state = STRING_IO
@@ -247,7 +282,7 @@ module RedmineGitHosting
 
     def push_to_buffer(invalue)
       nextchunk = invalue.is_a?(Integer) ? invalue.chr : invalue
-      if @my_buffer.length + nextchunk.length <= RedmineGitHosting::CacheManager.max_cache_size
+      if @my_buffer.length + nextchunk.length <= RedmineGitHosting::Cache.max_cache_size
         @my_buffer << nextchunk
       else
         @my_buffer_overfull = true

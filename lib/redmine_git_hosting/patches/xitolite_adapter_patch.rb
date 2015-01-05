@@ -49,7 +49,7 @@ module RedmineGitHosting
 
             if !git_cache_id.nil? && git_cache_enabled?
               # Insert cache between shell execution and caller
-              RedmineGitHosting::CacheManager.execute(cmd_str, git_cache_id, options, &block)
+              RedmineGitHosting::ShellRedirector.execute(cmd_str, git_cache_id, options, &block)
             else
               Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
             end

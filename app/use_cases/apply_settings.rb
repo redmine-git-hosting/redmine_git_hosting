@@ -107,7 +107,7 @@ class ApplySettings
 
     def check_cache_config
       ## Gitolite cache has changed, clear cache entries!
-      RedmineGitHosting::CacheManager.clear_obsolete_cache_entries if value_has_changed?(:gitolite_cache_max_time)
+      RedmineGitHosting::Cache.clear_obsolete_cache_entries if value_has_changed?(:gitolite_cache_max_time)
     end
 
 

@@ -59,6 +59,7 @@ module GitolitableCache
 
   # If repo identifiers unique, identifier forms unique label
   # Else, use directory notation: <project identifier>/<repo identifier>
+  #
   def git_cache_id
     if identifier.blank?
       # Should only happen with one repo/project (the default)
@@ -71,9 +72,10 @@ module GitolitableCache
   end
 
 
-  # Note: CacheManager doesn't know about repository object, it only know git_cache_id.
+  # Note: RedmineGitHosting::Cache doesn't know about repository object, it only knows git_cache_id.
+  #
   def empty_cache!
-    RedmineGitHosting::CacheManager.clear_cache_for_repository(git_cache_id)
+    RedmineGitHosting::Cache.clear_cache_for_repository(git_cache_id)
   end
 
 end
