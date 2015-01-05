@@ -37,6 +37,21 @@ module RedmineGitHosting
 
       module InstanceMethods
 
+        def changed_files(path = nil, rev = 'HEAD')
+          path ||= ''
+          cmd_args = []
+          cmd_args << 'log' << '--no-color' << '--pretty=format:%cd' << '--name-status' << '-1' << rev
+          cmd_args << '--' <<  scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
+          changed_files = []
+          git_cmd(cmd_args) do |io|
+            io.each_line do |line|
+              changed_files << line
+            end
+          end
+          changed_files
+        end
+
+
         private
 
           def logger
