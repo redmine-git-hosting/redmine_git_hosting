@@ -132,4 +132,6 @@ end
 # This *must stay after* Redmine::Plugin.register statement
 # because it needs to access to plugin settings...
 # so we need the plugin to be fully registered...
-require 'load_gitolite_hooks'
+Rails.configuration.to_prepare do
+  require_dependency 'load_gitolite_hooks'
+end
