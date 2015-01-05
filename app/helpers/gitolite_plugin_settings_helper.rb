@@ -79,6 +79,14 @@ module GitolitePluginSettingsHelper
   end
 
 
+  def git_cache_adapters
+    [
+      ['Database', 'database'],
+      ['Memcached', 'memcached']
+    ]
+  end
+
+
   def log_level_options
     [
       [l(:label_debug), 'debug'],

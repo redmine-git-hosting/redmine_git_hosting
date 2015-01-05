@@ -4,7 +4,12 @@ module RedmineGitHosting::Cache
     class << self
 
       def factory
-        Database.new
+        case RedmineGitHosting::Config.gitolite_cache_adapter
+        when 'database'
+          Database.new
+        when 'memcached'
+          Memcached.new
+        end
       end
 
     end

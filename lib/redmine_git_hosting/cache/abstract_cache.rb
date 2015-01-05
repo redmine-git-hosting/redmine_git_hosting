@@ -1,6 +1,18 @@
 module RedmineGitHosting::Cache
   class AbstractCache
 
+    attr_reader :max_cache_size
+    attr_reader :max_cache_time
+    attr_reader :max_cache_elements
+
+
+    def initialize
+      @max_cache_size     = RedmineGitHosting::Config.gitolite_cache_max_size
+      @max_cache_time     = RedmineGitHosting::Config.gitolite_cache_max_time
+      @max_cache_elements = RedmineGitHosting::Config.gitolite_cache_max_elements
+    end
+
+
     def set_cache(command, output, repo_id)
       raise NotImplementedError
     end
@@ -11,7 +23,12 @@ module RedmineGitHosting::Cache
     end
 
 
-    def clear_obsolete_cache_entries(limit)
+    def flush_cache!
+      raise NotImplementedError
+    end
+
+
+    def clear_obsolete_cache_entries
       raise NotImplementedError
     end
 
@@ -21,7 +38,7 @@ module RedmineGitHosting::Cache
     end
 
 
-    def apply_cache_limit(max_cache_elements)
+    def apply_cache_limit
       raise NotImplementedError
     end
 
@@ -31,6 +48,20 @@ module RedmineGitHosting::Cache
 
       def logger
         RedmineGitHosting.logger
+      end
+
+
+      def time_limit
+        return if max_cache_time < 0  # No expiration needed
+        current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+        limit = current_time - max_cache_time
+      end
+
+
+      def valid_cache_entry?(cached_entry_date)
+        current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
+        expired = (current_time.to_i - cached_entry_date.to_i > max_cache_time)
+        (!expired || max_cache_time < 0) ? true : false
       end
 
   end

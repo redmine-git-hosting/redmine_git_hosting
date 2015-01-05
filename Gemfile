@@ -9,6 +9,9 @@ gem 'gitlab-grack', git: 'https://github.com/n-rodriguez/grack.git', require: 'g
 # HAML views
 gem 'haml-rails'
 
+# Memcached client for GitCache
+gem 'dalli'
+
 # Syntaxic coloration
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'

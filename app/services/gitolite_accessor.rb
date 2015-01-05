@@ -76,7 +76,7 @@ module GitoliteAccessor
 
     def flush_git_cache
       logger.info('Flush Git Cache !')
-      ActiveRecord::Base.connection.execute('TRUNCATE git_caches')
+      RedmineGitHosting::Cache.flush_cache!
     end
 
 
