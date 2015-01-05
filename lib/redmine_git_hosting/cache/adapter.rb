@@ -9,6 +9,8 @@ module RedmineGitHosting::Cache
           Database.new
         when 'memcached'
           Memcached.new
+        when 'redis'
+          Redis.new
         end
       end
 

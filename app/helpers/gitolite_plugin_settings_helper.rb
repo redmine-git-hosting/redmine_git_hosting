@@ -82,7 +82,8 @@ module GitolitePluginSettingsHelper
   def git_cache_adapters
     [
       ['Database', 'database'],
-      ['Memcached', 'memcached']
+      ['Memcached', 'memcached'],
+      ['Redis', 'redis']
     ]
   end
 

@@ -10,6 +10,7 @@ module RedmineGitHosting
 
 
       def set_cache(repo_id, out_value, primary_key, secondary_key = nil)
+        return if out_value.strip.empty?
         command = compose_key(primary_key, secondary_key)
         adapter.apply_cache_limit if adapter.set_cache(command, out_value, repo_id)
       end

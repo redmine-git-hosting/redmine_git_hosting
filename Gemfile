@@ -12,6 +12,10 @@ gem 'haml-rails'
 # Memcached client for GitCache
 gem 'dalli'
 
+# Redis client for GitCache
+gem 'redis'
+gem 'hiredis'
+
 # Syntaxic coloration
 gem 'github-markup'
 gem 'redcarpet', '~> 2.3.0'
