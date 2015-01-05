@@ -60,7 +60,7 @@ namespace :redmine_git_hosting do
     puts "Installing/updating Gitolite hooks"
     puts "----------------------------------"
     puts "Results :"
-    result = RedmineGitHosting::HookManager.check_install!
+    result = RedmineGitHosting::Config.check_hooks_install!
     puts YAML::dump(result)
     puts "Done!"
   end
@@ -72,7 +72,7 @@ namespace :redmine_git_hosting do
     puts "Installing/updating Gitolite hook parameters"
     puts "----------------------------------"
     puts "Results :"
-    result = RedmineGitHosting::HookManager.update_hook_params!
+    result = RedmineGitHosting::Config.update_hook_params!
     puts YAML::dump(result)
     puts "Done!"
   end

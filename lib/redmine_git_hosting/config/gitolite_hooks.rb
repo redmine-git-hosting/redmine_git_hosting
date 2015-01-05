@@ -40,6 +40,29 @@ module RedmineGitHosting::Config
         RedmineGitHosting::Config.get_setting(:gitolite_local_code_dir)
       end
 
+
+      def gitolite_hooks_dir
+        if gitolite_version == 3
+          File.join(gitolite_home_dir, gitolite_local_code_dir, 'hooks', 'common')
+        else
+          File.join(gitolite_home_dir, '.gitolite', 'hooks', 'common')
+        end
+      end
+
+
+      def check_hooks_install!
+        {
+          hook_files:    RedmineGitHosting::GitoliteHooks.hooks_installed?,
+          global_params: RedmineGitHosting::GitoliteParams::GlobalParams.new.installed?,
+          mailer_params: RedmineGitHosting::GitoliteParams::MailerParams.new.installed?
+        }
+      end
+
+
+      def update_hook_params!
+        GlobalParams.new.installed?
+      end
+
     end
 
   end

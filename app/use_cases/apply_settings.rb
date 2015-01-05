@@ -33,7 +33,7 @@ class ApplySettings
       check_repo_hierarchy
       check_gitolite_config
       check_gitolite_default_values
-      check_hook_install
+      check_hooks_install
       check_hook_config
       check_cache_config
 
@@ -94,14 +94,14 @@ class ApplySettings
          value_has_changed?(:gitolite_hooks_are_asynchronous)
 
         # Need to update our .gitconfig
-        RedmineGitHosting::HookManager.update_hook_params!
+        RedmineGitHosting::Config.update_hook_params!
       end
     end
 
 
-    def check_hook_install
+    def check_hooks_install
       ## Gitolite user has changed, check if this new one has our hooks!
-      RedmineGitHosting::HookManager.check_install! if value_has_changed?(:gitolite_user)
+      RedmineGitHosting::Config.check_hooks_install! if value_has_changed?(:gitolite_user)
     end
 
 

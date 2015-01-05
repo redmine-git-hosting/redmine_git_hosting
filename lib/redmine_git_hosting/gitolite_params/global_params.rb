@@ -1,6 +1,8 @@
-module RedmineGitHosting::HookManager
+module RedmineGitHosting::GitoliteParams
 
-  class GlobalParams < HookParam
+  class GlobalParams
+
+    include BaseParam
 
     attr_reader :gitolite_hooks_url
     attr_reader :debug_mode

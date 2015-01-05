@@ -24,11 +24,7 @@
     %td= l(:label_sudo_redmine_to_gitolite_user)
     %td= image_tag (RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
 
-  - gitolite_checks = RedmineGitHosting::HookManager.check_install!
-
-  %tr
-    %td= l(:label_gitolite_hook_dirs_installed)
-    %td= render_gitolite_params_status(gitolite_checks[:hook_dirs])
+  - gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
 
   %tr
     %td= l(:label_gitolite_hooks_installed)

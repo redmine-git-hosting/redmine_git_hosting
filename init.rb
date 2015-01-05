@@ -127,3 +127,8 @@ Redmine::Plugin.register :redmine_git_hosting do
 
   Redmine::Scm::Base.add 'Xitolite'
 end
+
+# This *must stay after* Redmine::Plugin.register statement
+# because it needs to access to plugin settings...
+# so we need the plugin to be fully registered...
+require 'load_gitolite_hooks'

@@ -1,6 +1,8 @@
-module RedmineGitHosting::HookManager
+module RedmineGitHosting::GitoliteParams
 
-  class MailerParams < HookParam
+  class MailerParams
+
+    include BaseParam
 
     attr_reader :namespace
     attr_reader :current_params
