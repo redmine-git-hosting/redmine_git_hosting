@@ -20,18 +20,17 @@ module RedmineGitHosting
 
 
       def set_cache(repo_id, out_value, primary_key, secondary_key = nil)
-        logger.debug("Inserting cache entry for repository '#{repo_id}'")
-        logger.debug(compose_key(primary_key, secondary_key))
         command = compose_key(primary_key, secondary_key)
-        set_cache_entry(command, out_value, repo_id)
+        adapter.apply_cache_limit(max_cache_elements) if adapter.set_cache(command, out_value, repo_id)
       end
 
 
-      def check_cache(primary_key, secondary_key = nil)
-        cached = get_cache_entry(primary_key, secondary_key)
+      def get_cache(primary_key, secondary_key = nil)
+        command = compose_key(primary_key, secondary_key)
+        cached  = adapter.get_cache(command)
 
         if cached
-          if valid_cache_entry?(cached)
+          if valid_cache_entry?(cached.created_at)
             # Update updated_at flag
             cached.touch unless cached.command_output.nil?
             out = cached.command_output
@@ -52,48 +51,28 @@ module RedmineGitHosting
       def clear_obsolete_cache_entries
         return if max_cache_time < 0  # No expiration needed
         limit = Time.now - max_cache_time
-        do_clear_obsolete_cache_entries(limit)
+        adapter.clear_obsolete_cache_entries(limit)
       end
 
 
       # Clear the cache entries for given repository / git_cache_id
       def clear_cache_for_repository(repo_id)
-        do_clear_cache_for_repository(repo_id)
+        adapter.clear_cache_for_repository(repo_id)
+      end
+
+
+      def adapter
+        @adapter ||= Cache::Adapter.factory
       end
 
 
       private
 
 
-        def set_cache_entry(command, output, repo_id)
-          begin
-            GitCache.create(
-              command:         command,
-              command_output:  output,
-              repo_identifier: repo_id
-            )
-          rescue => e
-            logger.error("Could not insert in cache, this is the error : '#{e.message}'")
-          else
-            apply_cache_limit
-          end
-        end
-
-
-        def get_cache_entry(primary_key, secondary_key)
-          GitCache.find_by_command(compose_key(primary_key, secondary_key))
-        end
-
-
-        def valid_cache_entry?(cached)
+        def valid_cache_entry?(cached_entry_date)
           current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-          expired = (current_time.to_i - cached.created_at.to_i < max_cache_time)
+          expired = (current_time.to_i - cached_entry_date.to_i > max_cache_time)
           (!expired || max_cache_time < 0) ? true : false
-        end
-
-
-        def apply_cache_limit
-          GitCache.find(:last, order: 'created_at DESC').destroy if max_cache_elements >= 0 && GitCache.count > max_cache_elements
         end
 
 
@@ -103,23 +82,6 @@ module RedmineGitHosting
           else
             key1
           end
-        end
-
-
-        def do_clear_obsolete_cache_entries(limit)
-          deleted = GitCache.delete_all(['created_at < ?', limit])
-          logger.info("Removed '#{deleted}' expired cache entries among all repositories")
-        end
-
-
-        def do_clear_cache_for_repository(repo_id)
-          deleted = GitCache.delete_all(['repo_identifier = ?', repo_id])
-          logger.info("Removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
-        end
-
-
-        def logger
-          RedmineGitHosting.logger
         end
 
     end

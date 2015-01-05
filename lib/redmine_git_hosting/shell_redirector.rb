@@ -35,7 +35,7 @@ module RedmineGitHosting
       # *options[:write_stdin]* will derive caching key from data that block writes to io stream.
       #
       def execute(cmd_str, repo_id, options = {}, &block)
-        if !options[:write_stdin] && out = RedmineGitHosting::Cache.check_cache(cmd_str)
+        if !options[:write_stdin] && out = RedmineGitHosting::Cache.get_cache(cmd_str)
           # Simple case -- have cached result that depends only on cmd_str
           block.call(out)
           retio = out
@@ -153,7 +153,7 @@ module RedmineGitHosting
 
     def close_write
       # Ok -- now have all the extra args...  Check cache
-      out = RedmineGitHosting::Cache.check_cache(@my_cmd_str, @my_extra_args)
+      out = RedmineGitHosting::Cache.get_cache(@my_cmd_str, @my_extra_args)
       if out
         # Match in the cache!
         @state = STRING_IO
