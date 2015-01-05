@@ -168,8 +168,28 @@ class GitolitePublicKey < ActiveRecord::Base
 
 
     def set_identifier_for_deploy_key
-      key_count = user.gitolite_public_keys.deploy_key.length + 1
-      self.identifier ||= [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
+      self.identifier ||= deploy_key_identifier
+    end
+
+
+    # Fix https://github.com/jbox-web/redmine_git_hosting/issues/288
+    # Getting user deployment keys count is not sufficient to assure uniqueness of
+    # deployment key identifier. So we need an 'external' counter to increment the global count
+    # while a key with this identifier exists.
+    #
+    def deploy_key_identifier
+      count = 0
+      begin
+        key_id = generate_deploy_key_identifier(count)
+        count += 1
+      end while user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
+      key_id
+    end
+
+
+    def generate_deploy_key_identifier(count)
+      key_count = user.gitolite_public_keys.deploy_key.length + 1 + count
+      [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
     end
 
 
