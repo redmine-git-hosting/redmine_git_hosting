@@ -1,7 +1,7 @@
 require 'stringio'
 
 module RedmineGitHosting
-  class Cache
+  class ShellRedirector
 
     # Rewritten version of caching functionality to accommodate Redmine 1.4+
     # When the shell is called with options[:write_stdin], then part of the

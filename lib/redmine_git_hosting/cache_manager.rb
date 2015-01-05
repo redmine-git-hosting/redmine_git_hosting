@@ -33,7 +33,7 @@ module RedmineGitHosting
           status = nil
         else
           # Create redirector stream and call block
-          redirector = RedmineGitHosting::Cache.new(cmd_str, repo_id, options)
+          redirector = RedmineGitHosting::ShellRedirector.new(cmd_str, repo_id, options)
           block.call(redirector)
           retio, status = redirector.exit_shell
         end
