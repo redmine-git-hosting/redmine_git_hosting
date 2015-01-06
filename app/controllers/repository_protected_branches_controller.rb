@@ -7,10 +7,15 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   before_filter :find_repository_protected_branch, :except => [:index, :new, :create, :sort]
 
+  accept_api_auth :index, :show
+
 
   def index
     @repository_protected_branches = @repository.protected_branches.all
-    render layout: false
+    respond_to do |format|
+      format.html { render layout: false }
+      format.api
+    end
   end
 
 

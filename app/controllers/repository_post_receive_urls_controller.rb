@@ -7,10 +7,15 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
   before_filter :find_repository_post_receive_url, :except => [:index, :new, :create]
 
+  accept_api_auth :index, :show
+
 
   def index
     @repository_post_receive_urls = @repository.post_receive_urls.all
-    render layout: false
+    respond_to do |format|
+      format.html { render layout: false }
+      format.api
+    end
   end
 
 

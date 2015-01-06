@@ -1,0 +1,9 @@
+api.mirror do
+  api.id                    @mirror.id
+  api.url                   @mirror.url
+  api.active                @mirror.active
+  api.push_mode             @mirror.push_mode_to_s
+  api.include_all_branches  @mirror.include_all_branches
+  api.include_all_tags      @mirror.include_all_tags
+  api.explicit_refspec      @mirror.explicit_refspec
+end

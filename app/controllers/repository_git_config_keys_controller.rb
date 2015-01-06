@@ -7,10 +7,15 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
   before_filter :find_repository_git_config_key, :except => [:index, :new, :create]
 
+  accept_api_auth :index, :show
+
 
   def index
     @repository_git_config_keys = @repository.git_config_keys.all
-    render layout: false
+    respond_to do |format|
+      format.html { render layout: false }
+      format.api
+    end
   end
 
 

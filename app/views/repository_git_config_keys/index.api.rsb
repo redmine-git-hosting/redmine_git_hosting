@@ -1,0 +1,9 @@
+api.array :repository_git_config_keys, api_meta(total_count: @repository_git_config_keys.count) do
+  @repository_git_config_keys.each do |git_config_key|
+    api.git_config_key do
+      api.id     git_config_key.id
+      api.key    git_config_key.key
+      api.value  git_config_key.value
+    end
+  end
+end

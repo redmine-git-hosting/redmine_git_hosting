@@ -1,0 +1,7 @@
+api.protected_branch do
+  api.id           @protected_branch.id
+  api.path         @protected_branch.path
+  api.permissions  @protected_branch.permissions
+  api.user_list    @protected_branch.user_list
+  api.position     @protected_branch.position
+end

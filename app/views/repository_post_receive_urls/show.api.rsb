@@ -1,0 +1,9 @@
+api.post_receive_url do
+  api.id              @post_receive_url.id
+  api.url             @post_receive_url.url
+  api.mode            @post_receive_url.mode.to_s
+  api.active          @post_receive_url.active
+  api.use_triggers    @post_receive_url.use_triggers
+  api.triggers        @post_receive_url.triggers
+  api.split_payloads  @post_receive_url.split_payloads
+end

@@ -12,7 +12,9 @@ class RedmineGitHostingController < ApplicationController
 
 
   def show
-    render_404
+    respond_to do |format|
+      format.api
+    end
   end
 
 

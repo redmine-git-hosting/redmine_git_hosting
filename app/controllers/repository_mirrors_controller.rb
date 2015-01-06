@@ -7,10 +7,15 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   before_filter :find_repository_mirror, :except => [:index, :new, :create]
 
+  accept_api_auth :index, :show
+
 
   def index
     @repository_mirrors = @repository.mirrors.all
-    render layout: false
+    respond_to do |format|
+      format.html { render layout: false }
+      format.api
+    end
   end
 
 

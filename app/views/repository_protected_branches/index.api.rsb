@@ -1,0 +1,11 @@
+api.array :repository_protected_branches, api_meta(total_count: @repository_protected_branches.count) do
+  @repository_protected_branches.each do |protected_branch|
+    api.protected_branch do
+      api.id           protected_branch.id
+      api.path         protected_branch.path
+      api.permissions  protected_branch.permissions
+      api.user_list    protected_branch.user_list
+      api.position     protected_branch.position
+    end
+  end
+end
