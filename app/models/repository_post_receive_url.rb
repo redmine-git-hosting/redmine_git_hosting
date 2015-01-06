@@ -31,6 +31,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
 
   ## Callbacks
   before_validation :strip_whitespace
+  before_validation :remove_blank_triggers
 
 
   def mode
@@ -49,6 +50,12 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
     # Strip leading and trailing whitespace
     def strip_whitespace
       self.url = url.strip rescue ''
+    end
+
+
+    # Remove blank entries in triggers
+    def remove_blank_triggers
+      self.triggers = triggers.select { |t| !t.empty? }
     end
 
 end
