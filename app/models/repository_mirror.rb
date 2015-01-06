@@ -52,6 +52,18 @@ class RepositoryMirror < ActiveRecord::Base
   end
 
 
+  def push_mode_to_s
+    case push_mode
+    when 0
+      'mirror'
+    when 1
+      'force'
+    when 2
+      'fast_forward'
+    end
+  end
+
+
   private
 
 
