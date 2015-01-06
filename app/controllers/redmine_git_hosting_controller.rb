@@ -25,7 +25,7 @@ class RedmineGitHostingController < ApplicationController
 
     def set_repository
       begin
-        @repository = Repository.find(params[:repository_id])
+        @repository = Repository::Xitolite.find(params[:repository_id])
       rescue ActiveRecord::RecordNotFound => e
         render_404
       else
