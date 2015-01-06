@@ -24,12 +24,12 @@
     - style = @post_receive_url.use_triggers? ? '' : 'display: none;'
 
     #triggers_options{ style: style }
-      = hidden_field_tag "repository_post_receive_urls[triggers][]", ""
+      = hidden_field_tag "repository_post_receive_url[triggers][]", ""
 
       - @repository.branches.each do |branch|
         %p
           %label= branch.to_s
-          = check_box_tag "repository_post_receive_urls[triggers][]", branch.to_s, @post_receive_url.triggers.include?(branch.to_s)
+          = check_box_tag "repository_post_receive_url[triggers][]", branch.to_s, @post_receive_url.triggers.include?(branch.to_s)
 
 :javascript
   $(document).ready(function() {
