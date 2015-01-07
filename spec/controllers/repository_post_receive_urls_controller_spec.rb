@@ -38,8 +38,8 @@ describe RepositoryPostReceiveUrlsController do
       get :show, :repository_id => @repository.id, :id => @post_receive_url.id
     end
 
-    it "renders 404" do
-      expect(response.status).to eq 404
+    it "renders 406" do
+      expect(response.status).to eq 406
     end
   end
 

@@ -38,8 +38,8 @@ describe RepositoryGitConfigKeysController do
       get :show, :repository_id => @repository.id, :id => @git_config_key.id
     end
 
-    it "renders 404" do
-      expect(response.status).to eq 404
+    it "renders 406" do
+      expect(response.status).to eq 406
     end
   end
 
