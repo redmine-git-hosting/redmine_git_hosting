@@ -7,6 +7,8 @@ class CreateRepositoryProtectedBranches < ActiveRecord::Migration
       t.column :user_list,     :text
       t.column :position,      :integer
     end
+
+    add_index :repository_protected_branches, :repository_id
   end
 
   def self.down
