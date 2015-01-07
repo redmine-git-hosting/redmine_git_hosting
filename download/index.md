@@ -49,7 +49,7 @@ weight: 2
   <div class="col-lg-12">
     <h2>Requirements</h2>
     <ul>
-      <li><strong>Redmine :</strong> This plugin only works with Redmine <strong>2.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>2.5.3</strong>)</li>
+      <li><strong>Redmine :</strong> This plugin only works with Redmine <strong>2.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>2.6.0</strong>)</li>
       <li><strong>Ruby :</strong> works with Ruby 1.9.3, 2.0 and 2.1</li>
       <li><strong>Git :</strong> works with Git from 1.7.2.5 to 1.9.1</li>
       <li><strong>Gitolite :</strong> works with Gitolite 2.x and 3.x (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>v3.6.1-6-gdc8b590</strong>)</li>
