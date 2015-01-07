@@ -23,8 +23,8 @@ namespace :redmine_git_hosting do
 
   end
 
-  desc "Prepare migration to v0.8 version"
-  task :prepare_migration_to_v08 => [:environment] do
+  desc "Prepare migration to v1.0 version"
+  task :prepare_migration_to_v1 => [:environment] do
     ## First step : delete SSH keys
     task('redmine_git_hosting:migration_tools:delete_ssh_key').invoke
   end
