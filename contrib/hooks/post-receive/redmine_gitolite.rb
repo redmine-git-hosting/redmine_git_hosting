@@ -11,7 +11,7 @@ require_relative 'lib/git_hosting/config'
 require_relative 'lib/git_hosting/post_receive'
 require_relative 'lib/git_hosting/custom_hook'
 
-if GitHosting::PostReceive.new(repo_path, refs).exec
+if GitHosting::PostReceive.new(repo_path, refs).exec && GitHosting::CustomHook.new(repo_path, refs).exec
   exit 0
 else
   exit 1

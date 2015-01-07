@@ -15,7 +15,7 @@ RedmineGitHosting::GitoliteHooks.register_hooks do
   gitolite_hook do
     name        'mail_notifications.py'
     source      'post-receive/mail_notifications.py'
-    destination 'mail_notifications'
+    destination 'post-receive.d/mail_notifications'
     executable  true
   end
 
@@ -52,7 +52,7 @@ RedmineGitHosting::GitoliteHooks.register_hooks do
   gitolite_hook do
     name        'git_multimail.py'
     source      'post-receive/lib/git_multimail.py'
-    destination 'lib/git_hosting/git_multimail.py'
+    destination 'post-receive.d/git_multimail.py'
     executable  false
   end
 end
