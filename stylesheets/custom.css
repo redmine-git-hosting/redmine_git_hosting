@@ -137,3 +137,7 @@ blockquote {
 .jbox-icons i{
   font-size: 24px;
 }
+
+#configuration-container ul {
+  list-style-type: none;
+}

@@ -1,4 +1,5 @@
 #### Gitolite Storage Config
+***
 
 * **:gitolite_global_storage_dir**
 
@@ -10,6 +11,8 @@ Since Gitolite always uses *repositories/* as the default place for repositories
     # Default
     :gitolite_global_storage_dir    => 'repositories/'
 
+***
+
 * **:gitolite_redmine_storage_dir**
 
 The **:gitolite_redmine_storage_dir** is an optional subdirectory under the **:gitolite_global_storage_dir** which can be used for all plugin-managed repositories.
@@ -18,12 +21,16 @@ Its default value is the empty string (no special subdirectory). If you choose t
     # Default
     :gitolite_redmine_storage_dir   => './'
 
+***
+
 * **:gitolite_recycle_bin_dir**
 
 The **:gitolite_recycle_bin_dir** is the path relative to the Git user root where deleted repositories are placed. This path should end in a path separator, e.g. '/'.
 
     # Default
     :gitolite_recycle_bin_dir       => 'recycle_bin/'
+
+***
 
 * **:gitolite_local_code_dir**
 

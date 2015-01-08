@@ -1,4 +1,5 @@
 #### Redmine Config
+***
 
 * **:all_projects_use_git (Automatic Repository Creation)**
 
@@ -7,6 +8,8 @@ Can be enabled to automatically create a new Git repository every time you creat
     # Default
     :all_projects_use_git             => false
 
+***
+
 * **:init_repositories_on_create (Automatic Repository Initialization)**
 
 Can be enabled to automatically initialize a new Git repository with a README file (à la Github).
@@ -14,12 +17,16 @@ Can be enabled to automatically initialize a new Git repository with a README fi
     # Default
     :init_repositories_on_create      => false
 
+***
+
 * **:delete_git_repositories**
 
 Can be enabled to let this plugin control repository deletion. By default, this feature is disabled and when a repository is deleted in Redmine, it is not deleted in Gitolite. This is a safety feature to prevent the accidental loss of data. If this feature is enabled, the safety is turned off and the repository files will be deleted when the Project/Repository is deleted in Redmine. Note, however, that even when this feature is enabled, deleted repositories are placed into a "recycle_bin" for a configurable amount of time (defaulting to 24 hours) and can be recovered by recreating the project or the repository in Redmine with the same **identifier**.
 
     # Default
     :delete_git_repositories          => true
+
+***
 
 * **:hierarchical_organisation**
 
