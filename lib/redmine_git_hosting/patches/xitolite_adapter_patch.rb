@@ -76,7 +76,76 @@ module RedmineGitHosting
         end
 
 
+        # Monkey patch *tags* method to fix http://www.redmine.org/issues/18923
+        #
+        def tags
+          return @tags if @tags
+          cmd_args = %w|tag|
+          git_cmd(cmd_args) do |io|
+            @tags = io.readlines.sort!.map{ |t| t.strip }
+          end
+          @tags
+        rescue ScmCommandAborted
+          nil
+        end
+
+
+        def rev_list(revision, args)
+          cmd_args = ['rev-list', *args, revision]
+          git_cmd(cmd_args) do |io|
+            @revisions_list = io.readlines.map{ |t| t.strip }
+          end
+          @revisions_list
+        rescue ScmCommandAborted
+          []
+        end
+
+
+        def rev_parse(revision)
+          cmd_args = ['rev-parse', '--quiet', '--verify', revision]
+          git_cmd(cmd_args) do |io|
+            @parsed_revision = io.readlines.map{ |t| t.strip }.first
+          end
+          @parsed_revision
+        rescue ScmCommandAborted
+          nil
+        end
+
+
+        def archive(revision, format)
+          cmd_args = ['archive']
+          case format
+          when 'tar' then
+            cmd_args << '--format=tar'
+          when 'tar.gz' then
+            cmd_args << '--format=tar.gz'
+            cmd_args << '-7'
+          when 'zip' then
+            cmd_args << '--format=zip'
+            cmd_args << '-7'
+          else
+            cmd_args << '--format=tar'
+          end
+          cmd_args << revision
+          git_cmd(cmd_args, bypass_cache: true) do |io|
+            io.binmode
+            @content = io.read
+          end
+          @content
+        rescue ScmCommandAborted
+          nil
+        end
+
+
+        def mirror_push(mirror_url, branch = nil, args = [])
+          cmd_args = git_mirror_cmd.concat(['push', *args, mirror_url, branch]).compact
+          cmd = cmd_args.shift
+          RedmineGitHosting::Utils.capture(cmd, cmd_args, {merge_output: true})
+        end
+
+
         private
+
 
           def logger
             RedmineGitHosting.logger
@@ -123,6 +192,16 @@ module RedmineGitHosting
 
           def base_args
             RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path).concat(git_args)
+          end
+
+
+          def git_mirror_cmd
+            RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path, git_push_args)
+          end
+
+
+          def git_push_args
+            [ 'env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}" ]
           end
 
 

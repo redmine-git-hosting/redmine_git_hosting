@@ -11,7 +11,6 @@ class DownloadGitRevision
   attr_reader :commit_id
   attr_reader :content_type
   attr_reader :filename
-  attr_reader :cmd_args
 
 
   def initialize(repository, revision, format)
@@ -25,7 +24,6 @@ class DownloadGitRevision
     @commit_id     = nil
     @content_type  = ''
     @filename      = ''
-    @cmd_args      = []
 
     validate_revision
     fill_data
@@ -33,7 +31,7 @@ class DownloadGitRevision
 
 
   def content
-    RedmineGitHosting::Commands.sudo_git_archive(gitolite_repository_path, commit_id, cmd_args)
+    repository.archive(commit_id, format)
   end
 
 
@@ -53,10 +51,9 @@ class DownloadGitRevision
 
       # is the revision a tag?
       if commit.nil?
-        tags = RedmineGitHosting::Commands.sudo_git_tag(gitolite_repository_path)
-        tags.each do |x|
+        repository.tags.each do |x|
           if x == revision
-            commit = RedmineGitHosting::Commands.sudo_git_rev_list(gitolite_repository_path, revision).split[0]
+            commit = repository.rev_list(revision).first
             break
           end
         end
@@ -65,7 +62,7 @@ class DownloadGitRevision
       # well, let check if this is a valid commit
       commit = revision if commit.nil?
 
-      valid_commit = RedmineGitHosting::Commands.sudo_git_rev_parse(gitolite_repository_path, commit, ['--quiet', '--verify'])
+      valid_commit = repository.rev_parse(commit)
 
       if valid_commit == ''
         @commit_valid = false
@@ -78,27 +75,19 @@ class DownloadGitRevision
 
     def fill_data
       project_name = project.to_s.parameterize.to_s
-      project_name = "tarball" if project_name.length == 0
+      project_name = 'tarball' if project_name.length == 0
 
       case format
-        when 'tar' then
-          extension     = 'tar'
-          @content_type = 'application/x-tar'
-          @cmd_args << '--format=tar'
-
-        when 'tar.gz' then
-          extension     = 'tar.gz'
-          @content_type = 'application/x-gzip'
-          @cmd_args << '--format=tar.gz'
-          @cmd_args << '-7'
-
-        when 'zip' then
-          extension     = 'zip'
-          @content_type = 'application/x-zip'
-          @cmd_args << '--format=zip'
-          @cmd_args << '-7'
+      when 'tar' then
+        extension     = 'tar'
+        @content_type = 'application/x-tar'
+      when 'tar.gz' then
+        extension     = 'tar.gz'
+        @content_type = 'application/x-gzip'
+      when 'zip' then
+        extension     = 'zip'
+        @content_type = 'application/x-zip'
       end
-
       @filename = "#{project_name}-#{revision}.#{extension}"
     end
 

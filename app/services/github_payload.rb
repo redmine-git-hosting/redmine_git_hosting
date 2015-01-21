@@ -67,7 +67,7 @@ class GithubPayload
 
     def build_payload(ref, range)
       revisions_in_range = get_revisions_in_range(range)
-      logger.debug("Revisions in range : #{revisions_in_range.split().join(' ')}")
+      logger.debug("Revisions in range : #{revisions_in_range.join(' ')}")
 
       # Get refs
       oldhead, newhead, refname = ref.split(',')
@@ -105,8 +105,8 @@ class GithubPayload
 
     def build_commits_list(revisions_in_range)
       commits_list = []
-      revisions_in_range.split().each do |rev|
-        revision = repository.find_changeset_by_name(rev.strip)
+      revisions_in_range.each do |rev|
+        revision = repository.find_changeset_by_name(rev)
         next if revision.nil?
         commits_list << build_commit_entry(revision)
       end
@@ -150,7 +150,7 @@ class GithubPayload
 
 
     def get_revisions_in_range(range)
-      RedmineGitHosting::Commands.sudo_git_rev_list(repository.gitolite_repository_path, range, ['--reverse'])
+      repository.rev_list(range, ['--reverse'])
     end
 
 end

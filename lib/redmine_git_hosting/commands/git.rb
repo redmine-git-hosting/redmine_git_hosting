@@ -35,42 +35,6 @@ module RedmineGitHosting::Commands
       end
 
 
-      def sudo_git_mirror_push(repo_path, mirror_url, branch = nil, args = [])
-        cmd = sudo_git_args_for_repo(repo_path, git_push_args).concat(['push', *args, mirror_url, branch]).compact
-        capture(cmd, {merge_output: true})
-      end
-
-
-      def sudo_git_tag(repo_path, args = [])
-        cmd = sudo_git_args_for_repo(repo_path).concat(['tag', *args])
-        capture(cmd).split
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        []
-      end
-
-
-      def sudo_git_rev_list(repo_path, revision, args = [])
-        cmd = sudo_git_args_for_repo(repo_path).concat(['rev-list', *args, revision])
-        capture(cmd)
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        []
-      end
-
-
-      def sudo_git_rev_parse(repo_path, revision, args = [])
-        cmd = sudo_git_args_for_repo(repo_path).concat(['rev-parse', *args, revision])
-        capture(cmd).chomp.strip
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        ''
-      end
-
-
-      def sudo_git_archive(repo_path, revision, args = [])
-        cmd = sudo_git_args_for_repo(repo_path).concat(['archive', *args, revision])
-        capture(cmd)
-      end
-
-
       def sudo_unset_git_global_param(key)
         logger.info("Unset Git global parameter : #{key}")
 
@@ -135,11 +99,6 @@ module RedmineGitHosting::Commands
 
         def git_args_for_repo(repo_path)
           [ '--git-dir', repo_path ]
-        end
-
-
-        def git_push_args
-          [ 'env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}" ]
         end
 
 

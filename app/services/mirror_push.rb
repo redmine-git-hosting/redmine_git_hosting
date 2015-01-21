@@ -18,7 +18,7 @@ class MirrorPush
 
   def push!
     begin
-      push_message = RedmineGitHosting::Commands.sudo_git_mirror_push(repository.gitolite_repository_path, mirror.url, branch, push_args)
+      push_message = repository.mirror_push(mirror.url, branch, push_args)
       push_failed = false
     rescue RedmineGitHosting::Error::GitoliteCommandException => e
       push_message = e.output
