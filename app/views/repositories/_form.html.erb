@@ -42,23 +42,7 @@
       <% end %>
     </p>
 
-    <% if @project.repository.nil? %>
-      <p>
-        <%= hidden_field_tag "repository[is_default]", "0" %>
-        <label><%= l(:field_repository_is_default) %></label>
-        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-          <%= check_box_tag "repository[is_default]", @repository.is_default, @repository.is_default, disabled: !@repository.new_record? %>
-        </span>
-      </p>
-    <% elsif @project.repository == @repository %>
-      <p>
-        <%= hidden_field_tag "repository[is_default]", "1" %>
-        <label><%= l(:field_repository_is_default) %></label>
-        <span class="label label-success"><%= l(:label_yes) %></span>
-      </p>
-    <% else %>
-      <%= hidden_field_tag "repository[is_default]", "0" %>
-    <% end %>
+    <p><%= f.check_box :is_default, :label => :field_repository_is_default %></p>
 
     <% if @repository && @repository.is_a?(Repository::Git) %>
       <% if @repository.new_record? %>
@@ -76,18 +60,6 @@
       <% end %>
     <% else %>
       <p><%= f.text_field :identifier %></p>
-    <% end %>
-
-    <% if @repository && @repository.is_a?(Repository::Git) && !@repository.new_record? %>
-      <p>
-        <label><%= l(:label_browse_repository) %></label>
-        <%= link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
-      </p>
-
-      <p>
-        <%= label_tag  "", l(:label_repository_exists_in_gitolite) %>
-        <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
-      </p>
     <% end %>
 
     <%= content_tag('p', f.select(
@@ -121,19 +93,15 @@
 
       <p>
         <label><%= l(:label_enable_git_daemon) %></label>
-        <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-          <%= hidden_field_tag "extra[git_daemon]", "false" %>
-          <%= check_box_tag "extra[git_daemon]", selected, (selected == "true" ? true : false), disabled: !@project.is_public %>
-        </span>
+        <%= hidden_field_tag "extra[git_daemon]", "false" %>
+        <%= check_box_tag "extra[git_daemon]", selected, (selected == "true" ? true : false), disabled: !@project.is_public %>
       </p>
 
       <% if user_allowed_to(:create_repository_git_notifications, @repository.project) %>
         <p>
           <label><%= l(:label_enable_git_notify) %></label>
-          <span class="bootstrap-switch switch-small" data-on="primary" data-off="default" data-on-label="<%= l(:label_yes) %>" data-off-label="<%= l(:label_no) %>">
-            <%= hidden_field_tag "extra[git_notify]", "false" %>
-            <%= check_box_tag "extra[git_notify]", (@repository.extra[:git_notify] == 1 ? 'true' : 'false'), (@repository.extra[:git_notify] == 1 ? true : false) %>
-          </span>
+          <%= hidden_field_tag "extra[git_notify]", "false" %>
+          <%= check_box_tag "extra[git_notify]", (@repository.extra[:git_notify] == 1 ? 'true' : 'false'), (@repository.extra[:git_notify] == 1 ? true : false) %>
         </p>
       <% end %>
 
@@ -160,6 +128,18 @@
         <%= label_tag  "", l(:label_mirroring_keys_installed) %>
         <%= image_tag (RedmineGitolite::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png') %>
       </p>
+
+      <% unless @repository.new_record? %>
+        <p>
+          <%= label_tag  "", l(:label_repository_exists_in_gitolite) %>
+          <%= image_tag (@repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png') %>
+        </p>
+
+        <p>
+          <label><%= l(:label_browse_repository) %></label>
+          <%= link_to h(@repository.url), {:controller => 'repositories', :action => 'show', :id => @project, :repository_id => @repository.identifier_param} %>
+        </p>
+      <% end %>
 
     <% else %>
       <%= repository_field_tags(f, @repository) if @repository %>
