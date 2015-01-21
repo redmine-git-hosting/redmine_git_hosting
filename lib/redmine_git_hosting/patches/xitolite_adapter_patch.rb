@@ -79,7 +79,8 @@ module RedmineGitHosting
         # Monkey patch *tags* method to fix http://www.redmine.org/issues/18923
         #
         def tags
-          return @tags if @tags
+          return @tags if !@tags.nil?
+          @tags = []
           cmd_args = %w|tag|
           git_cmd(cmd_args) do |io|
             @tags = io.readlines.sort!.map{ |t| t.strip }
