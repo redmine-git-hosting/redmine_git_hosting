@@ -52,6 +52,30 @@ module RedmineGitHosting
         end
 
 
+        # Override the original method to accept options hash
+        # which may contain *bypass_cache* flag and pass the options hash to *git_cmd*.
+        #
+        def diff(path, identifier_from, identifier_to = nil, opts = {})
+          path ||= ''
+          cmd_args = []
+          if identifier_to
+            cmd_args << "diff" << "--no-color" << identifier_to << identifier_from
+          else
+            cmd_args << "show" << "--no-color" << identifier_from
+          end
+          cmd_args << "--" << scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
+          diff = []
+          git_cmd(cmd_args, opts) do |io|
+            io.each_line do |line|
+              diff << line
+            end
+          end
+          diff
+        rescue ScmCommandAborted
+          nil
+        end
+
+
         private
 
           def logger
@@ -60,10 +84,14 @@ module RedmineGitHosting
 
 
           def git_cmd_with_git_hosting(args, options = {}, &block)
+            # Get options
+            bypass_cache = options.delete(:bypass_cache){ false }
+
+            # Build git command line
             cmd_str = prepare_command(args)
 
-            if !git_cache_id.nil? && git_cache_enabled?
-              # Insert cache between shell execution and caller
+            # Insert cache between shell execution and caller
+            if !git_cache_id.nil? && git_cache_enabled? && !bypass_cache
               RedmineGitHosting::ShellRedirector.execute(cmd_str, git_cache_id, options, &block)
             else
               Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)

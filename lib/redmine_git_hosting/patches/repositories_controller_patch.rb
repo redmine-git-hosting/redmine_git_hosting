@@ -13,6 +13,7 @@ module RedmineGitHosting
           alias_method_chain :create,  :git_hosting
           alias_method_chain :update,  :git_hosting
           alias_method_chain :destroy, :git_hosting
+          alias_method_chain :diff,    :git_hosting
 
           before_filter :set_current_tab, only: :edit
 
@@ -56,6 +57,18 @@ module RedmineGitHosting
         end
 
 
+        # Monkey patch *diff* method to pass the *bypass_cache* flag
+        # on diff download.
+        #
+        def diff_with_git_hosting(&block)
+          if @repository.is_a?(Repository::Xitolite)
+            diff_with_options
+          else
+            diff_without_git_hosting(&block)
+          end
+        end
+
+
         private
 
 
@@ -94,6 +107,40 @@ module RedmineGitHosting
 
           def enable_git_annex?
             @repository.enable_git_annex == 'true' ? true : false
+          end
+
+
+          # This is the original diff method with the *bypass_cache* flag.
+          #
+          def diff_with_options
+            if params[:format] == 'diff'
+              @diff = @repository.diff(@path, @rev, @rev_to, bypass_cache: true)
+              (show_error_not_found; return) unless @diff
+              filename = "changeset_r#{@rev}"
+              filename << "_r#{@rev_to}" if @rev_to
+              send_data @diff.join, :filename => "#{filename}.diff",
+                                    :type => 'text/x-patch',
+                                    :disposition => 'attachment'
+            else
+              @diff_type = params[:type] || User.current.pref[:diff_type] || 'inline'
+              @diff_type = 'inline' unless %w(inline sbs).include?(@diff_type)
+
+              # Save diff type as user preference
+              if User.current.logged? && @diff_type != User.current.pref[:diff_type]
+                User.current.pref[:diff_type] = @diff_type
+                User.current.preference.save
+              end
+              @cache_key = "repositories/diff/#{@repository.id}/" +
+                              Digest::MD5.hexdigest("#{@path}-#{@rev}-#{@rev_to}-#{@diff_type}-#{current_language}")
+              unless read_fragment(@cache_key)
+                @diff = @repository.diff(@path, @rev, @rev_to)
+                show_error_not_found unless @diff
+              end
+
+              @changeset = @repository.find_changeset_by_name(@rev)
+              @changeset_to = @rev_to ? @repository.find_changeset_by_name(@rev_to) : nil
+              @diff_format_revisions = @repository.diff_format_revisions(@changeset, @changeset_to)
+            end
           end
 
       end

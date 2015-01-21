@@ -49,6 +49,14 @@ class Repository::Xitolite < Repository::Git
   end
 
 
+  # Override the original method to accept options hash
+  # which may contain *bypass_cache* flag.
+  #
+  def diff(path, rev, rev_to, opts = {})
+    scm.diff(path, rev, rev_to, opts)
+  end
+
+
   private
 
 
