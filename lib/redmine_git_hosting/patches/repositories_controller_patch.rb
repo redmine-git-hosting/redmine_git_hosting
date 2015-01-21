@@ -110,7 +110,8 @@ module RedmineGitHosting
           end
 
 
-          # This is the original diff method with the *bypass_cache* flag.
+          # This is the original diff method with the *bypass_cache* flag
+          # for diff download. We keep the cache for the diff view.
           #
           def diff_with_options
             if params[:format] == 'diff'
