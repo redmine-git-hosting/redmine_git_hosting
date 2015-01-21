@@ -14,7 +14,7 @@ title: Roadmap
 
 * #### v1.1 (next minor release)
 
-  * To be decided ...
+  * [Enhance branch permissions support](https://github.com/jbox-web/redmine_git_hosting/issues/264)
 
 * #### v1.0 (beta)
 
