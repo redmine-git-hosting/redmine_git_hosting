@@ -139,7 +139,7 @@ class ValidateSettings
         if valuehash[setting]
           if valuehash[setting] != ''
             normalized_param = strip_value(valuehash[setting])
-            if valid_domain_name?(normalized_param)
+            if !valid_domain_name?(normalized_param)
               valuehash[setting] = old_valuehash[setting]
             else
               valuehash[setting] = normalized_param
@@ -157,7 +157,7 @@ class ValidateSettings
       if valuehash[:https_server_domain]
         if valuehash[:https_server_domain] != ''
           domain_name = strip_value(valuehash[:https_server_domain])
-          if valid_domain_name?(domain_name)
+          if !valid_domain_name?(domain_name)
             valuehash[:https_server_domain] = old_valuehash[:https_server_domain]
           else
             valuehash[:https_server_domain] = domain_name
