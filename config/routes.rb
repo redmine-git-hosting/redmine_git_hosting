@@ -29,7 +29,7 @@ RedmineApp::Application.routes.draw do
   end
 
   # Enable Redirector for Go Lang repositories
-  match 'go/:repo_path', repo_path: /([^\/]+\/)*?[^\/]+/, to: 'go_redirector#index'
+  get 'go/:repo_path', repo_path: /([^\/]+\/)*?[^\/]+/, to: 'go_redirector#index'
 
   # Enable SmartHTTP Grack support
   mount Grack::Bundle.new({}), at: '/', constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
