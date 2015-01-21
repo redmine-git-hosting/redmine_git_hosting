@@ -18,19 +18,18 @@ module RedmineGitHosting::Config
     module ClassMethods
 
       def gitolite_infos
-        @gitolite_infos ||=
-          begin
-            RedmineGitHosting::Commands.gitolite_infos
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error('Error while getting Gitolite infos')
-            nil
-          end
+        begin
+          RedmineGitHosting::Commands.gitolite_infos
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error('Error while getting Gitolite infos')
+          nil
+        end
       end
 
 
       def gitolite_version
         logger.debug('Getting Gitolite version...')
-        find_version(gitolite_infos)
+        @gitolite_version ||= find_version(gitolite_infos)
       end
 
 
