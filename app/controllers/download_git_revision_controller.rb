@@ -25,7 +25,7 @@ class DownloadGitRevisionController < ApplicationController
 
     def set_repository
       begin
-        @repository = Repository.find(params[:id])
+        @repository = Repository::Xitolite.find(params[:id])
       rescue ActiveRecord::RecordNotFound => e
         render_404
       else
