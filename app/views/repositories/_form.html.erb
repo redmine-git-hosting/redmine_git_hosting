@@ -149,7 +149,7 @@
 
       <p>
         <%= label_tag  "", l(:label_repository_default_branch) %>
-        <% if !@repository.new_record? && !@repository.branches.empty? %>
+        <% if !@repository.new_record? && !@repository.branches.nil? && !@repository.branches.empty? %>
           <%= select_tag "extra[default_branch]", options_for_select(@repository.branches.collect{ |b| [b.to_s, b.to_s] }, :selected => @repository.branches.find{ |b| b.is_default}.to_s) %>
         <% else %>
           <span class="label label-info"><%= @repository.extra[:default_branch] %></span>
