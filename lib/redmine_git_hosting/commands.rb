@@ -107,7 +107,10 @@ module RedmineGitHosting
         # * <gitolite_user>@localhost (see +gitolite_url+)
         def ssh_shell_params
           [
-            '-T', '-o', 'BatchMode=yes',
+            '-T',
+            '-o', 'BatchMode=yes',
+            '-o', 'UserKnownHostsFile=/dev/null',
+            '-o', 'StrictHostKeyChecking=no',
             '-p', RedmineGitHosting::Config.gitolite_server_port,
             '-i', RedmineGitHosting::Config.gitolite_ssh_private_key,
             RedmineGitHosting::Config.gitolite_url
