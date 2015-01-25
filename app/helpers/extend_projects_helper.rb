@@ -81,4 +81,12 @@ module ExtendProjectsHelper
     return label, css_class, enabled
   end
 
+
+  def public_repo_feature(repository)
+    label     = l(:label_public_repo)
+    css_class = 'fa-users'
+    enabled   = repository.public_repo?
+    return label, css_class, enabled
+  end
+
 end

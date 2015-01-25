@@ -67,4 +67,9 @@ module GitolitableFeatures
     extra[:protected_branch]
   end
 
+
+  def public_repo?
+    extra[:public_repo]
+  end
+
 end

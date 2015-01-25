@@ -25,16 +25,19 @@ fr:
   label_enable_git_daemon: Activer le daemon Git
   label_enable_smart_http: Mode Smart HTTP
   label_enable_protected_branches: Activer les branches protégées
+  label_enable_public_repo: Rendre le dépôt public
   label_git_daemon: Daemon Git
   label_smart_http: Smart HTTP
   label_git_notify: Notifications Git
   label_protected_branch: Branches Protégées
+  label_public_repo: Dépôt public
   label_repository_default_branch: Branche par défaut
   label_init_repo_with_readme: Initialiser le dépôt avec un fichier README
   label_init_repo_with_git_annex: Initialiser le dépôt avec GitAnnex
   label_browse_repository: Parcourir les sources
   label_repository_exists_in_gitolite: Le dépôt existe dans Gitolite
   label_git_objects_count: Nombre d'objets dans Git
+  label_empty_repository: Dépot vide?
 
   notice_gitolite_extra_updated: Options mises à jour avec succès
   notice_gitolite_extra_update_failed: Erreurs lors de la mise à jour des options

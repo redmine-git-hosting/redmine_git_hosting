@@ -34,6 +34,7 @@
                 = render_feature(repository, :git_http)
                 = render_feature(repository, :git_notify)
                 = render_feature(repository, :protected_branch)
+                = render_feature(repository, :public_repo)
 
           %td{ class: 'buttons' }
             - if User.current.allowed_to?(:manage_repository, @project)
