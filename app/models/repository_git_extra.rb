@@ -14,7 +14,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   BOTH     = 3
 
   ## Attributes
-  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :key
+  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :public_repo, :key
 
   ## Relations
   belongs_to :repository

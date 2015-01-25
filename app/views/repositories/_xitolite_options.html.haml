@@ -26,6 +26,10 @@
                   = f.check_box :protected_branch
 
               %p
+                = label_tag 'repository_git_extra[public_repo]', l(:label_enable_public_repo)
+                = f.check_box :public_repo
+
+              %p
                 = label_tag 'repository_git_extra[git_http]', l(:label_enable_smart_http)
                 = f.select :git_http, options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, selected: repository.extra[:git_http].to_s)
 
