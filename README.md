@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
 [![Dependency Status](https://gemnasium.com/jbox-web/redmine_git_hosting.svg)](https://gemnasium.com/jbox-web/redmine_git_hosting)
 [![Coverage Status](https://coveralls.io/repos/jbox-web/redmine_git_hosting/badge.png?branch=devel)](https://coveralls.io/r/jbox-web/redmine_git_hosting?branch=devel)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU)
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
