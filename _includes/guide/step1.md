@@ -2,8 +2,12 @@
 
 Assuming that you have Redmine installed :
 
-    ## Before install the plugin, stop Redmine!
+<div class="alert alert-warning" role="alert">Before update the plugin don't forget to backup your database and stop Redmine!</div>
 
+    # Install dependencies
+    root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+
+    # Switch user
     root$ su - redmine
 
     # First git clone Bootstrap Kit
