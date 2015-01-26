@@ -104,8 +104,8 @@ namespace :redmine_git_hosting do
   end
 
 
-  desc "Migrate to v0.8 version"
-  task :migrate_to_v08 => [:environment] do
+  desc "Migrate to v1.0 version"
+  task :migrate_to_v1 => [:environment] do
     ## First step : rename migrations in DB
     task('redmine_git_hosting:migration_tools:fix_migration_numbers').invoke
     ## Migrate DB only for redmine_git_hosting plugin
