@@ -12,6 +12,8 @@ This plugin allows straightforward management of Gitolite within Redmine.
 
 You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosting/news/) or take a look at the [roadmap](https://jbox-web.github.io/redmine_git_hosting/about/roadmap/).
 
+**[Latest stable version : 1.0.0](https://jbox-web.github.io/redmine_git_hosting/about/releases-notes/#toc-release-1-0-0)**
+
 ## Installation
 
 The installation tutorial is [here](https://jbox-web.github.io/redmine_git_hosting/howtos/install/#step-by-step-installation).
