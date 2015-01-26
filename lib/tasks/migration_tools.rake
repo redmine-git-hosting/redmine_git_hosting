@@ -73,6 +73,34 @@ namespace :redmine_git_hosting do
 
       puts "Done!"
     end
+
+
+    desc "Update repositories type (from Git to Xitolite)"
+    task :update_repositories_type => [:environment] do
+
+      puts ""
+      puts "Update repositories type (from Git to Xitolite) :"
+      puts ""
+
+      Repository::Git.all.each do |repository|
+        # Don't update real Git repositories
+        next if repository.url.start_with?('/')
+
+        # Update Gitolite repositories
+        if repository.identifier.nil? || repository.identifier.empty?
+          puts repository.project.identifier
+          repository.update_attribute(:type, 'Repository::Xitolite')
+          puts "done!"
+          puts ""
+        else
+          puts repository.identifier
+          repository.update_attribute(:type, 'Repository::Xitolite')
+          puts "done!"
+          puts ""
+        end
+      end
+    end
+
   end
 
 
@@ -85,6 +113,8 @@ namespace :redmine_git_hosting do
     task('redmine:plugins:migrate').invoke
     ## Rename SSH keys (reset identifier)
     task('redmine_git_hosting:migration_tools:rename_ssh_keys').invoke
+    ## Update repositories type
+    task('redmine_git_hosting:migration_tools:update_repositories_type').invoke
   end
 
 end
