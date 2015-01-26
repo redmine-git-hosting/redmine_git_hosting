@@ -1,8 +1,8 @@
 #### **(step 1)** Clone the plugin
 
-Assuming that you have Redmine installed :
-
 <div class="alert alert-warning" role="alert">Before update the plugin don't forget to backup your database and stop Redmine!</div>
+
+Assuming that you have Redmine installed :
 
     # Install dependencies
     root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
