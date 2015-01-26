@@ -1,8 +1,6 @@
 ---
 layout: default
-title: How Tos
-group: navigation
-weight: 4
+title: How To Install
 ---
 
 ### Step by Step installation
@@ -76,68 +74,6 @@ If not, add this in /home/redmine/.profile :
     if [ -d "$HOME/bin" ] ; then
       PATH="$HOME/bin:$PATH"
     fi
-
-***
-
-### Step by Step upgrade
-
-<div class="alert alert-warning" role="alert">Before update the plugin, stop Redmine!</div>
-
-    root$ su - redmine
-
-    redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
-    redmine$ git fetch
-    redmine$ git checkout {{ site.data.project.release.version }}
-    redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development test
-    redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
-
-***
-
-### Step by Step removal
-
-I'm sorry you didn't find any satisfaction in this plugin.
-
-If you want to remove it just follow the steps :
-
-<div class="alert alert-warning" role="alert">Before update the plugin, stop Redmine!</div>
-
-    root$ su - redmine
-
-    redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production NAME=redmine_git_hosting VERSION=0 rake redmine:plugins:migrate
-    redmine$ rm -rf REDMINE_ROOT/plugins/redmine_git_hosting
-
-***
-
-### Step by Step migration
-
-If you're upgrading from 0.6 version (or older) you should follow these steps :
-
-<div class="alert alert-warning" role="alert">Before update the plugin, stop Redmine!</div>
-
-    root$ su - redmine
-
-    redmine$ cd REDMINE_ROOT/plugins
-    redmine$ rm -rf redmine_git_hosting
-    redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
-    redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
-    redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
-    redmine$ cd redmine_git_hosting/
-    redmine$ git checkout {{ site.data.project.release.version }}
-    redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development test
-    redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
-
-Now you must start Redmine to check everything is working.
-
-Go to *Administration -> Redmine Git Hosting -> Config Checks*, everything should be green.
-
-If not, check your configuration.
-
-Then you must update SSH keys by running the following command :
-
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:rename_ssh_keys
 
 
 <div id="toc">
