@@ -147,7 +147,7 @@ You can now remove the temp dir and the SSH config file
 
     root$ su - redmine
     redmine$ cd REDMINE_ROOT
-    redmine$ RAILS_ENV=production rake redmine_git_hosting:fetch_changesets
+    redmine$ bundle exec rake redmine_git_hosting:fetch_changesets RAILS_ENV=production
 
 
 <div id="toc">
