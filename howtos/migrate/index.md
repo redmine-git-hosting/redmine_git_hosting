@@ -15,6 +15,11 @@ title: How To Migrate
 
 <div class="alert alert-warning" role="alert">Before update the plugin don't forget to backup your database and stop Redmine!</div>
 
+First install new dependencies :
+
+    root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+
+
 When you are in **v0.7.10**, you first need to launch this Rake task to delete SSH Keys in Gitolite (we'll recreate them later) :
 
     redmine$ cd REDMINE_ROOT
