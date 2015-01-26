@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Gitolite Admin repository management
-gem 'gitolite-rugged', git: 'https://github.com/n-rodriguez/gitolite-rugged.git', branch: 'devel'
+gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', branch: 'v1.0.0'
 
 # Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine still uses Rails 3 and Rack 1.4)
 gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails3'
