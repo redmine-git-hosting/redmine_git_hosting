@@ -42,7 +42,6 @@ module RedmineGitHosting::Config
             logger.info('Done !')
             @mirroring_keys_installed = true
           else
-            logger.error('Failed to install Redmine Gitolite mirroring SSH keys !')
             @mirroring_keys_installed = false
           end
         end
@@ -82,6 +81,7 @@ module RedmineGitHosting::Config
         def install_private_key
           RedmineGitHosting::Commands.sudo_install_file(gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600')
         rescue
+          logger.error('Failed to install Redmine Git Hosting mirroring SSH private key !')
           false
         end
 
@@ -89,6 +89,7 @@ module RedmineGitHosting::Config
         def install_public_key
           RedmineGitHosting::Commands.sudo_install_file(gitolite_ssh_public_key_content, gitolite_ssh_public_key_dest_path, '644')
         rescue
+          logger.error('Failed to install Redmine Git Hosting mirroring SSH public key !')
           false
         end
 
@@ -96,6 +97,7 @@ module RedmineGitHosting::Config
         def install_mirroring_script
           RedmineGitHosting::Commands.sudo_install_file(mirroring_script_content, gitolite_mirroring_script, '700')
         rescue
+          logger.error('Failed to install Redmine Git Hosting mirroring script !')
           false
         end
 
