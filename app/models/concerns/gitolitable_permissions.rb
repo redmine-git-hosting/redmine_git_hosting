@@ -27,12 +27,12 @@ module GitolitablePermissions
 
 
   def git_access_available?
-    project.is_public? && git_daemon_enabled?
+    (public_project? || public_repo?) && git_daemon_enabled?
   end
 
 
   def go_access_available?
-    project.is_public? && smart_http_enabled?
+    (public_project? || public_repo?) && smart_http_enabled?
   end
 
 
