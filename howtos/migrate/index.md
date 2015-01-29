@@ -45,6 +45,8 @@ Now you must start Redmine to check everything is working.
 
 Go to *Administration -> Redmine Git Hosting -> Config Checks* and check that everything is green.
 
+[Let me know if it works ! (or not)](https://github.com/jbox-web/redmine_git_hosting/issues/339)
+
 ***
 
 #### Step by Step migration from **0.6 version (or older) to v0.7.10**

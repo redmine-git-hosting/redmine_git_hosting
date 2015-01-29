@@ -23,3 +23,5 @@ In particular, **do not re-use the key you set as the Gitolite admin key**.
 </div>
 
 At this point, the plugin should work. If not, take a look here : [Troubleshooting]({{ site.baseurl }}/configuration/troubleshooting).
+
+[Let me know if it works ! (or not)](https://github.com/jbox-web/redmine_git_hosting/issues/339)
