@@ -12,5 +12,11 @@ title: FAQ
 
 Now you know about that, think about the latency you could have when you browse your repository ;)
 
+***
+
+#### Why can't I specify a repository identifier that is the same as the project identifier?
+
+A long time ago, in a galaxy far far away, Redmine (the Empire) was only accepting one repository per project. At that time the repository identifier was the project's identifier. Everything was fine until the rebells (Redmine community) came around and ask to the Jedis brotherhood (Redmine developpers) to add the possibility to have many repositories per project. Thanks to the Force this could be done and then appears multi repositories in Redmine but with one condition : repository will have an identifier to recognize them among the others... except for one repository. The Architect introduces one subtility : one repository per project can have empty identifier. It is called The One ;)
+
 <div id="toc">
 </div>
