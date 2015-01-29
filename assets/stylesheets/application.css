@@ -58,6 +58,10 @@ PLUGIN SETTINGS
   margin-top: 15px;
 }
 
+.git-version {
+  font-style: italic;
+  padding-left: 10px;
+}
 
 /*
 REPOSITORY EDIT
