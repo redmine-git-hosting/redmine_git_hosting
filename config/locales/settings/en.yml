@@ -162,7 +162,6 @@ en:
   label_redmine_user: Redmine username
   label_git_version: Git version
   label_gitolite_repository_count: Count of physical repositories in Gitolite
-  label_incompatible_git_version: Incompatible Git version!
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin

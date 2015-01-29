@@ -44,7 +44,8 @@
 
   %tr
     %td= l(:label_git_version)
-    %td= render_git_version(Repository::Xitolite.scm_version_string)
+    %td
+      %span{ class: 'label label-success' }= Repository::Xitolite.scm_version_string
 
   %tr
     %td= l(:label_gitolite_version)

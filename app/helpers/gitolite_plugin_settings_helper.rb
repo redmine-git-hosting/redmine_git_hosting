@@ -31,22 +31,6 @@ module GitolitePluginSettingsHelper
   end
 
 
-  def render_git_version(version)
-    major = version.split('.')[0].to_i
-    minor = version.split('.')[1].to_i
-    patch = version.split('.')[2].to_i
-    # Git 1.7 : incompatible
-    if major == 1 && minor < 8
-      content_tag(:span, version, class: 'label label-important') + content_tag(:span, l(:label_incompatible_git_version), class: 'git-version')
-    # Git 1.8.x to 1.8.5 : incompatible
-    elsif major == 1 && minor == 8 && patch < 5
-      content_tag(:span, version, class: 'label label-important') + content_tag(:span, l(:label_incompatible_git_version), class: 'git-version')
-    else
-      content_tag(:span, version, class: 'label label-success')
-    end
-  end
-
-
   def render_temp_dir_writeable(state, label)
     css_class = state ? 'label label-success' : 'label label-important'
     content_tag(:span, label, class: css_class)
