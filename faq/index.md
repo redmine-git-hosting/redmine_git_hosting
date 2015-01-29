@@ -18,5 +18,11 @@ Now you know about that, think about the latency you could have when you browse 
 
 A long time ago, in a galaxy far far away, Redmine (the Empire) was only accepting one repository per project. At that time the repository identifier was the project's identifier. Everything was fine until the rebells (Redmine community) came around and ask to the Jedis brotherhood (Redmine developpers) to add the possibility to have many repositories per project. Thanks to the Force this could be done and then appears multi repositories in Redmine but with one condition : repository will have an identifier to recognize them among the others... except for one repository. The Architect introduces one subtility : one repository per project can have empty identifier. It is called The One ;)
 
+***
+
+#### In the SCM list, Gitolite shows up as Xitolite
+
+It's normal. It's the Ruby class name for Gitolite repositories. I would have named it Gitolite but there is a class name conflict with the Gitolite gem we use to access to Gitolite Admin repository. So it's a small workaround but it worth it ;)
+
 <div id="toc">
 </div>
