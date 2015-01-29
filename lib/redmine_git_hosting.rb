@@ -1,6 +1,3 @@
-## Redmine SCM adapter
-require 'redmine/scm/adapters/xitolite_adapter'
-
 ## Redmine Views Hooks
 require 'redmine_git_hosting/hooks/add_plugin_icon'
 require 'redmine_git_hosting/hooks/add_public_keys_link'
@@ -21,6 +18,10 @@ Rails.configuration.to_prepare do
     require_dependency file unless File.dirname(file) == Rails.root.join('plugins', 'redmine_git_hosting', 'lib', 'redmine_git_hosting', 'hooks').to_s
   end
 
+  ## Redmine SCM adapter
+  require_dependency 'redmine/scm/adapters/xitolite_adapter'
+
+  ## Gitlab Grack for Git SmartHTTP
   require_dependency 'grack/auth'
   require_dependency 'grack/server'
 

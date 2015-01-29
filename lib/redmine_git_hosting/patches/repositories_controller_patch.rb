@@ -15,6 +15,8 @@ module RedmineGitHosting
           alias_method_chain :destroy, :git_hosting
           alias_method_chain :diff,    :git_hosting
 
+          alias_method_chain :find_project_repository, :git_hosting
+
           before_filter :set_current_tab, only: :edit
 
           helper :git_hosting
@@ -107,6 +109,37 @@ module RedmineGitHosting
 
           def enable_git_annex?
             @repository.enable_git_annex == 'true' ? true : false
+          end
+
+
+          REV_PARAM_RE = %r{\A[a-f0-9]*\Z}i
+
+          # Monkey patch *find_project_repository* method to render Git instructions
+          # if repository has no branch
+          #
+          def find_project_repository_with_git_hosting
+            @project = Project.find(params[:id])
+            if params[:repository_id].present?
+              @repository = @project.repositories.find_by_identifier_param(params[:repository_id])
+            else
+              @repository = @project.repository
+            end
+            (render_404; return false) unless @repository
+            @path = params[:path].is_a?(Array) ? params[:path].join('/') : params[:path].to_s
+            @rev = params[:rev].blank? ? @repository.default_branch : params[:rev].to_s.strip
+            @rev_to = params[:rev_to]
+
+            unless @rev.to_s.match(REV_PARAM_RE) && @rev_to.to_s.match(REV_PARAM_RE)
+              if @repository.branches.blank?
+                raise InvalidRevisionParam
+              end
+            end
+          rescue ActiveRecord::RecordNotFound
+            render_404
+          rescue InvalidRevisionParam
+            # Fake list of repos
+            @repositories = @project.gitolite_repos
+            render 'git_instructions'
           end
 
 
