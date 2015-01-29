@@ -5,8 +5,13 @@ layout: default
 <div class="container">
   <div class="row">
     <div class="medium-8 columns">
-      <h4 class="subheader">{{ page.date | date: "%-d %B %Y" }} - {{ page.title }}</h4>
+      <h4 class="subheader">{{ page.title }}</h4>
       <hr>
+      {% if page.status == 'beta' %}
+        <p><strong>Release date :</strong> Pending</p>
+      {% else %}
+        <p><strong>Release date :</strong> {{ page.date | date: "%-d %B %Y" }}</p>
+      {% endif %}
       <p>
         <strong>Status :</strong>
         {% if page.status == 'latest stable' %}
@@ -17,25 +22,31 @@ layout: default
           <span class="label label-default">{{ page.status }}</span>
         {% elsif page.status == 'beta' %}
           <span class="label label-danger">{{ page.status }}</span>
+        {% elsif page.status == 'next stable' %}
+          <span class="label label-success">{{ page.status }}</span>
         {% else %}
           <span class="label label-primary">{{ page.status }}</span>
         {% endif %}
       </p>
       <p><strong>Download :</strong></p>
-      <ul class="release-downloads">
-        <li>
-          <a class="btn btn-primary" rel="nofollow" href="{{ page.download_zip }}">
-          <span class="glyphicon glyphicon-compressed"></span>
-          Source code (zip)
-          </a>
-        </li>
+      {% if page.status == 'next stable' || page.status == 'beta' %}
+        <p style="padding-left: 30px;">Not released yet, come back later!</p>
+      {% else %}
+        <ul class="release-downloads">
           <li>
-          <a class="btn btn-primary" rel="nofollow" href="{{ page.download_tar }}">
-          <span class="glyphicon glyphicon-compressed"></span>
-          Source code (tar.gz)
-          </a>
-        </li>
-      </ul>
+            <a class="btn btn-primary" rel="nofollow" href="{{ page.download_zip }}">
+            <span class="glyphicon glyphicon-compressed"></span>
+            Source code (zip)
+            </a>
+          </li>
+            <li>
+            <a class="btn btn-primary" rel="nofollow" href="{{ page.download_tar }}">
+            <span class="glyphicon glyphicon-compressed"></span>
+            Source code (tar.gz)
+            </a>
+          </li>
+        </ul>
+      {% endif %}
       <p><strong>Changelog :</strong></p>
       {{ content }}
     </div>
