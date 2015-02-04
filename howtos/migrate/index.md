@@ -17,8 +17,16 @@ title: How To Migrate
 
 First install new dependencies :
 
-    root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+    root# apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
 
+
+Be sure to have locales properly set ([#343](https://github.com/jbox-web/redmine_git_hosting/issues/343) :
+
+    root# apt-get install locales
+    root# dpkg-reconfigure locales
+
+
+It will open a dialog box to select the locales you want to generate then an other one to choose your default locale.
 
 When you are in **v0.7.10**, you first need to launch this Rake task to delete SSH Keys in Gitolite (we'll recreate them later) :
 
@@ -57,7 +65,7 @@ If you're upgrading from **0.6** version (or older) you should follow these step
 <div class="alert alert-warning" role="alert">Before update the plugin don't forget to backup your database and stop Redmine!</div>
 
     # Switch user
-    root$ su - redmine
+    root# su - redmine
 
     # Remove old plugin
     redmine$ cd REDMINE_ROOT/plugins
@@ -88,7 +96,7 @@ If not, check your configuration.
 
 Then you must update SSH keys by running the following command :
 
-    root$ su - redmine
+    root# su - redmine
     redmine$ cd REDMINE_ROOT
     redmine$ bundle exec rake redmine_git_hosting:rename_ssh_keys RAILS_ENV=production
 
