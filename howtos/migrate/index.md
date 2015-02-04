@@ -10,7 +10,7 @@ title: How To Migrate
 ***
 
 <div class="alert alert-warning" role="alert">
-  <b>Important !</b> Before migrating to the new 1.0 you <b>MUST</b> migrate first to the <b>v0.7.10</b>. It includes a Rake task that prepare the migration to 1.0, so <b>don't miss that step!</b>
+  <b>Important !</b> Before migrating to the new 1.0 you <b>MUST</b> migrate first to the <b>v0.7.10</b> (see below). It includes a Rake task that prepare the migration to 1.0, so <b>don't miss that step!</b>
 </div>
 
 <div class="alert alert-warning" role="alert">Before update the plugin don't forget to backup your database and stop Redmine!</div>
