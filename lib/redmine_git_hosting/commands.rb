@@ -9,6 +9,7 @@ module RedmineGitHosting
 
 
     class << self
+      GIT_BIN = Redmine::Configuration['scm_git_command'] || "git"
 
       # Return only the output of the shell command.
       # Throws an exception if the shell command does not exit with code 0.
@@ -140,7 +141,7 @@ module RedmineGitHosting
         # Return the Git command with prepend args (mainly env vars like FOO=BAR git push).
         #
         def git(args = [])
-          [*args, 'git']
+          [*args, GIT_BIN]
         end
 
 
