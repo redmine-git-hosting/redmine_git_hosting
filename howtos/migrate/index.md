@@ -20,7 +20,7 @@ First install new dependencies :
     root# apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
 
 
-Be sure to have locales properly set [#343](https://github.com/jbox-web/redmine_git_hosting/issues/343) :
+Be sure to have locales properly set ([#343](https://github.com/jbox-web/redmine_git_hosting/issues/343)) :
 
     root# apt-get install locales
     root# dpkg-reconfigure locales
