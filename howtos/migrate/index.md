@@ -30,11 +30,11 @@ Then you can switch to the **v1.0.0** branch and launch the migration task :
 
     # Update Redmine Gitolite Hosting
     redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
-    redmine$ git checkout v1.0.0
+    redmine$ git checkout 1.0.0
 
     # Update Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
-    redmine$ git checkout v0.2.0
+    redmine$ git checkout 0.2.0
 
     # Install gems and do the migration
     redmine$ cd REDMINE_ROOT
@@ -67,13 +67,13 @@ If you're upgrading from **0.6** version (or older) you should follow these step
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
     redmine$ cd redmine_bootstrap_kit/
-    redmine$ git checkout v0.1.0
+    redmine$ git checkout 0.1.0
 
     # Then git clone Redmine Git Hosting
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
     redmine$ cd redmine_git_hosting/
-    redmine$ git checkout v0.7.10
+    redmine$ git checkout 0.7.10
 
     # Finally install gems and migrate database
     redmine$ cd REDMINE_ROOT
