@@ -1,6 +1,6 @@
 RedmineApp::Application.routes.draw do
   # Handle the public keys plugin to my/account.
-  scope "/my" do
+  scope 'my' do
     resources :public_keys, controller: 'gitolite_public_keys'
   end
 
