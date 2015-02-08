@@ -43,7 +43,17 @@ module RedmineGitHosting::Config
 
 
       def gitolite_config_file
-        RedmineGitHosting::Config.get_setting(:gitolite_config_file)
+        File.basename(RedmineGitHosting::Config.get_setting(:gitolite_config_file))
+      end
+
+
+      def gitolite_config_dir
+        dirs = File.dirname(gitolite_config_file).split('/')
+        if dirs[0] != '.'
+          File.join('conf', *dirs)
+        else
+          'conf'
+        end
       end
 
 
