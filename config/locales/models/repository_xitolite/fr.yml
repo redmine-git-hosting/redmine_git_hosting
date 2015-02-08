@@ -18,6 +18,7 @@ fr:
   ########### REPOSITORIES ###########
 
   text_scm_command_not_available_git_hosting: Ce SCM n'est pas disponible. Vérifier les paramètres dans la section administration du plugin Redmine Git Hosting.
+  error_xitolite_repositories_disabled: "Les dépôts Gitolite sont désactivés, ne peut créer le dépôt!"
 
   # Edit Repository
   label_repository_options: Options du dépôt
