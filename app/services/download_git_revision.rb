@@ -4,7 +4,6 @@ class DownloadGitRevision
   attr_reader :repository
   attr_reader :revision
   attr_reader :format
-  attr_reader :project
   attr_reader :gitolite_repository_path
 
   attr_reader :commit_valid
@@ -17,7 +16,6 @@ class DownloadGitRevision
     @repository = repository
     @revision   = revision
     @format     = format
-    @project    = repository.project
     @gitolite_repository_path = repository.gitolite_repository_path
 
     @commit_valid  = false
@@ -74,9 +72,6 @@ class DownloadGitRevision
 
 
     def fill_data
-      project_name = project.to_s.parameterize.to_s
-      project_name = 'tarball' if project_name.length == 0
-
       case format
       when 'tar' then
         extension     = 'tar'
@@ -88,7 +83,7 @@ class DownloadGitRevision
         extension     = 'zip'
         @content_type = 'application/x-zip'
       end
-      @filename = "#{project_name}-#{revision}.#{extension}"
+      @filename = "#{repository.redmine_name}-#{revision}.#{extension}"
     end
 
 end
