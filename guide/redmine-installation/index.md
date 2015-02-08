@@ -6,13 +6,13 @@ title: Redmine installation
 ### {{ page.title }}
 ***
 
-You should not use ```www-data``` account to run Redmine. This is a common mistake.
+You should not use ```www-data``` account to run Redmine. This is (I think) a mistake.
 
 The best way to run Rails apps is to create a separate standard user, lets say ```redmine```, and install Redmine within the user's home. In that case, you should use Nginx and Puma (or other webservers) to serve Redmine.
 
 #### **(step 1)** Create the ```redmine``` user
 
-    root$ adduser --disabled-password redmine
+    root# adduser --disabled-password redmine
 
 ***
 
@@ -20,8 +20,9 @@ The best way to run Rails apps is to create a separate standard user, lets say `
 
 [Ruby Version Manager](https://rvm.io/) (RVM) is a command-line tool which allows you to easily install, manage, and work with multiple ruby environments from interpreters to sets of gems.
 
-    root$ su - redmine
-    redmine$ curl -L https://get.rvm.io | bash
+    root# su - redmine
+    redmine$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    redmine$ curl -sSL https://get.rvm.io | bash -s stable
 
 
 Be sure to have this in ```/home/redmine/.profile``` :
@@ -44,11 +45,13 @@ Be sure to have this in ```/home/redmine/.profile``` :
       source "$HOME/.rvm/scripts/completion"
     fi
 
+Now you should logout from Redmine user with ```exit``` then 'relogin' with ```su - redmine``` to reload env vars properly.
+
 ***
 
 #### **(step 3)** Install Ruby
 
-    redmine$ rvm install 2.1.1
+    redmine$ rvm install 2.1.4
 
 ***
 
@@ -56,24 +59,25 @@ Be sure to have this in ```/home/redmine/.profile``` :
 
 Change current user then follow the [Redmine installation tutorial](http://www.redmine.org/projects/redmine/wiki/RedmineInstall) with this user :
 
-    root$ su - redmine
+    root# su - redmine
 
 
 At the end of the Redmine installation, be sure to have :
 
     /home/redmine
-    /home/redmine/.ssh
     /home/redmine/bin
     /home/redmine/etc
-    /home/redmine/redmine ----> /home/redmine/redmine-2.5.2 # Symbolic link
+    /home/redmine/redmine ----> /home/redmine/redmine-2.6.1 # Symbolic link
+    /home/redmine/redmine-2.6.1
     /home/redmine/redmine-2.5.2
     /home/redmine/redmine-2.5.1
+    /home/redmine/ssh_keys
 
 The symbolic link is here to make Redmine upgrades easy.
 
 * The ```bin``` dir will contain the services start script (Puma, Sidekiq ...)
 * The ```etc``` dir will contain the services config file
-* The ```.ssh``` dir will contain the Gitolite admin key
+* The ```ssh_keys``` dir will contain the Gitolite admin key
 
 ***
 
@@ -85,7 +89,9 @@ Install Puma gem :
 
 Create the Puma config file ```/home/redmine/etc/puma.rb``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/puma.rb).
 
-Then create the Puma start script ```/home/redmine/bin/server_puma.sh``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh).
+Then create the Puma start script ```/home/redmine/bin/server_puma.sh``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh) and make it executable :
+
+    redmine$ chmod +x /home/redmine/bin/server_puma.sh
 
 ***
 
@@ -132,7 +138,7 @@ This way, you can manage Redmine independantly of Nginx :
 
 or
 
-    root$ su - redmine
+    root# su - redmine
     redmine$ server_puma.sh start
     redmine$ server_puma.sh stop
 
