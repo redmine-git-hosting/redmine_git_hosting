@@ -82,11 +82,6 @@ module GitolitablePermissions
   end
 
 
-  def allowed_to_commit?
-    User.current.allowed_to?(:commit_access, project) ? 'true' : 'false'
-  end
-
-
   def allowed_to_ssh?
     !User.current.anonymous? && User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
   end

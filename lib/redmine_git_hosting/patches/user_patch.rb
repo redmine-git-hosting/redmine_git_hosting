@@ -42,6 +42,11 @@ module RedmineGitHosting
         end
 
 
+        def allowed_to_commit?(project)
+          allowed_to?(:commit_access, project)
+        end
+
+
         private
 
 
