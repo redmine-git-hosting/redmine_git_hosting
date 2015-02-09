@@ -1,6 +1,6 @@
 %div
 
-  - if user_allowed_to(:create_repository_git_config_keys, @project)
+  - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
     .contextual= link_to l(:label_git_config_key_add), new_repository_git_config_key_path(@repository), class: 'icon icon-add modal-box'
 
   %h3= l(:label_git_config_keys)
@@ -24,7 +24,7 @@
               %span{ class: 'label label-success' }= git_config_key.value
 
             %td{ class: 'buttons' }
-              - if user_allowed_to(:edit_repository_git_config_keys, @project)
+              - if User.current.git_allowed_to?(:edit_repository_git_config_keys, @repository)
                 = link_to l(:button_edit), edit_repository_git_config_key_path(@repository, git_config_key), class: 'icon icon-edit modal-box'
                 = link_to l(:button_delete), repository_git_config_key_path(@repository, git_config_key), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
 

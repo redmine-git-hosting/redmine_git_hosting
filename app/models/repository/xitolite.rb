@@ -44,11 +44,6 @@ class Repository::Xitolite < Repository::Git
   end
 
 
-  def public_project?
-    project.is_public?
-  end
-
-
   # Override the original method to accept options hash
   # which may contain *bypass_cache* flag.
   #

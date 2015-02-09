@@ -85,17 +85,17 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
     def can_view_credentials
-      render_403 unless view_context.user_allowed_to(:view_deployment_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:view_deployment_keys, @repository)
     end
 
 
     def can_create_credentials
-      render_403 unless view_context.user_allowed_to(:create_deployment_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:create_deployment_keys, @repository)
     end
 
 
     def can_edit_credentials
-      render_403 unless view_context.user_allowed_to(:edit_deployment_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:edit_deployment_keys, @repository)
     end
 
 
@@ -142,7 +142,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
     def users_allowed_to_create_deployment_keys
-      @project.users.select { |user| user != User.current && user.allowed_to?(:create_deployment_keys, @project) }
+      @project.users.select { |user| user != User.current && user.git_allowed_to?(:create_deployment_keys, @repository) }
     end
 
 

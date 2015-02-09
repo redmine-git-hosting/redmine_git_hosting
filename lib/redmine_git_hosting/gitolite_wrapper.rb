@@ -1,7 +1,6 @@
 require 'gitolite'
 
 module RedmineGitHosting
-
   module GitoliteWrapper
 
     ##########################
@@ -93,58 +92,16 @@ module RedmineGitHosting
 
         def gitolite_admin_settings
           {
-            git_user: gitolite_user,
-            host: "localhost:#{gitolite_server_port}",
-
-            author_name: git_config_username,
-            author_email: git_config_email,
-
-            public_key: gitolite_ssh_public_key,
-            private_key: gitolite_ssh_private_key,
-
-            key_subdir: gitolite_key_subdir,
-            config_file: gitolite_config_file
+            git_user:     RedmineGitHosting::Config.gitolite_user,
+            host:         "localhost:#{RedmineGitHosting::Config.gitolite_server_port}",
+            author_name:  RedmineGitHosting::Config.git_config_username,
+            author_email: RedmineGitHosting::Config.git_config_email,
+            public_key:   RedmineGitHosting::Config.gitolite_ssh_public_key,
+            private_key:  RedmineGitHosting::Config.gitolite_ssh_private_key,
+            key_subdir:   RedmineGitHosting::Config.gitolite_key_subdir,
+            config_file:  RedmineGitHosting::Config.gitolite_config_file,
+            config_dir:   RedmineGitHosting::Config.gitolite_config_dir
           }
-        end
-
-
-        def gitolite_user
-          RedmineGitHosting::Config.gitolite_user
-        end
-
-
-        def gitolite_server_port
-          RedmineGitHosting::Config.gitolite_server_port
-        end
-
-
-        def git_config_username
-          RedmineGitHosting::Config.git_config_username
-        end
-
-
-        def git_config_email
-          RedmineGitHosting::Config.git_config_email
-        end
-
-
-        def gitolite_ssh_public_key
-          RedmineGitHosting::Config.gitolite_ssh_public_key
-        end
-
-
-        def gitolite_ssh_private_key
-          RedmineGitHosting::Config.gitolite_ssh_private_key
-        end
-
-
-        def gitolite_key_subdir
-          RedmineGitHosting::Config.gitolite_key_subdir
-        end
-
-
-        def gitolite_config_file
-          RedmineGitHosting::Config.gitolite_config_file
         end
 
     end

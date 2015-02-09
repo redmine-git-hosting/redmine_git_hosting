@@ -70,7 +70,7 @@ class GitolitePublicKeysController < ApplicationController
 
 
     def set_user_from_current_user
-      if User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
+      if User.current.allowed_to_ssh?
         @user = User.current
         @redirect_url = url_for(controller: 'gitolite_public_keys', action: 'index')
         @cancel_url = url_for(controller: 'my', action: 'account')
