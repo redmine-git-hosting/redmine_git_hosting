@@ -68,6 +68,11 @@ module GitolitableFeatures
   end
 
 
+  def public_project?
+    project.is_public?
+  end
+
+
   def public_repo?
     extra[:public_repo]
   end
