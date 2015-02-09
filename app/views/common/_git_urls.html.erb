@@ -5,7 +5,10 @@
     <% next if repository.available_urls.empty? %>
 
     <% if repositories.count > 1 # Don't display repository name if only one is present! %>
-      <div class="repository_name"><%= repository.name %></div>
+      <div class="repository_name">
+        <%= link_to h(repository.name),
+                    {:controller => 'repositories', :action => 'show', :id => repository.project, :repository_id => repository.identifier_param, :rev => nil, :path => nil} %>
+      </div>
     <% end %>
 
     <%# Prepare element name! -%>
