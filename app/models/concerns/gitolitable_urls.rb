@@ -65,7 +65,7 @@ module GitolitableUrls
 
 
   def ssh_access
-    { url: ssh_url, committer: User.current.allowed_to_commit?(project).to_s }
+    { url: ssh_url, committer: User.current.allowed_to_commit?(self).to_s }
   end
 
 
@@ -76,7 +76,7 @@ module GitolitableUrls
 
 
   def https_access
-    { url: https_url, committer: User.current.allowed_to_commit?(project).to_s }
+    { url: https_url, committer: User.current.allowed_to_commit?(self).to_s }
   end
 
 
@@ -86,7 +86,7 @@ module GitolitableUrls
 
 
   def git_annex_access
-    { url: git_annex_url, committer: User.current.allowed_to_commit?(project).to_s }
+    { url: git_annex_url, committer: User.current.allowed_to_commit?(self).to_s }
   end
 
 

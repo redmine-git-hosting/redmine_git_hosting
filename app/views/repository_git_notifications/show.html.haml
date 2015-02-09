@@ -2,12 +2,12 @@
 
   - if @repository.git_notification_enabled?
     - unless @git_notification.nil?
-      - if user_allowed_to(:edit_repository_git_notifications, @project)
+      - if User.current.git_allowed_to?(:edit_repository_git_notifications, @repository)
         .contextual
           = link_to l(:label_git_notifications_edit), edit_repository_git_notifications_path(@repository), class: 'icon icon-edit modal-box'
           = link_to l(:label_git_notifications_delete), repository_git_notifications_path(@repository), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
     - else
-      - if user_allowed_to(:create_repository_git_notifications, @project)
+      - if User.current.git_allowed_to?(:create_repository_git_notifications, @repository)
         .contextual= link_to l(:label_git_notifications_add), new_repository_git_notifications_path(@repository), class: 'icon icon-add modal-box'
 
   %h3{ class: 'git' }= l(:label_git_notifications)

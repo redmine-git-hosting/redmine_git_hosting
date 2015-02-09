@@ -24,15 +24,6 @@ module GitHostingHelper
   end
 
 
-  def user_allowed_to(permission, project)
-    if project.active?
-      return User.current.allowed_to?(permission, project)
-    else
-      return User.current.allowed_to?(permission, nil, global: true)
-    end
-  end
-
-
   def plugin_asset_link(plugin_name, asset_name)
     File.join(Redmine::Utils.relative_url_root, 'plugin_assets', plugin_name, 'images', asset_name)
   end

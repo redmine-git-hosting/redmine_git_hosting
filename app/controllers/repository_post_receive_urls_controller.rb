@@ -68,17 +68,17 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
 
     def can_view_post_receive_urls
-      render_403 unless view_context.user_allowed_to(:view_repository_post_receive_urls, @project)
+      render_403 unless User.current.git_allowed_to?(:view_repository_post_receive_urls, @repository)
     end
 
 
     def can_create_post_receive_urls
-      render_403 unless view_context.user_allowed_to(:create_repository_post_receive_urls, @project)
+      render_403 unless User.current.git_allowed_to?(:create_repository_post_receive_urls, @repository)
     end
 
 
     def can_edit_post_receive_urls
-      render_403 unless view_context.user_allowed_to(:edit_repository_post_receive_urls, @project)
+      render_403 unless User.current.git_allowed_to?(:edit_repository_post_receive_urls, @repository)
     end
 
 

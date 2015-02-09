@@ -96,17 +96,17 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
 
     def can_view_protected_branches
-      render_403 unless view_context.user_allowed_to(:view_repository_protected_branches, @project)
+      render_403 unless User.current.git_allowed_to?(:view_repository_protected_branches, @repository)
     end
 
 
     def can_create_protected_branches
-      render_403 unless view_context.user_allowed_to(:create_repository_protected_branches, @project)
+      render_403 unless User.current.git_allowed_to?(:create_repository_protected_branches, @repository)
     end
 
 
     def can_edit_protected_branches
-      render_403 unless view_context.user_allowed_to(:edit_repository_protected_branches, @project)
+      render_403 unless User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
     end
 
 

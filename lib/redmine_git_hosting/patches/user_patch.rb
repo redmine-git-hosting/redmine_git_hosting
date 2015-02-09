@@ -42,13 +42,32 @@ module RedmineGitHosting
         end
 
 
-        def allowed_to_commit?(project)
-          allowed_to?(:commit_access, project)
+        def allowed_to_commit?(repository)
+          allowed_to?(:commit_access, repository.project)
+        end
+
+
+        def allowed_to_clone?(repository)
+          allowed_to?(:view_changesets, repository.project)
         end
 
 
         def allowed_to_ssh?
           !anonymous? && allowed_to?(:create_gitolite_ssh_key, nil, global: true)
+        end
+
+
+        def allowed_to_download?(repository)
+          git_allowed_to?(:download_git_revision, repository)
+        end
+
+
+        def git_allowed_to?(permission, repository)
+          if repository.project.active?
+            allowed_to?(permission, repository.project)
+          else
+            allowed_to?(permission, nil, global: true)
+          end
         end
 
 

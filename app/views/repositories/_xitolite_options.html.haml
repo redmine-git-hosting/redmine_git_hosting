@@ -15,12 +15,12 @@
                 = label_tag 'repository_git_extra[git_daemon]', l(:label_enable_git_daemon)
                 = f.check_box :git_daemon, disabled: (!repository.public_project? && !repository.public_repo?)
 
-              - if user_allowed_to(:create_repository_git_notifications, repository.project)
+              - if User.current.git_allowed_to?(:create_repository_git_notifications, repository)
                 %p
                   = label_tag 'repository_git_extra[git_notify]', l(:label_enable_git_notify)
                   = f.check_box :git_notify
 
-              - if user_allowed_to(:create_repository_protected_branches, repository.project)
+              - if User.current.git_allowed_to?(:create_repository_protected_branches, repository)
                 %p
                   = label_tag 'repository_git_extra[protected_branch]', l(:label_enable_protected_branches)
                   = f.check_box :protected_branch

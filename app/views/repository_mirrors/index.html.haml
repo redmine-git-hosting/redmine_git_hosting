@@ -1,6 +1,6 @@
 %div
 
-  - if user_allowed_to(:create_repository_mirrors, @project)
+  - if User.current.git_allowed_to?(:create_repository_mirrors, @repository)
     .contextual= link_to l(:label_mirror_add), new_repository_mirror_path(@repository), class: 'icon icon-add modal-box'
 
   %h3= l(:label_repository_mirrors)
@@ -25,7 +25,7 @@
             %td= checked_image2 mirror.active?
 
             %td{ class: 'buttons' }
-              - if user_allowed_to(:edit_repository_mirrors, @project)
+              - if User.current.git_allowed_to?(:edit_repository_mirrors, @repository)
                 = link_to label_with_icon(l(:label_mirror_push), 'fa-rocket', class: 'fa-align'), push_repository_mirror_path(@repository, mirror), class: 'modal-box-close-only'
                 = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), class: 'icon icon-edit modal-box'
                 = link_to l(:button_delete), repository_mirror_path(@repository, mirror), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'

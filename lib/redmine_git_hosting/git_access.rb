@@ -32,7 +32,7 @@ module RedmineGitHosting
 
 
     def user_download_access_check(user, repository)
-      if user && user.allowed_to?(:view_changesets, repository.project)
+      if user && user.allowed_to_clone?(repository)
         build_status_object(true)
       else
         build_status_object(false, "You don't have access")
@@ -41,7 +41,7 @@ module RedmineGitHosting
 
 
     def user_upload_access_check(user, repository)
-      if user && user.allowed_to?(:commit_access, repository.project)
+      if user && user.allowed_to_commit?(repository)
         build_status_object(true)
       else
         build_status_object(false, "You don't have access")

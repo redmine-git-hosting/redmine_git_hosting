@@ -36,7 +36,7 @@ class DownloadGitRevisionController < ApplicationController
 
 
     def can_download_git_revision
-      render_403 unless view_context.user_allowed_to(:download_git_revision, @project)
+      render_403 unless User.current.allowed_to_download?(@repository)
     end
 
 

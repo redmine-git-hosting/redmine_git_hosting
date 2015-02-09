@@ -64,10 +64,8 @@ module GitolitablePermissions
   def downloadable?
     if git_annex_enabled?
       false
-    elsif project.active?
-      User.current.allowed_to?(:download_git_revision, project)
     else
-      User.current.allowed_to?(:download_git_revision, nil, global: true)
+      User.current.allowed_to_download?(self)
     end
   end
 

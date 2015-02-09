@@ -77,17 +77,17 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
 
     def can_view_config_keys
-      render_403 unless view_context.user_allowed_to(:view_repository_git_config_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:view_repository_git_config_keys, @repository)
     end
 
 
     def can_create_config_keys
-      render_403 unless view_context.user_allowed_to(:create_repository_git_config_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
     end
 
 
     def can_edit_config_keys
-      render_403 unless view_context.user_allowed_to(:edit_repository_git_config_keys, @project)
+      render_403 unless User.current.git_allowed_to?(:edit_repository_git_config_keys, @repository)
     end
 
 

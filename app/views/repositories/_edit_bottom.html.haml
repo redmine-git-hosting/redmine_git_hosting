@@ -2,22 +2,22 @@
 
   #repository-tabs
     %ul
-      - if user_allowed_to(:view_deployment_keys, @repository.project)
+      - if User.current.git_allowed_to?(:view_deployment_keys, @repository)
         %li{ id: 'tab-repository_deployment_credentials' }= link_to label_with_icon(l(:label_deployment_credentials), 'fa-lock'), repository_deployment_credentials_path(@repository)
 
-      - if user_allowed_to(:view_repository_git_notifications, @repository.project)
+      - if User.current.git_allowed_to?(:view_repository_git_notifications, @repository)
         %li{ id: 'tab-repository_git_notifications' }= link_to label_with_icon(l(:label_git_notifications), 'fa-bullhorn'), repository_git_notifications_path(@repository)
 
-      - if user_allowed_to(:view_repository_mirrors, @repository.project)
+      - if User.current.git_allowed_to?(:view_repository_mirrors, @repository)
         %li{ id: 'tab-repository_mirrors' }= link_to label_with_icon(l(:label_repository_mirrors), 'fa-cloud-upload'), repository_mirrors_path(@repository)
 
-      - if user_allowed_to(:view_repository_post_receive_urls, @repository.project)
+      - if User.current.git_allowed_to?(:view_repository_post_receive_urls, @repository)
         %li{ id: 'tab-repository_post_receive_urls' }= link_to label_with_icon(l(:label_post_receive_urls), 'fa-external-link'), repository_post_receive_urls_path(@repository)
 
-      - if user_allowed_to(:view_repository_git_config_keys, @repository.project)
+      - if User.current.git_allowed_to?(:view_repository_git_config_keys, @repository)
         %li{ id: 'tab-repository_git_config_keys' }= link_to label_with_icon(l(:label_git_config_keys), 'fa-th-list'), repository_git_config_keys_path(@repository)
 
-      - if user_allowed_to(:view_repository_protected_branches, @repository.project)
+      - if User.current.git_allowed_to?(:view_repository_protected_branches, @repository)
         %li{ id: 'tab-repository_protected_branches' }= link_to label_with_icon(l(:label_protected_branches), 'fa-shield'), repository_protected_branches_path(@repository)
 
   = render 'javascript'

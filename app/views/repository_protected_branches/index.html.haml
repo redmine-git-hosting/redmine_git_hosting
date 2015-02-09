@@ -1,6 +1,6 @@
 %div
 
-  - if user_allowed_to(:create_repository_protected_branches, @project)
+  - if User.current.git_allowed_to?(:create_repository_protected_branches, @repository)
     .contextual= link_to l(:label_protected_branch_add), new_repository_protected_branch_path(@repository), class: 'icon icon-add modal-box'
 
   %h3= l(:label_protected_branches)
@@ -34,7 +34,7 @@
                 %span{ class: 'label label-info' }= user
 
             %td{ class: 'buttons' }
-              - if user_allowed_to(:edit_repository_protected_branches, @project)
+              - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
                 = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-edit modal-box'
                 = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-clone modal-box'
                 = link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'

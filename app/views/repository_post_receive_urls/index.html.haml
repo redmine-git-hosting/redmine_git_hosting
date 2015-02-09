@@ -1,6 +1,6 @@
 %div
 
-  - if user_allowed_to(:create_repository_post_receive_urls, @project)
+  - if User.current.git_allowed_to?(:create_repository_post_receive_urls, @repository)
     .contextual= link_to l(:label_post_receive_url_add), new_repository_post_receive_url_path(@repository), class: 'icon icon-add modal-box'
 
   %h3= l(:label_post_receive_urls)
@@ -29,7 +29,7 @@
                 %span{ class: 'label label-info' }= trigger
 
             %td{ class: 'buttons' }
-              - if user_allowed_to(:edit_repository_post_receive_urls, @project)
+              - if User.current.git_allowed_to?(:edit_repository_post_receive_urls, @repository)
                 = link_to l(:button_edit), edit_repository_post_receive_url_path(@repository, post_receive_url), class: 'icon icon-edit modal-box'
                 = link_to l(:button_delete), repository_post_receive_url_path(@repository, post_receive_url), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
 
