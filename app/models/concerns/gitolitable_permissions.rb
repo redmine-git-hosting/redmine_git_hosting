@@ -12,7 +12,7 @@ module GitolitablePermissions
 
 
   def ssh_access_available?
-    allowed_to_ssh? && !git_annex_enabled?
+    User.current.allowed_to_ssh? && !git_annex_enabled?
   end
 
 
@@ -79,11 +79,6 @@ module GitolitablePermissions
 
   def deletable?
     RedmineGitHosting::Config.delete_git_repositories?
-  end
-
-
-  def allowed_to_ssh?
-    !User.current.anonymous? && User.current.allowed_to?(:create_gitolite_ssh_key, nil, global: true)
   end
 
 end
