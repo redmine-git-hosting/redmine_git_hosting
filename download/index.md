@@ -50,8 +50,8 @@ weight: 2
   <div class="col-lg-12">
     <h2>Requirements</h2>
     <ul>
-      <li><strong>Redmine :</strong> This plugin only works with Redmine <strong>2.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>2.6.1</strong>)</li>
-      <li><strong>Ruby :</strong> works with Ruby 1.9.3, 2.0 and 2.1</li>
+      <li><strong>Redmine :</strong> works with Redmine <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>3.0.0</strong>)</li>
+      <li><strong>Ruby :</strong> works with Ruby 2.0 and 2.1</li>
       <li><strong>Git :</strong> works with Git from 1.7.2.5 to 1.9.1</li>
       <li><strong>Gitolite :</strong> works with Gitolite 2.x and 3.x (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>v3.6.2-12-g1c61d57</strong>)</li>
       <li><strong>Database :</strong> works with MySQL and Postgres</li>
@@ -60,8 +60,7 @@ weight: 2
       <p>There is a known issue with Gitolite 3 and SmartHTTP access. <a href="{{ site.baseurl }}/configuration/troubleshooting#hook-errors-while-pushing-over-https">Take a look here to fix it.</a></p>
     </div>
     <div class="alert alert-warning" role="alert">
-      <p>Support for Ruby 1.9 will soon be dropped ! See <a href="https://www.ruby-lang.org/en/news/2014/01/10/ruby-1-9-3-will-end-on-2015/">here</a> for more informations.</p>
-
+      <p>Support for Ruby 1.9 has been dropped ! See <a href="https://www.ruby-lang.org/en/news/2014/01/10/ruby-1-9-3-will-end-on-2015/">here</a> for more informations.</p>
     </div>
   </div>
 </div>
