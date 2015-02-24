@@ -20,6 +20,11 @@ REDMINE_BOOTSTRAP_PLUGIN="https://github.com/jbox-web/redmine_bootstrap_kit.git"
 
 CURRENT_DIR=$(pwd)
 
+version=(${REDMINE_VERSION//./ })
+major=${version[0]}
+minor=${version[1]}
+patch=${version[2]}
+
 echo ""
 echo "######################"
 echo "REDMINE INSTALLATION SCRIPT"
@@ -71,21 +76,31 @@ cp "redmine/plugins/${PLUGIN_NAME}/spec/root_spec_helper.rb" "redmine/spec/spec_
 echo "Done !"
 echo ""
 
-echo "#### UPDATE GEMFILE"
-echo "Update shoulda to 3.5.0"
-sed -i 's/gem "shoulda", "~> 3.3.2"/gem "shoulda", "~> 3.5.0"/' "redmine/Gemfile"
-echo "Done !"
-echo ""
+if [ "$major" == "3" ] ; then
+  echo "#### RAILS 4 : INSTALL GEMFILE"
+  cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails4.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
+  echo "Done !"
+else
+  echo "#### RAILS 3 : INSTALL GEMFILE"
+  cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails3.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
+  echo "Done !"
 
-echo "Let update shoulda-matchers to 2.7.0"
-sed -i 's/gem "shoulda-matchers", "1.4.1"/#gem "shoulda-matchers", "1.4.1"/' "redmine/Gemfile"
-echo "Done !"
-echo ""
+  echo "#### RAILS 3 : UPDATE REDMINE GEMFILE"
+  echo "Update shoulda to 3.5.0"
+  sed -i 's/gem "shoulda", "~> 3.3.2"/gem "shoulda", "~> 3.5.0"/' "redmine/Gemfile"
+  echo "Done !"
+  echo ""
 
-echo "Update capybara to 2.2.0"
-sed -i 's/gem "capybara", "~> 2.1.0"/gem "capybara", "~> 2.2.0"/' "redmine/Gemfile"
-echo "Done !"
-echo ""
+  echo "Let update shoulda-matchers to 2.7.0"
+  sed -i 's/gem "shoulda-matchers", "1.4.1"/#gem "shoulda-matchers", "1.4.1"/' "redmine/Gemfile"
+  echo "Done !"
+  echo ""
+
+  echo "Update capybara to 2.2.0"
+  sed -i 's/gem "capybara", "~> 2.1.0"/gem "capybara", "~> 2.2.0"/' "redmine/Gemfile"
+  echo "Done !"
+  echo ""
+fi
 
 echo "#### INSTALL ADMIN SSH KEY"
 ssh-keygen -N '' -f "redmine/plugins/${PLUGIN_NAME}/ssh_keys/redmine_gitolite_admin_id_rsa"
