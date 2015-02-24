@@ -25,7 +25,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   before_validation :remove_blank_items
 
   ## Scopes
-  default_scope order('position ASC')
+  default_scope { order('position ASC') }
 
   ## Delegation
   delegate :project, to: :repository

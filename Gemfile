@@ -3,8 +3,15 @@ source 'https://rubygems.org'
 # Gitolite Admin repository management
 gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', branch: 'v1.0.0'
 
-# Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine still uses Rails 3 and Rack 1.4)
-gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails3'
+## Redmine 3.x
+## Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine uses Rails 4.2 and Rack 1.6)
+gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails4'
+gem 'redcarpet', '~> 3.1.2'
+
+## Redmine 2.x
+## Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine still uses Rails 3 and Rack 1.4)
+# gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails3'
+# gem 'redcarpet', '~> 2.3.0'
 
 # HAML views
 gem 'haml-rails'
@@ -18,7 +25,6 @@ gem 'hiredis'
 
 # Syntaxic coloration
 gem 'github-markup'
-gem 'redcarpet', '~> 2.3.0'
 gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
@@ -39,7 +45,7 @@ group :development, :test do
   gem 'database_cleaner'
 
   # Code coverage
-  gem 'simplecov'
+  gem 'simplecov', '~> 0.9.1'
   gem 'simplecov-rcov'
 
   # Junit results

@@ -1,7 +1,7 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
-  VALID_CONFIG_KEY_REGEX = /^\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
+  VALID_CONFIG_KEY_REGEX = /\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
 
   ## Attributes
   attr_accessible :key, :value

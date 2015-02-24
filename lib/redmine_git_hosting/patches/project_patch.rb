@@ -31,7 +31,8 @@ module RedmineGitHosting
 
         # Return first repo with a blank identifier (should be only one!)
         def repo_blank_ident
-          Repository.find_by_project_id(id, conditions: ["identifier = '' or identifier is null"])
+          # Repository.find_by_project_id(id, conditions: ["identifier = '' or identifier is null"])
+          Repository.where("project_id = ? and (identifier = '' or identifier is null)", id).first
         end
 
 
