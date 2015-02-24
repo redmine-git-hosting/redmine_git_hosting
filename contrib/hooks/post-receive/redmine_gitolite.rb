@@ -7,6 +7,7 @@ refs = ARGF.read
 repo_path = Dir.pwd
 
 require_relative 'lib/git_hosting/http_helper'
+require_relative 'lib/git_hosting/hook_logger'
 require_relative 'lib/git_hosting/config'
 require_relative 'lib/git_hosting/post_receive'
 require_relative 'lib/git_hosting/custom_hook'

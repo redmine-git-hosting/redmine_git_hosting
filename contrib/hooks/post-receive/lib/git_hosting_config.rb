@@ -70,6 +70,15 @@ module GitHosting
     end
 
 
+    def loglevel
+      if debug_mode?
+        'debug'
+      else
+        'info'
+      end
+    end
+
+
     def post_data
       post_data = {}
       post_data['clear_time']   = clear_time
