@@ -43,6 +43,13 @@ RedmineGitHosting::GitoliteHooks.register_hooks do
   end
 
   gitolite_hook do
+    name        'git_hosting_hook_logger.rb'
+    source      'post-receive/lib/git_hosting_hook_logger.rb'
+    destination 'lib/git_hosting/hook_logger.rb'
+    executable  false
+  end
+
+  gitolite_hook do
     name        'git_hosting_post_receive.rb'
     source      'post-receive/lib/git_hosting_post_receive.rb'
     destination 'lib/git_hosting/post_receive.rb'

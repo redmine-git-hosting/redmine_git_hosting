@@ -24,8 +24,9 @@ module GitHosting
 
 
       def notify_redmine
-        logger('')
-        logger("Notifying Redmine about changes to this repository : '#{git_config.repository_name}' ...")
+        logger.info('')
+        logger.info("Notifying Redmine about changes to this repository : '#{git_config.repository_name}' ...")
+        logger.info('')
 
         opts = {}
         opts[:params] = http_post_data
@@ -35,14 +36,18 @@ module GitHosting
             http.request(request) do |response|
               if response.code.to_i == 200
                 response.read_body do |body_frag|
-                  logger(body_frag)
+                  logger.info(body_frag)
                 end
+              else
+                logger.error("  - Error while notifying Redmine ! (status code: #{response.code})")
               end
             end
           rescue => e
-            logger("HTTP_ERROR : #{e.message}")
+            logger.error("HTTP_ERROR : #{e.message}")
           end
         end
+
+        logger.info('')
       end
 
 
@@ -61,8 +66,8 @@ module GitHosting
       end
 
 
-      def logger(message)
-        puts "#{message}\n"
+      def logger
+        @logger ||= GitHosting::HookLogger.new(loglevel: git_config.loglevel)
       end
 
   end
