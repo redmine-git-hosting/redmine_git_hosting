@@ -16,11 +16,11 @@ title: Roadmap
 
   * [Enhance branch permissions support](https://github.com/jbox-web/redmine_git_hosting/issues/264)
 
-* #### v1.0 (beta)
+* #### v1.0 (current stable)
 
   * [Support for branch permission / protected branches](https://github.com/jbox-web/redmine_git_hosting/issues/86)
 
-* #### v0.7 (current stable)
+* #### v0.7 (old stable)
 
   * remove Redmine 1.x support
   * remove Rails 2.x support
