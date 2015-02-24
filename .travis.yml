@@ -8,6 +8,8 @@ gemfile:
 branches:
   only:
     - devel
+    - /^fix_\..*$/
+    - /^feat_\..*$/
 env:
   global:
     - REDMINE_LANG=en
