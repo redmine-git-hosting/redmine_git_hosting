@@ -13,7 +13,7 @@ module GitolitableFeatures
   end
 
 
-  def default_branch
+  def git_default_branch
     extra[:default_branch]
   end
 

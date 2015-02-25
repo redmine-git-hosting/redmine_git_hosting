@@ -93,7 +93,7 @@ module RedmineGitHosting::Plugins::Extenders
 
 
       def remote_branch
-        "refs/heads/#{default_branch}"
+        "refs/heads/#{git_default_branch}"
       end
 
 

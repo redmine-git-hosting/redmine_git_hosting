@@ -38,7 +38,7 @@
                 - if !repository.branches.empty?
                   = f.select :default_branch, repository_branches_list(repository.branches)
                 - else
-                  %span{ class: 'label label-info' }= repository.default_branch
+                  %span{ class: 'label label-info' }= repository.git_default_branch
 
           .col-md-6
 

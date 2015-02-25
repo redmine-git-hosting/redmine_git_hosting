@@ -19,7 +19,7 @@
           %td= link_to h(repository.url), {controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param}
           %td
             - if repository.is_a?(Repository::Xitolite)
-              %span{ class: 'label label-info' }= repository.default_branch
+              %span{ class: 'label label-info' }= repository.git_default_branch
             - else
               -
           %td{ align: 'center' }
