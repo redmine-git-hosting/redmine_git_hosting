@@ -61,7 +61,7 @@ module Grack
     end
 
 
-    # Override original *popen_options* method.
+    # Override original *popen_env* method.
     # The original one passes useless arg (GL_ID) to IO.popen.
     # Notes : this method is called in *service_rpc* (not overriden)
     #
