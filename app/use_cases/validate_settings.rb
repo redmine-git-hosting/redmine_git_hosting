@@ -318,8 +318,11 @@ class ValidateSettings
 
     def validate_gitolite_hooks_url
       if valuehash[:gitolite_hooks_url]
-        if !RedmineGitHosting::Utils.valid_url?(valuehash[:gitolite_hooks_url])
+        url = strip_value(valuehash[:gitolite_hooks_url])
+        if !RedmineGitHosting::Utils.valid_url?(url)
           valuehash[:gitolite_hooks_url] = old_valuehash[:gitolite_hooks_url]
+        else
+          valuehash[:gitolite_hooks_url] = url
         end
       end
     end
