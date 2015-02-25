@@ -38,8 +38,6 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
 
 #### **(step 2)** Install the Sidekiq plugin
 
-<div class="alert alert-warning" role="alert">This plugin <b>does not support Ruby 1.9 !</b></div>
-
 <div class="alert alert-warning" role="alert">Before install the plugin, stop Redmine!</div>
 
     root$ su - redmine
