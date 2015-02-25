@@ -35,6 +35,13 @@ title: How to contribute ?
         <li>Aleksander Palyan</li>
         <li>wvolz</li>
         <li>bberawk</li>
+        <li>Strnadj</li>
+        <li>niosHD</li>
+        <li>nicesw123</li>
+        <li>dgeo</li>
+        <li>Marco Nenciarini</li>
+        <li>Ludovic Schoepps</li>
+        <li>Rafał Lisowski</li>
         <li>Thomas Debesse</li>
         <li>Philip Schiffer</li>
         <li>Daniel Dehennin</li>
