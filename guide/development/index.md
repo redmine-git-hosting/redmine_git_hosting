@@ -15,17 +15,17 @@ title: Development Guide
 This is my current configuration :
 
     Environment:
-      Redmine version                2.6.1.stable
+      Redmine version                3.0.0.stable
       Ruby version                   2.1.5-p273 (2014-11-13) [x86_64-linux]
-      Rails version                  3.2.21
+      Rails version                  4.2.0
       Environment                    development
       Database adapter               Mysql2
     SCM:
       Subversion                     1.6.17
       Mercurial                      2.2.2
-      Git                            1.7.10.4
+      Git                            1.9.1
       Filesystem
-      Xitolite                       1.7.10.4
+      Xitolite                       1.9.1
     Redmine plugins:
       redmine_bootstrap_kit          0.2.0
       redmine_git_hosting            1.0-devel
