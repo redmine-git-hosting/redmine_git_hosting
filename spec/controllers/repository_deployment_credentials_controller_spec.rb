@@ -46,8 +46,8 @@ describe RepositoryDeploymentCredentialsController do
       get :show, :repository_id => @repository.id, :id => @credential.id
     end
 
-    it "renders 406" do
-      expect(response.status).to eq 406
+    it "renders 404" do
+      expect(response.status).to eq 404
     end
   end
 

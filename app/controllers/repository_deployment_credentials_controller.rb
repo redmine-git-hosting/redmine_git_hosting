@@ -18,6 +18,11 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   end
 
 
+  def show
+    render_404
+  end
+
+
   def new
     @credential = @repository.deployment_credentials.new
   end
