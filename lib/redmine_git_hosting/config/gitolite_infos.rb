@@ -21,7 +21,7 @@ module RedmineGitHosting::Config
         begin
           RedmineGitHosting::Commands.gitolite_infos
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error('Error while getting Gitolite infos')
+          logger.error('Error while getting Gitolite infos, check your SSH keys path or your Git user.')
           nil
         end
       end
@@ -40,14 +40,14 @@ module RedmineGitHosting::Config
 
 
       def find_version(output)
-        return 0 if output.blank?
+        return nil if output.blank?
         line = output.split("\n")[0]
         if line =~ /gitolite[ -]v?2./
           2
         elsif line.include?('running gitolite3')
           3
         else
-          0
+          nil
         end
       end
 

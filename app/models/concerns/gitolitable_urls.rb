@@ -32,12 +32,12 @@ module GitolitableUrls
 
 
   def http_url
-    "http://#{http_user_login}#{RedmineGitHosting::Config.http_server_domain}/#{http_access_path}"
+    "http://#{http_user_login}#{RedmineGitHosting::Config.http_root_url}/#{http_access_path}"
   end
 
 
   def https_url
-    "https://#{http_user_login}#{RedmineGitHosting::Config.https_server_domain}/#{http_access_path}"
+    "https://#{http_user_login}#{RedmineGitHosting::Config.https_root_url}/#{http_access_path}"
   end
 
 
@@ -59,8 +59,8 @@ module GitolitableUrls
   #
   def go_url
     return '' if !smart_http_enabled?
-    return "#{RedmineGitHosting::Config.https_server_domain}/#{go_access_path}" if https_access_available?
-    return "#{RedmineGitHosting::Config.http_server_domain}/#{go_access_path}" if http_access_available?
+    return "#{RedmineGitHosting::Config.https_root_url}/#{go_access_path}" if https_access_available?
+    return "#{RedmineGitHosting::Config.http_root_url}/#{go_access_path}" if http_access_available?
   end
 
 

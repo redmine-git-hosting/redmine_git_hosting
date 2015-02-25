@@ -10,15 +10,17 @@ module Redmine
     module Adapters
       class XitoliteAdapter < AbstractAdapter
 
+        # Git executable name
+        XITOLITE_BIN = Redmine::Configuration['scm_git_command'] || "git"
+
         class GitBranch < Branch
           attr_accessor :is_default
         end
 
         class << self
 
-          # Change from the original method
           def client_command
-            @@bin ||= 'git (with sudo)'
+            @@bin ||= XITOLITE_BIN
           end
 
 

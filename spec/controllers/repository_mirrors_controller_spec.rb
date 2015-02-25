@@ -34,12 +34,12 @@ describe RepositoryMirrorsController do
 
   describe "GET #show" do
     before do
-      request.session[:user_id] = @user.id
-      get :show, :repository_id => @repository.id, :id => @mirror.id
+      Setting.rest_api_enabled = 1
+      get :show, :repository_id => @repository.id, :id => @mirror.id, :format => 'json', :key => @user.api_key
     end
 
-    it "renders 406" do
-      expect(response.status).to eq 406
+    it "renders 200" do
+      expect(response.status).to eq 200
     end
   end
 

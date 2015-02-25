@@ -2,12 +2,21 @@ language: ruby
 rvm:
   - 2.1.0
   - 2.0.0
-  - 1.9.3
 gemfile:
   - Gemfile
 branches:
   only:
     - devel
+    - /^fix_.*$/
+    - /^feat_.*$/
+matrix:
+  include:
+    - rvm: 2.2.0
+      env: REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=mysql
+      gemfile: Gemfile
+    - rvm: 2.2.0
+      env: REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=postgresql
+      gemfile: Gemfile
 env:
   global:
     - REDMINE_LANG=en
@@ -17,18 +26,22 @@ env:
     - MYSQL_USER=root
     - MYSQL_PASSWORD=
   matrix:
-    - REDMINE_VERSION=2.6.1 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=2.6.1 DATABASE_ADAPTER=postgresql
+    - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=postgresql
+    - REDMINE_VERSION=2.6.2 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=2.6.2 DATABASE_ADAPTER=postgresql
+    # - REDMINE_VERSION=2.6.1 DATABASE_ADAPTER=mysql
+    # - REDMINE_VERSION=2.6.1 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.6.0 DATABASE_ADAPTER=mysql
     # - REDMINE_VERSION=2.6.0 DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=2.5.3 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=2.5.3 DATABASE_ADAPTER=postgresql
+    # - REDMINE_VERSION=2.5.3 DATABASE_ADAPTER=mysql
+    # - REDMINE_VERSION=2.5.3 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=mysql
     # - REDMINE_VERSION=2.5.2 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.5.1
     # - REDMINE_VERSION=2.5.0
-    - REDMINE_VERSION=2.4.7 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=2.4.7 DATABASE_ADAPTER=postgresql
+    # - REDMINE_VERSION=2.4.7 DATABASE_ADAPTER=mysql
+    # - REDMINE_VERSION=2.4.7 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.4.6 DATABASE_ADAPTER=mysql
     # - REDMINE_VERSION=2.4.6 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.4.5

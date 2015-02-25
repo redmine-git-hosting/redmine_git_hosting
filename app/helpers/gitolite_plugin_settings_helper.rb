@@ -20,7 +20,7 @@ module GitolitePluginSettingsHelper
 
 
   def render_gitolite_version(version)
-    if version <= 0
+    if version.nil?
       css_class = 'label label-important'
       label = l(:label_unknown_gitolite_version)
     else

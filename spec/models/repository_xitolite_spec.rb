@@ -35,19 +35,19 @@ describe Repository::Xitolite do
   end
 
 
-  describe "common_tests" do
+  describe "common_tests : fast tests" do
     before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
-      @repository_1 = create_git_repository(project: @project_child, is_default: true)
-      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
-      extra.save!
-
-      @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
+      @repository_1 = build_git_repository(project: @project_child, is_default: true)
+      @repository_1.valid?
+      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
     end
 
     subject { @repository_1 }
+
+    it { should be_valid }
 
     ## Relations
     it { should have_many(:mirrors) }
@@ -58,8 +58,6 @@ describe Repository::Xitolite do
 
     it { should have_one(:extra) }
     it { should have_one(:git_notification) }
-
-    it { should be_valid }
 
     ## Attributes
     it { should respond_to(:identifier) }
@@ -111,56 +109,8 @@ describe Repository::Xitolite do
     it { expect(@repository_1.available_urls).to be_a(Hash) }
 
 
-    describe "invalid cases" do
-      it "should not allow identifier gitolite-admin" do
-        expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
-      end
-
-      context "when blank identifier" do
-        it "should not allow identifier changes" do
-          @repository_1.identifier = 'gitolite-admin'
-          expect(@repository_1).to be_invalid
-          expect(@repository_1.identifier).to eq 'gitolite-admin'
-        end
-      end
-
-      context "when non blank identifier" do
-        it "should not allow identifier changes" do
-          @repository_2.identifier = 'gitolite-admin'
-          expect(@repository_2).to be_valid
-          expect(@repository_2.identifier).to eq 'repo-test'
-        end
-      end
-    end
-
-
-    describe "Test uniqueness" do
-      context "when blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(project: @project_child, identifier: '')).to be_invalid }
-      end
-
-      context "when set as default and blank identifier is already taken by a repository" do
-        it { expect(build_git_repository(project: @project_child, identifier: '', is_default: true)).to be_invalid }
-      end
-
-      context "when identifier is already taken by a project" do
-        it { expect(build_git_repository(project: @project_child, identifier: 'project-child')).to be_invalid }
-      end
-
-      context "when identifier is already taken by a repository with same project" do
-        it { expect(build_git_repository(project: @project_child, identifier: 'repo-test')).to be_invalid }
-      end
-
-      context "when identifier are not unique" do
-        it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_valid }
-      end
-
-      context "when identifier are unique" do
-        it "should refuse duplicated identifier" do
-          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
-          expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid
-        end
-      end
+    it "should not allow identifier gitolite-admin" do
+      expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
     end
 
 
@@ -258,33 +208,97 @@ describe Repository::Xitolite do
       end
     end
 
+
     describe "Repository::Xitolite class" do
       it { expect(Repository::Xitolite).to respond_to(:repo_ident_unique?) }
       it { expect(Repository::Xitolite).to respond_to(:have_duplicated_identifier?) }
       it { expect(Repository::Xitolite).to respond_to(:repo_path_to_git_cache_id) }
       it { expect(Repository::Xitolite).to respond_to(:find_by_path) }
+    end
+  end
 
-      describe ".repo_ident_unique?" do
-        it { expect(Repository::Xitolite.repo_ident_unique?).to be false }
+
+  describe "common_tests : long tests" do
+    before do
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
+
+      @repository_1 = create_git_repository(project: @project_child, is_default: true)
+      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
+      extra.save!
+
+      @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
+    end
+
+   context "when blank identifier" do
+      it "should not allow identifier changes" do
+        @repository_1.identifier = 'new_repo'
+        expect(@repository_1).to be_invalid
+        expect(@repository_1.identifier).to eq 'new_repo'
+      end
+    end
+
+    context "when non blank identifier" do
+      it "should not allow identifier changes" do
+        @repository_2.identifier = 'new_repo2'
+        expect(@repository_2).to be_valid
+        expect(@repository_2.identifier).to eq 'repo-test'
+      end
+    end
+
+
+    describe "Test uniqueness" do
+      context "when blank identifier is already taken by a repository" do
+        it { expect(build_git_repository(project: @project_child, identifier: '')).to be_invalid }
       end
 
-      describe ".have_duplicated_identifier?" do
-        it { expect(Repository::Xitolite.have_duplicated_identifier?).to be false }
+      context "when set as default and blank identifier is already taken by a repository" do
+        it { expect(build_git_repository(project: @project_child, identifier: '', is_default: true)).to be_invalid }
       end
 
-      describe ".repo_path_to_git_cache_id" do
-        describe "when repo path is not found" do
-          it "should return nil" do
-            @git_cache_id = Repository::Xitolite.repo_path_to_git_cache_id('foo.git')
-            expect(@git_cache_id).to be nil
-          end
+      context "when identifier is already taken by a project" do
+        it { expect(build_git_repository(project: @project_child, identifier: 'project-child')).to be_invalid }
+      end
+
+      context "when identifier is already taken by a repository with same project" do
+        it { expect(build_git_repository(project: @project_child, identifier: 'repo-test')).to be_invalid }
+      end
+
+      context "when identifier are not unique" do
+        it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_valid }
+      end
+
+      context "when identifier are unique" do
+        it "should refuse duplicated identifier" do
+          Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+          expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid
         end
       end
     end
   end
 
 
-  def collection_of_unique_repositories
+  ##############################
+  #                            #
+  #  UNIQUE REPOSITORIES TESTS #
+  #                            #
+  ##############################
+
+
+  def build_collection_of_unique_repositories
+    @repository_1 = build_git_repository(project: @project_child, is_default: true)
+    @repository_1.valid?
+    @repository_2 = build_git_repository(project: @project_child, identifier: 'repo1-test')
+    @repository_2.valid?
+
+    @repository_3 = build_git_repository(project: @project_parent, is_default: true)
+    @repository_3.valid?
+    @repository_4 = build_git_repository(project: @project_parent, identifier: 'repo2-test')
+    @repository_4.valid?
+  end
+
+
+  def create_collection_of_unique_repositories
     @repository_1 = create_git_repository(project: @project_child, is_default: true)
     @repository_2 = create_git_repository(project: @project_child, identifier: 'repo1-test')
 
@@ -293,34 +307,12 @@ describe Repository::Xitolite do
   end
 
 
-  def collection_of_non_unique_repositories
-    @repository_1 = create_git_repository(project: @project_child, is_default: true)
-    @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
-
-    @repository_3 = create_git_repository(project: @project_parent, is_default: true)
-    @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo-test')
-  end
-
-
-  context "when hierarchical_organisation with non_unique_identifier" do
-    before(:each) do
+  context "when hierarchical_organisation with non_unique_identifier: fast tests" do
+    before(:all) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
-      collection_of_non_unique_repositories
+      build_collection_of_non_unique_repositories
     end
-
-    describe ".repo_ident_unique?" do
-      it "should be false" do
-        expect(Repository::Xitolite.repo_ident_unique?).to be false
-      end
-    end
-
-    describe ".have_duplicated_identifier?" do
-      it "should be true" do
-        expect(Repository::Xitolite.have_duplicated_identifier?).to be true
-      end
-    end
-
 
     describe "repository1" do
       it "should be default repository" do
@@ -620,53 +612,93 @@ describe Repository::Xitolite do
         expect(@repository_4.old_repository_name).to eq 'redmine/project-parent/repo-test'
       end
     end
-
-
-    describe ".repo_path_to_git_cache_id" do
-      before do
-        @repo1 = Repository::Xitolite.find_by_path(@repository_1.url, loose: true)
-        @repo2 = Repository::Xitolite.find_by_path(@repository_2.url, loose: true)
-        @repo3 = Repository::Xitolite.find_by_path(@repository_3.url, loose: true)
-        @repo4 = Repository::Xitolite.find_by_path(@repository_4.url, loose: true)
-
-        @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url)
-      end
-
-      describe "repositories should match" do
-        it { expect(@repo1).to eq @repository_1 }
-        it { expect(@repo2).to eq @repository_2 }
-        it { expect(@repo3).to eq @repository_3 }
-        it { expect(@repo4).to eq @repository_4 }
-
-        it { expect(@git_cache_id1).to eq 'project-child' }
-        it { expect(@git_cache_id2).to eq 'project-child/repo-test' }
-        it { expect(@git_cache_id3).to eq 'project-parent' }
-        it { expect(@git_cache_id4).to eq 'project-parent/repo-test' }
-      end
-    end
   end
 
 
-  context "when flat_organisation with unique_identifier" do
-    before(:each) do
-      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
-      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
-      collection_of_unique_repositories
-    end
-
+  context "when hierarchical_organisation with non_unique_identifier: long tests" do
     describe ".repo_ident_unique?" do
       it "should be false" do
-        expect(Repository::Xitolite.repo_ident_unique?).to be true
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
+        expect(Repository::Xitolite.repo_ident_unique?).to be false
       end
     end
 
     describe ".have_duplicated_identifier?" do
       it "should be true" do
-        expect(Repository::Xitolite.have_duplicated_identifier?).to be false
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
+        create_collection_of_non_unique_repositories
+        expect(Repository::Xitolite.have_duplicated_identifier?).to be true
       end
+    end
+
+    describe ".repo_path_to_git_cache_id" do
+      before do
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
+        create_collection_of_non_unique_repositories
+      end
+
+      let(:repo1){ Repository::Xitolite.find_by_path(@repository_1.url, loose: true) }
+      let(:repo2){ Repository::Xitolite.find_by_path(@repository_2.url, loose: true) }
+      let(:repo3){ Repository::Xitolite.find_by_path(@repository_3.url, loose: true) }
+      let(:repo4){ Repository::Xitolite.find_by_path(@repository_4.url, loose: true) }
+
+      let(:git_cache_id1){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url) }
+      let(:git_cache_id2){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url) }
+      let(:git_cache_id3){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
+      let(:git_cache_id4){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
+
+      describe "repositories should match" do
+        it { expect(repo1).to eq @repository_1 }
+        it { expect(repo2).to eq @repository_2 }
+        it { expect(repo3).to eq @repository_3 }
+        it { expect(repo4).to eq @repository_4 }
+
+        it { expect(git_cache_id1).to eq 'project-child' }
+        it { expect(git_cache_id2).to eq 'project-child/repo-test' }
+        it { expect(git_cache_id3).to eq 'project-parent' }
+        it { expect(git_cache_id4).to eq 'project-parent/repo-test' }
+      end
+    end
+  end
+
+
+  ##################################
+  #                                #
+  #  NON-UNIQUE REPOSITORIES TESTS #
+  #                                #
+  ##################################
+
+
+  def build_collection_of_non_unique_repositories
+    @repository_1 = build_git_repository(project: @project_child, is_default: true)
+    @repository_1.valid?
+    @repository_2 = build_git_repository(project: @project_child, identifier: 'repo-test')
+    @repository_2.valid?
+
+    @repository_3 = build_git_repository(project: @project_parent, is_default: true)
+    @repository_3.valid?
+    @repository_4 = build_git_repository(project: @project_parent, identifier: 'repo-test')
+    @repository_4.valid?
+  end
+
+
+  def create_collection_of_non_unique_repositories
+    @repository_1 = create_git_repository(project: @project_child, is_default: true)
+    @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
+
+    @repository_3 = create_git_repository(project: @project_parent, is_default: true)
+    @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo-test')
+  end
+
+
+  context "when flat_organisation with unique_identifier: fast tests" do
+    before(:all) do
+      Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
+      Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+      build_collection_of_unique_repositories
     end
 
 
@@ -968,31 +1000,54 @@ describe Repository::Xitolite do
         expect(@repository_4.https_url).to eq 'https://localhost/git/repo2-test.git'
       end
     end
+  end
 
+
+  context "when flat_organisation with unique_identifier: long tests" do
+    describe ".repo_ident_unique?" do
+      it "should be false" do
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+        expect(Repository::Xitolite.repo_ident_unique?).to be true
+      end
+    end
+
+    describe ".have_duplicated_identifier?" do
+      it "should be true" do
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+        create_collection_of_unique_repositories
+        expect(Repository::Xitolite.have_duplicated_identifier?).to be false
+      end
+    end
 
     describe ".repo_path_to_git_cache_id" do
       before do
-        @repo1 = Repository::Xitolite.find_by_path(@repository_1.url, loose: true)
-        @repo2 = Repository::Xitolite.find_by_path(@repository_2.url, loose: true)
-        @repo3 = Repository::Xitolite.find_by_path(@repository_3.url, loose: true)
-        @repo4 = Repository::Xitolite.find_by_path(@repository_4.url, loose: true)
-
-        @git_cache_id1 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url)
-        @git_cache_id2 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url)
-        @git_cache_id3 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url)
-        @git_cache_id4 = Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url)
+        Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
+        Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
+        create_collection_of_unique_repositories
       end
 
-      describe "repositories should match" do
-        it { expect(@repo1).to eq @repository_1 }
-        it { expect(@repo2).to eq @repository_2 }
-        it { expect(@repo3).to eq @repository_3 }
-        it { expect(@repo4).to eq @repository_4 }
+      let(:repo1){ Repository::Xitolite.find_by_path(@repository_1.url, loose: true) }
+      let(:repo2){ Repository::Xitolite.find_by_path(@repository_2.url, loose: true) }
+      let(:repo3){ Repository::Xitolite.find_by_path(@repository_3.url, loose: true) }
+      let(:repo4){ Repository::Xitolite.find_by_path(@repository_4.url, loose: true) }
 
-        it { expect(@git_cache_id1).to eq 'project-child' }
-        it { expect(@git_cache_id2).to eq 'repo1-test' }
-        it { expect(@git_cache_id3).to eq 'project-parent' }
-        it { expect(@git_cache_id4).to eq 'repo2-test' }
+      let(:git_cache_id1){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url) }
+      let(:git_cache_id2){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url) }
+      let(:git_cache_id3){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
+      let(:git_cache_id4){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
+
+      describe "repositories should match" do
+        it { expect(repo1).to eq @repository_1 }
+        it { expect(repo2).to eq @repository_2 }
+        it { expect(repo3).to eq @repository_3 }
+        it { expect(repo4).to eq @repository_4 }
+
+        it { expect(git_cache_id1).to eq 'project-child' }
+        it { expect(git_cache_id2).to eq 'repo1-test' }
+        it { expect(git_cache_id3).to eq 'project-parent' }
+        it { expect(git_cache_id4).to eq 'repo2-test' }
       end
     end
   end

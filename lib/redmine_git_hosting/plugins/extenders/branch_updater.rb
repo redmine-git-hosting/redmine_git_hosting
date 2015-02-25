@@ -37,7 +37,7 @@ module RedmineGitHosting::Plugins::Extenders
 
 
       def new_default_branch
-        "refs/heads/#{default_branch}"
+        "refs/heads/#{git_default_branch}"
       end
 
   end

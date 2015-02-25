@@ -5,7 +5,7 @@ module RedmineGitHosting::Plugins::Extenders
     attr_reader :recovered
     attr_reader :gitolite_repo_name
     attr_reader :gitolite_repo_path
-    attr_reader :default_branch
+    attr_reader :git_default_branch
     attr_reader :options
 
 
@@ -14,7 +14,7 @@ module RedmineGitHosting::Plugins::Extenders
       @recovered          = options.delete(:recovered){ false }
       @gitolite_repo_name = repository.gitolite_repository_name
       @gitolite_repo_path = repository.gitolite_repository_path
-      @default_branch     = repository.default_branch
+      @git_default_branch = repository.git_default_branch
       @options            = options
     end
 

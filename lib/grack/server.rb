@@ -2,6 +2,52 @@ module Grack
   class Server
 
     #
+    # Override original *service_rpc* method to fix compatibility with Ruby 1.9.3 IO.popen.
+    #
+    # Between Ruby 1.9 and Ruby 2.0 the method signature has changed :
+    # Ruby 1.9.x : popen(cmd, mode="r" [, opt])
+    # Ruby 2.x   : popen([env,] cmd, mode="r" [, opt])
+    #
+    # Hence we need to remove the *popen_env* hash from IO.popen args.
+    #
+    # See :
+    #  - https://github.com/jbox-web/redmine_git_hosting/issues/345
+    #  - http://ruby-doc.org//core-1.9.3/IO.html#method-c-popen
+    #  - http://ruby-doc.org//core-2.1.0/IO.html#method-c-popen
+    #
+    # Notes :
+    # Given that some people use the Debian package to install Redmine which depends on Ruby 1.9.3
+    # this patch will stay until the release of Debian Jessie which will provide Ruby 2.1 .
+    # You're still strongly encouraged to move to Ruby 2.x .
+    #
+    if RUBY_VERSION.split('.')[0] == '1'
+      def service_rpc
+        return render_no_access if !has_access(@rpc, true)
+        input = read_body
+
+        @res = Rack::Response.new
+        @res.status = 200
+        @res["Content-Type"] = "application/x-git-%s-result" % @rpc
+        @res["Transfer-Encoding"] = "chunked"
+        @res["Cache-Control"] = "no-cache"
+
+        @res.finish do
+          command = git_command(%W(#{@rpc} --stateless-rpc #{@dir}))
+          IO.popen(command, File::RDWR, popen_options) do |pipe|
+            pipe.write(input)
+            pipe.close_write
+            while !pipe.eof?
+              block = pipe.read(8192)           # 8KB at a time
+              @res.write encode_chunk(block)    # stream it to the client
+            end
+            @res.write terminating_chunk
+          end
+        end
+      end
+    end
+
+
+    #
     # Override original *get_git_dir* method because the path is relative
     # and accessed via Sudo.
     #
@@ -61,7 +107,7 @@ module Grack
     end
 
 
-    # Override original *popen_options* method.
+    # Override original *popen_env* method.
     # The original one passes useless arg (GL_ID) to IO.popen.
     # Notes : this method is called in *service_rpc* (not overriden)
     #

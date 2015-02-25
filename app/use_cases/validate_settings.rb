@@ -84,6 +84,7 @@ class ValidateSettings
       cleanup_tmp_dir
       validate_auto_create
       validate_tmp_dir
+      validate_ssh_keys_path
       validate_mandatory_domain_name
       validate_optional_domain_name
       validate_git_config_file
@@ -128,6 +129,24 @@ class ValidateSettings
         else
           # Add trailing '/'
           valuehash[:gitolite_temp_dir] = gitolite_temp_dir + '/'
+        end
+      end
+    end
+
+
+    def validate_ssh_keys_path
+      [ :gitolite_ssh_private_key, :gitolite_ssh_public_key ].each do |setting|
+        if valuehash[setting]
+          if valuehash[setting] != ''
+            normalized_param = strip_value(valuehash[setting])
+            if !File.exists?(normalized_param)
+              valuehash[setting] = old_valuehash[setting]
+            else
+              valuehash[setting] = normalized_param
+            end
+          else
+            valuehash[setting] = old_valuehash[setting]
+          end
         end
       end
     end
@@ -299,8 +318,11 @@ class ValidateSettings
 
     def validate_gitolite_hooks_url
       if valuehash[:gitolite_hooks_url]
-        if !RedmineGitHosting::Utils.valid_url?(valuehash[:gitolite_hooks_url])
+        url = strip_value(valuehash[:gitolite_hooks_url])
+        if !RedmineGitHosting::Utils.valid_url?(url)
           valuehash[:gitolite_hooks_url] = old_valuehash[:gitolite_hooks_url]
+        else
+          valuehash[:gitolite_hooks_url] = url
         end
       end
     end

@@ -23,6 +23,10 @@ module RedmineGitHosting::Commands
 
 
       def sudo_update_gitolite!
+        if gitolite_command.nil?
+          logger.error("gitolite_command is nil, can't update Gitolite !")
+          return
+        end
         logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
         begin
           sudo_shell(*gitolite_command)
