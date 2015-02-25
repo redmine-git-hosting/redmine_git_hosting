@@ -28,7 +28,7 @@ module RedmineGitHosting
         def create_with_git_hosting(&block)
           create_without_git_hosting(&block)
           # Only create repo if project creation worked
-          create_project_repository if validate_parent_id && @project.save
+          create_project_repository if valid_project?
         end
 
 
@@ -78,6 +78,15 @@ module RedmineGitHosting
 
 
         private
+
+
+          def valid_project?
+            if Rails::VERSION::MAJOR == 3
+              validate_parent_id && @project.save
+            else
+              @project.save
+            end
+          end
 
 
           # Call UseCase object that will complete Project repository creation :
