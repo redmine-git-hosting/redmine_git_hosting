@@ -80,7 +80,7 @@ module RedmineGitHosting::Commands
           params = []
         end
 
-        git_config_as_hash(params)
+        git_config_as_hash(namespace, params)
       end
 
 
@@ -111,10 +111,12 @@ module RedmineGitHosting::Commands
         end
 
 
-        def git_config_as_hash(params)
+        def git_config_as_hash(namespace, params)
           value_hash = {}
 
           params.each do |value_pair|
+            next if value_pair.empty?
+            next if !value_pair.start_with?(namespace)
             global_key = value_pair.split(' ')[0]
             value      = value_pair.split(' ')[1]
             key        = global_key.split('.')[1]
