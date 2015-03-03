@@ -1,18 +1,19 @@
 - content_for :header_tags do
-  = stylesheet_link_tag 'jquery_tag_it',                  :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_alert',      :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_animations', :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_close',      :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_custom',     :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_label' ,     :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_switch',     :plugin => 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_tables',     :plugin => 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'jquery_tag_it',                  plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap_custom',               plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_alert',      plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_animations', plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_close',      plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_custom',     plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_label' ,     plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_switch',     plugin: 'redmine_bootstrap_kit'
+  = stylesheet_link_tag 'bootstrap/bootstrap_tables',     plugin: 'redmine_bootstrap_kit'
 
-  = javascript_include_tag 'jquery_tag_it',            :plugin => 'redmine_bootstrap_kit'
-  = javascript_include_tag 'plugins/bootstrap_switch', :plugin => 'redmine_bootstrap_kit'
-  = javascript_include_tag 'bootstrap',                :plugin => 'redmine_bootstrap_kit'
+  = javascript_include_tag 'jquery_tag_it',            plugin: 'redmine_bootstrap_kit'
+  = javascript_include_tag 'plugins/bootstrap_switch', plugin: 'redmine_bootstrap_kit'
+  = javascript_include_tag 'bootstrap',                plugin: 'redmine_bootstrap_kit'
 
-  = stylesheet_link_tag 'application',                :plugin => 'redmine_git_hosting'
+  = stylesheet_link_tag 'application',                 plugin: 'redmine_git_hosting'
 
 %span
   = l(:label_need_help) + ' :'

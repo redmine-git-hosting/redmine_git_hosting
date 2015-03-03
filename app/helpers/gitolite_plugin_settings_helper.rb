@@ -1,7 +1,7 @@
 module GitolitePluginSettingsHelper
 
   def render_gitolite_params_status(params)
-    content_tag(:ul, style: 'list-style: none; margin: 0;') do
+    content_tag(:ul, class: 'list-unstyled') do
       content = ''
       params.each do |param, installed|
         content << content_tag(:li, style: 'padding: 2px;') do
