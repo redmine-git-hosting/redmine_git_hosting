@@ -1,20 +1,17 @@
 #### **(step 8)** Finish installation - Configuration
 
-The plugin is now installed, but you **must** set some additional settings on the *Administration -> Redmine Git Hosting* page.
+The plugin is now installed, but you **must** set some additional settings :
+
+1. Enable Xitolite repositories in *Administration -> Settings -> Repositories*
+2. Configure plugin settings in *Administration -> Redmine Git Hosting*
+3. Check your installation in *Administration -> Redmine Git Hosting* *Config Checks* tab.
+4. Set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys**.
 
 Before configuring the plugin you should take a look at this : [Repositories Storage Configuration Strategy]({{ site.baseurl }}/configuration/notes/#repositories-storage-configuration-strategy).
 
-You will able to check your installation in *Config Checks* tabs.
-
-<div class="alert alert-warning" role="alert" markdown="1">
-You must also set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys**.
-</div>
-
 Unless you want to access your repositories exclusively via Smart HTTP, users will need to set a public key to connect via SSH.
 
-To do this, open a browser, login to Redmine and follow the "My Account" link in the upper right-hand corner of the page.
-
-The right-hand column contains controls for adding your public key(s).
+To do this, open a browser, login to Redmine and follow the "My Account" link in the upper right-hand corner of the page then "Add SSH keys" link.
 
 SSH Keys should be unique, that is, the keys you set in Redmine **should not** already exist in the Gitolite repo.
 
