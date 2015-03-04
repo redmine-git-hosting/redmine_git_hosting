@@ -21,13 +21,11 @@
   %label= l(:label_gitolite_notify_global_sender_address)
   = text_field_tag 'settings[gitolite_notify_global_sender_address]', gitolite_notify_global_sender_address, size: 60
 
-= hidden_field_tag 'settings[gitolite_notify_global_include][]', ''
-= hidden_field_tag 'settings[gitolite_notify_global_exclude][]', ''
-
 %p
   %label= l(:label_gitolite_notify_global_include)
 
-%ul{ id: 'gitolite_notify_global_include' }
+= hidden_field_tag 'settings[gitolite_notify_global_include][]', ''
+= tag_it_list 'settings_gitolite_notify_global_include', { name: 'settings[gitolite_notify_global_include][]' }, { placeholder: '+ add email' } do
   - if gitolite_notify_global_include.any?
     - gitolite_notify_global_include.each do |item|
       %li= item
@@ -35,22 +33,13 @@
 %p
   %label= l(:label_gitolite_notify_global_exclude)
 
-%ul{ id: 'gitolite_notify_global_exclude' }
+= hidden_field_tag 'settings[gitolite_notify_global_exclude][]', ''
+= tag_it_list 'settings_gitolite_notify_global_exclude', { name: 'settings[gitolite_notify_global_exclude][]' }, { placeholder: '+ add email' } do
   - if gitolite_notify_global_exclude.any?
     - gitolite_notify_global_exclude.each do |item|
       %li= item
 
 :javascript
-  function loadTagIt(target){
-    $('#' + target).gtagit({
-      placeholderText: '+ add email',
-      allowDuplicates: false,
-      caseSensitive: false,
-      fieldName: 'settings[' + target + '][]',
-    });
-  }
-
   $(document).ready(function() {
-    loadTagIt('gitolite_notify_global_include');
-    loadTagIt('gitolite_notify_global_exclude');
+    setTagIt();
   });

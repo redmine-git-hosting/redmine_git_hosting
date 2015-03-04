@@ -5,6 +5,8 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
   before_filter :can_create_git_notifications, :only => [:new, :create]
   before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
 
+  helper :tag_it
+
 
   def index
     render_404

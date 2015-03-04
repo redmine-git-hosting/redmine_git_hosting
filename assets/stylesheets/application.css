@@ -177,11 +177,6 @@ STATISTICS
   margin-left: -20px;
 }
 
-ul, ol {
-  margin: 0 0 10px 25px;
-  padding: 0;
-}
-
 #statistics-global .thumbnail {
   background: none repeat scroll 0 0 #3498DB;
   padding: 10px;
@@ -258,32 +253,7 @@ ul, ol {
   line-height: 1;
 }
 
-/*BOOTSTRAP LIKE*/
-.container {
-  width: 100%;
-  display: table;
-}
-
-.row {
-  display: table-row;
-}
-
-.col-md-6 {
-  width: 45%;
-  display: table-cell;
-}
-
-.col-md-12 {
-  width: 90%;
-  display: table-cell;
-}
-
-.row > .col-md-6,
-.row > .col-md-12 {
-  padding: 10px 10px 0;
-}
-
 /*FONT AWESOME*/
 .fa-align {
- padding-right: 5px;
+  padding-right: 5px;
 }
