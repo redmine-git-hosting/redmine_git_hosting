@@ -8,10 +8,10 @@ require 'redmine_git_hosting/hooks/display_repository_readme'
 require 'redmine_git_hosting/hooks/display_repository_sidebar'
 
 
-# Set up autoload of patches
+## Set up autoload of patches
 Rails.configuration.to_prepare do
 
-  ## Redmine Git Hosting Libs, Patches and Hooks
+  ## Redmine Git Hosting Libs and Patches
   rbfiles = Rails.root.join('plugins', 'redmine_git_hosting', 'lib', 'redmine_git_hosting', '**', '*.rb')
   Dir.glob(rbfiles).each do |file|
     # Exclude Redmine Views Hooks from Rails loader to avoid multiple calls to hooks on reload in dev environment.
