@@ -1,21 +1,20 @@
-# PostgreSQL configuration example
+## PostgreSQL configuration example
+## Data come from environment variables so the test suite can be run
+## on Travis or Jenkins (see https://github.com/lmlima/jenkins-postgresql-job-databases-plugin)
 production:
   adapter: postgresql
-  database: redmine
-  username: postgres
+  database: <%= ENV['POSTGRES_DATABASE'] %>
+  username: <%= ENV['POSTGRES_USER'] %>
   encoding: utf8
 
 development:
   adapter: postgresql
-  database: redmine
-  username: postgres
+  database: <%= ENV['POSTGRES_DATABASE'] %>
+  username: <%= ENV['POSTGRES_USER'] %>
   encoding: utf8
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   adapter: postgresql
-  database: redmine
-  username: postgres
+  database: <%= ENV['POSTGRES_DATABASE'] %>
+  username: <%= ENV['POSTGRES_USER'] %>
   encoding: utf8

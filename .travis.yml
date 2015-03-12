@@ -25,6 +25,8 @@ env:
     - MYSQL_PORT=3306
     - MYSQL_USER=root
     - MYSQL_PASSWORD=
+    - POSTGRES_DATABASE=redmine
+    - POSTGRES_USER=postgres
   matrix:
     - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=postgresql
@@ -53,8 +55,6 @@ env:
     # - REDMINE_VERSION=2.3.4
     # - REDMINE_VERSION=2.2.4
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
   - cd ../..
   - ./jbox-web/redmine_git_hosting/contrib/travis/install_redmine.sh
   - cd redmine
