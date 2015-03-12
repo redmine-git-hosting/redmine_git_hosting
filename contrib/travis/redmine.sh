@@ -104,3 +104,25 @@ function finish_install() {
   ls -l "${REDMINE_NAME}/plugins"
   echo ""
 }
+
+
+function git_clone() {
+  plugin_name=$1
+  plugin_url=$2
+
+  IFS='#' read url treeish <<< "$plugin_url"
+
+  echo "#### INSTALL ${plugin_name} PLUGIN"
+
+  if [[ "$treeish" == "" ]] ; then
+    git clone "${url}" "redmine/plugins/${plugin_name}"
+  else
+    git clone "${url}" "redmine/plugins/${plugin_name}"
+    pushd "redmine/plugins/${plugin_name}" > /dev/null
+    git checkout -q "$treeish"
+    popd > /dev/null
+  fi
+
+  echo "Done !"
+  echo ""
+}
