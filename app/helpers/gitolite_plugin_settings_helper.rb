@@ -37,17 +37,6 @@ module GitolitePluginSettingsHelper
   end
 
 
-  def bootstrap_switch_tag(opts = {}, &block)
-    css_class = opts.delete(:class){ '' }
-    options   = { data: { :on => 'primary', :off => 'default', 'on-label' => l(:label_yes), 'off-label' => l(:label_no) } }
-    options   = options.deep_merge(opts)
-    options[:class] = ['bootstrap-switch', 'switch-small'].push(css_class)
-    content_tag(:span, options) do
-      yield if block_given?
-    end
-  end
-
-
   def gitolite_plugin_settings_tabs
     [
       { name: 'gitolite_config_ssh',        partial: 'settings/gitolite_config_ssh',     label: :label_tab_ssh },
