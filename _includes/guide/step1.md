@@ -5,14 +5,14 @@
 Assuming that you have Redmine installed :
 
     # Install dependencies (On Debian/Ubuntu)
-    root$ apt-get install build-essential libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+    root# apt-get install build-essential libssh2-1 libssh2-1-dev cmake libgpg-error-dev
 
     # Install dependencies (On Fedora/CentoS/RedHat)
-    root$ yum groupinstall "Development Tools"
-    root$ yum install libssh2 libssh2-devel cmake libgpg-error-devel
+    root# yum groupinstall "Development Tools"
+    root# yum install libssh2 libssh2-devel cmake libgpg-error-devel
 
     # Switch user
-    root$ su - redmine
+    root# su - redmine
 
     # First git clone Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins
