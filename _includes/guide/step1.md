@@ -4,8 +4,11 @@
 
 Assuming that you have Redmine installed :
 
-    # Install dependencies
-    root$ apt-get install libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+    # Install dependencies (On Debian/Ubuntu)
+    root$ apt-get install build-essential libssh2-1 libssh2-1-dev cmake libgpg-error-dev
+
+    # Install dependencies (On Fedora/CentoS/RedHat)
+    root$ yum groupinstall "Development Tools"
 
     # Switch user
     root$ su - redmine
