@@ -16,31 +16,27 @@ PLUGIN_NAME=${PLUGIN_NAME:-$GITHUB_PROJECT}
 
 
 function install_redmine() {
-  echo ""
-
-  echo "#### GET TARBALL"
+  log_title "GET TARBALL"
   wget "${REDMINE_URL}"
-  echo "Done !"
-  echo ""
+  log_ok
 
-  echo "#### EXTRACT IT"
+  log_title "EXTRACT IT"
   tar xf "${REDMINE_PACKAGE}"
-  echo "Done !"
-  echo ""
+  log_ok
 
-  echo "#### MOVE PLUGIN"
+  log_title "MOVE PLUGIN"
+  # Move GITHUB_USER/GITHUB_PROJECT to redmine/plugins dir
   mv "${PLUGIN_PATH}" "${REDMINE_NAME}/plugins"
-  rmdir "${PLUGIN_PATH}"
-  echo "Done !"
-  echo ""
+  # Remove parent dir (GITHUB_USER)
+  rmdir $(dirname ${PLUGIN_PATH})
+  log_ok
 
-  echo "#### CREATE SYMLINK"
+  log_title "CREATE SYMLINK"
   ln -s "${REDMINE_NAME}" "redmine"
   ln -s "redmine/plugins/redmine_git_hosting/.git" "${REDMINE_NAME}/.git"
-  echo "Done !"
-  echo ""
+  log_ok
 
-  echo "#### INSTALL DATABASE FILE"
+  log_title "INSTALL DATABASE FILE"
   if [ "$DATABASE_ADAPTER" == "mysql" ] ; then
     echo "Type : mysql"
     cp "redmine/plugins/${PLUGIN_NAME}/spec/database_mysql.yml" "redmine/config/database.yml"
@@ -49,80 +45,53 @@ function install_redmine() {
     cp "redmine/plugins/${PLUGIN_NAME}/spec/database_postgres.yml" "redmine/config/database.yml"
   fi
 
-  echo "Done !"
-  echo ""
+  log_ok
 }
 
 
 function install_rspec() {
-  echo "#### INSTALL RSPEC FILE"
+  log_title "INSTALL RSPEC FILE"
   mkdir "redmine/spec"
   cp "redmine/plugins/${PLUGIN_NAME}/spec/root_spec_helper.rb" "redmine/spec/spec_helper.rb"
-  echo "Done !"
-  echo ""
+  log_ok
 
   if [ "$major" == "3" ] ; then
-    echo "#### RAILS 4 : INSTALL GEMFILE"
-    cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails4.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
-    echo "Done !"
+    if [ -f "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails4.gemfile" ] ; then
+      log_title "RAILS 4 : INSTALL GEMFILE"
+      cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails4.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
+      log_ok
+    fi
   else
-    echo "#### RAILS 3 : INSTALL GEMFILE"
-    cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails3.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
-    echo "Done !"
 
-    echo "#### RAILS 3 : UPDATE REDMINE GEMFILE"
+    if [ -f "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails3.gemfile" ] ; then
+      log_title "RAILS 3 : INSTALL GEMFILE"
+      cp "redmine/plugins/${PLUGIN_NAME}/gemfiles/rails3.gemfile" "redmine/plugins/${PLUGIN_NAME}/Gemfile"
+      log_ok
+    fi
+
+    log_title "RAILS 3 : UPDATE REDMINE GEMFILE"
+
     echo "Update shoulda to 3.5.0"
     sed -i 's/gem "shoulda", "~> 3.3.2"/gem "shoulda", "~> 3.5.0"/' "redmine/Gemfile"
-    echo "Done !"
-    echo ""
+    log_ok
 
     echo "Let update shoulda-matchers to 2.7.0"
     sed -i 's/gem "shoulda-matchers", "1.4.1"/#gem "shoulda-matchers", "1.4.1"/' "redmine/Gemfile"
-    echo "Done !"
-    echo ""
+    log_ok
 
     echo "Update capybara to 2.2.0"
     sed -i 's/gem "capybara", "~> 2.1.0"/gem "capybara", "~> 2.2.0"/' "redmine/Gemfile"
-    echo "Done !"
-    echo ""
+    log_ok
   fi
 }
 
 
 function finish_install() {
-  echo "######################"
-  echo "CURRENT DIRECTORY LISTING"
-  echo ""
-
+  log_header "CURRENT DIRECTORY LISTING"
   ls -l "${CURRENT_DIR}"
   echo ""
 
-  echo "######################"
-  echo "REDMINE PLUGIN DIRECTORY LISTING"
-  echo ""
-
+  log_header "REDMINE PLUGIN DIRECTORY LISTING"
   ls -l "${REDMINE_NAME}/plugins"
-  echo ""
-}
-
-
-function git_clone() {
-  plugin_name=$1
-  plugin_url=$2
-
-  IFS='#' read url treeish <<< "$plugin_url"
-
-  echo "#### INSTALL ${plugin_name} PLUGIN"
-
-  if [[ "$treeish" == "" ]] ; then
-    git clone "${url}" "redmine/plugins/${plugin_name}"
-  else
-    git clone "${url}" "redmine/plugins/${plugin_name}"
-    pushd "redmine/plugins/${plugin_name}" > /dev/null
-    git checkout -q "$treeish"
-    popd > /dev/null
-  fi
-
-  echo "Done !"
   echo ""
 }

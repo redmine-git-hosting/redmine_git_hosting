@@ -1,6 +1,7 @@
 #!/bin/bash
 
 REDMINE_INSTALLER_DIR=$(dirname "$(readlink -f "$0")")
+source $REDMINE_INSTALLER_DIR/common.sh
 source $REDMINE_INSTALLER_DIR/plugin.sh
 source $REDMINE_INSTALLER_DIR/redmine.sh
 
