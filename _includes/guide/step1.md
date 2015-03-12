@@ -9,6 +9,7 @@ Assuming that you have Redmine installed :
 
     # Install dependencies (On Fedora/CentoS/RedHat)
     root$ yum groupinstall "Development Tools"
+    root$ yum install libssh2 libssh2-devel cmake libgpg-error-devel
 
     # Switch user
     root$ su - redmine
