@@ -74,18 +74,6 @@ module RedmineGitHosting::Config
       ###############################
 
       ## SUDO TEST1
-      def can_gitolite_sudo_to_redmine_user?
-        return true if gitolite_user == redmine_user
-        logger.info("Testing if Gitolite user '#{gitolite_user}' can sudo to Redmine user '#{redmine_user}'...")
-        result = execute_sudo_test(redmine_user) do
-          RedmineGitHosting::Commands.sudo_capture('sudo', '-n', '-u', redmine_user, '-i', 'whoami')
-        end
-        result ? logger.info('OK!') : logger.error('Error while testing can_gitolite_sudo_to_redmine_user')
-        result
-      end
-
-
-      ## SUDO TEST2
       def can_redmine_sudo_to_gitolite_user?
         return true if gitolite_user == redmine_user
         logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
