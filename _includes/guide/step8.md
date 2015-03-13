@@ -1,24 +1,9 @@
-#### **(step 8)** Finish installation - Configuration
+#### **(step 8)** Install Ruby interpreter for post-receive hook
 
-The plugin is now installed, but you **must** set some additional settings :
+Our post-receive hook is triggered after each commit and is used to fetch changesets in Redmine. As it is written in Ruby, you need to install Ruby on your server. Note that this does not conflict with RVM. Ruby 1.9 at least is required for the hooks.
 
-1. Enable Xitolite repositories in *Administration -> Settings -> Repositories*
-2. Configure plugin settings in *Administration -> Redmine Git Hosting*
-3. Check your installation in *Administration -> Redmine Git Hosting* *Config Checks* tab.
-4. Set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys**.
+    root$ apt-get install ruby
+    # or
+    root$ yum install ruby
 
-Before configuring the plugin you should take a look at this : [Repositories Storage Configuration Strategy]({{ site.baseurl }}/configuration/notes/#repositories-storage-configuration-strategy).
-
-Unless you want to access your repositories exclusively via Smart HTTP, users will need to set a public key to connect via SSH.
-
-To do this, open a browser, login to Redmine and follow the "My Account" link in the upper right-hand corner of the page then "Add SSH keys" link.
-
-SSH Keys should be unique, that is, the keys you set in Redmine **should not** already exist in the Gitolite repo.
-
-<div class="alert alert-danger" role="alert" markdown="1">
-In particular, **do not re-use the key you set as the Gitolite admin key**.
-</div>
-
-At this point, the plugin should work. If not, take a look here : [Troubleshooting]({{ site.baseurl }}/configuration/troubleshooting).
-
-[Let me know if it works ! (or not)](https://github.com/jbox-web/redmine_git_hosting/issues/339)
+***

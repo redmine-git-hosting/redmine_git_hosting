@@ -149,6 +149,16 @@ You can now remove the temp dir and the SSH config file
     redmine$ cd REDMINE_ROOT
     redmine$ bundle exec rake redmine_git_hosting:fetch_changesets RAILS_ENV=production
 
+***
+
+#### Bundle and Bitnami Stack
+
+If ```bundle``` command complains here what to do :
+
+    bitnami$ cd /opt/bitnami/apps/redmine/htdocs/vendor
+    bitnami$ rm -rf bundle
+    bitnami$ cd /opt/bitnami/apps/redmine/htdocs
+    bitnami$ bundle install --without development test --deployment
 
 <div id="toc">
 </div>

@@ -1,15 +1,18 @@
-#### **(step 5)** Configure sudo
+#### **(step 5)** Gitolite must accept hook keys
 
-Run ```visudo``` (you will need root permissions to run this) and set the necessary lines in your sudoers file : assuming Redmine is run as **redmine** and Gitolite is installed as **git**, you need to add this to your sudoers file:
+    root$ su - git
+    git$ vi (or nano) .gitolite.rc
 
-    root$ visudo
-    # Add these lines
-    redmine ALL=(git) NOPASSWD:ALL
+    ## Look for GIT_CONFIG_KEYS and make it look like :
+    GIT_CONFIG_KEYS  =>  '.*',
 
-If you have the *requiretty* set in the *Defaults* directive of your sudoers file (it is there by default in CentOS) either remove it or add the following lines below the original directive :
+    ## Enable local code directory
+    LOCAL_CODE       =>  "$ENV{HOME}/local"
 
-    Defaults:redmine !requiretty
+    ## then save and exit
 
-*Note: with at least some versions of Ubuntu, you must place any additions to the sudoers file **at the end**, otherwise the line starting with "admin ..." ends up negating these additions -- probably to your great frustration.*
+<div class="alert alert-warning" role="alert" markdown="1">
+If you plan to use [Automatic Repository Initialization]({{ site.baseurl }}/features/#automatic-repository-initialization) take a look at [this]({{ site.baseurl }}/configuration/troubleshooting/#initialization-of-the-repo-with-readme-file-does-not-work).
+</div>
 
 ***
