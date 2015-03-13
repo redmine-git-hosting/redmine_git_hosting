@@ -17,10 +17,6 @@
       %span{ class: 'label label-success' }= RedmineGitHosting::Config.gitolite_user
 
   %tr
-    %td= l(:label_sudo_gitolite_to_redmine_user)
-    %td= image_tag (RedmineGitHosting::Config.can_gitolite_sudo_to_redmine_user? ? 'true.png' : 'exclamation.png')
-
-  %tr
     %td= l(:label_sudo_redmine_to_gitolite_user)
     %td= image_tag (RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
 
