@@ -160,5 +160,17 @@ If ```bundle``` command complains here what to do :
     bitnami$ cd /opt/bitnami/apps/redmine/htdocs
     bitnami$ bundle install --without development test --deployment
 
+***
+
+#### Temp dir and Bitnami Stack
+
+The temp directory must be **fully** accesible for the ```daemon``` user so here what to do :
+
+    bitnami$ cd /opt/bitnami/apps/redmine
+    bitnami$ mkdir temp
+    bitnami$ chown -R daemon\: temp
+
+Then go in *Administration -> Redmine Git Hosting -> Global tab* and set the temp directory to ```/opt/bitnami/apps/redmine/temp```.
+
 <div id="toc">
 </div>

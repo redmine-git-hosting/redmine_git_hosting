@@ -22,8 +22,6 @@ Assuming that you have Redmine installed :
     redmine$ bundle install --without development test
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting
 
-    ## After install the plugin, start Redmine!
-
 
 Otherwise you can install Redmine by following the wiki : [Redmine Installation]({{ site.baseurl }}/guide/redmine-installation)
 

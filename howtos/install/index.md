@@ -15,6 +15,7 @@ title: How To Install
 {% include guide/step7.md %}
 {% include guide/step8.md %}
 {% include guide/step9.md %}
+{% include guide/step10.md %}
 
 ***
 
