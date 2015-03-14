@@ -16,7 +16,7 @@ describe GitolitePublicKeysHelper do
 
   def create_user_with_permissions(project)
     role = FactoryGirl.create(:role, :name => 'Manager2')
-    role.permissions << :create_deployment_keys
+    role.permissions << :create_repository_deployment_credentials
     role.save!
 
     user = FactoryGirl.create(:user)

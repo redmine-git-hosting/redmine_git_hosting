@@ -2,7 +2,7 @@
 
   #repository-tabs
     %ul
-      - if User.current.git_allowed_to?(:view_deployment_keys, @repository)
+      - if User.current.git_allowed_to?(:view_repository_deployment_credentials, @repository)
         %li{ id: 'tab-repository_deployment_credentials' }= link_to label_with_icon(l(:label_deployment_credentials), 'fa-lock'), repository_deployment_credentials_path(@repository)
 
       - if User.current.git_allowed_to?(:view_repository_git_notifications, @repository)

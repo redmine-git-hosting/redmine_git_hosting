@@ -96,9 +96,9 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :view_repository_post_receive_urls,   :repository_post_receive_urls => [:index, :show]
     permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => [:edit, :update, :destroy]
 
-    permission :create_deployment_keys, :repository_deployment_credentials => [:new, :create]
-    permission :view_deployment_keys,   :repository_deployment_credentials => [:index, :show]
-    permission :edit_deployment_keys,   :repository_deployment_credentials => [:edit, :update, :destroy]
+    permission :create_repository_deployment_credentials, :repository_deployment_credentials => [:new, :create]
+    permission :view_repository_deployment_credentials,   :repository_deployment_credentials => [:index, :show]
+    permission :edit_repository_deployment_credentials,   :repository_deployment_credentials => [:edit, :update, :destroy]
 
     permission :create_repository_git_config_keys, :repository_git_config_keys => [:new, :create]
     permission :view_repository_git_config_keys,   :repository_git_config_keys => [:index, :show]

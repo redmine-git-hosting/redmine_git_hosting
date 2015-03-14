@@ -43,7 +43,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   # Deployment Credentials ignored unless created by someone who still has permission to create them
   def honored?
-    user.admin? || user.allowed_to?(:create_deployment_keys, repository.project)
+    user.admin? || user.allowed_to?(:create_repository_deployment_credentials, repository.project)
   end
 
 

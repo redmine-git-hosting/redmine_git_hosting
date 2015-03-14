@@ -9,9 +9,9 @@ fr:
   permission_view_repository_post_receive_urls: Voir les URL après réception
   permission_edit_repository_post_receive_urls: Modifier les URL après réception
 
-  permission_create_deployment_keys: Créer des clés de déploiement
-  permission_view_deployment_keys: Voir des clés de déploiement
-  permission_edit_deployment_keys: Modifier des clés de déploiement
+  permission_create_repository_deployment_credentials: Créer des clés de déploiement
+  permission_view_repository_deployment_credentials: Voir des clés de déploiement
+  permission_edit_repository_deployment_credentials: Modifier des clés de déploiement
 
   permission_create_repository_git_config_keys: Créer des clés de configuration Git
   permission_view_repository_git_config_keys: Voir des clés de configuration Git

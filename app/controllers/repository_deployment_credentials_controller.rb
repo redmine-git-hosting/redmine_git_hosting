@@ -108,7 +108,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
 
     def users_allowed_to_create_deployment_keys
-      @project.users.select { |user| user != User.current && user.git_allowed_to?(:create_deployment_keys, @repository) }
+      @project.users.select { |user| user != User.current && user.git_allowed_to?(:create_repository_deployment_credentials, @repository) }
     end
 
 
