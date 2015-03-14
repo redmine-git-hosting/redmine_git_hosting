@@ -1,4 +1,6 @@
 - if @repository.is_a?(Repository::Xitolite)
+  = render 'common/javascript_headers'
+
   %div{ class: 'git_hosting box' }
     %h3= l(:label_repository_access_url)
-    = render :partial => 'common/git_urls', :locals => {:repository => @repository}
+    = render partial: 'common/git_urls', locals: { repository: @repository }
