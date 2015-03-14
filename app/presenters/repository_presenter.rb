@@ -56,7 +56,7 @@ class RepositoryPresenter < SimpleDelegator
 
 
     def render_clipboard_button
-      content_tag(:div, image_tag('paste.png', plugin: 'redmine_bootstrap_kit'), class: 'clipboard_button', id: clipboard_container_id, data: clipboard_options)
+      zero_clipboard_button_for(url_text_container_id)
     end
 
 
@@ -82,16 +82,6 @@ class RepositoryPresenter < SimpleDelegator
 
     def url_text_container_id
       "git_url_text_#{element_name}"
-    end
-
-
-    def clipboard_container_id
-      "clipboard_button_#{element_name}"
-    end
-
-
-    def clipboard_options
-      { 'clipboard-target' => url_text_container_id }
     end
 
 end
