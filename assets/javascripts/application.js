@@ -82,3 +82,15 @@ function setRepositoryActiveTab(current_tab) {
     }
   });
 }
+
+function setSettingsActiveTab() {
+  groups = $('[id^=tab-gitolite_]');
+
+  $.each(groups, function(key, elem) {
+    $(elem).on('click', function(){
+      if ("replaceState" in window.history) {
+        window.history.replaceState(null, document.title, 'redmine_git_hosting?tab=' + $(this).attr('id').replace('tab-', ''));
+      }
+    });
+  });
+}
