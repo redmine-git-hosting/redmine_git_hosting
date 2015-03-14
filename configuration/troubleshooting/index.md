@@ -168,7 +168,7 @@ The temp directory must be **fully** accesible for the ```daemon``` user so here
 
     bitnami$ cd /opt/bitnami/apps/redmine
     bitnami$ mkdir temp
-    bitnami$ chown -R daemon\: temp
+    bitnami$ sudo chown -R daemon\: temp
 
 Then go in *Administration -> Redmine Git Hosting -> Global tab* and set the temp directory to ```/opt/bitnami/apps/redmine/temp```.
 
