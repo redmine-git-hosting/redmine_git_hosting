@@ -4,6 +4,8 @@ Make sure that Redmine user has Gitolite server in his known_hosts list. This is
 
 It **should not** ask you for a password.
 
+Also the SSH config file for Redmine user is not needed anymore! Remove it if exists!
+
     root$ su - redmine
     redmine$ ssh -i ssh_keys/redmine_gitolite_admin_id_rsa git@localhost info
     # accept key
