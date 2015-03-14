@@ -1,31 +1,15 @@
 - content_for :header_tags do
-  = stylesheet_link_tag 'application',                    plugin: 'redmine_git_hosting'
+  = redmine_bootstrap_kit_load(:redmine_bootstrap_kit)
+  = redmine_bootstrap_kit_load(:bootstrap_alerts)
+  = redmine_bootstrap_kit_load(:bootstrap_label)
+  = redmine_bootstrap_kit_load(:bootstrap_modals)
+  = redmine_bootstrap_kit_load(:bootstrap_switch)
+  = redmine_bootstrap_kit_load(:bootstrap_tables)
+  = redmine_bootstrap_kit_load(:jquery_tag_it)
+  = redmine_bootstrap_kit_load(:font_awesome)
 
-  = stylesheet_link_tag 'jquery_tag_it',                  plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap_custom',               plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'font_awesome',                   plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_alert',      plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_animations', plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_close',      plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_custom',     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_label' ,     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_switch',     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_tables',     plugin: 'redmine_bootstrap_kit'
-
-  = javascript_include_tag 'plugins/jquery_tag_it',       plugin: 'redmine_bootstrap_kit'
-  = javascript_include_tag 'plugins/bootstrap_switch',    plugin: 'redmine_bootstrap_kit'
-  = javascript_include_tag 'bootstrap',                   plugin: 'redmine_bootstrap_kit'
-
-  = javascript_include_tag 'application',              plugin: 'redmine_git_hosting'
-
-  :javascript
-    var modals           = Object();
-    modals.label_save    = '#{l(:button_save)}';
-    modals.label_cancel  = '#{l(:button_cancel)}';
-    modals.label_ok      = '#{l(:button_ok)}';
-    modals.modal_list    = [];
-    modals.modal_list[0] = {'source': '.modal-box', 'target': '#modal-box', 'mode': 'standard'};
-    modals.modal_list[1] = {'source': '.modal-box-close-only', 'target': '#modal-box-close-only', 'mode': 'close-only'};
+  = stylesheet_link_tag    'application', plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
 
 #modal-box
 #modal-box-close-only
