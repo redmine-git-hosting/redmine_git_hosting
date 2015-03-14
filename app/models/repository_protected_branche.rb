@@ -45,7 +45,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
 
   def available_users
-    project.member_principals.map(&:user).compact.uniq.map{|u| u.login}.sort
+    project.member_principals.map(&:user).compact.uniq.map{ |u| u.login }.sort
   end
 
 
