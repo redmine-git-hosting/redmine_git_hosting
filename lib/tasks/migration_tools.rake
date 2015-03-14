@@ -86,6 +86,13 @@ namespace :redmine_git_hosting do
         # Don't update real Git repositories
         next if repository.url.start_with?('/')
 
+        # Don't update orphan repositories
+        if repository.project.nil?
+          puts "Repository with id : '#{repository.id}' doesn't have a project, skipping !!"
+          puts ""
+          next
+        end
+
         # Update Gitolite repositories
         if repository.identifier.nil? || repository.identifier.empty?
           puts repository.project.identifier
