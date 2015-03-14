@@ -19,7 +19,7 @@
     %p= f.check_box :split_payloads
 
   - if @repository.branches.any?
-    %p= f.check_box :use_triggers
+    %p= f.check_box :use_triggers, onchange: "trigger_mode_change(this); return false;"
 
     - style = @post_receive_url.use_triggers? ? '' : 'display: none;'
 
@@ -28,16 +28,6 @@
 
       - @repository.branches.each do |branch|
         %p
-          %label= branch.to_s
-          = check_box_tag "repository_post_receive_url[triggers][]", branch.to_s, @post_receive_url.triggers.include?(branch.to_s)
-
-:javascript
-  $(document).ready(function() {
-    $('#repository_post_receive_url_use_triggers').click(function () {
-      if ($(this).attr('checked')) {
-        $('#triggers_options').show();
-      } else {
-        $('#triggers_options').hide();
-      }
-    })
-  });
+          %label
+            = check_box_tag "repository_post_receive_url[triggers][]", branch.to_s, @post_receive_url.triggers.include?(branch.to_s)
+            = branch.to_s

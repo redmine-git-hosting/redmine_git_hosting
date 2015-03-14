@@ -1,6 +1,6 @@
-function post_mode_change(elem) {
-  if (!elem) return;
-  var idx = elem.selectedIndex;
+function post_mode_change(element) {
+  if (!element) return;
+  var idx = element.selectedIndex;
   if (idx == 0) {
     $('#payload_options').show();
   } else {
@@ -8,9 +8,9 @@ function post_mode_change(elem) {
   }
 }
 
-function push_mode_change(elem) {
-  if (!elem) return;
-  var idx = elem.selectedIndex;
+function push_mode_change(element) {
+  if (!element) return;
+  var idx = element.selectedIndex;
   if (idx == 0) {
     $('#ref_spec_options').hide();
   } else {
@@ -18,13 +18,22 @@ function push_mode_change(elem) {
   }
 }
 
-function key_mode_change(elem) {
-  if (!elem) return;
-  var idx = elem.selectedIndex;
+function key_mode_change(element) {
+  if (!element) return;
+  var idx = element.selectedIndex;
   if (idx == 0) {
     $('#new_key_window').show();
   } else {
     $('#new_key_window').hide();
+  }
+}
+
+function trigger_mode_change(element) {
+  element = $('#'+element.id);
+  if(element.is(":checked")) {
+    $('#triggers_options').show();
+  } else {
+    $('#triggers_options').hide();
   }
 }
 
