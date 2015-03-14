@@ -20,6 +20,7 @@ module RedmineGitHosting
           before_filter :set_current_tab, only: :edit
 
           helper :git_hosting
+          helper :redmine_presenter
 
           # Load ExtendRepositoriesHelper so we can call our
           # additional methods.

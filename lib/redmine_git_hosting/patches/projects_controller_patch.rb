@@ -18,6 +18,7 @@ module RedmineGitHosting
           alias_method_chain :reopen,    :git_hosting
 
           helper :git_hosting
+          helper :redmine_presenter
           helper :extend_projects
         end
       end
