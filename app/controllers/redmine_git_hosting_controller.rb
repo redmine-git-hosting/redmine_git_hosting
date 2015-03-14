@@ -9,6 +9,7 @@ class RedmineGitHostingController < ApplicationController
   layout Proc.new { |controller| controller.request.xhr? ? false : 'base' }
 
   helper :git_hosting
+  helper :redmine_ajax
 
 
   def show
