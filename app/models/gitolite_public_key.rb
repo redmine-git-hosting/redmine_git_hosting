@@ -153,9 +153,9 @@ class GitolitePublicKey < ActiveRecord::Base
     #
     def set_identifier
       return nil if user_id.nil?
-      if key_type == KEY_TYPE_USER
+      if user_key?
         set_identifier_for_user_key
-      elsif key_type == KEY_TYPE_DEPLOY
+      elsif deploy_key?
         set_identifier_for_deploy_key
       end
     end
