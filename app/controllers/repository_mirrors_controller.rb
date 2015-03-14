@@ -63,4 +63,13 @@ class RepositoryMirrorsController < RedmineGitHostingController
       render_404
     end
 
+
+    def check_xitolite_permissions
+      if self.action_name == 'push'
+        render_403 unless User.current.git_allowed_to?(:push_repository_mirrors, @repository)
+      else
+        super
+      end
+    end
+
 end

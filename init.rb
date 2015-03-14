@@ -91,6 +91,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :create_repository_mirrors, :repository_mirrors => [:new, :create]
     permission :view_repository_mirrors,   :repository_mirrors => [:index, :show]
     permission :edit_repository_mirrors,   :repository_mirrors => [:edit, :update, :destroy]
+    permission :push_repository_mirrors,   :repository_mirrors => [:push]
 
     permission :create_repository_post_receive_urls, :repository_post_receive_urls => [:new, :create]
     permission :view_repository_post_receive_urls,   :repository_post_receive_urls => [:index, :show]

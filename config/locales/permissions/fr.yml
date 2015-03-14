@@ -4,6 +4,7 @@ fr:
   permission_create_repository_mirrors: Créer des miroirs de dépôts
   permission_view_repository_mirrors: Voir des miroirs de dépôts
   permission_edit_repository_mirrors: Modifier des miroirs de dépôts
+  permission_push_repository_mirrors: Pousser des modifications vers des miroirs de dépôts
 
   permission_create_repository_post_receive_urls: Créer des URL après réception
   permission_view_repository_post_receive_urls: Voir les URL après réception

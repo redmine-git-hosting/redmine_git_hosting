@@ -4,6 +4,7 @@ en:
   permission_create_repository_mirrors: Create repository mirrors
   permission_view_repository_mirrors: View repository mirrors
   permission_edit_repository_mirrors: Edit repository mirrors
+  permission_push_repository_mirrors: Push changes to repository mirrors
 
   permission_create_repository_post_receive_urls: Create post-receive URLs
   permission_view_repository_post_receive_urls: View post-receive URLs
