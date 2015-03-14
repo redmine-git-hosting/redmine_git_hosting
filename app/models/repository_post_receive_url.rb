@@ -44,6 +44,11 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   end
 
 
+  def github_mode?
+    mode == :github
+  end
+
+
   private
 
 
