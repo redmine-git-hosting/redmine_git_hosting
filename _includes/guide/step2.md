@@ -9,7 +9,7 @@ Assuming that you have Redmine installed :
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
     redmine$ cd redmine_bootstrap_kit/
-    redmine$ git checkout v0.2.0
+    redmine$ git checkout 0.2.2
 
     # Then Redmine Git Hosting plugin
     redmine$ cd REDMINE_ROOT/plugins
