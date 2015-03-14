@@ -1,21 +1,15 @@
 class RepositoryProtectedBranchesController < RedmineGitHostingController
   unloadable
 
-  before_filter :can_view_protected_branches,   :only => [:index]
-  before_filter :can_create_protected_branches, :only => [:new, :create]
-  before_filter :can_edit_protected_branches,   :only => [:edit, :update, :destroy]
-
-  before_filter :find_repository_protected_branch, :except => [:index, :new, :create, :sort]
+  before_filter :check_xitolite_permissions
+  before_filter :find_repository_protected_branch, except: [:index, :new, :create, :sort]
 
   accept_api_auth :index, :show
 
 
   def index
     @repository_protected_branches = @repository.protected_branches.all
-    respond_to do |format|
-      format.html { render layout: false }
-      format.api
-    end
+    render_with_api
   end
 
 
@@ -27,44 +21,25 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def create
     @protected_branch = @repository.protected_branches.new(params[:repository_protected_branche])
-    respond_to do |format|
-      if @protected_branch.save
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_protected_branch_created)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @protected_branch.save
+      flash[:notice] = l(:notice_protected_branch_created)
+      call_use_case_and_redirect
     end
   end
 
 
   def update
-    respond_to do |format|
-      if @protected_branch.update_attributes(params[:repository_protected_branche])
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_protected_branch_updated)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @protected_branch.update_attributes(params[:repository_protected_branche])
+      flash[:notice] = l(:notice_protected_branch_updated)
+      call_use_case_and_redirect
     end
   end
 
 
   def destroy
-    respond_to do |format|
-      if @protected_branch.destroy
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_protected_branch_deleted)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      end
+    if @protected_branch.destroy
+      flash[:notice] = l(:notice_protected_branch_deleted)
+      call_use_case_and_redirect
     end
   end
 
@@ -79,10 +54,8 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     params[:repository_protected_branche].each_with_index do |id, index|
       @repository.protected_branches.update_all({position: index + 1}, {id: id})
     end
-
     # Update Gitolite repository
     call_use_case
-
     render nothing: true
   end
 
@@ -92,21 +65,6 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
     def set_current_tab
       @tab = 'repository_protected_branches'
-    end
-
-
-    def can_view_protected_branches
-      render_403 unless User.current.git_allowed_to?(:view_repository_protected_branches, @repository)
-    end
-
-
-    def can_create_protected_branches
-      render_403 unless User.current.git_allowed_to?(:create_repository_protected_branches, @repository)
-    end
-
-
-    def can_edit_protected_branches
-      render_403 unless User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
     end
 
 

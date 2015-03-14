@@ -1,9 +1,7 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
-  before_filter :can_view_git_notifications,   :only => [:index]
-  before_filter :can_create_git_notifications, :only => [:new, :create]
-  before_filter :can_edit_git_notifications,   :only => [:edit, :update, :destroy]
+  before_filter :check_xitolite_permissions
 
   helper :tag_it
 
@@ -26,16 +24,9 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   def create
     @git_notification = @repository.build_git_notification(params[:repository_git_notification])
-    respond_to do |format|
-      if @git_notification.save
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_git_notifications_created)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @git_notification.save
+      flash[:notice] = l(:notice_git_notifications_created)
+      call_use_case_and_redirect
     end
   end
 
@@ -47,30 +38,18 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   def update
     @git_notification = @repository.git_notification
-    respond_to do |format|
-      if @git_notification.update_attributes(params[:repository_git_notification])
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_git_notifications_updated)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @git_notification.update_attributes(params[:repository_git_notification])
+      flash[:notice] = l(:notice_git_notifications_updated)
+      call_use_case_and_redirect
     end
   end
 
 
   def destroy
     @git_notification = @repository.git_notification
-    respond_to do |format|
-      if @git_notification.destroy
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_git_notifications_deleted)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      end
+    if @git_notification.destroy
+      flash[:notice] = l(:notice_git_notifications_deleted)
+      call_use_case_and_redirect
     end
   end
 
@@ -80,21 +59,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
     def set_current_tab
       @tab = 'repository_git_notifications'
-    end
-
-
-    def can_view_git_notifications
-      render_403 unless User.current.git_allowed_to?(:view_repository_git_notifications, @repository)
-    end
-
-
-    def can_create_git_notifications
-      render_403 unless User.current.git_allowed_to?(:create_repository_git_notifications, @repository)
-    end
-
-
-    def can_edit_git_notifications
-      render_403 unless User.current.git_allowed_to?(:edit_repository_git_notifications, @repository)
     end
 
 

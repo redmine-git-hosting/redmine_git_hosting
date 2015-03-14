@@ -1,10 +1,7 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
-  before_filter :can_view_credentials,   only: [:index]
-  before_filter :can_create_credentials, only: [:new, :create]
-  before_filter :can_edit_credentials,   only: [:edit, :update, :destroy]
-
+  before_filter :check_xitolite_permissions
   before_filter :find_deployment_credential, only: [:edit, :update, :destroy]
   before_filter :find_key,                   only: [:edit, :update, :destroy]
   before_filter :find_all_keys,              only: [:index, :new, :create]
@@ -30,40 +27,24 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def create
     @credential = build_new_credential
-    respond_to do |format|
-      if @credential.save
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_deployment_credential_created)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @credential.save
+      flash[:notice] = l(:notice_deployment_credential_created)
+      call_use_case_and_redirect
     end
   end
 
 
   def update
-    respond_to do |format|
-      if @credential.update_attributes(params[:repository_deployment_credential])
-        # Update Gitolite repository
-        call_use_case
-
-        flash[:notice] = l(:notice_deployment_credential_updated)
-        format.js { render js: "window.location = #{success_url.to_json};" }
-      else
-        format.js
-      end
+    if @credential.update_attributes(params[:repository_deployment_credential])
+      flash[:notice] = l(:notice_deployment_credential_updated)
+      call_use_case_and_redirect
     end
   end
 
 
   def destroy
     will_delete_key = @key.deploy_key? && @key.delete_when_unused && @key.repository_deployment_credentials.count == 1
-
     @credential.destroy
-
     if will_delete_key && @key.repository_deployment_credentials.empty?
       # Key no longer used -- delete it!
       @key.destroy
@@ -72,12 +53,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
       flash[:notice] = l(:notice_deployment_credential_deleted)
     end
 
-    # Update Gitolite repository
-    call_use_case
-
-    respond_to do |format|
-      format.js { render js: "window.location = #{success_url.to_json};" }
-    end
+    call_use_case_and_redirect
   end
 
 
@@ -86,21 +62,6 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     def set_current_tab
       @tab = 'repository_deployment_credentials'
-    end
-
-
-    def can_view_credentials
-      render_403 unless User.current.git_allowed_to?(:view_deployment_keys, @repository)
-    end
-
-
-    def can_create_credentials
-      render_403 unless User.current.git_allowed_to?(:create_deployment_keys, @repository)
-    end
-
-
-    def can_edit_credentials
-      render_403 unless User.current.git_allowed_to?(:edit_deployment_keys, @repository)
     end
 
 

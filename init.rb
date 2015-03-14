@@ -88,31 +88,31 @@ Redmine::Plugin.register :redmine_git_hosting do
   })
 
   project_module :repository do
-    permission :create_repository_mirrors, :repository_mirrors => :create
-    permission :view_repository_mirrors,   :repository_mirrors => :index
-    permission :edit_repository_mirrors,   :repository_mirrors => :edit
+    permission :create_repository_mirrors, :repository_mirrors => [:new, :create]
+    permission :view_repository_mirrors,   :repository_mirrors => [:index, :show]
+    permission :edit_repository_mirrors,   :repository_mirrors => [:edit, :update, :destroy]
 
-    permission :create_repository_post_receive_urls, :repository_post_receive_urls => :create
-    permission :view_repository_post_receive_urls,   :repository_post_receive_urls => :index
-    permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => :edit
+    permission :create_repository_post_receive_urls, :repository_post_receive_urls => [:new, :create]
+    permission :view_repository_post_receive_urls,   :repository_post_receive_urls => [:index, :show]
+    permission :edit_repository_post_receive_urls,   :repository_post_receive_urls => [:edit, :update, :destroy]
 
-    permission :create_deployment_keys, :repository_deployment_credentials => :create
-    permission :view_deployment_keys,   :repository_deployment_credentials => :index
-    permission :edit_deployment_keys,   :repository_deployment_credentials => :edit
+    permission :create_deployment_keys, :repository_deployment_credentials => [:new, :create]
+    permission :view_deployment_keys,   :repository_deployment_credentials => [:index, :show]
+    permission :edit_deployment_keys,   :repository_deployment_credentials => [:edit, :update, :destroy]
 
-    permission :create_repository_git_config_keys, :repository_git_config_keys => :create
-    permission :view_repository_git_config_keys,   :repository_git_config_keys => :index
-    permission :edit_repository_git_config_keys,   :repository_git_config_keys => :edit
+    permission :create_repository_git_config_keys, :repository_git_config_keys => [:new, :create]
+    permission :view_repository_git_config_keys,   :repository_git_config_keys => [:index, :show]
+    permission :edit_repository_git_config_keys,   :repository_git_config_keys => [:edit, :update, :destroy]
 
-    permission :create_repository_protected_branches, :repository_protected_branches => :create
-    permission :view_repository_protected_branches,   :repository_protected_branches => :index
-    permission :edit_repository_protected_branches,   :repository_protected_branches => :edit
+    permission :create_repository_protected_branches, :repository_protected_branches => [:new, :create]
+    permission :view_repository_protected_branches,   :repository_protected_branches => [:index, :show]
+    permission :edit_repository_protected_branches,   :repository_protected_branches => [:edit, :update, :destroy]
 
-    permission :create_repository_git_notifications, :repository_git_notifications => :create
-    permission :view_repository_git_notifications,   :repository_git_notifications => :index
-    permission :edit_repository_git_notifications,   :repository_git_notifications => :edit
+    permission :create_repository_git_notifications, :repository_git_notifications => [:new, :create]
+    permission :view_repository_git_notifications,   :repository_git_notifications => [:index, :show]
+    permission :edit_repository_git_notifications,   :repository_git_notifications => [:edit, :update, :destroy]
+
     permission :receive_git_notifications,           :gitolite_hooks => :post_receive
-
     permission :create_gitolite_ssh_key,             :my => :account
     permission :download_git_revision,               :download_git_revision => :index
   end
