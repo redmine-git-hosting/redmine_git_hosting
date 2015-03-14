@@ -35,7 +35,7 @@ GIT_URL_BOX
 
 .git_url_list li a {
   background-color: #EEEEEE;
-  background:  url(../images/button.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#F8F8F8), to(#DDDDDD)); /* Konquerer */
   background: -moz-linear-gradient(top,  #F8F8F8,  #DDDDDD); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#DDDDDD));   /* Webkit (Chrome, Safari, ...) */
@@ -63,7 +63,7 @@ GIT_URL_BOX
 .git_url_list li a:hover,
 .git_url_list li a:focus {
   background-color: #507AAA;
-  background:  url(../images/button_focus.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button_focus.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#759FCF), to(#507AAA)); /* Konquerer */
   background: -moz-linear-gradient(top,  #759FCF,  #507AAA); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#759FCF), to(#507AAA)); /* Webkit (Chrome, Safari, ...) */
@@ -79,7 +79,7 @@ GIT_URL_BOX
 
 .git_url_list li.selected a {
   background-color: #BBBBBB;
-  background:  url(../images/button_selected.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button_selected.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));  /* Konquerer */
   background: -moz-linear-gradient(top,  #CCCCCC,  #AAAAAA); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));  /* Webkit (Chrome, Safari, ...) */
@@ -93,7 +93,7 @@ GIT_URL_BOX
 
 
 .git_hosting h3 {
-  background: url("../images/git_icon.png") no-repeat scroll 0 50% rgba(0, 0, 0, 0);
+  background: url('../images/git_icon.png') no-repeat scroll 0 50% rgba(0, 0, 0, 0);
   padding-left: 20px;
   margin-bottom: 10px;
 }
