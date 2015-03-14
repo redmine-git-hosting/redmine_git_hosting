@@ -61,3 +61,24 @@ function bindGitUrls(elements) {
     });
   });
 }
+
+function setRepositoryActiveTab(current_tab) {
+  var all_tabs = $("#repository-tabs li");
+  var active_tab = '';
+
+  all_tabs.each(function(){
+    if ($(this).attr('id').replace('tab-', '') == current_tab) {
+      active_tab = all_tabs.index(this);
+    }
+  });
+
+  $("#repository-tabs").tabs({
+    active: active_tab,
+    activate: function(event, ui) {
+      var new_tab_name = $(ui.newTab).attr('id').replace('tab-', '');
+      if ("replaceState" in window.history) {
+        window.history.replaceState(null, document.title, 'edit?tab=' + new_tab_name);
+      }
+    }
+  });
+}
