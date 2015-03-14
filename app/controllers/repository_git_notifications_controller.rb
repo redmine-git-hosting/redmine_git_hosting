@@ -3,8 +3,6 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
   before_filter :check_xitolite_permissions
 
-  helper :tag_it
-
 
   def index
     render_404
