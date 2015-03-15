@@ -18,7 +18,8 @@ module RedmineGitHosting
 
       WRAPPERS = [
         GitoliteWrapper::Admin, GitoliteWrapper::Repositories,
-        GitoliteWrapper::Users, GitoliteWrapper::Projects
+        GitoliteWrapper::Users, GitoliteWrapper::Projects,
+        GitoliteWrapper::Global
       ]
 
 

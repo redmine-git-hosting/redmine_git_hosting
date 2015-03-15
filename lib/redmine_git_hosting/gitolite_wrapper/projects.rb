@@ -50,40 +50,6 @@ module RedmineGitHosting
       end
 
 
-      def enable_readme_creation
-        repo_conf = gitolite_config.repos['@all']
-        if !repo_conf.nil?
-          logger.info('README file creation already enabled.')
-          return
-        end
-
-        # Repository '@all' doesn't exist, create it.
-        # TODO: update it if already exists (in case Administrator has modified it from another place)
-        #
-        admin.transaction do
-          gitolite_config.add_repo(create_readme_config)
-          gitolite_admin_repo_commit("Enable README file creation for repositories")
-        end
-      end
-
-
-      def disable_readme_creation
-        repo_conf = gitolite_config.repos['@all']
-        if repo_conf.nil?
-          logger.info('README file creation already disabled.')
-          return
-        end
-
-        # Repository '@all' exists, delete it.
-        # TODO: remove only redmine_gitolite_admin_id_rsa key from repository permissions
-        #
-        admin.transaction do
-          gitolite_config.rm_repo('@all')
-          gitolite_admin_repo_commit("Disable README file creation for repositories")
-        end
-      end
-
-
       private
 
 
@@ -133,21 +99,6 @@ module RedmineGitHosting
               logger.error("#{action} : error while cleaning repository path '#{path}'")
             end
           end
-        end
-
-
-        def create_readme_config
-          repo_conf = ::Gitolite::Config::Repo.new('@all')
-          repo_conf.permissions = create_readme_perms
-          repo_conf
-        end
-
-
-        def create_readme_perms
-          permissions = {}
-          permissions['RW+'] = {}
-          permissions['RW+'][''] = ['redmine_gitolite_admin_id_rsa']
-          [permissions]
         end
 
     end
