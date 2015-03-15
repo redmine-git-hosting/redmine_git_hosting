@@ -11,11 +11,11 @@
         = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
         )
 
-    - RedmineGitHosting::Recycle.content.each do |repo_trash|
+    - RedmineGitHosting::Recycle.content.each do |repo_in_trash|
       %tr
-        %td= repo_trash[0]
-        %td= repo_trash[1][:size]
-        %td= check_box_tag 'settings[gitolite_purge_repos][]', repo_trash[0], false, class: 'empty_trash'
+        %td= repo_in_trash[0]
+        %td= repo_in_trash[1][:size]
+        %td= check_box_tag 'settings[gitolite_purge_repos][]', repo_in_trash[0], false, class: 'empty_trash'
 
   #delete_warning{ class: 'alert alert-error', style: 'display: none;' }= l(:label_delete_warning)
 
@@ -23,24 +23,4 @@
   %p{ class: 'nodata', style: 'padding: 5px 0 0;' }= l(:label_no_data)
 
 :javascript
-  function displayWarning(){
-    var checked_list = $(".empty_trash:checked");
-    if(checked_list.length === 0){
-      $('#delete_warning').hide();
-    } else {
-      $('#delete_warning').show();
-    }
-  }
-
-  $(document).ready(function() {
-    $("#select_all_delete").on('click', function(){
-      $('.empty_trash').each(function(){
-        $(this).attr('checked', !$(this).attr('checked'));
-        displayWarning();
-      });
-    });
-
-    $(".empty_trash").on('change', function(){
-      displayWarning();
-    });
-  });
+  $(document).ready(function() { setRecycleBinWarnings(); });

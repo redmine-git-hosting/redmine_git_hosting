@@ -94,3 +94,25 @@ function setSettingsActiveTab() {
     });
   });
 }
+
+function displayWarning(){
+  var checked_list = $(".empty_trash:checked");
+  if(checked_list.length === 0){
+    $('#delete_warning').hide();
+  } else {
+    $('#delete_warning').show();
+  }
+}
+
+function setRecycleBinWarnings() {
+  $("#select_all_delete").on('click', function(){
+    $('.empty_trash').each(function(){
+      $(this).attr('checked', !$(this).attr('checked'));
+      displayWarning();
+    });
+  });
+
+  $(".empty_trash").on('change', function(){
+    displayWarning();
+  });
+}
