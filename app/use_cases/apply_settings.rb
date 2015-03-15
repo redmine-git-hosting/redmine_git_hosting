@@ -41,6 +41,7 @@ class ApplySettings
       do_resync_ssh_keys
       do_flush_cache
       do_delete_trash_repo
+      do_enable_readme_creation
     end
 
 
@@ -132,6 +133,11 @@ class ApplySettings
 
     def do_delete_trash_repo
       GitoliteAccessor.purge_trash_bin(delete_trash_repo) if !delete_trash_repo.empty?
+    end
+
+
+    def do_enable_readme_creation
+      valuehash[:init_repositories_on_create] == 'true' ? GitoliteAccessor.enable_readme_creation : GitoliteAccessor.disable_readme_creation
     end
 
 end

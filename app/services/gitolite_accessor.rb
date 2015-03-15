@@ -85,6 +85,18 @@ module GitoliteAccessor
     end
 
 
+    def enable_readme_creation
+      logger.info('Enable README creation for repositories')
+      resync_gitolite(:enable_readme_creation, 'enable_readme_creation')
+    end
+
+
+    def disable_readme_creation
+      logger.info('Disable README creation for repositories')
+      resync_gitolite(:disable_readme_creation, 'disable_readme_creation')
+    end
+
+
     private
 
 
