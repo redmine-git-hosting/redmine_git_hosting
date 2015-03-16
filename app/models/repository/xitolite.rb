@@ -72,6 +72,12 @@ class Repository::Xitolite < Repository::Git
   end
 
 
+  def fetch_changesets
+    empty_cache!
+    super
+  end
+
+
   private
 
 

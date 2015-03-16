@@ -21,9 +21,6 @@ class GitoliteHooksController < ApplicationController
 
 
     def post_receive_redmine
-      # Clear existing cache
-      @repository.empty_cache!
-
       # Set response headers
       set_response_headers
 
