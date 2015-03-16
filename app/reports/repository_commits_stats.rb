@@ -130,7 +130,12 @@ class RepositoryCommitsStats
 
 
     def total_changes_by_day
-      @total_changes_by_day ||= Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", repository.id).group(:commit_date).order(:commit_date).count
+      changes = {}
+      Changeset.where("repository_id = ?", repository.id).order(:commit_date).each do |changeset|
+        changes[changeset.commit_date] = 0 if !changes.has_key?(changeset.commit_date)
+        changes[changeset.commit_date] += changeset.filechanges.size
+      end
+      @total_changes_by_day ||= changes
     end
 
 

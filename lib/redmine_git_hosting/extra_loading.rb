@@ -7,6 +7,7 @@ module RedmineGitHosting
     # Load Forms and Concerns objects
     [
       Rails.root.join('plugins', 'redmine_git_hosting', 'app', 'models', 'concerns'),
+      Rails.root.join('plugins', 'redmine_git_hosting', 'app', 'presenters'),
       Rails.root.join('plugins', 'redmine_git_hosting', 'app', 'reports'),
       Rails.root.join('plugins', 'redmine_git_hosting', 'app', 'services'),
       Rails.root.join('plugins', 'redmine_git_hosting', 'app', 'use_cases')

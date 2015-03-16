@@ -1,4 +1,4 @@
-#validation_messages_git_notification= error_messages_for 'git_notification'
+.flash-messages= error_messages_for 'git_notification'
 
 .box
 
@@ -32,5 +32,4 @@
 
 :javascript
   var mailing_list_default_users = #{raw @repository.default_list.to_json};
-
   $(document).ready(function(){ setTagIt(); });

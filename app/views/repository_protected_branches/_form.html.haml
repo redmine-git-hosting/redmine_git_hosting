@@ -1,4 +1,4 @@
-#validation_messages_protected_branch= error_messages_for 'protected_branch'
+.flash-messages= error_messages_for 'protected_branch'
 
 .box
   %p= f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
@@ -9,41 +9,13 @@
   %p
     %label{ for: "repository_protected_branche[user_list]" }= l(:label_user_list) + ' :'
 
-  %ul{ id: 'user_list' }
+  = tag_it_list 'repository_protected_branche_user_list',
+                { name: 'repository_protected_branche[user_list][]' },
+                { source: 'user_list', placeholder: '+ add user' } do
     - if @protected_branch.user_list.any?
       - @protected_branch.user_list.each do |item|
         %li= item
 
 :javascript
   var user_list = #{raw @protected_branch.available_users.to_json};
-
-  function loadTagIt(target){
-
-    $('#' + target).gtagit({
-      autocomplete: {source: function(request, resolve) {
-          // fetch new values with request.resolve
-          resolve(user_list);
-        }
-      },
-      afterTagAdded: function(event, ui) {
-        var value = ui.tag.children('input:hidden').val();
-        user_list = user_list.filter(function(v) { return v != value;});
-        $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
-      },
-      afterTagRemoved: function(event, ui) {
-        var value = ui.tag.children('input:hidden').val();
-        user_list.push(value);
-        $(".ui-dialog-content").dialog("option", "position", ['center', 'center']).animate('slow');
-      },
-      showAutocompleteOnFocus: true,
-      placeholderText: '+ add user',
-      allowDuplicates: false,
-      caseSensitive: false,
-      fieldName: 'repository_protected_branche[' + target + '][]',
-    });
-
-  }
-
-  $(document).ready(function() {
-    loadTagIt('user_list');
-  });
+  $(document).ready(function(){ setTagIt(); });

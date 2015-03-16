@@ -1,29 +1,14 @@
-- content_for :header_tags do
-  = stylesheet_link_tag 'jquery_tag_it',                  plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap_custom',               plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_alert',      plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_animations', plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_close',      plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_custom',     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_label' ,     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_switch',     plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_tables',     plugin: 'redmine_bootstrap_kit'
-
-  = javascript_include_tag 'jquery_tag_it',            plugin: 'redmine_bootstrap_kit'
-  = javascript_include_tag 'plugins/bootstrap_switch', plugin: 'redmine_bootstrap_kit'
-  = javascript_include_tag 'bootstrap',                plugin: 'redmine_bootstrap_kit'
-
-  = stylesheet_link_tag 'application',                 plugin: 'redmine_git_hosting'
+= render partial: 'common/git_hosting_js_headers'
 
 %span
   = l(:label_need_help) + ' :'
-  = link_to l(:label_redmine_git_hosting_wiki), RedmineGitHosting::Config::GITHUB_WIKI, :target => '_blank'
+  = link_to l(:label_redmine_git_hosting_wiki), RedmineGitHosting::Config::GITHUB_WIKI, target: '_blank'
 
 %br
 
 %span
   = l(:label_open_issue) + ' :'
-  = link_to l(:label_redmine_git_hosting_issue), RedmineGitHosting::Config::GITHUB_ISSUE, :target => '_blank'
+  = link_to l(:label_redmine_git_hosting_issue), RedmineGitHosting::Config::GITHUB_ISSUE, target: '_blank'
 
 %br
 %br
@@ -31,18 +16,4 @@
 = render_tabs gitolite_plugin_settings_tabs
 
 :javascript
-  $(document).ready(function() {
-    groups = $('[id^=tab-gitolite_]');
-
-    $.each(groups, function(key, elem) {
-      $(elem).on('click', function(){
-        if ("replaceState" in window.history) {
-          window.history.replaceState(null, document.title, 'redmine_git_hosting?tab=' + $(this).attr('id').replace('tab-', ''));
-        }
-      });
-    });
-
-    $('.bootstrap-switch').each(function(index, element) {
-      installBootstrapSwitch(element);
-    });
-  });
+  $(document).ready(function() { setSettingsActiveTab(); setBootstrapSwitch(); });

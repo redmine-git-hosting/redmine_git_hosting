@@ -12,8 +12,8 @@ module ExtendRepositoriesHelper
 
   def create_readme_field(form, repository)
     content_tag(:p) do
-      hidden_field_tag('repository[create_readme]', 'false') +
-      content_tag(:label, l(:label_init_repo_with_readme)) +
+      hidden_field_tag('repository[create_readme]', 'false', id: '') +
+      content_tag(:label, l(:label_init_repo_with_readme), for: 'repository_create_readme') +
       check_box_tag('repository[create_readme]', 'true', RedmineGitHosting::Config.init_repositories_on_create?)
     end if repository.new_record?
   end
@@ -21,8 +21,8 @@ module ExtendRepositoriesHelper
 
   def enable_git_annex_field(form, repository)
     content_tag(:p) do
-      hidden_field_tag('repository[enable_git_annex]', 'false') +
-      content_tag(:label, l(:label_init_repo_with_git_annex)) +
+      hidden_field_tag('repository[enable_git_annex]', 'false', id: '') +
+      content_tag(:label, l(:label_init_repo_with_git_annex), for: 'repository_enable_git_annex') +
       check_box_tag('repository[enable_git_annex]', 'true')
     end if repository.new_record?
   end

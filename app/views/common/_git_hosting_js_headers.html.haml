@@ -1,0 +1,15 @@
+- content_for :header_tags do
+  = redmine_bootstrap_kit_load(:redmine_bootstrap_kit)
+  = redmine_bootstrap_kit_load(:bootstrap_alerts)
+  = redmine_bootstrap_kit_load(:bootstrap_label)
+  = redmine_bootstrap_kit_load(:bootstrap_modals)
+  = redmine_bootstrap_kit_load(:bootstrap_switch)
+  = redmine_bootstrap_kit_load(:bootstrap_tables)
+  = redmine_bootstrap_kit_load(:jquery_tag_it)
+  = redmine_bootstrap_kit_load(:font_awesome)
+
+  = stylesheet_link_tag    'application', plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
+
+#modal-box
+#modal-box-close-only

@@ -1,35 +1,3 @@
-/*
-ZERO CLIPBOARD
-*/
-.clipboard_button,
-#mirror_clipboard_button { height: 25px; display: block; float: left; }
-
-.clipboard_button,
-#mirror_clipboard_button { position: relative; padding: 0; text-align: center; border-color: #BBBBBB; border-style: solid; border-width: 1px; width: 24px; height: 23px; }
-
-.clipboard_button img,
-#mirror_clipboard_button img { padding-top: 4px; padding-left: 5px; display: block; }
-
-.clipboard_button.zeroclipboard-is-hover,
-#mirror_clipboard_button.zeroclipboard-is-hover {
-  background-color: #AAAAAA;
-  background-image:  url('../images/button_selected.svg') 0 0 no-repeat;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));
-  background-image: -moz-linear-gradient(top, #CCCCCC, #AAAAAA);
-  background-image: -webkit-linear-gradient(top, #CCCCCC, #AAAAAA);
-  background-image: -ms-linear-gradient(top, #CCCCCC, #AAAAAA);
-  background-image: -o-linear-gradient(top, #CCCCCC, #AAAAAA);
-  background-image: linear-gradient(to bottom, #CCCCCC, #AAAAAA);
-}
-
-.clipboard_button.zeroclipboard-is-active,
-#mirror_clipboard_button.zeroclipboard-is-active {
-  background-color: #DCDCDC;
-  background-image: none;
-  border-color: #B5B5B5;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset;
-}
-
 .repository_name { color: #505050; margin-top: 5px; }
 
 /*
@@ -67,7 +35,7 @@ GIT_URL_BOX
 
 .git_url_list li a {
   background-color: #EEEEEE;
-  background:  url(../images/button.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#F8F8F8), to(#DDDDDD)); /* Konquerer */
   background: -moz-linear-gradient(top,  #F8F8F8,  #DDDDDD); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#DDDDDD));   /* Webkit (Chrome, Safari, ...) */
@@ -95,7 +63,7 @@ GIT_URL_BOX
 .git_url_list li a:hover,
 .git_url_list li a:focus {
   background-color: #507AAA;
-  background:  url(../images/button_focus.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button_focus.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -khtml-gradient(linear, left top, left bottom, from(#759FCF), to(#507AAA)); /* Konquerer */
   background: -moz-linear-gradient(top,  #759FCF,  #507AAA); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#759FCF), to(#507AAA)); /* Webkit (Chrome, Safari, ...) */
@@ -111,7 +79,7 @@ GIT_URL_BOX
 
 .git_url_list li.selected a {
   background-color: #BBBBBB;
-  background:  url(../images/button_selected.svg) 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
+  background:  url('../images/button_selected.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
   background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));  /* Konquerer */
   background: -moz-linear-gradient(top,  #CCCCCC,  #AAAAAA); /* Gecko (Firefox, ...) */
   background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#AAAAAA));  /* Webkit (Chrome, Safari, ...) */
@@ -125,7 +93,7 @@ GIT_URL_BOX
 
 
 .git_hosting h3 {
-  background: url("../images/git_icon.png") no-repeat scroll 0 50% rgba(0, 0, 0, 0);
+  background: url('../images/git_icon.png') no-repeat scroll 0 50% rgba(0, 0, 0, 0);
   padding-left: 20px;
   margin-bottom: 10px;
 }

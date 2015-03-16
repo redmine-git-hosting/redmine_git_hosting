@@ -1,10 +1,10 @@
 /*
 PLUGIN ICONS
 */
-#admin-menu a.redmine-git-hosting { background-image: url(../images/git_icon.png); }
+#admin-menu a.redmine-git-hosting { background-image: url('../images/git_icon.png'); }
 
-.icon-git-logo { background-image: url("../images/git_icon.png"); padding-right: 5px; }
-.icon-clone { background-image: url("../images/clone.png"); }
+.icon-git-logo { background-image: url('../images/git_icon.png'); padding-right: 5px; }
+.icon-clone { background-image: url('../images/clone.png'); }
 
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }
@@ -71,7 +71,7 @@ REPOSITORY EDIT
 REPOSITORY VIEW
 */
 #sidebar li.repository.git {
-  background: url("../images/git_icon.png") no-repeat scroll 0 50% transparent;
+  background: url('../images/git_icon.png') no-repeat scroll 0 50% transparent;
   margin: 10px 10px 10px 0;
   padding-left: 25px;
 }
@@ -157,7 +157,7 @@ STATISTICS
 }
 
 .thumbnails:before, .thumbnails:after {
-  content: "";
+  content: '';
   display: table;
   line-height: 0;
 }
@@ -256,4 +256,9 @@ STATISTICS
 /*FONT AWESOME*/
 .fa-align {
   padding-right: 5px;
+}
+
+/*PROJECT OVERVIEW*/
+.repository-urls {
+  margin-top: 15px;
 }

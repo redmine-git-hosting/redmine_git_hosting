@@ -70,7 +70,10 @@ class RepositoryContributorsStats
       # registered_committers = [ committer,... ]
       registered_committers = []
       user_committer_mapping = {}
-      Changeset.where(repository_id: repository.id).where('user_id IS NOT NULL').group(:committer).includes(:user).each do |x|
+      Changeset.select('changesets.committer, changesets.user_id')
+               .where('repository_id = ? and user_id IS NOT NULL', repository.id)
+               .group(:committer, :user_id)
+               .includes(:user).each do |x|
         name = "#{x.user.firstname} #{x.user.lastname}"
         registered_committers << x.committer
         user_committer_mapping[[name, x.user.mail]] ||= []

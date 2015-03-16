@@ -43,21 +43,4 @@
     %p{ class: 'nodata' }= l(:label_no_data)
 
 :javascript
-  // Return a helper with preserved width of cells
-  var fixHelper = function(e, ui) {
-    ui.children().each(function() {
-      $(this).width($(this).width());
-    });
-    return ui;
-  };
-
-  $(document).ready(function() {
-    initModalBoxes(modals);
-    $('#protected_branches tbody').sortable({
-      helper: fixHelper,
-      axis: 'y',
-      update: function(event, ui) {
-        $.post($('#protected_branches').data('update-url'), $(this).sortable('serialize'));
-      }
-    });
-  });
+  $(document).ready(function() { initModalBoxes(modals); setSortableElement('#protected_branches tbody', '#protected_branches'); });

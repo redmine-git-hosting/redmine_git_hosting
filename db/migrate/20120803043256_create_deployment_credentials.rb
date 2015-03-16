@@ -19,9 +19,9 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     puts "Updating role : '#{manager_role_name}'..."
     manager_role = Role.find_by_name(manager_role_name)
     if !manager_role.nil?
-      manager_role.add_permission! :view_deployment_keys
-      manager_role.add_permission! :create_deployment_keys
-      manager_role.add_permission! :edit_deployment_keys
+      manager_role.add_permission! :view_repository_deployment_credentials
+      manager_role.add_permission! :create_repository_deployment_credentials
+      manager_role.add_permission! :edit_repository_deployment_credentials
       manager_role.save
       puts "done !"
     else
@@ -32,7 +32,7 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     puts "Updating role : '#{developer_role_name}'..."
     developer_role = Role.find_by_name(developer_role_name)
     if !developer_role.nil?
-      developer_role.add_permission! :view_deployment_keys
+      developer_role.add_permission! :view_repository_deployment_credentials
       developer_role.save
       puts "done !"
     else
@@ -49,9 +49,9 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     puts "Updating role : '#{manager_role_name}'..."
     manager_role = Role.find_by_name(manager_role_name)
     if !manager_role.nil?
-      manager_role.remove_permission! :view_deployment_keys
-      manager_role.remove_permission! :create_deployment_keys
-      manager_role.remove_permission! :edit_deployment_keys
+      manager_role.remove_permission! :view_repository_deployment_credentials
+      manager_role.remove_permission! :create_repository_deployment_credentials
+      manager_role.remove_permission! :edit_repository_deployment_credentials
       manager_role.save
       puts "done !"
     else
@@ -62,7 +62,7 @@ class CreateDeploymentCredentials < ActiveRecord::Migration
     puts "Updating role : '#{developer_role_name}'..."
     developer_role = Role.find_by_name(developer_role_name)
     if !developer_role.nil?
-      developer_role.remove_permission! :view_deployment_keys
+      developer_role.remove_permission! :view_repository_deployment_credentials
       developer_role.save
       puts "done !"
     else

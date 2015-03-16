@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
 [![Dependency Status](https://gemnasium.com/jbox-web/redmine_git_hosting.svg)](https://gemnasium.com/jbox-web/redmine_git_hosting)
 [![Coverage Status](https://coveralls.io/repos/jbox-web/redmine_git_hosting/badge.png?branch=devel)](https://coveralls.io/r/jbox-web/redmine_git_hosting?branch=devel)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jbox-web/redmine_git_hosting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU)
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
@@ -12,7 +13,7 @@ This plugin allows straightforward management of Gitolite within Redmine.
 
 You can follow announcements [here](https://jbox-web.github.io/redmine_git_hosting/news/) or take a look at the [roadmap](https://jbox-web.github.io/redmine_git_hosting/about/roadmap/).
 
-**[Latest stable version : 1.0.0](https://jbox-web.github.io/redmine_git_hosting/about/releases-notes/#toc-release-1-0-0)**
+**[Latest stable version : 1.0.2](https://jbox-web.github.io/redmine_git_hosting/about/releases-notes/#toc-release-1-0-2)**
 
 ## Installation
 

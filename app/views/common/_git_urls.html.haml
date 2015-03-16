@@ -1,0 +1,20 @@
+- content_for :header_tags do
+  = redmine_bootstrap_kit_load(:redmine_bootstrap_kit)
+  = redmine_bootstrap_kit_load(:zero_clipboard)
+  = stylesheet_link_tag    'git_urls',    plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
+
+- repositories = Array.wrap(repository) unless repositories
+- if repositories.map(&:available_urls).flatten.reject { |m| m.blank? }.any?
+  - repositories.sort_by { |r| r.is_default ? 0 : 1 }.each do |repository|
+    - next if repository.available_urls.empty?
+    - present repository do |p|
+      .repository-urls
+        = p.link_to_repository if repositories.count > 1
+        = p.git_urls_box
+
+- else
+  #git_url_box= l(:label_repository_access_not_configured)
+
+:javascript
+  $(document).ready(function() { setFirstGitUrl('.git_url_list'); bindGitUrls('.git_url'); });
