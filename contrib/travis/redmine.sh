@@ -32,7 +32,7 @@ function install_redmine_from_package() {
 
 function install_redmine_from_svn() {
   log_title "GET SOURCES FROM SVN"
-  svn co "${REDMINE_SVN_URL}/${REDMINE_VERSION}" "${REDMINE_NAME}"
+  svn co --non-interactive --trust-server-cert "${REDMINE_SVN_URL}/${REDMINE_VERSION}" "${REDMINE_NAME}"
   log_ok
 }
 
