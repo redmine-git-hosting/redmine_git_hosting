@@ -33,7 +33,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
 
   ## Scopes
   scope :active,   -> { where active: STATUS_ACTIVE }
-  scope :inactive, -> { where active: STATUS_LOCKED }
+  scope :inactive, -> { where active: STATUS_INACTIVE }
 
 
   def to_s
