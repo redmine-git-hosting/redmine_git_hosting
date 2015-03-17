@@ -8,7 +8,7 @@ module RepositoryMirrorsHelper
 
   # Refspec for mirrors
   def refspec(mirror, max_refspec = 0)
-    if mirror.push_mode == RepositoryMirror::PUSHMODE_MIRROR
+    if mirror.mirror_mode?
       l(:all_references)
     else
       result = []
@@ -30,8 +30,8 @@ module RepositoryMirrorsHelper
   end
 
 
-  def render_push_state(mirror, bool)
-    if bool
+  def render_push_state(mirror, error)
+    if error
       status = l(:label_mirror_push_fail)
       status_css = 'important'
     else

@@ -3,7 +3,7 @@ module RepositoryPostReceiveUrlsHelper
   # Post-receive Mode
   def post_receive_mode(prurl)
     label = []
-    if prurl.mode == :github
+    if prurl.github_mode?
       label << l(:label_github_post)
       label << "(#{l(:label_split_payloads)})" if prurl.split_payloads?
     else
