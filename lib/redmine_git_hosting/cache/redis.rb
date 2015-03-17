@@ -4,7 +4,7 @@ require 'digest/sha1'
 module RedmineGitHosting::Cache
   class Redis < AbstractCache
 
-    def set_cache(command, output, repo_id)
+    def set_cache(repo_id, command, output)
       logger.debug("Redis Adapter : inserting cache entry for repository '#{repo_id}'")
 
       # Create a SHA256 of the Git command as key id
@@ -21,7 +21,7 @@ module RedmineGitHosting::Cache
     end
 
 
-    def get_cache(command)
+    def get_cache(repo_id, command)
       client.get(hash_key(command))
     end
 

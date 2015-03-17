@@ -12,13 +12,13 @@ module RedmineGitHosting
       def set_cache(repo_id, out_value, primary_key, secondary_key = nil)
         return if out_value.strip.empty?
         command = compose_key(primary_key, secondary_key)
-        adapter.apply_cache_limit if adapter.set_cache(command, out_value, repo_id)
+        adapter.apply_cache_limit if adapter.set_cache(repo_id, command, out_value)
       end
 
 
-      def get_cache(primary_key, secondary_key = nil)
+      def get_cache(repo_id, primary_key, secondary_key = nil)
         command = compose_key(primary_key, secondary_key)
-        cached  = adapter.get_cache(command)
+        cached  = adapter.get_cache(repo_id, command)
         # Return result as a string stream
         cached.nil? ? nil : StringIO.new(cached)
       end

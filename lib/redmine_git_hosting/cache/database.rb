@@ -1,7 +1,7 @@
 module RedmineGitHosting::Cache
   class Database < AbstractCache
 
-    def set_cache(command, output, repo_id)
+    def set_cache(repo_id, command, output)
       logger.debug("DB Adapter : inserting cache entry for repository '#{repo_id}'")
       begin
         GitCache.create(
@@ -17,7 +17,7 @@ module RedmineGitHosting::Cache
     end
 
 
-    def get_cache(command)
+    def get_cache(repo_id, command)
       cached = GitCache.find_by_command(command)
       if cached
         if valid_cache_entry?(cached.created_at)

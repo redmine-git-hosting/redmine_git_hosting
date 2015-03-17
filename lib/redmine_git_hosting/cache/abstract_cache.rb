@@ -13,12 +13,12 @@ module RedmineGitHosting::Cache
     end
 
 
-    def set_cache(command, output, repo_id)
+    def set_cache(repo_id, command, output)
       raise NotImplementedError
     end
 
 
-    def get_cache(command)
+    def get_cache(repo_id, command)
       raise NotImplementedError
     end
 
