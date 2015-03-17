@@ -6,7 +6,7 @@ title: Bitnami installation
 ### {{ page.title }}
 ***
 
-As Bitnami override some internal paths needed to build native Ruby extension you must compile libgit2 yourself before installing Redmine Git Hosting.
+As Bitnami override some internal paths needed to build native Ruby extension you must compile libgit2 yourself [**before** installing Redmine Git Hosting]({{ site.baseurl }}/howtos/install).
 
 Here's the steps :
 
