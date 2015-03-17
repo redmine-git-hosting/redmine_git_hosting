@@ -202,7 +202,7 @@ module RedmineGitHosting
       if @my_read_stream.nil?
         # Shouldn't happen, but might be problem
         logger.error("Call to #{my_method.to_s} before IO-handlers wrapped.")
-        raise Redmine::Scm::Adapters::GitAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
+        raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
       end
 
 
