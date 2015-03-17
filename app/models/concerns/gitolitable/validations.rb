@@ -56,11 +56,7 @@ module Gitolitable
 
 
     def empty?
-      if extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
-        true
-      else
-        false
-      end
+      extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
     end
 
 

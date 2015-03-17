@@ -63,11 +63,7 @@ module Gitolitable
 
 
     def downloadable?
-      if git_annex_enabled?
-        false
-      else
-        User.current.allowed_to_download?(self)
-      end
+      git_annex_enabled? ? false : User.current.allowed_to_download?(self)
     end
 
 
