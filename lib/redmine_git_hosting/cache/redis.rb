@@ -21,6 +21,7 @@ module RedmineGitHosting::Cache
 
 
     def get_cache(repo_id, command)
+      logger.debug("Redis Adapter : getting cache entry for repository '#{repo_id}'")
       client.get(hash_key(repo_id, command))
     end
 
