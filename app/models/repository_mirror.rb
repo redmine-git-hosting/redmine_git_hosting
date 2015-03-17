@@ -1,9 +1,6 @@
 class RepositoryMirror < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE   = true
-  STATUS_INACTIVE = false
-
   PUSHMODE_MIRROR       = 0
   PUSHMODE_FORCE        = 1
   PUSHMODE_FAST_FORWARD = 2
@@ -34,8 +31,8 @@ class RepositoryMirror < ActiveRecord::Base
   validate :check_refspec
 
   ## Scopes
-  scope :active,               -> { where(active: STATUS_ACTIVE) }
-  scope :inactive,             -> { where(active: STATUS_INACTIVE) }
+  scope :active,               -> { where(active: true) }
+  scope :inactive,             -> { where(active: false) }
   scope :has_explicit_refspec, -> { where(push_mode: '> 0') }
 
   ## Callbacks

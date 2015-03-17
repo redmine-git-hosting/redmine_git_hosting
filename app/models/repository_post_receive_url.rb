@@ -3,9 +3,6 @@ require 'uri'
 class RepositoryPostReceiveUrl < ActiveRecord::Base
   unloadable
 
-  STATUS_ACTIVE   = true
-  STATUS_INACTIVE = false
-
   ## Attributes
   attr_accessible :url, :mode, :active, :use_triggers, :triggers, :split_payloads
 
@@ -26,8 +23,8 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   serialize :triggers, Array
 
   ## Scopes
-  scope :active,   -> { where(active: STATUS_ACTIVE) }
-  scope :inactive, -> { where(active: STATUS_INACTIVE) }
+  scope :active,   -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 
   ## Callbacks
   before_validation :strip_whitespace
