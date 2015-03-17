@@ -25,6 +25,7 @@
   %label= l(:label_gitolite_log_level)
   = select_tag 'settings[gitolite_log_level]', options_for_select(log_level_options, gitolite_log_level)
   %br
+  %em= l(:label_gitolite_log_level_desc)
 
 %p
   %label= l(:label_git_config_username)

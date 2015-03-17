@@ -50,6 +50,7 @@ en:
   label_gitolite_recycle_bin_expiration_time_desc: (In hours)
 
   label_gitolite_log_level: Gitolite log level
+  label_gitolite_log_level_desc: (You must restart Redmine to take effects)
   label_debug: Debug
   label_info: Info
   label_warn: Warning

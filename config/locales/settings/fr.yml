@@ -50,6 +50,7 @@ fr:
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
   label_gitolite_log_level: Niveau de journalisation
+  label_gitolite_log_level_desc: (Vous devrez redémarrer Redmine pour que le changement soit pris en compte)
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement
