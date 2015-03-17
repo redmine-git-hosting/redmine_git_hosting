@@ -1,11 +1,7 @@
 module GitolitePublicKeysHelper
 
   def keylabel(key)
-    if key.user == User.current
-      "#{key.title}"
-    else
-      "#{key.user.login}@#{key.title}"
-    end
+    key.user == User.current ? "#{key.title}" : "#{key.user.login}@#{key.title}"
   end
 
 

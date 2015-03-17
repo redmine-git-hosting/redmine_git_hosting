@@ -33,12 +33,7 @@ class MirrorPush
 
 
     def push_args
-      if mirror.mirror_mode?
-        ['--mirror']
-      else
-        # Not mirroring -- other possible push_args
-        mirror_args
-      end
+      mirror.mirror_mode? ? ['--mirror'] : mirror_args
     end
 
 
