@@ -524,7 +524,7 @@ module Redmine
             logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
             @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
             logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
-            logger.debug(@git_cache_id) if !@git_cache_id.nil?
+            logger.debug("git_cache_id found : #{@git_cache_id}") if !@git_cache_id.nil?
             @git_cache_id
           end
 
