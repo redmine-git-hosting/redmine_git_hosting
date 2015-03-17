@@ -20,6 +20,7 @@ echo ""
 
 install_packages
 install_redmine
+install_plugin
 install_rspec
 install_plugin
 finish_install
