@@ -12,16 +12,16 @@ branches:
 matrix:
   include:
     - rvm: 2.2.0
-      env: REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=mysql
-      gemfile: Gemfile
-    - rvm: 2.2.0
-      env: REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=postgresql
-      gemfile: Gemfile
-    - rvm: 2.2.0
       env: REDMINE_VERSION=3.0-stable USE_SVN=true DATABASE_ADAPTER=mysql
       gemfile: Gemfile
     - rvm: 2.2.0
       env: REDMINE_VERSION=3.0-stable USE_SVN=true DATABASE_ADAPTER=postgresql
+      gemfile: Gemfile
+    - rvm: 2.2.0
+      env: REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=mysql
+      gemfile: Gemfile
+    - rvm: 2.2.0
+      env: REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=postgresql
       gemfile: Gemfile
 env:
   global:
@@ -34,14 +34,14 @@ env:
     - POSTGRES_DATABASE=redmine
     - POSTGRES_USER=postgres
   matrix:
-    - REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=2.6.3 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=2.6.3 DATABASE_ADAPTER=postgresql
     - REDMINE_VERSION=3.0-stable USE_SVN=true DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.0-stable USE_SVN=true DATABASE_ADAPTER=postgresql
     - REDMINE_VERSION=2.6-stable USE_SVN=true DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=2.6-stable USE_SVN=true DATABASE_ADAPTER=postgresql
+    - REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=3.0.1 DATABASE_ADAPTER=postgresql
+    - REDMINE_VERSION=2.6.3 DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=2.6.3 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=mysql
     # - REDMINE_VERSION=3.0.0 DATABASE_ADAPTER=postgresql
     # - REDMINE_VERSION=2.6.2 DATABASE_ADAPTER=mysql
