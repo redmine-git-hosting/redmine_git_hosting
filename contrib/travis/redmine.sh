@@ -7,6 +7,8 @@ REDMINE_NAME="redmine-${REDMINE_VERSION}"
 REDMINE_PACKAGE="${REDMINE_NAME}.tar.gz"
 REDMINE_URL="${REDMINE_PACKAGE_URL}/${REDMINE_PACKAGE}"
 
+USE_SVN=${USE_SVN:-false}
+
 version=(${REDMINE_VERSION//./ })
 major=${version[0]}
 minor=${version[1]}
