@@ -50,11 +50,6 @@ fr:
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
   label_gitolite_log_level: Niveau de journalisation
-  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers
-  label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
-  label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
-  label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
-
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement

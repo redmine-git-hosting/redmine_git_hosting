@@ -36,7 +36,6 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_temp_dir                     => Rails.root.join('tmp', 'redmine_git_hosting').to_s,
       :gitolite_recycle_bin_expiration_time  => '24.0',
       :gitolite_log_level                    => 'info',
-      :gitolite_log_split                    => 'false',
       :git_config_username                   => 'Redmine Git Hosting',
       :git_config_email                      => 'redmine@example.net',
 

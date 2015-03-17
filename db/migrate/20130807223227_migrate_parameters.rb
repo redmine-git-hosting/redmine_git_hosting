@@ -44,7 +44,6 @@ class MigrateParameters < ActiveRecord::Migration
 
       # New features settings
       :gitolite_log_level   => 'info',
-      :gitolite_log_split   => 'false',
 
       :git_config_username => 'Redmine Git Hosting',
       :git_config_email    => 'redmine@example.net',

@@ -50,11 +50,6 @@ en:
   label_gitolite_recycle_bin_expiration_time_desc: (In hours)
 
   label_gitolite_log_level: Gitolite log level
-  label_gitolite_log_split: Split logs into multiple files?
-  label_gitolite_log_split_desc: (Need to restart both Redmine and Sidekiq after change)
-  label_gitolite_log_split_on: (Will be store in 'rails root/logs/git_hosting/git_*.log')
-  label_gitolite_log_split_off: (Will be store in 'rails root/logs/git_hosting.log')
-
   label_debug: Debug
   label_info: Info
   label_warn: Warning
