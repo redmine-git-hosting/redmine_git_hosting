@@ -11,6 +11,7 @@ module Hooks
 
 
     def execute
+      repository.empty_cache!
       fetch_changesets
     end
 
@@ -37,10 +38,6 @@ module Hooks
         rescue ::Redmine::Scm::Adapters::CommandFailed => e
           logger.error('Failed!')
           logger.error("Error during fetching changesets : #{e.message}")
-          y << " [failure]\n"
-        rescue => e
-          logger.error('Failed!')
-          logger.error("Error after fetching changesets : #{e.message}")
           y << " [failure]\n"
         end
 

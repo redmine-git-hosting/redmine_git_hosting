@@ -32,6 +32,7 @@ namespace :redmine_git_hosting do
   task :fetch_changesets => [:environment] do
     puts "Performing manual fetch_changesets operation..."
     RedmineGitHosting.logger.warn("Performing manual fetch_changesets operation from command line")
+    GitoliteAccessor.flush_git_cache
     Repository.fetch_changesets
     RedmineGitHosting.logger.warn("Done!")
     puts "Done!"
