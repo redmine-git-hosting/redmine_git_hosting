@@ -97,6 +97,7 @@ fr:
   label_gitolite_cache_max_size: Taille maximale d'un élément du cache
   label_gitolite_cache_max_elements: Nombre maximal d'éléments dans le cache
   label_gitolite_cache_adapter: Cache Adapter
+  label_gitolite_cache_adapter_desc: (Vous devrez redémarrer Redmine pour que le changement soit pris en compte)
 
   # Gitolite Notifications
   label_tab_notify: Notifications
