@@ -25,15 +25,15 @@ namespace :redmine_git_hosting do
       puts ""
 
       puts "* ls -hal #{gitolite_temp_dir}"
-      puts %x[ ls -hal #{gitolite_temp_dir} ]
+      puts %x[ ls -hal "#{gitolite_temp_dir}" ]
       puts ""
 
       puts "* ls -hal #{gitolite_temp_dir}/git"
-      puts %x[ ls -hal #{gitolite_temp_dir}/git ]
+      puts %x[ ls -hal "#{gitolite_temp_dir}/git" ]
       puts ""
 
       puts "* ls -hal #{gitolite_temp_dir}/git/gitolite-admin.git"
-      puts %x[ ls -hal #{gitolite_temp_dir}/git/gitolite-admin.git ]
+      puts %x[ ls -hal "#{gitolite_temp_dir}/git/gitolite-admin.git" ]
       puts ""
 
       begin
@@ -43,11 +43,11 @@ namespace :redmine_git_hosting do
         puts ""
         puts "GIT STATUS :"
         puts "------------"
-        puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} status ]
+        puts %x[ git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" status ]
         puts ""
         puts "GIT LOG :"
         puts "---------"
-        puts %x[ git --work-tree #{repo.workdir} --git-dir #{repo.path} log ]
+        puts %x[ git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" log ]
       rescue => e
         puts "Error while getting tests results"
         puts e.message
