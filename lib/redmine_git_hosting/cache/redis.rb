@@ -67,7 +67,7 @@ module RedmineGitHosting::Cache
       # When flushing cache, get all keys with this prefix and delete them.
       #
       def key_prefix(repo_id)
-        "git_hosting_cache:#{repo_id}"
+        "git_hosting_cache:#{Digest::SHA256.hexdigest(repo_id)}"
       end
 
 
