@@ -4,14 +4,13 @@ require 'digest/sha1'
 module RedmineGitHosting::Cache
   class Redis < AbstractCache
 
-    def set_cache(command, output, repo_id)
+    def set_cache(repo_id, command, output)
       logger.debug("Redis Adapter : inserting cache entry for repository '#{repo_id}'")
 
       # Create a SHA256 of the Git command as key id
-      hashed_command = hash_key(command)
+      hashed_command = hash_key(repo_id, command)
 
       begin
-        create_or_update_repo_references(repo_id, hashed_command)
         client.set(hashed_command, output, ex: max_cache_time)
         true
       rescue => e
@@ -21,13 +20,18 @@ module RedmineGitHosting::Cache
     end
 
 
-    def get_cache(command)
-      client.get(hash_key(command))
+    def get_cache(repo_id, command)
+      client.get(hash_key(repo_id, command))
     end
 
 
     def flush_cache!
-      client.scan_each(match: 'git_hosting_cache_*') { |key| client.del(key) }
+      deleted = 0
+      client.scan_each(match: 'git_hosting_cache:*') { |key|
+        client.del(key)
+        deleted += 1
+      }
+      logger.info("Redis Adapter : removed '#{deleted}' expired cache entries among all repositories")
     end
 
 
@@ -40,17 +44,12 @@ module RedmineGitHosting::Cache
 
 
     def clear_cache_for_repository(repo_id)
-      # Create a SHA256 of the repo_id as key id
-      hashed_repo_id = hash_key(repo_id)
-      # Find repository references in Redis
-      repo_references = client.get(hashed_repo_id)
-      return true if repo_references.nil?
-      # Delete reference keys
-      repo_references = repo_references.split(',').select { |r| !r.empty? }
-      repo_references.map { |key| client.del(key) }
-      logger.info("Redis Adapter : removed '#{repo_references.size}' expired cache entries for repository '#{repo_id}'")
-      # Reset references count
-      client.set(hashed_repo_id, '', ex: max_cache_time)
+      deleted = 0
+      client.scan_each(match: "#{key_prefix(repo_id)}:*") { |key|
+        client.del(key)
+        deleted += 1
+      }
+      logger.info("Redis Adapter : removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
     end
 
 
@@ -64,25 +63,18 @@ module RedmineGitHosting::Cache
     private
 
 
-      def create_or_update_repo_references(repo_id, reference)
-        # Create a SHA256 of the repo_id as key id
-        hashed_repo_id = hash_key(repo_id)
-        # Find it in Redis
-        repo_references = client.get(hashed_repo_id)
-        if repo_references.nil?
-          client.set(hashed_repo_id, reference, ex: max_cache_time)
-        else
-          client.append(hashed_repo_id, ',' + reference)
-        end
+      # Prefix each key with *git_hosting_cache:* to store them in a subdirectory.
+      # When flushing cache, get all keys with this prefix and delete them.
+      #
+      def key_prefix(repo_id)
+        "git_hosting_cache:#{repo_id}"
       end
 
 
-      # Prefix each key with *git_hosting_cache_* because keys
-      # are stored in the Redis root namespace.
-      # When flushing cache, get all keys with this prefix and delete them.
+      # Make SHAR256 of the Git command as identifier
       #
-      def hash_key(key)
-        'git_hosting_cache_' + Digest::SHA256.hexdigest(key)
+      def hash_key(repo_id, command)
+        "#{key_prefix(repo_id)}:#{Digest::SHA256.hexdigest(command)}"
       end
 
 

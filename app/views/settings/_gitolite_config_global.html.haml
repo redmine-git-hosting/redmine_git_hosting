@@ -3,7 +3,6 @@
 
 - gitolite_temp_dir    = RedmineGitHosting::Config.get_setting(:gitolite_temp_dir)
 - gitolite_log_level   = RedmineGitHosting::Config.get_setting(:gitolite_log_level)
-- gitolite_log_split   = RedmineGitHosting::Config.get_setting(:gitolite_log_split, true)
 
 - git_config_username  = RedmineGitHosting::Config.get_setting(:git_config_username)
 - git_config_email     = RedmineGitHosting::Config.get_setting(:git_config_email)
@@ -26,20 +25,7 @@
   %label= l(:label_gitolite_log_level)
   = select_tag 'settings[gitolite_log_level]', options_for_select(log_level_options, gitolite_log_level)
   %br
-  %em= l(:label_gitolite_log_split_desc)
-
-%p
-  %label= l(:label_gitolite_log_split)
-  = bootstrap_switch_tag do
-    = hidden_field_tag 'settings[gitolite_log_split]', 'false'
-    = check_box_tag 'settings[gitolite_log_split]', gitolite_log_split, gitolite_log_split
-  %br
-  %em= l(:label_gitolite_log_split_desc)
-  %br
-  - if gitolite_log_split
-    %em= l(:label_gitolite_log_split_on)
-  - else
-    %em= l(:label_gitolite_log_split_off)
+  %em= l(:label_gitolite_log_level_desc)
 
 %p
   %label= l(:label_git_config_username)

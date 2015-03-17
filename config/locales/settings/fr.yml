@@ -50,11 +50,7 @@ fr:
   label_gitolite_recycle_bin_expiration_time_desc: (En heures)
 
   label_gitolite_log_level: Niveau de journalisation
-  label_gitolite_log_split: Séparer les journaux dans plusieurs fichiers
-  label_gitolite_log_split_desc: (Redémarrez Redmine et Sidekiq après les changements)
-  label_gitolite_log_split_on: (Seront stockés dans « rails root/logs/git_hosting/git_*.log »)
-  label_gitolite_log_split_off: (Seront stockés dans « rails root/logs/git_hosting.log »)
-
+  label_gitolite_log_level_desc: (Vous devrez redémarrer Redmine pour que le changement soit pris en compte)
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement
@@ -101,6 +97,7 @@ fr:
   label_gitolite_cache_max_size: Taille maximale d'un élément du cache
   label_gitolite_cache_max_elements: Nombre maximal d'éléments dans le cache
   label_gitolite_cache_adapter: Cache Adapter
+  label_gitolite_cache_adapter_desc: (Vous devrez redémarrer Redmine pour que le changement soit pris en compte)
 
   # Gitolite Notifications
   label_tab_notify: Notifications
