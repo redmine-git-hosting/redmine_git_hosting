@@ -6,7 +6,7 @@ GITHUB_PROJECT=${GITHUB_PROJECT:-redmine_git_hosting}
 function install_plugin_packages() {
   log_title "INSTALL ADDITIONAL PACKAGES"
   sudo apt-get update -qq
-  sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
+  sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake subversion
 }
 
 
