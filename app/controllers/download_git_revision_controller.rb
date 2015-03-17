@@ -56,7 +56,7 @@ class DownloadGitRevisionController < ApplicationController
 
 
     def validate_download
-      if !@download.commit_valid
+      if !@download.valid_commit?
         flash.now[:error] = l(:error_download_revision_no_such_commit, commit: download_revision)
         render_404
       end

@@ -79,20 +79,12 @@ class GitNotifier
 
 
     def repository_include_list
-      if git_notification.nil? || git_notification.new_record?
-        []
-      else
-        git_notification.include_list
-      end
+      (git_notification.nil? || git_notification.new_record?) ? [] : git_notification.include_list
     end
 
 
     def repository_exclude_list
-      if git_notification.nil? || git_notification.new_record?
-        []
-      else
-        git_notification.exclude_list
-      end
+      (git_notification.nil? || git_notification.new_record?) ? [] : git_notification.exclude_list
     end
 
 

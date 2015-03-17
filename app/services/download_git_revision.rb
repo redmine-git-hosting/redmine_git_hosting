@@ -6,7 +6,6 @@ class DownloadGitRevision
   attr_reader :format
   attr_reader :gitolite_repository_path
 
-  attr_reader :commit_valid
   attr_reader :commit_id
   attr_reader :content_type
   attr_reader :filename
@@ -18,7 +17,7 @@ class DownloadGitRevision
     @format     = format
     @gitolite_repository_path = repository.gitolite_repository_path
 
-    @commit_valid  = false
+    @valid_commit  = false
     @commit_id     = nil
     @content_type  = ''
     @filename      = ''
@@ -30,6 +29,11 @@ class DownloadGitRevision
 
   def content
     repository.archive(commit_id, format)
+  end
+
+
+  def valid_commit?
+    @valid_commit
   end
 
 
@@ -59,14 +63,13 @@ class DownloadGitRevision
 
       # well, let check if this is a valid commit
       commit = revision if commit.nil?
+      commit = repository.rev_parse(commit)
 
-      valid_commit = repository.rev_parse(commit)
-
-      if valid_commit == ''
-        @commit_valid = false
+      if commit == ''
+        @valid_commit = false
       else
-        @commit_valid = true
-        @commit_id = valid_commit
+        @valid_commit = true
+        @commit_id = commit
       end
     end
 

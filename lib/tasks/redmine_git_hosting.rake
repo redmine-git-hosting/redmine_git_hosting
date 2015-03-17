@@ -71,7 +71,7 @@ namespace :redmine_git_hosting do
   task :install_hook_parameters => [:environment] do
     puts ""
     puts "Installing/updating Gitolite hook parameters"
-    puts "----------------------------------"
+    puts "--------------------------------------------"
     puts "Results :"
     result = RedmineGitHosting::Config.update_hook_params!
     puts YAML::dump(result)

@@ -1,9 +1,13 @@
 #!/bin/bash
 
-REDMINE_SOURCE_URL="http://www.redmine.org/releases"
+REDMINE_PACKAGE_URL="http://www.redmine.org/releases"
+REDMINE_SVN_URL="https://svn.redmine.org/redmine/branches"
+
 REDMINE_NAME="redmine-${REDMINE_VERSION}"
 REDMINE_PACKAGE="${REDMINE_NAME}.tar.gz"
-REDMINE_URL="${REDMINE_SOURCE_URL}/${REDMINE_PACKAGE}"
+REDMINE_URL="${REDMINE_PACKAGE_URL}/${REDMINE_PACKAGE}"
+
+USE_SVN=${USE_SVN:-false}
 
 version=(${REDMINE_VERSION//./ })
 major=${version[0]}
@@ -15,7 +19,7 @@ PLUGIN_PATH=${PLUGIN_PATH:-$GITHUB_SOURCE}
 PLUGIN_NAME=${PLUGIN_NAME:-$GITHUB_PROJECT}
 
 
-function install_redmine() {
+function install_redmine_from_package() {
   log_title "GET TARBALL"
   wget "${REDMINE_URL}"
   log_ok
@@ -23,7 +27,26 @@ function install_redmine() {
   log_title "EXTRACT IT"
   tar xf "${REDMINE_PACKAGE}"
   log_ok
+}
 
+
+function install_redmine_from_svn() {
+  log_title "GET SOURCES FROM SVN"
+  svn co --non-interactive --trust-server-cert "${REDMINE_SVN_URL}/${REDMINE_VERSION}" "${REDMINE_NAME}"
+  log_ok
+}
+
+
+function install_redmine() {
+  if [ $USE_SVN == 'true' ] ; then
+    install_redmine_from_svn
+  else
+    install_redmine_from_package
+  fi
+}
+
+
+function install_plugin() {
   log_title "MOVE PLUGIN"
   # Move GITHUB_USER/GITHUB_PROJECT to redmine/plugins dir
   mv "${PLUGIN_PATH}" "${REDMINE_NAME}/plugins"
