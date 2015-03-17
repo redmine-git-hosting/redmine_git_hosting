@@ -6,7 +6,7 @@ title: How To Migrate
 ### {{ page.title }}
 ***
 
-#### Step by Step migration from **0.7.10 version to v1.0.0**
+#### Step by Step migration from **0.7.10 version to v1.0.x**
 ***
 
 <div class="alert alert-warning" role="alert">
@@ -38,11 +38,11 @@ Then you can switch to the **v1.0.0** branch and launch the migration task :
 
     # Update Redmine Gitolite Hosting
     redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
-    redmine$ git checkout 1.0.0
+    redmine$ git checkout 1.0.2
 
     # Update Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
-    redmine$ git checkout 0.2.0
+    redmine$ git checkout 0.2.2
 
     # Install gems and do the migration
     redmine$ cd REDMINE_ROOT
