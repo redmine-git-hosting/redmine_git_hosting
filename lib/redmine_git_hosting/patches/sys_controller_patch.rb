@@ -17,9 +17,13 @@ module RedmineGitHosting
       module InstanceMethods
 
         def fetch_changesets_with_git_hosting(&block)
+          # Flush GitCache
+          GitoliteAccessor.flush_git_cache
+
           # Previous routine
           fetch_changesets_without_git_hosting(&block)
 
+          # Purge RecycleBin
           RedmineGitHosting.logger.info('Purging Recycle Bin from fetch_changesets')
           RedmineGitHosting::Recycle.delete_expired_files
         end
