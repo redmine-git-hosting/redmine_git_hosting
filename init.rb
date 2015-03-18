@@ -86,37 +86,38 @@ Redmine::Plugin.register :redmine_git_hosting do
     }
   })
 
-  project_module :repository do
-    permission :create_repository_mirrors, repository_mirrors: [:new, :create]
-    permission :view_repository_mirrors,   repository_mirrors: [:index, :show]
-    permission :edit_repository_mirrors,   repository_mirrors: [:edit, :update, :destroy]
-    permission :push_repository_mirrors,   repository_mirrors: [:push]
+  Redmine::AccessControl.map do |map|
+    map.project_module :repository do |map|
+      map.permission :create_repository_mirrors, repository_mirrors: [:new, :create]
+      map.permission :view_repository_mirrors,   repository_mirrors: [:index, :show]
+      map.permission :edit_repository_mirrors,   repository_mirrors: [:edit, :update, :destroy]
+      map.permission :push_repository_mirrors,   repository_mirrors: [:push]
 
-    permission :create_repository_post_receive_urls, repository_post_receive_urls: [:new, :create]
-    permission :view_repository_post_receive_urls,   repository_post_receive_urls: [:index, :show]
-    permission :edit_repository_post_receive_urls,   repository_post_receive_urls: [:edit, :update, :destroy]
+      map.permission :create_repository_post_receive_urls, repository_post_receive_urls: [:new, :create]
+      map.permission :view_repository_post_receive_urls,   repository_post_receive_urls: [:index, :show]
+      map.permission :edit_repository_post_receive_urls,   repository_post_receive_urls: [:edit, :update, :destroy]
 
-    permission :create_repository_deployment_credentials, repository_deployment_credentials: [:new, :create]
-    permission :view_repository_deployment_credentials,   repository_deployment_credentials: [:index, :show]
-    permission :edit_repository_deployment_credentials,   repository_deployment_credentials: [:edit, :update, :destroy]
+      map.permission :create_repository_deployment_credentials, repository_deployment_credentials: [:new, :create]
+      map.permission :view_repository_deployment_credentials,   repository_deployment_credentials: [:index, :show]
+      map.permission :edit_repository_deployment_credentials,   repository_deployment_credentials: [:edit, :update, :destroy]
 
-    permission :create_repository_git_config_keys, repository_git_config_keys: [:new, :create]
-    permission :view_repository_git_config_keys,   repository_git_config_keys: [:index, :show]
-    permission :edit_repository_git_config_keys,   repository_git_config_keys: [:edit, :update, :destroy]
+      map.permission :create_repository_git_config_keys, repository_git_config_keys: [:new, :create]
+      map.permission :view_repository_git_config_keys,   repository_git_config_keys: [:index, :show]
+      map.permission :edit_repository_git_config_keys,   repository_git_config_keys: [:edit, :update, :destroy]
 
-    permission :create_repository_protected_branches, repository_protected_branches: [:new, :create]
-    permission :view_repository_protected_branches,   repository_protected_branches: [:index, :show]
-    permission :edit_repository_protected_branches,   repository_protected_branches: [:edit, :update, :destroy]
+      map.permission :create_repository_protected_branches, repository_protected_branches: [:new, :create]
+      map.permission :view_repository_protected_branches,   repository_protected_branches: [:index, :show]
+      map.permission :edit_repository_protected_branches,   repository_protected_branches: [:edit, :update, :destroy]
 
-    permission :create_repository_git_notifications, repository_git_notifications: [:new, :create]
-    permission :view_repository_git_notifications,   repository_git_notifications: [:index, :show]
-    permission :edit_repository_git_notifications,   repository_git_notifications: [:edit, :update, :destroy]
+      map.permission :create_repository_git_notifications, repository_git_notifications: [:new, :create]
+      map.permission :view_repository_git_notifications,   repository_git_notifications: [:index, :show]
+      map.permission :edit_repository_git_notifications,   repository_git_notifications: [:edit, :update, :destroy]
 
-    permission :receive_git_notifications, gitolite_hooks: :post_receive
-    permission :download_git_revision,     download_git_revision: :index
-    permission :create_gitolite_ssh_key,   gitolite_public_keys: [:index, :create, :destroy]
+      map.permission :receive_git_notifications, gitolite_hooks: :post_receive
+      map.permission :download_git_revision,     download_git_revision: :index
+      map.permission :create_gitolite_ssh_key,   gitolite_public_keys: [:index, :create, :destroy]
+    end
   end
-
 
   Redmine::MenuManager.map :admin_menu do |menu|
     menu.push :redmine_git_hosting, { controller: 'settings', action: 'plugin', id: 'redmine_git_hosting' }, caption: :module_name
