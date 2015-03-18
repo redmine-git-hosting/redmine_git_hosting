@@ -20,9 +20,9 @@ class MigrateParameters < ActiveRecord::Migration
       :gitolite_config_has_admin_key        => 'true',
       :gitolite_recycle_bin_expiration_time => '24.0',
 
-      :gitolite_hooks_debug            => 'false',
-      :gitolite_force_hooks_update     => 'true',
-      :gitolite_hooks_are_asynchronous => 'false',
+      :gitolite_overwrite_existing_hooks => 'true',
+      :gitolite_hooks_are_asynchronous   => 'false',
+      :gitolite_hooks_debug              => 'false',
 
       :gitolite_cache_max_time     => '86400',
       :gitolite_cache_max_size     => '16',
@@ -114,7 +114,7 @@ class MigrateParameters < ActiveRecord::Migration
             new_setting[:gitolite_hooks_are_asynchronous] = value
 
           when 'gitForceHooksUpdate' then
-            new_setting[:gitolite_force_hooks_update] = value
+            new_setting[:gitolite_overwrite_existing_hooks] = value
 
           when 'gitHooksDebug' then
             new_setting[:gitolite_hooks_debug] = value

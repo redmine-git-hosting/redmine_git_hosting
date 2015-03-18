@@ -82,8 +82,8 @@ en:
   label_tab_hooks: Hooks
   label_gitolite_hooks_config: Gitolite Hooks Configuration
 
+  label_gitolite_overwrite_existing_hooks: Overwrite existing hooks
   label_gitolite_hooks_are_asynchronous: Run hooks asynchronously
-  label_gitolite_force_hooks_update: Force hooks to be updated
   label_gitolite_hooks_debug: Run hooks in Debug mode
   label_gitolite_hooks_url: Hooks URL
   label_gitolite_hooks_namespace: Hooks Git namespace

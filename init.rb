@@ -40,10 +40,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :git_config_email                      => 'redmine@example.net',
 
       # Gitolite Hooks Config
-      :gitolite_hooks_are_asynchronous  => 'false',
-      :gitolite_force_hooks_update      => 'true',
-      :gitolite_hooks_debug             => 'false',
-      :gitolite_hooks_url               => 'http://localhost:3000',
+      :gitolite_overwrite_existing_hooks => 'true',
+      :gitolite_hooks_are_asynchronous   => 'false',
+      :gitolite_hooks_debug              => 'false',
+      :gitolite_hooks_url                => 'http://localhost:3000',
 
       # Gitolite Cache Config
       :gitolite_cache_max_time          => '86400',

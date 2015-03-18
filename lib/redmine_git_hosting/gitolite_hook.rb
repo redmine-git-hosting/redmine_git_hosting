@@ -22,7 +22,7 @@ module RedmineGitHosting
 
     def initialize(source_dir, &block)
       @source_dir   = source_dir
-      @force_update = RedmineGitHosting::Config.gitolite_force_hooks_update?
+      @force_update = RedmineGitHosting::Config.gitolite_overwrite_existing_hooks?
       instance_eval(&block)
     end
 

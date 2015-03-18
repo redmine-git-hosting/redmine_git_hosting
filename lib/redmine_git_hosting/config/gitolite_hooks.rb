@@ -31,8 +31,8 @@ module RedmineGitHosting::Config
       end
 
 
-      def gitolite_force_hooks_update?
-        RedmineGitHosting::Config.get_setting(:gitolite_force_hooks_update, true)
+      def gitolite_overwrite_existing_hooks?
+        RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true)
       end
 
 
