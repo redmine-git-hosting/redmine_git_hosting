@@ -21,7 +21,7 @@ module RedmineGitHosting::Config
         begin
           RedmineGitHosting::Commands.gitolite_infos
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error('Error while getting Gitolite infos, check your SSH keys path or your Git user.')
+          logger.error('Error while getting Gitolite infos, check your SSH keys (path, permissions) or your Git user.')
           nil
         end
       end

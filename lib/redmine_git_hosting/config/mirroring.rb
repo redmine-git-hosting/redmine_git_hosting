@@ -20,13 +20,12 @@ module RedmineGitHosting::Config
     module ClassMethods
 
       def mirroring_public_key
-        @mirroring_public_key ||=
-          begin
-            format_mirror_key(gitolite_ssh_public_key_content)
-          rescue => e
-            logger.error("Error while loading mirroring public key : #{e.output}")
-            nil
-          end
+        begin
+          format_mirror_key(gitolite_ssh_public_key_content)
+        rescue => e
+          logger.error("Error while loading mirroring public key : #{e.output}")
+          nil
+        end
       end
 
 
@@ -60,11 +59,15 @@ module RedmineGitHosting::Config
 
         def gitolite_ssh_public_key_content
           File.read(gitolite_ssh_public_key)
+        rescue => e
+          nil
         end
 
 
         def gitolite_ssh_private_key_content
           File.read(gitolite_ssh_private_key)
+        rescue => e
+          nil
         end
 
 
