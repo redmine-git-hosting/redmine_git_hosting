@@ -88,6 +88,7 @@ en:
   label_gitolite_hooks_url: Hooks URL
   label_gitolite_hooks_namespace: Hooks Git namespace
   label_default_gitolite_hooks_url: Default URL
+  label_install_gitolite_hooks: Install hooks !
 
   # Gitolite Cache Config
   label_tab_cache: Cache

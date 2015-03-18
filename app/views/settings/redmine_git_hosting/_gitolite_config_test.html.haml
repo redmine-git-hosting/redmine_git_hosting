@@ -20,20 +20,6 @@
     %td= l(:label_sudo_redmine_to_gitolite_user)
     %td= image_tag (RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
 
-  - gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
-
-  %tr
-    %td= l(:label_gitolite_hooks_installed)
-    %td= render_gitolite_params_status(gitolite_checks[:hook_files])
-
-  %tr
-    %td= l(:label_gitolite_hooks_params_installed)
-    %td= render_gitolite_params_status(gitolite_checks[:global_params])
-
-  %tr
-    %td= l(:label_gitolite_mailer_params_installed)
-    %td= render_gitolite_params_status(gitolite_checks[:mailer_params])
-
   %tr
     %td= l(:label_mirroring_keys_installed)
     %td= image_tag (RedmineGitHosting::Config.mirroring_keys_installed?(reset: true) ? 'true.png' : 'exclamation.png')
