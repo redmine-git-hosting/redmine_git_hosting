@@ -14,7 +14,7 @@ title: How To Upgrade
     redmine$ git checkout {{ site.data.project.release.version }}
     redmine$ cd REDMINE_ROOT
     redmine$ bundle install --without development test
-    redmine$ RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
+    redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting
 
 <div id="toc">
 </div>
