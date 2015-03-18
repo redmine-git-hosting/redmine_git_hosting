@@ -63,7 +63,7 @@ weight: 2
       <p>Support for Ruby 1.9 has been dropped ! See <a href="https://www.ruby-lang.org/en/news/2014/01/10/ruby-1-9-3-will-end-on-2015/">here</a> for more informations.</p>
     </div>
     <div class="alert alert-warning" role="alert">
-      <p>Support for Gitolite v2 will be drop in next plugin branch ! (so actually <b>1.1.x</b>, currently the stable branch is <b>1.0.x</b>)</p>
+      <p>Support for Gitolite v2 will be drop in next stable branch ! (so actually <b>1.1.x</b>, the current stable branch is <b>1.0.x</b>)</p>
     </div>
   </div>
 </div>
