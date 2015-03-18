@@ -6,7 +6,7 @@ title: Redmine installation
 ### {{ page.title }}
 ***
 
-#### Why?
+#### Why not Apache?
 ***
 
 You should not use ```www-data``` account to run Redmine. This is (I think) a mistake and you may have troubles with file permissions on certain files. (Private SSH keys for instance, that should be accessible for only one user and certainly not the ```www-data``` user)
