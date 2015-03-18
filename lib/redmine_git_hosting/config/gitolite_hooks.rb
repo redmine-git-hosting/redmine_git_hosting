@@ -59,8 +59,17 @@ module RedmineGitHosting::Config
       end
 
 
+      def install_hooks!
+        {
+          hook_files:    RedmineGitHosting::GitoliteHooks.install_hooks!,
+          global_params: RedmineGitHosting::GitoliteParams::GlobalParams.new.install!,
+          mailer_params: RedmineGitHosting::GitoliteParams::MailerParams.new.install!
+        }
+      end
+
+
       def update_hook_params!
-        RedmineGitHosting::GitoliteParams::GlobalParams.new.installed?
+        RedmineGitHosting::GitoliteParams::GlobalParams.new.install!
       end
 
     end

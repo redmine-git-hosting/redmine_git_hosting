@@ -30,41 +30,19 @@ module RedmineGitHosting
 
 
       def installed?
-        gitolite_hooks_url_set?
-        debug_mode_set?
-        async_mode_set?
+        @installed['redmineurl'] = (current_params['redmineurl'] == gitolite_hooks_url)
+        @installed['debugmode']  = (current_params['debugmode'] == debug_mode)
+        @installed['asyncmode']  = (current_params['asyncmode'] == async_mode)
         @installed
       end
 
 
-      private
-
-
-        def gitolite_hooks_url_set?
-          if current_params['redmineurl'] != gitolite_hooks_url
-            @installed['redmineurl'] = set_git_config_param(namespace, 'redmineurl', gitolite_hooks_url)
-          else
-            @installed['redmineurl'] = true
-          end
-        end
-
-
-        def debug_mode_set?
-          if current_params['debugmode'] != debug_mode
-            @installed['debugmode'] = set_git_config_param(namespace, 'debugmode', debug_mode)
-          else
-            @installed['debugmode'] = true
-          end
-        end
-
-
-        def async_mode_set?
-          if current_params['asyncmode'] != async_mode
-            @installed['asyncmode'] = set_git_config_param(namespace, 'asyncmode', async_mode)
-          else
-            @installed['asyncmode'] = true
-          end
-        end
+      def install!
+        @installed['redmineurl'] = set_git_config_param(namespace, 'redmineurl', gitolite_hooks_url)
+        @installed['debugmode']  = set_git_config_param(namespace, 'debugmode', debug_mode)
+        @installed['asyncmode']  = set_git_config_param(namespace, 'asyncmode', async_mode)
+        @installed
+      end
 
     end
   end

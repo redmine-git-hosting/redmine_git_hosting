@@ -5,8 +5,8 @@ module GitolitePluginSettingsHelper
       content = ''
       params.each do |param, installed|
         content << content_tag(:li, style: 'padding: 2px;') do
-          image_tag(image_for_param(installed), style: 'vertical-align: bottom;') +
-          content_tag(:em, param)
+          image_tag(image_for_param(installed), style: 'vertical-align: bottom; padding-right: 5px;') +
+          content_tag(:em, label_for_param(param, installed))
         end
       end
       content.html_safe
@@ -14,8 +14,20 @@ module GitolitePluginSettingsHelper
   end
 
 
-  def image_for_param(bool)
-    bool ? 'true.png' : 'exclamation.png'
+  def label_for_param(param, install_status)
+    install_status == 2 ? "#{param} (#{l(:label_gitolite_hook_untouched)})" : param
+  end
+
+
+  def image_for_param(install_status)
+    case install_status
+    when 0, true
+      'true.png'
+    when 1, false
+      'exclamation.png'
+    when 2
+      'warning.png'
+    end
   end
 
 

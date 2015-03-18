@@ -22,7 +22,7 @@ module RedmineGitHosting
             render_404
             return
           end
-          @gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
+          @gitolite_checks = RedmineGitHosting::Config.install_hooks!
         end
 
       end
