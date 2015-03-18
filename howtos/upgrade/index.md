@@ -10,7 +10,7 @@ title: How To Upgrade
     root$ su - redmine
 
     redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
-    redmine$ git fetch
+    redmine$ git fetch -p
     redmine$ git checkout {{ site.data.project.release.version }}
     redmine$ cd REDMINE_ROOT
     redmine$ bundle install --without development test
