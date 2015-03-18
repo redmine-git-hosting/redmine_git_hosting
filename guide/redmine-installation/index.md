@@ -6,9 +6,24 @@ title: Redmine installation
 ### {{ page.title }}
 ***
 
-You should not use ```www-data``` account to run Redmine. This is (I think) a mistake.
+#### Why?
+***
 
-The best way to run Rails apps is to create a separate standard user, lets say ```redmine```, and install Redmine within the user's home. In that case, you should use Nginx and Puma (or other webservers) to serve Redmine.
+You should not use ```www-data``` account to run Redmine. This is (I think) a mistake and you may have troubles with file permissions on certain files. (Private SSH keys for instance, that should be accessible for only one user and certainly not the ```www-data``` user)
+
+The best way to run Redmine and (Rails apps in general) is to create a separate standard user, lets say ```redmine```, and install Redmine within the user's home. In that case, you should use Nginx and Puma (or other webservers) to serve Redmine.
+
+Nginx will run with ```www-data``` user but will communicate with Redmine via a UNIX socket and thus avoiding troubles with file permissions.
+
+Requests will be send to and executed by Puma which runs with the ```redmine``` user and has the needed permissions on sensitive files.
+
+Often 600 on SSH private keys what you **can't** do if you serve Redmine with Apache (at least 640 by using groups or worse 644).
+
+Also it will permit you to keep your Redmine updated as it won't depend on system librairies which bring the 'Wrong dependency version' issue.
+
+So this tutorial :)
+
+<br/>
 
 #### **(step 1)** Create the ```redmine``` user
 
