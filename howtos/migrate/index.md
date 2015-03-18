@@ -57,6 +57,29 @@ Go to *Administration -> Redmine Git Hosting -> Config Checks* and check that ev
 
 ***
 
+<div class="alert alert-danger" role="alert"><strong>Warning!&nbsp;During the migration some repositories paths/url may become inconsistent !</strong></div>
+
+The main case is sub-projects's main repository who changes from
+
+```repository/mainproject/subrepo.git``` to
+
+```repository/mainproject/subproject/subrepo.git```.
+
+This is due to [https://github.com/jbox-web/redmine_git_hosting/issues/199](https://github.com/jbox-web/redmine_git_hosting/issues/199).
+
+Unfortunately those repositories cannot be handled by the migration script.
+
+You will have to :
+
+* move them manually in gitolite to their new location (overwriting the empty new .git directory if exists)
+* adjust manually the paths in the ```gitolite.conf``` file (check for duplicate entries)
+* correct the database ```repositories.url``` and ```repositories.root_url``` fields to point to the correct location
+* inform your users about the change
+
+I'm really sorry for the disadvantages.
+
+***
+
 #### Step by Step migration from **0.6 version (or older) to v0.7.10**
 ***
 
