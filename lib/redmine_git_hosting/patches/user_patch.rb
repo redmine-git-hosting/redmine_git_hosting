@@ -52,8 +52,8 @@ module RedmineGitHosting
         end
 
 
-        def allowed_to_ssh?
-          !anonymous? && allowed_to?(:create_gitolite_ssh_key, nil, global: true)
+        def allowed_to_create_ssh_keys?
+          allowed_to?(:create_gitolite_ssh_key, nil, global: true)
         end
 
 

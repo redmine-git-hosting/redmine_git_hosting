@@ -87,6 +87,8 @@ Redmine::Plugin.register :redmine_git_hosting do
   })
 
   Redmine::AccessControl.map do |map|
+    map.permission :create_gitolite_ssh_key, gitolite_public_keys: [:index, :create, :destroy], require: :loggedin
+
     map.project_module :repository do |map|
       map.permission :create_repository_mirrors, repository_mirrors: [:new, :create]
       map.permission :view_repository_mirrors,   repository_mirrors: [:index, :show]
@@ -115,7 +117,6 @@ Redmine::Plugin.register :redmine_git_hosting do
 
       map.permission :receive_git_notifications, gitolite_hooks: :post_receive
       map.permission :download_git_revision,     download_git_revision: :index
-      map.permission :create_gitolite_ssh_key,   gitolite_public_keys: [:index, :create, :destroy]
     end
   end
 
