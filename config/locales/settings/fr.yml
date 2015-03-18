@@ -82,12 +82,14 @@ fr:
   label_tab_hooks: Hooks
   label_gitolite_hooks_config: Configuration des hooks de Gitolite
 
+  label_gitolite_overwrite_existing_hooks: Ecraser les hooks existants
   label_gitolite_hooks_are_asynchronous: Lancer les hooks de manière asynchrone
-  label_gitolite_force_hooks_update: Forcer la mise à jour des hooks
   label_gitolite_hooks_debug: Lancer les hooks en mode debug
   label_gitolite_hooks_url: URL des hooks
   label_gitolite_hooks_namespace: Espace de nom Git des hooks
   label_default_gitolite_hooks_url: URL par défaut
+  label_install_gitolite_hooks: Installer les hooks !
+  label_gitolite_hook_untouched: hook non mis à jour
 
   # Gitolite Cache Config
   label_tab_cache: Cache

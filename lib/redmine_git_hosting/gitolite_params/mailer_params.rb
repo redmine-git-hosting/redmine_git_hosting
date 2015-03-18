@@ -24,11 +24,17 @@ module RedmineGitHosting
 
       def installed?
         mailer_params.each do |param|
-          if current_params[param] != current_mailer_params[param]
-            @installed[param] = set_git_config_param(namespace, param, current_mailer_params[param])
-          else
-            @installed[param] = true
-          end
+          next if current_mailer_params[param].empty?
+          @installed[param] = (current_params[param] == current_mailer_params[param])
+        end
+        @installed
+      end
+
+
+      def install!
+        mailer_params.each do |param|
+          next if current_mailer_params[param].empty?
+          @installed[param] = set_git_config_param(namespace, param, current_mailer_params[param])
         end
         @installed
       end

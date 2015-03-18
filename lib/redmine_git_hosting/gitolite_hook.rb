@@ -17,12 +17,11 @@ module RedmineGitHosting
 
     def_field :name, :source, :destination, :executable
 
-    attr_reader :source_dir, :force_update
+    attr_reader :source_dir
 
 
     def initialize(source_dir, &block)
-      @source_dir   = source_dir
-      @force_update = RedmineGitHosting::Config.gitolite_force_hooks_update?
+      @source_dir = source_dir
       instance_eval(&block)
     end
 
@@ -51,14 +50,29 @@ module RedmineGitHosting
 
     def installed?
       if !file_exists?
+        1
+      elsif hook_file_has_changed?
+        2
+      else
+        0
+      end
+    end
+
+
+    def install!
+      if !file_exists?
         logger.info("Hook '#{name}' does not exist, installing it ...")
         install_hook
-      elsif hook_file_has_changed? && force_update
+      elsif hook_file_has_changed?
         logger.warn("Hook '#{name}' is already present but it's not ours!")
-        logger.info("Restoring '#{name}' hook since forceInstallHook == true")
-        install_hook
+        if force_update?
+          logger.info("Restoring '#{name}' hook since forceInstallHook == true")
+          install_hook
+        else
+          logger.info("Leaving '#{name}' hook untouched since forceInstallHook == false")
+        end
       end
-      file_exists?
+      installed?
     end
 
 
@@ -71,6 +85,11 @@ module RedmineGitHosting
           logger.info("Hook '#{name}' installed")
           update_gitolite
         end
+      end
+
+
+      def force_update?
+        RedmineGitHosting::Config.gitolite_overwrite_existing_hooks?
       end
 
 

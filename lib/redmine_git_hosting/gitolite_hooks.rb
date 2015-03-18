@@ -28,6 +28,15 @@ module RedmineGitHosting
       end
 
 
+      def install_hooks!
+        installed = {}
+        registered_hooks.each do |hook|
+          installed[hook.name] = hook.install!
+        end
+        installed
+      end
+
+
       def gitolite_hook(&block)
         @gitolite_hooks << RedmineGitHosting::GitoliteHook.new(@source_dir, &block)
       end

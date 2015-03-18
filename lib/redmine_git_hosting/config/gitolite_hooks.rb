@@ -31,8 +31,8 @@ module RedmineGitHosting::Config
       end
 
 
-      def gitolite_force_hooks_update?
-        RedmineGitHosting::Config.get_setting(:gitolite_force_hooks_update, true)
+      def gitolite_overwrite_existing_hooks?
+        RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true)
       end
 
 
@@ -59,8 +59,17 @@ module RedmineGitHosting::Config
       end
 
 
+      def install_hooks!
+        {
+          hook_files:    RedmineGitHosting::GitoliteHooks.install_hooks!,
+          global_params: RedmineGitHosting::GitoliteParams::GlobalParams.new.install!,
+          mailer_params: RedmineGitHosting::GitoliteParams::MailerParams.new.install!
+        }
+      end
+
+
       def update_hook_params!
-        RedmineGitHosting::GitoliteParams::GlobalParams.new.installed?
+        RedmineGitHosting::GitoliteParams::GlobalParams.new.install!
       end
 
     end
