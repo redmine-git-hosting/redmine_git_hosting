@@ -39,19 +39,19 @@ module GitolitePluginSettingsHelper
 
   def gitolite_plugin_settings_tabs
     [
-      { name: 'gitolite_config_ssh',        partial: 'settings/gitolite_config_ssh',     label: :label_tab_ssh },
-      { name: 'gitolite_config_storage',    partial: 'settings/gitolite_config_storage', label: :label_tab_storage },
-      { name: 'gitolite_config_file',       partial: 'settings/gitolite_config_file',    label: :label_tab_config_file },
-      { name: 'gitolite_config_global',     partial: 'settings/gitolite_config_global',  label: :label_tab_global },
-      { name: 'gitolite_config_access',     partial: 'settings/gitolite_config_access',  label: :label_tab_access },
-      { name: 'gitolite_config_hooks',      partial: 'settings/gitolite_config_hooks',   label: :label_tab_hooks },
-      { name: 'gitolite_config_cache',      partial: 'settings/gitolite_config_cache',   label: :label_tab_cache },
-      { name: 'gitolite_config_notify',     partial: 'settings/gitolite_config_notify',  label: :label_tab_notify },
-      { name: 'gitolite_redmine_config',    partial: 'settings/redmine_config',          label: :label_tab_redmine },
-      { name: 'gitolite_sidekiq_interface', partial: 'settings/sidekiq_interface',       label: :label_tab_sidekiq_interface },
-      { name: 'gitolite_config_test',       partial: 'settings/gitolite_config_test',    label: :label_tab_config_test },
-      { name: 'gitolite_recycle_bin',       partial: 'settings/gitolite_recycle_bin',    label: :label_tab_gitolite_recycle_bin },
-      { name: 'gitolite_rescue',            partial: 'settings/gitolite_rescue',         label: :label_tab_gitolite_rescue }
+      { name: 'gitolite_config_ssh',        partial: 'settings/redmine_git_hosting/gitolite_config_ssh',     label: :label_tab_ssh },
+      { name: 'gitolite_config_storage',    partial: 'settings/redmine_git_hosting/gitolite_config_storage', label: :label_tab_storage },
+      { name: 'gitolite_config_file',       partial: 'settings/redmine_git_hosting/gitolite_config_file',    label: :label_tab_config_file },
+      { name: 'gitolite_config_global',     partial: 'settings/redmine_git_hosting/gitolite_config_global',  label: :label_tab_global },
+      { name: 'gitolite_config_access',     partial: 'settings/redmine_git_hosting/gitolite_config_access',  label: :label_tab_access },
+      { name: 'gitolite_config_hooks',      partial: 'settings/redmine_git_hosting/gitolite_config_hooks',   label: :label_tab_hooks },
+      { name: 'gitolite_config_cache',      partial: 'settings/redmine_git_hosting/gitolite_config_cache',   label: :label_tab_cache },
+      { name: 'gitolite_config_notify',     partial: 'settings/redmine_git_hosting/gitolite_config_notify',  label: :label_tab_notify },
+      { name: 'gitolite_redmine_config',    partial: 'settings/redmine_git_hosting/redmine_config',          label: :label_tab_redmine },
+      { name: 'gitolite_sidekiq_interface', partial: 'settings/redmine_git_hosting/sidekiq_interface',       label: :label_tab_sidekiq_interface },
+      { name: 'gitolite_config_test',       partial: 'settings/redmine_git_hosting/gitolite_config_test',    label: :label_tab_config_test },
+      { name: 'gitolite_recycle_bin',       partial: 'settings/redmine_git_hosting/gitolite_recycle_bin',    label: :label_tab_gitolite_recycle_bin },
+      { name: 'gitolite_rescue',            partial: 'settings/redmine_git_hosting/gitolite_rescue',         label: :label_tab_gitolite_rescue }
     ]
   end
 
