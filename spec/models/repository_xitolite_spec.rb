@@ -127,8 +127,8 @@ describe Repository::Xitolite do
 
       context "with all options" do
         my_hash = {
-          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'false' },
-          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", committer: 'false' },
+          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'true' },
+          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", committer: 'true' },
           http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  committer: 'false' },
           go:    { url: "localhost/go/project-parent/project-child",                                committer: 'false' },
           git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 committer: 'false' }
@@ -157,7 +157,7 @@ describe Repository::Xitolite do
       end
 
       context "with ssh" do
-        my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'false' } }
+        my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'true' } }
 
         it "should return a Hash of Git url" do
           @user = create_user_with_permissions(@project_child)
