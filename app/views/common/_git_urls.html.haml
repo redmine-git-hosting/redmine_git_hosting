@@ -1,6 +1,8 @@
 - content_for :header_tags do
-  = redmine_bootstrap_kit_load(:redmine_bootstrap_kit)
-  = redmine_bootstrap_kit_load(:zero_clipboard)
+  = bootstrap_load_base
+  = bootstrap_load_module(:tooltip)
+  = zero_clipboard_load_base
+
   = stylesheet_link_tag    'git_urls',    plugin: 'redmine_git_hosting'
   = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
 

@@ -53,7 +53,7 @@
   %p= link_to l(:label_repository_new), new_project_repository_path(@project), class: 'icon icon-add'
 
 - content_for :header_tags do
-  = stylesheet_link_tag 'bootstrap/bootstrap_custom',  plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_label',   plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'bootstrap/bootstrap_tables',  plugin: 'redmine_bootstrap_kit'
-  = stylesheet_link_tag 'font_awesome',                plugin: 'redmine_bootstrap_kit'
+  = bootstrap_load_base
+  = bootstrap_load_module(:label)
+  = bootstrap_load_module(:tables)
+  = bootstrap_load_module(:font_awesome)
