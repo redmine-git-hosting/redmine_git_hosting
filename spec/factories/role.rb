@@ -60,7 +60,8 @@ FactoryGirl.define do
       :view_changesets,
       :manage_related_issues,
       :manage_project_activities,
-      :create_gitolite_ssh_key
+      :create_gitolite_ssh_key,
+      :commit_access
     ]
   end
 
