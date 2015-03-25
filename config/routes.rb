@@ -12,6 +12,9 @@ resources :repositories, only: [] do
 
   resource  :git_extras, controller: 'repository_git_extras', only: [:update] do
     match 'sort_urls', via: [:get, :post]
+    member do
+      match 'move', via: [:get, :post]
+    end
   end
 
   resource  :git_notifications, controller: 'repository_git_notifications'

@@ -69,6 +69,21 @@ module RedmineGitHosting
       end
 
 
+      def move_repository
+        if repository = Repository.find_by_id(object_id)
+          admin.transaction do
+            RedmineGitHosting::GitoliteHandlers::RepositoryMover.new(repository, gitolite_config, action).call
+            gitolite_admin_repo_commit("#{repository.gitolite_repository_name}")
+          end
+
+          # Fetch changeset
+          repository.fetch_changesets
+        else
+          logger.error("#{action} : repository does not exist anymore, object is nil, exit !")
+        end
+      end
+
+
       private
 
 

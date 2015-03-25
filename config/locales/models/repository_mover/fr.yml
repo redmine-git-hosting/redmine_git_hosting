@@ -1,0 +1,11 @@
+fr:
+  label_move_repository: "Déplacement du dépôt : '%{repo_name}'"
+
+  activemodel:
+    errors:
+      models:
+        repository_mover:
+          attributes:
+            base:
+              identifier_empty: Ne peut déplacer un dépôt avec un identifiant vide
+              identifier_taken: Identifiant de dépôt déjà utilisé par le nouveau projet

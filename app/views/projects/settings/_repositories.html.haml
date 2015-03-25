@@ -44,6 +44,9 @@
               = link_to l(:button_edit), edit_repository_path(repository),
                                          class: 'icon icon-edit'
 
+              = link_to l(:button_move), move_repository_git_extras_path(repository),
+                                         class: 'icon icon-move'
+
               = delete_link repository_path(repository)
 
 - else

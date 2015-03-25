@@ -5,6 +5,7 @@ PLUGIN ICONS
 
 .icon-git-logo { background-image: url('../images/git_icon.png'); padding-right: 5px; }
 .icon-clone { background-image: url('../images/clone.png'); }
+.icon-move { background-image: url('../images/move.png'); }
 
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }

@@ -34,6 +34,12 @@ module GitoliteAccessor
     end
 
 
+    def move_repository(repository, opts = {})
+      logger.info("User '#{User.current.login}' has moved repository '#{repository.gitolite_repository_name}'")
+      resync_gitolite(:move_repository, repository.id, opts)
+    end
+
+
     def destroy_repository(repository)
       logger.info("User '#{User.current.login}' has removed repository '#{repository.gitolite_repository_name}'")
       resync_gitolite(:delete_repository, repository.data_for_destruction)
