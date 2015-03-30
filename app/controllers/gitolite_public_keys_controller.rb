@@ -6,6 +6,7 @@ class GitolitePublicKeysController < ApplicationController
   before_filter :find_gitolite_public_key, only: [:destroy]
 
   helper :gitolite_public_keys
+  helper :redmine_bootstrap_kit
 
 
   def index
