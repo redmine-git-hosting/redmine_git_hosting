@@ -7,13 +7,13 @@ en:
         repository/xitolite:
           attributes:
             base:
-              blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
-              invalid_options: "Vous ne pouvez pas initialiser de fichier README dans un dépot GitAnnex"
+              blank_default_exists: "Can not create the respository as a blank repository already exists."
+              invalid_options: "You can not initialize a README file in a repository with GitAnnex"
             identifier:
-              cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
-              taken: "correspond à un identifiant de dépôt existant"
-              invalid: invalide
-              cannot_change: ne peut pas changer
+              cannot_equal_project: "can not match the ID of an existing project"
+              taken: "is already taken."
+              invalid: invalid
+              cannot_change: cannot change
 
   ########### REPOSITORIES ###########
 
