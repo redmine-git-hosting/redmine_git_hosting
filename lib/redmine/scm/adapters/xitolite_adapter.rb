@@ -555,7 +555,7 @@ module Redmine
 
 
           def git_cache_enabled?
-            RedmineGitHosting::Config.gitolite_cache_max_time > 0
+            RedmineGitHosting::Config.gitolite_cache_max_time != 0
           end
 
       end
