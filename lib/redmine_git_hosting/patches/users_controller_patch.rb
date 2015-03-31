@@ -14,6 +14,7 @@ module RedmineGitHosting
           alias_method_chain :destroy, :git_hosting
 
           helper :gitolite_public_keys
+          helper :redmine_bootstrap_kit
         end
       end
 
