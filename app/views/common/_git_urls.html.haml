@@ -7,7 +7,7 @@
   = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
 
 - repositories = Array.wrap(repository) unless repositories
-- if repositories.map(&:available_urls).flatten.reject { |m| m.blank? }.any?
+- if repositories.map(&:available_urls).reject { |h| h.empty? }.any?
   - repositories.sort_by { |r| r.is_default ? 0 : 1 }.each do |repository|
     - next if repository.available_urls.empty?
     - present repository do |p|
