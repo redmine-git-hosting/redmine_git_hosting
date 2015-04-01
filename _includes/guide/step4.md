@@ -3,7 +3,7 @@
 Assuming that you have Gitolite installed :
 
     repo    gitolite-admin
-            RW+     =       redmine_gitolite_admin_id_rsa
+      RW+                            = redmine_gitolite_admin_id_rsa
 
 
 Otherwise you can install Gitolite (v3) by following this :
