@@ -108,6 +108,34 @@ namespace :redmine_git_hosting do
       end
     end
 
+
+    desc "Check GitExtras presence"
+    task :check_git_extras_presence => [:environment] do
+
+      puts ""
+      puts "Checking for GitExtras presence"
+      puts ""
+
+      Repository::Xitolite.all.each do |repository|
+        next if !repository.extra.nil?
+        puts " - Repository '#{repository.redmine_name}' has no entry in RepositoryGitExtras table, create it :"
+        default_extra_options = {
+          git_http:       RedmineGitHosting::Config.gitolite_http_by_default?,
+          git_daemon:     RedmineGitHosting::Config.gitolite_daemon_by_default?,
+          git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
+          git_annex:      false,
+          default_branch: 'master',
+          key:            RedmineGitHosting::Utils.generate_secret(64)
+        }
+        extra = repository.build_extra(default_extra_options)
+        extra.save!
+        puts "   Done!"
+        puts ""
+      end
+
+      puts "Done!"
+    end
+
   end
 
 
