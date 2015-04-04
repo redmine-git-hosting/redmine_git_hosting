@@ -17,3 +17,5 @@ fr:
 
   label_branch_path: Chemin de la branche
   label_user_list: Liste des utilisateurs autorisés
+
+  protected_branches_reminder: Les branches protégées ci-dessus ne sont pas actives. Pour les activer veuillez d'abord cocher la case "Activer les branches protégées" dans les paramètres du dépôt ci-dessus.

@@ -7,7 +7,10 @@
 
   - if @repository_protected_branches.any?
 
-    %table{ class: 'table table-hover', id: 'protected_branches', data: { 'update-url' => sort_repository_protected_branches_url } }
+    %table{ class: 'table table-hover',
+            id: 'protected_branches',
+            data: { 'update-url' => sort_repository_protected_branches_url },
+            style: "opacity: #{@repository.protected_branches_enabled? ? '1' : '0.5'};" }
       %thead
         %tr
           %th
@@ -38,6 +41,9 @@
                 = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-edit modal-box'
                 = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-clone modal-box'
                 = link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
+
+    - if !@repository.protected_branches_enabled?
+      %em= l(:protected_branches_reminder)
 
   - else
     %p{ class: 'nodata' }= l(:label_no_data)
