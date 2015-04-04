@@ -24,7 +24,7 @@
 
     %div{ style: 'display:block;height:10px;clear:both;' }
 
-    %table{ class: 'list git_mailing_list' }
+    %table{ class: 'table table-hover' }
       %thead
         %tr
           %th= l(:label_git_notification_default_list)
@@ -36,25 +36,25 @@
         %tr
           %td
             - if @repository.default_list.any?
-              %ul
+              %ul{ class: 'list-unstyled' }
                 - @repository.default_list.each do |item|
                   %li= item
 
           %td
             - if !@git_notification.nil? && @git_notification.include_list.any?
-              %ul
+              %ul{ class: 'list-unstyled' }
                 - @git_notification.include_list.sort.each do |item|
                   %li= item
 
           %td
             - if !@git_notification.nil? && @git_notification.exclude_list.any?
-              %ul
+              %ul{ class: 'list-unstyled' }
                 - @git_notification.exclude_list.sort.each do |item|
                   %li= item
 
           %td
             - if @repository.mail_mapping.any?
-              %ul
+              %ul{ class: 'list-unstyled' }
                 - @repository.mail_mapping.each do |item, from|
                   %li
                     = item
