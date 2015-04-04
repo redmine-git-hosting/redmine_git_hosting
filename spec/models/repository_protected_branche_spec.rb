@@ -31,6 +31,8 @@ describe RepositoryProtectedBranche do
     it { should validate_presence_of(:permissions) }
     it { should validate_presence_of(:user_list) }
 
+    it { should validate_uniqueness_of(:path).scoped_to([:permissions, :repository_id]) }
+
     it { should validate_inclusion_of(:permissions).in_array(%w(RW RW+)) }
 
     ## Serializations
