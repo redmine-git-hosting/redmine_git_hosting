@@ -24,6 +24,8 @@ fr:
   label_gitolite_notify_prefix: Préfixe de la liste de diffusion
   label_gitolite_notify_sender_address: Adresse de l'expéditeur de la liste de diffusion
 
+  git_notifications_reminder: La liste de diffusion n'est pas activée. Pour l'activer veuillez d'abord cocher la case "Activer la liste de diffusion" dans les paramètres du dépôt ci-dessus.
+
   activerecord:
     errors:
       models:

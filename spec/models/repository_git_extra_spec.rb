@@ -13,8 +13,11 @@ describe RepositoryGitExtra do
     it { should allow_mass_assignment_of(:git_http) }
     it { should allow_mass_assignment_of(:git_daemon) }
     it { should allow_mass_assignment_of(:git_notify) }
+    it { should allow_mass_assignment_of(:git_annex) }
     it { should allow_mass_assignment_of(:default_branch) }
     it { should allow_mass_assignment_of(:protected_branch) }
+    it { should allow_mass_assignment_of(:public_repo) }
+    it { should allow_mass_assignment_of(:key) }
 
     ## Relations
     it { should belong_to(:repository) }

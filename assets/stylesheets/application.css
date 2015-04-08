@@ -9,12 +9,6 @@ PLUGIN ICONS
 .icon-git { padding-right: 15px; }
 .icon-git-disabled { opacity: 0.5; }
 
-table.git_mailing_list { width: 100%; margin-top: 15px; }
-table.git_mailing_list th { width: 25%; }
-table.git_mailing_list td { text-align: center; }
-table.git_mailing_list td ul { padding-left: 0px; list-style-type: none; }
-
-
 /*
 PLUGIN SETTINGS
 */

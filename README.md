@@ -50,6 +50,7 @@ Thanks for their contribution to :
 * Nicholas Clark
 * Robert Chady
 * Sébastien Dinot
+* wilsoc5
 * and others :)
 
 ## Contribute

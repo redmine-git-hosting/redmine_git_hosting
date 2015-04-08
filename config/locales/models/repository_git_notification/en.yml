@@ -24,6 +24,8 @@ en:
   label_gitolite_notify_prefix: Mailing list prefix
   label_gitolite_notify_sender_address: Mailing list sender address
 
+  git_notifications_reminder: The mailing list above is not enabled. Please enable Mailing List in the repository settings above.
+
   activerecord:
     errors:
       models:

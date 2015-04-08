@@ -17,3 +17,5 @@ en:
 
   label_branch_path: Branch path
   label_user_list: Users allowed
+
+  protected_branches_reminder: The protected branches above are not enabled. Please enable Protected Branches in the repository settings above.

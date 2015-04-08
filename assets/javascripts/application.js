@@ -37,6 +37,7 @@ function trigger_mode_change(element) {
   }
 }
 
+// GIT URLS
 function updateUrl(element) {
   var url = $(element).data('url');
   var target = $(element).data('target');
@@ -47,21 +48,41 @@ function updateUrl(element) {
   $(element).addClass('selected');
 }
 
-function setFirstGitUrl(elements) {
+function setGitUrls(elements) {
   $(elements).each(function(index, element){
-    var first_url = $(element).children().first();
-    updateUrl(first_url);
-  });
-}
-
-function bindGitUrls(elements) {
-  $(elements).each(function(index, element){
+    if (index == 0){
+      updateUrl(element);
+    };
     $(element).on('click', function(){
       updateUrl($(this));
     });
   });
 }
 
+// GIT INSTRUCTIONS
+function updateInstructionUrl(element) {
+  var url = $(element).data('url');
+  var committer = $(element).data('committer');
+  $('.git_url_access').html(url);
+  if (committer == 'RW') {
+    $('#repository_setup').show();
+  } else {
+    $('#repository_setup').hide();
+  }
+}
+
+function setGitUrlsInstructions(elements) {
+  $(elements).each(function(index, element){
+    if (index == 0){
+      updateInstructionUrl(element);
+    };
+    $(element).on('click', function(){
+      updateInstructionUrl($(this));
+    });
+  });
+}
+
+// REPOSITORY EDIT
 function setRepositoryActiveTab(current_tab) {
   var all_tabs = $("#repository-tabs li");
   var active_tab = '';

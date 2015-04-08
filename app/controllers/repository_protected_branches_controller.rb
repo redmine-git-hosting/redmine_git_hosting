@@ -52,7 +52,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def sort
     params[:repository_protected_branche].each_with_index do |id, index|
-      @repository.protected_branches.update_all({position: index + 1}, {id: id})
+      @repository.protected_branches.where(:id => id).update_all({:position => index + 1})
     end
     # Update Gitolite repository
     call_use_case
