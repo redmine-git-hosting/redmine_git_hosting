@@ -49,6 +49,7 @@ title: How to contribute ?
         <li>Nicholas Clark</li>
         <li>Robert Chady</li>
         <li>Sébastien Dinot</li>
+        <li>wilsoc5</li>
       </ul>
       <p>And the others I forgot :)</p>
     </div>
