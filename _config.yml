@@ -1,4 +1,4 @@
-baseurl: /
+baseurl: /redmine_git_hosting
 host: 127.0.0.1
 port: 4000
 
