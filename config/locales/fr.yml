@@ -1,6 +1,6 @@
 fr:
 
-  module_name: Redmine Git Hosting
+  redmine_git_hosting: Redmine Git Hosting
 
   ########### MISCELANOUS ###########
   label_enabled: Activé

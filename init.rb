@@ -121,7 +121,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   end
 
   Redmine::MenuManager.map :admin_menu do |menu|
-    menu.push :redmine_git_hosting, { controller: 'settings', action: 'plugin', id: 'redmine_git_hosting' }, caption: :module_name
+    menu.push :redmine_git_hosting, { controller: 'settings', action: 'plugin', id: 'redmine_git_hosting' }, caption: :redmine_git_hosting
   end
 
   Redmine::MenuManager.map :top_menu do |menu|
