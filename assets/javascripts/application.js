@@ -50,12 +50,16 @@ function updateUrl(element) {
 
 function setGitUrls(elements) {
   $(elements).each(function(index, element){
-    if (index == 0){
-      updateUrl(element);
-    };
     $(element).on('click', function(){
       updateUrl($(this));
     });
+  });
+}
+
+function setFirstGitUrl(elements) {
+  $(elements).each(function(index, element){
+    var first_url = $(element).children().first();
+    updateUrl(first_url);
   });
 }
 
