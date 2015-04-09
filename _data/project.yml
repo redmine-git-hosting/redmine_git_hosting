@@ -13,5 +13,9 @@ author:
   name: JBox Web
   url: http://www.jbox-web.com/
 
+license:
+  name: MIT
+  url: http://opensource.org/licenses/MIT
+
 # If you leave this field blank, google analytics is not run.
 google_analytics: ''

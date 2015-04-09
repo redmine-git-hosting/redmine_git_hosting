@@ -11,7 +11,7 @@ search: exclude
 
 <div class="col-sm-10 centered">
   &copy; {{ site.data.project.release.year }} <a href="{{ site.data.project.author.url }}">{{ site.data.project.author.name }}</a>.
-  Licensed under the <a href="{{ site.data.project.licence.url }}">{{ site.data.project.licence.name }} License</a>.
+  Licensed under the <a href="{{ site.data.project.license.url }}">{{ site.data.project.license.name }} License</a>.
   <br>Sponsored by <a href="{{ site.data.project.author.url }}">{{ site.data.project.author.name }}</a>.
   <br>
   <span class="container centered">
