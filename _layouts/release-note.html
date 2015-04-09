@@ -1,0 +1,82 @@
+---
+layout: default
+---
+
+<h1>{{ page.title }}</h1>
+
+<hr/>
+
+{% if page.status == 'beta' %}
+  <p><strong>Release date :</strong> Pending</p>
+{% else %}
+  <p><strong>Release date :</strong> {{ page.date | date: "%-d %B %Y" }}</p>
+{% endif %}
+
+<p>
+  <strong>Status :</strong>
+  {% if page.status == 'latest stable' %}
+    <span class="label label-success">{{ page.status }}</span>
+  {% elsif page.status == 'old stable' %}
+    <span class="label label-warning">{{ page.status }}</span>
+  {% elsif page.status == 'obsolete' %}
+    <span class="label label-default">{{ page.status }}</span>
+  {% elsif page.status == 'beta' %}
+    <span class="label label-danger">{{ page.status }}</span>
+  {% elsif page.status == 'next stable' %}
+    <span class="label label-success">{{ page.status }}</span>
+  {% else %}
+    <span class="label label-primary">{{ page.status }}</span>
+  {% endif %}
+</p>
+
+<p><strong>Download :</strong></p>
+
+{% if page.status == 'next stable' || page.status == 'beta' %}
+  <p style="padding-left: 30px;">Not released yet, come back later!</p>
+{% else %}
+  <ul class="release-downloads">
+    <li>
+      <a class="btn btn-primary" rel="nofollow" href="{{ page.download_zip }}">
+      <span class="glyphicon glyphicon-compressed"></span>
+      Source code (zip)
+      </a>
+    </li>
+      <li>
+      <a class="btn btn-primary" rel="nofollow" href="{{ page.download_tar }}">
+      <span class="glyphicon glyphicon-compressed"></span>
+      Source code (tar.gz)
+      </a>
+    </li>
+  </ul>
+{% endif %}
+
+<p><strong>Changelog :</strong></p>
+
+{{ content }}
+
+<hr/>
+
+{% for post in site.categories.releases-notes %}
+  {% if post.url == page.url %}
+    {% assign post_index0 = forloop.index0 %}
+    {% assign post_index1 = forloop.index %}
+  {% endif %}
+{% endfor %}
+
+{% for post in site.categories.releases-notes %}
+  {% if post_index0 == forloop.index %}
+    {% assign next_post = post.url %}
+  {% endif %}
+
+  {% if post_index1 == forloop.index0 %}
+    {% assign prev_post = post.url %}
+  {% endif %}
+{% endfor %}
+
+{% if next_post %}
+  <a href="{{ next_post }}" class="pull-right">Next Release</a>
+{% endif %}
+
+{% if prev_post %}
+  <a href="{{ prev_post }}">Previous Release</a>
+{% endif %}

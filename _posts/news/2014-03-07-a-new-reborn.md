@@ -2,6 +2,8 @@
 title: A new reborn
 layout: post-news
 category: news
+author: Nicolas Rodriguez
+search: include
 ---
 
 A new '**devel**' branch has been pushed to Github.

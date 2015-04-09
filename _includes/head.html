@@ -1,0 +1,32 @@
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% for stylesheet in site.data.theme.stylesheets.distant %}
+  <link rel="stylesheet" href="{{ stylesheet }}">
+  {% endfor %}
+
+  {% for stylesheet in site.data.theme.stylesheets.local %}
+  <link rel="stylesheet" href="{{ site.baseurl }}/{{ stylesheet }}">
+  {% endfor %}
+
+  {% for javascript in site.data.theme.javascripts.distant %}
+  <script src="{{ javascript }}"></script>
+  {% endfor %}
+
+  {% for javascript in site.data.theme.javascripts.local %}
+  <script src="{{ site.baseurl }}/{{ javascript }}"></script>
+  {% endfor %}
+
+  {% if page.video == true %}
+    <link href="{{ "/javascripts/video-js/video-js.min.css" | prepend:site.baseurl }}"  rel="stylesheet" type="text/css"></link>
+    <script src="{{ "/javascripts/video-js/video.js" | prepend:site.baseurl }}"></script>
+    <script> videojs.options.flash.swf = "{{site.baseurl}}/javascripts/video-js/video-js.swf";</script>
+  {% endif %}
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->

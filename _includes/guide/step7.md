@@ -1,4 +1,5 @@
 #### **(step 7)** Add Gitolite server in known_hosts list
+***
 
 Make sure that Redmine user has Gitolite server in his known_hosts list. This is also a good check to see if Gitolite works.
 
@@ -23,9 +24,6 @@ Or
         R W  gitolite-admin
         R W  testing
 
-
-<div class="alert alert-success" role="alert">
-  <p>If you get one of these messages, you're on the right way ;)</a></p>
-</div>
-
-***
+{{ site.data.callouts.alertsuccess }}
+  If you get one of these messages, you're on the right way ;)
+{{ site.data.callouts.end }}

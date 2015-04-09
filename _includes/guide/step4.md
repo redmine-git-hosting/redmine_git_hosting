@@ -1,4 +1,5 @@
 #### **(step 4)** User running Redmine must have **RW+** access to gitolite-admin
+***
 
 Assuming that you have Gitolite installed :
 
@@ -43,9 +44,6 @@ Otherwise you can install Gitolite (v3) by following this :
             git$ gitolite/install -to $HOME/bin
             git$ gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
 
-
-<div class="alert alert-warning" role="alert" markdown="1">
-If you are running Gitolite 3 don't forget to [patch it!]({{ site.baseurl }}/configuration/troubleshooting/#hook-errors-while-pushing-over-https).
-</div>
-
-***
+{{ site.data.callouts.alertwarning }}
+  If you are running Gitolite 3 don't forget to [patch it!]({{ site.baseurl }}/troubleshooting/#hook-errors-while-pushing-over-https)
+{{ site.data.callouts.end }}

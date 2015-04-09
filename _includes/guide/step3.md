@@ -1,4 +1,5 @@
 #### **(step 3)** Create SSH Keys for user running Redmine
+***
 
 As we need to send commands over SSH in **non-interactive mode**, the SSH key **must not** have passphrase (```-N ''``` argument).
 Also, it's better to store SSH Keys **outside** of REDMINE_ROOT path so
@@ -16,5 +17,3 @@ On Bitnami stack :
     bitnami$ chmod 640 ssh_keys/*
 
 You will have to configure the plugin to point to this path.
-
-***

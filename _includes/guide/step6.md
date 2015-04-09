@@ -1,4 +1,5 @@
 #### **(step 6)** Configure sudo
+***
 
 As root create the file ```/etc/sudoers.d/redmine``` and put this content in it :
 
@@ -8,5 +9,3 @@ As root create the file ```/etc/sudoers.d/redmine``` and put this content in it 
 Then chmod the file :
 
     root# chmod 440 /etc/sudoers.d/redmine
-
-***

@@ -1,0 +1,9 @@
+alertsuccess: '<div class="alert alert-success" markdown="1" role="alert"><i class="fa fa-check-square-o"></i>'
+alertinfo:    '<div class="alert alert-info"    markdown="1" role="alert"><i class="fa fa-info-circle"></i>'
+alertwarning: '<div class="alert alert-warning" markdown="1" role="alert"><i class="fa fa-warning"></i>'
+alertdanger:  '<div class="alert alert-danger"  markdown="1" role="alert"><i class="fa fa-exclamation-circle"></i>'
+
+end: '</div>'
+
+icon_ok: '<i class="fa fa-check" style="color: green;"></i>'
+icon_nok: '<i class="fa fa-exclamation-circle"></i>'

@@ -1,4 +1,5 @@
 #### **(step 9)** Finish installation - Configuration
+***
 
 The plugin is now installed, you can restart Redmine :)
 
@@ -15,8 +16,8 @@ But you **must** set some additional settings :
 
 Before configuring the plugin you should take a look at this : [Repositories Storage Configuration Strategy]({{ site.baseurl }}/configuration/notes/#repositories-storage-configuration-strategy).
 
-If you're using a Bitnami Stack (again) : you **must** properly configure the temp directory. [Here's how]({{ site.baseurl }}/configuration/troubleshooting#temp-dir-and-bitnami-stack).
+If you're using a Bitnami Stack (again) : you **must** properly configure the temp directory. [Here's how]({{ site.baseurl }}/troubleshooting#temp-dir-and-bitnami-stack).
 
-<div class="alert alert-warning" role="alert">You may need to restart Redmine after changing settings are some of them are put in cache.</div>
-
-***
+{{ site.data.callouts.alertwarning }}
+  You may need to restart Redmine after changing settings are some of them are put in cache.
+{{ site.data.callouts.end }}

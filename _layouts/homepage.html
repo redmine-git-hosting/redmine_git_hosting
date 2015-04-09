@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    {% include head.html %}
+  </head>
+
+  <body>
+
+    {% include github_ribbon.html %}
+
+    {% include topnav.html %}
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">&nbsp;</div>
+      </div>
+
+      {{ content }}
+
+      <hr>
+
+      <!-- Footer -->
+      <footer>
+        <div class="row">
+          {% include footer.html %}
+        </div>
+      </footer>
+
+    </div>
+
+    {% include google_analytics.html %}
+
+  </body>
+</html>

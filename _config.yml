@@ -1,45 +1,17 @@
-baseurl: /redmine_git_hosting
+baseurl: /
+host: 127.0.0.1
+port: 4000
 
-data:
-  project:
-    name: Redmine Git Hosting
-    description: A Redmine plugin which makes configuring your own Git hosting easy ;)
-    repository: https://github.com/jbox-web/redmine_git_hosting
+destination: _site/redmine_git_hosting
 
-    github_user: jbox-web
-    github_repository: redmine_git_hosting
+# the theme will include the page with id: homepage in the frontmatter on the index.html page.
+homepage_id: homepage
 
-    release:
-      year: 2015
-      version: 1.0.3
+# the theme will include the page with id: footer in the frontmatter.
+footer_id: footer
 
-    author:
-      name: JBox Web
-      url: http://www.jbox-web.com/
 
-    licence:
-      name: MIT
-      url: http://opensource.org/licenses/MIT
-
-  lang: en
-
-  google_tracker: UA-36504891-3
-
-  favicons:
-    - /assets/2014/04/21/favicon-152.png
-
-  theme:
-    stylesheets:
-      - //maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
-      - //maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
-      - //cdnjs.cloudflare.com/ajax/libs/octicons/2.1.2/octicons.css
-
-    javascripts:
-      - //code.jquery.com/jquery-1.11.1.min.js
-      - //code.jquery.com/ui/1.10.4/jquery-ui.min.js
-      - //maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js
-      - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js
-      - //platform.twitter.com/widgets.js
+## build settings -- leave as is
 
 markdown: kramdown
 
@@ -50,3 +22,40 @@ gems:
 - jekyll-sitemap
 
 excerpt_separator: "##########"
+
+highlighter: pygments
+
+exclude: # put all files or directories that you want to exclude from your project here.
+  - "Gemfile"
+  - "Gemfile.lock"
+  - _drafts
+  - _site/documentation-theme-jekyll
+  - bower_components
+
+# these are defaults that get applied to each page or post. you don't have to set these settings in the frontmatter if you put them here. But frontmatter settings will override the configs here.
+permalink: :title
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      search: include
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      search: include
+
+# sass:
+#   sass_dir: _sass
+
+# placed here for translation purposes
+search_placeholder_text: search...
+search_no_results_text: No results found.
+
+collections:
+  tooltips:
+    output: true

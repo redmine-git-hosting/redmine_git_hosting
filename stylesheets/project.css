@@ -1,0 +1,78 @@
+.test {color: red; font-size:40px;}
+
+/* change color of top nav bar*/
+.navbar-inverse {
+  background-color: #444;
+  border-color: #dedede;
+}
+
+
+/* change sidebar nav parent sections */
+/*.nav > li.active > a {
+  background-color: turquoise;
+}*/
+
+
+/*
+ * LANDING PAGE
+ */
+
+.jbox-icons.round {
+  border-radius: 100px;
+}
+
+.jbox-icons {
+  background: none repeat scroll 0 0 #bac9c2;
+  color: #f7f7f7;
+  height: 50px;
+  margin: 0 auto;
+  width: 50px;
+}
+
+.jbox-icons i{
+  font-size: 24px;
+}
+
+.release-downloads {
+  list-style-type: none;
+  margin: 15px -5px;
+}
+
+.release-downloads li {
+  display: inline-block;
+  margin: 5px;
+}
+
+.centered {
+  text-align: center;
+}
+
+.header-link {
+  font-size: 14px;
+  margin-right: 5px;
+
+  -webkit-transition: opacity 0.2s ease-in-out 0.1s;
+  -moz-transition: opacity 0.2s ease-in-out 0.1s;
+  -ms-transition: opacity 0.2s ease-in-out 0.1s;
+}
+
+.list-group h4 {
+  margin-top: 0;
+}
+
+.list-group-item {
+  padding: 20px;
+}
+
+h4:hover .header-link {
+  opacity: 1;
+}
+
+blockquote {
+  font-size: 15.5px;
+}
+
+.notes {
+  font-weight: bold;
+  margin-top: 10px;
+}

@@ -1,0 +1,65 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+sidebar_accordion: true
+
+# Sidebar
+entries:
+- title: Sidebar
+  subcategories:
+    - title: Getting started
+      items:
+        - title: Get started
+          url: /get_started/
+        - title: Supported features
+          url: /supported_features/
+        - title: Screenshots
+          url: /screenshots/
+        - title: Troubleshooting
+          url: /troubleshooting/
+        - title: FAQ
+          url: /faq/
+        - title: Support
+          url: /support/
+
+    - title: Documentation
+      items:
+        - title: Configuration variables
+          url: /configuration/variables/
+        - title: Configuration notes
+          url: /configuration/notes/
+        - title: How to migrate
+          url: /how-to/migrate/
+        - title: How to upgrade
+          url: /how-to/upgrade/
+        - title: How to remove
+          url: /how-to/remove/
+        - title: Use Sidekiq mode
+          url: /how-to/use-sidekiq-mode/
+        - title: Addons installation
+          url: /how-to/install-addons/
+        - title: Install on Bitnami stack
+          url: /how-to/install-on-bitnami/
+        - title: Install Redmine
+          url: /how-to/install-redmine/
+        - title: Help in development
+          url: /how-to/help-development/
+
+    - title: About
+      items:
+        - title: Releases
+          url: /about/releases/
+        - title: Roadmap
+          url: /about/roadmap/
+        - title: License
+          url: /about/license/
+        - title: How to contribute?
+          url: /about/how-to-contribute/
+        - title: JBox Web
+          url: /about/jbox-web/
+
+    - title: Archives
+      items:
+        - title: Posts
+          url: /archives/posts/
+        - title: Releases notes
+          url: /archives/releases-notes/

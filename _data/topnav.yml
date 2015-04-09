@@ -1,0 +1,27 @@
+# Topnav single links
+topnav:
+- title: Topnav
+  subcategories:
+    - title: News
+      url: /news/
+    - title: Download
+      url: /download/
+
+# Topnav dropdowns
+topnav_dropdowns:
+- title: Topnav dropdowns
+  subcategories:
+    - title: Getting started
+      items:
+        - title: Get started
+          url: /get_started/
+        - title: Supported features
+          url: /supported_features/
+        - title: Screenshots
+          url: /screenshots/
+        - title: Troubleshooting
+          url: /troubleshooting/
+        - title: FAQ
+          url: /faq/
+        - title: Support
+          url: /support/

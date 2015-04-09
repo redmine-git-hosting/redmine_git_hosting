@@ -1,0 +1,6 @@
+---
+permalink: /news/feed.atom
+layout: feed-news
+limit: 5
+search: exclude
+---

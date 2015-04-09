@@ -1,4 +1,5 @@
 #### **(step 2)** Clone the plugin
+***
 
 Assuming that you have Redmine installed :
 
@@ -23,10 +24,8 @@ Assuming that you have Redmine installed :
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting
 
 
-Otherwise you can install Redmine by following the wiki : [Redmine Installation]({{ site.baseurl }}/guide/redmine-installation)
+Otherwise you can install Redmine by following the wiki : [How to install Redmine]({{ site.baseurl }}/how-to/install-redmine)
 
-If you're running Redmine with the ```www-data``` user, take a look at [this]({{ site.baseurl }}/configuration/troubleshooting#a-note-about-path-variable).
+If you're running Redmine with the ```www-data``` user, take a look at [this]({{ site.baseurl }}/troubleshooting#a-note-about-path-variable).
 
-If ```bundle``` command complains on Bitnami Stack, take a look at [this]({{ site.baseurl }}/configuration/troubleshooting#bundle-and-bitnami-stack).
-
-***
+If ```bundle``` command complains on Bitnami Stack, take a look at [this]({{ site.baseurl }}/troubleshooting#bundle-and-bitnami-stack).

@@ -2,6 +2,8 @@
 title: The new website is out!
 layout: post-news
 category: news
+author: Nicolas Rodriguez
+search: include
 ---
 
 As you can see, the Github page has been reworked to be more clear :)

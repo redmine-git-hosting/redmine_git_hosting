@@ -2,12 +2,37 @@
 layout: default
 ---
 
-<div class="container">
-  <div class="row">
-    <div class="medium-8 columns">
-      <h4 class="subheader">{{ page.date | date: "%-d %B %Y" }} - {{ page.title }}</h4>
-      <hr>
-      {{ content }}
-    </div>
-  </div>
-</div>
+<h1>{{ page.title }}</h1>
+
+<p class="post-meta">
+  {{ page.date | date: "%b %-d, %Y" }} {% if page.author %} • by {{ page.author }} {% endif %} {% if page.tags %} • {{ page.tags | array_to_sentence_string }}{% endif %} {% if page.meta %} • {{ page.meta }}{% endif %}
+</p>
+
+{{ content }}
+
+<hr/>
+
+{% for post in site.categories.news %}
+  {% if post.url == page.url %}
+    {% assign post_index0 = forloop.index0 %}
+    {% assign post_index1 = forloop.index %}
+  {% endif %}
+{% endfor %}
+
+{% for post in site.categories.news %}
+  {% if post_index0 == forloop.index %}
+    {% assign next_post = post.url %}
+  {% endif %}
+
+  {% if post_index1 == forloop.index0 %}
+    {% assign prev_post = post.url %}
+  {% endif %}
+{% endfor %}
+
+{% if next_post %}
+  <a href="{{ next_post }}" class="pull-right">Next Post</a>
+{% endif %}
+
+{% if prev_post %}
+  <a href="{{ prev_post }}">Previous Post</a>
+{% endif %}
