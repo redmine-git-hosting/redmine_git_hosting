@@ -31,15 +31,17 @@ When you are in **v0.7.10**, you first need to launch this Rake task to delete S
     redmine$ cd REDMINE_ROOT
     redmine$ bundle exec rake redmine_git_hosting:prepare_migration_to_v1 RAILS_ENV=production
 
-Then you can switch to the **1.0.2** version and launch the migration task :
+Then you can switch to the **1.0.4** version and launch the migration task :
 
     # Update Redmine Gitolite Hosting
     redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
-    redmine$ git checkout 1.0.2
+    redmine$ git fetch -p
+    redmine$ git checkout 1.0.4
 
     # Update Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
-    redmine$ git checkout 0.2.2
+    redmine$ git fetch -p
+    redmine$ git checkout 0.2.3
 
     # Install gems and do the migration
     redmine$ cd REDMINE_ROOT
