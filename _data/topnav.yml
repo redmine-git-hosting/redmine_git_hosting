@@ -8,6 +8,8 @@ topnav:
       url: /features/
     - title: Get started
       url: /get_started/
+    - title: Professional Support
+      url: /professional_support/
     - title: Blog
       url: /blog/
 
@@ -27,7 +29,5 @@ topnav_dropdowns:
           url: /screenshots/
         - title: FAQ
           url: /faq/
-        - title: Support
-          url: /support/
         - title: How-To
           url: /how-to/

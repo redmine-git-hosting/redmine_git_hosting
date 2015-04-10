@@ -50,3 +50,5 @@ Git Config Keys Management          | {{ site.data.callouts.icon_ok }} | You can
 Default branch selection            | {{ site.data.callouts.icon_ok }} | By default, the repository default branch is called ```master```. If you have admin rights over a repository, you can change the default branch on the repository.
 GoLang Redirector                   | {{ site.data.callouts.icon_ok }} | This plugin supports GoLang URLs that ease dependency cloning ([Remote import paths](http://golang.org/cmd/go/#hdr-Remote_import_paths)).
 Repository Deletion                 | {{ site.data.callouts.icon_ok }} | This plugin can handle repositories deletion by puting them in a Recycle Bin for a configurable amount of time.
+Custom Gitolite Hooks Installer     | {{ site.data.callouts.icon_ok }} | Install your own Gitolite hooks when creating new repositories.
+Redmine Git Hosting Plugins         | {{ site.data.callouts.icon_ok }} | Create your own plugin to customize repositories creation.
