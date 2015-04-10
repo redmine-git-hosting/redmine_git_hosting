@@ -27,10 +27,6 @@ search: exclude
       <li>
         <a href="https://gemnasium.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}"><img src="https://gemnasium.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}.svg" alt="Dependency Status" /></a>
       </li>
-
-      <li>
-        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate" /></a>
-      </li>
     </ul>
   </span>
 </div>
