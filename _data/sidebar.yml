@@ -18,8 +18,6 @@ entries:
           url: /screenshots/
         - title: FAQ
           url: /faq/
-        - title: Support
-          url: /support/
 
     - title: How-To
       items:

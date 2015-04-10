@@ -1,6 +1,11 @@
 ---
-title: Support
-permalink: /support/
+title: Professional Support
+permalink: /professional_support/
 ---
 
-I'm actively developing this theme. Please let me know about any bugs or other issues that you find. Just email me at <a href="mailto:tomjohnson1492@gmail.com">tomjohnson1492@gmail.com</a>. You can also [create issues directly within the Github repository here](https://github.com/tomjohnson1492/jekyll-doc/issues).
+JBox Web, the company responsible for maintaining Redmine Git Hosting, offers professional services related to Redmine Git Hosting, including:
+
+* Installation, hosting, maintenance and support for custom Redmine installations.
+* Consulting services: development of custom features, integration, branding and training
+
+For more information about professional Redmine and Redmine Git Hosting services, please visit the [JBox Web](http://www.jbox-web.com) site.
