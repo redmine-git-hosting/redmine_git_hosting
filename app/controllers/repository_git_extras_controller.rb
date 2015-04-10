@@ -17,4 +17,16 @@ class RepositoryGitExtrasController < RedmineGitHostingController
     end
   end
 
+
+  def sort_urls
+    @git_extra = @repository.extra
+    if request.post?
+      if @git_extra.update_attributes(urls_order: params[:repository_git_extra])
+        flash.now[:notice] = l(:notice_gitolite_extra_updated)
+      else
+        flash.now[:error] = l(:notice_gitolite_extra_update_failed)
+      end
+    end
+  end
+
 end

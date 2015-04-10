@@ -39,6 +39,7 @@ en:
   label_repository_exists_in_gitolite: Repository exists in Gitolite
   label_git_objects_count: Git objects count
   label_empty_repository: Empty repository?
+  label_sort_urls: (Sort urls)
 
   notice_gitolite_extra_updated: Options successfully updated
   notice_gitolite_extra_update_failed: Errors while updating options

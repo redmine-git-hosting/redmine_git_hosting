@@ -10,7 +10,10 @@ resources :repositories, only: [] do
     get 'download_revision', to: 'download_git_revision#index', as: 'download_git_revision'
   end
 
-  resource  :git_extras,        controller: 'repository_git_extras', only: [:update]
+  resource  :git_extras, controller: 'repository_git_extras', only: [:update] do
+    match 'sort_urls', via: [:get, :post]
+  end
+
   resource  :git_notifications, controller: 'repository_git_notifications'
 
   resources :post_receive_urls,      controller: 'repository_post_receive_urls'

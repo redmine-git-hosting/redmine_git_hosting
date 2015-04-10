@@ -1,0 +1,8 @@
+#sortable-url-messages
+
+%ul{ id: 'sortable-url', data: { 'update-url' => sort_urls_repository_git_extras_path(@repository), remote: true } }
+  - @repository.available_urls_sorted.keys.each do |url|
+    %li{ id: "repository_git_extra_#{url}" }= url
+
+:javascript
+  $(document).ready(function() { setSortableElement('#sortable-url', '#sortable-url'); });

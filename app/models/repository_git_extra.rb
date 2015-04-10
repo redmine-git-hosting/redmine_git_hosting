@@ -9,12 +9,14 @@ class RepositoryGitExtra < ActiveRecord::Base
   ]
 
   DISABLED = 0
-  HTTP     = 1
-  HTTPS    = 2
-  BOTH     = 3
+  HTTP     = 3
+  HTTPS    = 1
+  BOTH     = 2
+
+  ALLOWED_URLS = %w[ssh http https go git git_annex]
 
   ## Attributes
-  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :public_repo, :key
+  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :public_repo, :key, :urls_order
 
   ## Relations
   belongs_to :repository
@@ -25,8 +27,14 @@ class RepositoryGitExtra < ActiveRecord::Base
   validates :default_branch, presence: true
   validates :key,            presence: true
 
+  validate :validate_urls_order
+
+  ## Serializations
+  serialize :urls_order, Array
+
   ## Callbacks
-  after_save :check_if_default_branch_changed
+  before_save :check_urls_order_consistency
+  after_save  :check_if_default_branch_changed
 
   ## Virtual attribute
   attr_accessor :default_branch_has_changed
@@ -41,6 +49,13 @@ class RepositoryGitExtra < ActiveRecord::Base
   private
 
 
+    def validate_urls_order
+      urls_order.each do |url|
+        errors.add(:urls_order, :invalid) unless ALLOWED_URLS.include?(url)
+      end
+    end
+
+
     # This is Rails method : <attribute>_changed?
     # However, the value is cleared before passing the object to the controller.
     # We need to save it in virtual attribute to trigger Gitolite resync if changed.
@@ -51,6 +66,59 @@ class RepositoryGitExtra < ActiveRecord::Base
       else
         self.default_branch_has_changed = false
       end
+    end
+
+
+    def check_urls_order_consistency
+      check_ssh_url
+      check_git_http_urls
+      check_go_url
+      check_git_url
+    end
+
+
+    # SSH url should always be present in urls_order Array
+    #
+    def check_ssh_url
+      add_url('ssh')
+    end
+
+
+    def check_git_http_urls
+      case git_http
+      when DISABLED
+        remove_url('http')
+        remove_url('https')
+      when HTTP
+        add_url('http')
+        remove_url('https')
+      when HTTPS
+        add_url('https')
+        remove_url('http')
+      when BOTH
+        add_url('http')
+        add_url('https')
+      end
+    end
+
+
+    def check_go_url
+      repository.go_access_available? ? add_url('go') : remove_url('go')
+    end
+
+
+    def check_git_url
+      git_daemon? ? add_url('git') : remove_url('git')
+    end
+
+
+    def remove_url(url)
+      self.urls_order.delete(url)
+    end
+
+
+    def add_url(url)
+      self.urls_order.push(url).uniq!
     end
 
 end

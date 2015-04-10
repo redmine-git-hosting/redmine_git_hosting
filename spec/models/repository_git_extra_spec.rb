@@ -18,6 +18,7 @@ describe RepositoryGitExtra do
     it { should allow_mass_assignment_of(:protected_branch) }
     it { should allow_mass_assignment_of(:public_repo) }
     it { should allow_mass_assignment_of(:key) }
+    it { should allow_mass_assignment_of(:urls_order) }
 
     ## Relations
     it { should belong_to(:repository) }
@@ -35,6 +36,10 @@ describe RepositoryGitExtra do
     it { should validate_numericality_of(:git_http) }
 
     it { should validate_inclusion_of(:git_http).in_array(%w(0 1 2 3)) }
+
+    ## Serializations
+    it { should serialize(:urls_order) }
+
 
     it "should have default values for git_http" do
       expect(@git_extra.git_http).to eq 0

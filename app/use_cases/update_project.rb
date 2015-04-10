@@ -29,10 +29,9 @@ class UpdateProject
     def disable_git_daemon_if_not_public
       # Go through all gitolite repos and disable Git daemon if necessary
       project.gitolite_repos.each do |repository|
-        if repository.extra[:git_daemon] && !project.is_public
-          repository.extra[:git_daemon] = false
-          repository.extra.save
-        end
+        repository.extra[:git_daemon] = false if repository.git_daemon_enabled? && !project.is_public
+        # Save GitExtra in all cases to trigger urls order consistency checks
+        repository.extra.save
       end
     end
 

@@ -78,5 +78,10 @@ module Gitolitable
       extra[:public_repo]
     end
 
+
+    def urls_order
+      extra[:urls_order]
+    end
+
   end
 end

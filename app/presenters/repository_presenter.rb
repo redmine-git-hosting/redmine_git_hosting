@@ -33,7 +33,7 @@ class RepositoryPresenter < SimpleDelegator
 
     def render_url_list
       s = ''
-      repository.available_urls.each do |key, value|
+      repository.available_urls_sorted.each do |key, value|
         s << content_tag(:li, link_to(key.upcase, 'javascript:void(0)').html_safe, options_for_git_url(key, value))
       end
       s.html_safe
