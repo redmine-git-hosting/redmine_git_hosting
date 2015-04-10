@@ -514,10 +514,10 @@ dd {
   .dl-horizontal dd:after {
     content: " ";
     /* 1 */
-  
+
     display: table;
     /* 2 */
-  
+
   }
   .dl-horizontal dd:after {
     clear: both;
@@ -526,10 +526,10 @@ dd {
   .dl-horizontal dd:after {
     content: " ";
     /* 1 */
-  
+
     display: table;
     /* 2 */
-  
+
   }
   .dl-horizontal dd:after {
     clear: both;
@@ -4189,9 +4189,6 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 .label:empty {
   display: none;
-}
-.label-default {
-  background-color: #f9faf9;
 }
 .label-default[href]:hover,
 .label-default[href]:focus {
