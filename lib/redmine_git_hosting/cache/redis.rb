@@ -10,8 +10,12 @@ module RedmineGitHosting::Cache
       # Create a SHA256 of the Git command as key id
       hashed_command = hash_key(repo_id, command)
 
+      # If *max_cache_time* is set to -1 (until next commit) then
+      # set the cache time to 1 day (we don't know when will be the next commit)
+      cache_time = (max_cache_time < 0) ? 86400 : max_cache_time
+
       begin
-        client.set(hashed_command, output, ex: max_cache_time)
+        client.set(hashed_command, output, ex: cache_time)
         true
       rescue => e
         logger.error("Redis Adapter : could not insert in cache, this is the error : '#{e.message}'")
