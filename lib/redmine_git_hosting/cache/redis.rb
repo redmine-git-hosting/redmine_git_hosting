@@ -76,7 +76,7 @@ module RedmineGitHosting::Cache
       end
 
 
-      # Make SHAR256 of the Git command as identifier
+      # Make SHA256 of the Git command as identifier
       #
       def hash_key(repo_id, command)
         "#{key_prefix(repo_id)}:#{Digest::SHA256.hexdigest(command)[0..16]}"
