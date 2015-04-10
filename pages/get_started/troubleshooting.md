@@ -3,51 +3,6 @@ title: Troubleshooting
 permalink: /troubleshooting/
 ---
 
-#### A note about PATH variable
-***
-
-One major source of issues with this plugin is that Redmine needs to be able to run both sudo and git commands. Specifically, these programs need to be in one of the directories specified by the PATH variable, in your Rails environment. This requirement has been known to cause problems, particularly when installing on FreeBSD.
-
-To address this problem in the Apache + Passenger configuration, one possible solution is to do the following :
-
-**(1)** Create a new file ```/usr/local/bin/ruby18env``` with the following code, modifying the PATH shown below to include all relevant directories :
-
-    #!/bin/sh
-    export PATH="/usr/local/lib/ruby/gems/1.8/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
-    [path_to_your_ruby_executable, e.g. /usr/local/bin/ruby18] $*
-
-**(2)** Make this file executable:
-
-    chmod 755 /usr/local/bin/ruby18env
-
-**(3)** In your httpd.conf file, replace (or add) your PassengerRuby directive with:
-
-    PassengerRuby /usr/local/bin/ruby18env
-
-Note that this may be an issue for configurations other than Apache + Passenger, but as this is one of the most common configurations, instructions for that are provided above.
-
-Thanks to user Tronix117 for helping to track down this issue and provide a solution for Apache + Passenger.
-
-
-#### A note about HOME variable
-***
-
-The HOME variable must be properly set in the execution environment.
-
-It seems that it's not the case for Nginx + Thin.
-
-To address this problem one possible solution is to do the following :
-
-Edit the ```/etc/init.d/thin``` file and change the line
-
-    /usr/bin/ruby1.9.1 $DAEMON $ACTION --all /etc/thin1.9.1
-
-to
-
-    export HOME=/home/redmine && /usr/bin/ruby1.9.1 $DAEMON $ACTION --all /etc/thin1.9.1
-
-Thanks to user overmind88 for providing a solution for Nginx + Thin.
-
 #### Hook errors while pushing over HTTPS
 ***
 

@@ -61,5 +61,5 @@ search: exclude
 </div>
 
 <div class="container centered">
-  <p><a class="btn btn-primary" href="{{ site.baseurl }}/supported_features/" role="button">And more &raquo;</a></p>
+  <p><a class="btn btn-primary" href="{{ site.baseurl }}/features/" role="button">And more &raquo;</a></p>
 </div>

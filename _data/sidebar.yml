@@ -6,31 +6,29 @@ sidebar_accordion: true
 entries:
 - title: Sidebar
   subcategories:
-    - title: Getting started
-      items:
-        - title: Get started
-          url: /get_started/
-        - title: Supported features
-          url: /supported_features/
-        - title: Screenshots
-          url: /screenshots/
-        - title: Troubleshooting
-          url: /troubleshooting/
-        - title: FAQ
-          url: /faq/
-        - title: Support
-          url: /support/
-
-    - title: Documentation
+    - title: Ressources
       items:
         - title: Configuration variables
           url: /configuration/variables/
         - title: Configuration notes
           url: /configuration/notes/
+        - title: Troubleshooting
+          url: /troubleshooting/
+        - title: Screenshots
+          url: /screenshots/
+        - title: FAQ
+          url: /faq/
+        - title: Support
+          url: /support/
+
+    - title: How-To
+      items:
         - title: How to migrate
           url: /how-to/migrate/
         - title: How to upgrade
           url: /how-to/upgrade/
+        - title: How to maintain
+          url: /how-to/maintain/
         - title: How to remove
           url: /how-to/remove/
         - title: Use Sidekiq mode

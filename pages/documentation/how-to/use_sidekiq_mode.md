@@ -15,8 +15,8 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
     # deb http://packages.dotdeb.org/  squeeze all
 
     # then
-    root$ apt-get update
-    root$ apt-get install redis-server
+    root# apt-get update
+    root# apt-get install redis-server
 
 
 #### **(step 2)** Install the Sidekiq plugin
@@ -26,7 +26,7 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
   Before installing the plugin, stop Redmine!
 {{ site.data.callouts.end }}
 
-    root$ su - redmine
+    root# su - redmine
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
     redmine$ cd REDMINE_ROOT
@@ -58,3 +58,15 @@ If not, add this in /home/redmine/.profile :
     if [ -d "$HOME/bin" ] ; then
       PATH="$HOME/bin:$PATH"
     fi
+
+
+#### **(Notes)** Sidekiq :: Concurrency
+***
+
+When running in Sidekiq mode, do **not** modify ```sidekiq.yaml```, particularly the ```concurrency``` parameter.
+
+Tasks are async but cannot be parallels as we need to write in a file.
+
+Hence the sidekiq worker is a one-queue worker and tasks are stacked **in order** in the queue.
+
+Modifying the ```concurrency``` parameter would break the order of tasks and could lead to an inconsistent state of the Gitolite configuration file.

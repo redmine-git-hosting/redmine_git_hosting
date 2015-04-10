@@ -10,7 +10,6 @@ homepage_id: homepage
 # the theme will include the page with id: footer in the frontmatter.
 footer_id: footer
 
-
 ## build settings -- leave as is
 
 markdown: kramdown

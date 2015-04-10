@@ -2,26 +2,32 @@
 topnav:
 - title: Topnav
   subcategories:
-    - title: News
-      url: /news/
     - title: Download
       url: /download/
+    - title: Features
+      url: /features/
+    - title: Get started
+      url: /get_started/
+    - title: Blog
+      url: /blog/
 
 # Topnav dropdowns
 topnav_dropdowns:
 - title: Topnav dropdowns
   subcategories:
-    - title: Getting started
+    - title: Ressources
       items:
-        - title: Get started
-          url: /get_started/
-        - title: Supported features
-          url: /supported_features/
-        - title: Screenshots
-          url: /screenshots/
+        - title: Configuration variables
+          url: /configuration/variables/
+        - title: Configuration notes
+          url: /configuration/notes/
         - title: Troubleshooting
           url: /troubleshooting/
+        - title: Screenshots
+          url: /screenshots/
         - title: FAQ
           url: /faq/
         - title: Support
           url: /support/
+        - title: How-To
+          url: /how-to/

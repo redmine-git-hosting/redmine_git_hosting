@@ -27,31 +27,8 @@ layout: homepage
     </ul>
   </div>
   <div class="col-lg-6">
-    <h2>Development version</h2>
-    <p>This is the current development version.</p>
-    <p>Once downloaded, follow the <a href="{{ site.baseurl }}/guide/development/">Development guide</a>.</p>
+    <h2>Requirements</h2>
 
-    <ul class="release-downloads">
-      <li>
-        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/devel.zip">
-        <span class="glyphicon glyphicon-download-alt"></span>
-        Download (zip)
-        </a>
-      </li>
-        <li>
-        <a class="btn btn-primary" rel="nofollow" href="https://github.com/jbox-web/redmine_git_hosting/archive/devel.tar.gz">
-        <span class="glyphicon glyphicon-download-alt"></span>
-        Download (tar.gz)
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-lg-12">
-    <h3>Requirements</h3>
-    <hr/>
     <ul>
       <li><strong>Redmine :</strong> works with Redmine <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>3.0.1</strong>)</li>
       <li><strong>Ruby :</strong> works with Ruby 2.0 and 2.1</li>
@@ -59,6 +36,11 @@ layout: homepage
       <li><strong>Gitolite :</strong> works with Gitolite 2.x and 3.x (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>v3.6.2-12-g1c61d57</strong>)</li>
       <li><strong>Database :</strong> works with MySQL and Postgres</li>
     </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
 
     <h3>Known issues</h3>
     <hr/>

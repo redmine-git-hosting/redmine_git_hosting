@@ -1,6 +1,6 @@
 ---
-title: News
-permalink: /news/
+title: Blog
+permalink: /blog/
 layout: homepage
 ---
 
@@ -29,5 +29,5 @@ layout: homepage
 </ul>
 
 <div class="home-read-more">
-  <a href="{{ "/archives/posts" | prepend:site.baseurl }}" class="btn btn-primary btn-lg">View All {{ site.categories['news'] | size }} Articles →</a>
+  <a href="{{ "/archives/posts" | prepend:site.baseurl }}" class="btn btn-primary btn-lg">View all {{ site.categories['news'] | size }} posts →</a>
 </div>
