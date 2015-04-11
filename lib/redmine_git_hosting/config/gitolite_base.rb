@@ -17,6 +17,7 @@ module RedmineGitHosting::Config
       def check_cache
         @gitolite_home_dir = nil
         @mirroring_keys_installed = nil
+        @mirroring_public_key = nil
       end
 
 

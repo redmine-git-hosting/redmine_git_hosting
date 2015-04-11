@@ -11,7 +11,7 @@ module RedmineGitHosting::Config
     module ClassMethods
 
       def mirroring_public_key
-        RedmineGitHosting::MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
+        @mirroring_public_key ||= RedmineGitHosting::MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
       end
 
 
