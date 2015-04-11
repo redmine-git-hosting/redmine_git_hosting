@@ -36,7 +36,7 @@
 
   %tr
     %td= l(:label_mirroring_keys_installed)
-    %td= image_tag (RedmineGitHosting::Config.mirroring_keys_installed?(reset: true) ? 'true.png' : 'exclamation.png')
+    %td= image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
 
   %tr
     %td= l(:label_git_version)
