@@ -1,3 +1,5 @@
+require 'etc'
+
 module RedmineGitHosting::Config
 
   module GitoliteBase
@@ -18,7 +20,7 @@ module RedmineGitHosting::Config
 
 
       def gitolite_home_dir
-        @gitolite_home_dir ||= RedmineGitHosting::Commands.sudo_capture('eval', 'echo', '$HOME').chomp.strip rescue '$HOME'
+        @gitolite_home_dir ||= Etc.getpwnam(gitolite_user).dir rescue nil
       end
 
 
