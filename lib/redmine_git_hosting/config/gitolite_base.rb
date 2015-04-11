@@ -14,6 +14,11 @@ module RedmineGitHosting::Config
     module ClassMethods
 
 
+      def check_cache
+        @gitolite_home_dir = nil
+      end
+
+
       def redmine_user
         @redmine_user ||= (%x[whoami]).chomp.strip
       end

@@ -5,14 +5,30 @@ module RedmineGitHosting
     module SettingPatch
 
       def self.included(base)
+        base.send(:extend, ClassMethods)
         base.send(:include, InstanceMethods)
         base.class_eval do
           unloadable
 
           before_save  :save_git_hosting_values
           after_commit :restore_git_hosting_values
+
+          class << self
+            alias_method_chain :check_cache, :git_hosting
+          end
         end
       end
+
+
+      module ClassMethods
+
+        def check_cache_with_git_hosting
+          check_cache_without_git_hosting
+          RedmineGitHosting::Config.check_cache
+        end
+
+      end
+
 
       module InstanceMethods
 
