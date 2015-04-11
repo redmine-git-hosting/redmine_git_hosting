@@ -23,8 +23,11 @@ module RedmineGitHosting
       module ClassMethods
 
         def check_cache_with_git_hosting
-          check_cache_without_git_hosting
-          RedmineGitHosting::Config.check_cache
+          settings_updated_on = Setting.maximum(:updated_on)
+          if settings_updated_on && @cached_cleared_on <= settings_updated_on
+            clear_cache
+            RedmineGitHosting::Config.check_cache
+          end
         end
 
       end
