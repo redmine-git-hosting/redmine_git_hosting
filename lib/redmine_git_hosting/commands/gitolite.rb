@@ -48,11 +48,7 @@ module RedmineGitHosting::Commands
       def sudo_repository_empty?(repo_path)
         repo_path = File.join(gitolite_home_dir, repo_path, 'objects')
         count = sudo_git_objects_count(repo_path)
-        if count.to_i == 0
-          true
-        else
-          false
-        end
+        count.to_i == 0
       end
 
 
