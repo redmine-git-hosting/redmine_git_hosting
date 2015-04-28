@@ -38,6 +38,10 @@ module RedmineGitHosting
         begin
           admin = gitolite_admin
         rescue Rugged::SshError => e
+          logger.error "Invalid Gitolite Admin SSH Keys"
+          logger.error(e.message)
+        rescue Rugged::NetworkError => e
+          logger.error "Access denied for Gitolite Admin SSH Keys"
           logger.error(e.message)
         else
           begin
