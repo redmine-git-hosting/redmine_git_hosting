@@ -320,7 +320,7 @@ describe Repository::Xitolite do
       end
 
       it "should have nil identifier" do
-        expect(@repository_1.identifier).to be nil
+        expect(@repository_1.identifier).to eq ''
       end
 
       it "should have a valid url" do
@@ -470,7 +470,7 @@ describe Repository::Xitolite do
       end
 
       it "should have nil identifier" do
-        expect(@repository_3.identifier).to be nil
+        expect(@repository_3.identifier).to eq ''
       end
 
       it "should have a valid url" do
@@ -708,7 +708,7 @@ describe Repository::Xitolite do
       end
 
       it "should have nil identifier" do
-        expect(@repository_1.identifier).to be nil
+        expect(@repository_1.identifier).to eq ''
       end
 
       it "should have a valid url" do
@@ -858,7 +858,7 @@ describe Repository::Xitolite do
       end
 
       it "should have nil identifier" do
-        expect(@repository_3.identifier).to be nil
+        expect(@repository_3.identifier).to eq ''
       end
 
       it "should have a valid url" do
