@@ -31,3 +31,7 @@ topnav_dropdowns:
           url: /faq/
         - title: How-To
           url: /how-to/
+        - title: About
+          url: /about/
+        - title: Archives
+          url: /archives/
