@@ -8,6 +8,7 @@ github_repository: redmine_git_hosting
 release:
   year: 2015
   version: 1.0.4
+  latest_redmine_version: 3.0.2
 
 author:
   name: JBox Web
