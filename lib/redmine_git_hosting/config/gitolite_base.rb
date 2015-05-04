@@ -92,7 +92,7 @@ module RedmineGitHosting::Config
 
 
       def gitolite_url
-        [gitolite_user, '@localhost'].join
+        [gitolite_user, '@', RedmineGitHosting::Config.ssh_server_domain].join
       end
 
 
