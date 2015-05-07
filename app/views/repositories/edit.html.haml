@@ -1,3 +1,6 @@
+.contextual
+  = render_repository_quick_jump(@repository)
+
 %h2
   = link_to l(:label_settings), settings_project_path(@repository.project, tab: 'repositories')
   »
