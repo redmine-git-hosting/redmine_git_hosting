@@ -32,14 +32,14 @@ module RedmineGitHosting
 
 
         def update_with_git_hosting(&block)
-          # Set public key values for view
+          # Set public key values for view (in case of invalid form)
           set_public_key_values
 
           # Previous routine
           update_without_git_hosting(&block)
 
           # Update projects if needed
-          update_projects
+          update_projects if @user.status_has_changed?
         end
 
 
@@ -66,8 +66,7 @@ module RedmineGitHosting
 
 
           def update_projects
-            options = { message: "Status of '#{@user.login}' has changed, update projects" }
-            GitoliteAccessor.update_projects(projects_to_update, options) if @user.status_has_changed?
+            GitoliteAccessor.update_projects(projects_to_update, { message: "Status of '#{@user.login}' has changed, update projects" })
           end
 
 
