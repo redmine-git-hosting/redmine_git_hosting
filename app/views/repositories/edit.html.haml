@@ -1,4 +1,9 @@
-%h2= l(:label_repository)
+%h2
+  = link_to l(:label_settings), settings_project_path(@repository.project, tab: 'repositories')
+  »
+  = l(:label_repository)
+  »
+  = @repository.redmine_name
 
 .container
   .row
