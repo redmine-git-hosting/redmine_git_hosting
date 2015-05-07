@@ -31,10 +31,6 @@ describe UsersController do
       it "populates an array of gitolite_deploy_keys" do
         expect(assigns(:gitolite_deploy_keys)).to eq [@deploy_key]
       end
-
-      it "populates an empty gitolite_public_key" do
-        expect(assigns(:gitolite_public_key)).to be_an_instance_of(GitolitePublicKey)
-      end
     end
   end
 
