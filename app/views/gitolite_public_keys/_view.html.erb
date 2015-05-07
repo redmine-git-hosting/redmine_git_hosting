@@ -18,7 +18,7 @@
 
   <fieldset class="public_key_view">
     <legend><%= l(:label_public_key_new) %></legend>
-    <%= render :partial => 'gitolite_public_keys/form', :locals => {:gitolite_public_key => @gitolite_public_key, :user => @user} %>
+    <%= render :partial => 'gitolite_public_keys/form', :locals => {:user => @user} %>
   </fieldset>
 
 <%= javascript_tag do %>

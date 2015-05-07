@@ -62,7 +62,6 @@ module RedmineGitHosting
           def set_public_key_values
             @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
             @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
-            @gitolite_public_key  = GitolitePublicKey.new
           end
 
 
