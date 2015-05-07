@@ -46,8 +46,8 @@
   %ul{ class: 'repository git' }
     - @repositories.sort.each do |repo|
       %li{ class: 'repository git' }
-        = link_to h(repo.name), {controller: 'repositories', action: 'show', id: @project, repository_id: repo.identifier_param, rev: nil, path: nil},
-                                class: 'repository' + (@repository.is_a?(Repository::Xitolite) ? ' git' : '') + (repo == @repository ? ' selected' : '')
+        = link_to_repository(repo, @repository)
+        = link_to "(#{l(:label_settings)})", edit_repository_path(repo) if User.current.allowed_to?(:manage_repository, @project)
 
   - if @repository.is_a?(Repository::Xitolite) && @repository.urls_are_viewable?
     .git_hosting_urls
