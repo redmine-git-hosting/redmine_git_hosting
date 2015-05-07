@@ -31,6 +31,8 @@ module RedmineGitHosting
 
 
         def update_with_git_hosting(&block)
+          # Set public key values for view
+          set_public_key_values
           # Previous routine
           update_without_git_hosting(&block)
           # Update projects if needed
