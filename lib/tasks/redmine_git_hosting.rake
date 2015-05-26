@@ -90,4 +90,13 @@ namespace :redmine_git_hosting do
     line.match(/.*version\s*['"](.*)['"]/)[1]
   end
 
+
+  desc "Resync ssh_keys"
+  task :resync_ssh_keys => [:environment] do
+    puts "Performing manual resync_ssh_keys operation..."
+    RedmineGitHosting.logger.warn("Performing manual resync_ssh_keys operation from command line")
+    GitoliteAccessor.resync_ssh_keys
+    puts "Done!"
+  end
+
 end
