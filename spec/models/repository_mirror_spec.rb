@@ -7,6 +7,7 @@ describe RepositoryMirror do
   VALID_URLS = [
     'ssh://user@host.xz:2222/path/to/repo.git',
     'ssh://user@host.xz/path/to/repo.git',
+    'ssh://user-name@long.host-domain.xz/path.git',
     'ssh://host.xz:2222/path/to/repo.git',
     'ssh://host.xz/path/to/repo.git',
     'ssh://user@host.xz/path/to/repo.git',

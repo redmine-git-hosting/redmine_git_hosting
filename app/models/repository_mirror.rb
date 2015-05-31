@@ -5,7 +5,7 @@ class RepositoryMirror < ActiveRecord::Base
   PUSHMODE_FORCE        = 1
   PUSHMODE_FAST_FORWARD = 2
 
-  VALID_MIRROR_REGEX = /\A(ssh:\/\/)([\w\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i
+  VALID_MIRROR_REGEX = /\A(ssh:\/\/)([\w\-\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i
 
   ## Attributes
   attr_accessible :url, :push_mode, :include_all_branches, :include_all_tags, :explicit_refspec, :active
