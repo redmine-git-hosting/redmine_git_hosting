@@ -53,3 +53,6 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 end
+
+# Disable Test::Unit automatic runner
+Test::Unit::AutoRunner.need_auto_run = false if defined?(Test::Unit::AutoRunner)
