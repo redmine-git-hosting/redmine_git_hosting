@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version '1.0.4'
+  version '1.0.5'
   url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
