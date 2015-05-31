@@ -2,12 +2,6 @@ module Gitolitable
   module Paths
     extend ActiveSupport::Concern
 
-    # This is the (possibly non-unique) basename for the Gitolite repository
-    #
-    def redmine_name
-      identifier.blank? ? project.identifier : identifier
-    end
-
 
     # This is the repository path from Redmine point of view.
     # It is used to build HTTP(s) urls (including GoLang url).
