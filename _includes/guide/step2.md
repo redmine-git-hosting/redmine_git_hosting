@@ -29,6 +29,4 @@ Assuming that you have Redmine installed :
 
 Otherwise you can install Redmine by following the wiki : [How to install Redmine]({{ site.baseurl }}/how-to/install-redmine)
 
-If you're running Redmine with the ```www-data``` user, take a look at [this]({{ site.baseurl }}/troubleshooting#a-note-about-path-variable).
-
 If ```bundle``` command complains on Bitnami Stack, take a look at [this]({{ site.baseurl }}/troubleshooting#bundle-and-bitnami-stack).
