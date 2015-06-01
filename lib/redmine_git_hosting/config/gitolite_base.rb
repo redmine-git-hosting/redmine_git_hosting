@@ -36,6 +36,11 @@ module RedmineGitHosting::Config
       end
 
 
+      def gitolite_server_host
+        RedmineGitHosting::Config.get_setting(:gitolite_server_host)
+      end
+
+
       def gitolite_server_port
         RedmineGitHosting::Config.get_setting(:gitolite_server_port)
       end

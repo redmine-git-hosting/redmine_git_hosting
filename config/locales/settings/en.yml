@@ -13,7 +13,8 @@ en:
   label_gitolite_user: Gitolite username
   label_gitolite_ssh_private_key: Gitolite SSH private key
   label_gitolite_ssh_public_key: Gitolite SSH public key
-  label_gitolite_server_port: SSH local server port
+  label_gitolite_server_host: SSH/Gitolite server host
+  label_gitolite_server_port: SSH/Gitolite server port
 
   # Gitolite Storage Config
   label_tab_storage: Storage
