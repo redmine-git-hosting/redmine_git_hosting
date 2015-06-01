@@ -39,7 +39,7 @@ module RedmineGitHosting::Commands
 
 
       def gitolite_repository_count
-        sudo_capture('gitolite', 'list-phy-repos').split("\n").length
+        ssh_shell('gitolite', 'list-phy-repos').split("\n").length
       end
 
 
