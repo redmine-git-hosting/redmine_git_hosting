@@ -45,4 +45,14 @@ module ExtendRepositoriesHelper
                           class: css_class
   end
 
+
+  def icon_for_url_type(url_type)
+    fa_icon RepositoryGitExtra::URLS_ICONS[url_type][:icon]
+  end
+
+
+  def label_for_url_type(url_type)
+    RepositoryGitExtra::URLS_ICONS[url_type][:label]
+  end
+
 end

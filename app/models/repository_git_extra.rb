@@ -15,6 +15,14 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   ALLOWED_URLS = %w[ssh http https go git git_annex]
 
+  URLS_ICONS = {
+    go:    {label: 'Go',    icon: 'fa-google'},
+    http:  {label: 'HTTP',  icon: 'fa-external-link'},
+    https: {label: 'HTTPS', icon: 'fa-external-link'},
+    ssh:   {label: 'SSH',   icon: 'fa-shield'},
+    git:   {label: 'Git',   icon: 'fa-git'}
+  }
+
   ## Attributes
   attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :public_repo, :key, :urls_order
 

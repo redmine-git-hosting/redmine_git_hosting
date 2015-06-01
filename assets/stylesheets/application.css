@@ -256,3 +256,12 @@ STATISTICS
 .repository-urls {
   margin-top: 15px;
 }
+
+li.url_type {
+  margin: 10px;
+  padding: 5px;
+}
+
+.draggable {
+  cursor: move;
+}
