@@ -30,6 +30,7 @@ class ApplySettings
 
 
     def apply_settings
+      check_gitolite_location
       check_repo_hierarchy
       check_gitolite_config
       check_gitolite_default_values
@@ -46,6 +47,16 @@ class ApplySettings
 
     def value_has_changed?(params)
       old_valuehash[params] != valuehash[params]
+    end
+
+
+    def check_gitolite_location
+      ## Gitolite location has changed. Remove temp directory, it will be recloned.
+      if value_has_changed?(:gitolite_server_host) ||
+         value_has_changed?(:gitolite_server_port) ||
+         value_has_changed?(:gitolite_user)
+        FileUtils.rm_rf RedmineGitHosting::Config.gitolite_temp_dir
+      end
     end
 
 
