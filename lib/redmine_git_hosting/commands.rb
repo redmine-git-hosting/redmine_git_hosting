@@ -104,7 +104,7 @@ module RedmineGitHosting
         # * (-i <gitolite_ssh_private_key>) Use the SSH keys given in Settings
         # * (-p <gitolite_server_port>) Use port from settings
         # * (-o BatchMode=yes) Never ask for a password
-        # * <gitolite_user>@localhost (see +gitolite_url+)
+        # * <gitolite_user>@<gitolite_server_host> (see +gitolite_url+)
         def ssh_shell_params
           [
             '-T',
