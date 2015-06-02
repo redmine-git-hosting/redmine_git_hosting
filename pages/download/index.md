@@ -61,7 +61,7 @@ layout: homepage
 {{ site.data.callouts.end }}
 
 {{ site.data.callouts.alertwarning }}
-  Support for Gitolite v2 will be drop in next stable branch ! (so actually **1.1.x**, the current stable branch is **1.0.x**). You're **strongly encouraged** to migrate to Gitolite v3.
+  Support for Gitolite v2 will be drop in next stable branch ! (so actually **2.x**, the current stable branch is **1.x**). You're **strongly encouraged** to migrate to Gitolite v3.
 {{ site.data.callouts.end }}
 
   </div>
