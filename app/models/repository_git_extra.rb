@@ -80,7 +80,8 @@ class RepositoryGitExtra < ActiveRecord::Base
     def check_urls_order_consistency
       check_ssh_url
       check_git_http_urls
-      check_go_url
+      # Add go url only for existing record to avoid chicken/egg issue
+      check_go_url unless new_record?
       check_git_url
     end
 
