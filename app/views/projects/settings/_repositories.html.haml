@@ -45,7 +45,7 @@
                                          class: 'icon icon-edit'
 
               = link_to l(:button_move), move_repository_git_extras_path(repository),
-                                         class: 'icon icon-move'
+                                         class: 'icon icon-move' if repository.is_a?(Repository::Xitolite) && repository.movable?
 
               = delete_link repository_path(repository)
 

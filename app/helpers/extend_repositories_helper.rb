@@ -55,4 +55,9 @@ module ExtendRepositoriesHelper
     RepositoryGitExtra::URLS_ICONS[url_type][:label]
   end
 
+
+  def render_options_for_move_repo_select_box(project)
+    projects = Project.active
+    project_tree_options_for_select(projects, selected: project) if projects.any?
+  end
 end

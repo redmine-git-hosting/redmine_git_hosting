@@ -8,7 +8,7 @@
 
     .flash-messages= error_messages_for 'move_repository_form'
 
-    %p= f.select :project_id, options_from_collection_for_select(@projects, :id, :name), prompt: 'Select a project'
+    %p= f.select :project_id, render_options_for_move_repo_select_box(@project), prompt: 'Select a project'
     %p
       = f.submit l(:button_move)
       = link_to l(:button_cancel), settings_project_path(@project, tab: 'repositories')

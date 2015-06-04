@@ -80,5 +80,10 @@ module Gitolitable
       RedmineGitHosting::Config.delete_git_repositories?
     end
 
+
+    def movable?
+      !identifier.nil? && !identifier.empty?
+    end
+
   end
 end

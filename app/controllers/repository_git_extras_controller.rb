@@ -18,7 +18,6 @@ class RepositoryGitExtrasController < RedmineGitHostingController
   end
 
 
-<<<<<<< HEAD
   def sort_urls
     @git_extra = @repository.extra
     if request.post?
@@ -32,16 +31,11 @@ class RepositoryGitExtrasController < RedmineGitHostingController
 
 
   def move
-    @projects = Project.all
-    @projects.delete(@project)
-    @move_repository_form = RepositoryMover.new()
+    @move_repository_form = MoveRepositoryForm.new(@repository)
     if request.post?
-      @move_repository_form = RepositoryMover.new(params[:repository_mover].merge(repository_id: @repository.id))
-      if @move_repository_form.valid?
-        project = @move_repository_form.project
-        @repository.update_attribute(:project_id, project.id)
-        GitoliteAccessor.move_repository(@repository)
-        redirect_to settings_project_path(project, tab: 'repositories')
+      @move_repository_form = MoveRepositoryForm.new(@repository)
+      if @move_repository_form.submit(params[:repository_mover])
+        redirect_to settings_project_path(@repository.project, tab: 'repositories')
       end
     end
   end
