@@ -7,3 +7,6 @@
       = link_to l(:label_sort_urls), sort_urls_repository_git_extras_path(@repository), class: 'modal-box-close-only'
 
     = render partial: 'common/git_urls', locals: { repository: @repository }
+
+:javascript
+  $(document).ready(function() { initModalBoxes(modals); });
