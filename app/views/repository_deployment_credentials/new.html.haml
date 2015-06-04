@@ -12,4 +12,4 @@
       %p= f.select :perm, options_for_select(RepositoryDeploymentCredential::VALID_PERMS, RepositoryDeploymentCredential::DEFAULT_PERM), required: true, label: :label_deployment_credential_permissions
 
     - else
-      = link_to l(:label_deployment_credential_create_key_first), url_for(controller: 'my', action: 'account')
+      = link_to l(:label_deployment_credential_create_key_first), public_keys_path
