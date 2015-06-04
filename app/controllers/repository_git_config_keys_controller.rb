@@ -30,7 +30,8 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def update
     if @git_config_key.update_attributes(params[:repository_git_config_key])
       flash[:notice] = l(:notice_git_config_key_updated)
-      call_use_case_and_redirect
+      options = @git_config_key.key_has_changed? ? { delete_git_config_key: @git_config_key.old_key } : {}
+      call_use_case_and_redirect(options)
     end
   end
 
@@ -38,7 +39,8 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def destroy
     if @git_config_key.destroy
       flash[:notice] = l(:notice_git_config_key_deleted)
-      call_use_case_and_redirect
+      options = { delete_git_config_key: @git_config_key.key }
+      call_use_case_and_redirect(options)
     end
   end
 
@@ -58,16 +60,8 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     end
 
 
-    def call_use_case
-      case self.action_name
-      when 'create'
-        options = {}
-      when 'update'
-        options = @git_config_key.key_has_changed? ? { delete_git_config_key: @git_config_key.old_key } : {}
-      when 'destroy'
-        options = { delete_git_config_key: @git_config_key.key }
-      end
-      options = options.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
+    def call_use_case(opts = {})
+      options = opts.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
       GitoliteAccessor.update_repository(@repository, options)
     end
 

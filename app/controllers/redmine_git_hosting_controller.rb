@@ -95,9 +95,9 @@ class RedmineGitHostingController < ApplicationController
     end
 
 
-    def call_use_case_and_redirect
+    def call_use_case_and_redirect(opts = {})
       # Update Gitolite repository
-      call_use_case
+      call_use_case(opts)
       render_js_redirect
     end
 
