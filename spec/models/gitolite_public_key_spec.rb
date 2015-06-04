@@ -260,6 +260,13 @@ describe GitolitePublicKey do
   end
 
 
+  context "when Gitolite Admin ssh key is reused" do
+    it "should not be valid" do
+      expect(build_ssh_key(:user_id => @user1.id, :title => 'foo', :key => File.read(RedmineGitHosting::Config.gitolite_ssh_public_key))).not_to be_valid
+    end
+  end
+
+
   context "when many keys are saved" do
     before do
       create_ssh_key(:user => @user1, :title => 'active1', key: SSH_KEY_1, :key_type => 1)
