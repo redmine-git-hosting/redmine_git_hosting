@@ -28,6 +28,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
   validate :has_not_been_changed
   validate :key_correctness
+  validate :key_not_admin
   validate :key_uniqueness
 
   ## Scopes
@@ -217,6 +218,11 @@ class GitolitePublicKey < ActiveRecord::Base
     def key_correctness
       return false if key.nil?
       (key.match(/^(\S+)\s+(\S+)/)) && (fingerprint =~ /^(\w{2}:?)+$/i)
+    end
+
+
+    def key_not_admin
+      errors.add(:key, :taken_by_gitolite_admin) if fingerprint == RedmineGitHosting::Config.gitolite_ssh_public_key_fingerprint
     end
 
 

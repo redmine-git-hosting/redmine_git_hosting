@@ -56,6 +56,11 @@ module RedmineGitHosting::Config
       end
 
 
+      def gitolite_ssh_public_key_fingerprint
+        @gitolite_ssh_fingerprint ||= RedmineGitHosting::Utils.ssh_fingerprint(File.read(gitolite_ssh_public_key))
+      end
+
+
       def gitolite_config_file
         File.basename(RedmineGitHosting::Config.get_setting(:gitolite_config_file))
       end
