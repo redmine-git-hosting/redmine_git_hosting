@@ -162,6 +162,8 @@ en:
   label_redmine_user: Redmine username
   label_git_version: Git version
   label_gitolite_repository_count: Count of physical repositories in Gitolite
+  label_gitolite_rugged_features: Rugged compiled features
+  label_gitolite_libgit2_version: libgit2 version
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin
