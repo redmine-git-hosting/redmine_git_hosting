@@ -27,6 +27,6 @@ Assuming that you have Redmine installed :
   Before running ```bundle exec``` you **must** edit plugin's Gemfile (```REDMINE_ROOT/plugin/redmine_git_hosting/Gemfile```) and comment / uncomment the lines corresponding to your Redmine version (2.x or 3.x).
 {{ site.data.callouts.end }}
 
-Otherwise you can install Redmine by following the wiki : [How to install Redmine]({{ site.baseurl }}/how-to/install-redmine)
+Otherwise you can install Redmine by following the wiki : [How to install Redmine]({{ site.baseurl }}/how-to/install-redmine).
 
 If ```bundle``` command complains on Bitnami Stack, take a look at [this]({{ site.baseurl }}/troubleshooting#bundle-and-bitnami-stack).
