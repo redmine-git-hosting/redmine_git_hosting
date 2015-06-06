@@ -17,6 +17,16 @@ module RedmineGitHosting::Config
 
     module ClassMethods
 
+      def rugged_features
+        Rugged.features
+      end
+
+
+      def libgit2_version
+        Rugged.libgit2_version.join('.')
+      end
+
+
       def gitolite_infos
         begin
           RedmineGitHosting::Commands.gitolite_infos
