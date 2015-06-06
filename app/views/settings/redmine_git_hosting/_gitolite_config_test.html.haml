@@ -52,6 +52,17 @@
     %td
       %span{ class: 'label label-success' }= RedmineGitHosting::Config.gitolite_repository_count
 
+  %tr
+    %td= l(:label_gitolite_rugged_features)
+    %td
+      - RedmineGitHosting::Config.rugged_features.each do |feature|
+        %span{ class: 'label label-success' }= feature
+
+  %tr
+    %td= l(:label_gitolite_libgit2_version)
+    %td
+      %span{ class: 'label label-success' }= RedmineGitHosting::Config.libgit2_version
+
 %p
   %label= l(:label_gitolite_banner)
 
