@@ -75,7 +75,7 @@ module Hooks
 
       issue = Issue.new
       issue.project_id = @project.id
-      issue.tracker_id = @project.trackers.find(:first).try(:id)
+      issue.tracker_id = @project.trackers.first.try(:id)
       issue.subject = @params[:issue][:title].chomp[0, 255]
       issue.description = @params[:issue][:body]
       issue.updated_on = @params[:issue][:updated_at]
