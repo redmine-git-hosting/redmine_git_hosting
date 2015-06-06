@@ -18,6 +18,7 @@ module RedmineGitHosting::Config
         @gitolite_home_dir = nil
         @mirroring_keys_installed = nil
         @mirroring_public_key = nil
+        @gitolite_ssh_fingerprint = nil
       end
 
 
