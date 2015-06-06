@@ -5,17 +5,26 @@ permalink: /about/roadmap/
 
 * #### v2.0 (next major release)
 
-  * To be decided ...
+  * [New installer](https://github.com/jbox-web/redmine_git_hosting/issues/382)
+  * Remove support for Gitolite v2
 
-* #### v1.1 (next minor release)
+* #### v1.2 (next patch release)
 
   * [Enhance branch permissions support](https://github.com/jbox-web/redmine_git_hosting/issues/264)
 
-* #### v1.0 (current stable)
+* #### v1.1 (current stable)
+
+  * Add 'Move repository' feature
+  * Improve UX
+
+* #### v1.0 (old stable)
 
   * [Support for branch permission / protected branches](https://github.com/jbox-web/redmine_git_hosting/issues/86)
+  * Add support for Rails 4
+  * Add support for Redmine 3.x
+  * Improve stability
 
-* #### v0.7 (old stable)
+* #### v0.7 (obsolete)
 
   * remove Redmine 1.x support
   * remove Rails 2.x support
@@ -41,4 +50,3 @@ permalink: /about/roadmap/
 
   * Fork repositories
   * Pull requests
-  * [Per-repository "Gitolite Access Configuration" options](https://github.com/jbox-web/redmine_git_hosting/issues/100)
