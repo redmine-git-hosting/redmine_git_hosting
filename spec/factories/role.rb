@@ -1,9 +1,9 @@
 FactoryGirl.define do
 
   factory :role do |f|
-    f.name    "Manager"
+    f.name    'Manager'
     f.builtin 0
-    f.issues_visibility "all"
+    f.issues_visibility 'all'
     f.position 1
     f.permissions  [
       :add_project,

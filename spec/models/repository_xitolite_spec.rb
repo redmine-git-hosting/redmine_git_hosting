@@ -640,15 +640,15 @@ describe Repository::Xitolite do
         create_collection_of_non_unique_repositories
       end
 
-      let(:repo1){ Repository::Xitolite.find_by_path(@repository_1.url, loose: true) }
-      let(:repo2){ Repository::Xitolite.find_by_path(@repository_2.url, loose: true) }
-      let(:repo3){ Repository::Xitolite.find_by_path(@repository_3.url, loose: true) }
-      let(:repo4){ Repository::Xitolite.find_by_path(@repository_4.url, loose: true) }
+      let(:repo1) { Repository::Xitolite.find_by_path(@repository_1.url, loose: true) }
+      let(:repo2) { Repository::Xitolite.find_by_path(@repository_2.url, loose: true) }
+      let(:repo3) { Repository::Xitolite.find_by_path(@repository_3.url, loose: true) }
+      let(:repo4) { Repository::Xitolite.find_by_path(@repository_4.url, loose: true) }
 
-      let(:git_cache_id1){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url) }
-      let(:git_cache_id2){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url) }
-      let(:git_cache_id3){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
-      let(:git_cache_id4){ Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
+      let(:git_cache_id1) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url) }
+      let(:git_cache_id2) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url) }
+      let(:git_cache_id3) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
+      let(:git_cache_id4) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
 
       describe "repositories should match" do
         it { expect(repo1).to eq @repository_1 }

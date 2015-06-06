@@ -28,7 +28,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe "GET #index" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "populates an array of post_receive_urls" do
         get :index, :repository_id => @repository.id
@@ -74,7 +74,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe "GET #new" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "assigns a new RepositoryPostReceiveUrl to @post_receive_url" do
         get :new, :repository_id => @repository.id
@@ -99,7 +99,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe "POST #create" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         it "saves the new post_receive_url in the database" do
@@ -160,7 +160,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe "GET #edit" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with existing post_receive_url" do
         it "assigns the requested post_receive_url to @post_receive_url" do
@@ -208,7 +208,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe "PUT #update" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         before do
@@ -264,7 +264,7 @@ describe RepositoryPostReceiveUrlsController do
 
   describe 'DELETE destroy' do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "deletes the post_receive_url" do
         post_receive_url_delete = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository.id)

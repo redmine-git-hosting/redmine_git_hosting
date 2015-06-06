@@ -28,7 +28,7 @@ describe RepositoryMirrorsController do
 
   describe "GET #index" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "populates an array of mirrors" do
         get :index, :repository_id => @repository.id
@@ -74,7 +74,7 @@ describe RepositoryMirrorsController do
 
   describe "GET #new" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "assigns a new RepositoryMirror to @mirror" do
         get :new, :repository_id => @repository.id
@@ -99,7 +99,7 @@ describe RepositoryMirrorsController do
 
   describe "POST #create" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         it "saves the new mirror in the database" do
@@ -160,7 +160,7 @@ describe RepositoryMirrorsController do
 
   describe "GET #edit" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with existing mirror" do
         it "assigns the requested mirror to @mirror" do
@@ -208,7 +208,7 @@ describe RepositoryMirrorsController do
 
   describe "PUT #update" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         before do
@@ -264,7 +264,7 @@ describe RepositoryMirrorsController do
 
   describe 'DELETE destroy' do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "deletes the mirror" do
         mirror_delete = FactoryGirl.create(:repository_mirror, :repository_id => @repository.id)

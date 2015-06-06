@@ -28,7 +28,7 @@ describe RepositoryGitConfigKeysController do
 
   describe "GET #index" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "populates an array of repository_git_config_keys" do
         get :index, :repository_id => @repository.id
@@ -74,7 +74,7 @@ describe RepositoryGitConfigKeysController do
 
   describe "GET #new" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       it "assigns a new RepositoryGitConfigKey to @git_config_key" do
         get :new, :repository_id => @repository.id
@@ -99,7 +99,7 @@ describe RepositoryGitConfigKeysController do
 
   describe "POST #create" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         it "saves the new git_config_key in the database" do
@@ -160,7 +160,7 @@ describe RepositoryGitConfigKeysController do
 
   describe "GET #edit" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with existing git_config_key" do
         it "assigns the requested git_config_key to @git_config_key" do
@@ -208,7 +208,7 @@ describe RepositoryGitConfigKeysController do
 
   describe "PUT #update" do
     context "with sufficient permissions" do
-      before(:each){ set_admin_session }
+      before(:each) { set_admin_session }
 
       context "with valid attributes" do
         before do

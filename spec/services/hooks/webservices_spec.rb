@@ -48,7 +48,7 @@ describe Hooks::Webservices do
     context "when triggers is set to master" do
       before do
         @post_receive_url.use_triggers = true
-        @post_receive_url.triggers = [ 'master' ]
+        @post_receive_url.triggers = ['master']
         @web_hook = Hooks::Webservices.new(@post_receive_url, GLOBAL_PAYLOAD)
       end
 
@@ -61,7 +61,7 @@ describe Hooks::Webservices do
     context "when triggers is set to master" do
       before do
         @post_receive_url.use_triggers = true
-        @post_receive_url.triggers = [ 'master' ]
+        @post_receive_url.triggers = ['master']
         @web_hook = Hooks::Webservices.new(@post_receive_url, BRANCHES_PAYLOAD)
       end
 

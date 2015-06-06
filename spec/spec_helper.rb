@@ -5,7 +5,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     RedmineGitHosting::Config.reload_from_file!
-    Setting.enabled_scm = [ 'Git', 'Subversion', 'Xitolite' ]
+    Setting.enabled_scm = ['Git', 'Subversion', 'Xitolite']
   end
 
 end
