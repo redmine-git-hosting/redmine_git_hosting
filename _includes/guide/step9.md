@@ -11,6 +11,7 @@ But you **must** set some additional settings :
   * Temp dir path
   * Access urls
   * Hooks url
+  * Hooks install (this may overwrite your existing Gitolite hooks)
 3. Check your installation in *Administration -> Redmine Git Hosting* *Config Checks* tab.
 4. Set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys**.
 
