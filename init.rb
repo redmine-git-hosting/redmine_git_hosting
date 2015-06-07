@@ -29,8 +29,9 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_local_code_dir        => 'local/',
 
       # Gitolite Config File
-      :gitolite_config_file           => 'gitolite.conf',
-      :gitolite_identifier_prefix     => 'redmine_',
+      :gitolite_config_file              => 'gitolite.conf',
+      :gitolite_identifier_prefix        => 'redmine_',
+      :gitolite_identifier_strip_user_id => 'false',
 
       # Gitolite Global Config
       :gitolite_temp_dir                     => Rails.root.join('tmp', 'redmine_git_hosting').to_s,

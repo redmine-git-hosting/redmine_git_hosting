@@ -200,6 +200,7 @@ class ValidateSettings
 
         # Repair key must be true if default path
         if valuehash[:gitolite_config_file] == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
+          valuehash[:gitolite_identifier_strip_user_id] = 'false'
           valuehash[:gitolite_identifier_prefix] = RedmineGitHosting::Config::GITOLITE_IDENTIFIER_DEFAULT_PREFIX
         end
       end

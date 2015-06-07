@@ -53,6 +53,7 @@ class MigrateParameters < ActiveRecord::Migration
       :init_repositories_on_create => 'false',
       :download_revision_enabled   => 'true',
       :gitolite_identifier_prefix  => 'redmine_',
+      :gitolite_identifier_strip_user_id => 'false',
 
       :gitolite_resync_all         => 'false',
 
