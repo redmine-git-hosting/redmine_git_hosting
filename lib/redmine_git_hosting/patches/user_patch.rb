@@ -27,7 +27,7 @@ module RedmineGitHosting
         # As login names may change (i.e., user renamed), we use the user id
         # with its login name as a prefix for readibility.
         def gitolite_identifier
-          [RedmineGitHosting::Config.gitolite_identifier_prefix, login.underscore.gsub(/[^0-9a-zA-Z]/, '_'), '_', id].join
+          [RedmineGitHosting::Config.gitolite_identifier_prefix, stripped_login, '_', id].join
         end
 
 
@@ -84,6 +84,11 @@ module RedmineGitHosting
             else
               self.status_has_changed = false
             end
+          end
+
+
+          def stripped_login
+            login.underscore.gsub(/[^0-9a-zA-Z]/, '_')
           end
 
       end
