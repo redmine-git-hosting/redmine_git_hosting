@@ -76,7 +76,7 @@ class ApplySettings
 
     def check_gitolite_config
       ## Gitolite config file has changed, create a new one!
-      if value_has_changed?(:gitolite_config_file) || value_has_changed?(:gitolite_config_has_admin_key)
+      if value_has_changed?(:gitolite_config_file)
         options = { message: 'Gitolite configuration has been modified, resync all projects (active, closed, archived)...' }
         GitoliteAccessor.update_projects('all', options)
       end

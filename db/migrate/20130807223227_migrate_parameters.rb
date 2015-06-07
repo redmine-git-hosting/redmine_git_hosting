@@ -17,7 +17,6 @@ class MigrateParameters < ActiveRecord::Migration
       :gitolite_scripts_dir                 => './',
       :gitolite_timeout                     => '10',
       :gitolite_config_file                 => 'gitolite.conf',
-      :gitolite_config_has_admin_key        => 'true',
       :gitolite_recycle_bin_expiration_time => '24.0',
 
       :gitolite_overwrite_existing_hooks => 'true',
@@ -99,9 +98,6 @@ class MigrateParameters < ActiveRecord::Migration
 
           when 'gitConfigFile' then
             new_setting[:gitolite_config_file] = value
-
-          when 'gitConfigHasAdminKey' then
-            new_setting[:gitolite_config_has_admin_key] = value
 
           when 'gitRecycleExpireTime' then
             new_setting[:gitolite_recycle_bin_expiration_time] = value

@@ -30,7 +30,6 @@ Redmine::Plugin.register :redmine_git_hosting do
 
       # Gitolite Config File
       :gitolite_config_file           => 'gitolite.conf',
-      :gitolite_config_has_admin_key  => 'true',
       :gitolite_identifier_prefix     => 'redmine_',
 
       # Gitolite Global Config

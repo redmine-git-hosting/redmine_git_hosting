@@ -32,7 +32,6 @@ en:
   # Gitolite Config File
   label_tab_config_file: Configuration file
   label_gitolite_config_file: Gitolite configuration file
-  label_gitolite_config_has_admin_key: Gitolite configuration file has Admin key?
   label_gitolite_identifier_prefix: Gitolite prefix
   label_gitolite_identifier_prefix_desc: (Will be used to generate SSH keys identifiers)
   label_git_config_username: Git author name
