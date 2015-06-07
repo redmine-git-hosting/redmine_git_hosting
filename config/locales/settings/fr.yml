@@ -34,6 +34,7 @@ fr:
   label_gitolite_config_file: Fichier de configuration de Gitolite
   label_gitolite_identifier_prefix: Préfixe Gitolite
   label_gitolite_identifier_prefix_desc: (Sera utilisé pour générer les identifiants de clé SSH)
+  label_gitolite_identifier_strip_user_id: Supprimer l'ID de l'utilisateur de l'identifiant Gitolite
 
   # Gitolite Global Config
   label_tab_global: Global
