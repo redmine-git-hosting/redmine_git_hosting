@@ -34,10 +34,6 @@ fr:
   label_gitolite_config_file: Fichier de configuration de Gitolite
   label_gitolite_identifier_prefix: Préfixe Gitolite
   label_gitolite_identifier_prefix_desc: (Sera utilisé pour générer les identifiants de clé SSH)
-  label_git_config_username: Nom de l'auteur Git
-  label_git_config_username_desc: (Sera utilisé comme nom de l'auteur dans les commits)
-  label_git_config_email: Email de l'auteur Git
-  label_git_config_email_desc: (Sera utilisé comme email de l'auteur dans les commits)
 
   # Gitolite Global Config
   label_tab_global: Global
@@ -55,6 +51,11 @@ fr:
   label_info: Info
   label_warn: Avertissement
   label_error: Erreur
+
+  label_git_config_username: Nom de l'auteur Git
+  label_git_config_username_desc: (Sera utilisé comme nom de l'auteur dans les commits)
+  label_git_config_email: Email de l'auteur Git
+  label_git_config_email_desc: (Sera utilisé comme email de l'auteur dans les commits)
 
   # Gitolite Access Config
   label_tab_access: Accès
