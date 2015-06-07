@@ -129,7 +129,7 @@ module Grack
 
 
       def render_not_found
-        [404, {'Content-Type' => 'text/plain'}, ['Not Found']]
+        [404, { 'Content-Type' => 'text/plain' }, ['Not Found']]
       end
 
 

@@ -227,9 +227,14 @@ module Redmine
             io.binmode
             io.puts(revisions.join("\n"))
             io.close_write
-            files=[]
+
+            files = []
             changeset = {}
-            parsing_descr = 0  #0: not parsing desc or files, 1: parsing desc, 2: parsing files
+
+            # 0: not parsing desc or files
+            # 1: parsing desc
+            # 2: parsing files
+            parsing_descr = 0
 
             io.each_line do |line|
               if line =~ /^commit ([0-9a-f]{40})(( [0-9a-f]{40})*)$/

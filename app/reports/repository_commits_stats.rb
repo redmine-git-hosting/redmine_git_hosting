@@ -25,8 +25,8 @@ class RepositoryCommitsStats
     data = {}
     data[:categories] = fields.reverse
     data[:series] = []
-    data[:series].push({name: l(:label_commit_plural), data: commits_by_month[0..11].reverse})
-    data[:series].push({name: l(:label_change_plural), data: changes_by_month[0..11].reverse})
+    data[:series].push({ name: l(:label_commit_plural), data: commits_by_month[0..11].reverse })
+    data[:series].push({ name: l(:label_change_plural), data: changes_by_month[0..11].reverse })
 
     data
   end
@@ -36,8 +36,8 @@ class RepositoryCommitsStats
     data = {}
     data[:categories]    = total_commits_by_day.keys
     data[:series]        = []
-    data[:series].push({name: l(:label_commit_plural), data: total_commits_by_day.values})
-    data[:series].push({name: l(:label_change_plural), data: total_changes_by_day.values})
+    data[:series].push({ name: l(:label_commit_plural), data: total_commits_by_day.values })
+    data[:series].push({ name: l(:label_change_plural), data: total_changes_by_day.values })
     data
   end
 
@@ -55,7 +55,7 @@ class RepositoryCommitsStats
     data = {}
     data[:categories]    = new_hours
     data[:series]        = []
-    data[:series].push({:name => l(:label_commit_plural), :data => commits_by_hour})
+    data[:series].push({ name: l(:label_commit_plural), data: commits_by_hour })
 
     return data
   end

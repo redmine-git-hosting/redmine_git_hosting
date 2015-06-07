@@ -115,7 +115,7 @@ module Hooks
         logger.info("Notifying #{url} ... ")
         y << "  - Notifying #{url} ... "
 
-        post_failed, post_message = self.send(use_method, url, {data: { payload: payload }})
+        post_failed, post_message = self.send(use_method, url, { data: { payload: payload } })
 
         if post_failed
           logger.error('Failed!')

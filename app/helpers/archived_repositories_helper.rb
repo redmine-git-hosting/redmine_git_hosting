@@ -8,7 +8,7 @@ module ArchivedRepositoriesHelper
     rev = revision.respond_to?(:identifier) ? revision.identifier : revision
     link_to(
         h(text),
-        {controller: 'archived_repositories', action: 'revision', id: repository.project, repository_id: repository.identifier_param, rev: rev},
+        { controller: 'archived_repositories', action: 'revision', id: repository.project, repository_id: repository.identifier_param, rev: rev },
         title: l(:label_revision_id, format_revision(revision))
       )
   end

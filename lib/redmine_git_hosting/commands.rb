@@ -34,7 +34,7 @@ module RedmineGitHosting
       #
       def sudo_pipe_data(stdin)
         cmd = sudo.push('sh')
-        capture(cmd, {stdin_data: stdin, binmode: true})
+        capture(cmd, { stdin_data: stdin, binmode: true })
       end
 
 
