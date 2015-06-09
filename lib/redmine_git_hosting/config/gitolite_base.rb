@@ -82,6 +82,11 @@ module RedmineGitHosting::Config
       end
 
 
+      def gitolite_identifier_strip_user_id?
+        RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+      end
+
+
       def gitolite_key_subdir
         'redmine_git_hosting'
       end

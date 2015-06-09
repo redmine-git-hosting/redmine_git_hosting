@@ -6,6 +6,7 @@ class ApplySettings
 
   attr_reader :resync_projects
   attr_reader :resync_ssh_keys
+  attr_reader :regenerate_ssh_keys
   attr_reader :flush_cache
   attr_reader :delete_trash_repo
 
@@ -14,10 +15,11 @@ class ApplySettings
     @old_valuehash     = old_valuehash
     @valuehash         = valuehash
 
-    @resync_projects   = opts.delete(:resync_projects){ false }
-    @resync_ssh_keys   = opts.delete(:resync_ssh_keys){ false }
-    @flush_cache       = opts.delete(:flush_cache){ false }
-    @delete_trash_repo = opts.delete(:delete_trash_repo){ [] }
+    @resync_projects     = opts.delete(:resync_projects){ false }
+    @resync_ssh_keys     = opts.delete(:resync_ssh_keys){ false }
+    @regenerate_ssh_keys = opts.delete(:regenerate_ssh_keys){ false }
+    @flush_cache         = opts.delete(:flush_cache){ false }
+    @delete_trash_repo   = opts.delete(:delete_trash_repo){ [] }
   end
 
 
@@ -39,6 +41,7 @@ class ApplySettings
 
       do_resync_projects
       do_resync_ssh_keys
+      do_regenerate_ssh_keys
       do_flush_cache
       do_delete_trash_repo
       do_enable_readme_creation
@@ -127,6 +130,11 @@ class ApplySettings
     def do_resync_ssh_keys
       ## A resync has been asked within the interface, update all projects in force mode
       GitoliteAccessor.resync_ssh_keys if resync_ssh_keys
+    end
+
+
+    def do_regenerate_ssh_keys
+      RegenerateSshKeys.new.call if regenerate_ssh_keys
     end
 
 

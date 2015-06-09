@@ -37,11 +37,12 @@ module RedmineGitHosting
 
         private
 
-        @@old_valuehash     = ((Setting.plugin_redmine_git_hosting).clone rescue {})
-        @@resync_projects   = false
-        @@resync_ssh_keys   = false
-        @@flush_cache       = false
-        @@delete_trash_repo = []
+        @@old_valuehash       = ((Setting.plugin_redmine_git_hosting).clone rescue {})
+        @@resync_projects     = false
+        @@resync_ssh_keys     = false
+        @@regenerate_ssh_keys = false
+        @@flush_cache         = false
+        @@delete_trash_repo   = []
 
 
         def save_git_hosting_values
@@ -52,6 +53,7 @@ module RedmineGitHosting
             ## This a force update
             @@resync_projects = true if valuehash[:gitolite_resync_all_projects] == 'true'
             @@resync_ssh_keys = true if valuehash[:gitolite_resync_all_ssh_keys] == 'true'
+            @@regenerate_ssh_keys = true if valuehash[:gitolite_regenerate_all_ssh_keys] == 'true'
 
             ## Flush Gitolite Cache
             @@flush_cache = true if valuehash[:gitolite_flush_cache] == 'true'
@@ -80,20 +82,22 @@ module RedmineGitHosting
 
             # Build options to pass to RestoreSettings object
             opts = {
-              resync_projects:   @@resync_projects,
-              resync_ssh_keys:   @@resync_ssh_keys,
-              delete_trash_repo: @@delete_trash_repo,
-              flush_cache:       @@flush_cache
+              resync_projects:     @@resync_projects,
+              resync_ssh_keys:     @@resync_ssh_keys,
+              regenerate_ssh_keys: @@regenerate_ssh_keys,
+              delete_trash_repo:   @@delete_trash_repo,
+              flush_cache:         @@flush_cache
             }
 
             # Call RestoreSettings
             ApplySettings.new(@@old_valuehash, valuehash, opts).call
 
             # Restore default class settings
-            @@resync_projects   = false
-            @@resync_ssh_keys   = false
-            @@flush_cache       = false
-            @@delete_trash_repo = []
+            @@resync_projects     = false
+            @@resync_ssh_keys     = false
+            @@regenerate_ssh_keys = false
+            @@flush_cache         = false
+            @@delete_trash_repo   = []
 
             @@old_valuehash = valuehash.clone
           end
