@@ -98,4 +98,30 @@ module GitolitePluginSettingsHelper
     ]
   end
 
+
+  def render_rugged_mandatory_features
+    content = ''
+    RedmineGitHosting::Config.rugged_mandatory_features.each do |feature|
+      if RedmineGitHosting::Config.rugged_features.include?(feature)
+        opts = { class: 'label label-success' }
+      else
+        opts = { class: 'label label-important' }
+      end
+      content << content_tag(:span, feature, opts) + "\n"
+    end
+    content.html_safe
+  end
+
+
+  def render_rugged_optional_features
+    content = ''
+    RedmineGitHosting::Config.rugged_features.each do |feature|
+      if !RedmineGitHosting::Config.rugged_mandatory_features.include?(feature)
+        opts = { class: 'label label-success' }
+        content << content_tag(:span, feature, opts)
+      end
+    end
+    content.html_safe
+  end
+
 end

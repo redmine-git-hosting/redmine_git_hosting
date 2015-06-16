@@ -22,6 +22,11 @@ module RedmineGitHosting::Config
       end
 
 
+      def rugged_mandatory_features
+        [:threads, :ssh]
+      end
+
+
       def libgit2_version
         Rugged.libgit2_version.join('.')
       end
