@@ -29,11 +29,18 @@ Here's the steps :
 #### **(step 4)** Clone libgit2 repository and build the lib
 ***
 
+Redmine Git Hosting - Rugged/libgit2 compatibility matrix :
+
+Redmine Git Hosting | Rugged/libgit2
+--------------------|----------------
+1.0.x               | v0.21.4
+1.1.x               | v0.22.2
+
     bitnami$ mkdir tmp
     bitnami$ cd tmp
     bitnami$ git clone https://github.com/libgit2/libgit2.git
     bitnami$ cd libgit2
-    bitnami$ git checkout v0.21.4
+    bitnami$ git checkout <libgit2 version>
     bitnami$ mkdir build
     bitnami$ cd build
     bitnami$ export PKG_CONFIG_PATH=/opt/bitnami/common/lib/pkgconfig
