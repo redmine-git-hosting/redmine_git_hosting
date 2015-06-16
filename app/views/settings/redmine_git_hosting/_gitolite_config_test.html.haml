@@ -55,8 +55,8 @@
   %tr
     %td= l(:label_gitolite_rugged_features)
     %td
-      - RedmineGitHosting::Config.rugged_features.each do |feature|
-        %span{ class: 'label label-success' }= feature
+      = render_rugged_mandatory_features
+      = render_rugged_optional_features
 
   %tr
     %td= l(:label_gitolite_libgit2_version)
