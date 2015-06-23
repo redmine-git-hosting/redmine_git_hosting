@@ -25,6 +25,7 @@ function install_plugin() {
 function install_plugin_libs() {
   log_title "INSTALL ADDITIONAL PACKAGES"
   sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
+  log_ok
 }
 
 
