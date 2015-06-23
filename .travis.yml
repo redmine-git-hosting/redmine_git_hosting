@@ -78,6 +78,7 @@ env:
     # - REDMINE_VERSION=2.2.4
 before_install:
   - cd ../..
+  - sudo apt-get update -qq
   - ./jbox-web/redmine_git_hosting/contrib/travis/install_redmine.sh
   - cd redmine
   - echo $(pwd)
