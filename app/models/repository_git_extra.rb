@@ -83,6 +83,7 @@ class RepositoryGitExtra < ActiveRecord::Base
       # Add go url only for existing record to avoid chicken/egg issue
       check_go_url unless new_record?
       check_git_url
+      check_git_annex_url
     end
 
 
@@ -118,6 +119,11 @@ class RepositoryGitExtra < ActiveRecord::Base
 
     def check_git_url
       git_daemon? ? add_url('git') : remove_url('git')
+    end
+
+
+    def check_git_annex_url
+      new_record? || repository.git_annex_access_available? ? add_url('git_annex') : remove_url('git_annex')
     end
 
 
