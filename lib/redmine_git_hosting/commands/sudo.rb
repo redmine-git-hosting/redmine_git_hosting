@@ -122,6 +122,11 @@ module RedmineGitHosting::Commands
       end
 
 
+      def sudo_cat(file)
+        sudo_capture('cat', file) rescue ''
+      end
+
+
       # Test if file content has changed
       #
       def sudo_file_changed?(source_file, dest_file)

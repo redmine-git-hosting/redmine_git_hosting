@@ -161,7 +161,7 @@ module RedmineGitHosting
         # Return the content of a file on Gitolite side.
         #
         def distant_content(destination_path)
-          sudo_capture('cat', destination_path) rescue ''
+          sudo_cat(destination_path)
         end
 
     end
