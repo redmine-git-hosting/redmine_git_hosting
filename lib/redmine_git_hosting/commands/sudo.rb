@@ -19,6 +19,7 @@ module RedmineGitHosting::Commands
 
       # Pipe file content via sudo to dest_file.
       # Expect file content to end with EOL (\n)
+      #
       def sudo_install_file(content, dest_file, filemode)
         stdin = [ 'cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
 
@@ -40,12 +41,14 @@ module RedmineGitHosting::Commands
 
 
       # Test if a file exists with size > 0
+      #
       def sudo_file_exists?(filename)
         sudo_test(filename, '-s')
       end
 
 
       # Test if a directory exists
+      #
       def sudo_dir_exists?(dirname)
         sudo_test(dirname, '-r')
       end
@@ -54,6 +57,7 @@ module RedmineGitHosting::Commands
       # Test properties of a path from the git user.
       #
       # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
+      #
       def sudo_test(path, testarg)
         _, _ , code = sudo_shell('test', testarg, path)
         return code == 0
@@ -73,6 +77,7 @@ module RedmineGitHosting::Commands
 
 
       # Syntaxic sugar for 'mkdir -p'
+      #
       def sudo_mkdir_p(path)
         sudo_mkdir('-p', path)
       end
