@@ -50,6 +50,7 @@ module RedmineGitHosting
       # i.e., executes 'ssh git@localhost <command>'
       #
       # Returns stdout, stderr and the exit code
+      #
       def ssh_shell(*params)
         cmd = ssh.concat(params)
         execute(cmd)
@@ -105,6 +106,7 @@ module RedmineGitHosting
         # * (-p <gitolite_server_port>) Use port from settings
         # * (-o BatchMode=yes) Never ask for a password
         # * <gitolite_user>@<gitolite_server_host> (see +gitolite_url+)
+        #
         def ssh_shell_params
           [
             '-T',
@@ -153,14 +155,14 @@ module RedmineGitHosting
 
         # Return the content of a local (Redmine side) file.
         #
-        def local_content(file)
+        def content_from_redmine_side(file)
           File.read(file)
         end
 
 
         # Return the content of a file on Gitolite side.
         #
-        def distant_content(destination_path)
+        def content_from_gitolite_side(destination_path)
           sudo_cat(destination_path)
         end
 

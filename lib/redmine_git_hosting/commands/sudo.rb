@@ -135,7 +135,7 @@ module RedmineGitHosting::Commands
       # Test if file content has changed
       #
       def sudo_file_changed?(source_file, dest_file)
-        hash_content(local_content(source_file)) != hash_content(distant_content(dest_file))
+        hash_content(content_from_redmine_side(source_file)) != hash_content(content_from_gitolite_side(dest_file))
       end
 
     end
