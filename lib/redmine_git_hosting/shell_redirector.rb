@@ -48,8 +48,8 @@ module RedmineGitHosting
         end
 
         if status && status.exitstatus.to_i != 0
-          logger.error("Git exited with non-zero status : #{status.exitstatus}")
-          raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus}"
+          logger.error("Git exited with non-zero status : #{status.exitstatus} : #{cmd_str}")
+          raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus} : #{cmd_str}"
         end
 
         return retio
