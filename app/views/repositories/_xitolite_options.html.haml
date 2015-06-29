@@ -63,4 +63,4 @@
               %label= l(:label_browse_repository)
               = link_to h(repository.url), { controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param }
 
-    %p= f.submit l(:button_save) unless repository.git_annex_enabled?
+    %p= f.submit l(:button_save)
