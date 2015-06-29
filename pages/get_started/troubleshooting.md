@@ -118,3 +118,18 @@ The temp directory must be **fully** accesible for the ```daemon``` user so here
     bitnami$ sudo chown -R daemon\: temp
 
 Then go in *Administration -> Redmine Git Hosting -> Global tab* and set the temp directory to ```/opt/bitnami/apps/redmine/temp```.
+
+#### Unsupported URL protocol
+***
+
+If you got this error it means that rugged/libgit2 has not been compiled with SSH support.
+
+Install [missing dependencies](http://redmine-git-hosting.io/get_started/#step-1-install-dependencies) then :
+
+    root# su - redmine
+
+    redmine$ cd REDMINE_ROOT
+    redmine$ bundle clean --force
+    redmine$ bundle install --without development test
+    redmine$ gem uninstall rugged
+    redmine$ gem install rugged -v='0.22.2'
