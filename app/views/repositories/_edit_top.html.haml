@@ -4,7 +4,7 @@
   %div{ class: 'git_hosting box' }
     %h3
       = l(:label_repository_access_url)
-      = link_to l(:label_sort_urls), sort_urls_repository_git_extras_path(@repository), class: 'modal-box-close-only'
+      = link_to l(:label_sort_urls), sort_urls_repository_git_extras_path(@repository), class: 'modal-box-close-only' unless @repository.git_annex_enabled?
 
     = render partial: 'common/git_urls', locals: { repository: @repository }
 

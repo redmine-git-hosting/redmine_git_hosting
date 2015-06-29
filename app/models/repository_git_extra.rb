@@ -16,11 +16,12 @@ class RepositoryGitExtra < ActiveRecord::Base
   ALLOWED_URLS = %w[ssh http https go git git_annex]
 
   URLS_ICONS = {
-    go:    {label: 'Go',    icon: 'fa-google'},
-    http:  {label: 'HTTP',  icon: 'fa-external-link'},
-    https: {label: 'HTTPS', icon: 'fa-external-link'},
-    ssh:   {label: 'SSH',   icon: 'fa-shield'},
-    git:   {label: 'Git',   icon: 'fa-git'}
+    go:        { label: 'Go',       icon: 'fa-google' },
+    http:      { label: 'HTTP',     icon: 'fa-external-link' },
+    https:     { label: 'HTTPS',    icon: 'fa-external-link' },
+    ssh:       { label: 'SSH',      icon: 'fa-shield' },
+    git:       { label: 'Git',      icon: 'fa-git' },
+    git_annex: { label: 'GitAnnex', icon: 'fa-git' }
   }
 
   ## Attributes
@@ -83,6 +84,7 @@ class RepositoryGitExtra < ActiveRecord::Base
       # Add go url only for existing record to avoid chicken/egg issue
       check_go_url unless new_record?
       check_git_url
+      check_git_annex_url
     end
 
 
@@ -113,6 +115,11 @@ class RepositoryGitExtra < ActiveRecord::Base
 
     def check_go_url
       repository.go_access_available? ? add_url('go') : remove_url('go')
+    end
+
+
+    def check_git_annex_url
+      git_annex? ? add_url('git_annex') : remove_url('git_annex')
     end
 
 
