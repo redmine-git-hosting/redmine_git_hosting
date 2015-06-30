@@ -9,6 +9,12 @@
 %p
   = label_tag 'settings[gitolite_regenerate_all_ssh_keys]', l(:label_regenerate_all_ssh_keys)
   = check_box_tag 'settings[gitolite_regenerate_all_ssh_keys]', 'true', false
+  %span{ style: 'display: inline-table;' }
+    %em= l(:label_regenerate_all_ssh_keys_desc)
+    %br
+    %em
+      = fa_icon('fa-warning')
+      = l(:label_regenerate_all_ssh_keys_desc2)
 
 %p
   = label_tag 'settings[gitolite_flush_cache]', l(:label_flush_cache)

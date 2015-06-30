@@ -123,7 +123,8 @@ fr:
   label_hierarchical_organisation: Structure des répertoires et des URL pour les dépôts gérés par Redmine
   label_unique_repo_identifier: Les identifiants de dépôts sont unique
 
-  label_current_access_patterns: Modèles d'accès courant pour les dépôts
+  label_ssh_keys_current_access_patterns: Modèles d'accès courant pour les clés SSH
+  label_repos_current_access_patterns: Modèles d'accès courant pour les dépôts
   label_storage_directory: Répertoire de stockage
   label_ssh_access: Accès SSH
   label_http_access: Accès HTTP
@@ -180,6 +181,9 @@ fr:
 
   label_resync_all_projects: Resynchroniser tous les projets
   label_resync_all_ssh_keys: Resynchroniser toutes les clés SSH
+  label_regenerate_all_ssh_keys: Regénérer toutes les clés SSH dans Gitolite
+  label_regenerate_all_ssh_keys_desc: "Permet de regénérer l'identifiant des clés SSH."
+  label_regenerate_all_ssh_keys_desc2: "Peut être assez long : les clés seront supprimées et ajoutés dans Gitolite une par une."
   label_flush_cache: Vider le cache Git
 
   # Misc
