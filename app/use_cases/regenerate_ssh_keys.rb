@@ -12,7 +12,7 @@ class RegenerateSshKeys
   def call
     GitolitePublicKey.all.each do |ssh_key|
       GitoliteAccessor.destroy_ssh_key(ssh_key, bypass_sidekiq: bypass_sidekiq)
-      ssh_key.reset_identifiers
+      ssh_key.reset_identifiers(skip_auto_increment: true)
       GitoliteAccessor.create_ssh_key(ssh_key, bypass_sidekiq: bypass_sidekiq)
     end
   end
