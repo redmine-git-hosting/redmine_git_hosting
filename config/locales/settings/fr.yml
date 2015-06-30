@@ -117,6 +117,7 @@ fr:
   label_tab_redmine: Redmine
   label_redmine_config: Configuration de Redmine
 
+  label_redmine_has_rw_access_on_all_repos: Redmine a accès en lecture/écriture à tous les dépôts Gitolite
   label_all_projects_use_git: Créer automatiquement un dépôt Git pour les nouveaux projets
   label_delete_git_repositories: Effacer les dépôts Git d'un projet quand celui-ci est effacé?<br/>(seront mis dans la corbeille)
   label_init_repositories_on_create: Initialiser automatiquement les dépôts Git avec un fichier README (à la Github)

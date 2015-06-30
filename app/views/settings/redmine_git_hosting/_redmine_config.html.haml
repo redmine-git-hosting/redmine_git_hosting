@@ -1,10 +1,17 @@
 / Redmine Config
-- all_projects_use_git        = RedmineGitHosting::Config.get_setting(:all_projects_use_git, true)
-- init_repositories_on_create = RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true)
-- delete_git_repositories     = RedmineGitHosting::Config.get_setting(:delete_git_repositories, true)
-- hierarchical_organisation   = RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
+- redmine_has_rw_access_on_all_repos = RedmineGitHosting::Config.get_setting(:redmine_has_rw_access_on_all_repos, true)
+- all_projects_use_git               = RedmineGitHosting::Config.get_setting(:all_projects_use_git, true)
+- init_repositories_on_create        = RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true)
+- delete_git_repositories            = RedmineGitHosting::Config.get_setting(:delete_git_repositories, true)
+- hierarchical_organisation          = RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
 
 %h3= l(:label_redmine_config)
+
+%p
+  %label= l(:label_redmine_has_rw_access_on_all_repos)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[redmine_has_rw_access_on_all_repos]', 'false'
+    = check_box_tag 'settings[redmine_has_rw_access_on_all_repos]', redmine_has_rw_access_on_all_repos, redmine_has_rw_access_on_all_repos
 
 %p
   %label= l(:label_all_projects_use_git)

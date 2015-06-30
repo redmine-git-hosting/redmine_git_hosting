@@ -62,9 +62,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_http_by_default         => '1',
 
       # Redmine Config
-      :all_projects_use_git             => 'false',
-      :init_repositories_on_create      => 'false',
-      :delete_git_repositories          => 'true',
+      :redmine_has_rw_access_on_all_repos => 'true',
+      :all_projects_use_git               => 'false',
+      :init_repositories_on_create        => 'false',
+      :delete_git_repositories            => 'true',
 
       # This params work together!
       # When hierarchical_organisation = true, unique_repo_identifier MUST be false

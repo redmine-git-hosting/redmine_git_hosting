@@ -91,15 +91,15 @@ module GitoliteAccessor
     end
 
 
-    def enable_readme_creation
-      logger.info('Enable README creation for repositories')
-      resync_gitolite(:enable_readme_creation, 'enable_readme_creation')
+    def enable_rw_access
+      logger.info('Enable RW access on all Gitolite repositories')
+      resync_gitolite(:enable_rw_access, 'enable_rw_access')
     end
 
 
-    def disable_readme_creation
-      logger.info('Disable README creation for repositories')
-      resync_gitolite(:disable_readme_creation, 'disable_readme_creation')
+    def disable_rw_access
+      logger.info('Disable RW access on all Gitolite repositories')
+      resync_gitolite(:disable_rw_access, 'disable_rw_access')
     end
 
 

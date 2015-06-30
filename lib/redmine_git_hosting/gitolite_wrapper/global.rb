@@ -2,30 +2,30 @@ module RedmineGitHosting
   module GitoliteWrapper
     class Global < Admin
 
-      def enable_readme_creation
+      def enable_rw_access
         if all_repository_config.nil?
           admin.transaction do
-            gitolite_config.add_repo(create_readme_config)
-            gitolite_admin_repo_commit("Enable README file creation for repositories")
+            gitolite_config.add_repo(rw_access_config)
+            gitolite_admin_repo_commit("Enable RW access on all Gitolite repositories")
           end
         else
           logger.info("'@all' repository already configured, check for RedmineGitHosting key presence")
           admin.transaction do
             add_redmine_key
-            gitolite_admin_repo_commit("Enable README file creation for repositories")
+            gitolite_admin_repo_commit("Enable RW access on all Gitolite repositories")
           end
         end
       end
 
 
-      def disable_readme_creation
+      def disable_rw_access
         if all_repository_config.nil?
-          logger.info('README file creation already disabled.')
+          logger.info('RW access on all Gitolite repositories already disabled.')
           return
         else
           admin.transaction do
             remove_redmine_key
-            gitolite_admin_repo_commit("Disable README file creation for repositories")
+            gitolite_admin_repo_commit("Disable RW access on all Gitolite repositories")
           end
         end
       end
@@ -49,14 +49,14 @@ module RedmineGitHosting
         end
 
 
-        def create_readme_config
+        def rw_access_config
           repo_conf = ::Gitolite::Config::Repo.new(all_repository)
-          repo_conf.permissions = create_readme_perms
+          repo_conf.permissions = rw_access_perms
           repo_conf
         end
 
 
-        def create_readme_perms
+        def rw_access_perms
           permissions = {}
           permissions['RW+'] = {}
           permissions['RW+'][''] = [redmine_gitolite_key]
@@ -97,7 +97,7 @@ module RedmineGitHosting
           # If not create the RW+ group and add the key
           if perms.empty?
             logger.info("No permissions set for '@all' repository, add RedmineGitHosting key")
-            repo_conf.permissions = create_readme_perms
+            repo_conf.permissions = rw_access_perms
             return
           end
 

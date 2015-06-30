@@ -44,7 +44,7 @@ class ApplySettings
       do_regenerate_ssh_keys
       do_flush_cache
       do_delete_trash_repo
-      do_enable_readme_creation
+      do_add_redmine_rw_access
     end
 
 
@@ -149,8 +149,8 @@ class ApplySettings
     end
 
 
-    def do_enable_readme_creation
-      valuehash[:init_repositories_on_create] == 'true' ? GitoliteAccessor.enable_readme_creation : GitoliteAccessor.disable_readme_creation
+    def do_add_redmine_rw_access
+      valuehash[:redmine_has_rw_access_on_all_repos] == 'true' ? GitoliteAccessor.enable_rw_access : GitoliteAccessor.disable_rw_access
     end
 
 end
