@@ -37,6 +37,7 @@ class GitolitePublicKey < ActiveRecord::Base
   before_validation :strip_whitespace
   before_validation :remove_control_characters
 
+  before_validation :set_identifier
   before_validation :set_fingerprint
 
 
@@ -141,6 +142,17 @@ class GitolitePublicKey < ActiveRecord::Base
     def remove_control_characters
       return if !new_record?
       self.key = RedmineGitHosting::Utils.sanitize_ssh_key(key)
+    end
+
+
+    # Returns the unique identifier for this key based on the key_type
+    #
+    # For user public keys, this simply is the user's gitolite_identifier.
+    # For deployment keys, we use an incrementing number.
+    #
+    def set_identifier
+      return nil if user_id.nil?
+      self.identifier ||= GeneratePublicKeyIdentifier.new(self, user).call
     end
 
 

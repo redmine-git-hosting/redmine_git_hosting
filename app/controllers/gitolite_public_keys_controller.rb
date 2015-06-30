@@ -18,7 +18,6 @@ class GitolitePublicKeysController < ApplicationController
   def create
     if params[:create_button]
       @gitolite_public_key = @user.gitolite_public_keys.new(params[:gitolite_public_key])
-      @gitolite_public_key.identifier = GeneratePublicKeyIdentifier.new(@gitolite_public_key, @user).call
       if @gitolite_public_key.save
         create_ssh_key(@gitolite_public_key)
         flash[:notice] = l(:notice_public_key_created, title: view_context.keylabel(@gitolite_public_key))
