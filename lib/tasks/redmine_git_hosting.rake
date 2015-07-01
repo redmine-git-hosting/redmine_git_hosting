@@ -41,7 +41,6 @@ namespace :redmine_git_hosting do
 
   desc "Check repositories identifier uniqueness"
   task :check_repository_uniqueness => [:environment] do
-    puts ""
     puts "Checking repositories identifier uniqueness..."
     if Repository::Xitolite.have_duplicated_identifier?
       # Oops -- have duplication.
@@ -52,6 +51,15 @@ namespace :redmine_git_hosting do
       puts "No duplication detected, good !"
     end
     puts ""
+  end
+
+
+  desc "Resync ssh_keys"
+  task :resync_ssh_keys => [:environment] do
+    puts "Performing manual resync_ssh_keys operation..."
+    RedmineGitHosting.logger.warn("Performing manual resync_ssh_keys operation from command line")
+    GitoliteAccessor.resync_ssh_keys
+    puts "Done!"
   end
 
 
@@ -88,15 +96,6 @@ namespace :redmine_git_hosting do
   def version(path)
     line = File.read(Rails.root.join(path))[/^\s*version\s*.*/]
     line.match(/.*version\s*['"](.*)['"]/)[1]
-  end
-
-
-  desc "Resync ssh_keys"
-  task :resync_ssh_keys => [:environment] do
-    puts "Performing manual resync_ssh_keys operation..."
-    RedmineGitHosting.logger.warn("Performing manual resync_ssh_keys operation from command line")
-    GitoliteAccessor.resync_ssh_keys
-    puts "Done!"
   end
 
 end

@@ -16,13 +16,6 @@ module RedmineGitHosting
       end
 
 
-      WRAPPERS = [
-        GitoliteWrapper::Admin, GitoliteWrapper::Repositories,
-        GitoliteWrapper::Users, GitoliteWrapper::Projects,
-        GitoliteWrapper::Global
-      ]
-
-
       # Update the Gitolite Repository
       #
       # action: An API action defined in one of the gitolite/* classes.
@@ -32,6 +25,12 @@ module RedmineGitHosting
 
         # Flush cache if needed
         flush_cache(options)
+
+        # Return if the action is only to flush cache on Sidekiq side
+        if action == :flush_settings_cache
+          logger.info('Settings cache flushed!')
+          return
+        end
 
         # Be sure to have a Gitolite::GitoliteAdmin object.
         # Return nil if issues.
@@ -46,7 +45,7 @@ module RedmineGitHosting
         else
           begin
             # Call our wrapper passing the GitoliteAdmin object
-            call_gitolite_wrapper(admin, action, object, options)
+            call_gitolite_wrapper(action, admin, object, options)
           rescue RedmineGitHosting::Error::GitoliteWrapperException => e
             logger.error(e.message)
           end
@@ -67,7 +66,7 @@ module RedmineGitHosting
 
         def gitolite_admin
           RedmineGitHosting::Config.create_temp_dir
-          logger.info("Accessing gitolite-admin.git at '#{gitolite_admin_dir}'")
+          logger.debug("Accessing gitolite-admin.git at '#{gitolite_admin_dir}'")
           ::Gitolite::GitoliteAdmin.new(gitolite_admin_dir, gitolite_admin_settings)
         end
 
@@ -77,10 +76,10 @@ module RedmineGitHosting
         end
 
 
-        def call_gitolite_wrapper(admin, action, object, options = {})
+        def call_gitolite_wrapper(action, admin, object, options = {})
           klass = find_gitolite_wrapper(action)
           if !klass.nil?
-            klass.new(admin, action, object, options).send(action)
+            klass.call(admin, object, options)
           else
             raise RedmineGitHosting::Error::GitoliteWrapperException.new("No available Wrapper for action '#{action}' found.")
           end
@@ -88,10 +87,12 @@ module RedmineGitHosting
 
 
         def find_gitolite_wrapper(action)
-          WRAPPERS.each do |wrappermod|
-            return wrappermod if wrappermod.method_defined?(action)
-          end
-          return nil
+          wrappers.has_key?(action) ? wrappers[action] : nil
+        end
+
+
+        def wrappers
+          RedmineGitHosting::GitoliteWrappers::Base.wrappers
         end
 
 
@@ -110,6 +111,5 @@ module RedmineGitHosting
         end
 
     end
-
   end
 end

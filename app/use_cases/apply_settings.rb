@@ -134,7 +134,7 @@ class ApplySettings
 
 
     def do_regenerate_ssh_keys
-      RegenerateSshKeys.new.call if regenerate_ssh_keys
+      GitoliteAccessor.regenerate_ssh_keys if regenerate_ssh_keys
     end
 
 

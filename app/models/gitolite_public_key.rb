@@ -123,6 +123,21 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
 
+  def type
+    key.split(' ')[0]
+  end
+
+
+  def blob
+    key.split(' ')[1]
+  end
+
+
+  def email
+    key.split(' ')[2]
+  end
+
+
   private
 
 
