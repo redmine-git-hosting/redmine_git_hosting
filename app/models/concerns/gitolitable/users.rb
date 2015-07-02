@@ -3,37 +3,54 @@ module Gitolitable
     extend ActiveSupport::Concern
 
     def gitolite_users
-      data = {}
-
       if project.active?
-        # Add project users
-        data[:rewind_users]   = rewind_users
-        data[:write_users]    = write_users
-        data[:read_users]     = read_users
-        data[:developer_team] = developer_team
-        data[:all_read]       = all_read
-
-        # Add Řepository Deployment keys
-        deployment_credentials.active.each do |cred|
-          if cred.perm == 'RW+'
-            data[:rewind_users] << cred.gitolite_public_key.owner
-          elsif cred.perm == 'R'
-            data[:read_users] << cred.gitolite_public_key.owner
-          end
-        end
-
-        # Add other users
-        data[:read_users] << 'DUMMY_REDMINE_KEY' if read_users.empty? && write_users.empty? && rewind_users.empty?
-        data[:read_users] << 'gitweb' if git_web_available?
-        data[:read_users] << 'daemon' if git_daemon_available?
-
+        users_for_active_project
       elsif project.archived?
-        data[:read_users] = ['REDMINE_ARCHIVED_PROJECT']
+        users_for_archived_project
       else
-        data[:read_users] = all_read
-        data[:read_users] << 'REDMINE_CLOSED_PROJECT'
+        users_for_closed_project
+      end
+    end
+
+
+    def users_for_active_project
+      data = {}
+      data[:rewind_users]   = rewind_users
+      data[:write_users]    = write_users
+      data[:read_users]     = read_users
+      data[:developer_team] = developer_team
+      data[:all_read]       = all_read
+
+      # Add Řepository Deployment keys
+      deployment_credentials.active.each do |cred|
+        if cred.perm == 'RW+'
+          data[:rewind_users] << cred.gitolite_public_key.owner
+        elsif cred.perm == 'R'
+          data[:read_users] << cred.gitolite_public_key.owner
+        end
       end
 
+      # Add other users
+      data[:read_users] << 'DUMMY_REDMINE_KEY' if read_users.empty? && write_users.empty? && rewind_users.empty?
+      data[:read_users] << 'gitweb' if git_web_available?
+      data[:read_users] << 'daemon' if git_daemon_available?
+
+      # Return users
+      data
+    end
+
+
+    def users_for_archived_project
+      data = {}
+      data[:read_users] = ['REDMINE_ARCHIVED_PROJECT']
+      data
+    end
+
+
+    def users_for_closed_project
+      data = {}
+      data[:read_users] = all_read
+      data[:read_users] << 'REDMINE_CLOSED_PROJECT'
       data
     end
 

@@ -73,6 +73,11 @@ module PermissionsBuilder
     private
 
 
+      def has_no_users?(type)
+        gitolite_users[type].nil? || gitolite_users[type].empty?
+      end
+
+
       def merge_permissions(current_permissions, old_permissions)
         merge_permissions = {}
         merge_permissions['RW+'] = {}

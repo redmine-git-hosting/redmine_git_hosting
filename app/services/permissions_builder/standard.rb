@@ -23,9 +23,9 @@ module PermissionsBuilder
 
 
     def build_permissions
-      @permissions['RW+'][''] = gitolite_users[:rewind_users] unless gitolite_users[:rewind_users].empty?
-      @permissions['RW']['']  = gitolite_users[:write_users]  unless gitolite_users[:write_users].empty?
-      @permissions['R']['']   = gitolite_users[:read_users]   unless gitolite_users[:read_users].empty?
+      @permissions['RW+'][''] = gitolite_users[:rewind_users] unless has_no_users?(:rewind_users)
+      @permissions['RW']['']  = gitolite_users[:write_users]  unless has_no_users?(:write_users)
+      @permissions['R']['']   = gitolite_users[:read_users]   unless has_no_users?(:read_users)
     end
 
   end

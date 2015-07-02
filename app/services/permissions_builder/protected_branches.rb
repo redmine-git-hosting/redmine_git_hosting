@@ -30,7 +30,7 @@ module PermissionsBuilder
         end
       end
 
-      @permissions['RW+']['personal/USER/'] = gitolite_users[:developer_team] unless gitolite_users[:developer_team].empty?
+      @permissions['RW+']['personal/USER/'] = gitolite_users[:developer_team] unless has_no_users?(:developer_team)
     end
 
   end
