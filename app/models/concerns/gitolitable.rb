@@ -1,5 +1,6 @@
 module Gitolitable
   extend ActiveSupport::Concern
+  include Gitolitable::Authorizations
   include Gitolitable::Cache
   include Gitolitable::Config
   include Gitolitable::Features

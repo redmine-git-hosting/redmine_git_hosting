@@ -1,5 +1,5 @@
 module Gitolitable
-  module Permissions
+  module Authorizations
     extend ActiveSupport::Concern
 
     # These are for repository Gitolite configuration
