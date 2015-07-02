@@ -22,30 +22,17 @@ module RedmineGitHosting
 
 
         def add_redmine_key
-          repo_conf = all_repository_config
-
           # RedmineGitHosting key must be in RW+ group
-          perms = repo_conf.permissions.select{ |p| p.has_key? 'RW+' }
-
           # If not create the RW+ group and add the key
           if perms.empty?
             logger.info("#{context} : No permissions set for '@all' repository, add RedmineGitHosting key")
             repo_conf.permissions = rw_access_perms
-            return
-          end
-
-          # RedmineGitHosting key can act on any refspec ('') so it should be it that 'subgroup'
-          users = perms[0]['RW+']['']
-
-          # If not create it
-          if users.nil?
+          elsif users.nil?
             logger.info("#{context} : RedmineGitHosting key is not present, add it !")
             repo_conf.permissions[0]['RW+'][''] = [redmine_gitolite_key]
-          # Check that the 'subgroup' contains our key
           elsif !users.include?(redmine_gitolite_key)
             logger.info("#{context} : RedmineGitHosting key is not present, add it !")
             repo_conf.permissions[0]['RW+'][''].push(redmine_gitolite_key)
-          # Our key already here, nothing to do
           else
             logger.info("#{context} : RedmineGitHosting key is present, nothing to do.")
           end

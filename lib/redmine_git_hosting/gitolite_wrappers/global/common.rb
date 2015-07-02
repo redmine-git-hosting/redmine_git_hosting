@@ -32,6 +32,23 @@ module RedmineGitHosting
           [permissions]
         end
 
+
+        def repo_conf
+          all_repository_config
+        end
+
+
+        def perms
+          repo_conf.permissions.select { |p| p.has_key? 'RW+' }
+        end
+
+
+        # RedmineGitHosting key can act on any refspec ('') so it should be in that 'subgroup'
+        #
+        def users
+          perms[0]['RW+']['']
+        end
+
       end
     end
   end

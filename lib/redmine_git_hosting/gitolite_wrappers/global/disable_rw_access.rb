@@ -19,17 +19,11 @@ module RedmineGitHosting
 
 
         def remove_redmine_key
-          repo_conf = all_repository_config
-
-          # RedmineGitHosting key must be in RW+ group
-          perms = repo_conf.permissions.select{ |p| p.has_key? 'RW+' }
-
           # RedmineGitHosting key must be in [RW+][''] group
           # Return if those groups are absent : it means that our key is not here
           return if perms.empty? || !perms[0]['RW+'].include?('')
 
           # Check for key presence
-          users = perms[0]['RW+']['']
           return if !users.include?(redmine_gitolite_key)
 
           # Delete the key
