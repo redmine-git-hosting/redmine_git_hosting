@@ -1,7 +1,7 @@
 class RepositoryProtectedBranche < ActiveRecord::Base
   unloadable
 
-  VALID_PERMS  = ['RW+', 'RW']
+  VALID_PERMS  = ['RW+', 'RW', 'R', '-']
   DEFAULT_PERM = 'RW+'
 
   acts_as_list
@@ -14,7 +14,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
   ## Validations
   validates :repository_id, presence: true
-  validates :path,          presence: true, uniqueness: { scope: [:permissions, :repository_id] }
+  validates :path,          uniqueness: { scope: [:permissions, :repository_id] }
   validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
   validates :user_list,     presence: true
 

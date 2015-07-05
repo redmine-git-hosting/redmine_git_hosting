@@ -40,7 +40,7 @@ module RedmineGitHosting
 
 
           def backup_old_perms
-            @old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf)
+            @old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf.permissions[0])
           end
 
 

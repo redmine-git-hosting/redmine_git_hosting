@@ -3,7 +3,9 @@
   - if User.current.git_allowed_to?(:create_repository_protected_branches, @repository)
     .contextual= link_to l(:label_protected_branch_add), new_repository_protected_branch_path(@repository), class: 'icon icon-add modal-box'
 
-  %h3= l(:label_protected_branches)
+  %h3
+    = l(:label_protected_branches)
+    = link_to "(#{l(:label_gitolite_documentation)})", 'http://gitolite.com/gitolite/conf.html#rules', target: '_blank'
 
   - if @repository_protected_branches.any?
 
@@ -14,8 +16,8 @@
       %thead
         %tr
           %th
-          %th= l(:label_branch_path)
           %th= l(:label_permissions)
+          %th= l(:label_branch_path)
           %th= l(:label_user_list)
           %th
 
@@ -26,11 +28,11 @@
               %span{ class: 'handle' }
                 [drag]
 
-            %td{ style: 'font-family: Consolas;' }= protected_branch.path
-
             %td
               - color = protected_branch.permissions == '-' ? 'important' : 'success'
               %span{ class: "label label-#{color}" }= protected_branch.permissions
+
+            %td{ style: 'font-family: Consolas;' }= protected_branch.path
 
             %td
               - protected_branch.user_list.each do |user|
