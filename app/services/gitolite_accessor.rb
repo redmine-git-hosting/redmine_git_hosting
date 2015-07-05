@@ -24,7 +24,7 @@ module GitoliteAccessor
 
     def regenerate_ssh_keys(opts = {})
       logger.info("Forced regenerate of all ssh keys...")
-      RegenerateSshKeys.new(opts).call
+      resync_gitolite(:regenerate_ssh_keys, 'all', opts)
     end
 
 

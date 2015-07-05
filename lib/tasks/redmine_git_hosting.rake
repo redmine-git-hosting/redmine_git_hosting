@@ -58,7 +58,16 @@ namespace :redmine_git_hosting do
   task :resync_ssh_keys => [:environment] do
     puts "Performing manual resync_ssh_keys operation..."
     RedmineGitHosting.logger.warn("Performing manual resync_ssh_keys operation from command line")
-    GitoliteAccessor.resync_ssh_keys
+    GitoliteAccessor.resync_ssh_keys(bypass_sidekiq: true)
+    puts "Done!"
+  end
+
+
+  desc "Regenerate ssh_keys"
+  task :regenerate_ssh_keys => [:environment] do
+    puts "Performing manual regenerate_ssh_keys operation..."
+    RedmineGitHosting.logger.warn("Performing manual regenerate_ssh_keys operation from command line")
+    GitoliteAccessor.regenerate_ssh_keys(bypass_sidekiq: true)
     puts "Done!"
   end
 
