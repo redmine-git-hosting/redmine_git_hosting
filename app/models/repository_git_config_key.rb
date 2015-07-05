@@ -1,22 +1,16 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
   unloadable
 
-  VALID_CONFIG_KEY_REGEX = /\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
-
   ## Attributes
-  attr_accessible :key, :value
+  attr_accessible :type, :key, :value
 
   ## Relations
   belongs_to :repository
 
   ## Validations
   validates :repository_id, presence: true
-
-  validates :key, presence: true,
-                  uniqueness: { case_sensitive: false, scope: :repository_id },
-                  format:     { with: VALID_CONFIG_KEY_REGEX }
-
-  validates :value, presence: true
+  validates :type,          presence: true, inclusion: { in: ['RepositoryGitConfigKey::Config', 'RepositoryGitConfigKey::Option'] }
+  validates :value,         presence: true
 
   ## Callbacks
   after_save :check_if_key_changed

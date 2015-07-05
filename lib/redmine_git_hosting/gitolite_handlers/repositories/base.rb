@@ -40,7 +40,7 @@ module RedmineGitHosting
 
 
           def backup_old_perms
-            @old_perms ||= repository.backup_gitolite_permissions(gitolite_repo_conf)
+            @old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf)
           end
 
 
@@ -93,9 +93,15 @@ module RedmineGitHosting
 
           def build_repository_config
             repo_conf = ::Gitolite::Config::Repo.new(repository.gitolite_repository_name)
-            repository.gitolite_config.each do |key, value|
+
+            repository.git_config.each do |key, value|
               repo_conf.set_git_config(key, value)
             end
+
+            repository.gitolite_options.each do |key, value|
+              repo_conf.set_gitolite_option(key, value)
+            end
+
             repo_conf
           end
 

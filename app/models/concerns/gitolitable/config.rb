@@ -2,7 +2,7 @@ module Gitolitable
   module Config
     extend ActiveSupport::Concern
 
-    def gitolite_config
+    def git_config
       repo_conf = {}
 
       # This is needed for all Redmine repositories
@@ -34,6 +34,17 @@ module Gitolitable
         repo_conf['http.receivepack']      = 'false'
         repo_conf['multimailhook.enabled'] = 'false'
       end
+
+      repo_conf
+    end
+
+
+    def gitolite_options
+      repo_conf = {}
+
+      git_option_keys.each do |option|
+        repo_conf[option.key] = option.value
+      end if git_option_keys.any?
 
       repo_conf
     end
