@@ -1,32 +1,23 @@
 module Hooks
-  class Redmine
+  class Redmine < Base
     unloadable
 
-    attr_reader :repository
-
-
-    def initialize(repository)
-      @repository = repository
+    def call
+      repository.empty_cache!
+      fetch_changesets
     end
 
 
-    def execute
-      repository.empty_cache!
-      fetch_changesets
+    def repository
+      object
     end
 
 
     private
 
 
-      def logger
-        RedmineGitHosting.logger
-      end
-
-
       def fetch_changesets
-        ## Fetch commits from the repository
-        y = ""
+        y = ''
 
         logger.info("Fetching changesets for '#{repository.redmine_name}' repository ... ")
         y << "  - Fetching changesets for '#{repository.redmine_name}' repository ... "
@@ -41,7 +32,7 @@ module Hooks
           y << " [failure]\n"
         end
 
-        return y
+        y
       end
 
   end

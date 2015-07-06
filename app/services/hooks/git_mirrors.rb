@@ -1,47 +1,14 @@
 module Hooks
-  class GitMirrors
+  class GitMirrors < Base
     unloadable
 
-    attr_reader :mirror
-    attr_reader :payloads
-    attr_reader :url
-
-
-    def initialize(mirror, payloads)
-      @mirror   = mirror
-      @payloads = payloads
-      @url      = mirror.url
-    end
-
-
-    class << self
-
-      def logger
-        RedmineGitHosting.logger
-      end
-
-
-      def execute(repository, payloads)
-        y = ''
-
-        ## Post to each post-receive URL
-        if repository.mirrors.active.any?
-          logger.info('Notifying mirrors about changes to this repository :')
-          y << "\nNotifying mirrors about changes to this repository :\n"
-
-          repository.mirrors.active.each do |mirror|
-            y << self.new(mirror, payloads).execute
-          end
-        end
-
-        y
-      end
-
-    end
-
-
-    def execute
+    def call
       call_mirror if needs_push?
+    end
+
+
+    def mirror
+      object
     end
 
 
@@ -74,10 +41,10 @@ module Hooks
       def call_mirror
         y = ''
 
-        logger.info("Pushing changes to #{url} ... ")
-        y << "  - Pushing changes to #{url} ... "
+        logger.info("Pushing changes to #{mirror.url} ... ")
+        y << "  - Pushing changes to #{mirror.url} ... "
 
-        push_failed, push_message = MirrorPush.new(mirror).call
+        push_failed, push_message = RepositoryMirrors::Push.call(mirror)
 
         if push_failed
           logger.error('Failed!')
@@ -89,11 +56,6 @@ module Hooks
         end
 
         y
-      end
-
-
-      def logger
-        RedmineGitHosting.logger
       end
 
   end

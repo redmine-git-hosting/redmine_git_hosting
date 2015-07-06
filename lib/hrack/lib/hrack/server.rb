@@ -40,9 +40,9 @@ module Hrack
       @res.status = 200
       @res["Content-Type"] = 'text/plain;'
       @res.finish do
-        @res.write Hooks::Redmine.new(@repository).execute
-        @res.write Hooks::GitMirrors.execute(@repository, payloads)
-        @res.write Hooks::Webservices.execute(@repository, payloads)
+        @res.write Repositories::ExecuteHook.call(@repository, :redmine)
+        @res.write Repositories::ExecuteHook.call(@repository, :git_mirrors, payloads)
+        @res.write Repositories::ExecuteHook.call(@repository, :web_services, payloads)
       end
     end
 
@@ -57,7 +57,7 @@ module Hrack
 
 
       def payloads
-        @payloads ||= GithubPayload.new(@repository, params[:refs]).build
+        @payloads ||= Repositories::BuildPayload.call(@repository, params[:refs])
       end
 
 

@@ -62,7 +62,7 @@ module RedmineGitHosting
             @@delete_trash_repo = valuehash[:gitolite_purge_repos] if valuehash.has_key?(:gitolite_purge_repos) && !valuehash[:gitolite_purge_repos].empty?
 
             # Call ValidateSettings and save back results (this return a modified valuehash)
-            self.value = ValidateSettings.new(@@old_valuehash, valuehash).call
+            self.value = Settings::Validate.call(@@old_valuehash, valuehash)
           end
         end
 
@@ -90,7 +90,7 @@ module RedmineGitHosting
             }
 
             # Call RestoreSettings
-            ApplySettings.new(@@old_valuehash, valuehash, opts).call
+            Settings::Apply.call(@@old_valuehash, valuehash, opts)
 
             # Restore default class settings
             @@resync_projects     = false

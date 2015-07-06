@@ -94,7 +94,7 @@ class GitolitePublicKey < ActiveRecord::Base
     self.identifier = nil
     self.fingerprint = nil
 
-    self.identifier = GeneratePublicKeyIdentifier.new(self, user, opts).call
+    self.identifier = GitolitePublicKeys::GenerateIdentifier.call(self, user, opts)
     set_fingerprint
 
     # Need to override the "never change identifier" constraint
@@ -167,7 +167,7 @@ class GitolitePublicKey < ActiveRecord::Base
     #
     def set_identifier
       return nil if user_id.nil?
-      self.identifier ||= GeneratePublicKeyIdentifier.new(self, user).call
+      self.identifier ||= GitolitePublicKeys::GenerateIdentifier.call(self, user)
     end
 
 

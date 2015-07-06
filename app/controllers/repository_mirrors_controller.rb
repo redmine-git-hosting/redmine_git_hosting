@@ -44,7 +44,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
 
   def push
-    @push_failed, @shellout = MirrorPush.new(@mirror).call
+    @push_failed, @shellout = RepositoryMirrors::Push.call(@mirror)
     render layout: false
   end
 

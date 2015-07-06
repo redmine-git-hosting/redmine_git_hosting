@@ -41,7 +41,7 @@ class DownloadGitRevisionController < ApplicationController
 
 
     def set_download
-      @download = DownloadGitRevision.new(@repository, download_revision, download_format)
+      @download = Repositories::DownloadRevision.new(@repository, download_revision, download_format)
     end
 
 

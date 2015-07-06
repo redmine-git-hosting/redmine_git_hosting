@@ -96,7 +96,7 @@ module RedmineGitHosting
           def create_project_repository
             if @project.module_enabled?('repository') && RedmineGitHosting::Config.all_projects_use_git?
               if Setting.enabled_scm.include?('Xitolite')
-                CreateProjectRepository.new(@project).call
+                Projects::CreateRepository.call(@project)
               else
                 flash[:error] = l(:error_xitolite_repositories_disabled)
               end
@@ -111,7 +111,7 @@ module RedmineGitHosting
 
           def update_project(message)
             options = { message: message }
-            UpdateProject.new(@project, options).call
+            Projects::Update.call(@project, options)
           end
 
 

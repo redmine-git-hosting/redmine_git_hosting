@@ -1,65 +1,39 @@
 module Hooks
-  class Webservices
+  class Webservices < Base
     unloadable
 
     include HttpHelper
 
-    attr_reader :post_receive_url
-    attr_reader :payloads
-    attr_reader :url
     attr_reader :payloads_to_send
 
 
-    def initialize(post_receive_url, payloads)
-      @post_receive_url = post_receive_url
-      @payloads         = payloads
-      @url              = post_receive_url.url
-      @payloads_to_send = []
+    def initialize(*args)
+      super
 
+      @payloads_to_send = []
       set_payloads_to_send
     end
 
 
-    class << self
-
-      def logger
-        RedmineGitHosting.logger
-      end
-
-
-      def execute(repository, payloads)
-        y = ''
-
-        ## Post to each post-receive URL
-        if repository.post_receive_urls.active.any?
-          logger.info('Notifying post receive urls about changes to this repository :')
-          y << "\nNotifying post receive urls about changes to this repository :\n"
-
-          repository.post_receive_urls.active.each do |post_receive_url|
-            y << self.new(post_receive_url, payloads).execute
-          end
-        end
-
-        y
-      end
-
-    end
-
-
-    def execute
+    def call
       call_webservice if needs_push?
     end
 
 
-    def needs_push?
-      return false if payloads.empty?
-      return true unless use_triggers?
-      return false if post_receive_url.triggers.empty?
-      return !payloads_to_send.empty?
+    def post_receive_url
+      object
     end
 
 
     private
+
+
+      def needs_push?
+        return false if payloads.empty?
+        return true unless use_triggers?
+        return false if post_receive_url.triggers.empty?
+        return !payloads_to_send.empty?
+      end
 
 
       def set_payloads_to_send
@@ -112,10 +86,10 @@ module Hooks
       def do_call_webservice(payload)
         y = ''
 
-        logger.info("Notifying #{url} ... ")
-        y << "  - Notifying #{url} ... "
+        logger.info("Notifying #{post_receive_url.url} ... ")
+        y << "  - Notifying #{post_receive_url.url} ... "
 
-        post_failed, post_message = self.send(use_method, url, { data: { payload: payload } })
+        post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
 
         if post_failed
           logger.error('Failed!')
@@ -127,11 +101,6 @@ module Hooks
         end
 
         y
-      end
-
-
-      def logger
-        RedmineGitHosting.logger
       end
 
   end
