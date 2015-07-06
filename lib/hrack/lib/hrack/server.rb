@@ -38,7 +38,7 @@ module Hrack
 
       @res = Rack::Response.new
       @res.status = 200
-      @res["Content-Type"] = PLAIN_TYPE
+      @res["Content-Type"] = 'text/plain;'
       @res.finish do
         @res.write Hooks::Redmine.new(@repository).execute
         @res.write Hooks::GitMirrors.execute(@repository, payloads)
