@@ -32,7 +32,7 @@ module RedmineGitHosting::Cache
 
     def flush_cache!
       deleted = 0
-      client.scan_each(match: 'git_hosting_cache:*') { |key|
+      client.scan_each(match: all_entries) { |key|
         client.del(key)
         deleted += 1
       }
@@ -50,7 +50,7 @@ module RedmineGitHosting::Cache
 
     def clear_cache_for_repository(repo_id)
       deleted = 0
-      client.scan_each(match: "#{key_prefix(repo_id)}:*") { |key|
+      client.scan_each(match: all_entries_for_repo(repo_id)) { |key|
         client.del(key)
         deleted += 1
       }
@@ -68,18 +68,32 @@ module RedmineGitHosting::Cache
     private
 
 
-      # Prefix each key with *git_hosting_cache:* to store them in a subdirectory.
-      # When flushing cache, get all keys with this prefix and delete them.
-      #
-      def key_prefix(repo_id)
-        "git_hosting_cache:#{Digest::SHA256.hexdigest(repo_id)[0..16]}"
+      def redis_namespace
+        'git_hosting_cache'
       end
 
 
+      def all_entries
+        "#{redis_namespace}:*"
+      end
+
+
+      def all_entries_for_repo(repo_id)
+        "#{redis_namespace}:#{digest(repo_id)}:*"
+      end
+
+
+      # Prefix each key with *git_hosting_cache:* to store them in a subdirectory.
+      # When flushing cache, get all keys with this prefix and delete them.
       # Make SHA256 of the Git command as identifier
       #
       def hash_key(repo_id, command)
-        "#{key_prefix(repo_id)}:#{Digest::SHA256.hexdigest(command)[0..16]}"
+        "#{redis_namespace}:#{digest(repo_id)}:#{digest(command)}"
+      end
+
+
+      def digest(string)
+        Digest::SHA256.hexdigest(string)[0..16]
       end
 
 
@@ -92,7 +106,7 @@ module RedmineGitHosting::Cache
       # However, I don't know exactly how it's used by Redis...
       #
       def redis_options
-        { db: 'git_hosting_cache', driver: :hiredis }
+        { db: redis_namespace, driver: :hiredis }
       end
 
   end
