@@ -42,7 +42,7 @@ get '/settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gitolit
 mount Grack::Bundle.new({}), at: '/', constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
 
 # Post Receive Hooks
-match 'githooks/post-receive/:type/:projectid', to: 'gitolite_hooks#post_receive', via: [:post]
+mount Hrack::Bundle.new({}), at: 'githooks/post-receive/:type/:projectid', via: [:post]
 
 # Archived Repositories
 get 'archived_projects/index',                                                to: 'archived_repositories#index'

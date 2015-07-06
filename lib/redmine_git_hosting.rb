@@ -24,9 +24,10 @@ Rails.configuration.to_prepare do
   ## Gitlab Grack for Git SmartHTTP
   require_dependency 'grack/auth'
   require_dependency 'grack/server'
-
 end
 
+## Hrack for Git Hooks
+require 'hrack/init'
 
 module RedmineGitHosting
 
