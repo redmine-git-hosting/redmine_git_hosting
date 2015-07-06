@@ -81,7 +81,7 @@ module GitoliteAccessor
     end
 
 
-    def purge_trash_bin(repositories)
+    def purge_recycle_bin(repositories)
       resync_gitolite(:purge_recycle_bin, repositories)
     end
 
