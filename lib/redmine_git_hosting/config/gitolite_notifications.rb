@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteNotifications
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module GitoliteNotifications
+      extend self
 
       def gitolite_notify_global_prefix
         RedmineGitHosting::Config.get_setting(:gitolite_notify_global_prefix)
@@ -31,6 +23,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteStorage
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module GitoliteStorage
+      extend self
 
       def gitolite_global_storage_dir
         RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir)
@@ -26,6 +18,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

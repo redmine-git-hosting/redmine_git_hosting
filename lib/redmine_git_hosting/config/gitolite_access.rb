@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteAccess
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module GitoliteAccess
+      extend self
 
       def gitolite_http_by_default?
         RedmineGitHosting::Config.get_setting(:gitolite_http_by_default)
@@ -74,6 +66,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

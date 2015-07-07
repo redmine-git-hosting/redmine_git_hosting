@@ -1,18 +1,9 @@
 require 'etc'
 
-module RedmineGitHosting::Config
-
-  module GitoliteBase
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
-
+module RedmineGitHosting
+  module Config
+    module GitoliteBase
+      extend self
 
       def check_cache
         @gitolite_home_dir        = nil
@@ -122,6 +113,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

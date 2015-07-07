@@ -1,21 +1,14 @@
-module RedmineGitHosting::Config
+module RedmineGitHosting
+  module Config
+    module GitoliteInfos
+      extend self
 
-  module GitoliteInfos
+      ##########################
+      #                        #
+      #     GITOLITE INFOS     #
+      #                        #
+      ##########################
 
-    ##########################
-    #                        #
-    #     GITOLITE INFOS     #
-    #                        #
-    ##########################
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
 
       def rugged_features
         Rugged.features
@@ -90,6 +83,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

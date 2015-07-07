@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module RedmineConfig
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module RedmineConfig
+      extend self
 
       def gitolite_use_sidekiq?
         RedmineGitHosting::Config.get_setting(:gitolite_use_sidekiq, true)
@@ -56,6 +48,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

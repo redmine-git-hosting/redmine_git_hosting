@@ -1,16 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteConfigTests
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
-
+module RedmineGitHosting
+  module Config
+    module GitoliteConfigTests
+      extend self
 
       ###############################
       ##                           ##
@@ -100,6 +91,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

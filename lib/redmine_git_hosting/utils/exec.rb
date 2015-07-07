@@ -1,16 +1,9 @@
 require 'open3'
 
-module RedmineGitHosting::Utils
-  module Exec
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Utils
+    module Exec
+      extend self
 
       # Executes the given command and a list of parameters on the shell
       # and returns the result.
@@ -44,6 +37,5 @@ module RedmineGitHosting::Utils
       end
 
     end
-
   end
 end

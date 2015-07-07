@@ -1,14 +1,7 @@
-module RedmineGitHosting::Config
-  module Mirroring
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module Mirroring
+      extend self
 
       def mirroring_public_key
         @mirroring_public_key ||= RedmineGitHosting::MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
@@ -25,6 +18,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

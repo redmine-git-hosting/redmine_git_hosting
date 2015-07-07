@@ -1,16 +1,9 @@
 require 'securerandom'
 
-module RedmineGitHosting::Utils
-  module Password
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Utils
+    module Password
+      extend self
 
       def generate_secret(length)
         length = length.to_i
@@ -21,6 +14,5 @@ module RedmineGitHosting::Utils
       end
 
     end
-
   end
 end

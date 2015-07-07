@@ -1,9 +1,9 @@
 module RedmineGitHosting
   module Utils
-    include Utils::Exec
-    include Utils::Git
-    include Utils::Http
-    include Utils::Password
-    include Utils::Ssh
+    extend Utils::Exec
+    extend Utils::Git
+    extend Utils::Http
+    extend Utils::Password
+    extend Utils::Ssh
   end
 end

@@ -3,17 +3,10 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 
-module RedmineGitHosting::Utils
-  module Http
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Utils
+    module Http
+      extend self
 
       def http_post(url, opts = {})
         data = opts.delete(:data){ {} }
@@ -97,6 +90,5 @@ module RedmineGitHosting::Utils
         end
 
     end
-
   end
 end

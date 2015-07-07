@@ -1,21 +1,14 @@
-module RedmineGitHosting::Commands
+module RedmineGitHosting
+  module Commands
+    module Sudo
+      extend self
 
-  module Sudo
+      ##########################
+      #                        #
+      #   SUDO Shell Wrapper   #
+      #                        #
+      ##########################
 
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    ##########################
-    #                        #
-    #   SUDO Shell Wrapper   #
-    #                        #
-    ##########################
-
-    module ClassMethods
 
       # Pipe file content via sudo to dest_file.
       # Expect file content to end with EOL (\n)
@@ -139,6 +132,5 @@ module RedmineGitHosting::Commands
       end
 
     end
-
   end
 end

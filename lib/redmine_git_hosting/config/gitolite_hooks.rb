@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteHooks
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module GitoliteHooks
+      extend self
 
       def gitolite_hooks_namespace
         'redminegitolite'
@@ -73,6 +65,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end

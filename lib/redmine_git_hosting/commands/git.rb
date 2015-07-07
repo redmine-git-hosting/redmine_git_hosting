@@ -1,21 +1,14 @@
-module RedmineGitHosting::Commands
+module RedmineGitHosting
+  module Commands
+    module Git
+      extend self
 
-  module Git
+      ############################
+      #                          #
+      #  Sudo+Git Shell Wrapper  #
+      #                          #
+      ############################
 
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    ############################
-    #                          #
-    #  Sudo+Git Shell Wrapper  #
-    #                          #
-    ############################
-
-    module ClassMethods
 
       # Send Git command with Sudo
       #
@@ -127,6 +120,5 @@ module RedmineGitHosting::Commands
         end
 
     end
-
   end
 end

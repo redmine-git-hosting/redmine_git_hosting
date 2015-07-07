@@ -1,21 +1,14 @@
-module RedmineGitHosting::Commands
+module RedmineGitHosting
+  module Commands
+    module Gitolite
+      extend self
 
-  module Gitolite
+      #################################
+      #                               #
+      #  Sudo+Gitolite Shell Wrapper  #
+      #                               #
+      #################################
 
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    #################################
-    #                               #
-    #  Sudo+Gitolite Shell Wrapper  #
-    #                               #
-    #################################
-
-    module ClassMethods
 
       def gitolite_infos
         ssh_capture('info')
@@ -62,7 +55,5 @@ module RedmineGitHosting::Commands
       end
 
     end
-
   end
-
 end

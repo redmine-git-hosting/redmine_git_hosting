@@ -1,14 +1,7 @@
-module RedmineGitHosting::Utils
-  module Git
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Utils
+    module Git
+      extend self
 
       # Parse a reference component.  Three possibilities:
       #
@@ -38,6 +31,5 @@ module RedmineGitHosting::Utils
       end
 
     end
-
   end
 end

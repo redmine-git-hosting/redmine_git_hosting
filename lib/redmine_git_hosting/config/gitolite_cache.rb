@@ -1,15 +1,7 @@
-module RedmineGitHosting::Config
-
-  module GitoliteCache
-
-    class << self
-      def included(receiver)
-        receiver.send(:extend, ClassMethods)
-      end
-    end
-
-
-    module ClassMethods
+module RedmineGitHosting
+  module Config
+    module GitoliteCache
+      extend self
 
       def gitolite_cache_max_time
         RedmineGitHosting::Config.get_setting(:gitolite_cache_max_time).to_i
@@ -31,6 +23,5 @@ module RedmineGitHosting::Config
       end
 
     end
-
   end
 end
