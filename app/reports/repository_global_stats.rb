@@ -1,4 +1,5 @@
 class RepositoryGlobalStats
+  unloadable
 
   include Redmine::I18n
 

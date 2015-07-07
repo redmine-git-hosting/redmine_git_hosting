@@ -1,5 +1,6 @@
 module PermissionsBuilder
   class Standard < Base
+    unloadable
 
     attr_reader :permissions
 

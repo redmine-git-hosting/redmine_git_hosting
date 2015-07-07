@@ -1,5 +1,6 @@
 module PermissionsBuilder
   class Base
+    unloadable
 
     attr_reader :repository
     attr_reader :gitolite_users

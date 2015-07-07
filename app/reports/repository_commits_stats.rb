@@ -1,4 +1,5 @@
 class RepositoryCommitsStats
+  unloadable
 
   include Redmine::I18n
 

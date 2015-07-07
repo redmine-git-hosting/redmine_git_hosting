@@ -1,4 +1,5 @@
 class RepositoryContributorsStats
+  unloadable
 
   include Redmine::I18n
 
