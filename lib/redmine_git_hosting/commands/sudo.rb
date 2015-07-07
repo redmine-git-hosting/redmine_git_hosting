@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module RedmineGitHosting
   module Commands
     module Sudo
@@ -130,6 +132,77 @@ module RedmineGitHosting
       def sudo_file_changed?(source_file, dest_file)
         hash_content(content_from_redmine_side(source_file)) != hash_content(content_from_gitolite_side(dest_file))
       end
+
+
+      # Return only the output of the shell command.
+      # Throws an exception if the shell command does not exit with code 0.
+      #
+      def sudo_capture(*params)
+        cmd = sudo.concat(params)
+        capture(cmd)
+      end
+
+
+      # Execute a command as the gitolite user defined in +GitoliteWrapper.gitolite_user+.
+      #
+      # Will shell out to +sudo -n -u <gitolite_user> params+
+      #
+      def sudo_shell(*params)
+        cmd = sudo.concat(params)
+        execute(cmd)
+      end
+
+
+      # Write data on stdin and return the output of the shell command.
+      # Throws an exception if the shell command does not exit with code 0.
+      #
+      def sudo_pipe_data(stdin)
+        cmd = sudo.push('sh')
+        capture(cmd, { stdin_data: stdin, binmode: true })
+      end
+
+
+      private
+
+
+        # Return the Sudo command with basic args.
+        #
+        def sudo
+          ['sudo', *sudo_shell_params]
+        end
+
+
+        # Returns the sudo prefix to all sudo_* commands.
+        #
+        # These are as follows:
+        # * (-i) login as `gitolite_user` (setting ENV['HOME')
+        # * (-n) non-interactive
+        # * (-u `gitolite_user`) target user
+        #
+        def sudo_shell_params
+          ['-n', '-u', RedmineGitHosting::Config.gitolite_user, '-i']
+        end
+
+
+        # Return a md5 hash of the string passed.
+        #
+        def hash_content(content)
+          Digest::MD5.hexdigest(content)
+        end
+
+
+        # Return the content of a local (Redmine side) file.
+        #
+        def content_from_redmine_side(file)
+          File.read(file)
+        end
+
+
+        # Return the content of a file on Gitolite side.
+        #
+        def content_from_gitolite_side(destination_path)
+          sudo_cat(destination_path)
+        end
 
     end
   end

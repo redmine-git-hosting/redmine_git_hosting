@@ -90,8 +90,15 @@ module RedmineGitHosting
       private
 
 
+        # Return the Git command with prepend args (mainly env vars like FOO=BAR git push).
+        #
+        def git(args = [])
+          [*args, Repository::Xitolite.scm_command]
+        end
+
+
         def git_args_for_repo(repo_path)
-          [ '--git-dir', repo_path ]
+          ['--git-dir', repo_path]
         end
 
 
