@@ -4,12 +4,12 @@ module RedmineGitHosting
       extend self
 
       def mirroring_public_key
-        @mirroring_public_key ||= RedmineGitHosting::MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
+        @mirroring_public_key ||= MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
       end
 
 
       def mirroring_keys_installed?
-        @mirroring_keys_installed ||= RedmineGitHosting::MirrorKeysInstaller.new(gitolite_home_dir, gitolite_ssh_public_key, gitolite_ssh_private_key).installed?
+        @mirroring_keys_installed ||= MirrorKeysInstaller.new(gitolite_home_dir, gitolite_ssh_public_key, gitolite_ssh_private_key).installed?
       end
 
 
