@@ -1,7 +1,5 @@
 module GitoliteAccessor
-  unloadable
   extend self
-
 
   def create_ssh_key(ssh_key, opts = {})
     logger.info("User '#{User.current.login}' has added a SSH key")

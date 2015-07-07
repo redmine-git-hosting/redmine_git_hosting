@@ -46,12 +46,8 @@ module GitoliteWrapper
         logger.error 'Access denied for Gitolite Admin SSH Keys'
         logger.error(e.message)
       else
-        begin
-          # Call our wrapper passing the GitoliteAdmin object
-          call_gitolite_wrapper(action, admin, object, options)
-        rescue RedmineGitHosting::Error::GitoliteWrapperException => e
-          logger.error(e.message)
-        end
+        # Call our wrapper passing the GitoliteAdmin object
+        call_gitolite_wrapper(action, admin, object, options)
       end
     end
 
@@ -69,22 +65,13 @@ module GitoliteWrapper
 
 
     def call_gitolite_wrapper(action, admin, object, options = {})
-      klass = find_gitolite_wrapper(action)
-      if !klass.nil?
-        klass.call(admin, object, options)
+      begin
+        klass = GitoliteWrappers::Base.find_by_action_name(action)
+      rescue RedmineGitHosting::Error::GitoliteWrapperException => e
+        logger.error(e.message)
       else
-        raise RedmineGitHosting::Error::GitoliteWrapperException.new("No available Wrapper for action '#{action}' found.")
+        klass.call(admin, object, options)
       end
-    end
-
-
-    def find_gitolite_wrapper(action)
-      wrappers.has_key?(action) ? wrappers[action] : nil
-    end
-
-
-    def wrappers
-      GitoliteWrappers::Base.wrappers
     end
 
 
