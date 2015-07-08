@@ -1,7 +1,7 @@
 module RedmineGitHosting::Cache
-  class Adapter
-
-    class << self
+  module Cache
+    module Adapter
+      extend self
 
       def factory
         case RedmineGitHosting::Config.gitolite_cache_adapter
@@ -15,6 +15,5 @@ module RedmineGitHosting::Cache
       end
 
     end
-
   end
 end
