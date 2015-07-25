@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Hooks::Webservices do
+describe RedmineHooks::CallWebservices do
 
   GLOBAL_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../../fixtures/global_payload.yml')))
   MASTER_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../../fixtures/master_payload.yml')))
@@ -14,7 +14,7 @@ describe Hooks::Webservices do
 
     context "when payload is empty" do
       before do
-        @web_hook = Hooks::Webservices.new(@post_receive_url, [])
+        @web_hook = RedmineHooks::CallWebservices.new(@post_receive_url, [])
       end
 
       it "shoud return false" do
@@ -24,7 +24,7 @@ describe Hooks::Webservices do
 
     context "when triggers are not used" do
       before do
-        @web_hook = Hooks::Webservices.new(@post_receive_url, GLOBAL_PAYLOAD)
+        @web_hook = RedmineHooks::CallWebservices.new(@post_receive_url, GLOBAL_PAYLOAD)
       end
 
       it "should return the global payload to push" do
@@ -36,7 +36,7 @@ describe Hooks::Webservices do
     context "when triggers are empty" do
       before do
         @post_receive_url.use_triggers = true
-        @web_hook = Hooks::Webservices.new(@post_receive_url, GLOBAL_PAYLOAD)
+        @web_hook = RedmineHooks::CallWebservices.new(@post_receive_url, GLOBAL_PAYLOAD)
       end
 
       it "should return the global payload to push" do
@@ -49,7 +49,7 @@ describe Hooks::Webservices do
       before do
         @post_receive_url.use_triggers = true
         @post_receive_url.triggers = ['master']
-        @web_hook = Hooks::Webservices.new(@post_receive_url, GLOBAL_PAYLOAD)
+        @web_hook = RedmineHooks::CallWebservices.new(@post_receive_url, GLOBAL_PAYLOAD)
       end
 
       it "should return the master payload" do
@@ -62,7 +62,7 @@ describe Hooks::Webservices do
       before do
         @post_receive_url.use_triggers = true
         @post_receive_url.triggers = ['master']
-        @web_hook = Hooks::Webservices.new(@post_receive_url, BRANCHES_PAYLOAD)
+        @web_hook = RedmineHooks::CallWebservices.new(@post_receive_url, BRANCHES_PAYLOAD)
       end
 
       it "should not be found in branches payload and return false" do

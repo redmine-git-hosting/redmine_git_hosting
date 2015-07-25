@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Hooks::GitMirrors do
+describe RedmineHooks::UpdateMirrors do
 
   # describe "Push args" do
   #   ## Validate push args : forced mode
