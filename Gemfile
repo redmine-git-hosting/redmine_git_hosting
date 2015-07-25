@@ -32,7 +32,7 @@ gem 'creole'
 gem 'asciidoctor'
 
 # Rack parser for Hrack
-gem 'rack-parser'
+gem 'rack-parser', require: 'rack/parser'
 
 group :development, :test do
   gem 'rspec', '~> 3.0.0'
