@@ -20,7 +20,7 @@ module Hrack
     def _call(env)
       @env = env
       @req = Rack::Request.new(env)
-      @params = @req.params.symbolize_keys
+      @params = @req.params.deep_symbolize_keys
 
       command, @project = match_routing
 
