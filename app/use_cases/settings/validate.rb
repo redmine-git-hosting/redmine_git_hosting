@@ -93,8 +93,9 @@ module Settings
 
 
       def cleanup_tmp_dir
-        if valuehash[:gitolite_temp_dir] && value_has_changed?(:gitolite_temp_dir) ||
-           valuehash[:gitolite_server_port] && value_has_changed?(:gitolite_server_port)
+        if valuehash[:gitolite_temp_dir] && value_has_changed?(:gitolite_temp_dir)       ||
+           valuehash[:gitolite_server_port] && value_has_changed?(:gitolite_server_port) ||
+           valuehash[:gitolite_server_host] && value_has_changed?(:gitolite_server_host)
 
           # Remove old tmp directory, since about to change
           FileUtils.rm_rf(RedmineGitHosting::Config.gitolite_admin_dir)
