@@ -1,5 +1,5 @@
 module RedmineHooks
-  class Webservices < Base
+  class CallWebservices < Base
     unloadable
 
     include HttpHelper
@@ -25,15 +25,20 @@ module RedmineHooks
     end
 
 
+    def needs_push?
+      return false if payloads.empty?
+      return true unless use_triggers?
+      return false if post_receive_url.triggers.empty?
+      return !payloads_to_send.empty?
+    end
+
+
+    def start_message
+      "Notifying #{post_receive_url.url}"
+    end
+
+
     private
-
-
-      def needs_push?
-        return false if payloads.empty?
-        return true unless use_triggers?
-        return false if post_receive_url.triggers.empty?
-        return !payloads_to_send.empty?
-      end
 
 
       def set_payloads_to_send
@@ -84,23 +89,18 @@ module RedmineHooks
 
 
       def do_call_webservice(payload)
-        y = ''
+        execute_hook do |y|
+          post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
 
-        logger.info("Notifying #{post_receive_url.url} ... ")
-        y << "  - Notifying #{post_receive_url.url} ... "
-
-        post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
-
-        if post_failed
-          logger.error('Failed!')
-          logger.error("#{post_message}")
-          y << " [failure]\n"
-        else
-          logger.info('Succeeded!')
-          y << " [success]\n"
+          unless post_failed
+            log_hook_succeeded
+            y << success_message
+          else
+            logger.error('Failed!')
+            logger.error(post_message)
+            y << failure_message
+          end
         end
-
-        y
       end
 
   end

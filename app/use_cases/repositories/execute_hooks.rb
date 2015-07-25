@@ -24,7 +24,7 @@ module Repositories
 
 
     def call
-      self.send("call_#{hook_type}_hooks")
+      self.send("execute_#{hook_type}_hook")
     end
 
 
@@ -36,21 +36,22 @@ module Repositories
       end
 
 
-      def call_redmine_hooks
-        Hooks::Redmine.call(repository)
+      def execute_fetch_changesets_hook
+        RedmineHooks::FetchChangesets.call(repository)
       end
 
 
-      def call_git_mirrors_hooks
+      def execute_update_mirrors_hook
+        message = 'Notifying mirrors about changes to this repository :'
         y = ''
 
         ## Post to each post-receive URL
         if repository.mirrors.active.any?
-          logger.info('Notifying mirrors about changes to this repository :')
-          y << "\nNotifying mirrors about changes to this repository :\n"
+          logger.info(message)
+          y << "\n#{message}\n"
 
           repository.mirrors.active.each do |mirror|
-            y << Hooks::GitMirrors.call(mirror, payloads)
+            y << RedmineHooks::UpdateMirrors.call(mirror, payloads)
           end
         end
 
@@ -58,16 +59,17 @@ module Repositories
       end
 
 
-      def call_web_services_hooks
+      def execute_call_webservices_hook
+        message = 'Notifying post receive urls about changes to this repository :'
         y = ''
 
         ## Post to each post-receive URL
         if repository.post_receive_urls.active.any?
-          logger.info('Notifying post receive urls about changes to this repository :')
-          y << "\nNotifying post receive urls about changes to this repository :\n"
+          logger.info(message)
+          y << "\n#{message}\n"
 
           repository.post_receive_urls.active.each do |post_receive_url|
-            y << Hooks::Webservices.call(post_receive_url, payloads)
+            y << RedmineHooks::CallWebservices.call(post_receive_url, payloads)
           end
         end
 

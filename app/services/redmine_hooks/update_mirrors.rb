@@ -1,5 +1,5 @@
 module RedmineHooks
-  class GitMirrors < Base
+  class UpdateMirrors < Base
     unloadable
 
     def call
@@ -12,16 +12,21 @@ module RedmineHooks
     end
 
 
+    # If we have an explicit refspec, check it against incoming payloads
+    # Special case: if we do not pass in any payloads, return true
+    def needs_push?
+      return true if payloads.empty?
+      return true if mirror.mirror_mode?
+      return check_ref_spec
+    end
+
+
+    def start_message
+      "Pushing changes to #{mirror.url}"
+    end
+
+
     private
-
-
-      # If we have an explicit refspec, check it against incoming payloads
-      # Special case: if we do not pass in any payloads, return true
-      def needs_push?
-        return true if payloads.empty?
-        return true if mirror.mirror_mode?
-        return check_ref_spec
-      end
 
 
       def check_ref_spec
@@ -39,23 +44,18 @@ module RedmineHooks
 
 
       def call_mirror
-        y = ''
+        execute_hook do |y|
+          push_failed, push_message = RepositoryMirrors::Push.call(mirror)
 
-        logger.info("Pushing changes to #{mirror.url} ... ")
-        y << "  - Pushing changes to #{mirror.url} ... "
-
-        push_failed, push_message = RepositoryMirrors::Push.call(mirror)
-
-        if push_failed
-          logger.error('Failed!')
-          logger.error("#{push_message}")
-          y << " [failure]\n"
-        else
-          logger.info('Succeeded!')
-          y << " [success]\n"
+          unless push_failed
+            log_hook_succeeded
+            y << success_message
+          else
+            log_hook_failed
+            logger.error(push_message)
+            y << failure_message
+          end
         end
-
-        y
       end
 
   end
