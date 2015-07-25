@@ -48,7 +48,7 @@ module Hrack
 
 
     def post_receive_github
-      Hooks::GithubIssuesSync.new(@project, params).execute
+      Projects::ExecuteHooks.call(@project, :github, params)
       render_200('OK!')
     end
 
