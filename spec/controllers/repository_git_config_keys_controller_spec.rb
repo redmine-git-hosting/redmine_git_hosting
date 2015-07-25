@@ -107,7 +107,8 @@ describe RepositoryGitConfigKeysController do
             xhr :post, :create, :repository_id => @repository.id,
                                 :repository_git_config_key => {
                                   :key   => 'foo.bar1',
-                                  :value => 0
+                                  :value => 0,
+                                  :type  => 'RepositoryGitConfigKey::GitConfig'
                                 }
           }.to change(RepositoryGitConfigKey, :count).by(1)
         end
@@ -116,7 +117,8 @@ describe RepositoryGitConfigKeysController do
           xhr :post, :create, :repository_id => @repository.id,
                               :repository_git_config_key => {
                                 :key   => 'foo.bar2',
-                                :value => 0
+                                :value => 0,
+                                :type  => 'RepositoryGitConfigKey::GitConfig'
                               }
           expect(response.status).to eq 200
         end

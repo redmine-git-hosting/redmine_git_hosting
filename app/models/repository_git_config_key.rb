@@ -9,7 +9,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   ## Validations
   validates :repository_id, presence: true
-  validates :type,          presence: true, inclusion: { in: ['RepositoryGitConfigKey::Config', 'RepositoryGitConfigKey::Option'] }
+  validates :type,          presence: true, inclusion: { in: ['RepositoryGitConfigKey::GitConfig', 'RepositoryGitConfigKey::Option'] }
   validates :value,         presence: true
 
   ## Callbacks
