@@ -40,9 +40,9 @@ module Hrack
       @res.status = 200
       @res["Content-Type"] = 'text/plain;'
       @res.finish do
-        @res.write Repositories::ExecuteHook.call(@repository, :redmine)
-        @res.write Repositories::ExecuteHook.call(@repository, :git_mirrors, payloads)
-        @res.write Repositories::ExecuteHook.call(@repository, :web_services, payloads)
+        @res.write Repositories::ExecuteHooks.call(@repository, :redmine)
+        @res.write Repositories::ExecuteHooks.call(@repository, :git_mirrors, payloads)
+        @res.write Repositories::ExecuteHooks.call(@repository, :web_services, payloads)
       end
     end
 
