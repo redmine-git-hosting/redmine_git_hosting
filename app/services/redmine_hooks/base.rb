@@ -1,4 +1,4 @@
-module Hooks
+module RedmineHooks
   class Base
     unloadable
 

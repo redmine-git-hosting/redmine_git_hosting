@@ -1,6 +1,6 @@
 require 'json'
 
-module Hooks
+module RedmineHooks
   class GithubIssuesSync
     unloadable
 

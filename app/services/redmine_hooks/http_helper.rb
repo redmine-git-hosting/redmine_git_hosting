@@ -1,4 +1,4 @@
-module Hooks
+module RedmineHooks
   module HttpHelper
     unloadable
 

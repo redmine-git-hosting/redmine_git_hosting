@@ -1,4 +1,4 @@
-module Hooks
+module RedmineHooks
   class GitMirrors < Base
     unloadable
 
