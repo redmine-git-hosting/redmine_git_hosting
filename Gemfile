@@ -31,6 +31,9 @@ gem 'creole'
 # gem 'wikicloth'
 gem 'asciidoctor'
 
+# Rack parser for Hrack
+gem 'rack-parser'
+
 group :development, :test do
   gem 'rspec', '~> 3.0.0'
   gem 'rspec-rails', '~> 3.0.1'
