@@ -61,7 +61,7 @@ module RedmineGitHosting
 
 
       def update_hook_params!
-        RedmineGitHosting::GitoliteParams::GlobalParams.new.install!
+        GitoliteParams::GlobalParams.new.install!
       end
 
     end
