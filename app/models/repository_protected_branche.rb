@@ -14,7 +14,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
   ## Validations
   validates :repository_id, presence: true
-  validates :path,          uniqueness: { scope: [:permissions, :repository_id] }
+  validates :path,          presence: true, uniqueness: { scope: [:permissions, :repository_id] }
   validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
   validates :user_list,     presence: true
 
