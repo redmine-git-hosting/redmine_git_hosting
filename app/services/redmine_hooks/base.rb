@@ -21,11 +21,50 @@ module RedmineHooks
     end
 
 
+    def call
+      raise NotImplementedError
+    end
+
+
+    def start_message
+      raise NotImplementedError
+    end
+
+
     private
 
 
       def logger
         RedmineGitHosting.logger
+      end
+
+
+      def success_message
+        " [success]\n"
+      end
+
+
+      def failure_message
+        " [failure]\n"
+      end
+
+
+      def log_hook_succeeded
+        logger.info('Succeeded!')
+      end
+
+
+      def log_hook_failed
+        logger.error('Failed!')
+      end
+
+
+      def execute_hook(&block)
+        y = ''
+        logger.info(start_message)
+        y << "  - #{start_message} ... "
+        yield y
+        y
       end
 
   end
