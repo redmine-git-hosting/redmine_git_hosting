@@ -78,28 +78,28 @@ module RedmineHooks
 
 
       def call_webservice
-        if use_method == :http_post && split_payloads?
-          payloads_to_send.each do |payload|
-            do_call_webservice(payload)
+        execute_hook do |y|
+          if use_method == :http_post && split_payloads?
+            payloads_to_send.each do |payload|
+              do_call_webservice(y, payload)
+            end
+          else
+            do_call_webservice(y, payloads_to_send)
           end
-        else
-          do_call_webservice(payloads_to_send)
         end
       end
 
 
-      def do_call_webservice(payload)
-        execute_hook do |y|
-          post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
+      def do_call_webservice(y, payload)
+        post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
 
-          unless post_failed
-            log_hook_succeeded
-            y << success_message
-          else
-            logger.error('Failed!')
-            logger.error(post_message)
-            y << failure_message
-          end
+        unless post_failed
+          log_hook_succeeded
+          y << (split_payloads? ? success_message.gsub("\n", '') : success_message)
+        else
+          logger.error('Failed!')
+          logger.error(post_message)
+          y << (split_payloads? ? failure_message.gsub("\n", '') : failure_message)
         end
       end
 
