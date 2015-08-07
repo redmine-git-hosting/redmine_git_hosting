@@ -136,7 +136,7 @@ REPOSITORY SETTINGS
 /*
 MISC
 */
-.spacer { display: block; height: 10px; clear: both; }
+.git_hosting_spacer { display: block; height: 10px; clear: both; }
 
 td.buttons { width: 20%; }
 
