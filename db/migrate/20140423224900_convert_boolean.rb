@@ -7,12 +7,12 @@ class ConvertBoolean < ActiveRecord::Migration
     GitolitePublicKey.reset_column_information
     GitolitePublicKey.all.each do |p|
       if p.active == 1
-        p.active_temp = true
+        active_temp = true
       else
-        p.active_temp = false
+        active_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:active_temp, active_temp)
     end
     remove_column :gitolite_public_keys, :active
     rename_column :gitolite_public_keys, :active_temp, :active
@@ -22,12 +22,12 @@ class ConvertBoolean < ActiveRecord::Migration
     GitolitePublicKey.reset_column_information
     GitolitePublicKey.all.each do |p|
       if p.delete_when_unused == 1
-        p.delete_when_unused_temp = true
+        delete_when_unused_temp = true
       else
-        p.delete_when_unused_temp = false
+        delete_when_unused_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:delete_when_unused_temp, delete_when_unused_temp)
     end
     remove_column :gitolite_public_keys, :delete_when_unused
     rename_column :gitolite_public_keys, :delete_when_unused_temp, :delete_when_unused
@@ -38,12 +38,12 @@ class ConvertBoolean < ActiveRecord::Migration
     RepositoryGitExtra.reset_column_information
     RepositoryGitExtra.all.each do |p|
       if p.git_daemon == 1
-        p.git_daemon_temp = true
+        git_daemon_temp = true
       else
-        p.git_daemon_temp = false
+        git_daemon_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:git_daemon_temp, git_daemon_temp)
     end
     remove_column :repository_git_extras, :git_daemon
     rename_column :repository_git_extras, :git_daemon_temp, :git_daemon
@@ -53,12 +53,12 @@ class ConvertBoolean < ActiveRecord::Migration
     RepositoryGitExtra.reset_column_information
     RepositoryGitExtra.all.each do |p|
       if p.git_notify == 1
-        p.git_notify_temp = true
+        git_notify_temp = true
       else
-        p.git_notify_temp = false
+        git_notify_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:git_notify_temp, git_notify_temp)
     end
     remove_column :repository_git_extras, :git_notify
     rename_column :repository_git_extras, :git_notify_temp, :git_notify
@@ -69,12 +69,12 @@ class ConvertBoolean < ActiveRecord::Migration
     RepositoryDeploymentCredential.reset_column_information
     RepositoryDeploymentCredential.all.each do |p|
       if p.active == 1
-        p.active_temp = true
+        active_temp = true
       else
-        p.active_temp = false
+        active_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:active_temp, active_temp)
     end
     remove_column :repository_deployment_credentials, :active
     rename_column :repository_deployment_credentials, :active_temp, :active
@@ -85,12 +85,12 @@ class ConvertBoolean < ActiveRecord::Migration
     RepositoryMirror.reset_column_information
     RepositoryMirror.all.each do |p|
       if p.active == 1
-        p.active_temp = true
+        active_temp = true
       else
-        p.active_temp = false
+        active_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:active_temp, active_temp)
     end
     remove_column :repository_mirrors, :active
     rename_column :repository_mirrors, :active_temp, :active
@@ -101,12 +101,12 @@ class ConvertBoolean < ActiveRecord::Migration
     RepositoryPostReceiveUrl.reset_column_information
     RepositoryPostReceiveUrl.all.each do |p|
       if p.active == 1
-        p.active_temp = true
+        active_temp = true
       else
-        p.active_temp = false
+        active_temp = false
       end
       puts "Update!"
-      p.save(:validate => false)
+      p.update_column(:active_temp, active_temp)
     end
     remove_column :repository_post_receive_urls, :active
     rename_column :repository_post_receive_urls, :active_temp, :active
