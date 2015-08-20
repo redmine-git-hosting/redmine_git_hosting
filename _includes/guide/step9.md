@@ -6,14 +6,17 @@ The plugin is now installed, you can restart Redmine :)
 But you **must** set some additional settings :
 
 1. Enable Xitolite repositories in *Administration -> Settings -> Repositories*
+
 2. Configure plugin settings in *Administration -> Redmine Git Hosting*, specially :
   * SSH Keys path
   * Temp dir path
   * Access urls
-  * Hooks url
-  * Hooks install (this may overwrite your existing Gitolite hooks)
+  * Hooks url (This url will be called by our Gitolite hook to trigger repository view refresh so be sure it's **callable**)
+  * Hooks install (This may overwrite your existing Gitolite hooks)
+
 3. Check your installation in *Administration -> Redmine Git Hosting* *Config Checks* tab.
-4. Set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys**.
+
+4. Set some permissions on *Administration -> Roles* page, **particularly if you want users to be able to create SSH keys** (see below).
 
 Before configuring the plugin you should take a look at this : [Repositories Storage Configuration Strategy]({{ site.baseurl }}/configuration/notes/#repositories-storage-configuration-strategy).
 
