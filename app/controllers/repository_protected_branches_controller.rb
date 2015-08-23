@@ -14,8 +14,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
 
   def new
-    @protected_branch = @repository.protected_branches.new()
-    @protected_branch.user_list  = []
+    @protected_branch = @repository.protected_branches.new
   end
 
 

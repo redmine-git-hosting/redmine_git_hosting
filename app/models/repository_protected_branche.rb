@@ -7,28 +7,20 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   acts_as_list
 
   ## Attributes
-  attr_accessible :path, :permissions, :position, :user_list
+  attr_accessible :path, :permissions, :position, :user_ids
 
   ## Relations
   belongs_to :repository
+  has_many   :protected_branches_users, foreign_key: :protected_branch_id, dependent: :destroy
+  has_many   :users, through: :protected_branches_users
 
   ## Validations
   validates :repository_id, presence: true
   validates :path,          presence: true, uniqueness: { scope: [:permissions, :repository_id] }
   validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
-  validates :user_list,     presence: true
-
-  ## Serializations
-  serialize :user_list, Array
-
-  ## Callbacks
-  before_validation :remove_blank_items
 
   ## Scopes
   default_scope { order('position ASC') }
-
-  ## Delegation
-  delegate :project, to: :repository
 
 
   class << self
@@ -44,21 +36,8 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   end
 
 
-  def available_users
-    project.member_principals.map(&:user).compact.uniq.map{ |u| u.login }.sort
-  end
-
-
   def allowed_users
-    user_list.map{|u| User.find_by_login(u).gitolite_identifier}.sort
+    users.map { |u| u.gitolite_identifier }.sort
   end
-
-
-  private
-
-
-    def remove_blank_items
-      self.user_list = user_list.select{|u| !u.blank?} rescue []
-    end
 
 end

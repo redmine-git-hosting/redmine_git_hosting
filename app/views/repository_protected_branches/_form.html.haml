@@ -4,18 +4,14 @@
   %p= f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
   %p= f.select :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions), required: true, label: :label_permissions
 
-  = hidden_field_tag "repository_protected_branche[user_list][]", ""
+  = hidden_field_tag 'repository_protected_branche[user_ids][]', ''
 
   %p
-    %label{ for: "repository_protected_branche[user_list]" }= l(:label_user_list) + ' :'
+    %label{ for: 'repository_protected_branche[user_ids]' }= l(:label_user_list) + ' :'
 
-  = tag_it_list 'repository_protected_branche_user_list',
-                { name: 'repository_protected_branche[user_list][]' },
-                { source: 'user_list', placeholder: '+ add user' } do
-    - if @protected_branch.user_list.any?
-      - @protected_branch.user_list.each do |item|
-        %li= item
-
-:javascript
-  var user_list = #{raw @protected_branch.available_users.to_json};
-  $(document).ready(function(){ setTagIt(); });
+  - protected_branch_available_users.each do |user|
+    %p
+      %label{ style: 'margin-left: 0; width: auto; font-weight: lighter;' }
+        = check_box_tag 'repository_protected_branche[user_ids][]', user.id, @protected_branch.users.include?(user)
+        = user
+      %br

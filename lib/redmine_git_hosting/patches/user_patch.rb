@@ -14,6 +14,8 @@ module RedmineGitHosting
 
           # Relations
           has_many :gitolite_public_keys, dependent: :destroy
+          has_many :protected_branches_users, dependent: :destroy
+          has_many :protected_branches, through: :protected_branches_users
 
           # Callbacks
           after_save :check_if_status_changed

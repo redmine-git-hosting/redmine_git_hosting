@@ -35,7 +35,7 @@
             %td{ style: 'font-family: Consolas;' }= protected_branch.path
 
             %td
-              - protected_branch.user_list.each do |user|
+              - protected_branch.users.each do |user|
                 %span{ class: 'label label-info' }= user
 
             %td{ class: 'buttons' }
