@@ -13,6 +13,7 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
         private

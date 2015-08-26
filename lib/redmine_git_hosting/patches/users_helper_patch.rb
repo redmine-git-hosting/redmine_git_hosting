@@ -13,6 +13,7 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
         # Add a public_keys tab to the user administration page

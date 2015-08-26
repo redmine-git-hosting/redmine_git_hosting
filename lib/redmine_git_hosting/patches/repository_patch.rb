@@ -11,6 +11,7 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
         # This is the (possibly non-unique) basename for the Gitolite repository

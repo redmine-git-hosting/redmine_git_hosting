@@ -14,6 +14,7 @@ module RedmineGitHosting
         end
       end
 
+
       module InstanceMethods
 
         def install_gitolite_hooks
