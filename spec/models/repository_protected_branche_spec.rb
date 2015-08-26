@@ -22,8 +22,8 @@ describe RepositoryProtectedBranche do
 
     ## Relations
     it { should belong_to(:repository) }
-    it { should have_many(:protected_branches_users).with_foreign_key(:protected_branch_id).dependent(:destroy) }
-    it { should have_many(:users).through(:protected_branches_users) }
+    it { should have_many(:protected_branches_members).with_foreign_key(:protected_branch_id).dependent(:destroy) }
+    it { should have_many(:members).through(:protected_branches_members) }
 
     ## Validations
     it { should be_valid }
@@ -34,6 +34,6 @@ describe RepositoryProtectedBranche do
 
     it { should validate_uniqueness_of(:path).scoped_to([:permissions, :repository_id]) }
 
-    it { should validate_inclusion_of(:permissions).in_array(%w(RW RW+)) }
+    it { should validate_inclusion_of(:permissions).in_array RepositoryProtectedBranche::VALID_PERMS }
   end
 end

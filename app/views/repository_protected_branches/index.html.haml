@@ -34,9 +34,7 @@
 
             %td{ style: 'font-family: Consolas;' }= protected_branch.path
 
-            %td
-              - protected_branch.users.each do |user|
-                %span{ class: 'label label-info' }= user
+            %td= protected_branch.users.map { |u| link_to(u) }.join(', ').html_safe
 
             %td{ class: 'buttons' }
               - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
