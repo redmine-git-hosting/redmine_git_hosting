@@ -130,9 +130,7 @@ module RedmineGitHosting
             @rev_to = params[:rev_to]
 
             unless @rev.to_s.match(REV_PARAM_RE) && @rev_to.to_s.match(REV_PARAM_RE)
-              if @repository.branches.blank?
-                raise InvalidRevisionParam
-              end
+              raise InvalidRevisionParam if @repository.branches.empty?
             end
           rescue ActiveRecord::RecordNotFound
             render_404
