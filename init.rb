@@ -27,6 +27,7 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_redmine_storage_dir   => '',
       :gitolite_recycle_bin_dir       => 'recycle_bin/',
       :gitolite_local_code_dir        => 'local/',
+      :gitolite_lib_dir               => 'bin/lib/',
 
       # Gitolite Config File
       :gitolite_config_file              => 'gitolite.conf',

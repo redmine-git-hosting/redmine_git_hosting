@@ -23,6 +23,20 @@ module RedmineGitHosting
       end
 
 
+      def gitolite_lib_dir
+        RedmineGitHosting::Config.get_setting(:gitolite_lib_dir)
+      end
+
+
+      def gitolite_lib_dir_path
+        if gitolite_lib_dir.starts_with?('/')
+          gitolite_lib_dir
+        else
+          File.join(gitolite_home_dir, gitolite_lib_dir)
+        end
+      end
+
+
       def gitolite_user
         RedmineGitHosting::Config.get_setting(:gitolite_user)
       end

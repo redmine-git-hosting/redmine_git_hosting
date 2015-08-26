@@ -39,7 +39,7 @@ module Grack
           @user = authenticate_user(login, password)
 
           if @user
-            @env['REMOTE_USER'] = @auth.username
+            @env['REMOTE_USER'] = @user.gitolite_identifier
           end
         end
 
