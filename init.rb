@@ -17,7 +17,7 @@ Redmine::Plugin.register :redmine_git_hosting do
     :default => {
       # Gitolite SSH Config
       :gitolite_user                  => 'git',
-      :gitolite_server_host           => 'localhost',
+      :gitolite_server_host           => '127.0.0.1',
       :gitolite_server_port           => '22',
       :gitolite_ssh_private_key       => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
       :gitolite_ssh_public_key        => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,

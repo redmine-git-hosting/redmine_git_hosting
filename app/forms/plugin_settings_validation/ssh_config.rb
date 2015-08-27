@@ -20,7 +20,7 @@ module PluginSettingsValidation
       end
 
       validates :gitolite_user,            presence: true
-      validates :gitolite_server_host,     presence: true
+      validates :gitolite_server_host,     presence: true, format: { with: Resolv::IPv4::Regex }
       validates :gitolite_server_port,     presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 65536 }
       validates :gitolite_ssh_private_key, presence: true
       validates :gitolite_ssh_public_key,  presence: true
