@@ -34,9 +34,11 @@ module RedmineGitHosting
           return plugin_without_git_hosting(&block) unless @plugin.id == :redmine_git_hosting
           if request.post?
             @settings_form = PluginSettingsForm.new(@plugin)
+            options = params[:settings].delete(:rescue){ {} }
             if @settings_form.submit(params[:settings])
-              cleanup_tmp_dir
+              @old_settings = Setting.send("plugin_#{@plugin.id}")
               Setting.send "plugin_#{@plugin.id}=", @settings_form.params
+              execute_post_actions(@old_settings, options)
               flash[:notice] = l(:notice_successful_update)
             else
               flash[:error] = @settings_form.errors.full_messages.join('<br>')
@@ -52,20 +54,8 @@ module RedmineGitHosting
         private
 
 
-          def cleanup_tmp_dir
-            if params[:settings][:gitolite_temp_dir] && value_is_changing?(:gitolite_temp_dir)       ||
-               params[:settings][:gitolite_server_port] && value_is_changing?(:gitolite_server_port) ||
-               params[:settings][:gitolite_server_host] && value_is_changing?(:gitolite_server_host)
-
-              # Remove old tmp directory, since about to change
-              RedmineGitHosting.logger.info('Cleanup temp dir')
-              FileUtils.rm_rf(RedmineGitHosting::Config.gitolite_admin_dir)
-            end
-          end
-
-
-          def value_is_changing?(setting)
-            params[:settings][setting] != Setting.plugin_redmine_git_hosting[setting]
+          def execute_post_actions(old_settings, opts = {})
+            Settings::Apply.call(old_settings, opts)
           end
 
       end

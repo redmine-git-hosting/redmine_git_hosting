@@ -1,7 +1,8 @@
 module Settings
-  class Apply < Base
+  class Apply
     unloadable
 
+    attr_reader :previous_settings
     attr_reader :resync_projects
     attr_reader :resync_ssh_keys
     attr_reader :regenerate_ssh_keys
@@ -9,18 +10,27 @@ module Settings
     attr_reader :delete_trash_repo
 
 
-    def initialize(old_valuehash, valuehash, opts = {})
-      super
-
-      @resync_projects     = opts.delete(:resync_projects){ false }
-      @resync_ssh_keys     = opts.delete(:resync_ssh_keys){ false }
-      @regenerate_ssh_keys = opts.delete(:regenerate_ssh_keys){ false }
-      @flush_cache         = opts.delete(:flush_cache){ false }
+    def initialize(previous_settings, opts = {})
+      @previous_settings   = previous_settings
+      @resync_projects     = opts.delete(:resync_all_projects){ false }
+      @resync_ssh_keys     = opts.delete(:resync_all_ssh_keys){ false }
+      @regenerate_ssh_keys = opts.delete(:regenerate_all_ssh_keys){ false }
+      @flush_cache         = opts.delete(:flush_gitolite_cache){ false }
       @delete_trash_repo   = opts.delete(:delete_trash_repo){ [] }
     end
 
 
+    class << self
+
+      def call(previous_settings, opts = {})
+        new(previous_settings, opts).call
+      end
+
+    end
+
+
     def call
+      GitoliteAccessor.flush_settings_cache
       apply_settings
     end
 
@@ -45,8 +55,13 @@ module Settings
       end
 
 
-      def value_has_changed?(params)
-        old_valuehash[params] != valuehash[params]
+      def current_setting(setting)
+        Setting.plugin_redmine_git_hosting[setting]
+      end
+
+
+      def value_has_changed?(setting)
+        previous_settings[setting] != current_setting(setting)
       end
 
 
@@ -54,8 +69,11 @@ module Settings
         ## Gitolite location has changed. Remove temp directory, it will be recloned.
         if value_has_changed?(:gitolite_server_host) ||
            value_has_changed?(:gitolite_server_port) ||
-           value_has_changed?(:gitolite_user)
-          FileUtils.rm_rf RedmineGitHosting::Config.gitolite_temp_dir
+           value_has_changed?(:gitolite_user)        ||
+           value_has_changed?(:gitolite_temp_dir)
+
+          RedmineGitHosting.logger.info("Temp dir has changed, remove the previous one : '#{previous_settings[:gitolite_temp_dir]}'")
+          FileUtils.rm_rf previous_settings[:gitolite_temp_dir]
         end
       end
 
@@ -147,7 +165,7 @@ module Settings
 
 
       def do_add_redmine_rw_access
-        valuehash[:redmine_has_rw_access_on_all_repos] == 'true' ? GitoliteAccessor.enable_rw_access : GitoliteAccessor.disable_rw_access
+        current_setting(:redmine_has_rw_access_on_all_repos) == 'true' ? GitoliteAccessor.enable_rw_access : GitoliteAccessor.disable_rw_access
       end
 
   end

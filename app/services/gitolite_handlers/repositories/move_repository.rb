@@ -8,6 +8,7 @@ module GitoliteHandlers
           perform_repository_move
         else
           logger.error("#{context} : repository '#{old_repo_name}' does not exist in Gitolite, exit !")
+          nil
         end
       end
 
@@ -26,6 +27,8 @@ module GitoliteHandlers
 
           # Return old path to delete it
           old_relative_parent_path
+        else
+          nil
         end
       end
 
@@ -41,7 +44,7 @@ module GitoliteHandlers
 
         def update_gitolite
           # Get old repository permissions
-          old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf)
+          old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf.permissions[0])
 
           # Remove repository from Gitolite configuration
           gitolite_config.rm_repo(old_repo_name)

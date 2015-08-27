@@ -1,14 +1,14 @@
 %p
-  = label_tag 'settings[gitolite_resync_all_projects]', l(:label_resync_all_projects)
-  = check_box_tag 'settings[gitolite_resync_all_projects]', 'true', false
+  = label_tag 'settings[rescue][resync_all_projects]', l(:label_resync_all_projects)
+  = check_box_tag 'settings[rescue][resync_all_projects]', 'true', false
 
 %p
-  = label_tag 'settings[gitolite_resync_all_ssh_keys]', l(:label_resync_all_ssh_keys)
-  = check_box_tag 'settings[gitolite_resync_all_ssh_keys]', 'true', false
+  = label_tag 'settings[rescue][resync_all_ssh_keys]', l(:label_resync_all_ssh_keys)
+  = check_box_tag 'settings[rescue][resync_all_ssh_keys]', 'true', false
 
 %p
-  = label_tag 'settings[gitolite_regenerate_all_ssh_keys]', l(:label_regenerate_all_ssh_keys)
-  = check_box_tag 'settings[gitolite_regenerate_all_ssh_keys]', 'true', false
+  = label_tag 'settings[rescue][regenerate_all_ssh_keys]', l(:label_regenerate_all_ssh_keys)
+  = check_box_tag 'settings[rescue][regenerate_all_ssh_keys]', 'true', false
   %span{ style: 'display: inline-table;' }
     %em= l(:label_regenerate_all_ssh_keys_desc)
     %br
@@ -17,5 +17,5 @@
       = l(:label_regenerate_all_ssh_keys_desc2)
 
 %p
-  = label_tag 'settings[gitolite_flush_cache]', l(:label_flush_cache)
-  = check_box_tag 'settings[gitolite_flush_cache]', 'true', false
+  = label_tag 'settings[rescue][flush_gitolite_cache]', l(:label_flush_cache)
+  = check_box_tag 'settings[rescue][flush_gitolite_cache]', 'true', false

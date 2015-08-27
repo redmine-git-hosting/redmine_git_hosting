@@ -7,7 +7,7 @@ module GitoliteWrappers
         delete_parent_path = []
         projects.reverse.each do |project|
           project.gitolite_repos.reverse.each do |repository|
-            repo_list.push << repository.gitolite_repository_name
+            repo_list << repository.gitolite_repository_name
             delete_parent_path << move_gitolite_repository(repository)
           end
           gitolite_admin_repo_commit("#{context} : #{project.identifier} | #{repo_list}")

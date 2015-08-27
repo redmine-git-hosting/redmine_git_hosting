@@ -15,7 +15,7 @@
       %tr
         %td= repo_in_trash[0]
         %td= repo_in_trash[1][:size]
-        %td= check_box_tag 'settings[gitolite_purge_repos][]', repo_in_trash[0], false, class: 'empty_trash'
+        %td= check_box_tag 'settings[rescue][delete_trash_repo][]', repo_in_trash[0], false, class: 'empty_trash'
 
   #delete_warning{ class: 'alert alert-error', style: 'display: none;' }= l(:label_delete_warning)
 

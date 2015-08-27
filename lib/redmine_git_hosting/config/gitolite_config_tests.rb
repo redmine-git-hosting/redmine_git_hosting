@@ -19,12 +19,12 @@ module RedmineGitHosting
         end
 
         if !File.directory?(@temp_dir_path)
-          logger.info("Create tmp directory : '#{@temp_dir_path}'")
+          logger.info("Create Gitolite Admin directory : '#{@temp_dir_path}'")
           begin
             FileUtils.mkdir_p @temp_dir_path
             FileUtils.chmod 0700, @temp_dir_path
           rescue => e
-            logger.error("Cannot create tmp directory : '#{@temp_dir_path}'")
+            logger.error("Cannot create Gitolite Admin directory : '#{@temp_dir_path}'")
           end
         end
 
@@ -38,7 +38,7 @@ module RedmineGitHosting
         @temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
 
         if !@temp_dir_writeable
-          logger.debug("Testing if temp directory '#{create_temp_dir}' is writeable ...")
+          logger.debug("Testing if Gitolite Admin directory '#{create_temp_dir}' is writeable ...")
           mytestfile = File.join(create_temp_dir, 'writecheck')
           if !File.directory?(create_temp_dir)
             @temp_dir_writeable = false
