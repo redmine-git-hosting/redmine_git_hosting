@@ -17,7 +17,7 @@ module RedmineGitHosting
       def call
         if !repo_conf
           logger.error("#{action} : repository '#{old_repo_name}' does not exist in Gitolite, exit !")
-          return
+          nil
         else
           perform_repository_move
         end
@@ -41,6 +41,8 @@ module RedmineGitHosting
 
             # Return old path to delete it
             old_relative_parent_path
+          else
+            nil
           end
         end
 

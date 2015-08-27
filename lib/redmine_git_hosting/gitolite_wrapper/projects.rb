@@ -81,7 +81,7 @@ module RedmineGitHosting
           delete_parent_path = []
           git_projects.reverse.each do |project|
             project.gitolite_repos.reverse.each do |repository|
-              repo_list.push << repository.gitolite_repository_name
+              repo_list << repository.gitolite_repository_name
               delete_parent_path << RedmineGitHosting::GitoliteHandlers::RepositoryMover.new(repository, gitolite_config, action).call
             end
             gitolite_admin_repo_commit("#{action} : #{project.identifier} | #{repo_list}")
