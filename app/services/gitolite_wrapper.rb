@@ -8,6 +8,7 @@ module GitoliteWrapper
   # action: An API action defined in one of the gitolite/* classes.
   def resync_gitolite(action, object, options = {})
     # Symbolize keys before using them
+    action  = action.to_sym
     options = options.symbolize_keys
 
     # Flush cache if needed
