@@ -35,7 +35,7 @@
 
 %p
   %label= raw l(:label_http_server_subdir)
-  = text_field_tag 'settings[http_server_subdir]', "./#{http_server_subdir}", size: 60
+  = text_field_tag 'settings[http_server_subdir]', http_server_subdir, size: 60
 
 %p
   %label= l(:label_gitolite_http_by_default)

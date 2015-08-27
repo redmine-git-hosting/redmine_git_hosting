@@ -9,7 +9,7 @@
 
 %p
   %label= l(:label_gitolite_config_file)
-  = text_field_tag 'settings[gitolite_config_file]', "./#{gitolite_config_file}", size: 60
+  = text_field_tag 'settings[gitolite_config_file]', gitolite_config_file, size: 60
 
 %p
   %label= l(:label_gitolite_identifier_prefix)

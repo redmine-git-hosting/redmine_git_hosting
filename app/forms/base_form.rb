@@ -3,6 +3,7 @@ module BaseForm
 
   included do
     include ActiveModel::Validations
+    include ActiveModel::Validations::Callbacks
     include ActiveModel::Conversion
     extend ActiveModel::Naming
   end
@@ -18,7 +19,7 @@ module BaseForm
       send("#{name}=", value)
     end
     if valid?
-      valid_form_submitted
+      valid_form_submitted if self.respond_to?(:valid_form_submitted)
       true
     else
       false
