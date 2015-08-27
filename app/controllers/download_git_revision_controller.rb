@@ -1,7 +1,6 @@
 class DownloadGitRevisionController < ApplicationController
   unloadable
 
-  before_filter :require_login
   before_filter :set_repository
   before_filter :can_download_git_revision
   before_filter :set_download
