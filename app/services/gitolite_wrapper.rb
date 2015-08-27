@@ -6,6 +6,7 @@ module GitoliteWrapper
   # Update the Gitolite Repository
   #
   # action: An API action defined in one of the gitolite/* classes.
+  #
   def resync_gitolite(action, object, options = {})
     # Symbolize keys before using them
     action  = action.to_sym
@@ -35,9 +36,10 @@ module GitoliteWrapper
     end
 
 
+    # Be sure to have a Gitolite::GitoliteAdmin object.
+    # Return if issues.
+    #
     def execute_action(action, object, options = {})
-      # Be sure to have a Gitolite::GitoliteAdmin object.
-      # Return nil if issues.
       begin
         admin = gitolite_admin
       rescue Rugged::SshError => e
@@ -47,7 +49,6 @@ module GitoliteWrapper
         logger.error 'Access denied for Gitolite Admin SSH Keys'
         logger.error(e.message)
       else
-        # Call our wrapper passing the GitoliteAdmin object
         call_gitolite_wrapper(action, admin, object, options)
       end
     end
