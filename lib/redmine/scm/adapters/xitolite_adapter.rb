@@ -94,7 +94,7 @@ module Redmine
           end
           @branches.sort!
         rescue ScmCommandAborted
-          nil
+          []
         end
 
 
@@ -107,7 +107,7 @@ module Redmine
           end
           @tags
         rescue ScmCommandAborted
-          nil
+          []
         end
 
 
