@@ -565,7 +565,7 @@ module Redmine
 
 
           def git_args
-            ['-c', 'core.quotepath=false', '-c', 'log.decorate=no'] if self.class.client_version_above?([1, 7, 2])
+            self.class.client_version_above?([1, 7, 2]) ? ['-c', 'core.quotepath=false', '-c', 'log.decorate=no'] : []
           end
 
 
