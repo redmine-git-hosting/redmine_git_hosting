@@ -41,7 +41,7 @@ class RepositoryPresenter < SimpleDelegator
 
 
     def options_for_git_url(key, value)
-      { class: 'git_url', data: { url: value[:url], committer: value[:committer], target: element_name, committer: committer_label(value) } }
+      { class: 'git_url', data: { url: value[:url], target: element_name, committer: committer_label(value) } }
     end
 
 
