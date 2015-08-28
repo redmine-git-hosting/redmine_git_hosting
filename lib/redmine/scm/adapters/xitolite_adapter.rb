@@ -93,7 +93,8 @@ module Redmine
             end
           end
           @branches.sort!
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           []
         end
 
@@ -106,7 +107,8 @@ module Redmine
             @tags = io.readlines.sort!.map{ |t| t.strip }
           end
           @tags
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           []
         end
 
@@ -114,9 +116,9 @@ module Redmine
         def default_branch
           bras = self.branches
           return nil if bras.nil?
-          default_bras = bras.select{|x| x.is_default == true}
-          return default_bras.first.to_s if ! default_bras.empty?
-          master_bras = bras.select{|x| x.to_s == 'master'}
+          default_bras = bras.select { |x| x.is_default == true }
+          return default_bras.first.to_s if !default_bras.empty?
+          master_bras = bras.select { |x| x.to_s == 'master' }
           master_bras.empty? ? bras.first.to_s : 'master'
         end
 
@@ -169,7 +171,8 @@ module Redmine
             end
           end
           entries.sort_by_name
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -198,7 +201,8 @@ module Redmine
             logger.error("The revision '#{path}' has a wrong format")
             return nil
           end
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -344,7 +348,8 @@ module Redmine
             end
           end
           diff
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -378,7 +383,8 @@ module Redmine
             end
           end
           blame
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -395,7 +401,8 @@ module Redmine
             cat = io.read
           end
           cat
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -425,7 +432,8 @@ module Redmine
             @revisions_list = io.readlines.map{ |t| t.strip }
           end
           @revisions_list
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           []
         end
 
@@ -438,7 +446,8 @@ module Redmine
             @parsed_revision = io.readlines.map{ |t| t.strip }.first
           end
           @parsed_revision
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
@@ -465,7 +474,8 @@ module Redmine
             @content = io.read
           end
           @content
-        rescue ScmCommandAborted
+        rescue ScmCommandAborted => e
+          logger.error(e.message)
           nil
         end
 
