@@ -173,7 +173,7 @@ module Redmine
           entries.sort_by_name
         rescue ScmCommandAborted => e
           logger.error(e.message)
-          nil
+          []
         end
 
 
