@@ -43,6 +43,10 @@ module RedmineGitHosting
         rescue Rugged::NetworkError => e
           logger.error "Access denied for Gitolite Admin SSH Keys"
           logger.error(e.message)
+        rescue Rugged::RepositoryError => e
+          logger.error "Gitolite couldn't write to its admin repo copy"
+          logger.error "Try recreating '#{gitolite_admin_dir}'"
+          logger.error(e.message)
         else
           begin
             # Call our wrapper passing the GitoliteAdmin object
