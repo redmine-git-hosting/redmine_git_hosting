@@ -8,7 +8,6 @@
 [![Coverage Status](https://coveralls.io/repos/jbox-web/redmine_git_hosting/badge.png?branch=devel)](https://coveralls.io/r/jbox-web/redmine_git_hosting?branch=devel)
 [![PullReview stats](https://www.pullreview.com/github/jbox-web/redmine_git_hosting/badges/devel.svg?)](https://www.pullreview.com/github/jbox-web/redmine_git_hosting/reviews/devel)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jbox-web/redmine_git_hosting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FBT7E7DAVVEEU)
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
@@ -31,5 +30,3 @@ You can contribute to this plugin in many ways such as :
 * Contributing code (features or bugfixes)
 * Reporting a bug
 * Submitting translations
-
-You can also donate :)
