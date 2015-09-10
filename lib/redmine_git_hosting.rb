@@ -46,6 +46,8 @@ module RedmineGitHosting
       Logger::WARN
     when 'error' then
       Logger::ERROR
+    else
+      Logger::INFO
     end
   end
 end
