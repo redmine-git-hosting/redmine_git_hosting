@@ -11,7 +11,7 @@ module RedmineGitHosting
       # here, name can have many components.
 
       REF_COMPONENT_PART = '[\\.\\-\\w_\\*]+'
-      REF_COMPONENT_REGEX = /^(refs\/)?((#{REF_COMPONENT_PART})\/)?(#{REF_COMPONENT_PART}(\/#{REF_COMPONENT_PART})*)$/
+      REF_COMPONENT_REGEX = /\A(refs\/)?((#{REF_COMPONENT_PART})\/)?(#{REF_COMPONENT_PART}(\/#{REF_COMPONENT_PART})*)\z/
 
       def refcomp_parse(spec)
         refcomp_parse = spec.match(REF_COMPONENT_REGEX)
