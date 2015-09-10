@@ -44,7 +44,7 @@ class MigrateParameters < ActiveRecord::Migration
       # New features settings
       :gitolite_log_level   => 'info',
 
-      :gitolite_server_host => 'localhost',
+      :gitolite_server_host => '127.0.0.1',
 
       :git_config_username => 'Redmine Git Hosting',
       :git_config_email    => 'redmine@example.net',
