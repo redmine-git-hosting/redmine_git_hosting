@@ -9,7 +9,7 @@ module RepositoryMirrors
 
     def push!
       begin
-        push_message = repository.mirror_push(mirror.url, branch, push_args)
+        push_message = repository.mirror_push(*command)
         push_failed = false
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         push_message = e.output
@@ -17,6 +17,11 @@ module RepositoryMirrors
       end
 
       return push_failed, push_message
+    end
+
+
+    def command
+      [mirror.url, branch, push_args]
     end
 
 
