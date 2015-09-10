@@ -42,7 +42,7 @@ describe Repository::Xitolite do
 
       @repository_1 = build_git_repository(project: @project_child, is_default: true)
       @repository_1.valid?
-      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
+      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
     end
 
     subject { @repository_1 }
@@ -224,7 +224,7 @@ describe Repository::Xitolite do
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
       @repository_1 = create_git_repository(project: @project_child, is_default: true)
-      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils.generate_secret(64))
+      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
       extra.save!
 
       @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')

@@ -132,7 +132,7 @@ namespace :redmine_git_hosting do
             git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
             git_annex:      false,
             default_branch: 'master',
-            key:            RedmineGitHosting::Utils.generate_secret(64)
+            key:            RedmineGitHosting::Utils::Crypto.generate_secret(64)
           }
           extra = repository.build_extra(default_extra_options)
           extra.save!

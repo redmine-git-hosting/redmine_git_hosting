@@ -53,7 +53,7 @@ module RedmineHooks
       def extract_payloads
         new_payloads = []
         payloads.each do |payload|
-          data = RedmineGitHosting::Utils.refcomp_parse(payload[:ref])
+          data = RedmineGitHosting::Utils::Git.refcomp_parse(payload[:ref])
           if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
             new_payloads << payload
           end

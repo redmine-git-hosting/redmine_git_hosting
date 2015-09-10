@@ -7,7 +7,7 @@ module RedmineGitHosting
       #
       def capture(args = [], opts = {})
         cmd = args.shift
-        RedmineGitHosting::Utils.capture(cmd, args, opts)
+        RedmineGitHosting::Utils::Exec.capture(cmd, args, opts)
       end
 
 
@@ -15,7 +15,7 @@ module RedmineGitHosting
       #
       def execute(args = [], opts = {})
         cmd = args.shift
-        RedmineGitHosting::Utils.execute(cmd, args, opts)
+        RedmineGitHosting::Utils::Exec.execute(cmd, args, opts)
       end
 
 

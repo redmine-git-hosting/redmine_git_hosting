@@ -88,7 +88,7 @@ module Grack
       args = command
 
       begin
-        RedmineGitHosting::Utils.capture(cmd, args)
+        RedmineGitHosting::Utils::Exec.capture(cmd, args)
       rescue => e
         logger.error('Problems while getting SmartHttp params')
       end

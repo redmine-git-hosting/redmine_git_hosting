@@ -156,7 +156,7 @@ class GitolitePublicKey < ActiveRecord::Base
     #
     def remove_control_characters
       return if !new_record?
-      self.key = RedmineGitHosting::Utils.sanitize_ssh_key(key)
+      self.key = RedmineGitHosting::Utils::Ssh.sanitize_ssh_key(key)
     end
 
 
@@ -173,7 +173,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
     def set_fingerprint
       begin
-        self.fingerprint = RedmineGitHosting::Utils.ssh_fingerprint(key)
+        self.fingerprint = RedmineGitHosting::Utils::Ssh.ssh_fingerprint(key)
       rescue RedmineGitHosting::Error::InvalidSshKey => e
         errors.add(:key, :corrupted)
       end

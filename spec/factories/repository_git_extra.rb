@@ -4,7 +4,7 @@ FactoryGirl.define do
     f.git_http        0
     f.default_branch  'master'
     f.association     :repository, factory: :repository_gitolite
-    f.key             { RedmineGitHosting::Utils.generate_secret(64) }
+    f.key             { RedmineGitHosting::Utils::Crypto.generate_secret(64) }
   end
 
 end

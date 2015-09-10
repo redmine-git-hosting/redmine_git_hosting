@@ -34,7 +34,7 @@ module Repositories
           git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
           git_annex:      false,
           default_branch: 'master',
-          key:            RedmineGitHosting::Utils.generate_secret(64)
+          key:            RedmineGitHosting::Utils::Crypto.generate_secret(64)
         }
       end
 
@@ -46,7 +46,7 @@ module Repositories
           git_notify:     false,
           git_annex:      true,
           default_branch: 'git-annex',
-          key:            RedmineGitHosting::Utils.generate_secret(64)
+          key:            RedmineGitHosting::Utils::Crypto.generate_secret(64)
         }
       end
 

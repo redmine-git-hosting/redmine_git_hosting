@@ -63,7 +63,7 @@ module RedmineGitHosting
 
 
       def gitolite_ssh_public_key_fingerprint
-        @gitolite_ssh_fingerprint ||= RedmineGitHosting::Utils.ssh_fingerprint(File.read(gitolite_ssh_public_key))
+        @gitolite_ssh_fingerprint ||= RedmineGitHosting::Utils::Ssh.ssh_fingerprint(File.read(gitolite_ssh_public_key))
       end
 
 
