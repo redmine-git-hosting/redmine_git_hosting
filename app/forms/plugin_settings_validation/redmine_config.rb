@@ -29,14 +29,14 @@ module PluginSettingsValidation
         self.init_repositories_on_create = 'false' if all_projects_use_git == 'false'
       end
 
-      validates :redmine_has_rw_access_on_all_repos, presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :all_projects_use_git,               presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :init_repositories_on_create,        presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :delete_git_repositories,            presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :download_revision_enabled,          presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :gitolite_use_sidekiq,               presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :hierarchical_organisation,          presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :unique_repo_identifier,             presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
+      validates :redmine_has_rw_access_on_all_repos, presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :all_projects_use_git,               presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :init_repositories_on_create,        presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :delete_git_repositories,            presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :download_revision_enabled,          presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :gitolite_use_sidekiq,               presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :hierarchical_organisation,          presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :unique_repo_identifier,             presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
 
       validate :check_for_duplicated_repo
     end

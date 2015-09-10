@@ -15,8 +15,8 @@ module PluginSettingsValidation
         self.gitolite_notify_global_exclude = filter_email_list(gitolite_notify_global_exclude)
       end
 
-      validates :gitolite_notify_by_default,            presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
-      validates :gitolite_notify_global_sender_address, presence: true, format: { with: PluginSettingsForm::EMAIL_REGEX }
+      validates :gitolite_notify_by_default,            presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :gitolite_notify_global_sender_address, presence: true, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX }
       validate  :git_notifications_intersection
     end
 

@@ -80,22 +80,8 @@ module GitolitePluginSettingsHelper
   end
 
 
-  def git_cache_adapters
-    [
-      ['Database', 'database'],
-      ['Memcached', 'memcached'],
-      ['Redis', 'redis']
-    ]
-  end
-
-
   def log_level_options
-    [
-      [l(:label_debug), 'debug'],
-      [l(:label_info), 'info'],
-      [l(:label_warn), 'warn'],
-      [l(:label_error), 'error']
-    ]
+    RedmineGitHosting::Logger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
   end
 
 

@@ -25,15 +25,15 @@ module PluginSettingsValidation
       end
 
       # Validates Gitolite Config File
-      validates :gitolite_identifier_strip_user_id, presence: true, inclusion: { in: PluginSettingsForm::BOOLEAN_FIELDS }
+      validates :gitolite_identifier_strip_user_id, presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
 
       # Validates Gitolite Global Config
       validates :gitolite_temp_dir, presence: true
       validates :gitolite_recycle_bin_expiration_time, presence: true, numericality: true
 
-      validates :gitolite_log_level,  presence: true, inclusion: { in: PluginSettingsForm::LOG_LEVELS }
+      validates :gitolite_log_level,  presence: true, inclusion: { in: RedmineGitHosting::Logger::LOG_LEVELS }
       validates :git_config_username, presence: true
-      validates :git_config_email,    presence: true, format: { with: PluginSettingsForm::EMAIL_REGEX }
+      validates :git_config_email,    presence: true, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX }
 
       validate  :gitolite_config_file_is_relative
       validate  :tmp_dir_is_absolute

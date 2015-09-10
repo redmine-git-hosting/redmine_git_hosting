@@ -3,6 +3,13 @@ require 'logger'
 module RedmineGitHosting
   class Logger < ::Logger
 
+    LOG_LEVELS = [
+      'debug',
+      'info',
+      'warn',
+      'error'
+    ]
+
     def self.init_logs!(progname, logfile, loglevel)
       logger           = new(logfile)
       logger.progname  = progname

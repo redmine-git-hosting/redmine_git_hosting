@@ -12,7 +12,7 @@ module PluginSettingsValidation
       validates :gitolite_cache_max_time,     presence: true, numericality: { only_integer: true }
       validates :gitolite_cache_max_size,     presence: true, numericality: { only_integer: true }
       validates :gitolite_cache_max_elements, presence: true, numericality: { only_integer: true }
-      validates :gitolite_cache_adapter,      presence: true, inclusion: { in: PluginSettingsForm::CACHE_ADAPTERS }
+      validates :gitolite_cache_adapter,      presence: true, inclusion: { in: GitCache.adapters }
     end
 
   end
