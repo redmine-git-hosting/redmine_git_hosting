@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitNotification do
 
-  VALID_MAIL   = ['user@foo.COM', 'A_US-ER@f.b.org', 'frst.lst@foo.jp', 'a+b@baz.cn']
+  VALID_MAIL   = ['user@foo.COM', 'A_US-ER@f.B.org', 'frst.lst@foo.jp', '3a+2b-1.0c__@0FoO.BaR.iT']
   INVALID_MAIL = ['user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com']
 
   describe "Valid RepositoryGitNotification creation" do

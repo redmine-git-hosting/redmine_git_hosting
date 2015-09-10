@@ -1,9 +1,6 @@
 class RepositoryGitNotification < ActiveRecord::Base
   unloadable
 
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
-  # VALID_EMAIL_REGEX = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-
   ## Attributes
   attr_accessible :prefix, :sender_address, :include_list, :exclude_list
 
@@ -12,7 +9,7 @@ class RepositoryGitNotification < ActiveRecord::Base
 
   ## Validations
   validates :repository_id,  presence: true, uniqueness: true
-  validates :sender_address, format: { with: VALID_EMAIL_REGEX, allow_blank: true }
+  validates :sender_address, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX, allow_blank: true }
 
   validate :validate_mailing_list
 
@@ -35,11 +32,11 @@ class RepositoryGitNotification < ActiveRecord::Base
 
     def validate_mailing_list
       include_list.each do |item|
-        errors.add(:include_list, :invalid) unless item =~ VALID_EMAIL_REGEX
+        errors.add(:include_list, :invalid) unless RedmineGitHosting::Validators.valid_email?(item)
       end
 
       exclude_list.each do |item|
-        errors.add(:exclude_list, :invalid) unless item =~ VALID_EMAIL_REGEX
+        errors.add(:exclude_list, :invalid) unless RedmineGitHosting::Validators.valid_email?(item)
       end
 
       intersection = include_list & exclude_list
