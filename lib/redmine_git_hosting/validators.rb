@@ -25,7 +25,7 @@ module RedmineGitHosting
 
 
     # Validate an email address
-    # '3a+2b-1.0c__@0FoO.BaR.iT'
+    # '3a+2b-1.0c__@0FoO.BaR.iT' (yes, this is a valid address)
     #
     EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
