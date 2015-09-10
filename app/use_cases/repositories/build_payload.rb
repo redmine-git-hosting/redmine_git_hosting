@@ -43,11 +43,11 @@ module Repositories
         # Get branch name
         branch_name = refname.gsub('refs/heads/', '')
 
-        if newhead.match(/^0{40}$/)
+        if newhead.match(/\A0{40}\z/)
           # Deleting a branch
           logger.info("Deleting branch '#{branch_name}'")
           range = nil
-        elsif oldhead.match(/^0{40}$/)
+        elsif oldhead.match(/\A0{40}\z/)
           # Creating a branch
           logger.info("Creating branch '#{branch_name}'")
           range = newhead
@@ -118,8 +118,8 @@ module Repositories
           :removed   => revision.filechanges.select{|c| c.action == 'D' }.map(&:path),
           :url       => url_for_revision(revision.revision),
           :author    => {
-            :name  => revision.committer.gsub(/^([^<]+)\s+.*$/, '\1'),
-            :email => revision.committer.gsub(/^.*<([^>]+)>.*$/, '\1')
+            :name  => revision.committer.gsub(/\A([^<]+)\s+.*\z/, '\1'),
+            :email => revision.committer.gsub(/\A.*<([^>]+)>.*\z/, '\1')
           }
         }
       end
