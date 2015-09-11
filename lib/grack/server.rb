@@ -1,7 +1,6 @@
 module Grack
   class Server
 
-    #
     # Override original *service_rpc* method to fix compatibility with Ruby 1.9.3 IO.popen.
     #
     # Between Ruby 1.9 and Ruby 2.0 the method signature has changed :
@@ -47,7 +46,6 @@ module Grack
     end
 
 
-    #
     # Override original *get_git_dir* method because the path is relative
     # and accessed via Sudo.
     #
@@ -61,7 +59,6 @@ module Grack
     end
 
 
-    #
     # Override original *git_command* method to prefix the command with Sudo and other args.
     #
     def git_command(params)
@@ -69,7 +66,6 @@ module Grack
     end
 
 
-    #
     # Override original *capture* method because the original IO.popen().read let zombie process behind.
     #
     # This method is called :
@@ -95,7 +91,6 @@ module Grack
     end
 
 
-    #
     # Override original *popen_options* method.
     # The original one try to chdir before executing the command by
     # passing 'chdir: @dir' option to IO.popen.
