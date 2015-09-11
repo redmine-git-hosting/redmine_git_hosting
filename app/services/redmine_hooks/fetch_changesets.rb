@@ -4,7 +4,9 @@ module RedmineHooks
 
     def call
       repository.empty_cache!
-      fetch_changesets
+      execute_hook do |y|
+        y << fetch_changesets
+      end
     end
 
 
@@ -22,16 +24,14 @@ module RedmineHooks
 
 
       def fetch_changesets
-        execute_hook do |y|
-          begin
-            repository.fetch_changesets
-            log_hook_succeeded
-            y << success_message
-          rescue ::Redmine::Scm::Adapters::CommandFailed => e
-            log_hook_failed
-            logger.error("Error during fetching changesets : #{e.message}")
-            y << failure_message
-          end
+        begin
+          repository.fetch_changesets
+          log_hook_succeeded
+          success_message
+        rescue ::Redmine::Scm::Adapters::CommandFailed => e
+          log_hook_failed
+          logger.error("Error during fetching changesets : #{e.message}")
+          failure_message
         end
       end
 

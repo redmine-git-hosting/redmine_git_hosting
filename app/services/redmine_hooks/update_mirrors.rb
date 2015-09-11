@@ -3,7 +3,13 @@ module RedmineHooks
     unloadable
 
     def call
-      call_mirror if needs_push?
+      execute_hook do |y|
+        if needs_push?
+          y << call_mirror
+        else
+          y << "This mirror doesn't need to be updated\n"
+        end
+      end
     end
 
 
@@ -44,17 +50,15 @@ module RedmineHooks
 
 
       def call_mirror
-        execute_hook do |y|
-          push_failed, push_message = RepositoryMirrors::Push.call(mirror)
+        push_failed, push_message = RepositoryMirrors::Push.call(mirror)
 
-          unless push_failed
-            log_hook_succeeded
-            y << success_message
-          else
-            log_hook_failed
-            logger.error(push_message)
-            y << failure_message
-          end
+        unless push_failed
+          log_hook_succeeded
+          success_message
+        else
+          log_hook_failed
+          logger.error(push_message)
+          failure_message
         end
       end
 
