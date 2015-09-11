@@ -1,19 +1,21 @@
-require 'simplecov'
-require 'simplecov-rcov'
-require 'coveralls'
-require 'codeclimate-test-reporter'
+unless ENV['DISABLE_COVERAGE'] == 'true'
+  require 'simplecov'
+  require 'simplecov-rcov'
+  require 'coveralls'
+  require 'codeclimate-test-reporter'
 
-## Configure SimpleCov
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  SimpleCov::Formatter::HTMLFormatter,
-  SimpleCov::Formatter::RcovFormatter
-  # Coveralls::SimpleCov::Formatter,
-  # CodeClimate::TestReporter::Formatter
-]
+  ## Configure SimpleCov
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::RcovFormatter
+    # Coveralls::SimpleCov::Formatter,
+    # CodeClimate::TestReporter::Formatter
+  ]
 
-## Start Simplecov
-SimpleCov.start 'rails' do
-  add_group 'Redmine Git Hosting', 'plugins/redmine_git_hosting'
+  ## Start Simplecov
+  SimpleCov.start 'rails' do
+    add_group 'Redmine Git Hosting', 'plugins/redmine_git_hosting'
+  end
 end
 
 ## Load Redmine App

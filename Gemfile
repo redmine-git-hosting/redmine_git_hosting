@@ -60,3 +60,12 @@ group :development, :test do
   # Publish to CodeClimate
   gem 'codeclimate-test-reporter', require: false
 end
+
+group :development do
+  gem 'spring',                '~> 1.3.1'
+  gem 'spring-commands-rspec', '~> 1.0.4'
+  gem 'quiet_assets',          '~> 1.1.0'
+
+  # gem 'brakeman', '~> 2.6.3'
+  # gem 'bullet',   '~> 4.14.7'
+end
