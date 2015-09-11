@@ -41,7 +41,18 @@ module Hooks
 
 
     def execute
-      call_mirror if needs_push?
+      y = ''
+
+      logger.info("Pushing changes to #{url} ... ")
+      y << "  - Pushing changes to #{url} ... "
+
+      if needs_push?
+        y << call_mirror
+      else
+        y << "This mirror doesn't need to be updated\n"
+      end
+
+      y
     end
 
 
@@ -72,23 +83,16 @@ module Hooks
 
 
       def call_mirror
-        y = ''
-
-        logger.info("Pushing changes to #{url} ... ")
-        y << "  - Pushing changes to #{url} ... "
-
         push_failed, push_message = MirrorPush.new(mirror).call
 
         if push_failed
           logger.error('Failed!')
           logger.error("#{push_message}")
-          y << " [failure]\n"
+          " [failure]\n"
         else
           logger.info('Succeeded!')
-          y << " [success]\n"
+          " [success]\n"
         end
-
-        y
       end
 
 
