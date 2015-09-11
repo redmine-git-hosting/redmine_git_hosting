@@ -3,11 +3,11 @@ module RedmineHooks
     unloadable
 
     def call
-      execute_hook do |y|
+      execute_hook do |out|
         if needs_push?
-          y << call_mirror
+          out << call_mirror
         else
-          y << "This mirror doesn't need to be updated\n"
+          out << "This mirror doesn't need to be updated\n"
         end
       end
     end

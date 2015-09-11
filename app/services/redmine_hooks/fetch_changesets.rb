@@ -4,8 +4,8 @@ module RedmineHooks
 
     def call
       repository.empty_cache!
-      execute_hook do |y|
-        y << fetch_changesets
+      execute_hook do |out|
+        out << fetch_changesets
       end
     end
 

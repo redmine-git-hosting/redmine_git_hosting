@@ -16,11 +16,11 @@ module RedmineHooks
 
 
     def call
-      execute_hook do |y|
+      execute_hook do |out|
         if needs_push?
-          y << call_webservice
+          out << call_webservice
         else
-          y << "This url doesn't need to be notified\n"
+          out << "This url doesn't need to be notified\n"
         end
       end
     end
