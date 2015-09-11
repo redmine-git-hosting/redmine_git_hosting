@@ -47,7 +47,18 @@ module Hooks
 
 
     def execute
-      call_webservice if needs_push?
+      y = ''
+
+      logger.info("Notifying #{url} ... ")
+      y << "  - Notifying #{url} ... "
+
+      if needs_push?
+        y << call_webservice
+      else
+        y << "This url doesn't need to be notified\n"
+      end
+
+      y
     end
 
 
@@ -110,23 +121,16 @@ module Hooks
 
 
       def do_call_webservice(payload)
-        y = ''
-
-        logger.info("Notifying #{url} ... ")
-        y << "  - Notifying #{url} ... "
-
         post_failed, post_message = self.send(use_method, url, {data: { payload: payload }})
 
         if post_failed
           logger.error('Failed!')
           logger.error("#{post_message}")
-          y << " [failure]\n"
+          " [failure]\n"
         else
           logger.info('Succeeded!')
-          y << " [success]\n"
+          " [success]\n"
         end
-
-        y
       end
 
 
