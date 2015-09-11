@@ -75,7 +75,11 @@ class RepositoryMirror < ActiveRecord::Base
       elsif include_all_branches? && include_all_tags?
         mutual_exclusion_error
       elsif !explicit_refspec.blank?
-        validate_refspec
+        if include_all_branches?
+          errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)}.")
+        else
+          validate_refspec
+        end
       elsif !include_all_branches? && !include_all_tags?
         errors.add(:base, :nothing_to_push)
       end
@@ -85,12 +89,11 @@ class RepositoryMirror < ActiveRecord::Base
     # Check format of refspec
     #
     def validate_refspec
-      errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)}.") if include_all_branches?
-
-      refspec_parsed = explicit_refspec.match(/^\+?([^:]*)(:([^:]*))?$/)
-      if refspec_parsed.nil? || !ref_comparison_valid(refspec_parsed[1]) || !ref_comparison_valid(refspec_parsed[3])
+      begin
+        RedmineGitHosting::Validators.valid_git_refspec_path?(explicit_refspec)
+      rescue RedmineGitHosting::Error::InvalidRefspec::BadFormat => e
         errors.add(:explicit_refspec, :bad_format)
-      elsif !refspec_parsed[1] || refspec_parsed[1] == ''
+      rescue RedmineGitHosting::Error::InvalidRefspec::NullComponent => e
         errors.add(:explicit_refspec, :have_null_component)
       end
     end
@@ -108,16 +111,6 @@ class RepositoryMirror < ActiveRecord::Base
       errors.add(:base, "Cannot #{l(:label_mirror_include_all_branches)} and #{l(:label_mirror_include_all_tags)} at the same time.")
       unless explicit_refspec.blank?
         errors.add(:explicit_refspec, "cannot be used with #{l(:label_mirror_include_all_branches)} or #{l(:label_mirror_include_all_tags)}")
-      end
-    end
-
-
-    def ref_comparison_valid(spec)
-      # Allow null or empty components
-      if !spec || spec == '' || RedmineGitHosting::Utils::Git.refcomp_parse(spec)
-        true
-      else
-        false
       end
     end
 

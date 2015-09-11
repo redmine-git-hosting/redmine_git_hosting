@@ -13,6 +13,36 @@ module RedmineGitHosting
     end
 
 
+    # Validate a Git refspec
+    # [+]<src>:<dest>
+    # [+]refs/<name>/<ref>:refs/<name>/<ref>
+    #
+    GIT_REFSPEC_REGEX = /\A\+?([^:]*)(:([^:]*))?\z/
+
+    def valid_git_refspec?(refspec)
+      refspec.match(GIT_REFSPEC_REGEX)
+    end
+
+
+    def valid_git_refspec_path?(refspec)
+      refspec_parsed = valid_git_refspec?(refspec)
+      if refspec_parsed.nil? || !valid_refspec_path?(refspec_parsed[1]) || !valid_refspec_path?(refspec_parsed[3])
+        raise RedmineGitHosting::Error::InvalidRefspec::BadFormat
+      elsif !refspec_parsed[1] || refspec_parsed[1] == ''
+        raise RedmineGitHosting::Error::InvalidRefspec::NullComponent
+      end
+    end
+
+
+    # Allow null or empty components
+    #
+    def valid_refspec_path?(refspec)
+      !refspec || refspec == '' || RedmineGitHosting::Utils::Git.parse_refspec(refspec) ? true : false
+    end
+
+    private_class_method :valid_refspec_path?
+
+
     # Validate a domain name with optional port
     # redmine.example.net
     # redmine.example.net:8080
