@@ -172,8 +172,56 @@ module RedmineGitHosting
     ###############################################
     # Duck-typing of an IO interface              #
     ###############################################
-    def respond_to?(my_method)
-      IO.instance_methods.map(&:to_sym).include?(my_method.to_sym) || super(my_method, *args, &block)
+
+    def respond_to?(method)
+      io_method?(method) || super(method, *args, &block)
+    end
+
+
+    def io_method?(method)
+      IO.instance_methods.map(&:to_sym).include?(method.to_sym)
+    end
+
+
+    def inject_enumerator_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        if @state == RUNNING_SHELL
+          # Must Divert results into buffer.
+          if block_given?
+            @my_read_stream.#{method}(*args) { |myvalue|
+              add_to_buffer(myvalue)
+              block.call(myvalue)
+            }
+          else
+            myvalue = @my_read_stream.#{method}(*args)
+            EnumerableRedirector.new(myvalue, self)
+          end
+        else
+          @my_read_stream.#{method}(*args, &block)
+        end
+      end
+      EOF
+    end
+
+
+    def inject_read_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        myvalue = @my_read_stream.#{method}(*args)
+        add_to_buffer(myvalue) if @state == RUNNING_SHELL
+        myvalue
+      end
+      EOF
+    end
+
+
+    def inject_proxy_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        @my_read_stream.#{method}(*args, &block)
+      end
+      EOF
     end
 
 
@@ -193,60 +241,31 @@ module RedmineGitHosting
     # for each encountered missing function (so that method_missing only gets called
     # once for each function.  Note that we don't use define_method here, since
     # Ruby 1.8 define_method doesn't work with blocks.
-    def method_missing(my_method, *args, &block)
-      # Only handle IO methods!
-      unless IO.instance_methods.map(&:to_sym).include?(my_method.to_sym)
-        return super(my_method, *args, &block)
-      end
+    #
+    # This will andle IO methods only!
+    #
+    def method_missing(method, *args, &block)
+      return super(method, *args, &block) unless io_method?(method)
 
+      # Shouldn't happen, but might be problem
       if @my_read_stream.nil?
-        # Shouldn't happen, but might be problem
-        logger.error("Call to #{my_method.to_s} before IO-handlers wrapped.")
-        raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Call to #{my_method.to_s} before IO-handlers wrapped."
+        logger.error("Call to #{method} before IO-handlers wrapped.")
+        raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Call to #{method} before IO-handlers wrapped."
       end
-
 
       # Buffer up results from read operations. Proxy everything else directly to IO stream.
-      my_name = my_method.to_s
-      if my_name =~ /^(each|bytes)/
-        # Handle Enumerator read functions (Class #1)
-        self.class.class_eval <<-EOF, __FILE__, __LINE__
-        def #{my_method}(*args, &block)
-          if @state == RUNNING_SHELL
-            # Must Divert results into buffer.
-            if block_given?
-              @my_read_stream.#{my_method}(*args) {|myvalue|
-                add_to_buffer(myvalue)
-                block.call(myvalue)
-              }
-            else
-              myvalue = @my_read_stream.#{my_method}(*args)
-              EnumerableRedirector.new(myvalue,self)
-            end
-          else
-            @my_read_stream.#{my_method}(*args, &block)
-          end
-        end
-        EOF
-      elsif my_name =~ /^(get|read)/
-        # Handle "regular" read functions (Class #2)
-        self.class.class_eval <<-EOF, __FILE__, __LINE__
-        def #{my_method}(*args, &block)
-          myvalue = @my_read_stream.#{my_method}(*args)
-          add_to_buffer(myvalue) if @state == RUNNING_SHELL
-          myvalue
-        end
-        EOF
+      method_name = method.to_s
+
+      if method_name =~ /^(each|bytes)/
+        inject_enumerator_method(method)
+      elsif method_name =~ /^(get|read)/
+        inject_read_method(method)
       else
-        # Handle every thing else by simply forwarding (Class #3)
-        self.class.class_eval <<-EOF, __FILE__, __LINE__
-        def #{my_method}(*args, &block)
-          @my_read_stream.#{my_method}(*args, &block)
-        end
-        EOF
+        inject_proxy_method(method)
       end
+
       # Call new function once
-      self.send(my_method, *args, &block)
+      self.send(method, *args, &block)
     end
 
 
