@@ -68,7 +68,8 @@ module Repositories
         oldhead, newhead, refname = ref.split(',')
 
         # Build payload hash
-        repository.github_payload.merge({ before: oldhead, after: newhead, ref: refname, commits: build_commits_list(revisions_in_range) })
+        repository.github_payload
+                  .merge({ before: oldhead, after: newhead, ref: refname, commits: build_commits_list(revisions_in_range) })
       end
 
 
