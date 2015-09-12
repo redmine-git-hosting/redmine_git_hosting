@@ -242,7 +242,7 @@ module RedmineGitHosting
     # once for each function.  Note that we don't use define_method here, since
     # Ruby 1.8 define_method doesn't work with blocks.
     #
-    # This will andle IO methods only!
+    # This will handle IO methods only!
     #
     def method_missing(method, *args, &block)
       return super(method, *args, &block) unless io_method?(method)
