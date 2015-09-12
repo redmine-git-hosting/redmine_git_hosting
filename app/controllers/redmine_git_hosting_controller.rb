@@ -1,8 +1,10 @@
 class RedmineGitHostingController < ApplicationController
   unloadable
 
+  include XitoliteRepositoryFinder
+
   before_filter :require_login
-  before_filter :set_repository
+  before_filter :find_repository
   before_filter :check_required_permissions
   before_filter :set_current_tab
 
@@ -25,15 +27,8 @@ class RedmineGitHostingController < ApplicationController
   private
 
 
-    def set_repository
-      begin
-        @repository = Repository::Xitolite.find(params[:repository_id])
-      rescue ActiveRecord::RecordNotFound => e
-        render_404
-      else
-        @project = @repository.project
-        render_404 if @project.nil?
-      end
+    def find_repository_param
+      params[:repository_id]
     end
 
 

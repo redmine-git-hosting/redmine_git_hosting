@@ -1,7 +1,9 @@
 class DownloadGitRevisionController < ApplicationController
   unloadable
 
-  before_filter :set_repository
+  include XitoliteRepositoryFinder
+
+  before_filter :find_repository
   before_filter :can_download_git_revision
   before_filter :set_download
   before_filter :validate_download
@@ -22,15 +24,8 @@ class DownloadGitRevisionController < ApplicationController
   private
 
 
-    def set_repository
-      begin
-        @repository = Repository::Xitolite.find(params[:id])
-      rescue ActiveRecord::RecordNotFound => e
-        render_404
-      else
-        @project = @repository.project
-        render_404 if @project.nil?
-      end
+    def find_repository_param
+      params[:id]
     end
 
 

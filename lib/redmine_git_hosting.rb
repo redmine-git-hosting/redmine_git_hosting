@@ -23,6 +23,7 @@ module RedmineGitHosting
                         'reports',
                         'services',
                         'use_cases',
+                        ['controllers', 'concerns'],
                         ['models', 'concerns']
 
 
