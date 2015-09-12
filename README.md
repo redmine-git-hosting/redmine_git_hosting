@@ -23,6 +23,10 @@ The installation tutorial is [here](http://redmine-git-hosting.io/get_started/).
 
 Read the documentation and more on the [project's website](http://redmine-git-hosting.io/).
 
+## Contributors
+
+A big thank to [them](https://github.com/jbox-web/redmine_git_hosting/blob/devel/AUTHORS) for their contribution!
+
 ## Contribute
 
 You can contribute to this plugin in many ways such as :
