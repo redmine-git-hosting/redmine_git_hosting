@@ -15,16 +15,21 @@ module RedmineGitHosting
       module InstanceMethods
 
         def github_payload
-          {
-            id:        revision,
-            message:   comments,
-            timestamp: committed_on,
-            added:     filechanges.select { |c| c.action == 'A' }.map(&:path),
-            modified:  filechanges.select { |c| c.action == 'M' }.map(&:path),
-            removed:   filechanges.select { |c| c.action == 'D' }.map(&:path),
-            url:       url_for_revision(revision),
-            author:    { name: author_name, email: author_email }
-          }
+          data = {}
+          data[:id]        = revision
+          data[:message]   = comments
+          data[:timestamp] = committed_on
+          data[:author]    = author_data
+          data[:added]     = added_files
+          data[:modified]  = modified_files
+          data[:removed]   = removed_files
+          data[:url]       = url_for_revision(revision)
+          data
+        end
+
+
+        def author_data
+          { name: author_name, email: author_email }
         end
 
 
@@ -35,6 +40,26 @@ module RedmineGitHosting
 
         def author_email
           committer.gsub(/\A.*<([^>]+)>.*\z/, '\1')
+        end
+
+
+        def added_files
+          filechanges_by_action('A')
+        end
+
+
+        def modified_files
+          filechanges_by_action('M')
+        end
+
+
+        def removed_files
+          filechanges_by_action('D')
+        end
+
+
+        def filechanges_by_action(action)
+          filechanges.select { |c| c.action == action }.map(&:path)
         end
 
 
