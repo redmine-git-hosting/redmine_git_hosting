@@ -14,7 +14,7 @@ module RedmineGitHosting
 
       module InstanceMethods
 
-        def to_hash
+        def github_payload
           {
             id:        revision,
             message:   comments,

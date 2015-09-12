@@ -77,7 +77,7 @@ module Repositories
         revisions_in_range.each do |rev|
           changeset = repository.find_changeset_by_name(rev)
           next if changeset.nil?
-          commits_list << changeset.to_hash
+          commits_list << changeset.github_payload
         end
         commits_list
       end
