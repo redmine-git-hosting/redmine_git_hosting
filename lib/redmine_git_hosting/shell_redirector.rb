@@ -59,14 +59,14 @@ module RedmineGitHosting
 
 
     def initialize(cmd_str, repo_id, options = {})
-      @my_cmd_str         = cmd_str
-      @my_repo_id         = repo_id
-      @my_options         = options
-      @my_buffer          = ''
-      @my_buffer_overfull = false
-      @my_extra_args      = ''
-      @my_read_stream     = nil
-      @status             = nil
+      @cmd_str     = cmd_str
+      @repo_id     = repo_id
+      @options     = options
+      @buffer      = ''
+      @buffer_full = false
+      @extra_args  = ''
+      @read_stream = nil
+      @status      = nil
 
       if options[:write_stdin]
         @state = WAIT_TO_CHECK
@@ -79,13 +79,13 @@ module RedmineGitHosting
     def startup_shell
       Thread.abort_on_exception = true
       proxy_started = false
-      @wrap_thread = Thread.new(@my_cmd_str, @my_options) { |cmd_str, options|
+      @wrap_thread = Thread.new(@cmd_str, @options) { |cmd_str, options|
         if options[:write_stdin]
           @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) { |io|
             io.binmode
-            io.puts(@my_extra_args)
+            io.puts(@extra_args)
             io.close_write
-            @my_read_stream = io
+            @read_stream = io
 
             proxy_started = true
 
@@ -94,7 +94,7 @@ module RedmineGitHosting
           }
         else
           @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str) { |io|
-            @my_read_stream = io
+            @read_stream = io
 
             proxy_started = true
 
@@ -119,9 +119,9 @@ module RedmineGitHosting
         @wrap_thread.run
         @wrap_thread.join
         @state = DEAD
-        if !@my_buffer_overfull
+        if !@buffer_full
           # Insert result into cache
-          RedmineGitHosting::Cache.set_cache(@my_repo_id, @my_buffer, @my_cmd_str, @my_extra_args)
+          RedmineGitHosting::Cache.set_cache(@repo_id, @buffer, @cmd_str, @extra_args)
         end
       end
       return [@retio, @status]
@@ -134,17 +134,17 @@ module RedmineGitHosting
     # and dynamically defines them as needed.
     #
     def puts(*args)
-      @my_extra_args << args.join("\n") + "\n"
+      @extra_args << args.join("\n") + "\n"
     end
 
 
     def putc(obj)
-      @my_extra_args << retval_to_s(obj)
+      @extra_args << retval_to_s(obj)
     end
 
 
     def write(obj)
-      @my_extra_args << obj.to_s
+      @extra_args << obj.to_s
     end
 
 
@@ -155,10 +155,10 @@ module RedmineGitHosting
 
 
     def close_write
-      cached = RedmineGitHosting::Cache.get_cache(@my_repo_id, @my_cmd_str, @my_extra_args)
+      cached = RedmineGitHosting::Cache.get_cache(@repo_id, @cmd_str, @extra_args)
       if cached
         @state = STRING_IO
-        @my_read_stream = @retio = cached
+        @read_stream = @retio = cached
       else
         startup_shell
       end
@@ -190,16 +190,16 @@ module RedmineGitHosting
         if @state == RUNNING_SHELL
           # Must Divert results into buffer.
           if block_given?
-            @my_read_stream.#{method}(*args) { |value|
+            @read_stream.#{method}(*args) { |value|
               add_to_buffer(value)
               block.call(value)
             }
           else
-            value = @my_read_stream.#{method}(*args)
+            value = @read_stream.#{method}(*args)
             EnumerableRedirector.new(value, self)
           end
         else
-          @my_read_stream.#{method}(*args, &block)
+          @read_stream.#{method}(*args, &block)
         end
       end
       EOF
@@ -209,7 +209,7 @@ module RedmineGitHosting
     def inject_read_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
-        value = @my_read_stream.#{method}(*args)
+        value = @read_stream.#{method}(*args)
         add_to_buffer(value) if @state == RUNNING_SHELL
         value
       end
@@ -220,7 +220,7 @@ module RedmineGitHosting
     def inject_proxy_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
-        @my_read_stream.#{method}(*args, &block)
+        @read_stream.#{method}(*args, &block)
       end
       EOF
     end
@@ -229,7 +229,7 @@ module RedmineGitHosting
     # On-the-fly compilation of any missing functions, including all of the
     # read functions (with and without blocks), which we divert into the buffer
     # for potential caching.  Other functions are compiled as "proxies", which
-    # simply call the corresponding functions on the current read stream (@my_read_stream).
+    # simply call the corresponding functions on the current read stream (@read_stream).
     # In this way, we pretty much get a complete I/O interface which diverts the
     # returns from reads.
     #
@@ -249,7 +249,7 @@ module RedmineGitHosting
       return super(method, *args, &block) unless io_method?(method)
 
       # Shouldn't happen, but might be problem
-      if @my_read_stream.nil?
+      if @read_stream.nil?
         logger.error("Call to #{method} before IO-handlers wrapped.")
         raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Call to #{method} before IO-handlers wrapped."
       end
@@ -276,15 +276,15 @@ module RedmineGitHosting
     class EnumerableRedirector
       include Enumerable
 
-      def initialize(my_enum, my_redirector)
-        @my_enum = my_enum
-        @my_redirector = my_redirector
+      def initialize(enum, redirector)
+        @enum       = enum
+        @redirector = redirector
       end
 
       def each
         return to_enum :each unless block_given?
-        @my_enum.each do |value|
-          @my_redirector.add_to_buffer(value)
+        @enum.each do |value|
+          @redirector.add_to_buffer(value)
           yield value
         end
       end
@@ -292,7 +292,7 @@ module RedmineGitHosting
 
 
     def add_to_buffer(value)
-      return if @my_buffer_overfull
+      return if @buffer_full
       if value.is_a?(Array)
         value.each { |next_value| push_to_buffer(next_value) }
       else
@@ -303,10 +303,10 @@ module RedmineGitHosting
 
     def push_to_buffer(value)
       next_chunk = value.is_a?(Integer) ? value.chr : value
-      if @my_buffer.length + next_chunk.length <= RedmineGitHosting::Cache.max_cache_size
-        @my_buffer << next_chunk
+      if @buffer.length + next_chunk.length <= RedmineGitHosting::Cache.max_cache_size
+        @buffer << next_chunk
       else
-        @my_buffer_overfull = true
+        @buffer_full = true
       end
     end
 
@@ -322,16 +322,16 @@ module RedmineGitHosting
       if @state == RUNNING_SHELL
         # Must Divert results into buffer.
         if block_given?
-          @my_read_stream.send(method, *args) { |value|
+          @read_stream.send(method, *args) { |value|
             add_to_buffer(value)
             block.call(value)
           }
         else
-          value = @my_read_stream.send(method, *args)
+          value = @read_stream.send(method, *args)
           EnumerableRedirector.new(value, self)
         end
       else
-        @my_read_stream.send(method, *args, &block)
+        @read_stream.send(method, *args, &block)
       end
     end
 
@@ -339,7 +339,7 @@ module RedmineGitHosting
     # Class #2 functions (Return of Array, String, or Integer)
     #
     def normal_diverter(method, *args)
-      value = @my_read_stream.send(method, *args)
+      value = @read_stream.send(method, *args)
       add_to_buffer(value) if @state == RUNNING_SHELL
       value
     end
@@ -348,7 +348,7 @@ module RedmineGitHosting
     # Class #3 functions (Everything by read functions)
     #
     def simple_proxy(method, *args, &block)
-      @my_read_stream.send(method, *args, &block)
+      @read_stream.send(method, *args, &block)
     end
 
   end
