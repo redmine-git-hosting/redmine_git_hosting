@@ -26,6 +26,8 @@ require 'rspec/rails'
 ## Load FactoryGirls factories
 Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each { |f| require f }
 
+Dir[Rails.root.join("plugins/*/spec/support/**/*.rb")].each { |f| require f }
+
 ## Configure RSpec
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods

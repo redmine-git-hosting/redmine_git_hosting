@@ -10,14 +10,14 @@ describe RepositoryGitConfigKeysController do
     @project        = FactoryGirl.create(:project)
     @repository     = FactoryGirl.create(:repository_gitolite, :project_id => @project.id)
     @git_config_key = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository.id)
-    @admin_user     = FactoryGirl.create(:user, :admin => true)
     @no_right_user  = FactoryGirl.create(:user)
     @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'gck-test')
+    @member_user    = create_user_with_permissions(@project, [:manage_repository, :create_repository_git_config_keys, :view_repository_git_config_keys, :edit_repository_git_config_keys])
   end
 
 
   def set_admin_session
-    request.session[:user_id] = @admin_user.id
+    request.session[:user_id] = @member_user.id
   end
 
 
@@ -58,7 +58,7 @@ describe RepositoryGitConfigKeysController do
 
     context "with sufficient permissions" do
       it "renders 200" do
-        get :show, :repository_id => @repository.id, :id => @git_config_key.id, :format => 'json', :key => @admin_user.api_key
+        get :show, :repository_id => @repository.id, :id => @git_config_key.id, :format => 'json', :key => @member_user.api_key
         expect(response.status).to eq 200
       end
     end

@@ -33,25 +33,9 @@ class RedmineGitHostingController < ApplicationController
 
 
     def check_required_permissions
-      # Deny access if the current user is not allowed to manage the project's repository
-      if !@project.module_enabled?(:repository)
-        render_403
-      end
-
+      return render_403 if !@project.module_enabled?(:repository)
       return true if User.current.admin?
-
-      not_enough_perms = true
-
-      User.current.roles_for_project(@project).each do |role|
-        if role.allowed_to?(:manage_repository)
-          not_enough_perms = false
-          break
-        end
-      end
-
-      if not_enough_perms
-        render_403
-      end
+      return render_403 unless User.current.allowed_to_manage_repository?(@repository)
     end
 
 
