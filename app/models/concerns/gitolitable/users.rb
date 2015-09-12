@@ -15,20 +15,11 @@ module Gitolitable
 
     def users_for_active_project
       data = {}
-      data[:rewind_users]   = rewind_users
+      data[:rewind_users]   = rewind_users + rewind_deploy_users
       data[:write_users]    = write_users
-      data[:read_users]     = read_users
+      data[:read_users]     = read_users + read_deploy_users
       data[:developer_team] = developer_team
       data[:all_read]       = all_users
-
-      # Add Řepository Deployment keys
-      deployment_credentials.active.each do |cred|
-        if cred.perm == 'RW+'
-          data[:rewind_users] << cred.gitolite_public_key.owner
-        elsif cred.perm == 'R'
-          data[:read_users] << cred.gitolite_public_key.owner
-        end
-      end
 
       # Add other users
       data[:read_users] << 'DUMMY_REDMINE_KEY' if read_users.empty? && write_users.empty? && rewind_users.empty?
@@ -82,6 +73,36 @@ module Gitolitable
 
     def all_users
       @all_users ||= (rewind_users + write_users + read_users).sort
+    end
+
+
+    def rewind_deploy_users
+      deploy_users_for_keys(rewind_deploy_keys)
+    end
+
+
+    def read_deploy_users
+      deploy_users_for_keys(read_deploy_keys)
+    end
+
+
+    def rewind_deploy_keys
+      deploy_keys_by_perm('RW+')
+    end
+
+
+    def read_deploy_keys
+      deploy_keys_by_perm('R')
+    end
+
+
+    def deploy_keys_by_perm(perm)
+      deployment_credentials.active.select { |cred| cred.perm == perm }
+    end
+
+
+    def deploy_users_for_keys(keys)
+      keys.map { |cred| cred.gitolite_public_key.owner }
     end
 
   end
