@@ -10,7 +10,11 @@ permalink: /about/roadmap/
 
 * #### v1.2 (next patch release)
 
-  * [Enhance branch permissions support](https://github.com/jbox-web/redmine_git_hosting/issues/264)
+  * Enhance branch permissions support : [#389](https://github.com/jbox-web/redmine_git_hosting/issues/389), [#414](https://github.com/jbox-web/redmine_git_hosting/issues/414)
+  * Add support for Gitolite options : [#415](https://github.com/jbox-web/redmine_git_hosting/issues/415)
+  * Enhance global repository access : [#465](https://github.com/jbox-web/redmine_git_hosting/issues/465)
+  * Better validation of plugin settings
+  * Cleanup API
 
 * #### v1.1 (current stable)
 
