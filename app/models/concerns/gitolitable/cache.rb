@@ -38,7 +38,7 @@ module Gitolitable
         # <MatchData "blabla2.git" 1:nil 2:nil 3:"blabla2" 4:".git">
         #
         def find_by_path(path, flags = {})
-          if parseit = path.match(/^.*?(([^\/]+)\/)?([^\/]+?)(\.git)?$/)
+          if parseit = path.match(/\A.*?(([^\/]+)\/)?([^\/]+?)(\.git)?\z/)
             if proj = Project.find_by_identifier(parseit[3])
               # return default or first repo with blank identifier (or first Git repo--very rare?)
               proj && (proj.repository || proj.repo_blank_ident || proj.gitolite_repos.first)
