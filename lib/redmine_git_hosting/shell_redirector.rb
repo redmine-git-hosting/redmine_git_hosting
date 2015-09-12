@@ -59,14 +59,15 @@ module RedmineGitHosting
 
 
     def initialize(cmd_str, repo_id, options = {})
-      @my_cmd_str = cmd_str
-      @my_repo_id = repo_id
-      @my_options = options
-      @my_buffer = ""
+      @my_cmd_str         = cmd_str
+      @my_repo_id         = repo_id
+      @my_options         = options
+      @my_buffer          = ''
       @my_buffer_overfull = false
-      @my_extra_args = ""
-      @my_read_stream = nil
-      @status = nil
+      @my_extra_args      = ''
+      @my_read_stream     = nil
+      @status             = nil
+
       if options[:write_stdin]
         @state = WAIT_TO_CHECK
       else
@@ -78,9 +79,9 @@ module RedmineGitHosting
     def startup_shell
       Thread.abort_on_exception = true
       proxy_started = false
-      @wrap_thread = Thread.new(@my_cmd_str, @my_options) {|cmd_str, options|
+      @wrap_thread = Thread.new(@my_cmd_str, @my_options) { |cmd_str, options|
         if options[:write_stdin]
-          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) {|io|
+          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) { |io|
             io.binmode
             io.puts(@my_extra_args)
             io.close_write
@@ -92,7 +93,7 @@ module RedmineGitHosting
             Thread.stop
           }
         else
-          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str) {|io|
+          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str) { |io|
             @my_read_stream = io
 
             proxy_started = true
@@ -131,6 +132,7 @@ module RedmineGitHosting
     # output (write) functions here.  Below, 'method_missing' traps the
     # read functions (since there are a lot of them) and any control functions
     # and dynamically defines them as needed.
+    #
     def puts(*args)
       @my_extra_args << args.join("\n") + "\n"
     end
@@ -147,17 +149,16 @@ module RedmineGitHosting
 
 
     # Ignore this -- must handle it before we have chosen output stream
+    #
     def binmode
     end
 
 
     def close_write
-      # Ok -- now have all the extra args...  Check cache
-      out = RedmineGitHosting::Cache.get_cache(@my_repo_id, @my_cmd_str, @my_extra_args)
-      if out
-        # Match in the cache!
+      cached = RedmineGitHosting::Cache.get_cache(@my_repo_id, @my_cmd_str, @my_extra_args)
+      if cached
         @state = STRING_IO
-        @my_read_stream = @retio = out
+        @my_read_stream = @retio = cached
       else
         startup_shell
       end
@@ -189,13 +190,13 @@ module RedmineGitHosting
         if @state == RUNNING_SHELL
           # Must Divert results into buffer.
           if block_given?
-            @my_read_stream.#{method}(*args) { |myvalue|
-              add_to_buffer(myvalue)
-              block.call(myvalue)
+            @my_read_stream.#{method}(*args) { |value|
+              add_to_buffer(value)
+              block.call(value)
             }
           else
-            myvalue = @my_read_stream.#{method}(*args)
-            EnumerableRedirector.new(myvalue, self)
+            value = @my_read_stream.#{method}(*args)
+            EnumerableRedirector.new(value, self)
           end
         else
           @my_read_stream.#{method}(*args, &block)
@@ -208,9 +209,9 @@ module RedmineGitHosting
     def inject_read_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
-        myvalue = @my_read_stream.#{method}(*args)
-        add_to_buffer(myvalue) if @state == RUNNING_SHELL
-        myvalue
+        value = @my_read_stream.#{method}(*args)
+        add_to_buffer(value) if @state == RUNNING_SHELL
+        value
       end
       EOF
     end
@@ -271,6 +272,7 @@ module RedmineGitHosting
 
     # This class wraps a given enumerator and produces another one
     # that logs all read data into the buffer.
+    #
     class EnumerableRedirector
       include Enumerable
 
@@ -281,28 +283,28 @@ module RedmineGitHosting
 
       def each
         return to_enum :each unless block_given?
-        @my_enum.each do |myvalue|
-          @my_redirector.add_to_buffer(myvalue)
-          yield myvalue
+        @my_enum.each do |value|
+          @my_redirector.add_to_buffer(value)
+          yield value
         end
       end
     end
 
 
-    def add_to_buffer(invalue)
+    def add_to_buffer(value)
       return if @my_buffer_overfull
-      if invalue.is_a?(Array)
-        invalue.each {|nextvalue| push_to_buffer nextvalue}
+      if value.is_a?(Array)
+        value.each { |next_value| push_to_buffer(next_value) }
       else
-        push_to_buffer invalue
+        push_to_buffer(value)
       end
     end
 
 
-    def push_to_buffer(invalue)
-      nextchunk = invalue.is_a?(Integer) ? invalue.chr : invalue
-      if @my_buffer.length + nextchunk.length <= RedmineGitHosting::Cache.max_cache_size
-        @my_buffer << nextchunk
+    def push_to_buffer(value)
+      next_chunk = value.is_a?(Integer) ? value.chr : value
+      if @my_buffer.length + next_chunk.length <= RedmineGitHosting::Cache.max_cache_size
+        @my_buffer << next_chunk
       else
         @my_buffer_overfull = true
       end
@@ -315,35 +317,38 @@ module RedmineGitHosting
     ##############################################################################
 
     # Class #1 functions (Read functions with block/enumerator behavior)
-    def enumerator_diverter(my_method, *args, &block)
+    #
+    def enumerator_diverter(method, *args, &block)
       if @state == RUNNING_SHELL
         # Must Divert results into buffer.
         if block_given?
-          @my_read_stream.send(my_method, *args) {|myvalue|
-            add_to_buffer(myvalue)
-            block.call(myvalue)
+          @my_read_stream.send(method, *args) { |value|
+            add_to_buffer(value)
+            block.call(value)
           }
         else
-          myvalue = @my_read_stream.send(my_method, *args)
-          EnumerableRedirector.new(myvalue, self)
+          value = @my_read_stream.send(method, *args)
+          EnumerableRedirector.new(value, self)
         end
       else
-        @my_read_stream.send(my_method, *args, &block)
+        @my_read_stream.send(method, *args, &block)
       end
     end
 
 
     # Class #2 functions (Return of Array, String, or Integer)
-    def normal_diverter(my_method, *args)
-      myvalue = @my_read_stream.send(my_method, *args)
-      add_to_buffer(myvalue) if @state == RUNNING_SHELL
-      myvalue
+    #
+    def normal_diverter(method, *args)
+      value = @my_read_stream.send(method, *args)
+      add_to_buffer(value) if @state == RUNNING_SHELL
+      value
     end
 
 
     # Class #3 functions (Everything by read functions)
-    def simple_proxy(my_method, *args, &block)
-      @my_read_stream.send(my_method, *args, &block)
+    #
+    def simple_proxy(method, *args, &block)
+      @my_read_stream.send(method, *args, &block)
     end
 
   end
