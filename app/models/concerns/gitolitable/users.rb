@@ -19,7 +19,7 @@ module Gitolitable
       data[:write_users]    = write_users
       data[:read_users]     = read_users
       data[:developer_team] = developer_team
-      data[:all_read]       = all_read
+      data[:all_read]       = all_users
 
       # Add Řepository Deployment keys
       deployment_credentials.active.each do |cred|
@@ -49,7 +49,7 @@ module Gitolitable
 
     def users_for_closed_project
       data = {}
-      data[:read_users] = all_read
+      data[:read_users] = all_users
       data[:read_users] << 'REDMINE_CLOSED_PROJECT'
       data
     end
@@ -80,8 +80,8 @@ module Gitolitable
     end
 
 
-    def all_read
-      @all_read ||= (rewind_users + write_users + read_users).sort
+    def all_users
+      @all_users ||= (rewind_users + write_users + read_users).sort
     end
 
   end
