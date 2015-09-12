@@ -57,26 +57,23 @@ class MirrorKeysInstaller
 
 
   def install_public_key
-    RedmineGitHosting::Commands.sudo_install_file(gitolite_ssh_public_key_content, gitolite_ssh_public_key_dest_path, '644')
-  rescue RedmineGitHosting::Error::GitoliteCommandException => e
-    logger.error("Failed to install Redmine Git Hosting mirroring SSH public key : #{e.output}")
-    false
+    install_file(gitolite_ssh_public_key_content, gitolite_ssh_public_key_dest_path, '644') do
+      logger.error("Failed to install Redmine Git Hosting mirroring SSH public key : #{e.output}")
+    end
   end
 
 
   def install_private_key
-    RedmineGitHosting::Commands.sudo_install_file(gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600')
-  rescue RedmineGitHosting::Error::GitoliteCommandException => e
-    logger.error("Failed to install Redmine Git Hosting mirroring SSH private key : #{e.output}")
-    false
+    install_file(gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600') do
+      logger.error("Failed to install Redmine Git Hosting mirroring SSH private key : #{e.output}")
+    end
   end
 
 
   def install_mirroring_script
-    RedmineGitHosting::Commands.sudo_install_file(mirroring_script_content, RedmineGitHosting::Config.gitolite_mirroring_script, '700')
-  rescue RedmineGitHosting::Error::GitoliteCommandException => e
-    logger.error("Failed to install Redmine Git Hosting mirroring script : #{e.output}")
-    false
+    install_file(mirroring_script_content, RedmineGitHosting::Config.gitolite_mirroring_script, '700') do
+      logger.error("Failed to install Redmine Git Hosting mirroring script : #{e.output}")
+    end
   end
 
 
@@ -118,6 +115,14 @@ class MirrorKeysInstaller
 
     def gitolite_ssh_private_key_dest_path
       File.join(gitolite_home_dir, '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
+    end
+
+
+    def install_file(source, destination, perms, &block)
+      RedmineGitHosting::Commands.sudo_install_file(source, destination, perms)
+    rescue RedmineGitHosting::Error::GitoliteCommandException => e
+      yield
+      false
     end
 
 end
