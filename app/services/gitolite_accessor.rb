@@ -27,7 +27,7 @@ module GitoliteAccessor
 
 
   def create_repository(repository, opts = {})
-    logger.info("User '#{User.current.login}' created a new repository '#{repository.gitolite_repository_name}'")
+    logger.info("User '#{User.current.login}' has created a new repository '#{repository.gitolite_repository_name}'")
     resync_gitolite(:add_repository, repository.id, opts)
   end
 
@@ -44,9 +44,9 @@ module GitoliteAccessor
   end
 
 
-  def destroy_repository(repository)
+  def destroy_repository(repository, opts = {})
     logger.info("User '#{User.current.login}' has removed repository '#{repository.gitolite_repository_name}'")
-    resync_gitolite(:delete_repository, repository.data_for_destruction)
+    resync_gitolite(:delete_repository, repository.data_for_destruction, opts)
   end
 
 
