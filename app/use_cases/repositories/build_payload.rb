@@ -23,6 +23,7 @@ module Repositories
 
       # Returns an array of GitHub post-receive hook style hashes
       # http://help.github.com/post-receive-hooks/
+      #
       def build_payloads
         refs.each do |ref|
           # Get revisions range
@@ -67,79 +68,18 @@ module Repositories
         oldhead, newhead, refname = ref.split(',')
 
         # Build payload hash
-        payload = {
-          :before     => oldhead,
-          :after      => newhead,
-          :ref        => refname,
-          :commits    => build_commits_list(revisions_in_range),
-          :pusher     => {
-            :name  => Setting['app_title'],
-            :email => Setting['mail_from']
-          },
-          :repository => {
-            :description => project.description,
-            :fork        => false,
-            :forks       => 0,
-            :homepage    => project.homepage,
-            :name        => repository.redmine_name,
-            :open_issues => project.issues.open.length,
-            :watchers    => 0,
-            :private     => !project.is_public,
-            :url         => repository_url,
-            :owner       => {
-              :name  => Setting['app_title'],
-              :email => Setting['mail_from']
-            }
-          }
-        }
-
-        payload
+        repository.github_payload.merge({ before: oldhead, after: newhead, ref: refname, commits: build_commits_list(revisions_in_range) })
       end
 
 
       def build_commits_list(revisions_in_range)
         commits_list = []
         revisions_in_range.each do |rev|
-          revision = repository.find_changeset_by_name(rev)
-          next if revision.nil?
-          commits_list << build_commit_entry(revision)
+          changeset = repository.find_changeset_by_name(rev)
+          next if changeset.nil?
+          commits_list << changeset.to_hash
         end
         commits_list
-      end
-
-
-      def build_commit_entry(revision)
-        {
-          :id        => revision.revision,
-          :message   => revision.comments,
-          :timestamp => revision.committed_on,
-          :added     => revision.filechanges.select{|c| c.action == 'A' }.map(&:path),
-          :modified  => revision.filechanges.select{|c| c.action == 'M' }.map(&:path),
-          :removed   => revision.filechanges.select{|c| c.action == 'D' }.map(&:path),
-          :url       => url_for_revision(revision.revision),
-          :author    => {
-            :name  => revision.committer.gsub(/\A([^<]+)\s+.*\z/, '\1'),
-            :email => revision.committer.gsub(/\A.*<([^>]+)>.*\z/, '\1')
-          }
-        }
-      end
-
-
-      def url_for_revision(revision)
-        Rails.application.routes.url_helpers.url_for(
-          controller: 'repositories', action: 'revision',
-          id: project, repository_id: repository.identifier_param, rev: revision,
-          only_path: false, host: Setting['host_name'], protocol: Setting['protocol']
-        )
-      end
-
-
-      def repository_url
-        Rails.application.routes.url_helpers.url_for(
-          controller: 'repositories', action: 'show',
-          id: project, repository_id: repository.identifier_param,
-          only_path: false, host: Setting['host_name'], protocol: Setting['protocol']
-        )
       end
 
 
