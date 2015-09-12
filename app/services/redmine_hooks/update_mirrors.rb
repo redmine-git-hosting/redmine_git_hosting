@@ -7,7 +7,8 @@ module RedmineHooks
         if needs_push?
           out << call_mirror
         else
-          out << "This mirror doesn't need to be updated\n"
+          out << "#{skip_message}\n"
+          logger.info(skip_message)
         end
       end
     end
@@ -29,6 +30,11 @@ module RedmineHooks
 
     def start_message
       "Pushing changes to #{mirror.url}"
+    end
+
+
+    def skip_message
+      "This mirror doesn't need to be updated"
     end
 
 

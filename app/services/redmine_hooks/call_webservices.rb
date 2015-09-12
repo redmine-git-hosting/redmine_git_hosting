@@ -20,7 +20,8 @@ module RedmineHooks
         if needs_push?
           out << call_webservice
         else
-          out << "This url doesn't need to be notified\n"
+          out << "#{skip_message}\n"
+          logger.info(skip_message)
         end
       end
     end
@@ -41,6 +42,11 @@ module RedmineHooks
 
     def start_message
       "Notifying #{post_receive_url.url}"
+    end
+
+
+    def skip_message
+      "This url doesn't need to be notified"
     end
 
 
