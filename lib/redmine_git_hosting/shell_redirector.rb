@@ -170,6 +170,47 @@ module RedmineGitHosting
     end
 
 
+    # This class wraps a given enumerator and produces another one
+    # that logs all read data into the buffer.
+    #
+    class EnumerableRedirector
+      include Enumerable
+
+      def initialize(enum, redirector)
+        @enum       = enum
+        @redirector = redirector
+      end
+
+      def each
+        return to_enum :each unless block_given?
+        @enum.each do |value|
+          @redirector.add_to_buffer(value)
+          yield value
+        end
+      end
+    end
+
+
+    def add_to_buffer(value)
+      return if @buffer_full
+      if value.is_a?(Array)
+        value.each { |next_value| push_to_buffer(next_value) }
+      else
+        push_to_buffer(value)
+      end
+    end
+
+
+    def push_to_buffer(value)
+      next_chunk = value.is_a?(Integer) ? value.chr : value
+      if @buffer.length + next_chunk.length <= RedmineGitHosting::Cache.max_cache_size
+        @buffer << next_chunk
+      else
+        @buffer_full = true
+      end
+    end
+
+
     ###############################################
     # Duck-typing of an IO interface              #
     ###############################################
@@ -181,48 +222,6 @@ module RedmineGitHosting
 
     def io_method?(method)
       IO.instance_methods.map(&:to_sym).include?(method.to_sym)
-    end
-
-
-    def inject_enumerator_method(method)
-      self.class.class_eval <<-EOF, __FILE__, __LINE__
-      def #{method}(*args, &block)
-        if @state == RUNNING_SHELL
-          # Must Divert results into buffer.
-          if block_given?
-            @read_stream.#{method}(*args) { |value|
-              add_to_buffer(value)
-              block.call(value)
-            }
-          else
-            value = @read_stream.#{method}(*args)
-            EnumerableRedirector.new(value, self)
-          end
-        else
-          @read_stream.#{method}(*args, &block)
-        end
-      end
-      EOF
-    end
-
-
-    def inject_read_method(method)
-      self.class.class_eval <<-EOF, __FILE__, __LINE__
-      def #{method}(*args, &block)
-        value = @read_stream.#{method}(*args)
-        add_to_buffer(value) if @state == RUNNING_SHELL
-        value
-      end
-      EOF
-    end
-
-
-    def inject_proxy_method(method)
-      self.class.class_eval <<-EOF, __FILE__, __LINE__
-      def #{method}(*args, &block)
-        @read_stream.#{method}(*args, &block)
-      end
-      EOF
     end
 
 
@@ -270,44 +269,45 @@ module RedmineGitHosting
     end
 
 
-    # This class wraps a given enumerator and produces another one
-    # that logs all read data into the buffer.
-    #
-    class EnumerableRedirector
-      include Enumerable
-
-      def initialize(enum, redirector)
-        @enum       = enum
-        @redirector = redirector
-      end
-
-      def each
-        return to_enum :each unless block_given?
-        @enum.each do |value|
-          @redirector.add_to_buffer(value)
-          yield value
+    def inject_enumerator_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        if @state == RUNNING_SHELL
+          # Must Divert results into buffer.
+          if block_given?
+            @read_stream.#{method}(*args) { |value|
+              add_to_buffer(value)
+              block.call(value)
+            }
+          else
+            value = @read_stream.#{method}(*args)
+            EnumerableRedirector.new(value, self)
+          end
+        else
+          @read_stream.#{method}(*args, &block)
         end
       end
+      EOF
     end
 
 
-    def add_to_buffer(value)
-      return if @buffer_full
-      if value.is_a?(Array)
-        value.each { |next_value| push_to_buffer(next_value) }
-      else
-        push_to_buffer(value)
+    def inject_read_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        value = @read_stream.#{method}(*args)
+        add_to_buffer(value) if @state == RUNNING_SHELL
+        value
       end
+      EOF
     end
 
 
-    def push_to_buffer(value)
-      next_chunk = value.is_a?(Integer) ? value.chr : value
-      if @buffer.length + next_chunk.length <= RedmineGitHosting::Cache.max_cache_size
-        @buffer << next_chunk
-      else
-        @buffer_full = true
+    def inject_proxy_method(method)
+      self.class.class_eval <<-EOF, __FILE__, __LINE__
+      def #{method}(*args, &block)
+        @read_stream.#{method}(*args, &block)
       end
+      EOF
     end
 
 
