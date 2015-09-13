@@ -12,9 +12,8 @@ describe GitolitePublicKey do
 
 
   before(:all) do
-    users = FactoryGirl.create_list(:user, 2)
-    @user1 = users[0]
-    @user2 = users[1]
+    @user1 = create_user('git_user1')
+    @user2 = create_user('git_user2')
   end
 
 
@@ -22,20 +21,10 @@ describe GitolitePublicKey do
   # Try to workaround it...
   def test_user
     if Redmine::VERSION.to_s.include?('2.6')
-      'redmine_user13_15'
+      'redmine_git_user1_21'
     else
       'redmine_user13_13'
     end
-  end
-
-
-  def build_ssh_key(opts = {})
-    FactoryGirl.build(:gitolite_public_key, opts)
-  end
-
-
-  def create_ssh_key(opts = {})
-    FactoryGirl.create(:gitolite_public_key, opts)
   end
 
 
@@ -123,74 +112,72 @@ describe GitolitePublicKey do
 
 
   describe "Valid SSH key creation" do
-    before do
-      @ssh_key = create_ssh_key(:user_id => @user1.id)
-    end
+    let(:ssh_key) { create_ssh_key(user_id: @user1.id) }
 
-    subject { @ssh_key }
+    subject { ssh_key }
 
     it "has an identifier" do
-      expect(@ssh_key.identifier).to eq "#{test_user}@redmine_test_key"
+      expect(ssh_key.identifier).to eq "#{test_user}@redmine_test_key"
     end
 
     it "has a fingerprint" do
-      expect(@ssh_key.fingerprint).to eq "af:af:da:41:5f:7e:6b:dd:e3:d9:bc:78:a6:8a:fc:be"
+      expect(ssh_key.fingerprint).to eq "af:af:da:41:5f:7e:6b:dd:e3:d9:bc:78:a6:8a:fc:be"
     end
 
     it "has a owner" do
-      expect(@ssh_key.owner).to eq "#{test_user}"
+      expect(ssh_key.owner).to eq "#{test_user}"
     end
 
     it "has a location" do
-      expect(@ssh_key.location).to eq "redmine_test_key"
+      expect(ssh_key.location).to eq "redmine_test_key"
     end
 
     it "has a gitolite_path" do
-      expect(@ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/#{test_user}/redmine_test_key/#{test_user}.pub"
+      expect(ssh_key.gitolite_path).to eq "keydir/redmine_git_hosting/#{test_user}/redmine_test_key/#{test_user}.pub"
     end
 
     it "it has data hash for destruction" do
       valid_hash = { key: SSH_KEY_0, location: 'redmine_test_key', owner: test_user, title: "#{test_user}@redmine_test_key" }
-      expect(@ssh_key.data_for_destruction).to eq valid_hash
+      expect(ssh_key.data_for_destruction).to eq valid_hash
     end
 
     context "when identifier is changed" do
-      before { @ssh_key.identifier = "foo" }
+      before { ssh_key.identifier = "foo" }
       it { should_not be_valid }
     end
 
     context "when key is changed" do
-      before { @ssh_key.key = "foo" }
+      before { ssh_key.key = "foo" }
       it { should_not be_valid }
     end
 
     context "when user_id is changed" do
-      before { @ssh_key.user_id = @user2.id }
+      before { ssh_key.user_id = @user2.id }
       it { should_not be_valid }
     end
 
     context "when key_type is changed" do
-      before { @ssh_key.key_type = 1 }
+      before { ssh_key.key_type = 1 }
       it { should_not be_valid }
     end
 
     # Test reset_identifiers
     context "when identifiers are reset" do
       before do
-        @old_identifier = @ssh_key.identifier
-        @old_fingerprint = @ssh_key.fingerprint
+        @old_identifier = ssh_key.identifier
+        @old_fingerprint = ssh_key.fingerprint
 
-        @ssh_key.reset_identifiers
+        ssh_key.reset_identifiers
       end
 
       it { should be_valid }
 
       it "should have the same identifier" do
-        expect(@ssh_key.identifier).to eq @old_identifier
+        expect(ssh_key.identifier).to eq @old_identifier
       end
 
       it "should have the same fingerprint" do
-        expect(@ssh_key.fingerprint).to eq @old_fingerprint
+        expect(ssh_key.fingerprint).to eq @old_fingerprint
       end
     end
   end
@@ -206,7 +193,7 @@ describe GitolitePublicKey do
 
       ssh_keys.each do |valid_key|
         it "should be valid" do
-          expect(build(:gitolite_public_key, :key => valid_key)).to be_valid
+          expect(build(:gitolite_public_key, key: valid_key)).to be_valid
         end
       end
     end
@@ -214,71 +201,66 @@ describe GitolitePublicKey do
 
 
   context "when SSH key already exist" do
-    before do
-      @ssh_key = create_ssh_key(:user_id => @user1.id)
-    end
+    before { create_ssh_key(user_id: @user1.id) }
 
     ## Test uniqueness validation
-    describe "and title is already taken" do
-      it { expect(build_ssh_key(:user_id => @user1.id, :key => SSH_KEY_1)).not_to be_valid }
+    context "and title is already taken" do
+      it { expect(build_ssh_key(user_id: @user1.id, key: SSH_KEY_1)).not_to be_valid }
     end
 
-    describe "and is already taken by someone" do
-      it { expect(build_ssh_key(:user_id => @user1.id, :title => 'foo')).not_to be_valid }
+    context "and is already taken by someone" do
+      it { expect(build_ssh_key(user_id: @user1.id, title: 'foo')).not_to be_valid }
     end
 
-    describe "and is already taken by current user" do
-      before do
+    context "and is already taken by current user" do
+      it "should_not be_valid" do
         User.current = @user1
+        expect(build_ssh_key(user_id: @user1.id, title: 'foo')).not_to be_valid
       end
-
-      it { expect(build_ssh_key(:user_id => @user1.id, :title => 'foo')).not_to be_valid }
     end
 
-    describe "and is already taken by other user and current user is admin" do
-      before do
+    context "and is already taken by other user and current user is admin" do
+      it "should_not be_valid" do
         @user2.admin = true
         User.current = @user2
+        expect(build_ssh_key(user_id: @user1.id, title: 'foo')).not_to be_valid
       end
-
-      it { expect(build_ssh_key(:user_id => @user1.id, :title => 'foo')).not_to be_valid }
     end
 
-    describe "and is already taken by other user and current user is not admin" do
-      before do
+    context "and is already taken by other user and current user is not admin" do
+      it "should_not be_valid" do
         User.current = @user2
+        expect(build_ssh_key(user_id: @user1.id, title: 'foo')).not_to be_valid
       end
-
-      it { expect(build_ssh_key(:user_id => @user1.id, :title => 'foo')).not_to be_valid }
     end
   end
 
 
   context "when Gitolite Admin ssh key is reused" do
     it "should not be valid" do
-      expect(build_ssh_key(:user_id => @user1.id, :title => 'foo', :key => File.read(RedmineGitHosting::Config.gitolite_ssh_public_key))).not_to be_valid
+      expect(build_ssh_key(user_id: @user1.id, title: 'foo', key: File.read(RedmineGitHosting::Config.gitolite_ssh_public_key))).not_to be_valid
     end
   end
 
 
   context "when many keys are saved" do
     before do
-      create_ssh_key(:user => @user1, :title => 'active1', key: SSH_KEY_1, :key_type => 1)
-      create_ssh_key(:user => @user1, :title => 'active2', key: SSH_KEY_2, :key_type => 1)
-      create_ssh_key(:user => @user2, :title => 'active3', key: SSH_KEY_3)
-      create_ssh_key(:user => @user2, :title => 'active4', key: SSH_KEY_4)
+      create_ssh_key(user: @user1, title: 'active1', key: SSH_KEY_1, key_type: 1)
+      create_ssh_key(user: @user1, title: 'active2', key: SSH_KEY_2, key_type: 1)
+      create_ssh_key(user: @user2, title: 'active3', key: SSH_KEY_3)
+      create_ssh_key(user: @user2, title: 'active4', key: SSH_KEY_4)
     end
 
-    it "should have 8 keys" do
-      expect(GitolitePublicKey.all.length).to be == 8
+    it "should have 6 keys" do
+      expect(GitolitePublicKey.all.length).to be == 6
     end
 
-    it "should have 3 user keys" do
-      expect(GitolitePublicKey.user_key.length).to be == 3
+    it "should have 2 user keys" do
+      expect(GitolitePublicKey.user_key.length).to be == 2
     end
 
-    it "should have 5 deploy keys" do
-      expect(GitolitePublicKey.deploy_key.length).to be == 5
+    it "should have 4 deploy keys" do
+      expect(GitolitePublicKey.deploy_key.length).to be == 4
     end
 
     it "user1 should have 2 keys" do
