@@ -1,41 +1,15 @@
 class GoRedirectorController < ApplicationController
   unloadable
 
+  include XitoliteRepositoryFinder
+
   # prevents login action to be filtered by check_if_login_required application scope filter
   skip_before_filter :check_if_login_required, :verify_authenticity_token
 
-  before_filter :find_repository
+  before_filter :find_xitolite_repository_by_path
 
 
   def index
   end
-
-
-  private
-
-
-    def find_repository
-      repository = Repository::Xitolite.find_by_path(repo_path, loose: true)
-      if repository.nil?
-        logger.error("GoRedirector : repository not found at path : '#{repo_path}', exiting !")
-        render_404
-      elsif !repository.go_access_available?
-        logger.error("GoRedirector : GoAccess is disabled for this repository '#{repository.gitolite_repository_name}', exiting !")
-        render_403
-      else
-        logger.info("GoRedirector : access granted for repository '#{repository.gitolite_repository_name}'")
-        @repository = repository
-      end
-    end
-
-
-    def repo_path
-      params[:repo_path] + '.git'
-    end
-
-
-    def logger
-      RedmineGitHosting.logger
-    end
 
 end
