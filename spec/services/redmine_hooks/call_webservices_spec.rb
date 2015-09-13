@@ -2,33 +2,29 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe RedmineHooks::CallWebservices do
 
-  GLOBAL_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../../fixtures/global_payload.yml')))
-  MASTER_PAYLOAD   = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../../fixtures/master_payload.yml')))
-  BRANCHES_PAYLOAD = YAML::load(File.open(File.expand_path(File.dirname(__FILE__) + '/../../fixtures/branches_payload.yml')))
-
+  let(:global_payload){ load_yaml_fixture('global_payload.yml') }
+  let(:master_payload){ load_yaml_fixture('master_payload.yml') }
+  let(:branches_payload){ load_yaml_fixture('branches_payload.yml') }
 
   describe '#needs_push' do
-    let(:post_receive_url){ build(:repository_post_receive_url) }
-
     context 'when payload is empty' do
       it 'shoud return false' do
-        web_hook = RedmineHooks::CallWebservices.new(post_receive_url, [])
+        web_hook = build_web_hook([])
         expect(web_hook.needs_push?).to be false
       end
     end
 
     context 'when triggers are not used' do
       it 'should return the global payload to push' do
-        web_hook = RedmineHooks::CallWebservices.new(post_receive_url, GLOBAL_PAYLOAD)
+        web_hook = build_web_hook(global_payload)
         expect(web_hook.needs_push?).to be true
-        expect(web_hook.payloads_to_send).to eq GLOBAL_PAYLOAD
+        expect(web_hook.payloads_to_send).to eq global_payload
       end
     end
 
     context 'when triggers are empty' do
       it 'should return the global payload to push' do
-        post_receive_url.use_triggers = true
-        web_hook = RedmineHooks::CallWebservices.new(post_receive_url, GLOBAL_PAYLOAD)
+        web_hook = build_web_hook(global_payload, use_triggers: true)
         expect(web_hook.needs_push?).to be false
         expect(web_hook.payloads_to_send).to eq []
       end
@@ -36,19 +32,15 @@ describe RedmineHooks::CallWebservices do
 
     context 'when triggers is set to master' do
       it 'should return the master payload' do
-        post_receive_url.use_triggers = true
-        post_receive_url.triggers = ['master']
-        web_hook = RedmineHooks::CallWebservices.new(post_receive_url, GLOBAL_PAYLOAD)
+        web_hook = build_web_hook(global_payload, use_triggers: true, triggers: ['master'])
         expect(web_hook.needs_push?).to be true
-        expect(web_hook.payloads_to_send).to eq MASTER_PAYLOAD
+        expect(web_hook.payloads_to_send).to eq master_payload
       end
     end
 
     context 'when triggers is set to master' do
       it 'should not be found in branches payload and return false' do
-        post_receive_url.use_triggers = true
-        post_receive_url.triggers = ['master']
-        web_hook = RedmineHooks::CallWebservices.new(post_receive_url, BRANCHES_PAYLOAD)
+        web_hook = build_web_hook(branches_payload, use_triggers: true, triggers: ['master'])
         expect(web_hook.needs_push?).to be false
       end
     end

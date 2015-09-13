@@ -98,4 +98,25 @@ module GlobalHelpers
     repository.extra.save!
   end
 
+
+  def build_mirror_pusher(opts = {})
+    mirror = build(:repository_mirror, opts)
+    RepositoryMirrors::Push.new(mirror)
+  end
+
+
+  def build_web_hook(payload, opts = {})
+    post_receive_url = build(:repository_post_receive_url, opts)
+    RedmineHooks::CallWebservices.new(post_receive_url, payload)
+  end
+
+
+  def load_yaml_fixture(fixture)
+    YAML::load(load_fixture(fixture))
+  end
+
+
+  def load_fixture(fixture)
+    File.read(RedmineGitHosting.plugin_spec_dir('fixtures', fixture))
+  end
 end

@@ -62,6 +62,11 @@ module RedmineGitHosting
     end
 
 
+    def plugin_spec_dir(*dirs)
+      plugin_dir('spec', *dirs)
+    end
+
+
     def load_plugin!
       autoload_libs!
       autoload_paths!
