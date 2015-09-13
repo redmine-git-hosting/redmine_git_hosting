@@ -52,6 +52,11 @@ module RedmineGitHosting
     end
 
 
+    def plugin_locales_dir
+      plugin_conf_dir('locales', '**', '*.yml')
+    end
+
+
     def required_lib_dirs
       plugin_lib_dir(plugin_name, '**', '*.rb')
     end
@@ -64,10 +69,15 @@ module RedmineGitHosting
     end
 
 
+    def hook_file?(file)
+      File.dirname(file) == plugin_hooks_dir.to_s
+    end
+
+
     def autoload_libs!
       Dir.glob(required_lib_dirs).each do |file|
         # Exclude Redmine Views Hooks from Rails loader to avoid multiple calls to hooks on reload in dev environment.
-        require_dependency file unless File.dirname(file) == plugin_hooks_dir.to_s
+        require_dependency file unless hook_file?(file)
       end
     end
 
@@ -80,7 +90,7 @@ module RedmineGitHosting
 
 
     def autoload_locales!
-      ::I18n.load_path += Dir.glob(plugin_conf_dir('locales', '**', '*.yml'))
+      ::I18n.load_path += Dir.glob(plugin_locales_dir)
     end
 
   end
