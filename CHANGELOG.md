@@ -1,12 +1,12 @@
-# CHANGELOG
+## CHANGELOG
 
-## 1.1.4 - 2015-09-15
+### 1.1.4 - 2015-09-15
 
 * Merge [#505](https://github.com/jbox-web/redmine_git_hosting/pull/505) ([Core] Added an error message in case that something as broken the temp directory)
 * Fix #<TypeError: no implicit conversion of nil into String> when triggers are enabled on PostReceiveUrls and pushing on a non-triggering branch
 * Fix #<TypeError: no implicit conversion of nil into String> when triggers (refspec) are enabled on RepositoryMirrors and pushing on a non-triggering branch
 
-## 1.1.3 - 2015-08-30
+### 1.1.3 - 2015-08-30
 
 * Merge [#350](https://github.com/jbox-web/redmine_git_hosting/pull/350) ([Core] return [] if error occured on branches or tags check)
 * Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) ([Views] 404 on the "My public keys" link in the user panel when Redmine is installed in a subpath)
@@ -14,12 +14,12 @@
 * Fix [#501](https://github.com/jbox-web/redmine_git_hosting/issues/501) ([Controllers] Download Git Revision Archive for Anonymous user redirect to login page)
 * Fix [#502](https://github.com/jbox-web/redmine_git_hosting/issues/502) ([Core] Issues with Git 1.7.1)
 
-## 1.1.2 - 2015-08-21
+### 1.1.2 - 2015-08-21
 
 * Fix [#459](https://github.com/jbox-web/redmine_git_hosting/issues/459) ([Install] Undefined method `urls_order' for #RepositoryGitExtra during migrations)
 * Merge [#491](https://github.com/jbox-web/redmine_git_hosting/pull/491) ([Views] Fix css spacer bug for compatibility with core css)
 
-## 1.1.1 - 2015-06-29
+### 1.1.1 - 2015-06-29
 
 * Display Rugged infos in Config test tab
 * Display Rugged features status (present/absent) in Config test tab
@@ -27,7 +27,7 @@
 * Add [#464](https://github.com/jbox-web/redmine_git_hosting/pull/464) ([Views] Fix display of git_annex urls)
 * Add [#466](https://github.com/jbox-web/redmine_git_hosting/pull/466) ([Core] In case of git command failure, log the actual command line)
 
-## 1.1.0 - 2015-06-06
+### 1.1.0 - 2015-06-06
 
 * Add [#417](https://github.com/jbox-web/redmine_git_hosting/issues/417) ([Views] Define order of repository urls)
 * Add [#426](https://github.com/jbox-web/redmine_git_hosting/issues/426) ([Views] Direct link to repository settings page on sidebar)
@@ -45,21 +45,21 @@
 * Add unique index on fingerprint field
 * Various small fixes
 
-## 1.0.7 - 2015-06-06
+### 1.0.7 - 2015-06-06
 
 * Fix [#450](https://github.com/jbox-web/redmine_git_hosting/issues/450) (Github webhook return 404 error)
 * Display Rugged infos in Config test tab
 
-## 1.0.6 - 2015-06-04
+### 1.0.6 - 2015-06-04
 
 * Validate that people don't reuse Gitolite Admin key
 
-## 1.0.5 - 2015-05-31
+### 1.0.5 - 2015-05-31
 
 * Fix [#418](https://github.com/jbox-web/redmine_git_hosting/issues/418) ([Rugged] On delete deploy key: Rugged::NetworkError)
 * Fix [#430](https://github.com/jbox-web/redmine_git_hosting/issues/430) ([User] Error when trying to update user details)
 
-## 1.0.4 - 2015-04-10
+### 1.0.4 - 2015-04-10
 
 * Fix [#404](https://github.com/jbox-web/redmine_git_hosting/issues/404) ([Git cache] "Until next commit" param is broken for Redis adapter)
 * Fix [#406](https://github.com/jbox-web/redmine_git_hosting/issues/406) ([Protected Branch] Protected Branch Name Must be Unique Across Projects)
@@ -67,7 +67,7 @@
 * Fix [#413](https://github.com/jbox-web/redmine_git_hosting/issues/413) ([Repository view] Missing repo source in repo instructions)
 * Add [#410](https://github.com/jbox-web/redmine_git_hosting/issues/410) ([Protected Branch] Gray protected branches if not enabled by repo flag)
 
-## 1.0.3 - 2015-04-01
+### 1.0.3 - 2015-04-01
 
 * Fix [#322](https://github.com/jbox-web/redmine_git_hosting/issues/322) ([Statistics view] PG::GroupingError: ERROR: column "changesets.id" must appear in the GROUP BY clause)
 * Fix [#334](https://github.com/jbox-web/redmine_git_hosting/issues/334) ([Translations] English locale file still contains French messages)
@@ -107,7 +107,7 @@ redmine$ rm -rf *
 
 * Deployment keys permissions has been renamed (from ```*_deployment_keys``` to ```*_repository_deployment_credentials```) so you will have to restore these permissions in *Administration -> Roles*.
 
-## 1.0.2 - 2015-03-14
+### 1.0.2 - 2015-03-14
 
 * Merge [#348](https://github.com/jbox-web/redmine_git_hosting/pull/348) (Use Redmine setting for Git command)
 * Fix [#345](https://github.com/jbox-web/redmine_git_hosting/issues/345) (HTTPS Push, Popen : wrong number of arguments, Ruby 1.9 compatibility)
@@ -144,7 +144,7 @@ redmine$ rm -rf *
 * Since [support of Ruby 1.9.x has ended](https://www.ruby-lang.org/en/news/2014/01/10/ruby-1-9-3-will-end-on-2015/), **we won't support Ruby 1.9.x anymore**.
 We highly recommend that you upgrade to Ruby 2.1 or 2.0.0 as soon as possible.
 
-## 1.0.1 - 2015-02-23
+### 1.0.1 - 2015-02-23
 
 * Fix archive name in DownloadGitRevision
 * Fix [#331](https://github.com/jbox-web/redmine_git_hosting/issues/331) (Internal Server Error on user details)
@@ -155,7 +155,7 @@ We highly recommend that you upgrade to Ruby 2.1 or 2.0.0 as soon as possible.
 
 * Add link to repositories in Project overview
 
-## 1.0.0 - 2015-01-26
+### 1.0.0 - 2015-01-26
 
 This new version is the first one of the v1.0 branch!
 
@@ -231,7 +231,7 @@ gitolite-admin.git/
     └── redmine_gitolite_admin_id_rsa.pub
 ```
 
-## 0.7.10 - 2015-01-26
+### 0.7.10 - 2015-01-26
 
 * Fix [#324](https://github.com/jbox-web/redmine_git_hosting/issues/324) (Unable to flag repository as Main)
 * Fix [#326](https://github.com/jbox-web/redmine_git_hosting/issues/326) (Error occurred while loading the routes definition)
@@ -251,7 +251,7 @@ gitolite-admin.git/
 
   It includes a Rake task that prepare the migration to 1.0, so **don't miss that step!**
 
-## 0.7.9 - 2014-12-29
+### 0.7.9 - 2014-12-29
 
 * Fix [#218](https://github.com/jbox-web/redmine_git_hosting/issues/218) (I18n warnings)
 * Fix [#288](https://github.com/jbox-web/redmine_git_hosting/issues/288) (wrong deployment key identifier attribution that may lead to a security issue)
@@ -261,7 +261,7 @@ gitolite-admin.git/
 * Better handling of errors on git commit
 * Add Rake task to prepare migration to V1.0
 
-## 0.7.8 - 2014-11-08
+### 0.7.8 - 2014-11-08
 
 * Fix collision in method name with Redmine Jenkins Plugin
 * Backport patch from [pull #266](https://github.com/jbox-web/redmine_git_hosting/pull/266)
@@ -284,7 +284,7 @@ You'll also have to update your ```.gitolite.rc``` accordingly :
 
     LOCAL_CODE  =>  "$ENV{HOME}/local"
 
-## 0.7.7 - 2014-09-10
+### 0.7.7 - 2014-09-10
 
 * Merge [#259](https://github.com/jbox-web/redmine_git_hosting/pull/259) (Some (very old) repositories have been indentified as empty)
 * Merge [#223](https://github.com/jbox-web/redmine_git_hosting/pull/223) (Fix https:// notifications if TLSvX is mandatory #223)
@@ -314,17 +314,17 @@ Until this version, the plugin silently failed when pushing data to Gitolite Adm
 [GitWorker]
 ```
 
-## 0.7.6 - 2014-07-17
+### 0.7.6 - 2014-07-17
 
 * Bump to jbox-gitolite 1.2.3 which depends on [gitlab-grit 2.7.0](https://github.com/gitlabhq/grit/blob/master/History.txt)
 * Fix [#207](https://github.com/jbox-web/redmine_git_hosting/issues/207) (gitolite-admin does not sync anymore) and his brothers
 
-## 0.7.5 - 2014-07-14
+### 0.7.5 - 2014-07-14
 
 * Fix [#226](https://github.com/jbox-web/redmine_git_hosting/issues/226) (unable to download revision if branch has a '/' in the name)
 * Fix [#230](https://github.com/jbox-web/redmine_git_hosting/issues/230) (Unwanted access to gitolite-admin repository)
 
-## 0.7.4 - 2014-07-04
+### 0.7.4 - 2014-07-04
 
 * Fix [#184](https://github.com/jbox-web/redmine_git_hosting/issues/184 ) (truncated Bootstrap Switches)
 * Fix [#211](https://github.com/jbox-web/redmine_git_hosting/issues/211) (mixed up dates in contributors statistics graph)
@@ -332,7 +332,7 @@ Until this version, the plugin silently failed when pushing data to Gitolite Adm
 * Fix [#225](https://github.com/jbox-web/redmine_git_hosting/issues/225) (unable to set new repository deployment credentials)
 * Set extra_info field when auto-creating repo with project
 
-## 0.7.3 - 2014-06-11
+### 0.7.3 - 2014-06-11
 
 * Fix [#144](https://github.com/jbox-web/redmine_git_hosting/issues/144) (redcarpet dependency)
 * Bump to jbox-gitolite 1.2.2
@@ -348,12 +348,12 @@ Until this version, the plugin silently failed when pushing data to Gitolite Adm
 
 You're invited to take a look at this [post](https://github.com/jbox-web/redmine_git_hosting/issues/199).
 
-## 0.7.2 - 2014-04-16
+### 0.7.2 - 2014-04-16
 
 * Fix [#160](https://github.com/jbox-web/redmine_git_hosting/issues/160)
 * Fix [#169](https://github.com/jbox-web/redmine_git_hosting/issues/169)
 
-## 0.7.1 - 2014-04-14
+### 0.7.1 - 2014-04-14
 
 * Remove ENV['HOME'] dependency
 * Remove Git config file dependency
@@ -365,7 +365,7 @@ You're invited to take a look at this [post](https://github.com/jbox-web/redmine
 * Various small fixes
 * Use last version of [jbox-gitolite](http://rubygems.org/gems/jbox-gitolite) gem (1.1.11)
 
-## 0.7.0 - 2014-04-02
+### 0.7.0 - 2014-04-02
 
 * remove Redmine 1.x support
 * remove Rails 2.x support
@@ -387,7 +387,7 @@ You're invited to take a look at this [post](https://github.com/jbox-web/redmine
 * add Bootstrap CSS
 * add Font Awesome icons
 
-## 0.6.3 - 2014-02-23
+### 0.6.3 - 2014-02-23
 
 This is a bugfix release.
 
@@ -395,7 +395,7 @@ This is the last release of the 0.6.x branch.
 
 The 'v0.6' is kept as archive and will be no longer supported.
 
-## 0.6.2 - 2013-07-29
+### 0.6.2 - 2013-07-29
 
 This is a security and bugfix release.
 
@@ -403,17 +403,17 @@ This releases fixes a high risk vulnerability, allowing an attacker to gain shel
 
 We strongly advise you to update your plugin!
 
-## 0.6.1 - 2013-04-05
+### 0.6.1 - 2013-04-05
 
 This is a bugfix release.
 
-## 0.6.0 - 2013-03-25
+### 0.6.0 - 2013-03-25
 
 This is a compatibility release.
 
 The plugin is now compatible with Redmine 2.x (and Redmine 1.x).
 
-## 0.5.2 - 2012-12-25
+### 0.5.2 - 2012-12-25
 
 This is a bug-fix release.
 
@@ -424,7 +424,7 @@ This is a bug-fix release.
 * Fix to preserve other administrative keys in the gitolite configuration file.  Previously, the plugin would delete all but the first one.  This fix is useful for people who want to have separate administrative keys for access to the gitolite config file.
 * Fixed weird behavior on Repository page when using multiple repos/project.  Showed up when on non-default repo when trying to switch to branch other than master.  Would switch back to default repository.
 
-## 0.5.1 - 2012-10-31
+### 0.5.1 - 2012-10-31
 
 This is a bug-fix release.
 
@@ -434,7 +434,7 @@ This is a bug-fix release.
 * Patched installation so that can install Redmine from *scratch* (i.e. run `rake db:migrate` on empty DB) with plugin already in place.
 * Latest migration should now work with PostGreSQL.  This was broken in 0.5.0x.
 
-## 0.5.0 - 2012-10-03
+### 0.5.0 - 2012-10-03
 
 This is a feature release.
 
@@ -442,7 +442,7 @@ This is a feature release.
 * Fix : Uninstall of plugin should work properly now.
 * Fix : Problems with patching on some installations should be fixed now (introduced in a recent revision).
 
-## 0.4.6 - 2012-08-22
+### 0.4.6 - 2012-08-22
 
 This is a feature release.
 
@@ -465,12 +465,12 @@ that only **managers** (or **administrators**) can create deployment credentials
 
 Prior to this, repository module deselection was treated inconsistently.
 
-## 0.4.5 - 2012-04-23
+### 0.4.5 - 2012-04-23
 
 * Fixed missed case for compatibility with Redmine 1.1-Stable.  This patch allows the mirror functionality to work.
 * Fixed bad interaction between cron cleanup of /tmp and access to gitolite-admin repository in /tmp.  Behavior could cause user keys to appear to be deleted, even though they remain in the redmine database.  This behavior has likely been a part of this plugin since before this branch was forked (pre 0.4.2).
 
-## 0.4.4 - 2012-04-01
+### 0.4.4 - 2012-04-01
 
 This release includes feature enhancements and bug fixes.
 
@@ -488,7 +488,7 @@ Compatibility with Redmine 1.1-Stable. A couple of patches were included to perm
 * Fix : Better handling of null-buffer condition in smart-http.
 * Fix : Fixed language tags in localization files.
 
-## 0.4.3 - 2012-02-01
+### 0.4.3 - 2012-02-01
 
 This release includes feature enhancements and bug fixes.
 
@@ -509,7 +509,7 @@ This code is now explicitly compatible with Redmine 1.3-stable.
 * Git Server parameter now supports a port specification.
 * Other bug fuxes: mirrors now report status properly.
 
-## 0.4.2 - 2011-12-01
+### 0.4.2 - 2011-12-01
 
 This release includes feature enhancements and bug fixes.
 
