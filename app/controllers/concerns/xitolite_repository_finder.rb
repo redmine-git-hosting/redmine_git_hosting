@@ -1,7 +1,7 @@
 module XitoliteRepositoryFinder
   extend ActiveSupport::Concern
 
-  def find_repository
+  def find_xitolite_repository
     begin
       @repository = Repository::Xitolite.find(find_repository_param)
     rescue ActiveRecord::RecordNotFound => e

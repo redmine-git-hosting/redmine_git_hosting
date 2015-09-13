@@ -4,7 +4,7 @@ class RedmineGitHostingController < ApplicationController
   include XitoliteRepositoryFinder
 
   before_filter :require_login
-  before_filter :find_repository
+  before_filter :find_xitolite_repository
   before_filter :check_required_permissions
   before_filter :set_current_tab
 
