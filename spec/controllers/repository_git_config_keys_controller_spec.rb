@@ -12,7 +12,7 @@ describe RepositoryGitConfigKeysController do
     @git_config_key = FactoryGirl.create(:repository_git_config_key, :repository_id => @repository.id)
     @no_right_user  = FactoryGirl.create(:user)
     @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'gck-test')
-    @member_user    = create_user_with_permissions(@project, [:manage_repository, :create_repository_git_config_keys, :view_repository_git_config_keys, :edit_repository_git_config_keys])
+    @member_user    = create_user_with_permissions(@project, permissions: [:manage_repository, :create_repository_git_config_keys, :view_repository_git_config_keys, :edit_repository_git_config_keys])
   end
 
 

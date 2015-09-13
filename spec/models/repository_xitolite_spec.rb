@@ -24,17 +24,6 @@ describe Repository::Xitolite do
   end
 
 
-  def create_user_with_permissions(project)
-    role = FactoryGirl.create(:role)
-    user = FactoryGirl.create(:user, login: 'redmine-test-user')
-
-    members = Member.new(role_ids: [role.id], user_id: user.id)
-    project.members << members
-
-    return user
-  end
-
-
   describe "common_tests : fast tests" do
     before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
@@ -135,7 +124,7 @@ describe Repository::Xitolite do
         }
 
         it "should return a Hash of Git url" do
-          @user = create_user_with_permissions(@project_child)
+          @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
           User.current = @user
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
@@ -160,7 +149,7 @@ describe Repository::Xitolite do
         my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'true' } }
 
         it "should return a Hash of Git url" do
-          @user = create_user_with_permissions(@project_child)
+          @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
           User.current = @user
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 0

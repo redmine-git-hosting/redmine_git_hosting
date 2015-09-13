@@ -107,21 +107,15 @@ describe GitolitePublicKey do
 
     ## Test change validation
     describe "when delete_when_unused is false" do
-      before do
-        @ssh_key.delete_when_unused = false
-      end
-
       it "should not be deleted when unused" do
+        @ssh_key.delete_when_unused = false
         expect(@ssh_key.delete_when_unused?).to be false
       end
     end
 
     describe "when delete_when_unused is true" do
-      before do
-        @ssh_key.delete_when_unused = true
-      end
-
       it "should be deleted when unused" do
+        @ssh_key.delete_when_unused = true
         expect(@ssh_key.delete_when_unused?).to be true
       end
     end

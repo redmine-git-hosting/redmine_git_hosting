@@ -12,7 +12,7 @@ describe RepositoryMirrorsController do
     @mirror         = FactoryGirl.create(:repository_mirror, :repository_id => @repository.id)
     @no_right_user  = FactoryGirl.create(:user)
     @repository2    = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'mirror-test')
-    @member_user    = create_user_with_permissions(@project, [:manage_repository, :create_repository_mirrors, :view_repository_mirrors, :edit_repository_mirrors, :push_repository_mirrors])
+    @member_user    = create_user_with_permissions(@project, permissions: [:manage_repository, :create_repository_mirrors, :view_repository_mirrors, :edit_repository_mirrors, :push_repository_mirrors])
   end
 
 

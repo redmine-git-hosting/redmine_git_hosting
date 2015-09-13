@@ -12,7 +12,7 @@ describe RepositoryPostReceiveUrlsController do
     @post_receive_url = FactoryGirl.create(:repository_post_receive_url, :repository_id => @repository.id)
     @no_right_user    = FactoryGirl.create(:user)
     @repository2      = FactoryGirl.create(:repository_gitolite, :project_id => @project.id, :identifier => 'pru-test')
-    @member_user      = create_user_with_permissions(@project, [:manage_repository, :create_repository_post_receive_urls, :view_repository_post_receive_urls, :edit_repository_post_receive_urls])
+    @member_user      = create_user_with_permissions(@project, permissions: [:manage_repository, :create_repository_post_receive_urls, :view_repository_post_receive_urls, :edit_repository_post_receive_urls])
   end
 
 
