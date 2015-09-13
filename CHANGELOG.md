@@ -94,14 +94,16 @@
 
 * Before update Redmine Git Hosting plugin you **must** update Redmine Bootstrap Kit plugin to version **0.2.3** :
 
-        # Update Redmine Bootstrap Kit
-        redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
-        redmine$ git fetch -p
-        redmine$ git checkout 0.2.3
+```sh
+# Update Redmine Bootstrap Kit
+redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
+redmine$ git fetch -p
+redmine$ git checkout 0.2.3
 
-        # Cleanup plugins assets dir
-        redmine$ cd REDMINE_ROOT/public/plugin_assets
-        redmine$ rm -rf *
+# Cleanup plugins assets dir
+redmine$ cd REDMINE_ROOT/public/plugin_assets
+redmine$ rm -rf *
+```
 
 * Deployment keys permissions has been renamed (from ```*_deployment_keys``` to ```*_repository_deployment_credentials```) so you will have to restore these permissions in *Administration -> Roles*.
 
@@ -128,14 +130,16 @@
 
 * Before update Redmine Git Hosting plugin you **must** update Redmine Bootstrap Kit plugin to version **0.2.2** :
 
-        # Update Redmine Bootstrap Kit
-        redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
-        redmine$ git fetch -p
-        redmine$ git checkout 0.2.2
+```sh
+# Update Redmine Bootstrap Kit
+redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
+redmine$ git fetch -p
+redmine$ git checkout 0.2.2
 
-        # Cleanup plugins assets dir
-        redmine$ cd REDMINE_ROOT/public/plugin_assets
-        redmine$ rm -rf *
+# Cleanup plugins assets dir
+redmine$ cd REDMINE_ROOT/public/plugin_assets
+redmine$ rm -rf *
+```
 
 * Since [support of Ruby 1.9.x has ended](https://www.ruby-lang.org/en/news/2014/01/10/ruby-1-9-3-will-end-on-2015/), **we won't support Ruby 1.9.x anymore**.
 We highly recommend that you upgrade to Ruby 2.1 or 2.0.0 as soon as possible.
@@ -212,19 +216,20 @@ Thanks to the work of Oliver Günther (really thank you), the plugin is now a lo
 
 Example :
 
-
-    gitolite-admin.git/
-    ├── conf
-    │   └── gitolite.conf
-    └── keydir
-        ├── redmine_git_hosting
-        │   ├── redmine_admin_1
-        │   │   └── redmine_my_key
-        │   │       └── redmine_admin_1.pub
-        │   └── redmine_admin_1_deploy_key_1
-        │       └── redmine_deploy_key_1
-        │           └── redmine_admin_1_deploy_key_1.pub
-        └── redmine_gitolite_admin_id_rsa.pub
+```sh
+gitolite-admin.git/
+├── conf
+│   └── gitolite.conf
+└── keydir
+    ├── redmine_git_hosting
+    │   ├── redmine_admin_1
+    │   │   └── redmine_my_key
+    │   │       └── redmine_admin_1.pub
+    │   └── redmine_admin_1_deploy_key_1
+    │       └── redmine_deploy_key_1
+    │           └── redmine_admin_1_deploy_key_1.pub
+    └── redmine_gitolite_admin_id_rsa.pub
+```
 
 ## 0.7.10 - 2015-01-26
 
@@ -232,23 +237,19 @@ Example :
 * Fix [#326](https://github.com/jbox-web/redmine_git_hosting/issues/326) (Error occurred while loading the routes definition)
 * Fix [#329](https://github.com/jbox-web/redmine_git_hosting/issues/329) ("internal Error" when trying to edit a newly created repo)
 
-<p class="notes">Notes :</p>
+**Notes :**
 
-{{ site.data.callouts.alertwarning }}
   **Important !**
 
   This is the last version of the v0.7 branch. **There won't be new releases under this branch**.
 
   That means that everyone should migrate to the new 1.0 version :)
-{{ site.data.callouts.end }}
 
-{{ site.data.callouts.alertwarning }}
   **Important !**
 
   Before migrating to the new 1.0 you **MUST** migrate to this version (0.7.10).
 
   It includes a Rake task that prepare the migration to 1.0, so **don't miss that step!**
-{{ site.data.callouts.end }}
 
 ## 0.7.9 - 2014-12-29
 
@@ -268,11 +269,9 @@ Example :
 * Fix [#258](https://github.com/jbox-web/redmine_git_hosting/issues/258) (wrong hook installation place on gitolite 3.x)
 * Fix [#289](https://github.com/jbox-web/redmine_git_hosting/issues/289) (url to wiki goes nowhere)
 
-<p class="notes">Notes :</p>
+**Notes :**
 
-{{ site.data.callouts.alertwarning }}
   **Important !**
-{{ site.data.callouts.end }}
 
 As explained in [Gitolite documentation](http://gitolite.com/gitolite/non-core.html#localcode) hooks should be installed in a separate directory.
 This new version fixes Gitolite hooks install path for Gitolite v3.
@@ -291,11 +290,11 @@ You'll also have to update your ```.gitolite.rc``` accordingly :
 * Merge [#223](https://github.com/jbox-web/redmine_git_hosting/pull/223) (Fix https:// notifications if TLSvX is mandatory #223)
 * Bump to jbox-gitolite 1.2.6 which depends on [gitlab-grit 2.7.1](https://github.com/gitlabhq/grit/blob/master/History.txt)
 
-<p class="notes">Notes :</p>
+**Notes :**
 
 Until this version, the plugin silently failed when pushing data to Gitolite Admin. Now when an error happens on push, you should get this in the log :
 
-```
+```sh
 2014-09-10 19:02:25 +0200 INFO [GitHosting] User 'admin' created a new repository 'test/blof'
 2014-09-10 19:02:25 +0200 INFO [GitWorker] Using Gitolite configuration file : 'gitolite.conf'
 2014-09-10 19:02:26 +0200 INFO [GitWorker] add_repository : repository 'test/blof' does not exist in Gitolite, create it ...
