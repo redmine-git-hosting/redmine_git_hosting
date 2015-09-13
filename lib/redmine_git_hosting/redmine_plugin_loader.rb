@@ -42,6 +42,26 @@ module RedmineGitHosting
     end
 
 
+    def plugin_dir(*dirs)
+      Rails.root.join('plugins', plugin_name, *dirs)
+    end
+
+
+    def plugin_app_dir(*dirs)
+      plugin_dir('app', *dirs)
+    end
+
+
+    def plugin_conf_dir(*dirs)
+      plugin_dir('config', *dirs)
+    end
+
+
+    def plugin_lib_dir(*dirs)
+      plugin_dir('lib', *dirs)
+    end
+
+
     def load_plugin!
       autoload_libs!
       autoload_paths!
@@ -50,26 +70,6 @@ module RedmineGitHosting
 
 
     private
-
-
-      def plugin_dir(*dirs)
-        Rails.root.join('plugins', plugin_name, *dirs)
-      end
-
-
-      def plugin_app_dir(*dirs)
-        plugin_dir('app', *dirs)
-      end
-
-
-      def plugin_conf_dir(*dirs)
-        plugin_dir('config', *dirs)
-      end
-
-
-      def plugin_lib_dir(*dirs)
-        plugin_dir('lib', *dirs)
-      end
 
 
       def hook_file?(file)
