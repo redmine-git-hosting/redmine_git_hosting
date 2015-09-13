@@ -45,16 +45,12 @@ class RepositoryCommitsStats < ReportBase
 
 
     def total_commits_by_month
-      cbm = [0] * 12
-      commits_by_day.each { |c| cbm[(date_to.month - c.first.to_date.month) % 12] += c.last }
-      cbm
+      total_by_month_for(:commits_by_day)
     end
 
 
     def total_changes_by_month
-      cbm = [0] * 12
-      changes_by_day.each { |c| cbm[(date_to.month - c.first.to_date.month) % 12] += c.last }
-      cbm
+      total_by_month_for(:changes_by_day)
     end
 
 
@@ -77,9 +73,7 @@ class RepositoryCommitsStats < ReportBase
 
 
     def total_commits_by_hour
-      cbh = [0] * 24
-      commits_by_hour.each { |c| cbh[get_hour_from_date(c)] += 1 }
-      cbh
+      total_by_hour_for(:commits_by_hour)
     end
 
 

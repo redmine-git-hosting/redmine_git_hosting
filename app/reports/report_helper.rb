@@ -37,4 +37,18 @@ module ReportHelper
     local.hour
   end
 
+
+  def total_by_month_for(method)
+    total = [0] * 12
+    self.send(method).each { |c| total[(date_to.month - c.first.to_date.month) % 12] += c.last }
+    total
+  end
+
+
+  def total_by_hour_for(method)
+    total = [0] * 24
+    self.send(method).each { |c| total[get_hour_from_date(c)] += 1 }
+    total
+  end
+
 end
