@@ -1,49 +1,39 @@
-class RepositoryGlobalStats
+class RepositoryGlobalStats < ReportBase
   unloadable
 
-  include Redmine::I18n
-
-  attr_reader :repository
-
-
-  def initialize(repository)
-    @repository = repository
-  end
-
-
   def build
-    build_report
+    data = {}
+    data[l(:label_total_commits)]               = total_commits
+    data[l(:label_total_contributors)]          = committers
+    data[l(:label_first_commit_date)]           = first_commit.commit_date
+    data[l(:label_latest_commit_date)]          = last_commit.commit_date
+    data[l(:label_active_for)]                  = "#{active_for} #{l(:label_active_days)}"
+    data[l(:label_average_commit_per_day)]      = average_commit_per_day
+    data[l(:label_average_contributor_commits)] = average_contributor_commits
+    data
   end
 
 
   private
 
 
-    def build_report
-      {
-        l(:label_total_commits)               => total_commits,
-        l(:label_total_contributors)          => committers,
-        l(:label_first_commit_date)           => first_commit.commit_date,
-        l(:label_latest_commit_date)          => last_commit.commit_date,
-        l(:label_active_for)                  => "#{active_for} #{l(:label_active_days)}",
-        l(:label_average_commit_per_day)      => average_commit_per_day,
-        l(:label_average_contributor_commits) => average_contributor_commits
-      }
+    def total_commits
+      @total_commits ||= all_changesets.count
     end
 
 
-    def total_commits
-      @total_commits ||= Changeset.where('repository_id = ?', repository.id).count
+    def committers
+      @committers ||= redmine_committers + external_committers
     end
 
 
     def first_commit
-      @first_commit ||= Changeset.where('repository_id = ?', repository.id).order('commit_date ASC').first
+      @first_commit ||= all_changesets.order('commit_date ASC').first
     end
 
 
     def last_commit
-      @last_commit ||= Changeset.where('repository_id = ?', repository.id).order('commit_date ASC').last
+      @last_commit ||= all_changesets.order('commit_date ASC').last
     end
 
 
@@ -59,21 +49,6 @@ class RepositoryGlobalStats
 
     def average_contributor_commits
       @average_contributor_commits ||= total_commits.fdiv(committers).round(2)
-    end
-
-
-    def committers
-      @committers ||= redmine_committers + external_committers
-    end
-
-
-    def redmine_committers
-      @redmine_committers ||= Changeset.where('repository_id = ?', repository.id).where('user_id IS NOT NULL').select(:user_id).uniq.count
-    end
-
-
-    def external_committers
-      @external_committers ||= Changeset.where('repository_id = ?', repository.id).where(user_id: nil).select(:committer).uniq.count
     end
 
 end

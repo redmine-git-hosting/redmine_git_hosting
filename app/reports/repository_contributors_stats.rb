@@ -1,13 +1,8 @@
-class RepositoryContributorsStats
+class RepositoryContributorsStats < ReportBase
   unloadable
 
-  include Redmine::I18n
-
-  attr_reader :repository
-
-
   def initialize(repository)
-    @repository = repository
+    super
     @changes_for_committer = {}
   end
 
@@ -33,7 +28,7 @@ class RepositoryContributorsStats
       data.push(commits_data)
     end
 
-    return data
+    data
   end
 
 
@@ -51,17 +46,7 @@ class RepositoryContributorsStats
   private
 
 
-    def commits_by_author
-      @commits_by_author ||= Changeset.where('repository_id = ?', repository.id).group(:committer).count
-    end
-
-
-    def changes_by_author
-      @changes_by_author ||= Change.joins(:changeset).where("#{Changeset.table_name}.repository_id = ?", repository.id).group(:committer).count
-    end
-
-
-    # generate mappings from the registered users to the comitters
+    # Generate mappings from the registered users to the comitters
     # user_committer_mapping = { name => [comitter, ...] }
     # registered_committers = [ committer,... ]
     #
