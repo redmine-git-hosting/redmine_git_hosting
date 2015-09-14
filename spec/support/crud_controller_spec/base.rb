@@ -2,9 +2,9 @@ module CrudControllerSpec
   module Base
     extend ActiveSupport::Concern
 
-    include CrudControllerSpec::Helpers
-
     included do
+
+      include CrudControllerSpec::Helpers
 
       before(:all) do
         @project        = create_project('git_project')
