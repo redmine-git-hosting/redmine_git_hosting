@@ -27,13 +27,13 @@ module GitHosting
 
 
     def serialize_params(params)
-      params.map { |key, value|
+      params.map do |key, value|
         if value.instance_of?(Array)
           value.map { |e| "#{urlencode(key.to_s)}=#{urlencode(e.to_s)}" }.join('&')
         else
           "#{urlencode(key.to_s)}=#{urlencode(value.to_s)}"
         end
-      }.join('&')
+      end.join('&')
     end
 
 

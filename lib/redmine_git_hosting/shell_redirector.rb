@@ -79,9 +79,9 @@ module RedmineGitHosting
     def startup_shell
       Thread.abort_on_exception = true
       proxy_started = false
-      @wrap_thread = Thread.new(@cmd_str, @options) { |cmd_str, options|
+      @wrap_thread = Thread.new(@cmd_str, @options) do |cmd_str, options|
         if options[:write_stdin]
-          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) { |io|
+          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options) do |io|
             io.binmode
             io.puts(@extra_args)
             io.close_write
@@ -91,19 +91,19 @@ module RedmineGitHosting
 
             # Wait before closing io
             Thread.stop
-          }
+          end
         else
-          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str) { |io|
+          @retio = Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str) do |io|
             @read_stream = io
 
             proxy_started = true
 
             # Wait before closing io
             Thread.stop
-          }
+          end
         end
         @status = $?
-      }
+      end
 
       # Wait until subthread gets far enough
       while !proxy_started
