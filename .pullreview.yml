@@ -3,3 +3,4 @@ rules:
   ignore:
   - avoid_similar_code
   - extra_blank_line_detected
+  - missing_class_documentation
