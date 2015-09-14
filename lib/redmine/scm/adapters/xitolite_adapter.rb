@@ -218,12 +218,8 @@ module Redmine
             revisions[0] << "#{identifier_from}.." if identifier_from
             revisions[0] << "#{identifier_to}" if identifier_to
           else
-            unless options[:includes].blank?
-              revisions += options[:includes]
-            end
-            unless options[:excludes].blank?
-              revisions += options[:excludes].map { |r| "^#{r}" }
-            end
+            revisions += options[:includes] unless options[:includes].blank?
+            revisions += options[:excludes].map { |r| "^#{r}" } unless options[:excludes].blank?
           end
 
           git_cmd(cmd_args, { write_stdin: true }) do |io|

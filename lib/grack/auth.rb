@@ -35,12 +35,9 @@ module Grack
 
           # Authentication with username and password
           login, password = @auth.credentials
-
           @user = authenticate_user(login, password)
 
-          if @user
-            @env['REMOTE_USER'] = @user.gitolite_identifier
-          end
+          @env['REMOTE_USER'] = @user.gitolite_identifier if @user
         end
 
         if authorized_request?
