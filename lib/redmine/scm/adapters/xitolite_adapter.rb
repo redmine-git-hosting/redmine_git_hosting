@@ -478,7 +478,7 @@ module Redmine
         def mirror_push(mirror_url, branch = nil, args = [])
           cmd_args = git_mirror_cmd.concat(['push', *args, mirror_url, branch]).compact
           cmd = cmd_args.shift
-          RedmineGitHosting::Utils::Exec.capture(cmd, cmd_args, {merge_output: true})
+          RedmineGitHosting::Utils::Exec.capture(cmd, cmd_args, { merge_output: true })
         end
 
 
@@ -520,7 +520,7 @@ module Redmine
             # Concat with Redmine args
             full_args += args
             # Quote args
-            cmd_str = full_args.map { |e| shell_quote e.to_s }.join(' ')
+            full_args.map { |e| shell_quote(e.to_s) }.join(' ')
           end
 
 
@@ -548,7 +548,7 @@ module Redmine
 
 
           def git_push_args
-            [ 'env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}" ]
+            ['env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}"]
           end
 
 
