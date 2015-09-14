@@ -58,13 +58,13 @@ module RedmineHooks
       def call_mirror
         push_failed, push_message = RepositoryMirrors::Push.call(mirror)
 
-        unless push_failed
-          log_hook_succeeded
-          success_message
-        else
+        if push_failed
           log_hook_failed
           logger.error(push_message)
           failure_message
+        else
+          log_hook_succeeded
+          success_message
         end
       end
 

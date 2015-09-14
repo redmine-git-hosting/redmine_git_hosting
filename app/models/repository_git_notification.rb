@@ -25,8 +25,8 @@ class RepositoryGitNotification < ActiveRecord::Base
 
 
     def remove_blank_items
-      self.include_list = include_list.select{ |mail| !mail.blank? }
-      self.exclude_list = exclude_list.select{ |mail| !mail.blank? }
+      self.include_list = include_list.select { |mail| !mail.blank? }
+      self.exclude_list = exclude_list.select { |mail| !mail.blank? }
     end
 
 

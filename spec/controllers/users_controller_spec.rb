@@ -6,9 +6,9 @@ describe UsersController do
 
   describe "GET #edit" do
     context "with git hosting patch" do
-      let(:user){ create_admin_user }
-      let(:user_key)  { create_ssh_key(user_id: user.id, title: 'user_key',   key: Faker::Ssh.public_key, key_type: 0) }
-      let(:deploy_key){ create_ssh_key(user_id: user.id, title: 'deploy_key', key: Faker::Ssh.public_key, key_type: 1) }
+      let(:user) { create_admin_user }
+      let(:user_key) { create_ssh_key(user_id: user.id, title: 'user_key', key: Faker::Ssh.public_key, key_type: 0) }
+      let(:deploy_key) { create_ssh_key(user_id: user.id, title: 'deploy_key', key: Faker::Ssh.public_key, key_type: 1) }
 
       it "populates an array of gitolite_user_keys" do
         set_session_user(user)

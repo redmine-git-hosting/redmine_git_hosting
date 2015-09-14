@@ -4,13 +4,16 @@ module Gitolitable
 
     included do
       # Set URL ourself as relative path.
+      #
       before_validation :set_git_urls
 
       # Make sure that identifier does not match Gitolite Admin repository
+      #
       validates_exclusion_of :identifier, in: %w(gitolite-admin)
 
       # Place additional constraints on repository identifiers
       # because of multi repos
+      #
       validate :additional_constraints_on_identifier
       validate :identifier_dont_change
       validate :default_repository_has_identifier
@@ -56,7 +59,7 @@ module Gitolitable
 
 
     def empty?
-      extra_info.nil? || ( !extra_info.has_key?('heads') && !extra_info.has_key?('branches') )
+      extra_info.nil? || (!extra_info.has_key?('heads') && !extra_info.has_key?('branches'))
     end
 
 
@@ -74,6 +77,7 @@ module Gitolitable
 
 
       # Set up git urls for new repositories
+      #
       def set_git_urls
         self.url = gitolite_repository_path if self.url.blank?
         self.root_url = self.url if self.root_url.blank?
@@ -84,6 +88,7 @@ module Gitolitable
       # 1) cannot equal identifier of any project
       # 2) if repo_ident_unique? make sure that repo identifier is globally unique
       # 3) cannot make this repo the default if there will be some other repo with blank identifier
+      #
       def additional_constraints_on_identifier
         if !identifier.blank? && (new_record? || identifier_changed?)
           errors.add(:identifier, :cannot_equal_project) if Project.find_by_identifier(identifier)
@@ -100,7 +105,7 @@ module Gitolitable
       #
       def identifier_dont_change
         return if new_record?
-        errors.add(:identifier, :cannot_change) if (identifier_was.blank? && !identifier.blank? || !identifier_was.blank? && identifier_changed?)
+        errors.add(:identifier, :cannot_change) if (identifier_was.blank? && !identifier.blank?) || (!identifier_was.blank? && identifier_changed?)
       end
 
 
@@ -109,7 +114,7 @@ module Gitolitable
       def default_repository_has_identifier
         if project && (is_default? || set_as_default?)
           possibles = Repository.where("project_id = ? and (identifier = '' or identifier is null)", project.id)
-          errors.add(:base, :blank_default_exists) if possibles.any? && (new_record? || possibles.detect{ |x| x.id != id })
+          errors.add(:base, :blank_default_exists) if possibles.any? && (new_record? || possibles.detect { |x| x.id != id })
         end
       end
 

@@ -44,9 +44,9 @@ describe GoRedirectorController do
 
   describe "GET #index" do
     context "when project is public" do
-      let(:project){ FactoryGirl.create(:project, is_public: true) }
-      let(:repository){ create_git_repository(project) }
-      let(:anonymous_user){ create_anonymous_user }
+      let(:project) { FactoryGirl.create(:project, is_public: true) }
+      let(:repository) { create_git_repository(project) }
+      let(:anonymous_user) { create_anonymous_user }
 
       context "and SmartHTTP is enabled" do
         it "renders 200" do
@@ -62,9 +62,9 @@ describe GoRedirectorController do
     end
 
     context "when project is private" do
-      let(:project){ FactoryGirl.create(:project, is_public: false) }
-      let(:repository){ create_git_repository(project) }
-      let(:anonymous_user){ create_anonymous_user }
+      let(:project) { FactoryGirl.create(:project, is_public: false) }
+      let(:repository) { create_git_repository(project) }
+      let(:anonymous_user) { create_anonymous_user }
 
       context "and SmartHTTP is enabled" do
         it "renders 403" do

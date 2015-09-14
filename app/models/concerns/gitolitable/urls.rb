@@ -109,7 +109,7 @@ module Gitolitable
 
 
     def available_urls_sorted
-      return available_urls if (urls_order.nil? || urls_order.empty?)
+      return available_urls if urls_order.nil? || urls_order.empty?
       hash = {}
       urls_order.each do |url|
         next if !available_urls[url.to_sym]

@@ -244,7 +244,7 @@ module Redmine
                 key = "commit"
                 value = $1
                 parents_str = $2
-                if (parsing_descr == 1 || parsing_descr == 2)
+                if parsing_descr == 1 || parsing_descr == 2
                   parsing_descr = 0
                   revision = Revision.new({
                     :identifier => changeset[:commit],

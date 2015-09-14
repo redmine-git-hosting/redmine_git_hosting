@@ -105,13 +105,13 @@ module RedmineHooks
       def do_call_webservice(payload)
         post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
 
-        unless post_failed
-          log_hook_succeeded
-          (split_payloads? ? success_message.gsub("\n", '') : success_message)
-        else
+        if post_failed
           logger.error('Failed!')
           logger.error(post_message)
           (split_payloads? ? failure_message.gsub("\n", '') : failure_message)
+        else
+          log_hook_succeeded
+          (split_payloads? ? success_message.gsub("\n", '') : success_message)
         end
       end
 

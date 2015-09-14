@@ -12,7 +12,7 @@ module GitolitePublicKeys
     def initialize(public_key, user, opts = {})
       @public_key          = public_key
       @user                = user
-      @skip_auto_increment = opts.delete(:skip_auto_increment){ false }
+      @skip_auto_increment = opts.delete(:skip_auto_increment) { false }
     end
 
 

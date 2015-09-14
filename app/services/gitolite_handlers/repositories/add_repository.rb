@@ -34,8 +34,8 @@ module GitoliteHandlers
 
       def initialize(*args)
         super
-        @force     = options.delete(:force){ false }
-        @old_perms = options.delete(:old_perms){ {} }
+        @force     = options.delete(:force) { false }
+        @old_perms = options.delete(:old_perms) { {} }
       end
 
     end

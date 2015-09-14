@@ -34,7 +34,7 @@ module ExtendRepositoriesHelper
 
 
   def render_repository_quick_jump(repository)
-    options = repository.project.repositories.map{ |r| [r.redmine_name, edit_repository_path(r)] }
+    options = repository.project.repositories.map { |r| [r.redmine_name, edit_repository_path(r)] }
     select_tag('repository_quick_jump_box', options_for_select(options, selected: edit_repository_path(repository)), onchange: 'if (this.value != \'\') { window.location = this.value; }')
   end
 

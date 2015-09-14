@@ -43,13 +43,13 @@ class GitNotifier
 
     def set_email_prefix
       @email_prefix = RedmineGitHosting::Config.gitolite_notify_global_prefix
-      @email_prefix = git_notification.prefix unless (git_notification.nil? || git_notification.new_record?)
+      @email_prefix = git_notification.prefix unless git_notification.nil? || git_notification.new_record?
     end
 
 
     def set_sender_address
       @sender_address = RedmineGitHosting::Config.gitolite_notify_global_sender_address
-      @sender_address = git_notification.sender_address unless (git_notification.nil? || git_notification.new_record? || git_notification.sender_address.empty?)
+      @sender_address = git_notification.sender_address unless git_notification.nil? || git_notification.new_record? || git_notification.sender_address.empty?
     end
 
 
@@ -59,7 +59,7 @@ class GitNotifier
 
 
     def allowed_users
-      project_users.select{ |u| u.allowed_to?(:receive_git_notifications, project) }
+      project_users.select { |u| u.allowed_to?(:receive_git_notifications, project) }
     end
 
 
@@ -92,16 +92,16 @@ class GitNotifier
       mail_mapping = {}
 
       # First collect all project users
-      default_list.map{ |mail| mail_mapping[mail] = :project }
+      default_list.map { |mail| mail_mapping[mail] = :project }
 
       # Then add global include list
-      global_include_list.sort.map{ |mail| mail_mapping[mail] = :global }
+      global_include_list.sort.map { |mail| mail_mapping[mail] = :global }
 
       # Then filter
       mail_mapping = filter_list(mail_mapping)
 
       # Then add local include list
-      repository_include_list.sort.map{ |mail| mail_mapping[mail] = :local }
+      repository_include_list.sort.map { |mail| mail_mapping[mail] = :local }
 
       @mail_mapping = mail_mapping
     end
