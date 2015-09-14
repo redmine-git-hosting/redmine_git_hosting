@@ -27,9 +27,9 @@ module GitHosting
 
 
     def serialize_params(params)
-      params.map {|key, value|
+      params.map { |key, value|
         if value.instance_of?(Array)
-          value.map {|e| "#{urlencode(key.to_s)}=#{urlencode(e.to_s)}"}.join('&')
+          value.map { |e| "#{urlencode(key.to_s)}=#{urlencode(e.to_s)}" }.join('&')
         else
           "#{urlencode(key.to_s)}=#{urlencode(value.to_s)}"
         end
@@ -47,7 +47,7 @@ module GitHosting
 
       def build_post_request(url, opts = {})
         # Get params
-        params = opts.delete(:params){ {} }
+        params = opts.delete(:params) { {} }
 
         # Build request
         uri, http = build_http_request(url, opts)
@@ -63,7 +63,7 @@ module GitHosting
 
       def build_get_request(url, opts = {})
         # Get params
-        params = opts.delete(:params){ {} }
+        params = opts.delete(:params) { {} }
         params = serialize_params(params)
 
         # Build request
@@ -76,8 +76,8 @@ module GitHosting
 
       def build_http_request(url, opts = {})
         # Get HTTP options
-        open_timeout = opts.delete(:open_timeout){ 5 }
-        read_timeout = opts.delete(:read_timeout){ 10 }
+        open_timeout = opts.delete(:open_timeout) { 5 }
+        read_timeout = opts.delete(:read_timeout) { 10 }
 
         uri  = URI(url)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -106,7 +106,7 @@ module GitHosting
       def one_shot_request(http, request)
         message = ''
         begin
-          res = http.start {|openhttp| openhttp.request request}
+          res = http.start { |openhttp| openhttp.request request }
           if !res.is_a?(Net::HTTPSuccess)
             message = "Return code : #{res.code} (#{res.message})."
             failed = true

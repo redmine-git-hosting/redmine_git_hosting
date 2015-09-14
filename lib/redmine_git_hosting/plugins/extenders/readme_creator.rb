@@ -8,7 +8,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def initialize(*args)
       super
-      @create_readme_file = options.delete(:create_readme_file){ false }
+      @create_readme_file = options.delete(:create_readme_file) { false }
     end
 
 

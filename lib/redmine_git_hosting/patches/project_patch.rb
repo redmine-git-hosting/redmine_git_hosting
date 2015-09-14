@@ -10,7 +10,7 @@ module RedmineGitHosting
           unloadable
 
           # Add custom scope
-          scope :active_or_closed, -> { where "status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_CLOSED}" }
+          scope :active_or_closed, -> { where("status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_CLOSED}") }
 
           # Make sure that identifier does not match Gitolite Admin repository
           validates_exclusion_of :identifier, in: %w(gitolite-admin)
@@ -25,7 +25,7 @@ module RedmineGitHosting
 
         # Find all repositories owned by project which are Repository::Xitolite
         def gitolite_repos
-          repositories.select{ |x| x.is_a?(Repository::Xitolite)}.sort { |x, y| x.id <=> y.id }
+          repositories.select { |x| x.is_a?(Repository::Xitolite)}.sort { |x, y| x.id <=> y.id }
         end
 
 

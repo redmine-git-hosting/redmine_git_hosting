@@ -12,11 +12,11 @@ module Settings
 
     def initialize(previous_settings, opts = {})
       @previous_settings   = previous_settings
-      @resync_projects     = opts.delete(:resync_all_projects){ false }
-      @resync_ssh_keys     = opts.delete(:resync_all_ssh_keys){ false }
-      @regenerate_ssh_keys = opts.delete(:regenerate_all_ssh_keys){ false }
-      @flush_cache         = opts.delete(:flush_gitolite_cache){ false }
-      @delete_trash_repo   = opts.delete(:delete_trash_repo){ [] }
+      @resync_projects     = opts.delete(:resync_all_projects) { false }
+      @resync_ssh_keys     = opts.delete(:resync_all_ssh_keys) { false }
+      @regenerate_ssh_keys = opts.delete(:regenerate_all_ssh_keys) { false }
+      @flush_cache         = opts.delete(:flush_gitolite_cache) { false }
+      @delete_trash_repo   = opts.delete(:delete_trash_repo) { [] }
     end
 
 

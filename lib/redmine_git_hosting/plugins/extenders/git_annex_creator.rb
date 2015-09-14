@@ -6,7 +6,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def initialize(*args)
       super
-      @enable_git_annex = options.delete(:enable_git_annex){ false }
+      @enable_git_annex = options.delete(:enable_git_annex) { false }
     end
 
 

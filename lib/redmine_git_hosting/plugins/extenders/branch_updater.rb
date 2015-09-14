@@ -6,7 +6,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def initialize(*args)
       super
-      @update_default_branch = options.delete(:update_default_branch){ false }
+      @update_default_branch = options.delete(:update_default_branch) { false }
     end
 
 

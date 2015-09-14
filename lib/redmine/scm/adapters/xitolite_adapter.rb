@@ -58,7 +58,7 @@ module Redmine
         end
 
 
-        def initialize(url, root_url=nil, login=nil, password=nil, path_encoding=nil)
+        def initialize(url, root_url = nil, login = nil, password = nil, path_encoding = nil)
           super
           @path_encoding = path_encoding.blank? ? 'UTF-8' : path_encoding
         end
@@ -71,7 +71,7 @@ module Redmine
 
         def info
           begin
-            Info.new(:root_url => url, :lastrev => lastrev('',nil))
+            Info.new(root_url: url, lastrev: lastrev('', nil))
           rescue
             nil
           end
@@ -123,23 +123,22 @@ module Redmine
         end
 
 
-        def entry(path=nil, identifier=nil)
-          parts = path.to_s.split(%r{[\/\\]}).select {|n| !n.blank?}
+        def entry(path = nil, identifier = nil)
+          parts = path.to_s.split(%r{[\/\\]}).select { |n| !n.blank? }
           search_path = parts[0..-2].join('/')
           search_name = parts[-1]
           if search_path.blank? && search_name.blank?
             # Root entry
-            Entry.new(:path => '', :kind => 'dir')
+            Entry.new(path: '', kind: 'dir')
           else
             # Search for the entry in the parent directory
-            es = entries(search_path, identifier,
-                         options = {:report_last_commit => false})
-            es ? es.detect {|e| e.name == search_name} : nil
+            es = entries(search_path, identifier, report_last_commit: false)
+            es ? es.detect { |e| e.name == search_name } : nil
           end
         end
 
 
-        def entries(path=nil, identifier=nil, options={})
+        def entries(path = nil, identifier = nil, options = {})
           path ||= ''
           p = scm_iconv(@path_encoding, 'UTF-8', path)
           entries = Entries.new
@@ -166,7 +165,7 @@ module Redmine
                  :size => (type == "tree") ? nil : size,
                  :lastrev => options[:report_last_commit] ?
                                  lastrev(full_path, identifier) : Revision.new
-                }) unless entries.detect{|entry| entry.name == name}
+                }) unless entries.detect{ |entry| entry.name == name }
               end
             end
           end
@@ -207,7 +206,7 @@ module Redmine
         end
 
 
-        def revisions(path, identifier_from, identifier_to, options={})
+        def revisions(path, identifier_from, identifier_to, options = {})
           revs = Revisions.new
           cmd_args = %w|log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin|
           cmd_args << "--reverse" if options[:reverse]
@@ -354,7 +353,7 @@ module Redmine
         end
 
 
-        def annotate(path, identifier=nil)
+        def annotate(path, identifier = nil)
           identifier = 'HEAD' if identifier.blank?
           cmd_args = %w|blame --encoding=UTF-8|
           cmd_args << "-p" << identifier << "--" <<  scm_iconv(@path_encoding, 'UTF-8', path)
@@ -389,10 +388,8 @@ module Redmine
         end
 
 
-        def cat(path, identifier=nil)
-          if identifier.nil?
-            identifier = 'HEAD'
-          end
+        def cat(path, identifier = nil)
+          identifier = 'HEAD' if identifier.nil?
           cmd_args = %w|show --no-color|
           cmd_args << "#{identifier}:#{scm_iconv(@path_encoding, 'UTF-8', path)}"
           cat = nil
@@ -492,7 +489,7 @@ module Redmine
         class Revision < Redmine::Scm::Adapters::Revision
           # Returns the readable identifier
           def format_identifier
-            identifier[0,8]
+            identifier[0, 8]
           end
         end
 

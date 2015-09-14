@@ -19,7 +19,7 @@ class GitCache < ActiveRecord::Base
   class << self
 
     def adapters
-      CACHE_ADAPTERS.map{ |a| a.last }
+      CACHE_ADAPTERS.map { |a| a.last }
     end
 
   end

@@ -6,7 +6,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def initialize(*args)
       super
-      @delete_git_config_key = options.delete(:delete_git_config_key){ '' }
+      @delete_git_config_key = options.delete(:delete_git_config_key) { '' }
     end
 
 

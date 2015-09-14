@@ -5,7 +5,7 @@ module GitHosting
 
 
     def initialize(opts = {})
-      @loglevel = opts.delete(:loglevel){ 'info' }
+      @loglevel = opts.delete(:loglevel) { 'info' }
     end
 
 

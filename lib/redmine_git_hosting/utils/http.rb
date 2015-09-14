@@ -9,7 +9,7 @@ module RedmineGitHosting
       extend self
 
       def http_post(url, opts = {})
-        data = opts.delete(:data){ {} }
+        data = opts.delete(:data) { {} }
         data = serialize_data(data)
         http, request = build_post_request(url, data)
         send_http_request(http, request)
@@ -73,7 +73,7 @@ module RedmineGitHosting
           message = ''
 
           begin
-            res = http.start {|openhttp| openhttp.request request}
+            res = http.start { |openhttp| openhttp.request request }
             if !res.is_a?(Net::HTTPSuccess)
               message = "Return code : #{res.code} (#{res.message})."
               failed = true
