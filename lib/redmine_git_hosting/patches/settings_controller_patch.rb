@@ -50,7 +50,7 @@ module RedmineGitHosting
             settings_form = PluginSettingsForm.new(@plugin)
 
             # Strip *rescue* hash from params as we don't want to save them
-            options = params[:settings].delete(:rescue){ {} }
+            options = params[:settings].delete(:rescue) { {} }
 
             # Validate form
             if settings_form.submit(params[:settings])

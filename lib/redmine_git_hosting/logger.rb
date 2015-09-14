@@ -10,9 +10,9 @@ module RedmineGitHosting
       'error'
     ]
 
-    def self.init_logs!(progname, logfile, loglevel)
+    def self.init_logs!(appname, logfile, loglevel)
       logger           = new(logfile)
-      logger.progname  = progname
+      logger.progname  = appname
       logger.level     = loglevel
       logger.formatter = proc do |severity, time, progname, msg|
         "#{time} [#{severity}] #{msg}\n"

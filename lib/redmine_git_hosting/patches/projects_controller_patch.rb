@@ -123,7 +123,7 @@ module RedmineGitHosting
 
           def hierarchy_to_update
             # Only take projects that have Git repos.
-            @project.self_and_descendants.uniq.select{ |p| p.gitolite_repos.any? }.map{ |project| project.id }
+            @project.self_and_descendants.uniq.select { |p| p.gitolite_repos.any? }.map { |project| project.id }
           end
 
 
@@ -140,7 +140,7 @@ module RedmineGitHosting
             projects = @project.self_and_descendants
 
             # Only take projects that have Git repos.
-            git_projects = projects.uniq.select{ |p| p.gitolite_repos.any? }
+            git_projects = projects.uniq.select { |p| p.gitolite_repos.any? }
 
             git_projects.reverse.each do |project|
               project.gitolite_repos.reverse.each do |repository|

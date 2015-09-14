@@ -17,7 +17,7 @@ module GitoliteWrappers
 
 
       def git_projects
-        @git_projects ||= projects.uniq.select{ |p| p.gitolite_repos.any? }
+        @git_projects ||= projects.uniq.select { |p| p.gitolite_repos.any? }
       end
 
 

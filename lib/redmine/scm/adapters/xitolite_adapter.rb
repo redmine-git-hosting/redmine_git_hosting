@@ -88,7 +88,7 @@ module Redmine
               bran = GitBranch.new(branch_rev[2])
               bran.revision =  branch_rev[3]
               bran.scmid    =  branch_rev[3]
-              bran.is_default = ( branch_rev[1] == '*' )
+              bran.is_default = (branch_rev[1] == '*')
               @branches << bran
             end
           end
@@ -104,7 +104,7 @@ module Redmine
           @tags = []
           cmd_args = %w|tag|
           git_cmd(cmd_args) do |io|
-            @tags = io.readlines.sort!.map{ |t| t.strip }
+            @tags = io.readlines.sort!.map { |t| t.strip }
           end
           @tags
         rescue ScmCommandAborted => e
@@ -214,7 +214,7 @@ module Redmine
           cmd_args << "--" << scm_iconv(@path_encoding, 'UTF-8', path) if path && !path.empty?
           revisions = []
           if identifier_from || identifier_to
-            revisions << ""
+            revisions << ''
             revisions[0] << "#{identifier_from}.." if identifier_from
             revisions[0] << "#{identifier_to}" if identifier_to
           else
@@ -222,11 +222,11 @@ module Redmine
               revisions += options[:includes]
             end
             unless options[:excludes].blank?
-              revisions += options[:excludes].map{|r| "^#{r}"}
+              revisions += options[:excludes].map { |r| "^#{r}" }
             end
           end
 
-          git_cmd(cmd_args, {:write_stdin => true}) do |io|
+          git_cmd(cmd_args, { write_stdin: true }) do |io|
             io.binmode
             io.puts(revisions.join("\n"))
             io.close_write
@@ -241,7 +241,7 @@ module Redmine
 
             io.each_line do |line|
               if line =~ /^commit ([0-9a-f]{40})(( [0-9a-f]{40})*)$/
-                key = "commit"
+                key = 'commit'
                 value = $1
                 parents_str = $2
                 if parsing_descr == 1 || parsing_descr == 2
@@ -264,20 +264,20 @@ module Redmine
                   files = []
                 end
                 changeset[:commit] = $1
-                unless parents_str.nil? or parents_str == ""
+                unless parents_str.nil? or parents_str == ''
                   changeset[:parents] = parents_str.strip.split(' ')
                 end
               elsif (parsing_descr == 0) && line =~ /^(\w+):\s*(.*)$/
                 key = $1
                 value = $2
-                if key == "Author"
+                if key == 'Author'
                   changeset[:author] = value
-                elsif key == "CommitDate"
+                elsif key == 'CommitDate'
                   changeset[:date] = value
                 end
-              elsif (parsing_descr == 0) && line.chomp.to_s == ""
+              elsif (parsing_descr == 0) && line.chomp.to_s == ''
                 parsing_descr = 1
-                changeset[:description] = ""
+                changeset[:description] = ''
               elsif (parsing_descr == 1 || parsing_descr == 2) \
                   && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\t(.+)$/
                 parsing_descr = 2
@@ -292,7 +292,7 @@ module Redmine
                 filepath      = $3
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
                 files << {:action => fileaction, :path => p}
-              elsif (parsing_descr == 1) && line.chomp.to_s == ""
+              elsif (parsing_descr == 1) && line.chomp.to_s == ''
                 parsing_descr = 2
               elsif (parsing_descr == 1)
                 changeset[:description] << line[4..-1]
@@ -335,11 +335,11 @@ module Redmine
           path ||= ''
           cmd_args = []
           if identifier_to
-            cmd_args << "diff" << "--no-color" << identifier_to << identifier_from
+            cmd_args << 'diff' << '--no-color' << identifier_to << identifier_from
           else
-            cmd_args << "show" << "--no-color" << identifier_from
+            cmd_args << 'show' << '--no-color' << identifier_from
           end
-          cmd_args << "--" << scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
+          cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
           diff = []
           git_cmd(cmd_args, opts) do |io|
             io.each_line do |line|
@@ -356,7 +356,7 @@ module Redmine
         def annotate(path, identifier = nil)
           identifier = 'HEAD' if identifier.blank?
           cmd_args = %w|blame --encoding=UTF-8|
-          cmd_args << "-p" << identifier << "--" <<  scm_iconv(@path_encoding, 'UTF-8', path)
+          cmd_args << '-p' << identifier << '--' <<  scm_iconv(@path_encoding, 'UTF-8', path)
           blame = Annotate.new
           content = nil
           git_cmd(cmd_args) { |io| io.binmode; content = io.read }
@@ -426,7 +426,7 @@ module Redmine
         def rev_list(revision, args)
           cmd_args = ['rev-list', *args, revision]
           git_cmd(cmd_args) do |io|
-            @revisions_list = io.readlines.map{ |t| t.strip }
+            @revisions_list = io.readlines.map { |t| t.strip }
           end
           @revisions_list
         rescue ScmCommandAborted => e
@@ -440,7 +440,7 @@ module Redmine
         def rev_parse(revision)
           cmd_args = ['rev-parse', '--quiet', '--verify', revision]
           git_cmd(cmd_args) do |io|
-            @parsed_revision = io.readlines.map{ |t| t.strip }.first
+            @parsed_revision = io.readlines.map { |t| t.strip }.first
           end
           @parsed_revision
         rescue ScmCommandAborted => e

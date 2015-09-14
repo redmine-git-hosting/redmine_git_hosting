@@ -59,7 +59,7 @@ class PluginSettingsForm
 
 
     def filter_email_list(list)
-      list.select{ |m| !m.blank? }.select{ |m| valid_email?(m) }
+      list.select { |m| !m.blank? }.select { |m| valid_email?(m) }
     end
 
 

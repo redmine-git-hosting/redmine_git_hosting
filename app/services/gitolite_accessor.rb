@@ -51,7 +51,7 @@ module GitoliteAccessor
 
 
   def destroy_repositories(repositories, opts = {})
-    message = opts.delete(:message){ ' ' }
+    message = opts.delete(:message) { ' ' }
     logger.info(message)
     repositories.each do |repository|
       resync_gitolite(:delete_repository, repository)
@@ -60,7 +60,7 @@ module GitoliteAccessor
 
 
   def update_projects(projects, opts = {})
-    message = opts.delete(:message){ ' ' }
+    message = opts.delete(:message) { ' ' }
     logger.info(message)
     resync_gitolite(:update_projects, projects, opts)
   end
