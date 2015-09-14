@@ -2,8 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe GoRedirectorController do
 
-  include ControllerHelpers
-
   def check_response_with_smart_http(repository, opts = {})
     enable_smart_http(repository)
     yield

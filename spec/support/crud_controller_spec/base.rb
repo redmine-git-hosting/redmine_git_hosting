@@ -2,7 +2,6 @@ module CrudControllerSpec
   module Base
     extend ActiveSupport::Concern
 
-    include ControllerHelpers
     include Helpers
 
     included do

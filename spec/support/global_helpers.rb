@@ -30,6 +30,11 @@ module GlobalHelpers
   end
 
 
+  def set_session_user(user)
+    request.session[:user_id] = user.id
+  end
+
+
   def create_anonymous_user
     create_user('git_anonymous')
   end
