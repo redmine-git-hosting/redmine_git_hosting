@@ -34,7 +34,8 @@ module RedmineGitHosting
 
 
         def get_rev(context)
-          (_rev = context[:request].params['rev']).blank? ? nil : _rev
+          _rev = context[:request].params['rev']
+          _rev.blank? ? nil : _rev
         end
 
 
