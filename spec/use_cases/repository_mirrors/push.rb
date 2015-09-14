@@ -2,7 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe RepositoryMirrors::Push do
 
-  let(:mirror_url){ 'ssh://git@redmine.example.org/project1/project2/project3/project4.git' }
+  let(:mirror_url) { 'ssh://git@redmine.example.org/project1/project2/project3/project4.git' }
+
+
+  def build_mirror_pusher(opts = {})
+    mirror = build(:repository_mirror, opts)
+    RepositoryMirrors::Push.new(mirror)
+  end
+
 
   describe 'Push args' do
     ## Validate push args : forced mode

@@ -45,6 +45,7 @@ group :development, :test do
   gem 'factory_girl'
   gem 'factory_girl_rails'
   gem 'faker'
+  gem 'sshkey'
   gem 'database_cleaner'
 
   # Code coverage

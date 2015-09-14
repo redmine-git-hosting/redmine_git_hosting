@@ -12,16 +12,21 @@ module GlobalHelpers
       user = FactoryGirl.create(:user, login: login)
     end
 
+    member = Member.new(role_ids: [role.id], user_id: user.id)
+    project.members << member
 
-    members = Member.new(role_ids: [role.id], user_id: user.id)
-    project.members << members
-
-    return user
+    user
   end
 
 
-  def set_session_user(user)
-    request.session[:user_id] = user.id
+  def create_project(identifier = nil)
+    if identifier.nil?
+      FactoryGirl.create(:project)
+    else
+      project = Project.find_by_identifier(identifier)
+      project = FactoryGirl.create(:project, identifier: identifier) if project.nil?
+      project
+    end
   end
 
 
@@ -53,9 +58,18 @@ module GlobalHelpers
 
 
   def create_git_repository(project, opts = {})
-    repository = create_repository(:repository_gitolite, project, opts)
-    build_extra(repository)
+    repository = Repository::Xitolite.find_by_identifier(opts[:identifier])
+    if repository.nil?
+      repository = create_repository(:repository_gitolite, project, opts)
+      build_extra(repository)
+    end
     repository
+  end
+
+
+  def build_extra(repository)
+    extra = repository.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
+    extra.save!
   end
 
 
@@ -69,48 +83,6 @@ module GlobalHelpers
   end
 
 
-  def build_extra(repository)
-    extra = repository.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
-    extra.save!
-  end
-
-
-  def enable_smart_http(repository)
-    repository.extra[:git_http] = 2
-    repository.extra.save!
-  end
-
-
-  def disable_smart_http(repository)
-    repository.extra[:git_http] = 0
-    repository.extra.save!
-  end
-
-
-  def enable_public_repo(repository)
-    repository.extra[:public_repo] = true
-    repository.extra.save!
-  end
-
-
-  def disable_public_repo(repository)
-    repository.extra[:public_repo] = false
-    repository.extra.save!
-  end
-
-
-  def build_mirror_pusher(opts = {})
-    mirror = build(:repository_mirror, opts)
-    RepositoryMirrors::Push.new(mirror)
-  end
-
-
-  def build_web_hook(payload, opts = {})
-    post_receive_url = build(:repository_post_receive_url, opts)
-    RedmineHooks::CallWebservices.new(post_receive_url, payload)
-  end
-
-
   def load_yaml_fixture(fixture)
     YAML::load(load_fixture(fixture))
   end
@@ -119,4 +91,5 @@ module GlobalHelpers
   def load_fixture(fixture)
     File.read(RedmineGitHosting.plugin_spec_dir('fixtures', fixture))
   end
+
 end

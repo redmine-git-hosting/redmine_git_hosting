@@ -68,4 +68,8 @@ Rails.configuration.to_prepare do
 
   ## Hrack for Git Hooks
   require 'hrack/init'
+
+  ## Extensions for Faker
+  require_dependency 'core_ext/faker/git'
+  require_dependency 'core_ext/faker/ssh'
 end

@@ -21,16 +21,16 @@ describe GitolitePublicKey do
   # Try to workaround it...
   def test_user
     if Redmine::VERSION.to_s.include?('2.6')
-      'redmine_git_user1_21'
+      'redmine_git_user1_17'
     else
-      'redmine_git_user1_19'
+      'redmine_git_user1_15'
     end
   end
 
 
   describe "Valid SSH key build" do
     before(:each) do
-      @ssh_key = build(:gitolite_public_key)
+      @ssh_key = build_ssh_key(title: 'test-key')
     end
 
     subject { @ssh_key }
@@ -112,7 +112,7 @@ describe GitolitePublicKey do
 
 
   describe "Valid SSH key creation" do
-    let(:ssh_key) { create_ssh_key(user_id: @user1.id) }
+    let(:ssh_key) { create_ssh_key(user_id: @user1.id, title: 'test-key') }
 
     subject { ssh_key }
 
@@ -193,7 +193,7 @@ describe GitolitePublicKey do
 
       ssh_keys.each do |valid_key|
         it "should be valid" do
-          expect(build(:gitolite_public_key, key: valid_key)).to be_valid
+          expect(build_ssh_key(key: valid_key)).to be_valid
         end
       end
     end
@@ -201,11 +201,11 @@ describe GitolitePublicKey do
 
 
   context "when SSH key already exist" do
-    before { create_ssh_key(user_id: @user1.id) }
+    before { create_ssh_key(user_id: @user1.id, title: 'test-key2') }
 
     ## Test uniqueness validation
     context "and title is already taken" do
-      it { expect(build_ssh_key(user_id: @user1.id, key: SSH_KEY_1)).not_to be_valid }
+      it { expect(build_ssh_key(user_id: @user1.id, title: 'test-key2', key: SSH_KEY_1)).not_to be_valid }
     end
 
     context "and is already taken by someone" do

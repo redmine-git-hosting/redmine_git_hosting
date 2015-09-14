@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe GoRedirectorController do
 
+  include ControllerHelpers
+
   def check_response_with_smart_http(repository, opts = {})
     enable_smart_http(repository)
     yield
@@ -19,6 +21,24 @@ describe GoRedirectorController do
   def call_page(repository, status)
     get :index, repo_path: repository.redmine_repository_path
     expect(response.status).to eq status
+  end
+
+
+  def enable_smart_http(repository)
+    repository.extra[:git_http] = 2
+    repository.extra.save!
+  end
+
+
+  def disable_smart_http(repository)
+    repository.extra[:git_http] = 0
+    repository.extra.save!
+  end
+
+
+  def enable_public_repo(repository)
+    repository.extra[:public_repo] = true
+    repository.extra.save!
   end
 
 

@@ -2,8 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryMirror do
 
-  MIRROR_URL = 'ssh://host.xz/path/to/repo.git'
-
   VALID_URLS = [
     'ssh://user@host.xz:2222/path/to/repo.git',
     'ssh://user@host.xz/path/to/repo.git',
