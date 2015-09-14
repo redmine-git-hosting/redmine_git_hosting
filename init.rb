@@ -89,10 +89,10 @@ Redmine::Plugin.register :redmine_git_hosting do
     }
   })
 
-  Redmine::AccessControl.map do |map|
-    map.permission :create_gitolite_ssh_key, gitolite_public_keys: [:index, :create, :destroy], require: :loggedin
+  Redmine::AccessControl.map do |main|
+    main.permission :create_gitolite_ssh_key, gitolite_public_keys: [:index, :create, :destroy], require: :loggedin
 
-    map.project_module :repository do |map|
+    main.project_module :repository do |map|
       map.permission :create_repository_mirrors, repository_mirrors: [:new, :create]
       map.permission :view_repository_mirrors,   repository_mirrors: [:index, :show]
       map.permission :edit_repository_mirrors,   repository_mirrors: [:edit, :update, :destroy]

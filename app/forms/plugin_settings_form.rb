@@ -38,9 +38,7 @@ class PluginSettingsForm
 
 
   def params
-    Hash[self.class.all_accessors.map { |v|
-      [v, self.send(v)]
-    }]
+    Hash[self.class.all_accessors.map { |v| [v, self.send(v)] }]
   end
 
 

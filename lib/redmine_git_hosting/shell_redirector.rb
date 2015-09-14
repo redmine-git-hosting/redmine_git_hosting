@@ -275,10 +275,10 @@ module RedmineGitHosting
         if @state == RUNNING_SHELL
           # Must Divert results into buffer.
           if block_given?
-            @read_stream.#{method}(*args) { |value|
+            @read_stream.#{method}(*args) do |value|
               add_to_buffer(value)
               block.call(value)
-            }
+            end
           else
             value = @read_stream.#{method}(*args)
             EnumerableRedirector.new(value, self)
@@ -322,10 +322,10 @@ module RedmineGitHosting
       if @state == RUNNING_SHELL
         # Must Divert results into buffer.
         if block_given?
-          @read_stream.send(method, *args) { |value|
+          @read_stream.send(method, *args) do |value|
             add_to_buffer(value)
             block.call(value)
-          }
+          end
         else
           value = @read_stream.send(method, *args)
           EnumerableRedirector.new(value, self)

@@ -13,7 +13,7 @@ module RedmineGitHosting
 
         # If *max_cache_time* is set to -1 (until next commit) then
         # set the cache time to 1 day (we don't know when will be the next commit)
-        cache_time = (max_cache_time < 0) ? 86400 : max_cache_time
+        cache_time = (max_cache_time < 0) ? 86_400 : max_cache_time
 
         begin
           client.set(hashed_command, output, ex: cache_time)
@@ -33,10 +33,10 @@ module RedmineGitHosting
 
       def flush_cache!
         deleted = 0
-        client.scan_each(match: all_entries) { |key|
+        client.scan_each(match: all_entries) do |key|
           client.del(key)
           deleted += 1
-        }
+        end
         logger.info("Redis Adapter : removed '#{deleted}' expired cache entries among all repositories")
       end
 
@@ -51,10 +51,10 @@ module RedmineGitHosting
 
       def clear_cache_for_repository(repo_id)
         deleted = 0
-        client.scan_each(match: all_entries_for_repo(repo_id)) { |key|
+        client.scan_each(match: all_entries_for_repo(repo_id)) do |key|
           client.del(key)
           deleted += 1
-        }
+        end
         logger.info("Redis Adapter : removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
       end
 
