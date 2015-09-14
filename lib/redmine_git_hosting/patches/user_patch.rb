@@ -37,7 +37,7 @@ module RedmineGitHosting
 
 
         def gitolite_projects
-          projects.uniq.select{ |p| p.gitolite_repos.any? }
+          projects.uniq.select { |p| p.gitolite_repos.any? }
         end
 
 

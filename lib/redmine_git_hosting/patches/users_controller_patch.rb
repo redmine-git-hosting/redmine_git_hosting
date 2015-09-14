@@ -71,7 +71,7 @@ module RedmineGitHosting
 
 
           def projects_to_update
-            @user.gitolite_projects.map{ |p| p.id }
+            @user.gitolite_projects.map { |p| p.id }
           end
 
 

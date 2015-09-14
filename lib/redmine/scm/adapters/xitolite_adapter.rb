@@ -165,7 +165,7 @@ module Redmine
                  :size => (type == "tree") ? nil : size,
                  :lastrev => options[:report_last_commit] ?
                                  lastrev(full_path, identifier) : Revision.new
-                }) unless entries.detect{ |entry| entry.name == name }
+                }) unless entries.detect { |entry| entry.name == name }
               end
             end
           end
@@ -504,7 +504,7 @@ module Redmine
 
           def git_cmd(args, options = {}, &block)
             # Get options
-            bypass_cache = options.delete(:bypass_cache){ false }
+            bypass_cache = options.delete(:bypass_cache) { false }
 
             # Build git command line
             cmd_str = prepare_command(args)

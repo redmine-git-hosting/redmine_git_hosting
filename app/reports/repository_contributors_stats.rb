@@ -24,7 +24,7 @@ class RepositoryContributorsStats < ReportBase
       commits_data[:total_commits] = committer_hash[:commits]
       commits_data[:categories]    = commits.keys
       commits_data[:series]        = []
-      commits_data[:series].push({ name: l(:label_commit_plural), data: commits.values })
+      commits_data[:series] << { name: l(:label_commit_plural), data: commits.values }
       data.push(commits_data)
     end
 
@@ -37,8 +37,8 @@ class RepositoryContributorsStats < ReportBase
     data = {}
     data[:categories] = merged.map { |x| x[:name] }
     data[:series] = []
-    data[:series].push({ name: l(:label_commit_plural), data: merged.map { |x| x[:commits] }})
-    data[:series].push({ name: l(:label_change_plural), data: merged.map { |x| x[:changes] }})
+    data[:series] << { name: l(:label_commit_plural), data: merged.map { |x| x[:commits] } }
+    data[:series] << { name: l(:label_change_plural), data: merged.map { |x| x[:changes] } }
     data
   end
 
