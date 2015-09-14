@@ -22,7 +22,7 @@ describe RepositoryDeploymentCredential do
 
   describe 'Valid RepositoryDeploymentCredential creation' do
     before(:each) do
-      @deployment_credential = build_deployment_credentialuser: @user1, gitolite_public_key: @deploy_key)
+      @deployment_credential = build_deployment_credential(user: @user1, gitolite_public_key: @deploy_key)
     end
 
     subject { @deployment_credential }
@@ -61,13 +61,13 @@ describe RepositoryDeploymentCredential do
 
   context 'when key is not a deployment key' do
     it 'should not be valid' do
-      expect(build_deployment_credentialuser: @user1, gitolite_public_key: @user_key)).not_to be_valid
+      expect(build_deployment_credential(user: @user1, gitolite_public_key: @user_key)).not_to be_valid
     end
   end
 
   context 'when user id is not the owner of deployment key' do
     it 'should not be valid' do
-      expect(build_deployment_credentialuser: @user2, gitolite_public_key: @user_key)).not_to be_valid
+      expect(build_deployment_credential(user: @user2, gitolite_public_key: @user_key)).not_to be_valid
     end
   end
 
