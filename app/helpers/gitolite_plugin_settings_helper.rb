@@ -25,7 +25,7 @@ module GitolitePluginSettingsHelper
       'true.png'
     when 1, false
       'exclamation.png'
-    when 2
+    else
       'warning.png'
     end
   end

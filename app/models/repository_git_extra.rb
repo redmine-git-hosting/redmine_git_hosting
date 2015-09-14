@@ -97,9 +97,6 @@ class RepositoryGitExtra < ActiveRecord::Base
 
     def check_git_http_urls
       case git_http
-      when DISABLED
-        remove_url('http')
-        remove_url('https')
       when HTTP
         add_url('http')
         remove_url('https')
@@ -109,6 +106,9 @@ class RepositoryGitExtra < ActiveRecord::Base
       when BOTH
         add_url('http')
         add_url('https')
+      else
+        remove_url('http')
+        remove_url('https')
       end
     end
 

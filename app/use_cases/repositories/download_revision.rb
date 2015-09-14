@@ -77,15 +77,15 @@ module Repositories
 
       def fill_data
         case format
-        when 'tar' then
-          extension     = 'tar'
-          @content_type = 'application/x-tar'
         when 'tar.gz' then
           extension     = 'tar.gz'
           @content_type = 'application/x-gzip'
         when 'zip' then
           extension     = 'zip'
           @content_type = 'application/x-zip'
+        else
+          extension     = 'tar'
+          @content_type = 'application/x-tar'
         end
         @filename = "#{repository.redmine_name}-#{revision}.#{extension}"
       end
