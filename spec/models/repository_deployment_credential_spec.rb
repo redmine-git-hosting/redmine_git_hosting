@@ -10,8 +10,8 @@ describe RepositoryDeploymentCredential do
     @user1 = users[0]
     @user2 = users[1]
 
-    @deploy_key = create(:gitolite_public_key, :user => @user1, :key_type => 1, :title => 'foo1', :key => DEPLOY_KEY)
-    @user_key   = create(:gitolite_public_key, :user => @user1, :key_type => 0, :title => 'foo2', :key => USER_KEY)
+    @deploy_key = create(:gitolite_public_key, user: @user1, key_type: 1, title: 'foo1', key: DEPLOY_KEY)
+    @user_key   = create(:gitolite_public_key, user: @user1, key_type: 0, title: 'foo2', key: USER_KEY)
   end
 
 
@@ -20,9 +20,9 @@ describe RepositoryDeploymentCredential do
   end
 
 
-  describe "Valid RepositoryDeploymentCredential creation" do
+  describe 'Valid RepositoryDeploymentCredential creation' do
     before(:each) do
-      @deployment_credential = build_deployment_credential(:user => @user1, :gitolite_public_key => @deploy_key)
+      @deployment_credential = build_deployment_credentialuser: @user1, gitolite_public_key: @deploy_key)
     end
 
     subject { @deployment_credential }
@@ -47,11 +47,11 @@ describe RepositoryDeploymentCredential do
     it { should validate_inclusion_of(:perm).in_array(%w(R RW+)) }
 
     ## Attributes content
-    it "is a active credential" do
+    it 'is a active credential' do
       expect(@deployment_credential.active?).to be true
     end
 
-    describe "when active is false" do
+    describe 'when active is false' do
       before { @deployment_credential.active = false }
       it 'shoud be inactive' do
         expect(@deployment_credential.active?).to be false
@@ -59,15 +59,15 @@ describe RepositoryDeploymentCredential do
     end
   end
 
-  context "when key is not a deployment key" do
+  context 'when key is not a deployment key' do
     it 'should not be valid' do
-      expect(build_deployment_credential(:user => @user1, :gitolite_public_key => @user_key)).not_to be_valid
+      expect(build_deployment_credentialuser: @user1, gitolite_public_key: @user_key)).not_to be_valid
     end
   end
 
-  context "when user id is not the owner of deployment key" do
+  context 'when user id is not the owner of deployment key' do
     it 'should not be valid' do
-      expect(build_deployment_credential(:user => @user2, :gitolite_public_key => @user_key)).not_to be_valid
+      expect(build_deployment_credentialuser: @user2, gitolite_public_key: @user_key)).not_to be_valid
     end
   end
 

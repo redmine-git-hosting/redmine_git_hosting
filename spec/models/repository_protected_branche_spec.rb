@@ -7,7 +7,7 @@ describe RepositoryProtectedBranche do
   end
 
 
-  describe "Valid RepositoryProtectedBranche creation" do
+  describe 'Valid RepositoryProtectedBranche creation' do
     before(:each) do
       @protected_branch = build_protected_branch(path: 'devel', permissions: 'RW')
     end

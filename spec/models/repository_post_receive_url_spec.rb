@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryPostReceiveUrl do
 
-  describe "Valid RepositoryPostReceiveUrl creation" do
+  describe 'Valid RepositoryPostReceiveUrl creation' do
     before(:each) do
       @post_receive_url = build(:repository_post_receive_url)
     end
@@ -43,44 +43,44 @@ describe RepositoryPostReceiveUrl do
     it { expect(@post_receive_url.triggers).to be_a(Array) }
     it { expect(@post_receive_url.split_payloads).to be false }
 
-    describe "when active is true" do
+    describe 'when active is true' do
       before { @post_receive_url.active = true }
       it { expect(@post_receive_url.active).to be true }
     end
 
-    describe "when active is false" do
+    describe 'when active is false' do
       before { @post_receive_url.active = false }
       it { expect(@post_receive_url.active).to be false }
     end
 
-    describe "when use_triggers is true" do
+    describe 'when use_triggers is true' do
       before { @post_receive_url.use_triggers = true }
       it { expect(@post_receive_url.use_triggers).to be true }
     end
 
-    describe "when use_triggers is false" do
+    describe 'when use_triggers is false' do
       before { @post_receive_url.use_triggers = false }
       it { expect(@post_receive_url.use_triggers).to be false }
     end
 
-    describe "when split_payloads is true" do
+    describe 'when split_payloads is true' do
       before { @post_receive_url.split_payloads = true }
       it { expect(@post_receive_url.split_payloads).to be true }
     end
 
-    describe "when split_payloads is false" do
+    describe 'when split_payloads is false' do
       before { @post_receive_url.split_payloads = false }
       it { expect(@post_receive_url.split_payloads).to be false }
     end
   end
 
 
-  context "when many post receive url are saved" do
+  context 'when many post receive url are saved' do
     before do
-      create(:repository_post_receive_url, :active => true)
-      create(:repository_post_receive_url, :active => true)
-      create(:repository_post_receive_url, :active => false)
-      create(:repository_post_receive_url, :active => false)
+      create(:repository_post_receive_url, active: true)
+      create(:repository_post_receive_url, active: true)
+      create(:repository_post_receive_url, active: false)
+      create(:repository_post_receive_url, active: false)
     end
 
     it { expect(RepositoryPostReceiveUrl.active.length).to be == 3 }

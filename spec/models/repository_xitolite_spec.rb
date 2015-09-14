@@ -24,7 +24,7 @@ describe Repository::Xitolite do
   end
 
 
-  describe "common_tests : fast tests" do
+  describe 'common_tests : fast tests' do
     before(:each) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
@@ -98,32 +98,32 @@ describe Repository::Xitolite do
     it { expect(@repository_1.available_urls).to be_a(Hash) }
 
 
-    it "should not allow identifier gitolite-admin" do
+    it 'should not allow identifier gitolite-admin' do
       expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
     end
 
 
-    describe "#available_urls" do
-      context "with no option" do
+    describe '#available_urls' do
+      context 'with no option' do
         my_hash = {}
 
-        it "should return an empty Hash" do
+        it 'should return an empty Hash' do
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 0
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
 
-      context "with all options" do
+      context 'with all options' do
         my_hash = {
           ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'true' },
-          https: { url: "https://redmine-test-user@localhost/git/project-parent/project-child.git", committer: 'true' },
-          http:  { url: "http://redmine-test-user@localhost/git/project-parent/project-child.git",  committer: 'false' },
-          go:    { url: "localhost/go/project-parent/project-child",                                committer: 'false' },
-          git:   { url: "git://localhost/redmine/project-parent/project-child.git",                 committer: 'false' }
+          https: { url: 'https://redmine-test-user@localhost/git/project-parent/project-child.git', committer: 'true' },
+          http:  { url: 'http://redmine-test-user@localhost/git/project-parent/project-child.git',  committer: 'false' },
+          go:    { url: 'localhost/go/project-parent/project-child',                                committer: 'false' },
+          git:   { url: 'git://localhost/redmine/project-parent/project-child.git',                 committer: 'false' }
         }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
           User.current = @user
           @project_child.is_public = true
@@ -133,10 +133,10 @@ describe Repository::Xitolite do
         end
       end
 
-      context "with git daemon" do
-        my_hash = { git: { url: "git://localhost/redmine/project-parent/project-child.git", committer: 'false' } }
+      context 'with git daemon' do
+        my_hash = { git: { url: 'git://localhost/redmine/project-parent/project-child.git', committer: 'false' } }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           User.current = nil
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
@@ -145,10 +145,10 @@ describe Repository::Xitolite do
         end
       end
 
-      context "with ssh" do
+      context 'with ssh' do
         my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'true' } }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
           User.current = @user
           @repository_1.extra[:git_daemon] = false
@@ -157,10 +157,10 @@ describe Repository::Xitolite do
         end
       end
 
-      context "with http" do
-        my_hash = { http: { url: "http://localhost/git/project-parent/project-child.git", committer: "false" } }
+      context 'with http' do
+        my_hash = { http: { url: 'http://localhost/git/project-parent/project-child.git', committer: 'false' } }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
@@ -169,10 +169,10 @@ describe Repository::Xitolite do
         end
       end
 
-      context "with https" do
-        my_hash = { https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" } }
+      context 'with https' do
+        my_hash = { https: { url: 'https://localhost/git/project-parent/project-child.git', committer: 'false' } }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
@@ -181,13 +181,13 @@ describe Repository::Xitolite do
         end
       end
 
-      context "with http and https" do
+      context 'with http and https' do
         my_hash = {
-          https: { url: "https://localhost/git/project-parent/project-child.git", committer: "false" },
-          http:  { url: "http://localhost/git/project-parent/project-child.git",  committer: "false" }
+          https: { url: 'https://localhost/git/project-parent/project-child.git', committer: 'false' },
+          http:  { url: 'http://localhost/git/project-parent/project-child.git',  committer: 'false' }
         }
 
-        it "should return a Hash of Git url" do
+        it 'should return a Hash of Git url' do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
@@ -198,7 +198,7 @@ describe Repository::Xitolite do
     end
 
 
-    describe "Repository::Xitolite class" do
+    describe 'Repository::Xitolite class' do
       it { expect(Repository::Xitolite).to respond_to(:repo_ident_unique?) }
       it { expect(Repository::Xitolite).to respond_to(:have_duplicated_identifier?) }
       it { expect(Repository::Xitolite).to respond_to(:repo_path_to_git_cache_id) }
@@ -207,7 +207,7 @@ describe Repository::Xitolite do
   end
 
 
-  describe "common_tests : long tests" do
+  describe 'common_tests : long tests' do
     before do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
@@ -219,16 +219,16 @@ describe Repository::Xitolite do
       @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
     end
 
-   context "when blank identifier" do
-      it "should not allow identifier changes" do
+   context 'when blank identifier' do
+      it 'should not allow identifier changes' do
         @repository_1.identifier = 'new_repo'
         expect(@repository_1).to be_invalid
         expect(@repository_1.identifier).to eq 'new_repo'
       end
     end
 
-    context "when non blank identifier" do
-      it "should not allow identifier changes" do
+    context 'when non blank identifier' do
+      it 'should not allow identifier changes' do
         @repository_2.identifier = 'new_repo2'
         expect(@repository_2).to be_valid
         expect(@repository_2.identifier).to eq 'repo-test'
@@ -236,29 +236,29 @@ describe Repository::Xitolite do
     end
 
 
-    describe "Test uniqueness" do
-      context "when blank identifier is already taken by a repository" do
+    describe 'Test uniqueness' do
+      context 'when blank identifier is already taken by a repository' do
         it { expect(build_git_repository(project: @project_child, identifier: '')).to be_invalid }
       end
 
-      context "when set as default and blank identifier is already taken by a repository" do
+      context 'when set as default and blank identifier is already taken by a repository' do
         it { expect(build_git_repository(project: @project_child, identifier: '', is_default: true)).to be_invalid }
       end
 
-      context "when identifier is already taken by a project" do
+      context 'when identifier is already taken by a project' do
         it { expect(build_git_repository(project: @project_child, identifier: 'project-child')).to be_invalid }
       end
 
-      context "when identifier is already taken by a repository with same project" do
+      context 'when identifier is already taken by a repository with same project' do
         it { expect(build_git_repository(project: @project_child, identifier: 'repo-test')).to be_invalid }
       end
 
-      context "when identifier are not unique" do
+      context 'when identifier are not unique' do
         it { expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_valid }
       end
 
-      context "when identifier are unique" do
-        it "should refuse duplicated identifier" do
+      context 'when identifier are unique' do
+        it 'should refuse duplicated identifier' do
           Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
           expect(build_git_repository(project: @project_parent, identifier: 'repo-test')).to be_invalid
         end
@@ -296,325 +296,325 @@ describe Repository::Xitolite do
   end
 
 
-  context "when hierarchical_organisation with non_unique_identifier: fast tests" do
+  context 'when hierarchical_organisation with non_unique_identifier: fast tests' do
     before(:all) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
       build_collection_of_non_unique_repositories
     end
 
-    describe "repository1" do
-      it "should be default repository" do
+    describe 'repository1' do
+      it 'should be default repository' do
         expect(@repository_1.is_default).to be true
       end
 
-      it "should have nil identifier" do
+      it 'should have nil identifier' do
         expect(@repository_1.identifier).to eq ''
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_1.url).to eq 'repositories/redmine/project-parent/project-child.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_1.root_url).to eq 'repositories/redmine/project-parent/project-child.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_1.git_cache_id).to eq 'project-child'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_1.redmine_name).to eq 'project-child'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-parent/project-child'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_1.redmine_repository_path).to eq 'project-parent/project-child'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_1.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_1.git_url).to eq 'git://localhost/redmine/project-parent/project-child.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_1.http_url).to eq 'http://localhost/git/project-parent/project-child.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_1.https_url).to eq 'https://localhost/git/project-parent/project-child.git'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_1.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_1.git_access_path).to eq 'redmine/project-parent/project-child.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_1.http_access_path).to eq 'git/project-parent/project-child.git'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_1.new_repository_name).to eq 'redmine/project-parent/project-child'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_1.old_repository_name).to eq 'redmine/project-parent/project-child'
       end
     end
 
 
-    describe "repository2" do
-      it "should not be default repository" do
+    describe 'repository2' do
+      it 'should not be default repository' do
         expect(@repository_2.is_default).to be false
       end
 
-      it "should have a valid identifier" do
+      it 'should have a valid identifier' do
         expect(@repository_2.identifier).to eq 'repo-test'
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_2.url).to eq 'repositories/redmine/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_2.root_url).to eq 'repositories/redmine/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_2.git_cache_id).to eq 'project-child/repo-test'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_2.redmine_name).to eq 'repo-test'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_2.gitolite_repository_name).to eq 'redmine/project-parent/project-child/repo-test'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_2.redmine_repository_path).to eq 'project-parent/project-child/repo-test'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_2.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child/repo-test.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_2.git_url).to eq 'git://localhost/redmine/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_2.http_url).to eq 'http://localhost/git/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_2.https_url).to eq 'https://localhost/git/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_2.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_2.git_access_path).to eq 'redmine/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_2.http_access_path).to eq 'git/project-parent/project-child/repo-test.git'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_2.new_repository_name).to eq 'redmine/project-parent/project-child/repo-test'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_2.old_repository_name).to eq 'redmine/project-parent/project-child/repo-test'
       end
     end
 
 
-    describe "repository3" do
-      it "should be default repository" do
+    describe 'repository3' do
+      it 'should be default repository' do
         expect(@repository_3.is_default).to be true
       end
 
-      it "should have nil identifier" do
+      it 'should have nil identifier' do
         expect(@repository_3.identifier).to eq ''
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_3.url).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_3.root_url).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_3.git_cache_id).to eq 'project-parent'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_3.redmine_name).to eq 'project-parent'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_3.gitolite_repository_path).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_3.gitolite_repository_name).to eq 'redmine/project-parent'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_3.redmine_repository_path).to eq 'project-parent'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_3.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_3.git_url).to eq 'git://localhost/redmine/project-parent.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_3.http_url).to eq 'http://localhost/git/project-parent.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_3.https_url).to eq 'https://localhost/git/project-parent.git'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_3.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_3.git_access_path).to eq 'redmine/project-parent.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_3.http_access_path).to eq 'git/project-parent.git'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_3.new_repository_name).to eq 'redmine/project-parent'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_3.old_repository_name).to eq 'redmine/project-parent'
       end
     end
 
 
-    describe "repository4" do
-      it "should not be default repository" do
+    describe 'repository4' do
+      it 'should not be default repository' do
         expect(@repository_4.is_default).to be false
       end
 
-      it "should have a valid identifier" do
+      it 'should have a valid identifier' do
         expect(@repository_4.identifier).to eq 'repo-test'
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_4.url).to eq 'repositories/redmine/project-parent/repo-test.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_4.root_url).to eq 'repositories/redmine/project-parent/repo-test.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_4.git_cache_id).to eq 'project-parent/repo-test'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_4.redmine_name).to eq 'repo-test'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_4.gitolite_repository_path).to eq 'repositories/redmine/project-parent/repo-test.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_4.gitolite_repository_name).to eq 'redmine/project-parent/repo-test'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_4.redmine_repository_path).to eq 'project-parent/repo-test'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_4.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent/repo-test.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_4.git_url).to eq 'git://localhost/redmine/project-parent/repo-test.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_4.http_url).to eq 'http://localhost/git/project-parent/repo-test.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_4.https_url).to eq 'https://localhost/git/project-parent/repo-test.git'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_4.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_4.git_access_path).to eq 'redmine/project-parent/repo-test.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_4.http_access_path).to eq 'git/project-parent/repo-test.git'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_4.new_repository_name).to eq 'redmine/project-parent/repo-test'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_4.old_repository_name).to eq 'redmine/project-parent/repo-test'
       end
     end
   end
 
 
-  context "when hierarchical_organisation with non_unique_identifier: long tests" do
-    describe ".repo_ident_unique?" do
-      it "should be false" do
+  context 'when hierarchical_organisation with non_unique_identifier: long tests' do
+    describe '.repo_ident_unique?' do
+      it 'should be false' do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
         expect(Repository::Xitolite.repo_ident_unique?).to be false
       end
     end
 
-    describe ".have_duplicated_identifier?" do
-      it "should be true" do
+    describe '.have_duplicated_identifier?' do
+      it 'should be true' do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
         create_collection_of_non_unique_repositories
@@ -622,7 +622,7 @@ describe Repository::Xitolite do
       end
     end
 
-    describe ".repo_path_to_git_cache_id" do
+    describe '.repo_path_to_git_cache_id' do
       before do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
@@ -639,7 +639,7 @@ describe Repository::Xitolite do
       let(:git_cache_id3) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
       let(:git_cache_id4) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
 
-      describe "repositories should match" do
+      describe 'repositories should match' do
         it { expect(repo1).to eq @repository_1 }
         it { expect(repo2).to eq @repository_2 }
         it { expect(repo3).to eq @repository_3 }
@@ -683,7 +683,7 @@ describe Repository::Xitolite do
   end
 
 
-  context "when flat_organisation with unique_identifier: fast tests" do
+  context 'when flat_organisation with unique_identifier: fast tests' do
     before(:all) do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
@@ -691,318 +691,318 @@ describe Repository::Xitolite do
     end
 
 
-    describe "repository1" do
-      it "should be default repository" do
+    describe 'repository1' do
+      it 'should be default repository' do
         expect(@repository_1.is_default).to be true
       end
 
-      it "should have nil identifier" do
+      it 'should have nil identifier' do
         expect(@repository_1.identifier).to eq ''
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_1.url).to eq 'repositories/redmine/project-child.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_1.root_url).to eq 'repositories/redmine/project-child.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_1.git_cache_id).to eq 'project-child'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_1.redmine_name).to eq 'project-child'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-child.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-child'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_1.redmine_repository_path).to eq  'project-child'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_1.new_repository_name).to eq 'redmine/project-child'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_1.old_repository_name).to eq 'redmine/project-child'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_1.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_1.git_access_path).to eq 'redmine/project-child.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_1.http_access_path).to eq 'git/project-child.git'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_1.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-child.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_1.git_url).to eq 'git://localhost/redmine/project-child.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_1.http_url).to eq 'http://localhost/git/project-child.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_1.https_url).to eq 'https://localhost/git/project-child.git'
       end
     end
 
 
-    describe "repository2" do
-      it "should not be default repository" do
+    describe 'repository2' do
+      it 'should not be default repository' do
         expect(@repository_2.is_default).to be false
       end
 
-      it "should have a valid identifier" do
+      it 'should have a valid identifier' do
         expect(@repository_2.identifier).to eq 'repo1-test'
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_2.url).to eq 'repositories/redmine/repo1-test.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_2.root_url).to eq 'repositories/redmine/repo1-test.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_2.git_cache_id).to eq 'repo1-test'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_2.redmine_name).to eq 'repo1-test'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/repo1-test.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_2.gitolite_repository_name).to eq 'redmine/repo1-test'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_2.redmine_repository_path).to eq  'repo1-test'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_2.new_repository_name).to eq 'redmine/repo1-test'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_2.old_repository_name).to eq 'redmine/repo1-test'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_2.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_2.git_access_path).to eq 'redmine/repo1-test.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_2.http_access_path).to eq 'git/repo1-test.git'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_2.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/repo1-test.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_2.git_url).to eq 'git://localhost/redmine/repo1-test.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_2.http_url).to eq 'http://localhost/git/repo1-test.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_2.https_url).to eq 'https://localhost/git/repo1-test.git'
       end
     end
 
 
-    describe "repository3" do
-      it "should not be default repository" do
+    describe 'repository3' do
+      it 'should not be default repository' do
         expect(@repository_3.is_default).to be true
       end
 
-      it "should have nil identifier" do
+      it 'should have nil identifier' do
         expect(@repository_3.identifier).to eq ''
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_3.url).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_3.root_url).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_3.git_cache_id).to eq 'project-parent'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_3.redmine_name).to eq 'project-parent'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_3.gitolite_repository_path).to eq 'repositories/redmine/project-parent.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_3.gitolite_repository_name).to eq 'redmine/project-parent'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_3.redmine_repository_path).to eq  'project-parent'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_3.new_repository_name).to eq 'redmine/project-parent'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_3.old_repository_name).to eq 'redmine/project-parent'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_3.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_3.git_access_path).to eq 'redmine/project-parent.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_3.http_access_path).to eq 'git/project-parent.git'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_3.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/project-parent.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_3.git_url).to eq 'git://localhost/redmine/project-parent.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_3.http_url).to eq 'http://localhost/git/project-parent.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_3.https_url).to eq 'https://localhost/git/project-parent.git'
       end
     end
 
 
-    describe "repository4" do
-      it "should not be default repository" do
+    describe 'repository4' do
+      it 'should not be default repository' do
         expect(@repository_4.is_default).to be false
       end
 
-      it "should have a valid identifier" do
+      it 'should have a valid identifier' do
         expect(@repository_4.identifier).to eq 'repo2-test'
       end
 
-      it "should have a valid url" do
+      it 'should have a valid url' do
         expect(@repository_4.url).to eq 'repositories/redmine/repo2-test.git'
       end
 
-      it "should have a valid root_url" do
+      it 'should have a valid root_url' do
         expect(@repository_4.root_url).to eq 'repositories/redmine/repo2-test.git'
       end
 
-      it "should have a valid git_cache_id" do
+      it 'should have a valid git_cache_id' do
         expect(@repository_4.git_cache_id).to eq 'repo2-test'
       end
 
-      it "should have a valid redmine_name" do
+      it 'should have a valid redmine_name' do
         expect(@repository_4.redmine_name).to eq 'repo2-test'
       end
 
-      it "should have a valid gitolite_repository_path" do
+      it 'should have a valid gitolite_repository_path' do
         expect(@repository_4.gitolite_repository_path).to eq 'repositories/redmine/repo2-test.git'
       end
 
-      it "should have a valid gitolite_repository_name" do
+      it 'should have a valid gitolite_repository_name' do
         expect(@repository_4.gitolite_repository_name).to eq 'redmine/repo2-test'
       end
 
-      it "should have a valid redmine_repository_path" do
+      it 'should have a valid redmine_repository_path' do
         expect(@repository_4.redmine_repository_path).to eq  'repo2-test'
       end
 
-      it "should have a valid new_repository_name" do
+      it 'should have a valid new_repository_name' do
         expect(@repository_4.new_repository_name).to eq 'redmine/repo2-test'
       end
 
-      it "should have a valid old_repository_name" do
+      it 'should have a valid old_repository_name' do
         expect(@repository_4.old_repository_name).to eq 'redmine/repo2-test'
       end
 
-      it "should have a valid http_user_login" do
+      it 'should have a valid http_user_login' do
         expect(@repository_4.http_user_login).to eq ''
       end
 
-      it "should have a valid git_access_path" do
+      it 'should have a valid git_access_path' do
         expect(@repository_4.git_access_path).to eq 'redmine/repo2-test.git'
       end
 
-      it "should have a valid http_access_path" do
+      it 'should have a valid http_access_path' do
         expect(@repository_4.http_access_path).to eq 'git/repo2-test.git'
       end
 
-      it "should have a valid ssh_url" do
+      it 'should have a valid ssh_url' do
         expect(@repository_4.ssh_url).to eq "ssh://#{GIT_USER}@localhost/redmine/repo2-test.git"
       end
 
-      it "should have a valid git_url" do
+      it 'should have a valid git_url' do
         expect(@repository_4.git_url).to eq 'git://localhost/redmine/repo2-test.git'
       end
 
-      it "should have a valid http_url" do
+      it 'should have a valid http_url' do
         expect(@repository_4.http_url).to eq 'http://localhost/git/repo2-test.git'
       end
 
-      it "should have a valid https_url" do
+      it 'should have a valid https_url' do
         expect(@repository_4.https_url).to eq 'https://localhost/git/repo2-test.git'
       end
     end
   end
 
 
-  context "when flat_organisation with unique_identifier: long tests" do
-    describe ".repo_ident_unique?" do
-      it "should be false" do
+  context 'when flat_organisation with unique_identifier: long tests' do
+    describe '.repo_ident_unique?' do
+      it 'should be false' do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
         expect(Repository::Xitolite.repo_ident_unique?).to be true
       end
     end
 
-    describe ".have_duplicated_identifier?" do
-      it "should be true" do
+    describe '.have_duplicated_identifier?' do
+      it 'should be true' do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
         create_collection_of_unique_repositories
@@ -1010,7 +1010,7 @@ describe Repository::Xitolite do
       end
     end
 
-    describe ".repo_path_to_git_cache_id" do
+    describe '.repo_path_to_git_cache_id' do
       before do
         Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'false'
         Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'true'
@@ -1027,7 +1027,7 @@ describe Repository::Xitolite do
       let(:git_cache_id3) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
       let(:git_cache_id4) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
 
-      describe "repositories should match" do
+      describe 'repositories should match' do
         it { expect(repo1).to eq @repository_1 }
         it { expect(repo2).to eq @repository_2 }
         it { expect(repo3).to eq @repository_3 }

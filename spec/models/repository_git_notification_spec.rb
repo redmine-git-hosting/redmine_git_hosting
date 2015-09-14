@@ -5,7 +5,7 @@ describe RepositoryGitNotification do
   VALID_MAIL   = ['user@foo.COM', 'A_US-ER@f.B.org', 'frst.lst@foo.jp', '3a+2b-1.0c__@0FoO.BaR.iT']
   INVALID_MAIL = ['user@foo,com', 'user_at_foo.org', 'example.user@foo.', 'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com']
 
-  describe "Valid RepositoryGitNotification creation" do
+  describe 'Valid RepositoryGitNotification creation' do
     before(:each) do
       @git_notification = build(:repository_git_notification)
     end
@@ -37,40 +37,40 @@ describe RepositoryGitNotification do
     it { should serialize(:exclude_list) }
 
     ## Attributes content
-    it { expect(@git_notification.prefix).to eq "[TEST PROJECT]" }
-    it { expect(@git_notification.sender_address).to eq "redmine@example.com" }
+    it { expect(@git_notification.prefix).to eq '[TEST PROJECT]' }
+    it { expect(@git_notification.sender_address).to eq 'redmine@example.com' }
     it { expect(@git_notification.include_list).to eq ['foo@bar.com', 'bar@foo.com'] }
     it { expect(@git_notification.exclude_list).to eq ['far@boo.com', 'boo@far.com'] }
 
-    context "when include_list contains emails with valid format" do
+    context 'when include_list contains emails with valid format' do
       before { @git_notification.include_list = VALID_MAIL }
-      it "should be valid" do
+      it 'should be valid' do
         expect(@git_notification).to be_valid
       end
     end
 
-    context "when include_list contains emails with invalid format" do
+    context 'when include_list contains emails with invalid format' do
       before { @git_notification.include_list = INVALID_MAIL }
-      it "should be valid" do
+      it 'should be valid' do
         expect(@git_notification).not_to be_valid
       end
     end
 
-    context "when exclude_list contains emails with valid format" do
+    context 'when exclude_list contains emails with valid format' do
       before { @git_notification.exclude_list = VALID_MAIL }
-      it "should be valid" do
+      it 'should be valid' do
         expect(@git_notification).to be_valid
       end
     end
 
-    context "when exclude_list contains emails with invalid format" do
+    context 'when exclude_list contains emails with invalid format' do
       before { @git_notification.exclude_list = INVALID_MAIL }
-      it "should be valid" do
+      it 'should be valid' do
         expect(@git_notification).not_to be_valid
       end
     end
 
-    describe "when emails is in both list" do
+    describe 'when emails is in both list' do
       addresses = [
         'user@foo.COM',
         'A_US-ER@f.b.org',
@@ -83,7 +83,7 @@ describe RepositoryGitNotification do
         @git_notification.exclude_list = addresses
       end
 
-      it "should be invalid" do
+      it 'should be invalid' do
         expect(@git_notification).not_to be_valid
       end
     end

@@ -33,7 +33,7 @@ describe RepositoryMirror do
   end
 
 
-  describe "Valid RepositoryMirror creation" do
+  describe 'Valid RepositoryMirror creation' do
     before(:each) do
       @mirror = build(:repository_mirror)
     end
@@ -70,43 +70,43 @@ describe RepositoryMirror do
     it { expect(@mirror.active).to be true }
     it { expect(@mirror.include_all_branches).to be false }
     it { expect(@mirror.include_all_tags).to be false }
-    it { expect(@mirror.explicit_refspec).to eq "" }
+    it { expect(@mirror.explicit_refspec).to eq '' }
     it { expect(@mirror.push_mode).to eq 0 }
     it { expect(@mirror.push_mode).to be_a(Integer) }
 
     ## Test changes
-    describe "when active is true" do
+    describe 'when active is true' do
       before { @mirror.active = true }
-      it "shoud be active" do
+      it 'shoud be active' do
         expect(@mirror.active).to be true
       end
     end
 
-    describe "when active is false" do
+    describe 'when active is false' do
       before { @mirror.active = false }
-      it "should be inactive" do
+      it 'should be inactive' do
         expect(@mirror.active).to be false
       end
     end
 
-    context "it should accept different refspec format" do
-      it "should accept <name>" do
+    context 'it should accept different refspec format' do
+      it 'should accept <name>' do
         expect_valid_refspec 'devel'
       end
 
-      it "should accept a branch path" do
+      it 'should accept a branch path' do
         expect_valid_refspec 'refs/branches/dev'
       end
 
-      it "should accept the update param (+)" do
+      it 'should accept the update param (+)' do
         expect_valid_refspec '+refs/branches/dev'
       end
 
-      it "should accept the wildcard param (*)" do
+      it 'should accept the wildcard param (*)' do
         expect_valid_refspec '+refs/branches/*'
       end
 
-      it "should accept a destination" do
+      it 'should accept a destination' do
         expect_valid_refspec '+refs/branches/*:refs/branches/*'
         expect_valid_refspec '+refs/heads/experiment:refs/remotes/origin/experiment'
         expect_valid_refspec '+devel:devel'
@@ -117,28 +117,28 @@ describe RepositoryMirror do
   end
 
 
-  describe "Invalid Mirror creation" do
+  describe 'Invalid Mirror creation' do
     ## Test presence conflicts
-    it "is invalid when include_all_branches && include_all_tags" do
+    it 'is invalid when include_all_branches && include_all_tags' do
       expect(build_mirror(push_mode: 1, include_all_branches: true, include_all_tags: true)).not_to be_valid
     end
 
-    it "is invalid when include_all_branches && explicit_refspec" do
+    it 'is invalid when include_all_branches && explicit_refspec' do
       expect(build_mirror(push_mode: 1, include_all_branches: true, explicit_refspec: 'devel')).not_to be_valid
     end
 
     ## Validate push mode : forced
-    it "is invalid when push_mode forced without params" do
+    it 'is invalid when push_mode forced without params' do
       expect(build_mirror(push_mode: 1)).not_to be_valid
     end
 
     ## Validate push mode : fast_forward
-    it "is invalid when push_mode fast_forward without params" do
+    it 'is invalid when push_mode fast_forward without params' do
       expect(build_mirror(push_mode: 2)).not_to be_valid
     end
 
     ## Validate explicit_refspec
-    it "should check that <source> and <target> are well formated" do
+    it 'should check that <source> and <target> are well formated' do
       expect_invalid_refspec ':'
       expect_invalid_refspec ':devel'
       expect_invalid_refspec ':/devel'
@@ -158,7 +158,7 @@ describe RepositoryMirror do
   end
 
 
-  context "when many mirror are saved" do
+  context 'when many mirror are saved' do
     before do
       create(:repository_mirror, active: true)
       create(:repository_mirror, active: true)

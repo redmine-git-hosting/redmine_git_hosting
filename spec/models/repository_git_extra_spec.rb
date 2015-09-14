@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitExtra do
 
-  describe "Valid RepositoryGitExtra creation" do
+  describe 'Valid RepositoryGitExtra creation' do
     before(:each) do
       @git_extra = build(:repository_git_extra)
     end
@@ -41,27 +41,27 @@ describe RepositoryGitExtra do
     it { should serialize(:urls_order) }
 
 
-    it "should have default values for git_http" do
+    it 'should have default values for git_http' do
       expect(@git_extra.git_http).to eq 0
     end
 
-    it "should have default values for git_daemon" do
+    it 'should have default values for git_daemon' do
       expect(@git_extra.git_daemon).to be true
     end
 
-    it "should have default values for git_notify" do
+    it 'should have default values for git_notify' do
       expect(@git_extra.git_notify).to be true
     end
 
-    it "should have default values for default_branch" do
+    it 'should have default values for default_branch' do
       expect(@git_extra.default_branch).to eq 'master'
     end
 
-    it "should have default values for protected_branch" do
+    it 'should have default values for protected_branch' do
       expect(@git_extra.protected_branch).to be false
     end
 
-    it "should have default values for key" do
+    it 'should have default values for key' do
       expect(@git_extra.key).to match /\A[a-zA-Z0-9]+\z/
     end
   end
