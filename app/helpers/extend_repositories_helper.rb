@@ -4,7 +4,7 @@ module ExtendRepositoriesHelper
     content_tag(:p) do
       form.select(
         :path_encoding, [nil] + Setting::ENCODINGS,
-        :label => l(:field_scm_path_encoding)
+        label: l(:field_scm_path_encoding)
       ) + '<br />'.html_safe + l(:text_scm_path_encoding_note)
     end
   end
