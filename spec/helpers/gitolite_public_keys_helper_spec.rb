@@ -12,28 +12,28 @@ describe GitolitePublicKeysHelper do
   end
 
 
-  describe ".keylabel" do
-    context "when current user is the key owner" do
+  describe '.keylabel' do
+    context 'when current user is the key owner' do
       before { User.current = @user_without_perm }
       it { expect(helper.keylabel(@gitolite_public_key)).to eq 'foo1' }
     end
 
-    context "when current user is not the key owner" do
+    context 'when current user is not the key owner' do
       before { User.current = @admin_user }
       it { expect(helper.keylabel(@gitolite_public_key)).to eq 'git_anonymous@foo1' }
     end
   end
 
-  describe ".can_create_deployment_keys_for_some_project" do
-    context "when current user is admin" do
+  describe '.can_create_deployment_keys_for_some_project' do
+    context 'when current user is admin' do
       it { expect(helper.can_create_deployment_keys_for_some_project(@admin_user)).to eq true }
     end
 
-    context "when current user can create_deployment_keys" do
+    context 'when current user can create_deployment_keys' do
       it { expect(helper.can_create_deployment_keys_for_some_project(@user_with_perm)).to eq true }
     end
 
-    context "when current user cannot create_deployment_keys" do
+    context 'when current user cannot create_deployment_keys' do
       it { expect(helper.can_create_deployment_keys_for_some_project(@user_without_perm)).to eq false }
     end
   end

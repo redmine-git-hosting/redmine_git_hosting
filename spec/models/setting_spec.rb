@@ -5,7 +5,7 @@ describe Setting do
   before do
     RedmineGitHosting::Config.reload_from_file!
     @settings = Setting.plugin_redmine_git_hosting
-    @default_settings = Redmine::Plugin.find("redmine_git_hosting").settings[:default]
+    @default_settings = Redmine::Plugin.find('redmine_git_hosting').settings[:default]
   end
 
   subject { @settings }

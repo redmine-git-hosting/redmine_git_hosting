@@ -65,17 +65,17 @@ describe RepositoryMirrorsController do
   end
 
 
-  describe "GET #push" do
-    context "with sufficient permissions" do
-      it "renders the :push view" do
+  describe 'GET #push' do
+    context 'with sufficient permissions' do
+      it 'renders the :push view' do
         set_session_user(@member_user)
         get :push, repository_id: @repository.id, id: @object.id
         check_template(:push)
       end
     end
 
-    context "with unsufficient permissions" do
-      it "renders 403" do
+    context 'with unsufficient permissions' do
+      it 'renders 403' do
         set_session_user(@anonymous_user)
         get :push, repository_id: @repository.id, id: @object.id
         check_status(403)

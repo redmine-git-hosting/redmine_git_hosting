@@ -14,7 +14,7 @@ describe RedmineGitHosting::Config do
   ]
 
   GITOLITE_VERSION_2.each do |gitolite_version|
-    it "should recognize Gitolite2" do
+    it 'should recognize Gitolite2' do
       version = RedmineGitHosting::Config.find_version(gitolite_version)
       expect(version).to eq 2
     end
@@ -22,7 +22,7 @@ describe RedmineGitHosting::Config do
 
 
   GITOLITE_VERSION_3.each do |gitolite_version|
-    it "should recognize Gitolite3" do
+    it 'should recognize Gitolite3' do
       version = RedmineGitHosting::Config.find_version(gitolite_version)
       expect(version).to eq 3
     end
