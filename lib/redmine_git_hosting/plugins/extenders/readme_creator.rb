@@ -80,7 +80,7 @@ module RedmineGitHosting::Plugins::Extenders
           author:     commit_author,
           committer:  commit_author,
           message:    'Add README file',
-          parents:    [repo.head.target].compact,
+          parents:    repo.empty? ? [] : [ repo.head.target ].compact,
           tree:       commit_tree,
           update_ref: 'HEAD'
         )
