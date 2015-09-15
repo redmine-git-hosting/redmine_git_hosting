@@ -2,9 +2,9 @@ namespace :redmine_git_hosting do
 
   namespace :migration_tools do
 
-    desc "Fix migration numbers (add missing trailing 0 to some migrations)"
-    task :fix_migration_numbers => [:environment] do
-      puts
+    desc 'Fix migration numbers (add missing trailing 0 to some migrations)'
+    task fix_migration_numbers: [:environment] do
+      puts ''
 
       %w[2011072600000 2011080700000 2011081300000 2011081700000 2012052100000 2012052100001 2012052200000].each do |migration|
 
@@ -32,55 +32,55 @@ namespace :redmine_git_hosting do
           if result.to_a.empty?
             puts "Error : migration is missing #{new_name}"
           else
-            puts "Already migrated, pass!"
-            puts
+            puts 'Already migrated, pass!'
+            puts ''
           end
           next
         end
-        puts
+        puts ''
       end
 
-      puts "Done!"
+      puts 'Done!'
     end
 
 
-    desc "Rename SSH keys"
-    task :rename_ssh_keys => [:environment] do
+    desc 'Rename SSH keys'
+    task rename_ssh_keys: [:environment] do
 
-      puts ""
-      puts "Delete SSH keys in Gitolite and reset identifier :"
-      puts ""
+      puts ''
+      puts 'Delete SSH keys in Gitolite and reset identifier :'
+      puts ''
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Delete SSH key #{ssh_key.identifier}"
         GitoliteAccessor.destroy_ssh_key(ssh_key, bypass_sidekiq: true)
         ssh_key.reset_identifiers
       end
-      puts ""
+      puts ''
 
-      puts "Add SSH keys with new name in Gitolite :"
-      puts ""
+      puts 'Add SSH keys with new name in Gitolite :'
+      puts ''
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Add SSH key : #{ssh_key.identifier}"
         GitoliteAccessor.create_ssh_key(ssh_key, bypass_sidekiq: true)
       end
 
-      puts ""
+      puts ''
 
-      options = { message: "Gitolite configuration has been modified, resync all projects...", bypass_sidekiq: true }
+      options = { message: 'Gitolite configuration has been modified, resync all projects...', bypass_sidekiq: true }
       GitoliteAccessor.update_projects('all', options)
 
-      puts "Done!"
+      puts 'Done!'
     end
 
 
-    desc "Update repositories type (from Git to Xitolite)"
-    task :update_repositories_type => [:environment] do
+    desc 'Update repositories type (from Git to Xitolite)'
+    task update_repositories_type: [:environment] do
 
-      puts ""
-      puts "Update repositories type (from Git to Xitolite) :"
-      puts ""
+      puts ''
+      puts 'Update repositories type (from Git to Xitolite) :'
+      puts ''
 
       Repository::Git.all.each do |repository|
         # Don't update real Git repositories
@@ -89,7 +89,7 @@ namespace :redmine_git_hosting do
         # Don't update orphan repositories
         if repository.project.nil?
           puts "Repository with id : '#{repository.id}' doesn't have a project, skipping !!"
-          puts ""
+          puts ''
           next
         end
 
@@ -97,29 +97,29 @@ namespace :redmine_git_hosting do
         if repository.identifier.nil? || repository.identifier.empty?
           puts repository.project.identifier
           repository.update_attribute(:type, 'Repository::Xitolite')
-          puts "done!"
-          puts ""
+          puts 'Done!'
+          puts ''
         else
           puts repository.identifier
           repository.update_attribute(:type, 'Repository::Xitolite')
-          puts "done!"
-          puts ""
+          puts 'Done!'
+          puts ''
         end
       end
     end
 
 
-    desc "Check GitExtras presence"
-    task :check_git_extras_presence => [:environment] do
+    desc 'Check GitExtras presence'
+    task check_git_extras_presence: [:environment] do
 
-      puts ""
-      puts "Checking for GitExtras presence"
-      puts ""
+      puts ''
+      puts 'Checking for GitExtras presence'
+      puts ''
 
       Repository::Xitolite.all.each do |repository|
         if repository.project.nil?
           puts " - ERROR : Repository with id '##{repository.id}' has no associated project ! You should take a look at it !"
-          puts ""
+          puts ''
           next
         elsif !repository.extra.nil?
           puts " - Repository '#{repository.redmine_name}' has an entry in RepositoryGitExtras table, update it :"
@@ -137,18 +137,18 @@ namespace :redmine_git_hosting do
           extra = repository.build_extra(default_extra_options)
           extra.save!
         end
-        puts "   Done!"
-        puts ""
+        puts '   Done!'
+        puts ''
       end
 
-      puts "Done!"
+      puts 'Done!'
     end
 
   end
 
 
-  desc "Migrate to v1.0 version"
-  task :migrate_to_v1 => [:environment] do
+  desc 'Migrate to v1.0 version'
+  task migrate_to_v1: [:environment] do
     ## First step : rename migrations in DB
     task('redmine_git_hosting:migration_tools:fix_migration_numbers').invoke
     ## Migrate DB only for redmine_git_hosting plugin
