@@ -46,6 +46,14 @@ module Gitolitable
     end
 
 
+    # This is the full absolute path to the Gitolite repository.
+    # Example : /home/git/repositories/redmine/blabla/test-blabla/uuuuuuuuuuu/oooooo.git
+    #
+    def gitolite_full_repository_path
+      File.join(RedmineGitHosting::Config.gitolite_home_dir, gitolite_repository_path)
+    end
+
+
     # A syntaxic sugar used to move repository from a location to an other
     # Example : repositories/blabla/test-blabla/uuuuuuuuuuu/oooooo
     #

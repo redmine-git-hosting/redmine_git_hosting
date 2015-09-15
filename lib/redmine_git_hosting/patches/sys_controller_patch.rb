@@ -25,7 +25,7 @@ module RedmineGitHosting
 
           # Purge RecycleBin
           RedmineGitHosting.logger.info('Purging Recycle Bin from fetch_changesets')
-          RedmineGitHosting::Recycle.delete_expired_files
+          RedmineGitHosting::RecycleBin.delete_expired_content
         end
 
       end

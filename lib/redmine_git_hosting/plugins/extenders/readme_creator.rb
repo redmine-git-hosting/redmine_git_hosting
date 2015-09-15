@@ -16,7 +16,7 @@ module RedmineGitHosting::Plugins::Extenders
       if repository_empty?
         do_create_readme_file
       else
-        logger.warn("Repository not empty, cannot create README file in path '#{gitolite_repo_path}'")
+        logger.warn("Repository is not empty, cannot create README file in path '#{gitolite_repo_path}'")
       end if installable?
     end
 
@@ -35,7 +35,7 @@ module RedmineGitHosting::Plugins::Extenders
 
 
       def do_create_readme_file
-        logger.info("Create README file for repository '#{gitolite_repo_name}'")
+        logger.info("Creating README file for repository '#{gitolite_repo_name}'")
         temp_dir = Dir.mktmpdir
 
         begin

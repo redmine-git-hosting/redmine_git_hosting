@@ -13,10 +13,10 @@ module RedmineGitHosting::Plugins::Sweepers
 
       def move_repository_to_recycle
         if repository_data.is_a?(Hash)
-          RedmineGitHosting::Recycle.move_repository_to_recycle(repository_data)
+          RedmineGitHosting::RecycleBin.move_object_to_recycle(repository_data[:repo_name], repository_data[:repo_path])
         elsif repository_data.is_a?(Array)
-          repository_data.each do |repo|
-            RedmineGitHosting::Recycle.move_repository_to_recycle(repo)
+          repository_data.each do |object_data|
+            RedmineGitHosting::RecycleBin.move_object_to_recycle(object_data[:repo_name], object_data[:repo_path])
           end
         end
       end

@@ -17,6 +17,11 @@ module RedmineGitHosting
         RedmineGitHosting::Config.get_setting(:gitolite_recycle_bin_dir)
       end
 
+
+      def recycle_bin_dir
+        File.join(gitolite_home_dir, gitolite_recycle_bin_dir)
+      end
+
     end
   end
 end

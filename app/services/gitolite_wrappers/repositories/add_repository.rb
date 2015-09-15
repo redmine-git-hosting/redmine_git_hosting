@@ -22,7 +22,7 @@ module GitoliteWrappers
           create_gitolite_repository(repository)
           gitolite_admin_repo_commit(repository.gitolite_repository_name)
 
-          @recovered = RedmineGitHosting::Recycle.recover_repository_if_present?(repository)
+          @recovered = RedmineGitHosting::RecycleBin.restore_object_from_recycle(repository.gitolite_repository_name, repository.gitolite_full_repository_path)
 
           if !@recovered
             logger.info("#{context} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'")

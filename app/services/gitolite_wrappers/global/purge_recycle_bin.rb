@@ -4,7 +4,7 @@ module GitoliteWrappers
       unloadable
 
       def call
-        RedmineGitHosting::Recycle.delete_expired_files(object_id)
+        RedmineGitHosting::RecycleBin.delete_content(object_id)
         RedmineGitHosting.logger.info("purge_recycle_bin : done !")
       end
 
