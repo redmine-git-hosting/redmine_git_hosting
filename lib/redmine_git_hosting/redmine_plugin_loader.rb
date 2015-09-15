@@ -22,6 +22,31 @@ module RedmineGitHosting
     end
 
 
+    def settings
+      default_settings.merge(local_settings)
+    end
+
+
+    def local_settings
+      load_setting_file(local_settings_file)
+    end
+
+
+    def default_settings
+      load_setting_file(default_settings_file)
+    end
+
+
+    def default_settings_file
+      plugin_lib_dir('default_settings.yml')
+    end
+
+
+    def local_settings_file
+      plugin_dir('settings.yml')
+    end
+
+
     def plugin_patches_dir
       plugin_lib_dir(plugin_name, 'patches')
     end
@@ -75,6 +100,12 @@ module RedmineGitHosting
 
 
     private
+
+
+      def load_setting_file(file)
+        return {} unless File.exists?(file)
+        YAML::load(ERB.new(IO.read(file)).result).symbolize_keys
+      end
 
 
       def hook_file?(file)

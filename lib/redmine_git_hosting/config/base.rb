@@ -57,7 +57,7 @@ module RedmineGitHosting
           Setting.check_cache
 
           ## Get actual values
-          valuehash = (Setting.plugin_redmine_git_hosting).clone
+          valuehash = (Setting.plugin_redmine_git_hosting).clone rescue {}
 
           ## Update!
           changes = 0
