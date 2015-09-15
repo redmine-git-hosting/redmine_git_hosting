@@ -19,14 +19,14 @@ unless ENV['DISABLE_COVERAGE'] == 'true'
 end
 
 ## Load Redmine App
-ENV["RAILS_ENV"] = 'test'
+ENV['RAILS_ENV'] = 'test'
 require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 require 'rspec/rails'
 
 ## Load FactoryGirls factories
-Dir[Rails.root.join("plugins/*/spec/factories/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('plugins/*/spec/factories/**/*.rb')].each { |f| require f }
 
-Dir[Rails.root.join("plugins/*/spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('plugins/*/spec/support/**/*.rb')].each { |f| require f }
 
 ## Configure RSpec
 RSpec.configure do |config|

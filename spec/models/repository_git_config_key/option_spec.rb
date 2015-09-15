@@ -15,7 +15,7 @@ describe RepositoryGitConfigKey::Option do
   it { should allow_value('hookfoo', 'hookfoo.foo', 'hookfoo.foo.bar').for(:key) }
 
 
-  context "when key is updated" do
+  context 'when key is updated' do
     before do
       @git_config_key.save
       @git_config_key.key = 'hookbar.foo'

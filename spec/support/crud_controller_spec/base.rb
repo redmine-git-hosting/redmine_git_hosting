@@ -142,7 +142,7 @@ module CrudControllerSpec
 
           context 'with non-existing repository' do
             it 'renders 404' do
-              check_edit_status(404, repository_id: 12345, id: @object.id)
+              check_edit_status(404, repository_id: 345, id: @object.id)
             end
           end
         end

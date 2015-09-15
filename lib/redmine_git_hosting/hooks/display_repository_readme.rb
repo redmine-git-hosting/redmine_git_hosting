@@ -45,7 +45,7 @@ module RedmineGitHosting
 
 
         def find_repository(context, repo_id)
-          blk = repo_id ? lambda { |r| r.identifier == repo_id } : lambda { |r| r.is_default }
+          blk = repo_id ? ->(r) { r.identifier == repo_id } : ->(r) { r.is_default }
           context[:project].repositories.find(&blk)
         end
 
