@@ -19,12 +19,12 @@ module RedmineGitHosting
         end
 
         if !File.directory?(@temp_dir_path)
-          logger.info("Create Gitolite Admin directory : '#{@temp_dir_path}'")
+          file_logger.info("Create Gitolite Admin directory : '#{@temp_dir_path}'")
           begin
             FileUtils.mkdir_p @temp_dir_path
             FileUtils.chmod 0700, @temp_dir_path
           rescue => e
-            logger.error("Cannot create Gitolite Admin directory : '#{@temp_dir_path}'")
+            file_logger.error("Cannot create Gitolite Admin directory : '#{@temp_dir_path}'")
           end
         end
 
@@ -38,7 +38,7 @@ module RedmineGitHosting
         @temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
 
         if !@temp_dir_writeable
-          logger.debug("Testing if Gitolite Admin directory '#{create_temp_dir}' is writeable ...")
+          file_logger.debug("Testing if Gitolite Admin directory '#{create_temp_dir}' is writeable ...")
           mytestfile = File.join(create_temp_dir, 'writecheck')
           if !File.directory?(create_temp_dir)
             @temp_dir_writeable = false
@@ -67,11 +67,11 @@ module RedmineGitHosting
       ## SUDO TEST1
       def can_redmine_sudo_to_gitolite_user?
         return true if gitolite_user == redmine_user
-        logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
+        file_logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
         result = execute_sudo_test(gitolite_user) do
           RedmineGitHosting::Commands.sudo_capture('whoami')
         end
-        result ? logger.info('OK!') : logger.error('Error while testing can_redmine_sudo_to_gitolite_user')
+        result ? file_logger.info('OK!') : file_logger.error('Error while testing can_redmine_sudo_to_gitolite_user')
         result
       end
 

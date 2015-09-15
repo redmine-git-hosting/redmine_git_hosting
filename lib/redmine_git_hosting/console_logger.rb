@@ -9,6 +9,12 @@ module RedmineGitHosting
     end
 
 
+    def debug(message)
+      puts message
+      logger.debug(message.strip)
+    end
+
+
     def info(message)
       puts message
       logger.info(message.strip)

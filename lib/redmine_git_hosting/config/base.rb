@@ -10,11 +10,6 @@ module RedmineGitHosting
       ###############################
 
 
-      def logger
-        RedmineGitHosting.logger
-      end
-
-
       def get_setting(setting, bool = false)
         if bool
           return_bool do_get_setting(setting)
@@ -69,14 +64,14 @@ module RedmineGitHosting
 
           default_hash.each do |key, value|
             if valuehash[key] != value
-              logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
+              console_logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
               valuehash[key] = value
               changes += 1
             end
           end
 
           if changes == 0
-            logger.info('No changes necessary.')
+            console_logger.info('No changes necessary.')
           else
             commit_changes(valuehash)
           end
@@ -84,22 +79,27 @@ module RedmineGitHosting
 
 
         def commit_changes(valuehash)
-          logger.info('Committing changes ... ')
+          console_logger.info('Committing changes ... ')
           begin
             ## Update Settings
             Setting.plugin_redmine_git_hosting = valuehash
             ## Refresh Settings cache
             Setting.check_cache
-            logger.info('Success!')
+            console_logger.info('Success!')
           rescue => e
-            logger.error('Failure.')
-            logger.error(e.message)
+            console_logger.error('Failure.')
+            console_logger.error(e.message)
           end
         end
 
 
-        def logger
+        def console_logger
           RedmineGitHosting::ConsoleLogger
+        end
+
+
+        def file_logger
+          RedmineGitHosting.logger
         end
 
     end
