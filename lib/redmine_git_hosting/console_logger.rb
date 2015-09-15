@@ -1,28 +1,38 @@
 module RedmineGitHosting
-  class ConsoleLogger
+  module ConsoleLogger
+    extend self
 
-    attr_reader :console
-    attr_reader :logger
-
-    def initialize(opts = {})
-      @console = opts[:console] || false
-      @logger ||= RedmineGitHosting.logger
+    def title(message, &block)
+      info("\n * #{message} :")
+      yield if block_given?
+      info("   Done !\n\n")
     end
+
 
     def info(message)
-      puts message if console
-      logger.info(message)
+      puts message
+      logger.info(message.strip)
     end
+
+
+    def warn
+      puts message
+      logger.warn(message.strip)
+    end
+
 
     def error(message)
-      puts message if console
-      logger.error(message)
+      puts message
+      logger.error(message.strip)
     end
 
-    # Handle everything else with base object
-    def method_missing(m, *args, &block)
-      logger.send m, *args, &block
-    end
+
+    private
+
+
+      def logger
+        RedmineGitHosting.logger
+      end
 
   end
 end

@@ -24,8 +24,10 @@ module RedmineGitHosting
       end
 
 
-      def reload_from_file!(opts = {})
-        reload!(nil, opts)
+      def reload_from_file!
+        ## Get default config from init.rb
+        default_hash = Redmine::Plugin.find('redmine_git_hosting').settings[:default]
+        do_reload_config(default_hash)
       end
 
 
@@ -48,34 +50,14 @@ module RedmineGitHosting
             value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting]
           else
             ## The Setting table exist but does not contain the value yet, fallback to default
-            if value.nil?
-              value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting]
-            end
+            value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting] if value.nil?
           end
 
           value
         end
 
 
-        def reload!(config = nil, opts = {})
-          logger = ConsoleLogger.new(opts)
-
-          if !config.nil?
-            default_hash = config
-          else
-            ## Get default config from init.rb
-            default_hash = Redmine::Plugin.find('redmine_git_hosting').settings[:default]
-          end
-
-          if default_hash.nil? || default_hash.empty?
-            logger.info('No defaults specified in init.rb!')
-          else
-            do_reload_config(default_hash, logger)
-          end
-        end
-
-
-        def do_reload_config(default_hash, logger)
+        def do_reload_config(default_hash)
           ## Refresh Settings cache
           Setting.check_cache
 
@@ -96,18 +78,28 @@ module RedmineGitHosting
           if changes == 0
             logger.info('No changes necessary.')
           else
-            logger.info('Committing changes ... ')
-            begin
-              ## Update Settings
-              Setting.plugin_redmine_git_hosting = valuehash
-              ## Refresh Settings cache
-              Setting.check_cache
-              logger.info('Success!')
-            rescue => e
-              logger.error('Failure.')
-              logger.error(e.message)
-            end
+            commit_changes(valuehash)
           end
+        end
+
+
+        def commit_changes(valuehash)
+          logger.info('Committing changes ... ')
+          begin
+            ## Update Settings
+            Setting.plugin_redmine_git_hosting = valuehash
+            ## Refresh Settings cache
+            Setting.check_cache
+            logger.info('Success!')
+          rescue => e
+            logger.error('Failure.')
+            logger.error(e.message)
+          end
+        end
+
+
+        def logger
+          RedmineGitHosting::ConsoleLogger
         end
 
     end
