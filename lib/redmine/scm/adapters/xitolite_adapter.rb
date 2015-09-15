@@ -280,14 +280,14 @@ module Redmine
                 fileaction    = $1
                 filepath      = $2
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
-                files << {:action => fileaction, :path => p}
+                files << { action: fileaction, path: p }
               elsif (parsing_descr == 1 || parsing_descr == 2) \
                   && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/
                 parsing_descr = 2
                 fileaction    = $1
                 filepath      = $3
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
-                files << {:action => fileaction, :path => p}
+                files << { action: fileaction, path: p }
               elsif (parsing_descr == 1) && line.chomp.to_s == ''
                 parsing_descr = 2
               elsif (parsing_descr == 1)
@@ -304,7 +304,7 @@ module Redmine
                 :message    => changeset[:description],
                 :paths      => files,
                 :parents    => changeset[:parents]
-                 })
+              })
               if block_given?
                 yield revision
               else

@@ -5,7 +5,7 @@ module Hrack
 
     attr_reader :params
 
-    PLAIN_TYPE = { "Content-Type" => "text/plain" }
+    PLAIN_TYPE = { 'Content-Type' => 'text/plain' }
 
 
     def initialize(config = {})
@@ -38,7 +38,7 @@ module Hrack
 
       @res = Rack::Response.new
       @res.status = 200
-      @res["Content-Type"] = 'text/plain;'
+      @res['Content-Type'] = 'text/plain;'
       @res.finish do
         @res.write Repositories::ExecuteHooks.call(@repository, :fetch_changesets)
         @res.write Repositories::ExecuteHooks.call(@repository, :update_mirrors, payloads)
@@ -118,7 +118,7 @@ module Hrack
 
 
       def path_parameters
-        @env["action_dispatch.request.path_parameters"]
+        @env['action_dispatch.request.path_parameters']
       end
 
 

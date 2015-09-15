@@ -40,7 +40,7 @@ module ExtendRepositoriesHelper
 
 
   def link_to_repository(repo, current_repo)
-    css_class = [ 'repository', (repo == current_repo ? 'selected' : ''), current_repo.type.split('::')[1].downcase ].join(' ')
+    css_class = ['repository', (repo == current_repo ? 'selected' : ''), current_repo.type.split('::')[1].downcase].join(' ')
     link_to h(repo.name), { controller: 'repositories', action: 'show', id: @project, repository_id: repo.identifier_param, rev: nil, path: nil },
                           class: css_class
   end

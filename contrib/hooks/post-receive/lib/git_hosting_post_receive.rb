@@ -61,7 +61,7 @@ module GitHosting
         parsed = []
         refs.split("\n").each do |line|
           r = line.chomp.strip.split
-          parsed << [ r[0].to_s, r[1].to_s, r[2].to_s ].join(',')
+          parsed << [r[0].to_s, r[1].to_s, r[2].to_s].join(',')
         end
         parsed
       end

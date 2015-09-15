@@ -44,7 +44,7 @@ module GitolitePublicKeys
 
       def set_identifier_for_user_key
         tag = public_key.title.gsub(/[^0-9a-zA-Z]/, '_')
-        [ user.gitolite_identifier, '@', 'redmine_', tag ].join
+        [user.gitolite_identifier, '@', 'redmine_', tag].join
       end
 
 
@@ -66,7 +66,7 @@ module GitolitePublicKeys
       def generate_deploy_key_identifier(count)
         key_count = 1 + count
         key_count += user.gitolite_public_keys.deploy_key.length unless skip_auto_increment
-        [ user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count ].join
+        [user.gitolite_identifier, '_', DEPLOY_PSEUDO_USER, '_', key_count, '@', 'redmine_', DEPLOY_PSEUDO_USER, '_', key_count].join
       end
 
   end

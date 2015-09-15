@@ -80,7 +80,7 @@ module RedmineGitHosting::Plugins::Extenders
           author:     commit_author,
           committer:  commit_author,
           message:    'Add README file',
-          parents:    repo.empty? ? [] : [ repo.head.target ].compact,
+          parents:    [repo.head.target].compact,
           tree:       commit_tree,
           update_ref: 'HEAD'
         )
@@ -88,7 +88,7 @@ module RedmineGitHosting::Plugins::Extenders
 
 
       def push_commit(repo)
-        repo.push('origin', [ remote_branch ], credentials: credentials)
+        repo.push('origin', [remote_branch], credentials: credentials)
       end
 
 
@@ -99,9 +99,9 @@ module RedmineGitHosting::Plugins::Extenders
 
       def credentials
         Rugged::Credentials::SshKey.new(
-          :username   => RedmineGitHosting::Config.gitolite_user,
-          :publickey  => RedmineGitHosting::Config.gitolite_ssh_public_key,
-          :privatekey => RedmineGitHosting::Config.gitolite_ssh_private_key
+          username:   RedmineGitHosting::Config.gitolite_user,
+          publickey:  RedmineGitHosting::Config.gitolite_ssh_public_key,
+          privatekey: RedmineGitHosting::Config.gitolite_ssh_private_key
         )
       end
 

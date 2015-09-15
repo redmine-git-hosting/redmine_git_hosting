@@ -5,7 +5,7 @@ module ExtendProjectsHelper
     label, css_class, enabled = self.send(method, repository)
 
     # Get css class
-    base_class = [ 'icon-git fa fa-lg' ]
+    base_class = ['icon-git fa fa-lg']
     base_class << css_class
     base_class << 'icon-git-disabled' if !enabled
 
