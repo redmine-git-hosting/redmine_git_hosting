@@ -1,7 +1,7 @@
 class AddFingerprintToGitolitePublicKeys < ActiveRecord::Migration
 
   def self.up
-    add_column :gitolite_public_keys, :fingerprint, :string, :after => 'key'
+    add_column :gitolite_public_keys, :fingerprint, :string, after: 'key'
   end
 
 

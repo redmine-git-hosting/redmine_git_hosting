@@ -1,4 +1,5 @@
 class AddSettingsToPlugin < ActiveRecord::Migration
+
   def self.up
     begin
       # Add some new settings to settings page, if they don't exist
@@ -8,12 +9,12 @@ class AddSettingsToPlugin < ActiveRecord::Migration
       valuehash['gitLockWaitTime'] ||= '10'
       valuehash['httpServer'] ||= RedmineGitHosting::Config.my_root_url
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
+      if Setting.plugin_redmine_git_hosting != valuehash
         Setting.plugin_redmine_git_hosting = valuehash
-        say "Added redmine_git_hosting settings: 'gitRecycleBasePath', 'getRecycleExpireTime', 'getLockWaitTime', 'httpServer'"
+        say 'Added redmine_git_hosting settings: gitRecycleBasePath, getRecycleExpireTime, getLockWaitTime, httpServer'
       end
     rescue => e
-      puts e.message
+      say e.message
     end
   end
 
@@ -26,13 +27,14 @@ class AddSettingsToPlugin < ActiveRecord::Migration
       valuehash.delete('gitLockWaitTime')
       valuehash.delete('gitLockWaitTime')
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
+      if Setting.plugin_redmine_git_hosting != valuehash
         Setting.plugin_redmine_git_hosting = valuehash
-        say "Removed redmine_git_hosting settings: 'gitRecycleBasePath', 'getRecycleExpireTime', 'getLockWaitTime', 'httpServer'"
+        say 'Removed redmine_git_hosting settings: gitRecycleBasePath, getRecycleExpireTime, getLockWaitTime, httpServer'
       end
       Setting.plugin_redmine_git_hosting = valuehash
     rescue => e
-      puts e.message
+      say e.message
     end
   end
+
 end

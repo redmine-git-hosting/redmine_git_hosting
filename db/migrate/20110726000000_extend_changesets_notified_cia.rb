@@ -1,6 +1,7 @@
 class ExtendChangesetsNotifiedCia < ActiveRecord::Migration
+
   def self.up
-    add_column :changesets, :notified_cia, :integer, :default=>0
+    add_column :changesets, :notified_cia, :integer, default: 0
   end
 
   def self.down
@@ -9,6 +10,6 @@ class ExtendChangesetsNotifiedCia < ActiveRecord::Migration
   end
 
   def self.column_exists?(table_name, column_name)
-    columns(table_name).any?{ |c| c.name == column_name.to_s }
+    columns(table_name).any? { |c| c.name == column_name.to_s }
   end
 end

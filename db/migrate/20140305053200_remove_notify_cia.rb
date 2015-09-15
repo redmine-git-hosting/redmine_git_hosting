@@ -2,7 +2,6 @@ class RemoveNotifyCia < ActiveRecord::Migration
 
   def self.up
     drop_table :git_cia_notifications
-
     remove_column :repository_git_extras, :notify_cia
   end
 

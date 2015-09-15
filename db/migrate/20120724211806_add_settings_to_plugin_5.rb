@@ -1,4 +1,5 @@
 class AddSettingsToPlugin5 < ActiveRecord::Migration
+
   def self.up
     begin
       # Add some new settings to settings page, if they don't exist
@@ -6,12 +7,12 @@ class AddSettingsToPlugin5 < ActiveRecord::Migration
       valuehash['gitConfigFile'] ||= 'gitolite.conf'
       valuehash['gitConfigHasAdminKey'] ||= 'true'
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
-        say "Added redmine_git_hosting settings: 'gitConfigFile', 'gitConfigHasAdminKey'"
+      if Setting.plugin_redmine_git_hosting != valuehash
+        say 'Added redmine_git_hosting settings: gitConfigFile, gitConfigHasAdminKey'
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      puts e.message
+      say e.message
     end
   end
 
@@ -22,12 +23,13 @@ class AddSettingsToPlugin5 < ActiveRecord::Migration
       valuehash.delete('gitConfigFile')
       valuehash.delete('gitConfigHasAdminKey')
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
-        say "Removed redmine_git_hosting settings: 'gitConfigFile', 'gitConfigHasAdminKey"
+      if Setting.plugin_redmine_git_hosting != valuehash
+        say 'Removed redmine_git_hosting settings: gitConfigFile, gitConfigHasAdminKey'
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      puts e.message
+      say e.message
     end
   end
+
 end

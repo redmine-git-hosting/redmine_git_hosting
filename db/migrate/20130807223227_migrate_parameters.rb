@@ -4,64 +4,64 @@ class MigrateParameters < ActiveRecord::Migration
     ## Prepare default values in case we install Redmine from scratch
     new_setting = {
       # Legacy settings
-      :gitolite_user                 => 'git',
-      :gitolite_server_port          => '22',
-      :gitolite_ssh_private_key      => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
-      :gitolite_ssh_public_key       => Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
+      gitolite_user:                 'git',
+      gitolite_server_port:          '22',
+      gitolite_ssh_private_key:      Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa').to_s,
+      gitolite_ssh_public_key:       Rails.root.join('plugins', 'redmine_git_hosting', 'ssh_keys', 'redmine_gitolite_admin_id_rsa.pub').to_s,
 
-      :gitolite_global_storage_dir   => 'repositories/',
-      :gitolite_redmine_storage_dir  => '',
-      :gitolite_recycle_bin_dir      => 'recycle_bin/',
+      gitolite_global_storage_dir:   'repositories/',
+      gitolite_redmine_storage_dir:  '',
+      gitolite_recycle_bin_dir:      'recycle_bin/',
 
-      :gitolite_temp_dir                    => Rails.root.join('tmp', 'redmine_git_hosting').to_s,
-      :gitolite_scripts_dir                 => './',
-      :gitolite_timeout                     => '10',
-      :gitolite_config_file                 => 'gitolite.conf',
-      :gitolite_recycle_bin_expiration_time => '24.0',
+      gitolite_temp_dir:                    Rails.root.join('tmp', 'redmine_git_hosting').to_s,
+      gitolite_scripts_dir:                 './',
+      gitolite_timeout:                     '10',
+      gitolite_config_file:                 'gitolite.conf',
+      gitolite_recycle_bin_expiration_time: '24.0',
 
-      :gitolite_overwrite_existing_hooks => 'true',
-      :gitolite_hooks_are_asynchronous   => 'false',
-      :gitolite_hooks_debug              => 'false',
+      gitolite_overwrite_existing_hooks: 'true',
+      gitolite_hooks_are_asynchronous:   'false',
+      gitolite_hooks_debug:              'false',
 
-      :gitolite_cache_max_time     => '86400',
-      :gitolite_cache_max_size     => '16',
-      :gitolite_cache_max_elements => '2000',
+      gitolite_cache_max_time:     '86400',
+      gitolite_cache_max_size:     '16',
+      gitolite_cache_max_elements: '2000',
 
-      :ssh_server_domain     => 'localhost',
-      :http_server_domain    => 'localhost',
-      :https_server_domain   => '',
-      :http_server_subdir    => '',
-      :show_repositories_url => 'true',
+      ssh_server_domain:     'localhost',
+      http_server_domain:    'localhost',
+      https_server_domain:   '',
+      http_server_subdir:    '',
+      show_repositories_url: 'true',
 
-      :gitolite_daemon_by_default  => 'false',
-      :gitolite_http_by_default    => '1',
+      gitolite_daemon_by_default:  'false',
+      gitolite_http_by_default:    '1',
 
-      :all_projects_use_git      => 'false',
-      :delete_git_repositories   => 'true',
-      :hierarchical_organisation => 'true',
-      :unique_repo_identifier    => 'false',
+      all_projects_use_git:      'false',
+      delete_git_repositories:   'true',
+      hierarchical_organisation: 'true',
+      unique_repo_identifier:    'false',
 
       # New features settings
-      :gitolite_log_level   => 'info',
+      gitolite_log_level:   'info',
 
-      :gitolite_server_host => '127.0.0.1',
+      gitolite_server_host: '127.0.0.1',
 
-      :git_config_username => 'Redmine Git Hosting',
-      :git_config_email    => 'redmine@example.net',
+      git_config_username: 'Redmine Git Hosting',
+      git_config_email:    'redmine@example.net',
 
-      :gitolite_use_sidekiq        => 'false',
-      :init_repositories_on_create => 'false',
-      :download_revision_enabled   => 'true',
-      :gitolite_identifier_prefix  => 'redmine_',
-      :gitolite_identifier_strip_user_id => 'false',
+      gitolite_use_sidekiq:        'false',
+      init_repositories_on_create: 'false',
+      download_revision_enabled:   'true',
+      gitolite_identifier_prefix:  'redmine_',
+      gitolite_identifier_strip_user_id: 'false',
 
-      :gitolite_resync_all         => 'false',
+      gitolite_resync_all:         'false',
 
-      :gitolite_notify_by_default            => 'false',
-      :gitolite_notify_global_prefix         => '[REDMINE]',
-      :gitolite_notify_global_sender_address => 'redmine@example.net',
-      :gitolite_notify_global_include        => [],
-      :gitolite_notify_global_exclude        => [],
+      gitolite_notify_by_default:            'false',
+      gitolite_notify_global_prefix:         '[REDMINE]',
+      gitolite_notify_global_sender_address: 'redmine@example.net',
+      gitolite_notify_global_include:        [],
+      gitolite_notify_global_exclude:        [],
     }
 
     ## Grab current values and update existing settings
@@ -172,15 +172,15 @@ class MigrateParameters < ActiveRecord::Migration
       end
     end
 
-    puts "Applying configuration update ..."
-    puts YAML::dump(new_setting)
+    say "Applying configuration update ..."
+    say YAML::dump(new_setting)
 
     begin
       Setting.plugin_redmine_git_hosting = new_setting
     rescue => e
-      puts "Error : #{e.message}"
+      say "Error : #{e.message}"
     else
-      puts "Done!"
+      say "Done!"
     end
 
   end

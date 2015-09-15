@@ -1,4 +1,5 @@
 class AddSettingsToPlugin2 < ActiveRecord::Migration
+
   def self.up
     begin
       # Add some new settings to settings page, if they don't exist
@@ -10,15 +11,17 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration
       # Fix httpServer by removing directory components
       valuehash['httpServer'] = (valuehash['httpServer'][/^[^\/]*/])
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
-        say "Added redmine_git_hosting settings: 'httpServerSubdir', 'gitRedmineSubdir', 'gitRepositoryHierarchy'"
-        if (Setting.plugin_redmine_git_hosting['httpServer'] != valuehash['httpServer'])
+      if Setting.plugin_redmine_git_hosting != valuehash
+        say 'Added redmine_git_hosting settings: httpServerSubdir, gitRedmineSubdir, gitRepositoryHierarchy'
+
+        if Setting.plugin_redmine_git_hosting['httpServer'] != valuehash['httpServer']
           say "Updated 'httpServer' from '#{Setting.plugin_redmine_git_hosting['httpServer']}' to '#{valuehash['httpServer']}'."
         end
+
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      puts e.message
+      say e.message
     end
   end
 
@@ -33,15 +36,18 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration
       # Restore redmine root directory to httpServer (remove trailing '/')
       valuehash['httpServer'] = RedmineGitHosting::Config.my_root_url
 
-      if (Setting.plugin_redmine_git_hosting != valuehash)
-        say "Removed redmine_git_hosting settings: 'httpServerSubdir', 'gitRedmineSubdir', 'gitRepositoryHierarchy'"
-        if (Setting.plugin_redmine_git_hosting['httpServer'] != valuehash['httpServer'])
+      if Setting.plugin_redmine_git_hosting != valuehash
+        say 'Removed redmine_git_hosting settings: httpServerSubdir, gitRedmineSubdir, gitRepositoryHierarchy'
+
+        if Setting.plugin_redmine_git_hosting['httpServer'] != valuehash['httpServer']
           say "Updated 'httpServer' from '#{Setting.plugin_redmine_git_hosting['httpServer']}' to '#{valuehash['httpServer']}'."
         end
+
         Setting.plugin_redmine_git_hosting = valuehash
       end
     rescue => e
-      puts e.message
+      say e.message
     end
   end
+
 end
