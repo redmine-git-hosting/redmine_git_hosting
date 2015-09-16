@@ -26,9 +26,9 @@ module Grack
 
         @res = Rack::Response.new
         @res.status = 200
-        @res["Content-Type"] = "application/x-git-%s-result" % @rpc
-        @res["Transfer-Encoding"] = "chunked"
-        @res["Cache-Control"] = "no-cache"
+        @res['Content-Type']      = "application/x-git-#{@rpc}-result"
+        @res['Transfer-Encoding'] = 'chunked'
+        @res['Cache-Control']     = 'no-cache'
 
         @res.finish do
           command = git_command(%W(#{@rpc} --stateless-rpc #{@dir}))

@@ -17,7 +17,7 @@ module GitHosting
       ## Execute extra hooks
       extra_hooks = get_extra_hooks
       if !extra_hooks.empty?
-        logger.info("Calling additional post-receive hooks...")
+        logger.info('Calling additional post-receive hooks...')
         call_extra_hooks(extra_hooks)
         logger.info('')
       end

@@ -23,7 +23,7 @@ module RedmineGitHosting
       def delete_expired_content(expiration_time)
         begin
           expired_content = load_recycle_bin_content(get_expired_content(expiration_time))
-          logger.info("Removing #{expired_content.length} expired repositor#{(expired_content.length != 1) ? "ies" : "y"} from Recycle Bin :")
+          logger.info("Removing #{expired_content.length} expired objects from Recycle Bin :")
           expired_content.map(&:destroy!)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           []

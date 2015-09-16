@@ -12,7 +12,7 @@ module GitoliteWrappers
         else
           admin.transaction do
             remove_redmine_key
-            gitolite_admin_repo_commit("Disable RW access on all Gitolite repositories")
+            gitolite_admin_repo_commit('Disable RW access on all Gitolite repositories')
           end
         end
       end

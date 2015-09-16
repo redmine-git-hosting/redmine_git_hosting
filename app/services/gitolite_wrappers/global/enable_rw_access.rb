@@ -9,13 +9,13 @@ module GitoliteWrappers
         if all_repository_config.nil?
           admin.transaction do
             gitolite_config.add_repo(rw_access_config)
-            gitolite_admin_repo_commit("Enable RW access on all Gitolite repositories")
+            gitolite_admin_repo_commit('Enable RW access on all Gitolite repositories')
           end
         else
           logger.info("#{context} : '@all' repository already configured, check for RedmineGitHosting key presence")
           admin.transaction do
             add_redmine_key
-            gitolite_admin_repo_commit("Enable RW access on all Gitolite repositories")
+            gitolite_admin_repo_commit('Enable RW access on all Gitolite repositories')
           end
         end
       end
