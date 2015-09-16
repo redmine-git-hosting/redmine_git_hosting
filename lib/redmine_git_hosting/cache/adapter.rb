@@ -1,4 +1,4 @@
-module RedmineGitHosting::Cache
+module RedmineGitHosting
   module Cache
     module Adapter
       extend self
