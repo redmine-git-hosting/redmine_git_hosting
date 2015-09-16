@@ -162,7 +162,7 @@ module Settings
 
 
       def do_delete_trash_repo
-        gitolite_accessor.purge_recycle_bin(delete_trash_repo) if !delete_trash_repo.empty?
+        gitolite_accessor.delete_from_recycle_bin(delete_trash_repo) if !delete_trash_repo.empty?
       end
 
 

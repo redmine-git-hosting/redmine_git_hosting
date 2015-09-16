@@ -4,7 +4,7 @@ module RedmineGitHosting
       class PurgeRecycleBin < GitoliteWrappers::Base
 
         def call
-          RedmineGitHosting::RecycleBin.delete_content(object_id)
+          RedmineGitHosting::RecycleBin.delete_expired_content
           RedmineGitHosting.logger.info('purge_recycle_bin : done !')
         end
 

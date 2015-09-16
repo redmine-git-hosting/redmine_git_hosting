@@ -12,7 +12,7 @@ namespace :redmine_git_hosting do
   desc 'Purge expired repositories from Recycle Bin'
   task purge_recycle_bin: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Purging Recycle Bin from command line') do
-      RedmineGitHosting::RecycleBin.delete_expired_content
+      RedmineGitHosting::GitoliteAccessor.purge_recycle_bin
     end
   end
 

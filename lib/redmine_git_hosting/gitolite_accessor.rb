@@ -91,8 +91,13 @@ module RedmineGitHosting
     end
 
 
-    def purge_recycle_bin(repositories)
-      resync_gitolite(:purge_recycle_bin, repositories)
+    def purge_recycle_bin
+      resync_gitolite(:purge_recycle_bin, 'all')
+    end
+
+
+    def delete_from_recycle_bin(repositories)
+      resync_gitolite(:delete_from_recycle_bin, repositories)
     end
 
 
