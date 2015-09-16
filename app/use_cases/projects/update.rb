@@ -23,7 +23,7 @@ module Projects
 
 
       def resync
-        GitoliteAccessor.update_projects([project.id], options)
+        gitolite_accessor.update_projects([project.id], options)
       end
 
   end

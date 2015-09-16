@@ -1,6 +1,8 @@
 class RepositoryProtectedBranchesController < RedmineGitHostingController
   unloadable
 
+  include RedmineGitHosting::GitoliteAccessor::Methods
+
   before_filter :check_xitolite_permissions
   before_filter :find_repository_protected_branch, except: [:index, :new, :create, :sort]
 
@@ -76,7 +78,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
     def call_use_case(opts = {})
       options = opts.merge({ message: "Update branch permissions for repository : '#{@repository.gitolite_repository_name}'" })
-      GitoliteAccessor.update_repository(@repository, options)
+      gitolite_accessor.update_repository(@repository, options)
     end
 
 end

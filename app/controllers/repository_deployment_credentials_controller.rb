@@ -1,6 +1,8 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   unloadable
 
+  include RedmineGitHosting::GitoliteAccessor::Methods
+
   before_filter :check_xitolite_permissions
   before_filter :find_deployment_credential, only: [:edit, :update, :destroy]
   before_filter :find_key,                   only: [:edit, :update, :destroy]
@@ -114,7 +116,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
     def call_use_case(opts = {})
       options = opts.merge({ message: "Update deploy keys for repository : '#{@repository.gitolite_repository_name}'" })
-      GitoliteAccessor.update_repository(@repository, options)
+      gitolite_accessor.update_repository(@repository, options)
     end
 
 

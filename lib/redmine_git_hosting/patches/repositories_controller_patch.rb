@@ -6,6 +6,7 @@ module RedmineGitHosting
 
       def self.included(base)
         base.send(:include, InstanceMethods)
+        base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
           unloadable
 
@@ -88,9 +89,9 @@ module RedmineGitHosting
                   # it will create GitExtra association and then the repository in Gitolite.
                   Repositories::Create.call(@repository, creation_options)
                 when 'update'
-                  GitoliteAccessor.update_repository(@repository)
+                  gitolite_accessor.update_repository(@repository)
                 when 'destroy'
-                  GitoliteAccessor.destroy_repository(@repository)
+                  gitolite_accessor.destroy_repository(@repository)
                 end
               end
             end

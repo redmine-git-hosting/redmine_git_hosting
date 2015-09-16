@@ -6,6 +6,7 @@ module RedmineGitHosting
 
       def self.included(base)
         base.send(:include, InstanceMethods)
+        base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
           unloadable
 
@@ -105,7 +106,7 @@ module RedmineGitHosting
 
 
           def move_project_hierarchy
-            GitoliteAccessor.move_project_hierarchy(@project)
+            gitolite_accessor.move_project_hierarchy(@project)
           end
 
 
@@ -117,7 +118,7 @@ module RedmineGitHosting
 
           def update_project_hierarchy(message)
             options = { message: message }
-            GitoliteAccessor.update_projects(hierarchy_to_update, options)
+            gitolite_accessor.update_projects(hierarchy_to_update, options)
           end
 
 
@@ -129,7 +130,7 @@ module RedmineGitHosting
 
           def destroy_repositories(repositories_list)
             options = { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
-            GitoliteAccessor.destroy_repositories(repositories_list, options)
+            gitolite_accessor.destroy_repositories(repositories_list, options)
           end
 
 

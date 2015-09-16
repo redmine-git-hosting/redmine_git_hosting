@@ -6,6 +6,7 @@ module RedmineGitHosting
 
       def self.included(base)
         base.send(:include, InstanceMethods)
+        base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
           unloadable
           alias_method_chain :create,      :git_hosting
@@ -51,7 +52,7 @@ module RedmineGitHosting
 
           def call_gitolite(message)
             options = { message: "Role has been #{message}, resync all projects (active or closed)..." }
-            GitoliteAccessor.update_projects('active_or_closed', options)
+            gitolite_accessor.update_projects('active_or_closed', options)
           end
 
       end

@@ -1,6 +1,8 @@
 class RepositoryGitConfigKeysController < RedmineGitHostingController
   unloadable
 
+  include RedmineGitHosting::GitoliteAccessor::Methods
+
   before_filter :check_xitolite_permissions
   before_filter :find_repository_git_config_key, except: [:index, :new, :create]
 
@@ -75,7 +77,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
     def call_use_case(opts = {})
       options = opts.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
-      GitoliteAccessor.update_repository(@repository, options)
+      gitolite_accessor.update_repository(@repository, options)
     end
 
 end

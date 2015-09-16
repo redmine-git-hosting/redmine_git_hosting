@@ -2,6 +2,8 @@ module Settings
   class Apply
     unloadable
 
+    include RedmineGitHosting::GitoliteAccessor::Methods
+
     attr_reader :previous_settings
     attr_reader :resync_projects
     attr_reader :resync_ssh_keys
@@ -30,7 +32,7 @@ module Settings
 
 
     def call
-      GitoliteAccessor.flush_settings_cache
+      gitolite_accessor.flush_settings_cache
       apply_settings
     end
 
@@ -87,7 +89,7 @@ module Settings
           # Need to update everyone!
           # We take all root projects (even those who are closed) and move each hierarchy individually
           count = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }.length
-          GitoliteAccessor.move_repositories_tree(count) if count > 0
+          gitolite_accessor.move_repositories_tree(count) if count > 0
         end
       end
 
@@ -98,7 +100,7 @@ module Settings
            value_has_changed?(:gitolite_identifier_prefix) ||
            value_has_changed?(:gitolite_identifier_strip_user_id)
           options = { message: 'Gitolite configuration has been modified, resync all projects (active, closed, archived)...' }
-          GitoliteAccessor.update_projects('all', options)
+          gitolite_accessor.update_projects('all', options)
         end
       end
 
@@ -112,7 +114,7 @@ module Settings
 
           # Need to update everyone!
           options = { message: 'Gitolite configuration has been modified, resync all active projects...' }
-          GitoliteAccessor.update_projects('active', options)
+          gitolite_accessor.update_projects('active', options)
         end
       end
 
@@ -138,34 +140,34 @@ module Settings
       def do_resync_projects
         ## A resync has been asked within the interface, update all projects in force mode
         options = { message: 'Forced resync of all projects (active, closed, archived)...', force: true }
-        GitoliteAccessor.update_projects('all', options) if resync_projects
+        gitolite_accessor.update_projects('all', options) if resync_projects
       end
 
 
       def do_resync_ssh_keys
         ## A resync has been asked within the interface, update all projects in force mode
-        GitoliteAccessor.resync_ssh_keys if resync_ssh_keys
+        gitolite_accessor.resync_ssh_keys if resync_ssh_keys
       end
 
 
       def do_regenerate_ssh_keys
-        GitoliteAccessor.regenerate_ssh_keys if regenerate_ssh_keys
+        gitolite_accessor.regenerate_ssh_keys if regenerate_ssh_keys
       end
 
 
       def do_flush_cache
         ## A cache flush has been asked within the interface
-        GitoliteAccessor.flush_git_cache if flush_cache
+        gitolite_accessor.flush_git_cache if flush_cache
       end
 
 
       def do_delete_trash_repo
-        GitoliteAccessor.purge_recycle_bin(delete_trash_repo) if !delete_trash_repo.empty?
+        gitolite_accessor.purge_recycle_bin(delete_trash_repo) if !delete_trash_repo.empty?
       end
 
 
       def do_add_redmine_rw_access
-        current_setting(:redmine_has_rw_access_on_all_repos) == 'true' ? GitoliteAccessor.enable_rw_access : GitoliteAccessor.disable_rw_access
+        current_setting(:redmine_has_rw_access_on_all_repos) == 'true' ? gitolite_accessor.enable_rw_access : gitolite_accessor.disable_rw_access
       end
 
   end

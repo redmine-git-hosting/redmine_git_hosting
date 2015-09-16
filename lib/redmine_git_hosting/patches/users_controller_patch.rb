@@ -6,6 +6,7 @@ module RedmineGitHosting
 
       def self.included(base)
         base.send(:include, InstanceMethods)
+        base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
           unloadable
 
@@ -66,7 +67,7 @@ module RedmineGitHosting
 
 
           def update_projects
-            GitoliteAccessor.update_projects(projects_to_update, { message: "Status of '#{@user.login}' has changed, update projects" })
+            gitolite_accessor.update_projects(projects_to_update, { message: "Status of '#{@user.login}' has changed, update projects" })
           end
 
 
@@ -83,7 +84,7 @@ module RedmineGitHosting
           def destroy_ssh_keys(ssh_keys_list)
             RedmineGitHosting.logger.info("User '#{@user.login}' has been deleted from Redmine, delete membership and SSH keys !")
             ssh_keys_list.each do |ssh_key|
-              GitoliteAccessor.destroy_ssh_key(ssh_key)
+              gitolite_accessor.destroy_ssh_key(ssh_key)
             end
           end
 

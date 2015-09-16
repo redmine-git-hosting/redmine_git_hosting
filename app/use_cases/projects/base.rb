@@ -2,6 +2,8 @@ module Projects
   class Base
     unloadable
 
+    include RedmineGitHosting::GitoliteAccessor::Methods
+
     attr_reader :project
     attr_reader :options
 

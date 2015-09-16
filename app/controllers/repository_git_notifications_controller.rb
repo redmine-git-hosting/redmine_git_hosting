@@ -1,6 +1,8 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
   unloadable
 
+  include RedmineGitHosting::GitoliteAccessor::Methods
+
   before_filter :check_xitolite_permissions
 
 
@@ -62,7 +64,7 @@ class RepositoryGitNotificationsController < RedmineGitHostingController
 
     def call_use_case(opts = {})
       options = opts.merge({ message: "Rebuild mailing list for respository : '#{@repository.gitolite_repository_name}'" })
-      GitoliteAccessor.update_repository(@repository, options)
+      gitolite_accessor.update_repository(@repository, options)
     end
 
 end

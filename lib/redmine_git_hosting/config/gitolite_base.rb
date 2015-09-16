@@ -24,7 +24,7 @@ module RedmineGitHosting
 
 
       def gitolite_lib_dir
-        RedmineGitHosting::Config.get_setting(:gitolite_lib_dir)
+        get_setting(:gitolite_lib_dir)
       end
 
 
@@ -38,27 +38,27 @@ module RedmineGitHosting
 
 
       def gitolite_user
-        RedmineGitHosting::Config.get_setting(:gitolite_user)
+        get_setting(:gitolite_user)
       end
 
 
       def gitolite_server_host
-        RedmineGitHosting::Config.get_setting(:gitolite_server_host)
+        get_setting(:gitolite_server_host)
       end
 
 
       def gitolite_server_port
-        RedmineGitHosting::Config.get_setting(:gitolite_server_port)
+        get_setting(:gitolite_server_port)
       end
 
 
       def gitolite_ssh_private_key
-        RedmineGitHosting::Config.get_setting(:gitolite_ssh_private_key)
+        get_setting(:gitolite_ssh_private_key)
       end
 
 
       def gitolite_ssh_public_key
-        RedmineGitHosting::Config.get_setting(:gitolite_ssh_public_key)
+        get_setting(:gitolite_ssh_public_key)
       end
 
 
@@ -68,7 +68,7 @@ module RedmineGitHosting
 
 
       def gitolite_config_file
-        File.basename(RedmineGitHosting::Config.get_setting(:gitolite_config_file))
+        File.basename(get_setting(:gitolite_config_file))
       end
 
 
@@ -83,12 +83,12 @@ module RedmineGitHosting
 
 
       def gitolite_identifier_prefix
-        RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
+        get_setting(:gitolite_identifier_prefix)
       end
 
 
       def gitolite_identifier_strip_user_id?
-        RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+        get_setting(:gitolite_identifier_strip_user_id, true)
       end
 
 
@@ -98,17 +98,17 @@ module RedmineGitHosting
 
 
       def git_config_username
-        RedmineGitHosting::Config.get_setting(:git_config_username)
+        get_setting(:git_config_username)
       end
 
 
       def git_config_email
-        RedmineGitHosting::Config.get_setting(:git_config_email)
+        get_setting(:git_config_email)
       end
 
 
       def gitolite_temp_dir
-        RedmineGitHosting::Config.get_setting(:gitolite_temp_dir)
+        get_setting(:gitolite_temp_dir)
       end
 
 
@@ -123,7 +123,7 @@ module RedmineGitHosting
 
 
       def gitolite_log_level
-        RedmineGitHosting::Config.get_setting(:gitolite_log_level)
+        get_setting(:gitolite_log_level)
       end
 
     end

@@ -6,6 +6,7 @@ module RedmineGitHosting
 
       def self.included(base)
         base.send(:include, InstanceMethods)
+        base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
           unloadable
 
@@ -18,7 +19,7 @@ module RedmineGitHosting
 
         def fetch_changesets_with_git_hosting(&block)
           # Flush GitCache
-          GitoliteAccessor.flush_git_cache
+          gitolite_accessor.flush_git_cache
 
           # Previous routine
           fetch_changesets_without_git_hosting(&block)

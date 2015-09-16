@@ -24,7 +24,7 @@ class MoveRepositoryForm
 
   def valid_form_submitted
     repository.update_attribute(:project_id, project.id)
-    GitoliteAccessor.move_repository(repository)
+    RedmineGitHosting::GitoliteAccessor.move_repository(repository)
   end
 
 

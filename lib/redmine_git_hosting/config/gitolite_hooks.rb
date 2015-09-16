@@ -9,27 +9,27 @@ module RedmineGitHosting
 
 
       def gitolite_hooks_url
-        [RedmineGitHosting::Config.get_setting(:gitolite_hooks_url), '/githooks/post-receive/redmine'].join
+        [get_setting(:gitolite_hooks_url), '/githooks/post-receive/redmine'].join
       end
 
 
       def gitolite_hooks_debug
-        RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true)
+        get_setting(:gitolite_hooks_debug, true)
       end
 
 
       def gitolite_hooks_are_asynchronous
-        RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
+        get_setting(:gitolite_hooks_are_asynchronous, true)
       end
 
 
       def gitolite_overwrite_existing_hooks?
-        RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true)
+        get_setting(:gitolite_overwrite_existing_hooks, true)
       end
 
 
       def gitolite_local_code_dir
-        RedmineGitHosting::Config.get_setting(:gitolite_local_code_dir)
+        get_setting(:gitolite_local_code_dir)
       end
 
 
@@ -45,8 +45,8 @@ module RedmineGitHosting
       def check_hooks_install!
         {
           hook_files:    RedmineGitHosting::GitoliteHooks.hooks_installed?,
-          global_params: GitoliteParams::GlobalParams.new.installed?,
-          mailer_params: GitoliteParams::MailerParams.new.installed?
+          global_params: RedmineGitHosting::GitoliteParams::GlobalParams.new.installed?,
+          mailer_params: RedmineGitHosting::GitoliteParams::MailerParams.new.installed?
         }
       end
 
@@ -54,14 +54,14 @@ module RedmineGitHosting
       def install_hooks!
         {
           hook_files:    RedmineGitHosting::GitoliteHooks.install_hooks!,
-          global_params: GitoliteParams::GlobalParams.new.install!,
-          mailer_params: GitoliteParams::MailerParams.new.install!
+          global_params: RedmineGitHosting::GitoliteParams::GlobalParams.new.install!,
+          mailer_params: RedmineGitHosting::GitoliteParams::MailerParams.new.install!
         }
       end
 
 
       def update_hook_params!
-        GitoliteParams::GlobalParams.new.install!
+        RedmineGitHosting::GitoliteParams::GlobalParams.new.install!
       end
 
     end

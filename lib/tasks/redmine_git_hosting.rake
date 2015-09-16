@@ -20,7 +20,7 @@ namespace :redmine_git_hosting do
   desc 'Update/repair Gitolite configuration'
   task update_repositories: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual update_repositories operation from command line') do
-      GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
+      RedmineGitHosting::GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
     end
   end
 
@@ -28,7 +28,7 @@ namespace :redmine_git_hosting do
   desc 'Fetch commits from gitolite repositories/update gitolite configuration'
   task fetch_changesets: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual fetch_changesets operation from command line') do
-      GitoliteAccessor.flush_git_cache
+      RedmineGitHosting::GitoliteAccessor.flush_git_cache
       Repository.fetch_changesets
     end
   end
@@ -50,7 +50,7 @@ namespace :redmine_git_hosting do
   desc 'Resync ssh_keys'
   task resync_ssh_keys: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual resync_ssh_keys operation from command line') do
-      GitoliteAccessor.resync_ssh_keys(bypass_sidekiq: true)
+      RedmineGitHosting::GitoliteAccessor.resync_ssh_keys(bypass_sidekiq: true)
     end
   end
 
@@ -58,7 +58,7 @@ namespace :redmine_git_hosting do
   desc 'Regenerate ssh_keys'
   task regenerate_ssh_keys: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual regenerate_ssh_keys operation from command line') do
-      GitoliteAccessor.regenerate_ssh_keys(bypass_sidekiq: true)
+      RedmineGitHosting::GitoliteAccessor.regenerate_ssh_keys(bypass_sidekiq: true)
     end
   end
 
