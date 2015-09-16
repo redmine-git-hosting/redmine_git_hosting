@@ -11,7 +11,7 @@ Redmine::MenuManager.map :top_menu do |menu|
             if: Proc.new { User.current.logged? && User.current.admin? }
 end
 
-## Redmine Permissions
+## Redmine SCM
 Redmine::Scm::Base.add 'Xitolite'
 
 ## Redmine Views Hooks
