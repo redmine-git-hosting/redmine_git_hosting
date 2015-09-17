@@ -28,6 +28,16 @@ module RedmineGitHosting
         end
       end
 
+
+      def author_name(committer)
+        committer.gsub(/\A([^<]+)\s+.*\z/, '\1')
+      end
+
+
+      def author_email(committer)
+        committer.gsub(/\A.*<([^>]+)>.*\z/, '\1')
+      end
+
     end
   end
 end
