@@ -6,11 +6,11 @@ require 'redmine_git_hosting'
 
 Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
-  author      'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
+  author      'A lot of people! A big thank to them for their contribution!'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
   version     '1.1-devel'
-  url         'https://github.com/jbox-web/redmine_git_hosting'
-  author_url  'https://github.com/jbox-web'
+  url         'http://redmine-git-hosting.io/'
+  author_url  '/settings/plugin/redmine_git_hosting/authors'
 
   settings({ partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings })
 end

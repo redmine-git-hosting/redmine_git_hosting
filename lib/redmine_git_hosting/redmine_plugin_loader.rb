@@ -22,6 +22,16 @@ module RedmineGitHosting
     end
 
 
+    def authors
+      load_authors_file
+    end
+
+
+    def authors_file
+      plugin_dir('AUTHORS')
+    end
+
+
     def settings
       default_settings.merge(local_settings)
     end
@@ -105,6 +115,12 @@ module RedmineGitHosting
       def load_setting_file(file)
         return {} unless File.exists?(file)
         YAML::load(ERB.new(IO.read(file)).result).symbolize_keys
+      end
+
+
+      def load_authors_file
+        return [] unless File.exists?(authors_file)
+        File.read(authors_file).split("\n").map { |a| RedmineGitHosting::PluginAuthor.new(a) }
       end
 
 

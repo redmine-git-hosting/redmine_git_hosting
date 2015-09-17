@@ -36,6 +36,7 @@ end
 # Enable Redirector for Go Lang repositories
 get 'go/:repo_path', repo_path: /([^\/]+\/)*?[^\/]+/, to: 'go_redirector#index'
 
+get 'settings/plugin/:id/authors', to: 'settings#authors', as: 'plugin_authors'
 get 'settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gitolite_hooks', as: 'install_gitolite_hooks'
 
 # Enable SmartHTTP Grack support

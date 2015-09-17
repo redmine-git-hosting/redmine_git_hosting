@@ -19,12 +19,17 @@ module RedmineGitHosting
 
       module InstanceMethods
 
+        def authors
+          @plugin = Redmine::Plugin.find(params[:id])
+          return render_404 unless @plugin.id == :redmine_git_hosting
+          @authors = RedmineGitHosting.authors
+          render layout: false
+        end
+
+
         def install_gitolite_hooks
           @plugin = Redmine::Plugin.find(params[:id])
-          unless @plugin.id == :redmine_git_hosting
-            render_404
-            return
-          end
+          return render_404 unless @plugin.id == :redmine_git_hosting
           @gitolite_checks = RedmineGitHosting::Config.install_hooks!
         end
 

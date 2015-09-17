@@ -53,6 +53,12 @@ PLUGIN SETTINGS
   margin-top: 15px;
 }
 
+.authors-list {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+
 
 /*
 REPOSITORY EDIT
