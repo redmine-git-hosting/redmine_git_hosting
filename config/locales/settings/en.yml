@@ -21,19 +21,21 @@ en:
   label_gitolite_storage_config: Gitolite Storage Configuration
 
   label_gitolite_global_storage_dir: Gitolite repositories base path
-  label_gitolite_global_storage_dir_desc: (Relative to Gitolite user home)
+  label_gitolite_global_storage_dir_desc: Relative to Gitolite user home
   label_gitolite_recycle_bin_dir: Gitolite recycle bin base path
-  label_gitolite_recycle_bin_dir_desc: (Relative to Gitolite user home)
+  label_gitolite_recycle_bin_dir_desc: Relative to Gitolite user home
   label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
-  label_gitolite_redmine_storage_dir_desc: (Relative to Gitolite repositories base path)
+  label_gitolite_redmine_storage_dir_desc: Relative to Gitolite repositories base path
   label_gitolite_local_code_dir: Gitolite non-core hooks directory
   label_gitolite_local_code_dir_desc: Relative to Gitolite user home
+  label_gitolite_lib_dir: Gitolite librairies directory
+  label_gitolite_lib_dir_desc: /usr/share/gitolite3/lib under Debian, bin/lib/ if installed by hand
 
   # Gitolite Config File
   label_tab_config_file: Configuration file
   label_gitolite_config_file: Gitolite configuration file
   label_gitolite_identifier_prefix: Gitolite prefix
-  label_gitolite_identifier_prefix_desc: (Will be used to generate SSH keys identifiers)
+  label_gitolite_identifier_prefix_desc: Will be used to generate SSH keys identifiers
   label_gitolite_identifier_strip_user_id: Remove user ID from Gitolite identifier
 
   # Gitolite Global Config
@@ -41,22 +43,22 @@ en:
   label_gitolite_global_config: Gitolite Global Configuration
 
   label_gitolite_temp_dir: Temporary dir for lock file and data
-  label_gitolite_temp_dir_desc: (Must be absolute)
+  label_gitolite_temp_dir_desc: Must be absolute
 
   label_gitolite_recycle_bin_expiration_time: Expiration time for repositories in recycle bin
-  label_gitolite_recycle_bin_expiration_time_desc: (In hours)
+  label_gitolite_recycle_bin_expiration_time_desc: In hours
 
   label_gitolite_log_level: Gitolite log level
-  label_gitolite_log_level_desc: (You must restart Redmine to take effects)
+  label_gitolite_log_level_desc: You must restart Redmine to take effects
   label_debug: Debug
   label_info: Info
   label_warn: Warning
   label_error: Error
 
   label_git_config_username: Git author name
-  label_git_config_username_desc: (Will be used as author name in commits)
+  label_git_config_username_desc: Will be used as author name in commits
   label_git_config_email: Git author email
-  label_git_config_email_desc: (Will be used as author email in commits)
+  label_git_config_email_desc: Will be used as author email in commits
 
   # Gitolite Access Config
   label_tab_access: Access
@@ -65,10 +67,10 @@ en:
   label_ssh_server_domain: SSH server domain
   label_http_server_domain: HTTP server domain
   label_https_server_domain: HTTPS server domain
-  label_https_server_domain_desc: "(don't set it if you don't use it)"
+  label_https_server_domain_desc: Let it blank if you don't use it
   label_default_domain_name: Default domain name
   label_http_server_subdir: Subdirectory for HTTP access
-  label_http_server_subdir_desc: (Relative to Redmine root url)
+  label_http_server_subdir_desc: Relative to Redmine root url
   label_show_repositories_url: Show checkout URL's?
 
   label_gitolite_daemon_by_default: Enable Git Daemon mode for new repositories by default?
@@ -101,7 +103,7 @@ en:
   label_gitolite_cache_max_size: Max cache element size
   label_gitolite_cache_max_elements: Max cache elements
   label_gitolite_cache_adapter: Cache Adapter
-  label_gitolite_cache_adapter_desc: (You must restart Redmine to take effects)
+  label_gitolite_cache_adapter_desc: You must restart Redmine to take effects
 
   # Gitolite Notifications
   label_tab_notify: Notifications

@@ -16,7 +16,9 @@
   = hidden_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix if disable_button
   = text_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix, size: 60, disabled: disable_button
   %br
-  %em= l(:label_gitolite_identifier_prefix_desc)
+  %em
+    = surround '(', ')' do
+      = l(:label_gitolite_identifier_prefix_desc)
 
 %p
   %label= l(:label_gitolite_identifier_strip_user_id)

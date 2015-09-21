@@ -21,19 +21,21 @@ fr:
   label_gitolite_storage_config: Configuration du stockage dans Gitolite
 
   label_gitolite_global_storage_dir: Chemin de base des dépôts Gitolite
-  label_gitolite_global_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_global_storage_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
   label_gitolite_recycle_bin_dir: Chemin de la corbeille Gitolite
-  label_gitolite_recycle_bin_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_recycle_bin_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
   label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
-  label_gitolite_redmine_storage_dir_desc: (Relatif au répertoire personnel de l'utilisateur Gitolite)
+  label_gitolite_redmine_storage_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
   label_gitolite_local_code_dir: Répertoire de stockage des hooks non-core
   label_gitolite_local_code_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
+  label_gitolite_lib_dir: Répertoire contenant les librairies Gitolite
+  label_gitolite_lib_dir_desc: /usr/share/gitolite3/lib sous Debian, bin/lib/ si installé à la main
 
   # Gitolite Config File
   label_tab_config_file: Fichier de configuration
   label_gitolite_config_file: Fichier de configuration de Gitolite
   label_gitolite_identifier_prefix: Préfixe Gitolite
-  label_gitolite_identifier_prefix_desc: (Sera utilisé pour générer les identifiants de clé SSH)
+  label_gitolite_identifier_prefix_desc: Sera utilisé pour générer les identifiants de clé SSH
   label_gitolite_identifier_strip_user_id: Supprimer l'ID de l'utilisateur de l'identifiant Gitolite
 
   # Gitolite Global Config
@@ -41,22 +43,22 @@ fr:
   label_gitolite_global_config: Configuration globale du plugin
 
   label_gitolite_temp_dir: Répertoire temporaire pour les fichiers de verrouillage et les données
-  label_gitolite_temp_dir_desc: (Doit être absolu)
+  label_gitolite_temp_dir_desc: Doit être absolu
 
   label_gitolite_recycle_bin_expiration_time: Temps d'expiration pour les dépôts dans la corbeille
-  label_gitolite_recycle_bin_expiration_time_desc: (En heures)
+  label_gitolite_recycle_bin_expiration_time_desc: En heures
 
   label_gitolite_log_level: Niveau de journalisation
-  label_gitolite_log_level_desc: (Vous devrez redémarrer Redmine pour que le changement soit pris en compte)
+  label_gitolite_log_level_desc: Vous devrez redémarrer Redmine pour que le changement soit pris en compte
   label_debug: Débogue
   label_info: Info
   label_warn: Avertissement
   label_error: Erreur
 
   label_git_config_username: Nom de l'auteur Git
-  label_git_config_username_desc: (Sera utilisé comme nom de l'auteur dans les commits)
+  label_git_config_username_desc: Sera utilisé comme nom de l'auteur dans les commits
   label_git_config_email: Email de l'auteur Git
-  label_git_config_email_desc: (Sera utilisé comme email de l'auteur dans les commits)
+  label_git_config_email_desc: Sera utilisé comme email de l'auteur dans les commits
 
   # Gitolite Access Config
   label_tab_access: Accès
@@ -65,10 +67,10 @@ fr:
   label_ssh_server_domain: Nom de domaine du serveur SSH
   label_http_server_domain: Nom de domaine du serveur HTTP
   label_https_server_domain: Nom de domaine du serveur HTTPS
-  label_https_server_domain_desc: "(laissez vide si vous n'utilisez pas HTTPS)"
+  label_https_server_domain_desc: Laissez vide si vous n'utilisez pas HTTPS
   label_default_domain_name: Nom de domaine par défaut
   label_http_server_subdir: Sous-répertoire pour l'accès HTTP
-  label_http_server_subdir_desc: (Relatif à la racine de Redmine)
+  label_http_server_subdir_desc: Relatif à la racine de Redmine
   label_show_repositories_url: Afficher les URL des dépôts
 
   label_gitolite_daemon_by_default: Activer le daemon Git pour les nouveaux dépôts par défaut

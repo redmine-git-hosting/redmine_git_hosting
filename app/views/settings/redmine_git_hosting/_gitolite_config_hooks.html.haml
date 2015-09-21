@@ -34,8 +34,9 @@
         = text_field_tag 'settings[gitolite_hooks_url]', gitolite_hooks_url, size: 60
         %br
         %em
-          = l(:label_default_gitolite_hooks_url) + ' :'
-          = "#{Setting.protocol}://#{Setting.host_name.split('/').first}"
+          = surround '(', ')' do
+            = l(:label_default_gitolite_hooks_url) + ' :'
+            = "#{Setting.protocol}://#{Setting.host_name.split('/').first}"
 
       %p
         %label= l(:label_gitolite_hooks_url)

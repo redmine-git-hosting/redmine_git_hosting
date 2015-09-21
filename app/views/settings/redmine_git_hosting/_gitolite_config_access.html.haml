@@ -16,22 +16,26 @@
   = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60
   %br
   %em
-    = l(:label_default_domain_name) + ' :'
-    = Setting.host_name.split('/').first
+    = surround '(', ')' do
+      = l(:label_default_domain_name) + ' :'
+      = Setting.host_name.split('/').first
 
 %p
   %label= l(:label_http_server_domain)
   = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60
   %br
   %em
-    = l(:label_default_domain_name) + ' :'
-    = Setting.host_name.split('/').first
+    = surround '(', ')' do
+      = l(:label_default_domain_name) + ' :'
+      = Setting.host_name.split('/').first
 
 %p
   %label= l(:label_https_server_domain)
   = text_field_tag 'settings[https_server_domain]', https_server_domain, size: 60
   %br
-  %em= l(:label_https_server_domain_desc)
+  %em
+    = surround '(', ')' do
+      = l(:label_https_server_domain_desc)
 
 %p
   %label= raw l(:label_http_server_subdir)
