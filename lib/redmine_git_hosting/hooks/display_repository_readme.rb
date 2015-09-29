@@ -56,7 +56,7 @@ module RedmineGitHosting
 
 
         def get_formatter(repository, readme_file, rev)
-          raw_readme_text = repository.cat(readme_file.path, rev)
+          raw_readme_text = Redmine::CodesetUtil.to_utf8_by_setting(repository.cat(readme_file.path, rev))
 
           if MARKDOWN_EXT.include?(File.extname(readme_file.path))
             formatter_name = Redmine::WikiFormatting.format_names.find { |name| name =~ /markdown/i }
