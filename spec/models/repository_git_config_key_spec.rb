@@ -2,11 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryGitConfigKey do
 
-  before(:each) do
-    @git_config_key = build(:repository_git_config_key_base)
-  end
+  let(:git_config_key) { build(:repository_git_config_key_base) }
 
-  subject { @git_config_key }
+  subject { git_config_key }
 
   ## Attributes
   it { should allow_mass_assignment_of(:type) }

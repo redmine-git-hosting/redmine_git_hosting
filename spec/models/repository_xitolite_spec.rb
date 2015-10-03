@@ -49,59 +49,73 @@ describe Repository::Xitolite do
     it { should have_one(:git_notification) }
 
     ## Attributes
-    it { should respond_to(:identifier) }
-    it { should respond_to(:url) }
-    it { should respond_to(:root_url) }
-
-    ## Methods
-    it { should respond_to(:extra) }
-
-    it { should respond_to(:report_last_commit) }
-    it { should respond_to(:extra_report_last_commit) }
-
-    it { should respond_to(:git_cache_id) }
-    it { should respond_to(:redmine_name) }
-
-    it { should respond_to(:gitolite_repository_path) }
-    it { should respond_to(:gitolite_repository_name) }
-    it { should respond_to(:redmine_repository_path) }
-
-    it { should respond_to(:new_repository_name) }
-    it { should respond_to(:old_repository_name) }
-
-    it { should respond_to(:http_user_login) }
-    it { should respond_to(:git_access_path) }
-    it { should respond_to(:http_access_path) }
-
-    it { should respond_to(:ssh_url) }
-    it { should respond_to(:git_url) }
-    it { should respond_to(:http_url) }
-    it { should respond_to(:https_url) }
-
-    it { should respond_to(:available_urls) }
-
-    it { should respond_to(:default_list) }
-    it { should respond_to(:mail_mapping) }
-
-    it { should respond_to(:exists_in_gitolite?) }
-    it { should respond_to(:gitolite_hook_key) }
-
-    ## Test attributes more specifically
     it { expect(@repository_1.report_last_commit).to be true }
     it { expect(@repository_1.extra_report_last_commit).to be true }
-
-    it { expect(@repository_1.extra[:git_http]).to eq 1 }
-    it { expect(@repository_1.extra[:git_daemon]).to be true }
-    it { expect(@repository_1.extra[:git_notify]).to be true }
-    it { expect(@repository_1.extra[:default_branch]).to eq 'master' }
-
-    it { expect(@repository_1.available_urls).to be_a(Hash) }
+    it { expect(@repository_1.git_default_branch).to eq 'master' }
+    it { expect(@repository_1.gitolite_hook_key).to match /\A[a-zA-Z0-9]+\z/ }
+    it { expect(@repository_1.git_daemon_enabled?).to be true }
+    it { expect(@repository_1.git_annex_enabled?).to be false }
+    it { expect(@repository_1.git_notification_enabled?).to be true }
+    it { expect(@repository_1.smart_http_enabled?).to be true }
+    it { expect(@repository_1.https_access_enabled?).to be true }
+    it { expect(@repository_1.http_access_enabled?).to be false }
+    it { expect(@repository_1.only_https_access_enabled?).to be true }
+    it { expect(@repository_1.only_http_access_enabled?).to be false }
+    it { expect(@repository_1.protected_branches_enabled?).to be false }
+    it { expect(@repository_1.public_project?).to be false }
+    it { expect(@repository_1.public_repo?).to be false }
+    it { expect(@repository_1.urls_order).to eq [] }
 
 
     it 'should not allow identifier gitolite-admin' do
       expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
     end
 
+
+    describe '#exists_in_gitolite?' do
+      it 'should check if repository exists on Gitolite side' do
+        expect(RedmineGitHosting::Commands).to receive(:sudo_dir_exists?).with('repositories/redmine/project-parent/project-child.git')
+        @repository_1.exists_in_gitolite?
+      end
+    end
+
+    describe '#empty_in_gitolite?' do
+      it 'should check if repository is empty on Gitolite side' do
+        expect(RedmineGitHosting::Commands).to receive(:sudo_repository_empty?).with('repositories/redmine/project-parent/project-child.git')
+        @repository_1.empty_in_gitolite?
+      end
+    end
+
+    describe '#git_objects_count' do
+      it 'should return repository objects count' do
+        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count).with('repositories/redmine/project-parent/project-child.git')
+        @repository_1.git_objects_count
+      end
+    end
+
+    describe '#data_for_destruction' do
+      it 'should return a hash of data' do
+        expect(@repository_1.data_for_destruction).to eq({
+          delete_repository: true,
+          git_cache_id:      'project-child',
+          repo_name:         'redmine/project-parent/project-child',
+          repo_path:         '/home/git/repositories/redmine/project-parent/project-child.git',
+        })
+      end
+    end
+
+    describe '#empty?' do
+      it 'should check if repository is empty from Redmine point of view' do
+        expect(@repository_1.empty?).to be true
+      end
+    end
+
+    describe '#empty_cache!' do
+      it 'should flush the repository git cache' do
+        expect(RedmineGitHosting::Cache).to receive(:clear_cache_for_repository).with('project-child')
+        @repository_1.empty_cache!
+      end
+    end
 
     describe '#available_urls' do
       context 'with no option' do
@@ -129,6 +143,7 @@ describe Repository::Xitolite do
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
           @repository_1.extra[:git_http]   = 2
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -141,6 +156,7 @@ describe Repository::Xitolite do
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
           @repository_1.extra[:git_http]   = 0
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -153,6 +169,7 @@ describe Repository::Xitolite do
           User.current = @user
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 0
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -165,6 +182,7 @@ describe Repository::Xitolite do
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 3
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -177,6 +195,7 @@ describe Repository::Xitolite do
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 1
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -192,6 +211,7 @@ describe Repository::Xitolite do
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = 2
+          @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -332,6 +352,10 @@ describe Repository::Xitolite do
         expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child.git'
       end
 
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_1.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-parent/project-child.git'
+      end
+
       it 'should have a valid gitolite_repository_name' do
         expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-parent/project-child'
       end
@@ -405,6 +429,10 @@ describe Repository::Xitolite do
 
       it 'should have a valid gitolite_repository_path' do
         expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/project-parent/project-child/repo-test.git'
+      end
+
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_2.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-parent/project-child/repo-test.git'
       end
 
       it 'should have a valid gitolite_repository_name' do
@@ -482,6 +510,10 @@ describe Repository::Xitolite do
         expect(@repository_3.gitolite_repository_path).to eq 'repositories/redmine/project-parent.git'
       end
 
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_3.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-parent.git'
+      end
+
       it 'should have a valid gitolite_repository_name' do
         expect(@repository_3.gitolite_repository_name).to eq 'redmine/project-parent'
       end
@@ -555,6 +587,10 @@ describe Repository::Xitolite do
 
       it 'should have a valid gitolite_repository_path' do
         expect(@repository_4.gitolite_repository_path).to eq 'repositories/redmine/project-parent/repo-test.git'
+      end
+
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_4.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-parent/repo-test.git'
       end
 
       it 'should have a valid gitolite_repository_name' do
@@ -720,6 +756,10 @@ describe Repository::Xitolite do
         expect(@repository_1.gitolite_repository_path).to eq 'repositories/redmine/project-child.git'
       end
 
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_1.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-child.git'
+      end
+
       it 'should have a valid gitolite_repository_name' do
         expect(@repository_1.gitolite_repository_name).to eq 'redmine/project-child'
       end
@@ -793,6 +833,10 @@ describe Repository::Xitolite do
 
       it 'should have a valid gitolite_repository_path' do
         expect(@repository_2.gitolite_repository_path).to eq 'repositories/redmine/repo1-test.git'
+      end
+
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_2.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/repo1-test.git'
       end
 
       it 'should have a valid gitolite_repository_name' do
@@ -870,6 +914,10 @@ describe Repository::Xitolite do
         expect(@repository_3.gitolite_repository_path).to eq 'repositories/redmine/project-parent.git'
       end
 
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_3.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/project-parent.git'
+      end
+
       it 'should have a valid gitolite_repository_name' do
         expect(@repository_3.gitolite_repository_name).to eq 'redmine/project-parent'
       end
@@ -943,6 +991,10 @@ describe Repository::Xitolite do
 
       it 'should have a valid gitolite_repository_path' do
         expect(@repository_4.gitolite_repository_path).to eq 'repositories/redmine/repo2-test.git'
+      end
+
+      it 'should have a valid gitolite_full_repository_path' do
+        expect(@repository_4.gitolite_full_repository_path).to eq '/home/git/repositories/redmine/repo2-test.git'
       end
 
       it 'should have a valid gitolite_repository_name' do
