@@ -24,7 +24,7 @@ module RedmineGitHosting
         def user_added_with_git_hosting(user, &block)
           user_added_without_git_hosting(user, &block)
           protected_branches.each do |pb|
-            pb.add_user_member(user, self)
+            RepositoryProtectedBranches::MemberManager.new(pb).add_user_from_group(user, self.id)
           end
         end
 
@@ -32,7 +32,7 @@ module RedmineGitHosting
         def user_removed_with_git_hosting(user, &block)
           user_removed_without_git_hosting(user, &block)
           protected_branches.each do |pb|
-            pb.remove_user_member(user, self)
+            RepositoryProtectedBranches::MemberManager.new(pb).remove_user_from_group(user, self.id)
           end
         end
 

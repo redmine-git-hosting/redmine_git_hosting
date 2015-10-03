@@ -4,8 +4,8 @@
   %p= f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
   %p= f.select :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions), required: true, label: :label_permissions
 
-  = hidden_field_tag 'repository_protected_branche[user_ids][]', ''
-  = hidden_field_tag 'repository_protected_branche[group_ids][]', ''
+  = hidden_field_tag 'user_ids[]', ''
+  = hidden_field_tag 'group_ids[]', ''
 
   .container
     .row
@@ -14,7 +14,7 @@
         - protected_branch_available_users.each do |user|
           %p{ style: 'padding: 0px;' }
             %label{ style: 'margin-left: 0; width: auto; font-weight: lighter;' }
-              = check_box_tag 'repository_protected_branche[user_ids][]', user.id, @protected_branch.users.include?(user)
+              = check_box_tag 'user_ids[]', user.id, @protected_branch.users.include?(user)
               = user
             %br
 
@@ -23,6 +23,6 @@
         - protected_branch_available_groups.each do |group|
           %p{ style: 'padding: 0px;' }
             %label{ style: 'margin-left: 0; width: auto; font-weight: lighter;' }
-              = check_box_tag 'repository_protected_branche[group_ids][]', group.id, @protected_branch.groups.include?(group)
+              = check_box_tag 'group_ids[]', group.id, @protected_branch.groups.include?(group)
               = group
             %br
