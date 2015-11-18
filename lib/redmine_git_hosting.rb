@@ -86,6 +86,8 @@ Rails.configuration.to_prepare do
   require 'hrack/init'
 
   ## Extensions for Faker
-  require_dependency 'core_ext/faker/git'
-  require_dependency 'core_ext/faker/ssh'
+  if Rails.env.development?
+    require_dependency 'core_ext/faker/git'
+    require_dependency 'core_ext/faker/ssh'
+  end
 end
