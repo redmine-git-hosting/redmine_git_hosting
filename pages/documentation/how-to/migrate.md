@@ -4,11 +4,11 @@ permalink: /how-to/migrate/
 ---
 
 
-#### Step by Step migration from **0.7.x version to 1.0.x**
+#### Step by Step migration from **0.7.x version to 1.x**
 ***
 
 {{ site.data.callouts.alertwarning }}
-  <b>Important !</b> Before migrating to the new 1.0.x version you <b>MUST migrate first to 0.7.10</b> (see below). It includes a Rake task that prepare the migration to 1.0, so <b>don't miss that step!</b>
+  <b>Important !</b> Before migrating to the new 1.x version you <b>MUST migrate first to 0.7.10</b> (see below). It includes a Rake task that prepare the migration to 1.x, so <b>don't miss that step!</b>
 {{ site.data.callouts.end }}
 
 {{ site.data.callouts.alertwarning }}
@@ -31,17 +31,17 @@ When you are in **v0.7.10**, you first need to launch this Rake task to delete S
     redmine$ cd REDMINE_ROOT
     redmine$ bundle exec rake redmine_git_hosting:prepare_migration_to_v1 RAILS_ENV=production
 
-Then you can switch to the **1.0.7** version and launch the migration task :
+Then you can switch to the **{{ site.data.project.release.version }}** version and launch the migration task :
 
     # Update Redmine Gitolite Hosting
     redmine$ cd REDMINE_ROOT/plugins/redmine_git_hosting
     redmine$ git fetch -p
-    redmine$ git checkout 1.0.7
+    redmine$ git checkout {{ site.data.project.release.version }}
 
     # Update Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
     redmine$ git fetch -p
-    redmine$ git checkout 0.2.3
+    redmine$ git checkout 0.2.4
 
     # Install gems and do the migration
     redmine$ cd REDMINE_ROOT
