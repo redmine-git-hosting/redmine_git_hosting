@@ -19,7 +19,7 @@ You can follow announcements [here](http://redmine-git-hosting.io/blog/) or take
 
 ## Installation
 
-The installation tutorial is [here](http://redmine-git-hosting.io/get_started/). The migration tutorial is [here](http://redmine-git-hosting.io/how-to/migrate/).
+The installation guide is [here](http://redmine-git-hosting.io/get_started/). The migration guide is [here](http://redmine-git-hosting.io/how-to/migrate/).
 
 Read the documentation and more on the [project's website](http://redmine-git-hosting.io/).
 
