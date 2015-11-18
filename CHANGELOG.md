@@ -1,6 +1,11 @@
 ## CHANGELOG
 
-### 1.1.4 - 2015-09-15
+### 1.1.5 - 2015-11-18
+
+* Fix wrong behavior of GoRedirectorController when project is private
+* Update Redcarpet to latest version (3.3.2)
+
+### 1.1.4 - 2015-10-01
 
 * Merge [#505](https://github.com/jbox-web/redmine_git_hosting/pull/505) ([Core] Added an error message in case that something as broken the temp directory)
 * Fix #<TypeError: no implicit conversion of nil into String> when triggers are enabled on PostReceiveUrls and pushing on a non-triggering branch
