@@ -16,6 +16,8 @@ Improved Repository Statistics      | {{ site.data.callouts.icon_ok }} | Use Hig
 Git SmartHTTP                       | {{ site.data.callouts.icon_ok }} | This plugin allows you to automatically enable Git SmartHTTP access to your repositories.
 Git Daemon                          | {{ site.data.callouts.icon_ok }} | This plugin allows you to manage repositories exported via GitDaemon.
 Browse Archived Repositories        | {{ site.data.callouts.icon_ok }} | If you are Admin in Redmine you can browse archived repositories by clicking on *Archived repositories* in the top menu.
+Default branch selection            | {{ site.data.callouts.icon_ok }} | By default, the repository default branch is called ```master```. If you have admin rights over a repository, you can change the default branch on the repository.
+Repository Deletion                 | {{ site.data.callouts.icon_ok }} | This plugin can handle repositories deletion by puting them in a Recycle Bin for a configurable amount of time.
 
 
 ### {{ site.data.callouts.icon_gears }} Productivity helpers
@@ -46,9 +48,16 @@ Features | Supported | Notes
 Deployment Credentials              | {{ site.data.callouts.icon_ok }} | This plugin provides deployment credentials on a per-repository basis. One typical use-case would be for all deploy keys to be owned by the administrator and attached selectively to various repositories.
 Post-Receive URLs                   | {{ site.data.callouts.icon_ok }} | This plugin supports the inclusion of GitHub-style Post-Receive URLs. Once added, a post-receive URL will be notified when new changes are pushed to the repository.
 Automatic Mirror Updates            | {{ site.data.callouts.icon_ok }} | This plugin can automatically push updates to repository mirrors when new changes are pushed to the repository.
-Git Config Keys Management          | {{ site.data.callouts.icon_ok }} | You can manage Git config key/value pairs for each repository.
-Default branch selection            | {{ site.data.callouts.icon_ok }} | By default, the repository default branch is called ```master```. If you have admin rights over a repository, you can change the default branch on the repository.
+Git Config Keys Management          | {{ site.data.callouts.icon_ok }} | You can manage [Git config key/value pairs](http://gitolite.com/gitolite/git-config.html) for each repository.
+Gitolite Options Management         | {{ site.data.callouts.icon_ok }} | You can manage [Gitolite options](http://gitolite.com/gitolite/options.html) for each repository.
 GoLang Redirector                   | {{ site.data.callouts.icon_ok }} | This plugin supports GoLang URLs that ease dependency cloning ([Remote import paths](http://golang.org/cmd/go/#hdr-Remote_import_paths)).
-Repository Deletion                 | {{ site.data.callouts.icon_ok }} | This plugin can handle repositories deletion by puting them in a Recycle Bin for a configurable amount of time.
 Custom Gitolite Hooks Installer     | {{ site.data.callouts.icon_ok }} | Install your own Gitolite hooks when creating new repositories.
 Redmine Git Hosting Plugins         | {{ site.data.callouts.icon_ok }} | Create your own plugin to customize repositories creation.
+
+
+### {{ site.data.callouts.icon_download }} Deployment tools
+***
+
+Features | Supported | Notes
+---------|-----------|------
+Plugin config override              | {{ site.data.callouts.icon_ok }} | Keep your custom settings safe in a YAML file
