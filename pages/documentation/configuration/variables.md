@@ -5,6 +5,7 @@ permalink: /configuration/variables/
 
 {% include configuration/variables/gitolite_ssh_config.md %}
 {% include configuration/variables/gitolite_storage_config.md %}
+{% include configuration/variables/gitolite_config_file.md %}
 {% include configuration/variables/gitolite_global_config.md %}
 {% include configuration/variables/gitolite_hooks_config.md %}
 {% include configuration/variables/gitolite_cache_config.md %}
