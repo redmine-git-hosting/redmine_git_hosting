@@ -50,9 +50,9 @@ A startup script [```contrib/scripts/sidekiq_git_hosting.sh```](https://github.c
 
 You should place this script in Redmine user's home bin dir like : ```/home/redmine/bin/sidekiq_git_hosting.sh```.
 
-Normally the Redmine user's bin directory should be in the PATH.
+Normally the Redmine user's bin directory should be in the ```PATH```.
 
-If not, add this in /home/redmine/.profile :
+If not, add this in ```/home/redmine/.profile``` :
 
     # Set PATH so it includes user's private bin if it exists
     if [ -d "$HOME/bin" ] ; then
