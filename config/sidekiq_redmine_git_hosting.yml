@@ -1,0 +1,6 @@
+---
+:pidfile: tmp/pids/sidekiq_redmine_git_hosting.pid
+:concurrency: 1
+:timeout: 15
+:queues:
+  - redmine_git_hosting
