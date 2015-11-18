@@ -23,6 +23,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def create
     @protected_branch = @repository.protected_branches.new(params[:repository_protected_branche])
     if @protected_branch.save
+      check_members
       flash[:notice] = l(:notice_protected_branch_created)
       call_use_case_and_redirect
     end
@@ -31,6 +32,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def update
     if @protected_branch.update_attributes(params[:repository_protected_branche])
+      check_members
       flash[:notice] = l(:notice_protected_branch_updated)
       call_use_case_and_redirect
     end
@@ -79,6 +81,13 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
     def call_use_case(opts = {})
       options = opts.merge({ message: "Update branch permissions for repository : '#{@repository.gitolite_repository_name}'" })
       gitolite_accessor.update_repository(@repository, options)
+    end
+
+
+    def check_members
+      member_manager = RepositoryProtectedBranches::MemberManager.new(@protected_branch)
+      member_manager.add_users(params[:user_ids])
+      member_manager.add_groups(params[:group_ids])
     end
 
 end

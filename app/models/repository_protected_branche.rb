@@ -7,7 +7,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   acts_as_list
 
   ## Attributes
-  attr_accessible :path, :permissions, :position, :user_ids, :group_ids
+  attr_accessible :path, :permissions, :position
 
   ## Relations
   belongs_to :repository
@@ -44,72 +44,12 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
 
   def groups
-    members.select { |m| m.class.name == 'Group' }
+    members.select { |m| m.class.name == 'Group' }.uniq
   end
 
 
   def allowed_users
     users.map { |u| u.gitolite_identifier }.sort
   end
-
-
-  # Mass assignment
-  #
-  def user_ids=(ids)
-    current_ids = users.map(&:id)
-    create_member(ids, current_ids, 'User')
-  end
-
-
-  def group_ids=(ids)
-    current_ids = groups.map(&:id)
-    create_member(ids, current_ids, 'Group') do |group|
-      ids = group.users.map(&:id)
-      current_ids = users_by_group_id(group.id).map(&:id)
-      create_member(ids, current_ids, 'User', inherited_by: group.id, destroy: false)
-    end
-  end
-
-
-  # Triggered by Group callbacks
-  #
-  def add_user_member(user, group)
-    ids = users_by_group_id(group.id).push(user).map(&:id)
-    current_ids = users_by_group_id(group.id).map(&:id)
-    create_member(ids, current_ids, 'User', inherited_by: group.id, destroy: false)
-  end
-
-
-  def remove_user_member(user, group)
-    return unless users_by_group_id(group.id).include?(user)
-    member = protected_branches_members.find_by_protected_branch_id_and_principal_id_and_inherited_by(id, user.id, group.id)
-    member.destroy! unless member.nil?
-  end
-
-
-  private
-
-
-    def users_by_group_id(id)
-      protected_branches_members.select { |pbm| pbm.principal.class.name == 'User' && pbm.inherited_by == id }.map(&:principal)
-    end
-
-
-    def create_member(ids, current_ids, klass, destroy: true, inherited_by: nil, &block)
-      ids = (ids || []).collect(&:to_i) - [0]
-      new_ids = ids - current_ids
-
-      new_ids.each do |id|
-        object = klass.constantize.find_by_id(id)
-        next if object.nil?
-        protected_branches_members.create(principal_id: object.id, inherited_by: inherited_by)
-        yield object if block_given?
-      end
-
-      if destroy
-        member_to_destroy = protected_branches_members.select { |m| m.principal.class.name == klass && !ids.include?(m.principal.id) }
-        member_to_destroy.each(&:destroy) if member_to_destroy.any?
-      end
-    end
 
 end

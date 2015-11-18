@@ -2,38 +2,56 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryProtectedBranche do
 
-  def build_protected_branch(opts = {})
-    build(:repository_protected_branche, opts)
-  end
+  let(:protected_branch) { build(:repository_protected_branche) }
 
+  subject { protected_branch }
 
-  describe 'Valid RepositoryProtectedBranche creation' do
-    before(:each) do
-      @protected_branch = build_protected_branch(path: 'devel', permissions: 'RW')
+  ## Attributes
+  it { should allow_mass_assignment_of(:path) }
+  it { should allow_mass_assignment_of(:permissions) }
+  it { should allow_mass_assignment_of(:position) }
+
+  ## Relations
+  it { should belong_to(:repository) }
+  it { should have_many(:protected_branches_members).with_foreign_key(:protected_branch_id).dependent(:destroy) }
+  it { should have_many(:members).through(:protected_branches_members) }
+
+  ## Validations
+  it { should be_valid }
+
+  it { should validate_presence_of(:repository_id) }
+  it { should validate_presence_of(:path) }
+  it { should validate_presence_of(:permissions) }
+
+  it { should validate_uniqueness_of(:path).scoped_to([:permissions, :repository_id]) }
+
+  it { should validate_inclusion_of(:permissions).in_array RepositoryProtectedBranche::VALID_PERMS }
+
+  describe '#users' do
+    it 'should return an array of users' do
+      user  = build(:user)
+      group = build(:group)
+      expect(protected_branch).to receive(:members).and_return([user, user, group])
+      expect(protected_branch.users).to eq [user]
     end
-
-    subject { @protected_branch }
-
-    ## Attributes
-    it { should allow_mass_assignment_of(:path) }
-    it { should allow_mass_assignment_of(:permissions) }
-    it { should allow_mass_assignment_of(:position) }
-    it { should allow_mass_assignment_of(:user_ids) }
-
-    ## Relations
-    it { should belong_to(:repository) }
-    it { should have_many(:protected_branches_members).with_foreign_key(:protected_branch_id).dependent(:destroy) }
-    it { should have_many(:members).through(:protected_branches_members) }
-
-    ## Validations
-    it { should be_valid }
-
-    it { should validate_presence_of(:repository_id) }
-    it { should validate_presence_of(:path) }
-    it { should validate_presence_of(:permissions) }
-
-    it { should validate_uniqueness_of(:path).scoped_to([:permissions, :repository_id]) }
-
-    it { should validate_inclusion_of(:permissions).in_array RepositoryProtectedBranche::VALID_PERMS }
   end
+
+  describe '#groups' do
+    it 'should return an array of groups' do
+      user  = build(:user)
+      group = build(:group)
+      expect(protected_branch).to receive(:members).and_return([group, user, group])
+      expect(protected_branch.groups).to eq [group]
+    end
+  end
+
+  describe '#allowed_users' do
+    it 'should return an array of gitolite identifiers' do
+      user1 = build(:user)
+      user2 = build(:user)
+      expect(protected_branch).to receive(:users).and_return([user1, user2])
+      expect(protected_branch.allowed_users).to eq [user1.gitolite_identifier, user2.gitolite_identifier]
+    end
+  end
+
 end
