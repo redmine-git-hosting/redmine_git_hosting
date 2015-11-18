@@ -37,3 +37,19 @@ To fix this you must add this to your Nginx configuration (server section) :
 ```
 passenger_env_var PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin;
 ```
+
+#### A note about ```HOME``` variable
+***
+
+The ```HOME``` variable must be properly set in the execution environment. It seems that it's not the case for Nginx + Thin.
+To address this problem one possible solution is to do the following :
+
+Edit the ```/etc/init.d/thin``` file and change the line
+
+    /usr/bin/ruby1.9.1 $DAEMON $ACTION --all /etc/thin1.9.1
+
+to
+
+    export HOME=/home/redmine && /usr/bin/ruby1.9.1 $DAEMON $ACTION --all /etc/thin1.9.1
+
+Thanks to user overmind88 for providing a solution for Nginx + Thin.
