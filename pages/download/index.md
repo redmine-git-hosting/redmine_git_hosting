@@ -31,7 +31,7 @@ layout: homepage
 
     <ul>
       <li><strong>Redmine :</strong> works with Redmine <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>{{ site.data.project.release.latest_redmine_version }}</strong>)</li>
-      <li><strong>Ruby :</strong> works with Ruby 2.0 and 2.1</li>
+      <li><strong>Ruby :</strong> works with Ruby 2.x</li>
       <li><strong>Git :</strong> works with Git from 1.7.x to 2.x</li>
       <li><strong>Gitolite :</strong> works with Gitolite 2.x and 3.x (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>v3.6.2-12-g1c61d57</strong>)</li>
       <li><strong>Database :</strong> works with MySQL and Postgres</li>
