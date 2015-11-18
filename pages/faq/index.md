@@ -6,9 +6,7 @@ permalink: /faq/
 #### Can I install Gitolite and Redmine on different servers ?
 ***
 
-**No, you can't**. Redmine and Gitolite **must be on the same server** as Redmine needs to access to repository files (via sudo) to display them within the interface.
-
-Now you know about that, think about the latency you could have when you browse your repository ;)
+Yes. Redmine and Gitolite can be installed on different servers but you will need to store repositories on a network filesystem like NFS and configure servers to keep Redmine user's id and Gitolite user's id consistent accross servers to keep sudo working.
 
 
 #### Why can't I specify a repository identifier that is the same as the project identifier?
