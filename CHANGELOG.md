@@ -1,5 +1,17 @@
 ## CHANGELOG
 
+### 1.2.0 - 2015-11-18
+
+* Enhance protected branches permissions support : [#389](https://github.com/jbox-web/redmine_git_hosting/issues/389), [#414](https://github.com/jbox-web/redmine_git_hosting/issues/414)
+* Add support for [Gitolite options](http://gitolite.com/gitolite/options.html) : [#415](https://github.com/jbox-web/redmine_git_hosting/issues/415)
+* Enhance global repository access : [#465](https://github.com/jbox-web/redmine_git_hosting/issues/465). You can now choose if Redmine has RW access on all repositories.
+* Improve validation of plugin settings. Validation errors are now displayed in the view.
+* Use our own Rack implementation to render Gitolite hooks
+* Fix [push over HTTP](http://redmine-git-hosting.io/troubleshooting/#hook-errors-while-pushing-over-https)
+* Cleanup code/API
+* Improve coding style
+* Display contributors in plugins info page ;)
+
 ### 1.1.5 - 2015-11-18
 
 * Fix wrong behavior of GoRedirectorController when project is private
