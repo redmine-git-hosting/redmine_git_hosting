@@ -4,11 +4,11 @@ permalink: /how-to/migrate/
 ---
 
 
-#### Step by Step migration from **0.7.10 version to v1.0.x**
+#### Step by Step migration from **0.7.x version to v1.0.x**
 ***
 
 {{ site.data.callouts.alertwarning }}
-  <b>Important !</b> Before migrating to the new 1.0 you <b>MUST</b> migrate first to the <b>v0.7.10</b> (see below). It includes a Rake task that prepare the migration to 1.0, so <b>don't miss that step!</b>
+  <b>Important !</b> Before migrating to the new 1.0 you <b>MUST</b> migrate <b>first</b> to the <b>v0.7.10</b> (see below). It includes a Rake task that prepare the migration to 1.0, so <b>don't miss that step!</b>
 {{ site.data.callouts.end }}
 
 {{ site.data.callouts.alertwarning }}
