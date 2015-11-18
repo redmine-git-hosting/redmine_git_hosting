@@ -22,3 +22,18 @@ This plugin respects Gitolite repositories that are managed outside of Redmine o
 * Users other than **redmine_*** are left untouched and can be in projects by themselves or mixed in with projects managed by redmine.
 
 * When a Redmine-managed project is deleted (with the **Delete Git Repository When Project Is Deleted** option enabled), its corresponding Git repository **will not be deleted/recycled** if there are non-Redmine users in the *gitolite.conf* file.
+
+
+#### A note about the ```PATH``` variable
+***
+
+One major source of issues with this plugin is that Rails needs to be able to run both ```sudo``` and ```git``` commands.  Specifically, these programs need to be in one of the directories specified by the ```PATH``` variable, in your Rails environment. This requirement has been known to cause problems.
+
+* With Passenger
+
+When working as Nginx extension, Passenger creates a sandbox so environment variables aren't sent to Passenger.
+To fix this you must add this to your Nginx configuration (server section) :
+
+```
+passenger_env_var PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin;
+```
