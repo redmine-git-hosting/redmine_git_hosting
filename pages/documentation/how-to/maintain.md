@@ -3,10 +3,11 @@ title: How To Maintain
 permalink: /how-to/maintain/
 ---
 
+**Note that all these commands must be run as *redmine* user**.
+
+
 #### Resynchronization of Gitolite configuration
 ***
-
-**Note that it is very important that these commands be run as *redmine* user**.
 
 To fixup the Gitolite configuration file, execute :
 
@@ -14,17 +15,29 @@ To fixup the Gitolite configuration file, execute :
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:update_repositories
 
+
+#### Fetch changesets
+***
+
 To fetch changesets for all repositories manually, execute :
 
     root$ su - redmine
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:fetch_changesets
 
-To restore/update your plugin settings, set you current settings in ```init.rb``` file, then execute :
+
+#### Restore/update plugin settings
+***
+
+To restore/update your plugin settings, set you current settings in ```settings.yml``` file (```init.rb``` for RedmineGitHosting < 1.2), then execute :
 
     root$ su - redmine
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:restore_default_settings
+
+
+#### Purge expired repositories from Recycle Bin
+***
 
 To purge expired repositories from Recycle Bin, execute :
 
@@ -32,11 +45,19 @@ To purge expired repositories from Recycle Bin, execute :
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:purge_recycle_bin
 
+
+#### Check repositories uniqueness
+***
+
 To check repositories uniqueness before switching from Flat storage organization to Hierarchical organization execute :
 
     root$ su - redmine
     redmine$ cd REDMINE_ROOT
     redmine$ RAILS_ENV=production rake redmine_git_hosting:check_repository_uniqueness
+
+
+#### Install hooks
+***
 
 To install/update hook files on Gitolite side execute :
 
