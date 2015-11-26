@@ -1,5 +1,4 @@
 class GitolitePublicKey < ActiveRecord::Base
-  unloadable
 
   TITLE_LENGTH_LIMIT = 60
 

@@ -1,5 +1,4 @@
 class RepositoryGitConfigKey::GitConfig < RepositoryGitConfigKey
-  unloadable
 
   VALID_CONFIG_KEY_REGEX = /\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
 

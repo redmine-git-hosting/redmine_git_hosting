@@ -1,5 +1,4 @@
 class GitolitePublicKeysController < ApplicationController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 

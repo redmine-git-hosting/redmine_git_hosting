@@ -1,5 +1,4 @@
 class MoveRepositoryForm
-  unloadable
 
   include BaseForm
 

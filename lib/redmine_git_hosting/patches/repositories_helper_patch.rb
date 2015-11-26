@@ -7,8 +7,6 @@ module RedmineGitHosting
       def self.included(base)
         base.send(:include, InstanceMethods)
         base.class_eval do
-          unloadable
-
           # First alias xitolite_field_tags to git_field_tags
           # to define the method otherwise the method is not created...
           # (don't know why...)

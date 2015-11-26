@@ -1,5 +1,4 @@
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
-  unloadable
 
   before_filter :check_xitolite_permissions
   before_filter :find_repository_post_receive_url, except: [:index, :new, :create]

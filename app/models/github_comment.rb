@@ -1,5 +1,4 @@
 class GithubComment < ActiveRecord::Base
-  unloadable
 
   ## Relations
   belongs_to :journal

@@ -1,5 +1,4 @@
 class RepositoryCommitsStats < ReportBase
-  unloadable
 
   def commits_per_month
     data = {}

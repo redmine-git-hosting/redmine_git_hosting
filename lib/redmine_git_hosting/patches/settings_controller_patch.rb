@@ -7,8 +7,6 @@ module RedmineGitHosting
       def self.included(base)
         base.send(:include, InstanceMethods)
         base.class_eval do
-          unloadable
-
           helper :redmine_bootstrap_kit
           helper :gitolite_plugin_settings
 

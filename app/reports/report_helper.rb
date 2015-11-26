@@ -1,5 +1,4 @@
 module ReportHelper
-  unloadable
 
   def date_to
     Date.today

@@ -1,5 +1,4 @@
 class RepositoryMirror < ActiveRecord::Base
-  unloadable
 
   PUSHMODE_MIRROR       = 0
   PUSHMODE_FORCE        = 1

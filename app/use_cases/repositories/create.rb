@@ -1,6 +1,5 @@
 module Repositories
   class Create < Base
-    unloadable
 
     def call
       set_repository_extra

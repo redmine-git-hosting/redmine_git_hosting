@@ -1,5 +1,4 @@
 class RedmineGitHostingController < ApplicationController
-  unloadable
 
   include XitoliteRepositoryFinder
 

@@ -1,5 +1,4 @@
 class PluginSettingsForm
-  unloadable
 
   class << self
 

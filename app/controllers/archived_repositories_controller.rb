@@ -1,5 +1,4 @@
 class ArchivedRepositoriesController < RepositoriesController
-  unloadable
 
   skip_before_filter :authorize
   skip_before_filter :find_project_repository, only: :index

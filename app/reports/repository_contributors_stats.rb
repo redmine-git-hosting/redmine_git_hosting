@@ -1,5 +1,4 @@
 class RepositoryContributorsStats < ReportBase
-  unloadable
 
   def initialize(repository)
     super

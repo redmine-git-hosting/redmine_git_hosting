@@ -1,5 +1,4 @@
 class RepositoryDeploymentCredential < ActiveRecord::Base
-  unloadable
 
   VALID_PERMS  = ['R', 'RW+']
   DEFAULT_PERM = 'RW+'

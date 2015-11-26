@@ -2,7 +2,6 @@ require 'json'
 
 module RedmineHooks
   class GithubIssuesSync < Base
-    unloadable
 
     include HttpHelper
 

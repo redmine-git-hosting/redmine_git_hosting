@@ -1,5 +1,4 @@
 class GitNotifier
-  unloadable
 
   attr_reader :repository
   attr_reader :project

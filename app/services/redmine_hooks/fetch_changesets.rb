@@ -1,6 +1,5 @@
 module RedmineHooks
   class FetchChangesets < Base
-    unloadable
 
     def call
       repository.empty_cache!

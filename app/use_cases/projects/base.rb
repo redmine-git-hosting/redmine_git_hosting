@@ -1,6 +1,5 @@
 module Projects
   class Base
-    unloadable
 
     include RedmineGitHosting::GitoliteAccessor::Methods
 

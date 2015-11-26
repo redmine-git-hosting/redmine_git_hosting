@@ -1,6 +1,5 @@
 module RepositoryMirrors
   class Base
-    unloadable
 
     attr_reader :mirror
     attr_reader :repository

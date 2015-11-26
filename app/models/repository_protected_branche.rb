@@ -1,5 +1,4 @@
 class RepositoryProtectedBranche < ActiveRecord::Base
-  unloadable
 
   VALID_PERMS  = ['RW+', 'RW', 'R', '-']
   DEFAULT_PERM = 'RW+'

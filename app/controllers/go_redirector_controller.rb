@@ -1,5 +1,4 @@
 class GoRedirectorController < ApplicationController
-  unloadable
 
   include XitoliteRepositoryFinder
 

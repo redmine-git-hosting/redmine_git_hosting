@@ -1,6 +1,5 @@
 module Repositories
   class BuildPayload < Base
-    unloadable
 
     def initialize(*args)
       super

@@ -1,6 +1,5 @@
 module RedmineHooks
   class CallWebservices < Base
-    unloadable
 
     include HttpHelper
 

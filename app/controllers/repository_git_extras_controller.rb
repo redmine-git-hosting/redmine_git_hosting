@@ -1,5 +1,4 @@
 class RepositoryGitExtrasController < RedmineGitHostingController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 

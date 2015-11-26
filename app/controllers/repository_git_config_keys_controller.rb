@@ -1,5 +1,4 @@
 class RepositoryGitConfigKeysController < RedmineGitHostingController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 

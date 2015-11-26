@@ -3,8 +3,6 @@ require 'github/markup'
 module RedmineGitHosting
   module Hooks
     class DisplayRepositoryReadme < Redmine::Hook::ViewListener
-      unloadable
-
       MARKDOWN_EXT = %w(.txt)
 
       def view_repositories_show_bottom(context)

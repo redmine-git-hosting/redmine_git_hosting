@@ -8,8 +8,6 @@ module RedmineGitHosting
         base.send(:include, InstanceMethods)
         base.send(:include, RedmineGitHosting::GitoliteAccessor::Methods)
         base.class_eval do
-          unloadable
-
           alias_method_chain :show,    :git_hosting
           alias_method_chain :create,  :git_hosting
           alias_method_chain :update,  :git_hosting

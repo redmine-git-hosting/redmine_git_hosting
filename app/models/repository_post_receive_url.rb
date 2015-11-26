@@ -1,7 +1,6 @@
 require 'uri'
 
 class RepositoryPostReceiveUrl < ActiveRecord::Base
-  unloadable
 
   ## Attributes
   attr_accessible :url, :mode, :active, :use_triggers, :triggers, :split_payloads

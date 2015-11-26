@@ -1,6 +1,5 @@
 module Projects
   class ExecuteHooks
-    unloadable
 
     attr_reader :project
     attr_reader :hook_type

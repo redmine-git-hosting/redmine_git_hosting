@@ -1,6 +1,5 @@
 module RepositoryMirrors
   class Push < Base
-    unloadable
 
     def call
       push!

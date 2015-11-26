@@ -1,5 +1,4 @@
 class RepositoryDeploymentCredentialsController < RedmineGitHostingController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 

@@ -1,6 +1,5 @@
 module GitolitePublicKeys
   class GenerateIdentifier
-    unloadable
 
     DEPLOY_PSEUDO_USER = 'deploy_key'
 

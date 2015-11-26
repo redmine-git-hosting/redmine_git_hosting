@@ -1,5 +1,4 @@
 class RepositoryMirrorsController < RedmineGitHostingController
-  unloadable
 
   before_filter :check_xitolite_permissions
   before_filter :find_repository_mirror, except: [:index, :new, :create]

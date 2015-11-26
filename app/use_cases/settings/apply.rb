@@ -1,6 +1,5 @@
 module Settings
   class Apply
-    unloadable
 
     include RedmineGitHosting::GitoliteAccessor::Methods
 

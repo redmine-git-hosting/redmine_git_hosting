@@ -1,5 +1,4 @@
 class RepositoryGitConfigKey < ActiveRecord::Base
-  unloadable
 
   ## Attributes
   attr_accessible :type, :key, :value

@@ -1,6 +1,5 @@
 module PermissionsBuilder
   class ProtectedBranches < Base
-    unloadable
 
     attr_reader :permissions
 

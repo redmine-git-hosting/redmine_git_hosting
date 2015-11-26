@@ -1,6 +1,5 @@
 module RepositoryProtectedBranches
   class MemberManager
-    unloadable
 
     attr_reader :protected_branch
 

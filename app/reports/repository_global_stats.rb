@@ -1,5 +1,4 @@
 class RepositoryGlobalStats < ReportBase
-  unloadable
 
   def build
     data = {}

@@ -1,6 +1,5 @@
 module RedmineHooks
   class UpdateMirrors < Base
-    unloadable
 
     def call
       execute_hook do |out|

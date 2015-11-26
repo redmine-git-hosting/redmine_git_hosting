@@ -1,6 +1,5 @@
 module Repositories
   class DownloadRevision
-    unloadable
 
     attr_reader :repository
     attr_reader :revision

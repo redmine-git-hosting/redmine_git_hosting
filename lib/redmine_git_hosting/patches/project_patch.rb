@@ -7,8 +7,6 @@ module RedmineGitHosting
       def self.included(base)
         base.send(:include, InstanceMethods)
         base.class_eval do
-          unloadable
-
           # Add custom scope
           scope :active_or_closed, -> { where("status = #{Project::STATUS_ACTIVE} OR status = #{Project::STATUS_CLOSED}") }
 

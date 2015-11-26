@@ -1,6 +1,5 @@
 module RedmineHooks
   class Base
-    unloadable
 
     attr_reader :object
     attr_reader :payloads

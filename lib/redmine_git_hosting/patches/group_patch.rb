@@ -7,8 +7,6 @@ module RedmineGitHosting
       def self.included(base)
         base.send(:include, InstanceMethods)
         base.class_eval do
-          unloadable
-
           # Relations
           has_many :protected_branches_members, dependent: :destroy, foreign_key: :principal_id
           has_many :protected_branches, through: :protected_branches_members

@@ -1,5 +1,4 @@
 class DownloadGitRevisionController < ApplicationController
-  unloadable
 
   include XitoliteRepositoryFinder
 

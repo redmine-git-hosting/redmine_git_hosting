@@ -6,8 +6,6 @@ module RedmineGitHosting
 
       def self.included(base)
         base.class_eval do
-          unloadable
-
           has_one :github_issue, foreign_key: 'issue_id', class_name: 'GithubIssue', dependent: :destroy
         end
       end

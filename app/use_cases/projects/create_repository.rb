@@ -1,6 +1,5 @@
 module Projects
   class CreateRepository < Base
-    unloadable
 
     def call
       create_project_repository

@@ -1,5 +1,4 @@
 module ReportQuery
-  unloadable
 
   private
 

@@ -1,5 +1,4 @@
 class RepositoryGitNotification < ActiveRecord::Base
-  unloadable
 
   ## Attributes
   attr_accessible :prefix, :sender_address, :include_list, :exclude_list

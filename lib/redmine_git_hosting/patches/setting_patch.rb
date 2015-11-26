@@ -7,8 +7,6 @@ module RedmineGitHosting
       def self.included(base)
         base.send(:extend, ClassMethods)
         base.class_eval do
-          unloadable
-
           class << self
             alias_method_chain :check_cache, :git_hosting
           end

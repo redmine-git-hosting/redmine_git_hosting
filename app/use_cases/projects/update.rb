@@ -1,6 +1,5 @@
 module Projects
   class Update < Base
-    unloadable
 
     def call
       # Adjust daemon status

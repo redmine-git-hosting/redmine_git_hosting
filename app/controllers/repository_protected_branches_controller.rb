@@ -1,5 +1,4 @@
 class RepositoryProtectedBranchesController < RedmineGitHostingController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 

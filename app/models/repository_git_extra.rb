@@ -1,5 +1,4 @@
 class RepositoryGitExtra < ActiveRecord::Base
-  unloadable
 
   SMART_HTTP_OPTIONS = [
     [l(:label_disabled), '0'],

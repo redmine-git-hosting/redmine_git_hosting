@@ -1,5 +1,4 @@
 class GitCache < ActiveRecord::Base
-  unloadable
 
   CACHE_ADAPTERS = [
     ['Database', 'database'],

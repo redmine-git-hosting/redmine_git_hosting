@@ -1,5 +1,4 @@
 class ReportBase
-  unloadable
 
   include Redmine::I18n
   include ReportHelper

@@ -1,6 +1,5 @@
 module Repositories
   class ExecuteHooks
-    unloadable
 
     attr_reader :repository
     attr_reader :hook_type

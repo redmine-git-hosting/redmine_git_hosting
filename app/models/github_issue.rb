@@ -1,5 +1,4 @@
 class GithubIssue < ActiveRecord::Base
-  unloadable
 
   ## Relations
   belongs_to :issue

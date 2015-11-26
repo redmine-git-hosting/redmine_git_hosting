@@ -1,5 +1,4 @@
 class RepositoryGitNotificationsController < RedmineGitHostingController
-  unloadable
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 
