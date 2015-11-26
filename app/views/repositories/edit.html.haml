@@ -2,7 +2,7 @@
   = render_repository_quick_jump(@repository)
 
 %h2
-  = link_to l(:label_settings), settings_project_path(@repository.project, tab: 'repositories')
+  = link_to l(:label_settings), settings_project_path(@project, tab: 'repositories')
   »
   = l(:label_repository)
   »
@@ -10,7 +10,7 @@
 
 .container
   .row
-    .col-md-12= call_hook(:view_repository_edit_top)
+    .col-md-12= call_hook(:view_repository_edit_top, { repository: @repository, project: @project })
 
 .container
   .row
@@ -22,4 +22,4 @@
 
 .container
   .row
-    .col-md-12= call_hook(:view_repository_edit_bottom)
+    .col-md-12= call_hook(:view_repository_edit_bottom, { repository: @repository, project: @project })
