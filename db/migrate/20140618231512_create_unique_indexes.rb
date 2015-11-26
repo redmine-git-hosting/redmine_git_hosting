@@ -14,7 +14,7 @@ class CreateUniqueIndexes < ActiveRecord::Migration
     add_index :repository_mirrors,           :repository_id
     add_index :repository_mirrors,           [:url, :repository_id], unique: true
 
-    add_index :repository_deployment_credentials, [:repository_id, :gitolite_public_key_id], unique: true, name: 'index_deployment_credentials_on_repository_id_and_public_key_id'
+    add_index :repository_deployment_credentials, [:repository_id, :gitolite_public_key_id], unique: true, name: 'index_deployment_credentials_on_repo_id_and_public_key_id'
 
     add_index :gitolite_public_keys, [:title, :user_id], unique: true
 
@@ -36,7 +36,7 @@ class CreateUniqueIndexes < ActiveRecord::Migration
     remove_index :repository_mirrors,           :repository_id
     remove_index :repository_mirrors,           [:url, :repository_id]
 
-    remove_index :repository_deployment_credentials, name: 'index_deployment_credentials_on_repository_id_and_public_key_id'
+    remove_index :repository_deployment_credentials, name: 'index_deployment_credentials_on_repo_id_and_public_key_id'
 
     remove_index :gitolite_public_keys, [:title, :user_id]
 
