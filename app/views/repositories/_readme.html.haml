@@ -1,5 +1,5 @@
-#readme_container{ class: 'box', style: 'cursor: pointer;' }
-  %h2 README
+#readme_container{ class: 'box' }
+  %h2{ id: 'readme_trigger', style: 'cursor: pointer;' } README
   %hr
 
   #readme_at_repo_dir{ class: 'wiki' }
@@ -9,4 +9,4 @@
       = html.html_safe
 
 :javascript
-  $(document).ready(function() { $("#readme_container").click(function(){ $("#readme_at_repo_dir").toggle(500); }); });
+  $(document).ready(function() { $("#readme_trigger").click(function(){ $("#readme_at_repo_dir").toggle(500); }); });
