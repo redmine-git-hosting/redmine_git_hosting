@@ -97,8 +97,12 @@ REPOSITORY VIEW
 
 .git_hosting_urls {
   display: block;
-  height: 90px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.git_hosting_urls .repository-urls {
+  margin-top: 0;
 }
 
 #git_hosting_download_buttons i {

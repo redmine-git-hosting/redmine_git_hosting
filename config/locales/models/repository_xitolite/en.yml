@@ -49,7 +49,8 @@ en:
   label_git_annex: GitAnnex
 
   # Repository code browser
-  label_download_format: Download as %{archive_format}
+  label_download_format: Download as
+  label_download_select_format: Select format
   error_download_revision_no_such_commit: "No such commit %{commit}"
 
   # Repositories URL (labels)

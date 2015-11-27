@@ -4,12 +4,5 @@
       = link_to_repository(repo, @repository)
       = link_to "(#{l(:label_settings)})", edit_repository_path(repo) if User.current.allowed_to?(:manage_repository, @project)
 
-- if @repository.is_a?(Repository::Xitolite) && RedmineGitHosting::Config.show_repositories_url?
-  .git_hosting_urls
-    %h3= l(:label_repository_access_url)
-    = render 'common/git_urls', repository: @repository
-
-= render 'repositories/download_revision'
-
 :javascript
   $(document).ready(function() { $('#sidebar p').remove(); });
