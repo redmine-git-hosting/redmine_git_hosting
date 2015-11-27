@@ -47,7 +47,7 @@ module Gitolitable
 
 
     def users
-      project.member_principals.map(&:user).compact.uniq
+      project.users_available
     end
 
 

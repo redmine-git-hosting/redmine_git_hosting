@@ -33,7 +33,28 @@ module RedmineGitHosting
         end
 
 
+        def users_available
+          get_members_available('User')
+        end
+
+
+        def groups_available
+          get_members_available('Group')
+        end
+
+
         private
+
+
+          def get_members_available(klass)
+            scope = old_redmine_version? ? member_principals : memberships.active
+            scope.map(&:principal).select { |m| m.class.name == klass }.uniq.sort
+          end
+
+
+          def old_redmine_version?
+            Redmine::VERSION::MAJOR < 3 || (Redmine::VERSION::MAJOR <= 3 && Redmine::VERSION::MINOR == 0)
+          end
 
 
           def additional_constraints_on_identifier
