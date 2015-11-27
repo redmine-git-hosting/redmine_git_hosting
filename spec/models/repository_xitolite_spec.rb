@@ -46,7 +46,6 @@ describe Repository::Xitolite do
     it { should have_many(:protected_branches) }
 
     it { should have_one(:extra) }
-    it { should have_one(:git_notification) }
 
     ## Attributes
     it { expect(@repository_1.report_last_commit).to be true }

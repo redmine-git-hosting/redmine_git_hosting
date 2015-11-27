@@ -14,7 +14,6 @@ class Repository::Xitolite < Repository::Git
 
   # Relations
   has_one  :extra,                  dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryGitExtra'
-  has_one  :git_notification,       dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryGitNotification'
   has_many :mirrors,                dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryMirror'
   has_many :post_receive_urls,      dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryPostReceiveUrl'
   has_many :deployment_credentials, dependent: :destroy, foreign_key: 'repository_id', class_name: 'RepositoryDeploymentCredential'
@@ -26,6 +25,7 @@ class Repository::Xitolite < Repository::Git
   # Additionnal validations
   validate :valid_repository_options, on: :create
 
+  acts_as_watchable
 
   class << self
 

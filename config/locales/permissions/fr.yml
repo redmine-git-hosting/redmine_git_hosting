@@ -22,11 +22,6 @@ fr:
   permission_view_repository_protected_branches: Voir des branches protégées
   permission_edit_repository_protected_branches: Modifier des branches protégées
 
-  permission_create_repository_git_notifications: Créer des listes de distributions git
-  permission_view_repository_git_notifications: Voir les listes de distribution git
-  permission_edit_repository_git_notifications: Modifier les listes de distribution git
-  permission_receive_git_notifications: Recevoir des notifications à chaque commit git
-
+  permission_delete_repository_xitolite_watchers: Supprimer des observateurs
   permission_create_gitolite_ssh_key: Créer des clés SSH
-
   permission_download_git_revision: Télécharger les révisions Git sous forme d'archive

@@ -23,11 +23,7 @@ Redmine::AccessControl.map do |main|
     map.permission :view_repository_protected_branches,   repository_protected_branches: [:index, :show]
     map.permission :edit_repository_protected_branches,   repository_protected_branches: [:edit, :update, :destroy]
 
-    map.permission :create_repository_git_notifications, repository_git_notifications: [:new, :create]
-    map.permission :view_repository_git_notifications,   repository_git_notifications: [:index, :show]
-    map.permission :edit_repository_git_notifications,   repository_git_notifications: [:edit, :update, :destroy]
-
-    map.permission :receive_git_notifications, gitolite_hooks: :post_receive
-    map.permission :download_git_revision,     download_git_revision: :index
+    map.permission :delete_repository_xitolite_watchers, watchers: :destroy
+    map.permission :download_git_revision, download_git_revision: :index
   end
 end

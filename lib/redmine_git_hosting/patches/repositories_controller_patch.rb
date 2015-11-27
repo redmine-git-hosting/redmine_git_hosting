@@ -19,6 +19,7 @@ module RedmineGitHosting
           before_filter :set_current_tab, only: :edit
 
           helper :redmine_bootstrap_kit
+          helper :watchers
 
           # Load ExtendRepositoriesHelper so we can call our
           # additional methods.

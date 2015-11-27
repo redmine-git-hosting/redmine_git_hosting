@@ -17,8 +17,6 @@ resources :repositories, only: [] do
     end
   end
 
-  resource  :git_notifications, controller: 'repository_git_notifications'
-
   resources :post_receive_urls,      controller: 'repository_post_receive_urls'
   resources :deployment_credentials, controller: 'repository_deployment_credentials'
   resources :git_config_keys,        controller: 'repository_git_config_keys'

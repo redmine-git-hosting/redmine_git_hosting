@@ -24,16 +24,18 @@ class RepositoryGitExtra < ActiveRecord::Base
   }
 
   ## Attributes
-  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch, :public_repo, :key, :urls_order
+  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch,
+                  :public_repo, :key, :urls_order, :notification_sender, :notification_prefix
 
   ## Relations
   belongs_to :repository
 
   ## Validations
-  validates :repository_id,  presence: true, uniqueness: true
-  validates :git_http,       presence: true, numericality: { only_integer: true }, inclusion: { in: [DISABLED, HTTP, HTTPS, BOTH] }
-  validates :default_branch, presence: true
-  validates :key,            presence: true
+  validates :repository_id,       presence: true, uniqueness: true
+  validates :git_http,            presence: true, numericality: { only_integer: true }, inclusion: { in: [DISABLED, HTTP, HTTPS, BOTH] }
+  validates :default_branch,      presence: true
+  validates :key,                 presence: true
+  validates :notification_sender, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX, allow_blank: true }
 
   validate :validate_urls_order
 

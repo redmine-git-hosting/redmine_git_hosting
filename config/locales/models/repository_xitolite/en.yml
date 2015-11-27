@@ -40,6 +40,8 @@ en:
   label_git_objects_count: Git objects count
   label_empty_repository: Empty repository?
   label_sort_urls: (Sort urls)
+  label_git_notification_sender: Mailing list sender address
+  label_git_notification_prefix: Mailing list prefix
 
   notice_gitolite_extra_updated: Options successfully updated
   notice_gitolite_extra_update_failed: Errors while updating options

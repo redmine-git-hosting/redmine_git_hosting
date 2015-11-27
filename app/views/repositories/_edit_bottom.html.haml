@@ -5,9 +5,6 @@
       - if User.current.git_allowed_to?(:view_repository_deployment_credentials, @repository)
         %li{ id: 'tab-repository_deployment_credentials' }= link_to label_with_icon(l(:label_deployment_credentials), 'fa-lock'), repository_deployment_credentials_path(@repository)
 
-      - if User.current.git_allowed_to?(:view_repository_git_notifications, @repository)
-        %li{ id: 'tab-repository_git_notifications' }= link_to label_with_icon(l(:label_git_notifications), 'fa-bullhorn'), repository_git_notifications_path(@repository)
-
       - if User.current.git_allowed_to?(:view_repository_mirrors, @repository)
         %li{ id: 'tab-repository_mirrors' }= link_to label_with_icon(l(:label_repository_mirrors), 'fa-cloud-upload'), repository_mirrors_path(@repository)
 
