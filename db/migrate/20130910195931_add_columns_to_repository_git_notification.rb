@@ -1,13 +1,8 @@
 class AddColumnsToRepositoryGitNotification < ActiveRecord::Migration
 
   def self.up
-    unless RepositoryGitNotification.column_names.include? 'prefix'
-      add_column :repository_git_notifications, :prefix, :string
-    end
-
-    unless RepositoryGitNotification.column_names.include? 'sender_address'
-      add_column :repository_git_notifications, :sender_address, :string
-    end
+    add_column :repository_git_notifications, :prefix, :string
+    add_column :repository_git_notifications, :sender_address, :string
   end
 
   def self.down
