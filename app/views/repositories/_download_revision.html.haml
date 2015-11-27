@@ -1,24 +1,8 @@
-- if @repository.is_a?(Repository::Xitolite) && RedmineGitHosting::Config.download_revision_enabled?
-  - if @repository.downloadable?
+- if repository.downloadable?
+  - content_for :header_tags do
+    = bootstrap_load_module(:font_awesome)
 
-    %div{ style: 'clear: both;' }
-
-    #git_hosting_download_buttons
-      %ul
-        %li
-          = link_to label_with_icon(l(:label_download_format, :archive_format => '.tar'), 'fa-download'),
-                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'tar'),
-                    :class => 'button'
-
-        %li
-          = link_to label_with_icon(l(:label_download_format, :archive_format => '.tar.gz'), 'fa-download'),
-                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'tar.gz'),
-                    :class => 'button'
-
-        %li
-          = link_to label_with_icon(l(:label_download_format, :archive_format => '.zip'), 'fa-download'),
-                    download_git_revision_repository_path(@repository, :rev => @rev, :download_format => 'zip'),
-                    :class => 'button'
-
-    - content_for :header_tags do
-      = bootstrap_load_module(:font_awesome)
+  = label_with_icon(l(:label_download_format), 'fa-download')
+  = select_tag  :download, options_for_select(available_download_format(repository, @rev)),
+                prompt: l(:label_download_select_format),
+                onchange: "if (this.value != '') { window.location = this.value; }"

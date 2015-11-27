@@ -10,6 +10,11 @@ module ExtendRepositoriesHelper
   end
 
 
+  def available_download_format(repository, rev = nil)
+    %w(zip tar tar.gz).map { |f| [f, download_git_revision_repository_path(repository, rev: rev, download_format: f)] }
+  end
+
+
   def create_readme_field(form, repository)
     content_tag(:p) do
       hidden_field_tag('repository[create_readme]', 'false', id: '') +
