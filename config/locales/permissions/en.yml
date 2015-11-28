@@ -22,6 +22,9 @@ en:
   permission_view_repository_protected_branches: View protected branches
   permission_edit_repository_protected_branches: Edit protected branches
 
+  permission_view_repository_xitolite_watchers: View watchers
+  permission_add_repository_xitolite_watchers: Add watchers
   permission_delete_repository_xitolite_watchers: Delete watchers
+
   permission_create_gitolite_ssh_key: Create SSH keys
   permission_download_git_revision: Download Git Revision Archive

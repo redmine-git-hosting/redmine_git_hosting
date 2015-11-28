@@ -23,7 +23,10 @@ Redmine::AccessControl.map do |main|
     map.permission :view_repository_protected_branches,   repository_protected_branches: [:index, :show]
     map.permission :edit_repository_protected_branches,   repository_protected_branches: [:edit, :update, :destroy]
 
+    map.permission :view_repository_xitolite_watchers,   repositories: :show
+    map.permission :add_repository_xitolite_watchers,    watchers: :create
     map.permission :delete_repository_xitolite_watchers, watchers: :destroy
+
     map.permission :download_git_revision, download_git_revision: :index
   end
 end
