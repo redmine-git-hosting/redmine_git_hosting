@@ -48,7 +48,7 @@ search: exclude
       <i class="fa fa-lg fa-cloud"></i>
     </div>
     <h4>Mirror your repositories</h4>
-    <p>Automatically push updates to external repository mirrors (Github, Bitbicket) when new changes are pushed to the repository.</p>
+    <p>Automatically push updates to external repository mirrors (Github, Bitbucket) when new changes are pushed to the repository.</p>
   </div>
 
   <div class="col-lg-4 centered">
