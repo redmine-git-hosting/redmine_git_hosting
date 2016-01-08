@@ -1,6 +1,9 @@
 class ProtectedBranchesMember < ActiveRecord::Base
   unloadable
 
+  ## Attributes
+  attr_accessible :principal_id, :inherited_by
+
   ## Relations
   belongs_to :protected_branch, class_name: 'RepositoryProtectedBranche'
   belongs_to :principal
