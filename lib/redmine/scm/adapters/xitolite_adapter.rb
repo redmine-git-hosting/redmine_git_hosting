@@ -85,7 +85,7 @@ module Redmine
           git_cmd(cmd_args) do |io|
             io.each_line do |line|
               branch_rev = line.match('\s*(\*?)\s*(.*?)\s*([0-9a-f]{40}).*$')
-              bran = GitBranch.new(branch_rev[2])
+              bran = GitBranch.new(branch_rev[2].to_s.force_encoding(Encoding::UTF_8))
               bran.revision =  branch_rev[3]
               bran.scmid    =  branch_rev[3]
               bran.is_default = (branch_rev[1] == '*')
@@ -104,7 +104,7 @@ module Redmine
           @tags = []
           cmd_args = %w|tag|
           git_cmd(cmd_args) do |io|
-            @tags = io.readlines.sort!.map { |t| t.strip }
+            @tags = io.readlines.sort!.map { |t| t.strip.force_encoding(Encoding::UTF_8) }
           end
           @tags
         rescue ScmCommandAborted => e
