@@ -87,9 +87,16 @@ module RedmineHooks
 
       def create_redmine_issue
         logger.info('Github Issues Sync : create new issue')
+        
+        tracker = project.trackers.find_by_name('GitHub')           
 
         issue             = project.issues.new
+         
+        if tracker.nil?
         issue.tracker_id  = project.trackers.first.try(:id)
+        else 
+          issue.tracker_id = tracker.id
+        end
         issue.subject     = params[:issue][:title].chomp[0, 255]
         issue.description = params[:issue][:body]
         issue.updated_on  = params[:issue][:updated_at]
