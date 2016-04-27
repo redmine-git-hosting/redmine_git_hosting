@@ -99,6 +99,9 @@ module RedmineHooks
         user = find_user(params[:issue][:user][:url])
         issue.author = user
 
+        object_custom_field_set_value(issue, 'github_user', params[:issue][:user][:html_url])
+        object_custom_field_set_value(issue, 'github_link', params[:issue][:html_url])
+
         issue.save!
         return issue
       end
