@@ -62,15 +62,24 @@ module RedmineHooks
         end
 
         if params.has_key?(:comment)
-          issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
+           github_comment = GithubComment.find_by_github_id(params[:comment][:id])
 
-          if issue_journal.nil?
+          if  github_comment.nil?
             issue_journal = create_issue_journal(github_issue.issue)
 
             github_comment = GithubComment.new
             github_comment.github_id = params[:comment][:id]
             github_comment.journal_id = issue_journal.id
             github_comment.save!
+          else
+            issue_journal = Journal.find_by_id(github_comment.journal_id)
+            if issue_journal.nil?
+              issue_journal = create_issue_journal(github_issue.issue)
+              github_comment.journal_id = issue_journal.id
+            else
+              issue_journal.notes = params[:comment][:body]
+              issue_journal.save!
+            end
           end
         end
       end
