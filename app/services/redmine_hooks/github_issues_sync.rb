@@ -55,10 +55,10 @@ module RedmineHooks
         end
 
         if create_relation
-          github_issue = GithubIssue.new
-          github_issue.github_id = params[:issue][:id]
-          github_issue.issue_id = redmine_issue.id
-          github_issue.save!
+          new_github_issue = GithubIssue.new
+          new_github_issue.github_id = params[:issue][:id]
+          new_github_issue.issue_id = redmine_issue.id
+          new_github_issue.save!
         end
 
         if params.has_key?(:comment)
