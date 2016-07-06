@@ -22,7 +22,7 @@ gems:
 
 excerpt_separator: "##########"
 
-highlighter: pygments
+highlighter: rouge
 
 exclude: # put all files or directories that you want to exclude from your project here.
   - "Gemfile"
