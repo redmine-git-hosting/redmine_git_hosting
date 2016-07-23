@@ -9,8 +9,9 @@ But you **must** set some additional settings :
 
 2. Configure plugin settings in *Administration -> Redmine Git Hosting*, specially :
   * SSH Keys path
-  * Temp dir path
-  * Access urls
+  * Temp dir path (to store GitoliteAdmin repository)
+  * `LOCAL_CODE` path (for Gitolite hooks)
+  * Access urls (SSH, HTTP, HTTPS)
   * Hooks url (This url will be called by our Gitolite hook to trigger repository view refresh so be sure it's **callable**)
   * Hooks install (This may overwrite your existing Gitolite hooks)
 
