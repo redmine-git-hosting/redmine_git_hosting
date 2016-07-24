@@ -7,8 +7,10 @@ module RedmineGitHosting
           return if git_projects.empty?
           admin.transaction do
             git_projects.each do |project|
-              handle_project_update(project)
-              gitolite_admin_repo_commit(project.identifier)
+              if project.gitolite_repos.any?
+                handle_project_update(project)
+                gitolite_admin_repo_commit(project.identifier)
+              end
             end
           end
         end
