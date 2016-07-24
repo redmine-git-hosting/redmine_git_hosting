@@ -1,6 +1,33 @@
 ## CHANGELOG
 
-### 1.1.4 - 2015-09-15
+### 1.2.1 - 2016-07-25
+
+* Fix [#524](https://github.com/jbox-web/redmine_git_hosting/issues/524) ([DB] Index too long)
+* Fix [#533](https://github.com/jbox-web/redmine_git_hosting/issues/533) ([Views] About readme.md preview feature)
+* Fix [#541](https://github.com/jbox-web/redmine_git_hosting/issues/541) ([Core] SSH/Gitolite server host on 1.2)
+* Fix [#553](https://github.com/jbox-web/redmine_git_hosting/issues/553) ([Controllers] Protected branches user list never updated. Mass-assign warning.)
+* Fix [#569](https://github.com/jbox-web/redmine_git_hosting/issues/569) ([Core] Connection refused when sshd doesn't listen on default port)
+* Merge [#583](https://github.com/jbox-web/redmine_git_hosting/pull/583) ([Core] force UTF-8 encoding for tags and branches)
+* Merge [#600](https://github.com/jbox-web/redmine_git_hosting/pull/600) ([Core] Improve performance)
+
+### 1.2.0 - 2015-11-18
+
+* Enhance protected branches permissions support : [#389](https://github.com/jbox-web/redmine_git_hosting/issues/389), [#414](https://github.com/jbox-web/redmine_git_hosting/issues/414)
+* Add support for [Gitolite options](http://gitolite.com/gitolite/options.html) : [#415](https://github.com/jbox-web/redmine_git_hosting/issues/415)
+* Enhance global repository access : [#465](https://github.com/jbox-web/redmine_git_hosting/issues/465). You can now choose if Redmine has RW access on all repositories.
+* Improve validation of plugin settings. Validation errors are now displayed in the view.
+* Use our own Rack implementation to render Gitolite hooks
+* Fix [push over HTTP](http://redmine-git-hosting.io/troubleshooting/#hook-errors-while-pushing-over-https)
+* Cleanup code/API
+* Improve coding style
+* Display contributors in plugins info page ;)
+
+### 1.1.5 - 2015-11-18
+
+* Fix wrong behavior of GoRedirectorController when project is private
+* Update Redcarpet to latest version (3.3.2)
+
+### 1.1.4 - 2015-10-01
 
 * Merge [#505](https://github.com/jbox-web/redmine_git_hosting/pull/505) ([Core] Added an error message in case that something as broken the temp directory)
 * Fix #<TypeError: no implicit conversion of nil into String> when triggers are enabled on PostReceiveUrls and pushing on a non-triggering branch
