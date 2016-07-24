@@ -1,5 +1,15 @@
 ## CHANGELOG
 
+### 1.2.1 - 2016-07-25
+
+* Fix [#524](https://github.com/jbox-web/redmine_git_hosting/issues/524) ([DB] Index too long)
+* Fix [#533](https://github.com/jbox-web/redmine_git_hosting/issues/533) ([Views] About readme.md preview feature)
+* Fix [#541](https://github.com/jbox-web/redmine_git_hosting/issues/541) ([Core] SSH/Gitolite server host on 1.2)
+* Fix [#553](https://github.com/jbox-web/redmine_git_hosting/issues/553) ([Controllers] Protected branches user list never updated. Mass-assign warning.)
+* Fix [#569](https://github.com/jbox-web/redmine_git_hosting/issues/569) ([Core] Connection refused when sshd doesn't listen on default port)
+* Merge [#583](https://github.com/jbox-web/redmine_git_hosting/pull/583) ([Core] force UTF-8 encoding for tags and branches)
+* Merge [#600](https://github.com/jbox-web/redmine_git_hosting/pull/600) ([Core] Improve performance)
+
 ### 1.2.0 - 2015-11-18
 
 * Enhance protected branches permissions support : [#389](https://github.com/jbox-web/redmine_git_hosting/issues/389), [#414](https://github.com/jbox-web/redmine_git_hosting/issues/414)
