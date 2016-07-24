@@ -52,7 +52,7 @@ module GitHosting
 
 
     def repository_name
-      if config.has_key?('repositoryid')
+      if config.has_key?('repositoryid') && !config['repositoryid'].empty?
         "#{project_name}/#{config['repositoryid']}"
       else
         project_name
