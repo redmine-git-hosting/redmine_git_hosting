@@ -45,7 +45,7 @@ Caching Options                     | {{ site.data.callouts.icon_ok }} | When br
 
 Features | Supported | Notes
 ---------|-----------|------
-Deployment Credentials              | {{ site.data.callouts.icon_ok }} | This plugin provides deployment credentials on a per-repository basis. One typical use-case would be for all deploy keys to be owned by the administrator and attached selectively to various repositories.
+Deployment Credentials              | {{ site.data.callouts.icon_ok }} | This plugin provides deployment keys on a per-repository basis. Grant access to repositories for specific keys, no redmine user necessary. Great for service integrations such as build services or repository mirrors!
 Post-Receive URLs                   | {{ site.data.callouts.icon_ok }} | This plugin supports the inclusion of GitHub-style Post-Receive URLs. Once added, a post-receive URL will be notified when new changes are pushed to the repository.
 Automatic Mirror Updates            | {{ site.data.callouts.icon_ok }} | This plugin can automatically push updates to repository mirrors when new changes are pushed to the repository.
 Git Config Keys Management          | {{ site.data.callouts.icon_ok }} | You can manage [Git config key/value pairs](http://gitolite.com/gitolite/git-config.html) for each repository.
