@@ -8,6 +8,18 @@ module RedmineGitHosting
       end
 
 
+      def sidekiq_available?
+        @sidekiq_available ||=
+          begin
+            require 'sidekiq'
+          rescue LoadError
+            false
+          else
+            true
+          end
+      end
+
+
       def hierarchical_organisation?
         get_setting(:hierarchical_organisation, true)
       end

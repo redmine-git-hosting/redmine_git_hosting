@@ -139,7 +139,8 @@ module RedmineGitHosting
           bypass = false
         end
 
-        if RedmineGitHosting::Config.gitolite_use_sidekiq? && !bypass
+        if RedmineGitHosting::Config.gitolite_use_sidekiq? &&
+           RedmineGitHosting::Config.sidekiq_available? && !bypass
           GithostingShellWorker.maybe_do(command, object, options)
         else
           GitoliteWrapper.resync_gitolite(command, object, options)
