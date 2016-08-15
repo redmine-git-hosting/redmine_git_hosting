@@ -53,7 +53,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
     def key_type
       case params[:repository_git_config_key][:type]
-      when 'RepositoryGitConfigKey::Config'
+      when 'RepositoryGitConfigKey::GitConfig'
         :git_config_keys
       when 'RepositoryGitConfigKey::Option'
         :git_option_keys
