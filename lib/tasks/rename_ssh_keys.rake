@@ -12,7 +12,7 @@ namespace :redmine_git_hosting do
       repo_key['title']    = ssh_key.identifier
       repo_key['key']      = ssh_key.key
       repo_key['owner']    = ssh_key.owner
-      repo_key['location'] = (ssh_key.location or "")
+      repo_key['location'] = ssh_key.location || ''
 
       puts "  - Delete SSH key #{ssh_key.identifier}"
       RedmineGitolite::GitHosting.resync_gitolite({ :command => :delete_ssh_key, :object => repo_key })
