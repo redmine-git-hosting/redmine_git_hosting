@@ -8,7 +8,7 @@ module RedmineGitHosting
       end
 
       def self.default_url_options
-        {}
+        {:script_name => Redmine::Utils.relative_url_root}
       end
 
     end
