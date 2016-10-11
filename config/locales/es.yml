@@ -1,0 +1,24 @@
+es:
+
+  redmine_git_hosting: Redmine Git Hosting
+
+  ########### MISCELANOUS ###########
+  label_enabled: Activado
+  label_disabled: Desactivado
+  label_true: Cierto
+  label_false: Falso
+  label_backup_in_progress: Guardando...
+  label_delete_in_progress: Borrando...
+  label_url: URL
+  label_mode: Modo
+  label_hour: Hora
+  button_ok: Aceptar
+  button_clone: Clonar
+
+  label_monday: Lunes
+  label_tuesday: Martes
+  label_wednesday: Miércoles
+  label_thursday: Jueves
+  label_friday: Viernes
+  label_saturday: Sábado
+  label_sunday: Domingo
