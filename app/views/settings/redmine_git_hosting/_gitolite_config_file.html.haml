@@ -25,7 +25,10 @@
   = bootstrap_switch_tag do
     = hidden_field_tag 'settings[gitolite_identifier_strip_user_id]', "#{disable_button}"
     = check_box_tag 'settings[gitolite_identifier_strip_user_id]', gitolite_identifier_strip_user_id, gitolite_identifier_strip_user_id, { disabled: disable_button }
-
+  %br
+  %em
+    = surround '(', ')' do
+      = l(:label_gitolite_identifier_strip_user_id_desc)
 %br
 
 .git_hosting_access_box
