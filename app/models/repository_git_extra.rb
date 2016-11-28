@@ -128,6 +128,11 @@ class RepositoryGitExtra < ActiveRecord::Base
     end
 
 
+    def check_git_annex_url
+      new_record? || repository.git_annex_access_available? ? add_url('git_annex') : remove_url('git_annex')
+    end
+
+
     def remove_url(url)
       self.urls_order.delete(url)
     end
