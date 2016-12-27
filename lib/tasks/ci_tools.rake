@@ -3,7 +3,7 @@ namespace :redmine_git_hosting do
   namespace :ci do
 
     RSpec::Core::RakeTask.new do |task|
-      task.rspec_opts = 'plugins/redmine_git_hosting/spec --color'
+      task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
     end
 
     desc 'Check unit tests results'
