@@ -50,10 +50,6 @@ group :development, :test do
 
   # Code coverage
   gem 'simplecov', '~> 0.9.1'
-  gem 'simplecov-rcov'
-
-  # Junit results
-  gem 'ci_reporter_rspec', '~> 1.0.0'
 
   # Publish to Coveralls
   gem 'coveralls', require: false
