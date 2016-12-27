@@ -35,8 +35,8 @@ gem 'asciidoctor'
 gem 'rack-parser', require: 'rack/parser'
 
 group :development, :test do
-  gem 'rspec', '~> 3.0.0'
-  gem 'rspec-rails', '~> 3.0.1'
+  gem 'rspec'
+  gem 'rspec-rails'
 
   gem 'shoulda', '~> 3.5.0'
   gem 'shoulda-matchers', '~> 2.7.0'
