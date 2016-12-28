@@ -8,8 +8,8 @@ module CrudControllerSpec
 
       before(:all) do
         @project        = create_project('git_project')
-        @repository     = create_git_repository(@project, identifier: 'git_repository')
-        @repository2    = create_git_repository(@project, identifier: 'git_repository2')
+        @repository     = find_or_create_git_repository(project: @project, identifier: 'git_repository')
+        @repository2    = find_or_create_git_repository(project: @project, identifier: 'git_repository2')
         @member_user    = create_user_with_permissions(@project, member_user_options)
         @anonymous_user = create_anonymous_user
         @object         = create_object

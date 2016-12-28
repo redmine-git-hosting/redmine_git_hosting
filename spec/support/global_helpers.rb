@@ -62,12 +62,24 @@ module GlobalHelpers
   end
 
 
-  def create_git_repository(project, opts = {})
+  def build_git_repository(opts = {})
+    FactoryGirl.build(:repository_gitolite, opts)
+  end
+
+
+  def find_or_create_git_repository(opts = {})
     repository = Repository::Xitolite.find_by_identifier(opts[:identifier])
     if repository.nil?
-      repository = create_repository(:repository_gitolite, project, opts)
+      repository = FactoryGirl.create(:repository_gitolite, opts)
       build_extra(repository)
     end
+    repository
+  end
+
+
+  def create_git_repository(opts = {})
+    repository = FactoryGirl.create(:repository_gitolite, opts)
+    build_extra(repository)
     repository
   end
 
@@ -78,13 +90,8 @@ module GlobalHelpers
   end
 
 
-  def create_svn_repository(project, opts = {})
-    create_repository(:repository_svn, project, opts)
-  end
-
-
-  def create_repository(type, project, opts = {})
-    FactoryGirl.create(type, opts.merge(project_id: project.id))
+  def create_svn_repository(opts = {})
+    FactoryGirl.create(:repository_svn, opts)
   end
 
 
