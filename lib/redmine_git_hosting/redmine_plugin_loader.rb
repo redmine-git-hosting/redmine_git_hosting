@@ -114,7 +114,8 @@ module RedmineGitHosting
 
       def load_setting_file(file)
         return {} unless File.exists?(file)
-        YAML::load(ERB.new(IO.read(file)).result).symbolize_keys
+        data = YAML::load(ERB.new(IO.read(file)).result) || {}
+        data.symbolize_keys
       end
 
 
