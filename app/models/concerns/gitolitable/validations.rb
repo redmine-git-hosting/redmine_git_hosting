@@ -54,7 +54,7 @@ module Gitolitable
 
 
     def git_objects_count
-      RedmineGitHosting::Commands.sudo_git_objects_count(gitolite_repository_path)
+      RedmineGitHosting::Commands.sudo_git_objects_count(File.join(gitolite_repository_path, 'objects'))
     end
 
 
