@@ -46,8 +46,14 @@ module RedmineGitHosting
 
 
       def sudo_git_objects_count(repo_path)
+        if RedmineGitHosting::Config.gitolite_use_sudo?
+          cmd = ['eval', 'find', repo_path, '-type', 'f', '|', 'wc', '-l']
+        else
+          cmd = ['bash', '-c', "find #{repo_path} -type f | wc -l"]
+        end
+
         begin
-          sudo_capture('eval', 'find', repo_path, '-type', 'f', '|', 'wc', '-l')
+          sudo_capture(*cmd)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Can't retrieve Git objects count : #{e.output}")
           0

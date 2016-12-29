@@ -18,6 +18,11 @@ module RedmineGitHosting
       end
 
 
+      def gitolite_use_sudo?
+        redmine_user != gitolite_user
+      end
+
+
       def gitolite_home_dir
         @gitolite_home_dir ||= Etc.getpwnam(gitolite_user).dir rescue nil
       end
