@@ -168,7 +168,11 @@ module RedmineGitHosting
         # Return the Sudo command with basic args.
         #
         def sudo
-          ['sudo', *sudo_shell_params]
+          if RedmineGitHosting::Config.gitolite_use_sudo?
+            ['sudo', *sudo_shell_params]
+          else
+            []
+          end
         end
 
 

@@ -66,7 +66,7 @@ module RedmineGitHosting
 
       ## SUDO TEST1
       def can_redmine_sudo_to_gitolite_user?
-        return true if gitolite_user == redmine_user
+        return true unless gitolite_use_sudo?
         file_logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
         result = execute_sudo_test(gitolite_user) do
           RedmineGitHosting::Commands.sudo_capture('whoami')

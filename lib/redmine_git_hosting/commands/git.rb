@@ -13,7 +13,11 @@ module RedmineGitHosting
       # Send Git command with Sudo
       #
       def sudo_git(*params)
-        cmd = sudo_git_cmd.concat(params)
+        if RedmineGitHosting::Config.gitolite_use_sudo?
+          cmd = sudo_git_cmd.concat(params)
+        else
+          cmd = ['git'].concat(params)
+        end
         capture(cmd)
       end
 
@@ -67,7 +71,7 @@ module RedmineGitHosting
       # Return a hash with global config parameters.
       def sudo_get_git_global_params(namespace)
         begin
-          params = sudo_git('config', '-f', '.gitconfig', '--get-regexp', namespace).split("\n")
+          params = sudo_git('config', '--get-regexp', namespace).split("\n")
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'")
           params = []
