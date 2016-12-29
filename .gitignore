@@ -1,5 +1,6 @@
 .*.swp
 Gemfile.lock
+settings.yml
 /tmp
 /rdoc
 /coverage
