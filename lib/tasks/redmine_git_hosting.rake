@@ -1,12 +1,11 @@
 namespace :redmine_git_hosting do
 
-  desc 'Reload defaults from init.rb into the redmine_git_hosting settings.'
-  task restore_default_settings: [:environment] do
-    RedmineGitHosting::ConsoleLogger.title('Reloading defaults from init.rb from command line') do
+  desc 'Update plugin settings in database (This will read settings from `<redmine_root>/redmine_git_hosting.yml` and `<plugin_root>/settings.yml`)'
+  task update_settings: [:environment] do
+    RedmineGitHosting::ConsoleLogger.title('Reloading defaults settings from command line') do
       RedmineGitHosting::Config.reload_from_file!
     end
   end
-  task restore_defaults: [:restore_default_settings]
 
 
   desc 'Purge expired repositories from Recycle Bin'
