@@ -21,4 +21,4 @@ If you're using Apache to run Redmine :
     root# sudo -u www-data  mkdir -p            /var/www/redmine/ssh_keys
     root# sudo -u www-data  ssh-keygen -N '' -f /var/www/redmine/ssh_keys/redmine_gitolite_admin_id_rsa
 
-You will have to configure the plugin to point to this path.
+You will have to [configure the plugin](#step-9-finish-installation---configuration) to point to this path.
