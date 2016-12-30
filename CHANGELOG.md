@@ -1,5 +1,21 @@
 ## CHANGELOG
 
+### 1.2.2 2016-12-31
+
+* Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) ([Views] 404 on the "My public keys" link in the user panel)
+* Fix [#526](https://github.com/jbox-web/redmine_git_hosting/issues/526) ([Core] Plugin breaks if gitolite user == redmine user)
+* Fix [#551](https://github.com/jbox-web/redmine_git_hosting/issues/551) ([Core] Make Sidekiq truly optional)
+* Fix [#576](https://github.com/jbox-web/redmine_git_hosting/issues/576) ([Models] Can't add Git Config Key)
+* Merge [#581](https://github.com/jbox-web/redmine_git_hosting/pull/581) (Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) by amelentjev)
+* Merge [#621](https://github.com/jbox-web/redmine_git_hosting/pull/621) ([Routes] Mount grack under http_server_subdir)
+* Merge [#624](https://github.com/jbox-web/redmine_git_hosting/pull/624) ([Translations] add Spanish translation)
+* Fix repo url in Gitolite hooks
+* Fix nil data case when loading custom settings from empty file
+* Allow to load plugin settings from a file in Redmine root (should ease deployment and upgrades)
+* Fix wrong Repository Git objects count
+* Add Russian translation
+* Rename `redmine_git_hosting:restore_defaults` task to `redmine_git_hosting:update_settings`
+
 ### 1.2.1 - 2016-07-25
 
 * Fix [#524](https://github.com/jbox-web/redmine_git_hosting/issues/524) ([DB] Index too long)
