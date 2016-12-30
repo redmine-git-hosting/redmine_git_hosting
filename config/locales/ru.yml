@@ -1,0 +1,24 @@
+ru:
+
+  redmine_git_hosting: Redmine Git Hosting
+
+  ########### MISCELANOUS ###########
+  label_enabled: Включено
+  label_disabled: Выключено
+  label_true: Истина
+  label_false: Ложь
+  label_backup_in_progress: Сохранение...
+  label_delete_in_progress: Удаление...
+  label_url: URL
+  label_mode: Режим
+  label_hour: Час
+  button_ok: OK
+  button_clone: Клонировать
+
+  label_monday: Понедельник
+  label_tuesday: Вторник
+  label_wednesday: Среда
+  label_thursday: Четверг
+  label_friday: Пятница
+  label_saturday: Суббота
+  label_sunday: Воскресенье
