@@ -40,7 +40,10 @@ get 'settings/plugin/:id/authors', to: 'settings#authors', as: 'plugin_authors'
 get 'settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gitolite_hooks', as: 'install_gitolite_hooks'
 
 # Enable SmartHTTP Grack support
-mount Grack::Bundle.new({}), at: '/', constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
+mount Grack::Bundle.new({}),
+      at: (RedmineGitHosting::Config.http_server_subdir rescue '/'),
+      constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) },
+      via: [:get, :post]
 
 # Post Receive Hooks
 mount Hrack::Bundle.new({}), at: 'githooks/post-receive/:type/:projectid', via: [:post]
