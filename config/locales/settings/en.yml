@@ -37,6 +37,7 @@ en:
   label_gitolite_identifier_prefix: Gitolite prefix
   label_gitolite_identifier_prefix_desc: Will be used to generate SSH keys identifiers
   label_gitolite_identifier_strip_user_id: Remove user ID from Gitolite identifier
+  label_gitolite_identifier_strip_user_id_desc: You must restart Redmine to take effects
 
   # Gitolite Global Config
   label_tab_global: Global
