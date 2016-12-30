@@ -8,7 +8,9 @@
 * Fix [#576](https://github.com/jbox-web/redmine_git_hosting/issues/576) ([Models] Can't add Git Config Key)
 * Merge [#581](https://github.com/jbox-web/redmine_git_hosting/pull/581) (Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) by amelentjev)
 * Merge [#621](https://github.com/jbox-web/redmine_git_hosting/pull/621) ([Routes] Mount grack under http_server_subdir)
-* Merge [#624](https://github.com/jbox-web/redmine_git_hosting/pull/624) ([Translations] add Spanish translation)
+* Merge [#624](https://github.com/jbox-web/redmine_git_hosting/pull/624) ([Translations] Add Spanish translation)
+* Merge [#634](https://github.com/jbox-web/redmine_git_hosting/pull/634) ([Views] Added missing mandatory param for partial repositories/download_revision)
+* Merge [#636](https://github.com/jbox-web/redmine_git_hosting/pull/636) ([Doc] "Remove user ID from Gitolite identifier" requires a restart)
 * Fix repo url in Gitolite hooks
 * Fix nil data case when loading custom settings from empty file
 * Allow to load plugin settings from a file in Redmine root (should ease deployment and upgrades)
