@@ -60,7 +60,8 @@
     <% end %>
   </ul>
 
-  <%= render :partial => 'repositories/download_revision' %>
+  <%= render :partial => 'repositories/download_revision'
+            :locals => { :repository => @repository } %>
 <% end %>
 
 <% content_for :header_tags do %>
