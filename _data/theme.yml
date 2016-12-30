@@ -1,8 +1,8 @@
 stylesheets:
   distant:
-    - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css
-    - //cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css
-    - //cdnjs.cloudflare.com/ajax/libs/octicons/2.2.2/octicons.min.css
+    - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css
+    - //cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css
+    - //cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/octicons.min.css
 
   local:
     - stylesheets/syntax.css
@@ -13,9 +13,9 @@ stylesheets:
 
 javascripts:
   distant:
-    - //cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js
-    - //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js
-    - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js
+    - //cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js
+    - //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
+    - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js
     - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js
     - //platform.twitter.com/widgets.js
 
