@@ -1,13 +1,13 @@
 #### **(step 4)** User running Redmine must have **RW+** access to gitolite-admin
 ***
 
-Assuming that you have Gitolite installed :
+Assuming that you have Gitolite installed, add this in ```gitolite.conf``` file :
 
     repo    gitolite-admin
       RW+                            = redmine_gitolite_admin_id_rsa
 
 
-Otherwise you can install Gitolite (v3) by following this :
+Otherwise you can install Gitolite (v3) by following this (this will automatically set the line above) :
 
     Server requirements:
 
@@ -26,7 +26,7 @@ Otherwise you can install Gitolite (v3) by following this :
 
       * make sure ~/.ssh non-existent
 
-      * make sure **Redmine SSH public key** we've just created is available at $HOME/redmine_gitolite_admin_id_rsa.pub
+      * make sure **Redmine SSH public key** we've just created (step 3) is available at $HOME/redmine_gitolite_admin_id_rsa.pub
 
       * add this in ~/.profile
 
