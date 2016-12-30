@@ -77,7 +77,7 @@ describe Repository::Xitolite do
 
     describe '#git_objects_count' do
       it 'should return repository objects count' do
-        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count).with('repositories/redmine/project-parent/project-child.git')
+        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count).with('repositories/redmine/project-parent/project-child.git/objects')
         @repository_1.git_objects_count
       end
     end
