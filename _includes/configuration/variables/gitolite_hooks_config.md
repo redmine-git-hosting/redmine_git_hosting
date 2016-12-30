@@ -1,4 +1,4 @@
-#### Gitolite Hooks Config
+#### **Gitolite Hooks Config**
 ***
 
 Setting | Default | Notes

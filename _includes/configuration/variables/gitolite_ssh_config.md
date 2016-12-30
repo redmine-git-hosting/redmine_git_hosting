@@ -1,4 +1,4 @@
-#### Gitolite SSH Config
+#### **Gitolite SSH Config**
 ***
 
 Setting | Default | Notes

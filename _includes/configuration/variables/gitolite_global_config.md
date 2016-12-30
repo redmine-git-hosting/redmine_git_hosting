@@ -1,4 +1,4 @@
-#### Gitolite Global Config
+#### **Gitolite Global Config**
 ***
 
 Setting | Default | Notes

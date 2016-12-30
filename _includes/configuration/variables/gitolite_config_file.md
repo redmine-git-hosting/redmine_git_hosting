@@ -1,4 +1,4 @@
-#### Gitolite Config File
+#### **Gitolite Config File**
 ***
 
 Setting | Default | Notes

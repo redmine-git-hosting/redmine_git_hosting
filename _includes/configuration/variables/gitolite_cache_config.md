@@ -1,4 +1,4 @@
-#### Gitolite Cache Config
+#### **Gitolite Cache Config**
 ***
 
 Setting | Default | Notes

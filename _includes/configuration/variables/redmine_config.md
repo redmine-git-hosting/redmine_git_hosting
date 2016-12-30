@@ -1,4 +1,4 @@
-#### Redmine Config
+#### **Redmine Config**
 ***
 
 Setting | Default | Notes

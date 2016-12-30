@@ -1,4 +1,4 @@
-#### Gitolite Access Config
+#### **Gitolite Access Config**
 ***
 
 Setting | Default | Notes

@@ -1,4 +1,4 @@
-#### Gitolite Storage Config
+#### **Gitolite Storage Config**
 ***
 
 Setting | Default | Notes

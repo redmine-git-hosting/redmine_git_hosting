@@ -1,4 +1,4 @@
-#### Git Mailing List Config
+#### **Git Mailing List Config**
 ***
 
 Setting | Default | Notes
