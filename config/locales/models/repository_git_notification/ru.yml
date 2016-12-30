@@ -1,0 +1,40 @@
+ru:
+
+  ########### GIT NOTIFICATIONS ###########
+  # Basics labels
+  label_git_notifications: Почтовая рассылка
+  label_git_notifications_add: Добавить рассылку
+  label_git_notifications_create: Создать рассылку
+  label_git_notifications_edit: Редактировать рассылку
+  label_git_notifications_delete: Удалить рассылку
+
+  # Basics notices
+  notice_git_notifications_created: Почтовая рассылка успешно создана
+  notice_git_notifications_updated: Почтовая рассылка успешно обновлена
+  notice_git_notifications_deleted: Почтовая рассылка успешно удалена
+  notice_git_notifications_create_failed: Ошибка при создании рассылки
+  notice_git_notifications_update_failed: Ошибка при обновлении рассылки
+
+  # Misc
+  label_git_notification_include_list: Входят
+  label_git_notification_exclude_list: Исключены
+  label_git_notification_default_list: Умолчание
+  label_git_notification_effective_list: Действует
+
+  label_gitolite_notify_prefix: Префикс рассылки
+  label_gitolite_notify_sender_address: Адрес отправителя
+
+  git_notifications_reminder: Почтовая рассылка не включена. Сначала подключите рассылку в настройках репозитория.
+
+  activerecord:
+    errors:
+      models:
+
+        repository_git_notification:
+          attributes:
+            base:
+              invalid: 'адрес определен дважды'
+            include_list:
+              invalid: ошибочный
+            exclude_list:
+              invalid: ошибочный
