@@ -54,10 +54,10 @@ group :development, :test do
 end
 
 group :development do
-  gem 'spring',                '~> 1.3.1'
-  gem 'spring-commands-rspec', '~> 1.0.4'
-  gem 'quiet_assets',          '~> 1.1.0'
+  gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'quiet_assets'
 
-  # gem 'brakeman', '~> 2.6.3'
-  # gem 'bullet',   '~> 4.14.7'
+  gem 'brakeman'
+  gem 'bullet'
 end
