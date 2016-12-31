@@ -29,12 +29,12 @@ module RedmineGitHosting
 
 
       def gitolite_bin_dir
-        @gitolite_bin_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_BINDIR')
+        @gitolite_bin_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_BINDIR').chomp
       end
 
 
       def gitolite_lib_dir
-        @gitolite_lib_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_LIBDIR')
+        @gitolite_lib_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_LIBDIR').chomp
       end
 
 
