@@ -61,10 +61,10 @@
           </div>
           <script src="{{ site.baseurl }}/javascripts/jekyll-search.js" type="text/javascript"></script>
           <script type="text/javascript">
-            SimpleJekyllSearch.init({
+            SimpleJekyllSearch({
               searchInput: document.getElementById('search-input'),
               resultsContainer: document.getElementById('results-container'),
-              dataSource: '{{ site.baseurl }}/search.json',
+              json: '{{ site.baseurl }}/search.json',
               searchResultTemplate: '<li><a href="{url}" title="{{page.title}}">{title}</a></li>',
               noResultsText: '{{site.search_no_results_text}}',
               limit: 10,

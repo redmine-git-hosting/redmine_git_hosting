@@ -10,8 +10,8 @@ search: exclude
       "category" : "{{ page.category }}",
       "url"      : "{{ site.baseurl }}{{ page.url }}",
       "date"     : "{{ page.date }}",
-      "body": "{{ page.content | markdownify | strip_html | strip_newlines | replace: '\', '\\\\' | replace: '"', '\\"' }}",
-      "excerpt": "{{ page.content | markdownify | strip_html | strip_newlines | truncate: 140, '…' | replace: '\', '\\' | replace: '"', '\\"' }}"
+      "content"  : "{{ page.content | markdownify | strip_html | strip_newlines | replace: '\', '\\\\' | replace: '"', '\\"' }}",
+      "excerpt"  : "{{ page.content | markdownify | strip_html | strip_newlines | truncate: 140, '…' | replace: '\', '\\' | replace: '"', '\\"' }}"
     } ,
     {% endif %}
   {% endfor %}
@@ -23,8 +23,8 @@ search: exclude
       "tags"     : "{{ post.tags | array_to_sentence_string }}",
       "url"      : "{{ site.baseurl }}{{ post.url }}",
       "date"     : "{{ post.date }}",
-      "body": "{{ post.content | markdownify | strip_html | strip_newlines | replace: '\', '\\\\' | replace: '"', '\\"' }}",
-      "excerpt": "{{ post.content | markdownify | strip_html | strip_newlines | truncate: 140, '…' | replace: '\', '\\' | replace: '"', '\\"' }}"
+      "content"  : "{{ post.content | markdownify | strip_html | strip_newlines | replace: '\', '\\\\' | replace: '"', '\\"' }}",
+      "excerpt"  : "{{ post.content | markdownify | strip_html | strip_newlines | truncate: 140, '…' | replace: '\', '\\' | replace: '"', '\\"' }}"
     } {% unless forloop.last %},{% endunless %}
     {% endif %}
   {% endfor %}

@@ -17,10 +17,10 @@ javascripts:
     - //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
     - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js
     - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js
+    - //cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.1.5/jekyll-search.min.js
     - //platform.twitter.com/widgets.js
 
   local:
-    - javascripts/jekyll-search.js
     - javascripts/jquery.navgoco.min.js
     - javascripts/jquery.cookie.min.js
     - javascripts/toc.js
