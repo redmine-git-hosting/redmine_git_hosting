@@ -65,7 +65,6 @@ Rails.configuration.to_prepare do
   # Redmine SCM adapter
   require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
-  # Hrack for Git Hooks
   require 'hrack/init'
 
   # Extensions for Faker
