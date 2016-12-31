@@ -138,11 +138,6 @@ module RedmineGitHosting
     end
 
 
-    def putc(obj)
-      @extra_args << retval_to_s(obj)
-    end
-
-
     def write(obj)
       @extra_args << obj.to_s
     end
