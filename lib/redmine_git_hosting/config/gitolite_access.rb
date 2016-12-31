@@ -34,7 +34,8 @@ module RedmineGitHosting
 
 
       def http_server_subdir
-        get_setting(:http_server_subdir)
+        subdir = get_setting(:http_server_subdir)
+        subdir.empty? ? '/' : subdir
       end
 
 

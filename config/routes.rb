@@ -39,7 +39,7 @@ get 'settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gitolite
 
 # Enable SmartHTTP Grack support
 mount Grack::Bundle.new({}),
-      at: (RedmineGitHosting::Config.http_server_subdir rescue '/'),
+      at: RedmineGitHosting::Config.http_server_subdir,
       constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) },
       via: [:get, :post]
 
