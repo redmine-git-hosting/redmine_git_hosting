@@ -18,6 +18,12 @@ namespace :redmine_git_hosting do
   end
 
 
+  desc 'Dump plugin settings in console'
+  task dump_settings: [:environment] do
+    RedmineGitHosting::Config.dump_settings
+  end
+
+
   desc 'Purge expired repositories from Recycle Bin'
   task purge_recycle_bin: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Purging Recycle Bin from command line') do

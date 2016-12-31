@@ -26,6 +26,11 @@ module RedmineGitHosting
       end
 
 
+      def dump_settings
+        puts YAML.dump Redmine::Plugin.find('redmine_git_hosting').settings[:default]
+      end
+
+
       private
 
 
