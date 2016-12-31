@@ -4,7 +4,6 @@ gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', t
 ## Redmine 3.x
 ## Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine uses Rails 4.2 and Rack 1.6)
 gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails4'
-gem 'redcarpet', '~> 3.3.2'
 
 # HAML views
 gem 'haml-rails'
@@ -39,9 +38,6 @@ group :development, :test do
   gem 'faker'
   gem 'sshkey'
   gem 'database_cleaner'
-
-  # Code coverage
-  gem 'simplecov', '~> 0.9.1'
 
   # Publish to Coveralls
   gem 'coveralls', require: false
