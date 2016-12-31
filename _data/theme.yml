@@ -18,10 +18,10 @@ javascripts:
     - //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js
     - //cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.min.js
     - //cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.1.5/jekyll-search.min.js
+    - //cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
     - //platform.twitter.com/widgets.js
 
   local:
     - javascripts/jquery.navgoco.min.js
-    - javascripts/jquery.cookie.min.js
     - javascripts/toc.js
     - javascripts/project.js
