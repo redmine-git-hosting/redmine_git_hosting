@@ -50,8 +50,6 @@ entries:
           url: /about/license/
         - title: How to contribute?
           url: /about/how-to-contribute/
-        - title: JBox Web
-          url: /about/jbox-web/
 
     - title: Archives
       items:

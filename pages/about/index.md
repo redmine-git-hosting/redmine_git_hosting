@@ -7,4 +7,3 @@ permalink: /about/
 * [Roadmap]({{ site.base_url }}/about/roadmap/)
 * [License]({{ site.base_url }}/about/license/)
 * [How to contribute?]({{ site.base_url }}/about/how-to-contribute/)
-* [JBox Web]({{ site.base_url }}/about/jbox-web/)
