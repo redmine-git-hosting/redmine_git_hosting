@@ -47,13 +47,7 @@ module RedmineGitHosting
 
 
           def get_members_available(klass)
-            scope = old_redmine_version? ? member_principals : memberships.active
-            scope.map(&:principal).select { |m| m.class.name == klass }.uniq.sort
-          end
-
-
-          def old_redmine_version?
-            Redmine::VERSION::MAJOR < 3 || (Redmine::VERSION::MAJOR <= 3 && Redmine::VERSION::MINOR == 0)
+            memberships.active.map(&:principal).select { |m| m.class.name == klass }.uniq.sort
           end
 
 
