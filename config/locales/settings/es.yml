@@ -28,8 +28,6 @@ es:
   label_gitolite_redmine_storage_dir_desc: Relativa al directorio de repositorios de Gitolite
   label_gitolite_local_code_dir: Carpeta de hooks non-core de Gitolite
   label_gitolite_local_code_dir_desc: Relativa al directorio del usuario de Gitolite
-  label_gitolite_lib_dir: Carpeta de bibliotecas de Gitolite
-  label_gitolite_lib_dir_desc: /usr/share/gitolite3/lib en Debian, bin/lib/ si se ha instalado a mano
 
   # Gitolite Config File
   label_tab_config_file: Fichero de configuración
@@ -169,6 +167,8 @@ es:
   label_gitolite_repository_count: Recuento de repositorios físicos en Gitolite
   label_gitolite_rugged_features: Características de Rugged compiladas
   label_gitolite_libgit2_version: Versión de libgit2
+  label_gitolite_bin_dir: Carpeta de binarios de Gitolite
+  label_gitolite_lib_dir: Carpeta de bibliotecas de Gitolite
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Papelera de reciclaje

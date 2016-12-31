@@ -28,17 +28,13 @@ module RedmineGitHosting
       end
 
 
-      def gitolite_lib_dir
-        get_setting(:gitolite_lib_dir)
+      def gitolite_bin_dir
+        @gitolite_bin_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_BINDIR')
       end
 
 
-      def gitolite_lib_dir_path
-        if gitolite_lib_dir.starts_with?('/')
-          gitolite_lib_dir
-        else
-          File.join(gitolite_home_dir, gitolite_lib_dir)
-        end
+      def gitolite_lib_dir
+        @gitolite_lib_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('GL_LIBDIR')
       end
 
 

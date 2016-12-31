@@ -153,7 +153,8 @@ module Grack
       def smart_http_args
         [
           'env',
-          "GL_LIBDIR=#{RedmineGitHosting::Config.gitolite_lib_dir_path}",
+          "GL_BINDIR=#{RedmineGitHosting::Config.gitolite_bin_dir}",
+          "GL_LIBDIR=#{RedmineGitHosting::Config.gitolite_lib_dir}",
           "GL_REPO=#{repository_object.gitolite_repository_name}",
           "GL_USER=#{@env['REMOTE_USER']}"
         ]

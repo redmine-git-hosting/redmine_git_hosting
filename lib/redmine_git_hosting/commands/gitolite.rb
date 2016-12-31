@@ -15,6 +15,16 @@ module RedmineGitHosting
       end
 
 
+      def sudo_gitolite_query_rc(param)
+        begin
+          sudo_capture('gitolite', 'query-rc', param)
+        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          logger.error("Can't retrieve Gitolite param : #{e.output}")
+          nil
+        end
+      end
+
+
       def sudo_update_gitolite!
         if gitolite_command.nil?
           logger.error("gitolite_command is nil, can't update Gitolite !")
