@@ -31,7 +31,7 @@ layout: default
 
 <p><strong>Download :</strong></p>
 
-{% if page.status == 'next stable' || page.status == 'beta' %}
+{% if page.status == 'next stable' or page.status == 'beta' %}
   <p style="padding-left: 30px;">Not released yet, come back later!</p>
 {% else %}
   <ul class="release-downloads">

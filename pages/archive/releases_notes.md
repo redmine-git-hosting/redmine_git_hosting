@@ -31,7 +31,7 @@ layout: page
       </p>
 
       <p><strong>Download :</strong>
-        {% if post.status == 'next stable' || post.status == 'beta' %}
+        {% if post.status == 'next stable' or post.status == 'beta' %}
           Not released yet, come back later!
         {% else %}
           <a class="btn btn-sm btn-primary" rel="nofollow" href="{{ post.download_zip }}">
