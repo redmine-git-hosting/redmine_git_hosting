@@ -19,6 +19,7 @@ kramdown:
 
 gems:
 - jekyll-sitemap
+- jekyll-octicons
 
 excerpt_separator: "##########"
 

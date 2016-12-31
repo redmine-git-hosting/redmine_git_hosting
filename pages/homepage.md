@@ -19,8 +19,8 @@ search: exclude
     <p>Keep your code secure on your own server.</p>
   </div>
   <div class="col-lg-4 centered">
-    <div class="jbox-icons round" style="padding: 16px 13px 17px 12px; box-sizing: border-box;">
-      <i class="octicon octicon-key"></i>
+    <div class="jbox-icons round" style="padding: 11px 13px 17px 8px; box-sizing: border-box;">
+      {% octicon key width:32 height:26 %}
     </div>
     <h4>Manage your SSH Keys</h4>
     <p>Allow Redmine users to manage their own SSH keys.</p>
