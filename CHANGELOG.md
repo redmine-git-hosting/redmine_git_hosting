@@ -6,6 +6,8 @@
 * Fix [#526](https://github.com/jbox-web/redmine_git_hosting/issues/526) ([Core] Plugin breaks if gitolite user == redmine user)
 * Fix [#551](https://github.com/jbox-web/redmine_git_hosting/issues/551) ([Core] Make Sidekiq truly optional)
 * Fix [#576](https://github.com/jbox-web/redmine_git_hosting/issues/576) ([Models] Can't add Git Config Key)
+* Fix [#630](https://github.com/jbox-web/redmine_git_hosting/issues/630) ([Core] Use "gitolite query-rc" to get Gitolite variables)
+* Fix [#632](https://github.com/jbox-web/redmine_git_hosting/issues/632) ([Core] Mirroring does not work on git push)
 * Merge [#581](https://github.com/jbox-web/redmine_git_hosting/pull/581) (Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) by amelentjev)
 * Merge [#621](https://github.com/jbox-web/redmine_git_hosting/pull/621) ([Routes] Mount grack under http_server_subdir)
 * Merge [#624](https://github.com/jbox-web/redmine_git_hosting/pull/624) ([Translations] Add Spanish translation)
