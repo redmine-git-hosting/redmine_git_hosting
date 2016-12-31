@@ -43,7 +43,3 @@ Otherwise you can install Gitolite (v3) by following this (this will automatical
             git$ git clone git://github.com/sitaramc/gitolite
             git$ gitolite/install -to $HOME/bin
             git$ gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
-
-{{ site.data.callouts.alertwarning }}
-  If you are running Gitolite 3 don't forget to [patch it!]({{ site.baseurl }}/troubleshooting/#hook-errors-while-pushing-over-https)
-{{ site.data.callouts.end }}
