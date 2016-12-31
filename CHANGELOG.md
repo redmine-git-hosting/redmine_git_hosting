@@ -19,6 +19,7 @@
 * Fix wrong Repository Git objects count
 * Add Russian translation
 * Rename `redmine_git_hosting:restore_defaults` task to `redmine_git_hosting:update_settings`
+* Add Rake task `redmine_git_hosting:dump_settings` to dump plugin settings in console
 
 ### 1.2.1 - 2016-07-25
 
