@@ -7,7 +7,7 @@ github_repository: redmine_git_hosting
 
 release:
   year: 2016
-  version: 1.2.1
+  version: 1.2.2
   latest_redmine_version: 3.3.0
 
 author:
