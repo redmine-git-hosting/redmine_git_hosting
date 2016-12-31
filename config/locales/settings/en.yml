@@ -26,8 +26,6 @@ en:
   label_gitolite_recycle_bin_dir_desc: Relative to Gitolite user home
   label_gitolite_redmine_storage_dir: Subdirectory for Redmine-managed repositories
   label_gitolite_redmine_storage_dir_desc: Relative to Gitolite repositories base path
-  label_gitolite_local_code_dir: Gitolite non-core hooks directory
-  label_gitolite_local_code_dir_desc: Relative to Gitolite user home
 
   # Gitolite Config File
   label_tab_config_file: Configuration file
@@ -170,6 +168,7 @@ en:
   label_gitolite_libgit2_version: libgit2 version
   label_gitolite_bin_dir: Gitolite binaries directory
   label_gitolite_lib_dir: Gitolite librairies directory
+  label_gitolite_local_code_dir: Gitolite non-core hooks directory
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Recycle Bin
