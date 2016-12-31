@@ -23,7 +23,6 @@ gem 'github-markup'
 gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
-# gem 'wikicloth'
 gem 'asciidoctor'
 
 # Rack parser for Hrack
