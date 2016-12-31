@@ -1,6 +1,6 @@
 ## CHANGELOG
 
-### 1.2.2 2016-12-31
+### 1.2.2 - 2016-12-31
 
 * Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) ([Views] 404 on the "My public keys" link in the user panel)
 * Fix [#526](https://github.com/jbox-web/redmine_git_hosting/issues/526) ([Core] Plugin breaks if gitolite user == redmine user)
