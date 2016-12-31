@@ -1,12 +1,10 @@
 module Grack
-  class Auth < Rack::Auth::Basic
-
-    attr_accessor :user, :env
+  module AuthPatch
 
     def call(env)
       @env = env
       @request = Rack::Request.new(env)
-      @auth = Request.new(env)
+      @auth = Rack::Auth::Basic::Request.new(env)
 
       # Need this patch due to the rails mount
 
@@ -41,7 +39,7 @@ module Grack
         end
 
         if authorized_request?
-          @app.call(env)
+          @app.call(@env)
         else
           unauthorized
         end
@@ -57,8 +55,8 @@ module Grack
       def authorized_request?
         case git_cmd
         when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
-          if user
-            RedmineGitHosting::GitAccess.new.download_access_check(user, repository, is_ssl?).allowed?
+          if @user
+            RedmineGitHosting::GitAccess.new.download_access_check(@user, repository, is_ssl?).allowed?
           elsif repository.public_project? || repository.public_repo?
             # Allow clone/fetch for public projects
             true
@@ -70,8 +68,8 @@ module Grack
           if !is_ssl?
             logger.error('SmartHttp : your are trying to push data without SSL!, exiting !')
             false
-          elsif user
-            RedmineGitHosting::GitAccess.new.upload_access_check(user, repository).allowed?
+          elsif @user
+            RedmineGitHosting::GitAccess.new.upload_access_check(@user, repository).allowed?
           else
             false
           end
@@ -135,4 +133,8 @@ module Grack
       end
 
   end
+end
+
+unless Grack::Auth.included_modules.include?(Grack::AuthPatch)
+  Grack::Auth.send(:prepend, Grack::AuthPatch)
 end

@@ -80,8 +80,8 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
   ## Gitlab Grack for Git SmartHTTP
-  require_dependency 'grack/auth'
-  require_dependency 'grack/server'
+  require_dependency 'grack/auth_patch'
+  require_dependency 'grack/server_patch'
 
   ## Hrack for Git Hooks
   require 'hrack/init'
