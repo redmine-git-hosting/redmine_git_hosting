@@ -20,11 +20,7 @@ describe GitolitePublicKey do
   # There is an isolation issue in tests.
   # Try to workaround it...
   def test_user
-    if Redmine::VERSION.to_s.include?('2.6')
-      'redmine_git_user1_17'
-    else
-      'redmine_git_user1_15'
-    end
+    'redmine_git_user1_15'
   end
 
 
