@@ -8,13 +8,6 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
 #### **(step 1)** Install Redis Server
 ***
 
-    # I use Redis Server from packages.dotdeb.org on Debian Wheezy
-    # so you can add this to /etc/apt/sources.list :
-    # deb http://packages.dotdeb.org/  wheezy all
-    # or for Squeeze :
-    # deb http://packages.dotdeb.org/  squeeze all
-
-    # then
     root# apt-get update
     root# apt-get install redis-server
 
@@ -63,7 +56,7 @@ If not, add this in ```/home/redmine/.profile``` :
 #### **(Notes)** Sidekiq :: Concurrency
 ***
 
-When running in Sidekiq mode, do **not** modify ```sidekiq.yaml```, particularly the ```concurrency``` parameter.
+When running in Sidekiq mode, do **not** modify ```sidekiq.yml```, particularly the ```concurrency``` parameter.
 
 Tasks are async but cannot be parallels as we need to write in a file.
 
