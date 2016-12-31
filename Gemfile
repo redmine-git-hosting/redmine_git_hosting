@@ -1,8 +1,7 @@
 # Gitolite Admin repository management
 gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.2.0'
 
-## Redmine 3.x
-## Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine uses Rails 4.2 and Rack 1.6)
+# Ruby/Rack Git Smart-HTTP Server Handler (use our own repository because Redmine uses Rails 4.2 and Rack 1.6)
 gem 'gitlab-grack', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_rails4'
 
 # HAML views
