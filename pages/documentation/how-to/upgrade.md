@@ -17,7 +17,7 @@ permalink: /how-to/upgrade/
     # Update Bootstrap Kit
     redmine$ cd REDMINE_ROOT/plugins/redmine_bootstrap_kit
     redmine$ git fetch -p
-    redmine$ git checkout 0.2.4
+    redmine$ git checkout 0.2.5
 
     # Install gems and run migrations
     redmine$ cd REDMINE_ROOT

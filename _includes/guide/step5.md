@@ -11,5 +11,3 @@
     LOCAL_CODE       =>  "$ENV{HOME}/local"
 
     ## then save and exit
-
-**Note :** You will have to set the `LOCAL_CODE` path in plugin settings (see below).
