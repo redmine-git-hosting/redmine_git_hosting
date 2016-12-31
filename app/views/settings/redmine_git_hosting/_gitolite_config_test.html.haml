@@ -36,6 +36,14 @@
       - else
         = image_tag('exclamation.png')
 
+  %tr
+    %td= l(:label_gitolite_local_code_dir)
+    %td
+      - if RedmineGitHosting::Config.gitolite_local_code_dir
+        %span{ class: 'label label-success' }= RedmineGitHosting::Config.gitolite_local_code_dir
+      - else
+        = image_tag('exclamation.png')
+
   - gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
 
   %tr

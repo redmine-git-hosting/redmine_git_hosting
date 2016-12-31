@@ -29,13 +29,13 @@ module RedmineGitHosting
 
 
       def gitolite_local_code_dir
-        get_setting(:gitolite_local_code_dir)
+        @gitolite_local_code_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('LOCAL_CODE')
       end
 
 
       def gitolite_hooks_dir
         if gitolite_version == 3
-          File.join(gitolite_home_dir, gitolite_local_code_dir, 'hooks', 'common')
+          File.join(gitolite_local_code_dir, 'hooks', 'common')
         else
           File.join(gitolite_home_dir, '.gitolite', 'hooks', 'common')
         end

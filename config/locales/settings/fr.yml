@@ -26,8 +26,6 @@ fr:
   label_gitolite_recycle_bin_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
   label_gitolite_redmine_storage_dir: Sous-répertoire pour les dépôts gérés par Redmine
   label_gitolite_redmine_storage_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
-  label_gitolite_local_code_dir: Répertoire de stockage des hooks non-core
-  label_gitolite_local_code_dir_desc: Relatif au répertoire personnel de l'utilisateur Gitolite
 
   # Gitolite Config File
   label_tab_config_file: Fichier de configuration
@@ -170,6 +168,7 @@ fr:
   label_gitolite_libgit2_version: Version de libgit2
   label_gitolite_bin_dir: Répertoire des binaires Gitolite
   label_gitolite_lib_dir: Répertoire des librairies Gitolite
+  label_gitolite_local_code_dir: Répertoire de stockage des hooks non-core
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Corbeille

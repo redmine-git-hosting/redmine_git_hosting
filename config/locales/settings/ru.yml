@@ -26,8 +26,6 @@ ru:
   label_gitolite_recycle_bin_dir_desc: Относительно домашнего каталога пользователя Gitolite
   label_gitolite_redmine_storage_dir: Подкаталог управляемых через Redmine репозиториев
   label_gitolite_redmine_storage_dir_desc: Относительно каталога репозиториев Gitolite
-  label_gitolite_local_code_dir: Каталог внешних хуков Gitolite
-  label_gitolite_local_code_dir_desc: Относительно домашнего каталога пользователя Gitolite
 
   # Gitolite Config File
   label_tab_config_file: Конфиг. файл
@@ -169,6 +167,7 @@ ru:
   label_gitolite_libgit2_version: Версия libgit2
   label_gitolite_bin_dir: Каталог с двоичный Gitolite
   label_gitolite_lib_dir: Каталог с библиотеками Gitolite
+  label_gitolite_local_code_dir: Каталог внешних хуков Gitolite
 
   # Recycle Bin
   label_tab_gitolite_recycle_bin: Корзина
