@@ -1,5 +1,3 @@
-require 'hrack/bundle'
-
 module Hrack
-
+  require 'hrack/bundle'
 end
