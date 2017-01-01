@@ -1,8 +1,6 @@
 /*
 PLUGIN ICONS
 */
-#admin-menu a.redmine-git-hosting { background-image: url('../images/git_icon.png'); }
-
 .icon-git-logo { background-image: url('../images/git_icon.png'); padding-right: 5px; }
 .icon-clone { background-image: url('../images/clone.png'); }
 .icon-move { background-image: url('../images/move.png'); }
@@ -53,12 +51,6 @@ PLUGIN SETTINGS
   margin-top: 15px;
 }
 
-.authors-list {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-}
-
 
 /*
 REPOSITORY EDIT
@@ -71,17 +63,6 @@ REPOSITORY EDIT
 /*
 REPOSITORY VIEW
 */
-#sidebar li.repository.git {
-  background: url('../images/git_icon.png') no-repeat scroll 0 50% transparent;
-  margin: 10px 10px 10px 0;
-  padding-left: 25px;
-}
-
-#sidebar ul.repository.git {
-  padding-left: 15px;
-  list-style-type: none;
-}
-
 #git_hosting_download_buttons {
   margin-top: 20px;
 }
@@ -261,11 +242,6 @@ STATISTICS
 /*FONT AWESOME*/
 .fa-align {
   padding-right: 5px;
-}
-
-/*PROJECT OVERVIEW*/
-.repository-urls {
-  margin-top: 15px;
 }
 
 li.url_type {

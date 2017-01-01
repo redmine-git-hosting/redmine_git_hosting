@@ -1,5 +1,16 @@
 #flash_warning{ class: 'flash warning' }= l(:notice_empty_repository)
 
+- if @repository.urls_are_viewable?
+  - content_for :header_tags do
+    = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+
+  .git_hosting_urls.box
+    .container
+      .row
+        .col-md-8{ style: 'vertical-align: middle;' }
+          = render 'common/git_urls', repository: @repository
+        .col-md-4{ style: 'text-align: right; vertical-align: middle;' }
+
 .box
   - if User.current.allowed_to?(:view_changesets, @project)
     %h2= l(:label_help_git_setup) + ' :'
@@ -48,11 +59,6 @@
       %li{ class: 'repository git' }
         = link_to_repository(repo, @repository)
         = link_to "(#{l(:label_settings)})", edit_repository_path(repo) if User.current.allowed_to?(:manage_repository, @project)
-
-  - if @repository.is_a?(Repository::Xitolite) && @repository.urls_are_viewable?
-    .git_hosting_urls
-      %h3= l(:label_repository_access_url)
-      = render 'common/git_urls', repository: @repository
 
 :javascript
   $(document).ready(function() { setGitUrlsInstructions('.git_url'); });

@@ -1,10 +1,9 @@
 - content_for :header_tags do
-  = bootstrap_load_base
   = bootstrap_load_module(:tooltip)
   = zero_clipboard_load_base
 
-  = stylesheet_link_tag    'git_urls',    plugin: 'redmine_git_hosting'
-  = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
+  = stylesheet_link_tag    'git_urls', plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'git_urls', plugin: 'redmine_git_hosting'
 
   :javascript
     $(document).ready(function() { setFirstGitUrl('.git_url_list'); setGitUrls('.git_url'); });

@@ -1,0 +1,10 @@
+/*
+PLUGIN ICON
+*/
+#admin-menu a.redmine-git-hosting { background-image: url('../images/git_icon.png'); }
+
+.authors-list {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}

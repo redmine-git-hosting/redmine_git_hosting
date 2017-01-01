@@ -43,6 +43,3 @@
                 = link_to l(:button_delete), repository_deployment_credential_path(@repository, credential), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
   - else
     %p{ class: 'nodata' }= l(:label_no_data)
-
-:javascript
-  $(document).ready(function() { initModalBoxes(modals); });

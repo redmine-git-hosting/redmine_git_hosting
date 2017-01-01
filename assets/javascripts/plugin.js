@@ -1,5 +1,7 @@
-// Bind links on Dialog box
-function initModalBox() {
+/*
+REDMINE PLUGIN LIST VIEW OVERRIDE
+*/
+function openAuthorModalBox(element) {
   $('#ajax-modal').dialog({
     resizable: false,
     autoOpen: false,
@@ -10,21 +12,14 @@ function initModalBox() {
       effect: "fade",
       duration: 500
     },
-    buttons: {
-      Ok: function(){$(this).dialog('close');}
-    }
+    buttons: { Ok: function(){ $(this).dialog('close'); } }
   });
 
-  $('.modal-box').each(function() {
-    $(this).on('click', function() {
-      var title = $(this).html();
-      $.get($(this).attr('href'), function(data){
-        $('#ajax-modal').html(data);
-        $('#ajax-modal').dialog('option', 'title', title);
-        $('#ajax-modal').dialog('open');
-      });
-      return false;
-    });
+  var title = $(element).html();
+  $.get($(element).attr('href'), function(data){
+    $('#ajax-modal').html(data);
+    $('#ajax-modal').dialog('option', 'title', title);
+    $('#ajax-modal').dialog('open');
   });
 }
 
@@ -32,7 +27,10 @@ function enhanceAuthorsUrlForPlugin(plugin_name) {
   var link = $('#plugin-' + plugin_name + ' > td.author > a');
   if (link.length) {
     link.addClass('modal-box');
-    initModalBox();
+    $(document).on('click', 'a.modal-box', function(e){
+      e.preventDefault();
+      openAuthorModalBox(this);
+    });
   }
 }
 
