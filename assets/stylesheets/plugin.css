@@ -8,3 +8,6 @@ PLUGIN ICON
   -webkit-columns: 2;
   -moz-columns: 2;
 }
+
+.icon-git { padding-right: 15px; }
+.icon-git-disabled { opacity: 0.5; }
