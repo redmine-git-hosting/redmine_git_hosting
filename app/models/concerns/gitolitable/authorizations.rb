@@ -42,7 +42,7 @@ module Gitolitable
 
 
     def ssh_access_available?
-      User.current.allowed_to_commit?(self) && !git_annex_enabled?
+      git_ssh_enabled? && !git_annex_enabled? && User.current.allowed_to_commit?(self)
     end
 
 
@@ -62,7 +62,7 @@ module Gitolitable
 
 
     def go_access_available?
-      (public_project? || public_repo?) && smart_http_enabled?
+      (public_project? || public_repo?) && smart_http_enabled? && git_go_enabled?
     end
 
 

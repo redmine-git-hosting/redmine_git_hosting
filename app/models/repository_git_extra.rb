@@ -7,11 +7,6 @@ class RepositoryGitExtra < ActiveRecord::Base
     [l(:label_https_and_http), '2']
   ]
 
-  DISABLED = 0
-  HTTP     = 3
-  HTTPS    = 1
-  BOTH     = 2
-
   ALLOWED_URLS = %w[ssh http https go git git_annex]
 
   URLS_ICONS = {
@@ -24,7 +19,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   }
 
   ## Attributes
-  attr_accessible :git_http, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch,
+  attr_accessible :git_http, :git_https, :git_ssh, :git_go, :git_daemon, :git_notify, :git_annex, :default_branch, :protected_branch,
                   :public_repo, :key, :urls_order, :notification_sender, :notification_prefix
 
   ## Relations
@@ -32,7 +27,6 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   ## Validations
   validates :repository_id,       presence: true, uniqueness: true
-  validates :git_http,            presence: true, numericality: { only_integer: true }, inclusion: { in: [DISABLED, HTTP, HTTPS, BOTH] }
   validates :default_branch,      presence: true
   validates :key,                 presence: true
   validates :notification_sender, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX, allow_blank: true }
@@ -82,31 +76,27 @@ class RepositoryGitExtra < ActiveRecord::Base
     def check_urls_order_consistency
       check_ssh_url
       check_git_http_urls
-      # Add go url only for existing record to avoid chicken/egg issue
-      check_go_url unless new_record?
+      check_go_url
       check_git_url
       check_git_annex_url
     end
 
 
-    # SSH url should always be present in urls_order Array
-    #
     def check_ssh_url
-      add_url('ssh')
+      git_ssh? ? add_url('ssh') : remove_url('ssh')
     end
 
 
     def check_git_http_urls
-      case git_http
-      when HTTP
+      if git_http? && git_https?
+        add_url('http')
+        add_url('https')
+      elsif git_http?
         add_url('http')
         remove_url('https')
-      when HTTPS
+      elsif git_https?
         add_url('https')
         remove_url('http')
-      when BOTH
-        add_url('http')
-        add_url('https')
       else
         remove_url('http')
         remove_url('https')
@@ -115,7 +105,7 @@ class RepositoryGitExtra < ActiveRecord::Base
 
 
     def check_go_url
-      repository.go_access_available? ? add_url('go') : remove_url('go')
+      git_go? ? add_url('go') : remove_url('go')
     end
 
 

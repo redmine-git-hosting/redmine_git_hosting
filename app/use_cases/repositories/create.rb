@@ -28,13 +28,26 @@ module Repositories
 
       def standard_repository_options
         {
-          git_http:       RedmineGitHosting::Config.gitolite_http_by_default?,
           git_daemon:     RedmineGitHosting::Config.gitolite_daemon_by_default?,
           git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
           git_annex:      false,
           default_branch: 'master',
           key:            RedmineGitHosting::Utils::Crypto.generate_secret(64)
-        }
+        }.merge(smart_http_options)
+      end
+
+
+      def smart_http_options
+        case RedmineGitHosting::Config.gitolite_http_by_default?
+        when '1' # HTTPS only
+          { git_https: true }
+        when '2' # HTTPS and HTTP
+          { git_http: true, git_https: true }
+        when '3' # HTTP only
+          { git_http: true }
+        else
+          {}
+        end
       end
 
 

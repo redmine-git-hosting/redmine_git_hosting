@@ -24,7 +24,10 @@ fr:
   label_repository_options: Options du dépôt
   label_enable_git_notify: Activer la liste de diffusion
   label_enable_git_daemon: Activer le daemon Git
-  label_enable_smart_http: Mode Smart HTTP
+  label_enable_smart_http: Activer SmartHTTP
+  label_enable_smart_https: Activer SmartHTTPS
+  label_enable_ssh_url: Afficher l'url SSH
+  label_enable_go_url: Activer l'url Go
   label_enable_protected_branches: Activer les branches protégées
   label_enable_public_repo: Rendre le dépôt public
   label_git_daemon: Daemon Git

@@ -30,14 +30,19 @@
 
               %p
                 = label_tag 'repository_git_extra[git_http]', l(:label_enable_smart_http)
-                = f.select :git_http, options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, selected: repository.extra[:git_http].to_s)
+                = f.check_box :git_http
 
               %p
-                = label_tag 'repository_git_extra[default_branch]', l(:label_repository_default_branch)
-                - if !repository.branches.empty?
-                  = f.select :default_branch, repository_branches_list(repository.branches)
-                - else
-                  %span{ class: 'label label-info' }= repository.git_default_branch
+                = label_tag 'repository_git_extra[git_https]', l(:label_enable_smart_https)
+                = f.check_box :git_https
+
+              %p
+                = label_tag 'repository_git_extra[git_go]', l(:label_enable_go_url)
+                = f.check_box :git_go
+
+              %p
+                = label_tag 'repository_git_extra[git_ssh]', l(:label_enable_ssh_url)
+                = f.check_box :git_ssh
 
           .col-md-4
             - unless repository.git_annex_enabled?
@@ -57,6 +62,13 @@
           .col-md-4
 
             - unless repository.git_annex_enabled?
+              %p
+                = label_tag 'repository_git_extra[default_branch]', l(:label_repository_default_branch)
+                - if !repository.branches.empty?
+                  = f.select :default_branch, repository_branches_list(repository.branches)
+                - else
+                  %span{ class: 'label label-info' }= repository.git_default_branch
+
               %p
                 %label= l(:label_mirroring_keys_installed)
                 = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')

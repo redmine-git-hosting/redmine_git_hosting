@@ -39,28 +39,38 @@ module Gitolitable
     end
 
 
-    def smart_http_enabled?
-      extra[:git_http] != 0
+    def git_ssh_enabled?
+      extra[:git_ssh]
+    end
+
+
+    def git_go_enabled?
+      extra[:git_go]
     end
 
 
     def https_access_enabled?
-      extra[:git_http] == 1 || extra[:git_http] == 2
+      extra[:git_https]
     end
 
 
     def http_access_enabled?
-      extra[:git_http] == 3 || extra[:git_http] == 2
+      extra[:git_http]
+    end
+
+
+    def smart_http_enabled?
+      https_access_enabled? || http_access_enabled?
     end
 
 
     def only_https_access_enabled?
-      extra[:git_http] == 1
+      https_access_enabled? && !http_access_enabled?
     end
 
 
     def only_http_access_enabled?
-      extra[:git_http] == 3
+      http_access_enabled? && !https_access_enabled?
     end
 
 
