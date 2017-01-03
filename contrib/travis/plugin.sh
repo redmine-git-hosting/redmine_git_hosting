@@ -60,6 +60,11 @@ function install_database() {
 function install_gemfile() {
   log_title "INSTALL RAILS 4 GEMFILE"
   cp "${CONTRIB_DATA_DIR}/gem_files/rails4.gemfile" "${PLUGIN_DIR}/Gemfile"
+
+  if [ $USE_SVN == 'true' ] ; then
+    sed -i "s/gem 'rdoc', '>= 2.4.2'/gem 'rdoc', '~> 4.3'/" "${PLUGIN_DIR}/Gemfile"
+  fi
+
   log_ok
 }
 
