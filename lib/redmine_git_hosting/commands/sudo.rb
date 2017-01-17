@@ -139,7 +139,7 @@ module RedmineGitHosting
       #
       def sudo_capture(*params)
         cmd = sudo.concat(params)
-        capture(cmd)
+        capture(cmd).strip
       end
 
 
