@@ -64,4 +64,12 @@ describe RepositoryGitConfigKeysController do
     { id: @object.id, repository_git_config_key: { key: 'foo', value: 1 } }
   end
 
+
+  private
+
+
+    def base_options
+      { repository_id: @repository.id, type: 'git_keys' }.clone
+    end
+
 end

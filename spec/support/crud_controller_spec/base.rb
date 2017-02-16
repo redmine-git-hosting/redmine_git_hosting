@@ -59,7 +59,7 @@ module CrudControllerSpec
         context 'with sufficient permissions' do
           before(:each) { set_session_user(@member_user) }
 
-          it 'assigns a new RepositoryMirror to @object' do
+          it "assigns a new @object variable" do
             check_new_variable(main_variable, tested_klass)
           end
 

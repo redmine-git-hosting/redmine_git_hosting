@@ -21,7 +21,7 @@ describe Repository::Xitolite do
 
       @repository_1 = build_git_repository(project: @project_child, is_default: true)
       @repository_1.valid?
-      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
+      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64), git_https: true)
     end
 
     subject { @repository_1 }
@@ -112,7 +112,10 @@ describe Repository::Xitolite do
 
         it 'should return an empty Hash' do
           @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 0
+          @repository_1.extra[:git_http]   = false
+          @repository_1.extra[:git_https]  = false
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = false
           expect(@repository_1.available_urls).to eq my_hash
         end
       end
@@ -131,7 +134,10 @@ describe Repository::Xitolite do
           User.current = @user
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
-          @repository_1.extra[:git_http]   = 2
+          @repository_1.extra[:git_http]   = true
+          @repository_1.extra[:git_https]  = true
+          @repository_1.extra[:git_go]     = true
+          @repository_1.extra[:git_ssh]    = true
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
@@ -144,7 +150,10 @@ describe Repository::Xitolite do
           User.current = nil
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
-          @repository_1.extra[:git_http]   = 0
+          @repository_1.extra[:git_http]   = false
+          @repository_1.extra[:git_https]  = false
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = false
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
@@ -157,7 +166,10 @@ describe Repository::Xitolite do
           @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
           User.current = @user
           @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 0
+          @repository_1.extra[:git_http]   = false
+          @repository_1.extra[:git_https]  = false
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = true
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
@@ -170,7 +182,10 @@ describe Repository::Xitolite do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 3
+          @repository_1.extra[:git_http]   = true
+          @repository_1.extra[:git_https]  = false
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = false
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
@@ -183,7 +198,10 @@ describe Repository::Xitolite do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 1
+          @repository_1.extra[:git_http]   = false
+          @repository_1.extra[:git_https]  = true
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = false
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end
@@ -199,7 +217,10 @@ describe Repository::Xitolite do
           User.current = nil
           @project_child.is_public = false
           @repository_1.extra[:git_daemon] = false
-          @repository_1.extra[:git_http]   = 2
+          @repository_1.extra[:git_http]   = true
+          @repository_1.extra[:git_https]  = true
+          @repository_1.extra[:git_go]     = false
+          @repository_1.extra[:git_ssh]    = false
           @repository_1.extra.save
           expect(@repository_1.available_urls).to eq my_hash
         end

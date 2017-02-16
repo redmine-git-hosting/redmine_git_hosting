@@ -24,29 +24,42 @@ describe RepositoryGitExtra do
   it { should be_valid }
 
   it { should validate_presence_of(:repository_id) }
-  it { should validate_presence_of(:git_http) }
   it { should validate_presence_of(:default_branch) }
   it { should validate_presence_of(:key) }
 
   it { should validate_uniqueness_of(:repository_id) }
 
-  it { should validate_numericality_of(:git_http) }
-
-  it { should validate_inclusion_of(:git_http).in_array(%w(0 1 2 3)) }
-
   ## Serializations
   it { should serialize(:urls_order) }
 
 
-  describe '#git_http' do
-    it 'should return the value for git_http' do
-      expect(git_extra.git_http).to eq 0
-    end
-  end
-
   describe '#git_daemon' do
     it 'should return the value for git_daemon' do
       expect(git_extra.git_daemon).to be true
+    end
+  end
+
+  describe '#git_http' do
+    it 'should return the value for git_http' do
+      expect(git_extra.git_http).to be false
+    end
+  end
+
+  describe '#git_https' do
+    it 'should return the value for git_https' do
+      expect(git_extra.git_https).to be false
+    end
+  end
+
+  describe '#git_go' do
+    it 'should return the value for git_go' do
+      expect(git_extra.git_go).to be false
+    end
+  end
+
+  describe '#git_ssh' do
+    it 'should return the value for git_ssh' do
+      expect(git_extra.git_ssh).to be true
     end
   end
 

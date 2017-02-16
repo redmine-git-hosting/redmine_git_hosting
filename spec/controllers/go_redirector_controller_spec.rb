@@ -3,14 +3,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe GoRedirectorController do
 
   def check_response_with_smart_http(repository, opts = {})
-    enable_smart_http(repository)
+    enable_go_url(repository)
     yield
     call_page(repository, opts[:status])
   end
 
 
   def check_response_without_smart_http(repository, opts = {})
-    disable_smart_http(repository)
+    disable_go_url(repository)
     yield
     call_page(repository, opts[:status])
   end
@@ -22,14 +22,16 @@ describe GoRedirectorController do
   end
 
 
-  def enable_smart_http(repository)
-    repository.extra[:git_http] = 2
+  def enable_go_url(repository)
+    repository.extra[:git_http] = true
+    repository.extra[:git_go]   = true
     repository.extra.save!
   end
 
 
-  def disable_smart_http(repository)
-    repository.extra[:git_http] = 0
+  def disable_go_url(repository)
+    repository.extra[:git_http] = false
+    repository.extra[:git_go]   = false
     repository.extra.save!
   end
 
