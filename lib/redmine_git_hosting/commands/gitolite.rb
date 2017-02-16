@@ -17,7 +17,7 @@ module RedmineGitHosting
 
       def sudo_gitolite_query_rc(param)
         begin
-          sudo_capture('gitolite', 'query-rc', param)
+          sudo_capture('gitolite', 'query-rc', param).try(:chomp)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Can't retrieve Gitolite param : #{e.output}")
           nil
