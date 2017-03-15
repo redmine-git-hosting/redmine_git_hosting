@@ -1,11 +1,13 @@
 #### **(step 10)** Add your SSH Keys
 ***
 
-Repositories access are based on Redmine project's members and project's roles : you **must** add users with the adequate role as project's member to be able to clone/update repositories.
+**Repositories access are based on Redmine project's memberships and members's roles : you must add users with the adequate role as project's member to be able to clone/update repositories.**
+
+**You'll also need to configure roles's permissions on *Administration -> Roles page*.**
 
 Unless you want to access your repositories exclusively via Smart HTTP, users will need to set a public key to connect via SSH.
 
-To do this, open a browser, login to Redmine and follow the "My Account" link in the upper right-hand corner of the page then "Add SSH keys" link.
+To do this, open a browser, login to Redmine and follow the *My Account* link in the upper right-hand corner of the page then *Add SSH keys* link.
 
 SSH Keys should be unique, that is, the keys you set in Redmine **should not** already exist in the Gitolite repo.
 
