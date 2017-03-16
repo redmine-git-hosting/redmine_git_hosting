@@ -112,7 +112,14 @@ module RedmineGitHosting
 
       def install_hook_file
         logger.info("Installing hook '#{source_path}' in '#{destination_path}'")
-        RedmineGitHosting::Commands.sudo_install_file(File.read(source_path), destination_path, filemode)
+        begin
+          content = File.read(source_path)
+        rescue Errno::ENOENT => e
+          logger.error("Errors while installing hook '#{e.message}'")
+          return false
+        else
+          RedmineGitHosting::Commands.sudo_install_file(content, destination_path, filemode)
+        end
       end
 
 
