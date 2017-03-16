@@ -101,7 +101,8 @@ module RedmineGitHosting
 
 
       def hook_file_has_changed?
-        RedmineGitHosting::Commands.sudo_file_changed?(source_path, destination_path)
+        RedmineGitHosting::Commands.sudo_file_changed?(source_path, destination_path) ||
+          RedmineGitHosting::Commands.sudo_file_perms_changed?(filemode, destination_path)
       end
 
 
