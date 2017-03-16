@@ -134,6 +134,17 @@ module RedmineGitHosting
       end
 
 
+      # Test if file permissions has changed
+      #
+      def sudo_file_perms_changed?(filemode, dest_file)
+        current_mode = sudo_capture('stat', '-c', "%a", dest_file)
+        current_mode.chomp != filemode
+      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        logger.error(e.output)
+        false
+      end
+
+
       # Return only the output of the shell command.
       # Throws an exception if the shell command does not exit with code 0.
       #
