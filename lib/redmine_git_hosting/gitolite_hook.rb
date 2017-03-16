@@ -71,6 +71,8 @@ module RedmineGitHosting
         else
           logger.info("Leaving '#{name}' hook untouched since forceInstallHook == false")
         end
+      else
+        logger.info("Hook '#{name}' is correcly installed")
       end
       installed?
     end
