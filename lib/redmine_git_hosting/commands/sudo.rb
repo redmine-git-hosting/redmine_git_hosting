@@ -199,6 +199,9 @@ module RedmineGitHosting
         #
         def content_from_redmine_side(file)
           File.read(file)
+        rescue Errno::ENOENT => e
+          logger.error(e.message)
+          ''
         end
 
 
