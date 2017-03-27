@@ -28,7 +28,7 @@ gem 'org-ruby'
 gem 'creole'
 # gem 'wikicloth'
 gem 'asciidoctor'
-gem 'rdoc'
+gem 'rdoc', "~> 4.3"
 
 # Rack parser for Hrack
 gem 'rack-parser', require: 'rack/parser'
