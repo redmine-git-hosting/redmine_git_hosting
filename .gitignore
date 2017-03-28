@@ -5,3 +5,4 @@ settings.yml
 /rdoc
 /coverage
 /junit
+custom_hooks.rb

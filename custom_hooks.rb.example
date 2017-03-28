@@ -1,0 +1,38 @@
+# You can declare here you own hooks to install globally in Gitolite.
+# You must set the source directory of the files with the *source_dir* method and
+# declare your hooks with *gitolite_hook* method.
+#
+# *RedmineGitHosting::GitoliteHooks.register_hooks* can be called multiple times
+# with a different *source_dir*.
+#
+# *name*        : the hook name (just a name to identify the hook)
+# *source*      : the source path concatenated with *source_dir*
+# *destination* : the destination path on Gitolite side.
+#
+# The *destination* must be relative.
+# The final destination will depend on your Gitolite version :
+#
+# Gitolite v2 : <gitolite_home_dir>/.gitolite/hooks/common
+# Gitolite v3 : <gitolite_home_dir>/local/hooks/common/
+#
+# RedmineGitHosting::GitoliteHooks.register_hooks do
+#   source_dir    '/tmp/global-hooks'
+#
+#   gitolite_hook do
+#     name 'global/check-branch'
+#     source 'pre-receive/check_branch.rb'
+#     destination 'pre-receive.d/check_branch.rb'
+#     executable  true
+#   end
+# end
+#
+# RedmineGitHosting::GitoliteHooks.register_hooks do
+#   source_dir    '/tmp/custom-hooks'
+#
+#   gitolite_hook do
+#     name 'custom/notify-users'
+#     source 'post-receive/notify_users.rb'
+#     destination 'post-receive.d/notify_users.rb'
+#     executable  true
+#   end
+# end
