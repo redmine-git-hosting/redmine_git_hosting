@@ -18,6 +18,7 @@ module RedmineGitHosting
   extend RedminePluginLoader
 
   Haml::Template.options[:attr_wrapper] = '"'
+  Haml::Template.options[:remove_whitespace] = true
 
   set_plugin_name       'redmine_git_hosting'
 

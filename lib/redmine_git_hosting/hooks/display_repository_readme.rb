@@ -3,7 +3,8 @@ require 'github/markup'
 module RedmineGitHosting
   module Hooks
     class DisplayRepositoryReadme < Redmine::Hook::ViewListener
-      MARKDOWN_EXT = %w(.txt).freeze
+      REDMINE_MARKDOWN_EXT = %w(.txt).freeze
+      GITHUB_MARKDOWN_EXT  = %w(.markdown .mdown .mkdn .md).freeze
 
       def view_repositories_show_bottom(context)
         path        = get_path(context)
@@ -56,13 +57,25 @@ module RedmineGitHosting
         def get_formated_text(repository, file, rev)
           raw_readme_text = Redmine::CodesetUtil.to_utf8_by_setting(repository.cat(file.path, rev))
           content =
-            if MARKDOWN_EXT.include?(File.extname(file.path))
+            if redmine_file?(file)
               formatter_name = Redmine::WikiFormatting.format_names.find { |name| name =~ /markdown/i }
               Redmine::WikiFormatting.formatter_for(formatter_name).new(raw_readme_text).to_html
+            elsif github_file?(file)
+              RedmineGitHosting::MarkdownRenderer.to_html(raw_readme_text)
             else
               GitHub::Markup.render(file.path, raw_readme_text)
             end
           content
+        end
+
+
+        def redmine_file?(file)
+          REDMINE_MARKDOWN_EXT.include?(File.extname(file.path))
+        end
+
+
+        def github_file?(file)
+          GITHUB_MARKDOWN_EXT.include?(File.extname(file.path))
         end
 
     end

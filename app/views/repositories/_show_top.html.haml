@@ -2,6 +2,7 @@
   - content_for :header_tags do
     = rbk_include_css('bootstrap_custom')
     = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+    = stylesheet_link_tag 'markdown',    plugin: 'redmine_git_hosting'
 
   .git_hosting_urls.box
     .container
