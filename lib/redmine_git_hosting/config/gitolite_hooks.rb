@@ -29,7 +29,7 @@ module RedmineGitHosting
 
 
       def gitolite_local_code_dir
-        @gitolite_local_code_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('LOCAL_CODE')
+        @gitolite_local_code_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('LOCAL_CODE').rstrip
       end
 
 
