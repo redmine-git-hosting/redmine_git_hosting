@@ -3,7 +3,7 @@ require 'github/markup'
 module RedmineGitHosting
   module Hooks
     class DisplayRepositoryReadme < Redmine::Hook::ViewListener
-      MARKDOWN_EXT = %w(.txt)
+      MARKDOWN_EXT = %w(.txt).freeze
 
       def view_repositories_show_bottom(context)
         path        = get_path(context)
@@ -14,11 +14,11 @@ module RedmineGitHosting
 
         return '' if readme_file.nil?
 
-        formatter = get_formatter(repository, readme_file, rev)
+        content = get_formated_text(repository, readme_file, rev)
 
         context[:controller].send(:render_to_string, {
           partial: 'repositories/readme',
-          locals: { html: formatter }
+          locals: { html: content }
         })
       end
 
@@ -53,17 +53,16 @@ module RedmineGitHosting
         end
 
 
-        def get_formatter(repository, readme_file, rev)
-          raw_readme_text = Redmine::CodesetUtil.to_utf8_by_setting(repository.cat(readme_file.path, rev))
-
-          if MARKDOWN_EXT.include?(File.extname(readme_file.path))
-            formatter_name = Redmine::WikiFormatting.format_names.find { |name| name =~ /markdown/i }
-            formatter = Redmine::WikiFormatting.formatter_for(formatter_name).new(raw_readme_text).to_html
-          else
-            formatter = GitHub::Markup.render(readme_file.path, raw_readme_text)
-          end
-
-          formatter
+        def get_formated_text(repository, file, rev)
+          raw_readme_text = Redmine::CodesetUtil.to_utf8_by_setting(repository.cat(file.path, rev))
+          content =
+            if MARKDOWN_EXT.include?(File.extname(file.path))
+              formatter_name = Redmine::WikiFormatting.format_names.find { |name| name =~ /markdown/i }
+              Redmine::WikiFormatting.formatter_for(formatter_name).new(raw_readme_text).to_html
+            else
+              GitHub::Markup.render(file.path, raw_readme_text)
+            end
+          content
         end
 
     end
