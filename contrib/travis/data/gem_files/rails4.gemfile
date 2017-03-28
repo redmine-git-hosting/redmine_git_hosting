@@ -14,6 +14,12 @@ gem 'dalli'
 gem 'redis'
 gem 'hiredis'
 
+# Markdown rendering
+gem 'html-pipeline'
+gem 'rouge'
+gem 'task_list'
+gem 'rinku'
+
 # Syntaxic coloration
 gem 'github-markup'
 gem 'RedCloth'
