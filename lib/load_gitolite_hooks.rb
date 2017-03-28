@@ -64,39 +64,10 @@ RedmineGitHosting::GitoliteHooks.register_hooks do
   end
 end
 
-
-# You can declare here you own hooks to install globally in Gitolite.
-# You must set the source directory of the files with the *source_dir* method and
-# declare your hooks with *gitolite_hook* method. (see above)
-#
-# *RedmineGitHosting::GitoliteHooks.register_hooks* can be called multiple times
-# with a different *source_dir*.
-#
-# *name*        : the hook name (to identify the hook)
-# *source*      : the source path concatenated with *source_dir*
-# *destination* : the destination path on Gitolite side.
-#
-# The *destination* must be relative.
-# The final destination depends on your Gitolite version :
-#
-# Gitolite v3 : <gitolite_home_dir>/local/hooks/common/
-# Gitolite v2 : <gitolite_home_dir>/.gitolite/hooks/common
-#
-# RedmineGitHosting::GitoliteHooks.register_hooks do
-#   # Set source directory : /tmp/foo
-#   source_dir    File.join('/', 'tmp', 'foo')
-#
-#   gitolite_hook do
-#     # Hook name
-#     name 'bar.rb'
-#
-#     # Will be /tmp/foo/pre-receive/lib/bar.rb
-#     source 'pre-receive/lib/bar.rb'
-#
-#     # Will be <gitolite_home_dir>/local/hooks/common/lib_toto/test.rb (Gitolite v3)
-#     # Will be <gitolite_home_dir>/.gitolite/hooks/common/lib_toto/test.rb (Gitolite v2)
-#     destination 'lib_toto/test.rb'
-#
-#     executable  false
-#   end
-# end
+# Gitolite hooks can be found in Redmine root dir or in plugin root dir
+[
+  Rails.root.join('redmine_git_hosting_hooks.rb').to_s,
+  Rails.root.join('plugins', 'redmine_git_hosting', 'custom_hooks.rb').to_s
+].each do |file|
+  require_dependency file if File.exist?(file)
+end
