@@ -25,7 +25,7 @@ namespace :redmine_git_hosting do
   desc 'Update/repair Gitolite configuration'
   task update_repositories: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual update_repositories operation from command line') do
-      RedmineGitHosting::GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
+      RedmineGitHosting::GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})...", force: true })
     end
   end
 
