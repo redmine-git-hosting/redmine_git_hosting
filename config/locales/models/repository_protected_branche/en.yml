@@ -15,7 +15,7 @@ en:
   notice_protected_branch_create_failed: Failed to create protected branch
   notice_protected_branch_update_failed: Failed to update protected branch
 
-  label_branch_path: Branch path
+  label_branch_path: Branch path (regexp)
   label_user_list: Users allowed
 
   protected_branches_reminder: The protected branches above are not enabled. Please enable Protected Branches in the repository settings above.

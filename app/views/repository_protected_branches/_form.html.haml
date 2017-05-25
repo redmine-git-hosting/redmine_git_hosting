@@ -1,7 +1,7 @@
 .flash-messages= error_messages_for 'protected_branch'
 
 .box
-  %p= f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
+  %p= f.text_field :path, required: false, size: 65, label: l(:label_branch_path)
   %p= f.select :permissions, options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions), required: true, label: :label_permissions
 
   = hidden_field_tag 'user_ids[]', ''
