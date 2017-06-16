@@ -4,6 +4,7 @@
 - init_repositories_on_create        = RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true)
 - delete_git_repositories            = RedmineGitHosting::Config.get_setting(:delete_git_repositories, true)
 - hierarchical_organisation          = RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
+- gitolite_one_level_repo_depth      = RedmineGitHosting::Config.get_setting(:gitolite_one_level_repo_depth, true)
 
 %h3= l(:label_redmine_config)
 
@@ -30,6 +31,15 @@
   = bootstrap_switch_tag do
     = hidden_field_tag 'settings[delete_git_repositories]', 'false'
     = check_box_tag 'settings[delete_git_repositories]', delete_git_repositories, delete_git_repositories
+
+
+%p
+  %label= l(:label_gitolite_one_level_repo_depth)
+  = bootstrap_switch_tag do
+    = hidden_field_tag 'settings[gitolite_one_level_repo_depth]', 'false'
+    = check_box_tag 'settings[gitolite_one_level_repo_depth]', gitolite_one_level_repo_depth, gitolite_one_level_repo_depth, {:disabled => !hierarchical_organisation}
+
+%br
 
 %p
   %label= l(:label_hierarchical_organisation)

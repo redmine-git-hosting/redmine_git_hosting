@@ -83,6 +83,7 @@ module Settings
         ## Storage infos has changed, move repositories!
         if value_has_changed?(:gitolite_global_storage_dir)  ||
            value_has_changed?(:gitolite_redmine_storage_dir) ||
+           value_has_changed?(:gitolite_one_level_repo_depth)  ||
            value_has_changed?(:hierarchical_organisation)
 
           # Need to update everyone!

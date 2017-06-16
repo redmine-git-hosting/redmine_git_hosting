@@ -120,6 +120,7 @@ en:
   label_all_projects_use_git: Automatically initialize Git repositories for new projects?
   label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
   label_init_repositories_on_create: Automatically initialize Git repositories with a README file (à la Github)
+  label_gitolite_one_level_repo_depth: Restrict repos URI to max depth of one level. (project/repo.git)
   label_hierarchical_organisation: Directory and URL structure for Redmine-managed repositories
   label_unique_repo_identifier: Repository identifiers are globally unique?
 
@@ -136,6 +137,7 @@ en:
   display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
+  display_access_gitolite_one_level: "Hierarchical mode is accessed only through <em>one level depth</em>."
 
   label_flat: Flat
   label_hierarchical: Hierarchical

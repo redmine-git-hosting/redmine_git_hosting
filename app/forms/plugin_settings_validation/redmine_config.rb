@@ -9,7 +9,8 @@ module PluginSettingsValidation
                    :init_repositories_on_create,
                    :delete_git_repositories,
                    :download_revision_enabled,
-                   :gitolite_use_sidekiq
+                   :gitolite_use_sidekiq,
+                   :gitolite_one_level_repo_depth
 
       # This params work together!
       # When hierarchical_organisation = true, unique_repo_identifier MUST be false
@@ -23,6 +24,7 @@ module PluginSettingsValidation
           self.unique_repo_identifier = 'false'
         else
           self.unique_repo_identifier = 'true'
+          self.gitolite_one_level_repo_depth = 'false'
         end
 
         ## If we don't auto-create repository, we cannot create README file
@@ -37,6 +39,7 @@ module PluginSettingsValidation
       validates :gitolite_use_sidekiq,               presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
       validates :hierarchical_organisation,          presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
       validates :unique_repo_identifier,             presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
+      validates :gitolite_one_level_repo_depth,      presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
 
       validate :check_for_duplicated_repo
     end

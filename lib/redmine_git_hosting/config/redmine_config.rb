@@ -40,6 +40,11 @@ module RedmineGitHosting
       end
 
 
+      def gitolite_one_level_repo_depth?
+        get_setting(:gitolite_one_level_repo_depth, true)
+      end
+
+
       def show_repositories_url?
         get_setting(:show_repositories_url, true)
       end

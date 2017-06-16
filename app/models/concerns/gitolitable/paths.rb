@@ -25,7 +25,10 @@ module Gitolitable
     # Call File.expand_path to add then remove heading /
     #
     def gitolite_repository_name
-      File.expand_path(File.join('./', RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), '/')[1..-1]
+      repo_depth = RedmineGitHosting::Config.get_setting(:gitolite_one_level_repo_depth, true)
+      repo_path = File.expand_path(File.join('./', RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), '/')[1..-1]
+
+      repo_depth ? repo_path.split("/").last(2).join("/") : repo_path
     end
 
 

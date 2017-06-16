@@ -55,6 +55,7 @@ delete_git_repositories:            'true'
 # When hierarchical_organisation = false unique_repo_identifier MUST be true
 hierarchical_organisation:        'true'
 unique_repo_identifier:           'false'
+gitolite_one_level_repo_depth:    'false'
 
 # Download Revision Config
 download_revision_enabled:        'true'
