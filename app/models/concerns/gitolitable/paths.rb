@@ -26,9 +26,35 @@ module Gitolitable
     #
     def gitolite_repository_name
       repo_depth = RedmineGitHosting::Config.get_setting(:gitolite_one_level_repo_depth, true)
-      repo_path = File.expand_path(File.join('./', RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), '/')[1..-1]
+      redmine_storage = RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir, false)
+      repo_path = File.expand_path(File.join('./', redmine_storage, get_full_parent_path, git_cache_id), '/')[1..-1]
 
-      repo_depth ? repo_path.split("/").last(2).join("/") : repo_path
+      if repo_depth
+        if get_full_parent_path.blank?
+          # we are in parent project
+          new_repo = redmine_storage.blank? ? repo_path : repo_path.gsub(redmine_storage, "")[0..-1]
+          if new_repo.split("/").size == 2
+            redmine_storage.blank? ? new_repo : redmine_storage + new_repo
+          else
+            redmine_storage.blank? ? new_repo + "/" + new_repo : redmine_storage + new_repo + "/" + new_repo
+          end
+
+        else
+          # if parent path isnt blank, we are in subproject
+          new_repo = redmine_storage.blank? ? repo_path.gsub(get_full_parent_path, "")[1..-1] :
+            repo_path.gsub(redmine_storage + get_full_parent_path, "")[1..-1]
+          if new_repo.split("/").size == 2
+            redmine_storage.blank? ? new_repo : redmine_storage + new_repo
+          else
+            redmine_storage.blank? ? new_repo + "/" + new_repo : redmine_storage + new_repo + "/" + new_repo
+          end
+
+        end
+      else
+        # default Hierachical style
+        repo_path
+      end
+
     end
 
 
