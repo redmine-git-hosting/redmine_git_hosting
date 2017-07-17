@@ -41,7 +41,7 @@ group :development, :test do
 
   gem 'factory_girl'
   gem 'factory_girl_rails'
-  gem 'faker'
+  gem 'faker', '1.7.3'
   gem 'sshkey'
   gem 'database_cleaner'
 
