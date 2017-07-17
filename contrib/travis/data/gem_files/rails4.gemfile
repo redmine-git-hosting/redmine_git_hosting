@@ -45,9 +45,6 @@ group :development, :test do
   gem 'sshkey'
   gem 'database_cleaner'
 
-  # Publish to Coveralls
-  gem 'coveralls', require: false
-
   # Publish to CodeClimate
   gem 'codeclimate-test-reporter', require: false
 end

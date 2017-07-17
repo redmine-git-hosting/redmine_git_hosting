@@ -1,14 +1,5 @@
 unless ENV['DISABLE_COVERAGE'] == 'true'
   require 'simplecov'
-  require 'coveralls'
-  require 'codeclimate-test-reporter'
-
-  ## Configure SimpleCov
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    # Coveralls::SimpleCov::Formatter,
-    # CodeClimate::TestReporter::Formatter
-  ]
 
   ## Start Simplecov
   SimpleCov.start 'rails' do
