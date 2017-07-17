@@ -1,5 +1,17 @@
 ## CHANGELOG
 
+### 1.2.3 - 2017-07-17
+
+* Merge [#640](https://github.com/jbox-web/redmine_git_hosting/pull/640) ([Views] Fix typo while rendering partial repositories/download_revision)
+* Merge [#646](https://github.com/jbox-web/redmine_git_hosting/pull/646) (Fix compatibility with Redmine 3.3)
+* Merge [#663](https://github.com/jbox-web/redmine_git_hosting/pull/663) ([Core] Fix installation of Gitolite3 hooks)
+* Improve custom Gitolite hook loading (see `custom_hooks.rb.example` at the root of the project)
+* Fix plugin icon with Redmine 3.4.x
+* Fix author url in sub-uri mode
+* Check if hook's permissions has changed
+* Catch Errno::ENOENT exceptions when installing custom hooks
+* Add logs for well installed Gitolite hooks
+
 ### 1.2.2 - 2016-12-31
 
 * Fix [#472](https://github.com/jbox-web/redmine_git_hosting/issues/472) ([Views] 404 on the "My public keys" link in the user panel)
