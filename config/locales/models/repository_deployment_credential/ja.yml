@@ -1,0 +1,45 @@
+ja:
+
+  ########### DEPLOYMENT CREDENTIALS ###########
+  # Basics labels
+  label_deployment_credentials: デプロイクレデンシャル
+  label_deployment_credential_add: デプロイクレデンシャル情報の追加
+  label_deployment_credential_create: デプロイクレデンシャル情報の作成
+  label_deployment_credential_edit: デプロイクレデンシャル情報の編集
+  label_deployment_credential_delete: デプロイクレデンシャル情報の作成
+
+  # Basics notices
+  notice_deployment_credential_created: デプロイクレデンシャル情報は正常に作成できました。
+  notice_deployment_credential_updated: デプロイクレデンシャル情報は正常に編集できました。
+  notice_deployment_credential_deleted: デプロイクレデンシャル情報は正常に削除できました。
+  notice_deployment_credential_deleted_with_key: デプロイクレデンシャル情報およびキーは正常に削除できました。
+  notice_deployment_credential_create_failed: デプロイクレデンシャル情報作成エラー
+  notice_deployment_credential_update_failed: デプロイクレデンシャル情報編集エラー
+
+  # Basics fields
+  field_perm: アクセス権限
+
+  # Misc
+  label_deployment_credential_create_key_first: デプロイキーが見つかりません。新しいデプロイキーを作成してください。
+  label_deployment_credential_permissions: アクセス権限
+  label_deployment_credential_delete_when_unused: 使用しないキーを削除する？
+  label_deployment_credential_select_deploy_key: デプロイキーの選択
+
+  label_deployment_credential_owner: 所有者
+  label_deployment_credential_public_key_name: パプリックキー名
+  label_deployment_credential_public_key_file: パプリックキーファイル
+  label_deployment_credential_permissions: 権限
+  label_deployment_credential_honored: Honored?
+  label_deployment_credential_active: Active?
+
+  select_other_keys: 他のキー
+
+  activerecord:
+    errors:
+      models:
+
+        repository_deployment_credential:
+          attributes:
+            base:
+              invalid_key: パプリックキーはデプロイキーでなければなりません
+              invalid_user: クレデンシャルの所有者はキーの所有者でなければなりません

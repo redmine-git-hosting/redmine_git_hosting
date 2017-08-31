@@ -1,0 +1,55 @@
+ja:
+
+  ########### MIRRORS ###########
+  # Basics labels
+  label_repository_mirrors: ミラーリポジトリ
+  label_mirror_add: ミラーリポジトリ追加
+  label_mirror_create: ミラーリポジトリ作成
+  label_mirror_edit: ミラーリポジトリ編集
+  label_mirror_delete: ミラーリポジトリ削除
+
+  # Basics notices
+  notice_mirror_created: ミラーリポジトリは正常に作成できました。
+  notice_mirror_updated: ミラーリポジトリは正常に編集できました。
+  notice_mirror_deleted: ミラーリポジトリは正常に削除できました。
+  notice_mirror_create_failed: ミラーリポジトリ作成エラー。
+  notice_mirror_update_failed: ミラーリポジトリ編集エラー。
+
+  # Misc
+  label_mirror_push_mode: ミラーリポジトリ編集モード
+  label_mirror_full_mirror: 複製完了
+  label_mirror_forced_update: リモート更新強制
+  label_mirror_fast_forward: ファストフォワード (非強制)
+
+  label_mirror_inactive: 非活性
+  label_mirror_help: ミラーリポジトリに以下のパプリックキーの書き込み権限の付与が必要です
+
+  label_mirror_push_title: ミラーリポジトリへプッシュ
+  label_mirror_push_info_html: "ミラーリポジトリへプッシュ中<b>%{mirror_url}</b>：<span class=\"label label-%{status_css}\">%{status}</span>"
+  label_mirror_push_output: 出力
+  label_mirror_push_sucess: 成功
+  label_mirror_push_fail: エラー
+
+  label_mirror: ミラーリポジトリ
+  label_mirror_push: プッシュ
+  label_mirror_refspec: 参照仕様
+  label_mirror_include_all_branches: 全ブランチプッシュ
+  label_mirror_include_all_tags: 全タグプッシュ
+  label_mirror_explicit_refspec: 明示参照仕様
+  label_mirror_url_accepted_format: 許可されたURL形式
+
+  all_references: 全参照
+  all_branches: 全ブランチ
+  all_tags: 全タグ
+
+  activerecord:
+    errors:
+      models:
+
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: プッシュするためのアイテムを少なくとも1つが必要です
+            explicit_refspec:
+              bad_format: は不正な形式です
+              have_null_component: cannot have null first component (will delete remote branch(es))

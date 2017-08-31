@@ -1,0 +1,24 @@
+ja:
+
+  redmine_git_hosting: Redmine Git Hosting
+
+  ########### MISCELANOUS ###########
+  label_enabled: 有効
+  label_disabled: 無効
+  label_true: True
+  label_false: False
+  label_backup_in_progress: 保存中...
+  label_delete_in_progress: 削除中...
+  label_url: URL
+  label_mode: モード
+  label_hour: 時
+  button_ok: OK
+  button_clone: クローン
+
+  label_monday: 月曜日
+  label_tuesday: 火曜日
+  label_wednesday: 水曜日
+  label_thursday: 木曜日
+  label_friday: 金曜日
+  label_saturday: 土曜日
+  label_sunday: 日曜日
