@@ -1,0 +1,192 @@
+ja:
+
+  # Global
+  label_need_help: Need Help?
+  label_open_issue: Open Issue
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
+
+  # Gitolite SSH Config
+  label_tab_ssh: SSH
+  label_gitolite_ssh_config: Gitolite SSH設定
+
+  label_gitolite_user: Gitoliteユーザー名
+  label_gitolite_ssh_private_key: Gitolite SSHプライベートキー
+  label_gitolite_ssh_public_key: Gitolite SSHパプリックキー
+  label_gitolite_server_host: SSH/Gitoliteサーバーホスト
+  label_gitolite_server_port: SSH/Gitoliteサーバーポート
+
+  # Gitolite Storage Config
+  label_tab_storage: ストレージ
+  label_gitolite_storage_config: Gitoliteのストレージの設定
+
+  label_gitolite_global_storage_dir: Gitoliteリポジトリのバースパス
+  label_gitolite_global_storage_dir_desc: Gitoliteユーザーホームに対する相対パス
+  label_gitolite_recycle_bin_dir: Gitoliteゴミ箱のベースパス
+  label_gitolite_recycle_bin_dir_desc: Gitoliteユーザーホームに対する相対パス
+  label_gitolite_redmine_storage_dir: Redmine管理上のリポジトリのサブディレクトリ
+  label_gitolite_redmine_storage_dir_desc: Gitoliteリポジトリのベースパスに対する相対パス
+
+  # Gitolite Config File
+  label_tab_config_file: 設定ファイル
+  label_gitolite_config_file: Gitolite設定ファイル
+  label_gitolite_identifier_prefix: Gitolite接頭辞
+  label_gitolite_identifier_prefix_desc: SSHキータイトルの生成に使用します
+  label_gitolite_identifier_strip_user_id: GitoliteタイトルからユーザーIDを除外する
+  label_gitolite_identifier_strip_user_id_desc: 有効にするにはRedmineの再起動が必要です
+
+  # Gitolite Global Config
+  label_tab_global: 全般
+  label_gitolite_global_config: Gitolite全般設定
+  label_gitolite_temp_dir: ロックファイルとデータ用の一時的なディレクトリ
+  label_gitolite_temp_dir_desc: 絶対パス
+
+  label_gitolite_recycle_bin_expiration_time: ゴミ箱内のリポジトリの有効期間
+  label_gitolite_recycle_bin_expiration_time_desc: 時
+
+  label_gitolite_log_level: Gitoliteログレベル
+  label_gitolite_log_level_desc: 有効にするにはRedmineの再起動が必要です
+  label_debug: Debug
+  label_info: Info
+  label_warn: Warning
+  label_error: Error
+
+  label_git_config_username: Git作者名
+  label_git_config_username_desc: コミットの作者名に使用します
+  label_git_config_email: Git作者メール
+  label_git_config_email_desc: コミットの作者メールアドレスに使用します
+
+  # Gitolite Access Config
+  label_tab_access: アクセス
+  label_gitolite_access_config: Gitoliteアクセス設定
+
+  label_ssh_server_domain: SSHサーバードメイン
+  label_http_server_domain: HTTPサーバードメイン
+  label_https_server_domain: HTTPSサーバードメイン
+  label_https_server_domain_desc: 使用しない場合は空にしてもいいです
+  label_default_domain_name: 既定ドメイン名
+  label_http_server_subdir: HTTPアクセス用のサブディレクトリ  
+  label_http_server_subdir_desc: RedmineルートURLに対する相対パス
+  label_show_repositories_url: クローン用のリポジトリURLを表示する？
+
+  label_gitolite_daemon_by_default: 新リポジトリ作成時にGit Daemonモードをデフォルトに有効化？
+  label_gitolite_http_by_default: 新リポジトリ作成時にSmart HTTPモードをデフォルトに有効化？
+
+  label_http_only: HTTPのみ
+  label_https_only: HTTPSのみ
+  label_https_and_http: HTTPSおよびHTTP
+
+  label_gitolite_download_revision_enabled: Gitリビジョンダウンロードを有効化
+
+  # Gitolite Hooks Config
+  label_tab_hooks: フック
+  label_gitolite_hooks_config: Gitoliteフック設定
+
+  label_gitolite_overwrite_existing_hooks: 既存のフックを上書き
+  label_gitolite_hooks_are_asynchronous: フックを非同期実行
+  label_gitolite_hooks_debug: フックのデバグモード有効化
+  label_gitolite_hooks_url: フックURL
+  label_gitolite_hooks_namespace: フックGit名前空間
+  label_default_gitolite_hooks_url: 既定URL
+  label_install_gitolite_hooks: フックインストール！
+  label_gitolite_hook_untouched: フックアクセス不可
+
+  # Gitolite Cache Config
+  label_tab_cache: キャッシュ
+  label_gitolite_cache_config: Gitoliteキャッシュ設定
+  label_gitolite_cache_max_time: 最大キャッシュ時間
+  label_gitolite_cache_max_size: 最大キャッシュ要素サイズ
+  label_gitolite_cache_max_elements: 最大キャッシュ要素数
+  label_gitolite_cache_adapter: キャッシュアダプター
+  label_gitolite_cache_adapter_desc: 有効にするにはRedmineの再起動が必要です
+
+  # Gitolite Notifications
+  label_tab_notify: 通知
+  label_gitolite_notify_config: Gitメールリスト設定
+
+  label_gitolite_notify_by_default: 新リポジトリ作成時にGit通知をデフォルトに有効化？
+  label_gitolite_notify_global_prefix: Gitメールリストのグローバル接頭辞
+  label_gitolite_notify_global_sender_address: Gitメールリストのグローバル宛先
+  label_gitolite_notify_global_include: Gitメールリストのグローバル包含リスト
+  label_gitolite_notify_global_exclude: Gitメールリストのグローバル除外リスト
+
+  # Redmine Config
+  label_tab_redmine: Redmine
+  label_redmine_config: Redmine設定
+
+  label_redmine_has_rw_access_on_all_repos: Redmineは全GitoliteリポジトリのRWアクセス権限を持っています
+  label_all_projects_use_git: 新プロジェクト作成時にGitリポジトリを自動作成する？
+  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？<br/>(ゴミ箱に移動します)
+  label_init_repositories_on_create: Gitリポジトリ作成時にREADMEを自動作成する？(Githubと同様)
+  label_hierarchical_organisation: Redmine管理上のリポジトリのディレクトリとURLの形式
+  label_unique_repo_identifier: リポジトリのタイトルは全体的にユニークですか？
+
+  label_ssh_keys_current_access_patterns: SSHキーアクセスパターン
+  label_repos_current_access_patterns: 現リポジトリのアクセスパターン
+  label_storage_directory: Git格納ディレクトリ
+  label_ssh_access: SSHアクセス
+  label_http_access: HTTPアクセス
+  label_https_access: HTTPSアクセス
+
+  display_access_setup1: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
+  display_access_setup2: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
+  display_access_setup3: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
+  display_access_emphasis: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
+  display_access_hierarchical: "<em>階層</em>モードのため、親ディレクトリもURLに含まれています。"
+  display_access_flat: "<em>フラット</em>モードのため、親ディレクトリはURLに含まれていません。"
+
+  label_flat: フラット
+  label_hierarchical: 階層
+  label_default_repository: defaultリポジトリ
+  label_example_repository: exampleリポジトリ
+
+  # Sidekiq Config
+  label_tab_sidekiq_interface: Sidekiq
+  label_gitolite_use_sidekiq: 非同期ジョブの立ち上げにSidekiqを使用する
+
+  # Config Check
+  label_tab_config_test: 設定テスト
+  label_permissions_header: 必要なアクセス許可
+  label_sudo_redmine_to_gitolite_user: RedmineユーザーはGitユーザーに対してsudo可能？
+  label_sudo_gitolite_to_redmine_user: GitユーザーはRedmineユーザーに対してsudo可能？
+  label_unknown_gitolite_version: バージョン不明
+  label_temp_dir_writeable: テンプディレクトリへ書き込み可能？
+  label_mirroring_keys_installed: ミラーキーインストール済み？
+  label_gitolite_version: Gitoliteバージョン
+  label_gitolite_banner: Gitoliteバーナー
+  label_path_directories: PATHディレクトリ
+  label_gitolite_hooks_params_installed: フックパラメータインストール済み？
+  label_gitolite_mailer_params_installed: メーラーパラメータインストール済み？
+  label_gitolite_hooks_installed: フックインストール済み？
+  label_gitolite_hook_dirs_installed: フックディレクトリインストール済み？
+  label_redmine_user: Redmineユーザー名
+  label_git_version: Gitバージョン
+  label_gitolite_repository_count: Gitolite上の物理的なリポジトリ数
+  label_gitolite_rugged_features: Ruggedコンパイル機能
+  label_gitolite_libgit2_version: libgit2バージョン
+  label_gitolite_bin_dir: Gitolite実行ディレクトリ
+  label_gitolite_lib_dir: Gitoliteライブラリディレクトリ
+  label_gitolite_local_code_dir: Gitoliteでないフックディレクトリ
+
+  # Recycle Bin
+  label_tab_gitolite_recycle_bin: ゴミ箱
+  label_empty_recycle_bin: ゴミ箱を空にする
+  label_recycle_bin_content: ゴミ箱内容
+  label_recycle_bin_content_size: サイズ
+  label_delete_from_recyle_bin: ゴミ箱から削除
+  label_delete_warning: 注意！完全に削除してもいいですか？
+
+  # Gitolite Rescue
+  label_tab_gitolite_rescue: レスキュー
+  label_gitolite_rescue: Gitoliteレスキュー
+
+  label_resync_all_projects: 全プロジェクトを再同期する？
+  label_resync_all_ssh_keys: 全SSHキーを再同期する？
+  label_regenerate_all_ssh_keys: 全SSHキーを再作成する？
+  label_regenerate_all_ssh_keys_desc: "本処理はSSHキーのタイトルを再作成します"
+  label_regenerate_all_ssh_keys_desc2: "時間がかかる場合があります。全SSHキーを１つずつ削除してからGitoliteに再追加します。"
+  label_flush_cache: Gitキャッシュをフラッシュする？
+
+  # Misc
+  label_select_all: 全選択
+  label_etcetera: etc
