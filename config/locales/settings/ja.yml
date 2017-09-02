@@ -185,7 +185,7 @@ ja:
   label_regenerate_all_ssh_keys: 全SSHキーを再作成する？
   label_regenerate_all_ssh_keys_desc: "本処理はSSHキーのタイトルを再作成します"
   label_regenerate_all_ssh_keys_desc2: "時間がかかる場合があります。全SSHキーを１つずつ削除してからGitoliteに再追加します。"
-  label_flush_cache: Flush Gitキャッシュをフラッシュする？
+  label_flush_cache: Gitキャッシュをフラッシュする？
 
   # Misc
   label_select_all: 全選択
