@@ -66,15 +66,15 @@ ja:
   label_help_repository_setup_existing: 既存リポジトリの設定
   label_help_repository_clone: リポジトリのクローン
   label_help_no_repo_rights: このリポジトリへのアクセス権限がありません。"
-  label_this_urls_has_permissions: "This URL has <span id=\"%{span_id}\"></span> access."
+  label_this_urls_has_permissions: "このURLに<span id=\"%{span_id}\"></span>のアクセス権限があります。"
   label_read_write_permission: RW
   label_read_only_permission: RO
 
   notice_empty_repository: 空リポジトリです。リポジトリの使用開始は以下の手順を参考してください。
 
   # Gitolite Hooks
-  error_project_not_found: "この識別子のプロジェクトが見つかりません。"
-  error_repository_not_found: "この識別子のリポジトリが見つかりません。"
+  error_project_not_found: "このタイトルのプロジェクトが見つかりません。"
+  error_repository_not_found: "このタイトルのリポジトリが見つかりません。"
 
   # Statistics
   label_repository_statistics_global: 全体統計

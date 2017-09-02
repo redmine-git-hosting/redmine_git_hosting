@@ -1,0 +1,12 @@
+ja:
+  label_move_repository: "リポジトリを移動する：'%{repo_name}'"
+
+  activemodel:
+    errors:
+      models:
+        move_repository_form:
+          attributes:
+            base:
+              identifier_empty: 空タイトルのリポジトリは移動できません
+              identifier_taken: 指定したリポジトリのタイトルは既に他のプロジェクトに使用されています
+              wrong_target_project: 移動先と移動元のプロジェクトが同じです

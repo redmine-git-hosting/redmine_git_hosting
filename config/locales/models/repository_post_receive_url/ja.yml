@@ -1,0 +1,28 @@
+ja:
+
+  ########### POST RECEIVE URL ###########
+  # Basics labels
+  label_post_receive_urls: Post Receive URLs
+  label_post_receive_url_add: Post Receive URL追加
+  label_post_receive_url_create: Post-receive URLレポジトリ作成
+  label_post_receive_url_edit: Post-receive URLレポジトリ編集
+  label_post_receive_url_delete: Post-receive URLレポジトリ削除
+
+  # Basics notices
+  notice_post_receive_url_created: Post-receive URLは正常に作成できました。
+  notice_post_receive_url_updated: Post-receive URLは正常に編集できました。
+  notice_post_receive_url_deleted: Post-receive URLは正常に削除できました。
+  notice_post_receive_url_create_failed: Post-receive URL作成エラー。
+  notice_post_receive_url_update_failed: Post-receive URL編集エラー。
+
+  # Basics fields
+  field_mode: モード
+  field_use_triggers: 使用トリガー
+  field_split_payloads: グローバルペイロードを複数ペイロードに分割する
+
+  # Misc
+  label_github_post: GitHub&nbsp;POST
+  label_empty_get: Empty&nbsp;GET
+  label_use_triggers: 使用トリガー
+  label_triggers: トリガー
+  label_split_payloads: ペイロード分割

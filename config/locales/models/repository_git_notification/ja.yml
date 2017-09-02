@@ -2,29 +2,29 @@ ja:
 
   ########### GIT NOTIFICATIONS ###########
   # Basics labels
-  label_git_notifications: Mailing list
-  label_git_notifications_add: Add mailing list
-  label_git_notifications_create: Create mailing list
-  label_git_notifications_edit: Edit mailing list
-  label_git_notifications_delete: Delete mailing list
+  label_git_notifications: メールリスト
+  label_git_notifications_add: メールリスト追加
+  label_git_notifications_create: メールリスト作成
+  label_git_notifications_edit: メールリスト編集
+  label_git_notifications_delete: メールリスト削除
 
   # Basics notices
-  notice_git_notifications_created: Mailing list was successfully created
-  notice_git_notifications_updated: Mailing list was successfully updated
-  notice_git_notifications_deleted: Mailing list was successfully deleted
-  notice_git_notifications_create_failed: Failed to create mailing list
-  notice_git_notifications_update_failed: Failed to update mailing list
+  notice_git_notifications_created: メールリストは正常に作成できました。
+  notice_git_notifications_updated: メールリストは正常に編集できました。
+  notice_git_notifications_deleted: メールリストは正常に削除できました。
+  notice_git_notifications_create_failed: メールリスト作成エラー。
+  notice_git_notifications_update_failed: メールリスト編集エラー。
 
   # Misc
-  label_git_notification_include_list: Include list
-  label_git_notification_exclude_list: Exclude list
-  label_git_notification_default_list: Default list
-  label_git_notification_effective_list: Effective list
+  label_git_notification_include_list: 包含リスト
+  label_git_notification_exclude_list: 除外リスト
+  label_git_notification_default_list: 既定トリスト
+  label_git_notification_effective_list: 効果リスト
 
-  label_gitolite_notify_prefix: Mailing list prefix
-  label_gitolite_notify_sender_address: Mailing list sender address
+  label_gitolite_notify_prefix: メールリスト接頭辞
+  label_gitolite_notify_sender_address: メールリスト宛先
 
-  git_notifications_reminder: The mailing list above is not enabled. Please enable Mailing List in the repository settings above.
+  git_notifications_reminder: 上記のメールリストが有効化されていません。上記のリポジトリの設定で有効化を行ってください。
 
   activerecord:
     errors:
@@ -33,8 +33,8 @@ ja:
         repository_git_notification:
           attributes:
             base:
-              invalid: 'the same address is defined twice'
+              invalid: '同じメールアドレスが重複しています'
             include_list:
-              invalid: invalid
+              invalid: 不正
             exclude_list:
-              invalid: invalid
+              invalid: 不正

@@ -1,0 +1,21 @@
+ja:
+
+  ########### PROTECTED BRANCHES ###########
+  # Basics labels
+  label_protected_branches: 保護ブランチ
+  label_protected_branch_add: 保護ブランチ追加
+  label_protected_branch_create: 保護ブランチ作成
+  label_protected_branch_edit: 保護ブランチ編集
+  label_protected_branch_delete: 保護ブランチ削除
+
+  # Basics notices
+  notice_protected_branch_created: 保護ブランチは正常に作成できました。
+  notice_protected_branch_updated: 保護ブランチは正常に編集できました。
+  notice_protected_branch_deleted: 保護ブランチは正常に削除できました。
+  notice_protected_branch_create_failed: 保護ブランチ作成エラー
+  notice_protected_branch_update_failed: 保護ブランチ編集エラー
+
+  label_branch_path: ブランチパス
+  label_user_list: 許可ユーザー
+
+  protected_branches_reminder: 上記の保護ブランチが有効化されていません。上記のリポジトリの設定で有効化を行ってください。

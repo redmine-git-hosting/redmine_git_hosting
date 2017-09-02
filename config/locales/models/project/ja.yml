@@ -1,0 +1,11 @@
+ja:
+
+  activerecord:
+    errors:
+      models:
+
+        project:
+          attributes:
+            identifier:
+              invalid: タイトルが不正です
+              taken: タイトルが既に存在しています

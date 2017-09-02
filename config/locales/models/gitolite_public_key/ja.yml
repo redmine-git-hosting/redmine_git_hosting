@@ -3,9 +3,9 @@ ja:
   ########### SSH KEYS ###########
 
   # User SSH keys (notices)
-  notice_public_key_created: パプリックキー <strong>%{title}</strong>が正常に作成できました。
-  notice_public_key_updated: パプリックキー <strong>%{title}</strong>が正常に編集できました。
-  notice_public_key_deleted: パプリックキー <strong>%{title}</strong>が正常に削除できました。
+  notice_public_key_created: パプリックキー <strong>%{title}</strong>は正常に作成できました。
+  notice_public_key_updated: パプリックキー <strong>%{title}</strong>は正常に編集できました。
+  notice_public_key_deleted: パプリックキー <strong>%{title}</strong>は正常に削除できました。
 
   # User SSH keys (fields)
   field_key: this key
@@ -20,13 +20,13 @@ ja:
   label_current_deploy_keys: 現在のデプロイキー
   label_no_public_keys: パプリックキーがまだ作成されていません
   label_public_key_new: 新パプリックキーの作成
-  label_identifier_can_be_arbitrary: 識別子
+  label_identifier_can_be_arbitrary: タイトル
   label_identifier_can_be_arbitrary_desc: （任意文字列）
   label_key_type: パプリックキー種類
   label_user_key: ユーザーキー
   label_deploy_key: デプロイキー
   label_cut_and_paste: パプリックキー（通常は.pubの拡張子のファイル）の内容を上記に貼り付けてください。
-  label_identifier_cannot_be_changed: 識別子<br/><em>（編集できません）</em>
+  label_identifier_cannot_be_changed: タイトル<br/><em>（編集できません）</em>
   label_key_cannot_be_changed_please_create_new_key: 'キーの内容は編集できません。ただしキーを削除し新しいキーを作成することができます。'
 
   # User SSH keys (confirmation)

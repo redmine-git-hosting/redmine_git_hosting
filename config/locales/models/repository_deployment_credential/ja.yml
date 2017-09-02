@@ -9,10 +9,10 @@ ja:
   label_deployment_credential_delete: デプロイクレデンシャル情報の作成
 
   # Basics notices
-  notice_deployment_credential_created: デプロイクレデンシャル情報が正常に作成できました。
-  notice_deployment_credential_updated: デプロイクレデンシャル情報が正常に編集できました。
-  notice_deployment_credential_deleted: デプロイクレデンシャル情報が正常に削除できました。
-  notice_deployment_credential_deleted_with_key: デプロイクレデンシャル情報およびキーが正常に削除できました。
+  notice_deployment_credential_created: デプロイクレデンシャル情報は正常に作成できました。
+  notice_deployment_credential_updated: デプロイクレデンシャル情報は正常に編集できました。
+  notice_deployment_credential_deleted: デプロイクレデンシャル情報は正常に削除できました。
+  notice_deployment_credential_deleted_with_key: デプロイクレデンシャル情報およびキーは正常に削除できました。
   notice_deployment_credential_create_failed: デプロイクレデンシャル情報作成エラー
   notice_deployment_credential_update_failed: デプロイクレデンシャル情報編集エラー
 

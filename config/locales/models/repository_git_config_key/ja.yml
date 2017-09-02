@@ -1,0 +1,34 @@
+ja:
+
+  ########### GIT CONFIG KEYS ###########
+  # Basics labels
+  label_git_config_keys: Git設定キー
+  label_git_option_keys: Gitolite設定オプション
+  label_git_config_key_add: Git設定キー追加
+  label_git_option_key_add: Gitoliteオプション追加
+
+  label_git_config_key_create: 新しいGit設定キー作成
+  label_git_config_key_edit: Git設定キー修正
+  label_git_config_key_delete: Git設定キー削除
+
+  # Basics notices
+  notice_git_config_key_created: Git設定キーは正常に作成できました。
+  notice_git_config_key_updated: Git設定キーは正常に編集できました。
+  notice_git_config_key_deleted: Git設定キーは正常に削除できました。
+  notice_git_config_key_create_failed: Git設定キー作成エラー
+  notice_git_config_key_update_failed: Git設定キー編集エラー
+
+  label_gitolite_documentation: Gitoliteドキュメント
+  label_git_key_type_config: Git設定キー
+  label_git_key_type_option: Gitoliteオプション
+  label_key: キー
+  label_value: 値
+
+  activerecord:
+    errors:
+      models:
+
+        repository_git_config_key:
+          attributes:
+            key:
+              invalid: "キーの形式が不正です (ドット「.」が含まれる必要があります)"

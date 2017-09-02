@@ -1,0 +1,32 @@
+en:
+
+  ## Permissions
+  permission_create_repository_mirrors: ミラーリポジトリの作成
+  permission_view_repository_mirrors: ミラーリポジトリの閲覧
+  permission_edit_repository_mirrors: ミラーリポジトリの編集
+  permission_push_repository_mirrors: ミラーリポジトリへのプッシュ
+
+  permission_create_repository_post_receive_urls: Post-receive URLの作成
+  permission_view_repository_post_receive_urls: Post-receive URLの閲覧
+  permission_edit_repository_post_receive_urls: Post-receive URLの編集
+
+  permission_create_repository_deployment_credentials: デプロイキーの作成
+  permission_view_repository_deployment_credentials: デプロイキーの閲覧
+  permission_edit_repository_deployment_credentials: デプロイキーの編集
+
+  permission_create_repository_git_config_keys: Git設定キーの作成
+  permission_view_repository_git_config_keys: Git設定キーの閲覧
+  permission_edit_repository_git_config_keys: Git設定キーの編集
+
+  permission_create_repository_protected_branches: 保護ブランチの作成
+  permission_view_repository_protected_branches: 保護ブランチの閲覧
+  permission_edit_repository_protected_branches: 保護ブランチの編集
+
+  permission_create_repository_git_notifications: Gitメールリストの作成
+  permission_view_repository_git_notifications: Gitメールリストの閲覧
+  permission_edit_repository_git_notifications: Gitメールリストの編集
+  permission_receive_git_notifications: コミット時のGit通知の受信
+
+  permission_create_gitolite_ssh_key: SSHキーの作成
+
+  permission_download_git_revision: アーカイブGitリビジョンのダウンロード
