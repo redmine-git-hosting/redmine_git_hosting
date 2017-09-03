@@ -7,10 +7,10 @@ ja:
         repository/xitolite:
           attributes:
             base:
-              blank_default_exists: "空リポジトリが既に存在しているためリポジトリ作成できません。"
-              invalid_options: "GitAnnexによりREADMEファイルありのリポジトリを作成できません。"
+              blank_default_exists: "空リポジトリが既に存在しているためリポジトリは作成できません。"
+              invalid_options: "GitAnnexによりREADMEファイルありのリポジトリは作成できません。"
             identifier:
-              cannot_equal_project: "既存プロジェクトのIDを使用できません。"
+              cannot_equal_project: "既存プロジェクトのIDは使用できません。"
               taken: "は既に使用されています。"
               invalid: 不正
               cannot_change: 編集不可
@@ -18,7 +18,7 @@ ja:
   ########### REPOSITORIES ###########
 
   text_scm_command_not_available_git_hosting: SMCコマンドが使用できません。Redmine Git Hostingの管理設定を確認してください。
-  error_xitolite_repositories_disabled: "Gitoliteが無効化になっています。リポジトリを作成できません。"
+  error_xitolite_repositories_disabled: "Gitoliteは無効になっています。リポジトリを作成できません。"
 
   # Edit Repository
   label_repository_options: リポジトリ設定
@@ -36,16 +36,16 @@ ja:
   label_init_repo_with_readme: READMEありのリポジトリを作成する
   label_init_repo_with_git_annex: GitAnnexによりリポジトリを作成する
   label_browse_repository: リポジトリ閲覧
-  label_repository_exists_in_gitolite: Gitoliteにリポジトリが既に存在しています
+  label_repository_exists_in_gitolite: Gitoliteにリポジトリは既に存在しています
   label_git_objects_count: Gitオブジェクト数
   label_empty_repository: 空リポジトリ？
-  label_sort_urls: (Urlsソート)
+  label_sort_urls: (Urls並び替え)
 
   notice_gitolite_extra_updated: 設定更新成功
   notice_gitolite_extra_update_failed: 設定更新エラー
 
   # Repository list view
-  label_repository_enabled_capabilities: Repository Enabled Capabilities
+  label_repository_enabled_capabilities: リポジトリの有効化済機能
   label_git_annex: GitAnnex
 
   # Repository code browser

@@ -7,5 +7,5 @@ ja:
         project:
           attributes:
             identifier:
-              invalid: タイトルが不正です
-              taken: タイトルが既に存在しています
+              invalid: タイトルは不正です
+              taken: タイトルは既に存在しています

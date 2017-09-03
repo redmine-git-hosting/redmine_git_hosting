@@ -27,7 +27,7 @@ ja:
   label_deploy_key: デプロイキー
   label_cut_and_paste: パプリックキー（通常は.pubの拡張子のファイル）の内容を上記に貼り付けてください。
   label_identifier_cannot_be_changed: タイトル<br/><em>（編集できません）</em>
-  label_key_cannot_be_changed_please_create_new_key: 'キーの内容は編集できません。ただしキーを削除し新しいキーを作成することができます。'
+  label_key_cannot_be_changed_please_create_new_key: 'キーの内容は編集できません。ただしキーを削除し新しいキーを作成することはできます。'
 
   # User SSH keys (confirmation)
   text_gitolite_key_destroy_confirmation: "このキーを削除してもよろしいですか: %{title}？"

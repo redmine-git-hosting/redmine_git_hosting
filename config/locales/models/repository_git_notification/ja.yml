@@ -24,7 +24,7 @@ ja:
   label_gitolite_notify_prefix: メールリスト接頭辞
   label_gitolite_notify_sender_address: メールリスト宛先
 
-  git_notifications_reminder: 上記のメールリストが有効化されていません。上記のリポジトリの設定で有効化を行ってください。
+  git_notifications_reminder: 上記のメールリストは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
 
   activerecord:
     errors:
@@ -33,7 +33,7 @@ ja:
         repository_git_notification:
           attributes:
             base:
-              invalid: '同じメールアドレスが重複しています'
+              invalid: 'メールアドレスは重複しています'
             include_list:
               invalid: 不正
             exclude_list:

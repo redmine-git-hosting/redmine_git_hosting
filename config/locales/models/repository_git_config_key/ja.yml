@@ -31,4 +31,4 @@ ja:
         repository_git_config_key:
           attributes:
             key:
-              invalid: "キーの形式が不正です (ドット「.」が含まれる必要があります)"
+              invalid: "キーの形式は不正です (ドット「.」が含まれる必要があります)"

@@ -18,4 +18,4 @@ ja:
   label_branch_path: ブランチパス
   label_user_list: 許可ユーザー
 
-  protected_branches_reminder: 上記の保護ブランチが有効化されていません。上記のリポジトリの設定で有効化を行ってください。
+  protected_branches_reminder: 上記の保護ブランチは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
