@@ -83,7 +83,7 @@ module RedmineGitHosting
 
       def git_version
         begin
-          sudo_git('--version', '--no-color')
+          sudo_git('--version')
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Can't retrieve Git version: #{e.output}")
           'unknown'
