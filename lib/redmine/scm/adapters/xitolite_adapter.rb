@@ -357,7 +357,7 @@ module Redmine
           content = nil
           git_cmd(cmd_args) { |io| io.binmode; content = io.read }
           # git annotates binary files
-          return nil if content.is_binary_data?
+          return nil if binary_data?(content)
           identifier = ''
           # git shows commit author on the first occurrence only
           authors_by_commit = {}
@@ -564,6 +564,14 @@ module Redmine
 
           def git_cache_enabled?
             RedmineGitHosting::Config.gitolite_cache_max_time != 0
+          end
+
+          def binary_data?(content)
+            if Gem::Version.new(Redmine::VERSION.to_s) >= Gem::Version.new('3.4')
+              ScmData.binary?(content)
+            else
+              content.is_binary_data?
+            end
           end
 
       end
