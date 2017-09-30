@@ -6,9 +6,10 @@ github_user: jbox-web
 github_repository: redmine_git_hosting
 
 release:
-  year: 2016
-  version: 1.2.2
-  latest_redmine_version: 3.3.1
+  year: 2017
+  version: 1.2.3
+  latest_redmine_version: 3.4.2
+  latest_gitolite_version: v3.6.6-6-g7c8f0ab
 
 author:
   name: JBox Web
