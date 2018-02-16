@@ -22,7 +22,11 @@ module RedmineGitHosting
       def hooks_installed?
         installed = {}
         registered_hooks.each do |hook|
-          installed[hook.name] = hook.installed?
+          begin
+            installed[hook.name] = hook.installed?
+          rescue Exception => msg
+            installed[hook.name] = false
+          end
         end
         installed
       end

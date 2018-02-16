@@ -19,7 +19,7 @@ module RedmineGitHosting
 
 
       def recycle_bin_dir
-        File.join(gitolite_home_dir, gitolite_recycle_bin_dir)
+        File.join(gitolite_home_dir, gitolite_recycle_bin_dir) rescue nil
       end
 
     end
