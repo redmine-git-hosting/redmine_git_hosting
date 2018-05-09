@@ -4,7 +4,6 @@
 [![GitHub release](https://img.shields.io/github/release/jbox-web/redmine_git_hosting.svg)](https://github.com/jbox-web/redmine_git_hosting/releases/latest)
 [![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
 [![Build Status](https://travis-ci.org/jbox-web/redmine_git_hosting.svg?branch=devel)](https://travis-ci.org/jbox-web/redmine_git_hosting)
-[![Dependency Status](https://gemnasium.com/jbox-web/redmine_git_hosting.svg)](https://gemnasium.com/jbox-web/redmine_git_hosting)
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
