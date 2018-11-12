@@ -2,8 +2,9 @@ language: ruby
 sudo: required
 cache: bundler
 rvm:
-  - 2.3.4
-  - 2.2.7
+  - 2.4.5
+  - 2.3.8
+  - 2.2.10
 gemfile:
   - Gemfile
 branches:
