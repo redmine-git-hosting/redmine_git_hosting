@@ -27,15 +27,11 @@ env:
     - REDMINE_VERSION=3.4-stable USE_SVN=true DATABASE_ADAPTER=postgresql
     - REDMINE_VERSION=3.3-stable USE_SVN=true DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.3-stable USE_SVN=true DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=3.2-stable USE_SVN=true DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.2-stable USE_SVN=true DATABASE_ADAPTER=postgresql
 
     - REDMINE_VERSION=3.4.4 DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.4.4 DATABASE_ADAPTER=postgresql
     - REDMINE_VERSION=3.3.6 DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.3.6 DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=3.2.9 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.2.9 DATABASE_ADAPTER=postgresql
 before_install:
   - cd ../..
   - sudo apt-get update -qq
