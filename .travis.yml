@@ -32,6 +32,10 @@ env:
     - REDMINE_VERSION=3.4.6 DATABASE_ADAPTER=postgresql
     - REDMINE_VERSION=3.3.8 DATABASE_ADAPTER=mysql
     - REDMINE_VERSION=3.3.8 DATABASE_ADAPTER=postgresql
+matrix:
+  allow_failures:
+  - rvm: 2.5.3
+  - rvm: 2.4.5
 before_install:
   - cd ../..
   - sudo apt-get update -qq
