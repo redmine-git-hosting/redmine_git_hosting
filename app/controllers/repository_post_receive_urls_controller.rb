@@ -1,7 +1,7 @@
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
-  before_filter :check_xitolite_permissions
-  before_filter :find_repository_post_receive_url, except: [:index, :new, :create]
+  before_action :check_xitolite_permissions
+  before_action :find_repository_post_receive_url, except: [:index, :new, :create]
 
   accept_api_auth :index, :show
 

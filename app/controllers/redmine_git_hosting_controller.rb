@@ -2,10 +2,10 @@ class RedmineGitHostingController < ApplicationController
 
   include XitoliteRepositoryFinder
 
-  before_filter :require_login
-  before_filter :find_xitolite_repository
-  before_filter :check_required_permissions
-  before_filter :set_current_tab
+  before_action :require_login
+  before_action :find_xitolite_repository
+  before_action :check_required_permissions
+  before_action :set_current_tab
 
   layout Proc.new { |controller| controller.request.xhr? ? false : 'base' }
 

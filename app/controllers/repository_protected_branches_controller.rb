@@ -2,8 +2,8 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 
-  before_filter :check_xitolite_permissions
-  before_filter :find_repository_protected_branch, except: [:index, :new, :create, :sort]
+  before_action :check_xitolite_permissions
+  before_action :find_repository_protected_branch, except: [:index, :new, :create, :sort]
 
   accept_api_auth :index, :show
 

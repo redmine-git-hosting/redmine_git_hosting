@@ -1,9 +1,9 @@
 class ArchivedRepositoriesController < RepositoriesController
 
-  skip_before_filter :authorize
-  skip_before_filter :find_project_repository, only: :index
+  skip_before_action :authorize
+  skip_before_action :find_project_repository, only: :index
 
-  before_filter :can_view_archived_projects
+  before_action :can_view_archived_projects
 
 
   def index

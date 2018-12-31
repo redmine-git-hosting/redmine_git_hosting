@@ -2,10 +2,10 @@ class DownloadGitRevisionController < ApplicationController
 
   include XitoliteRepositoryFinder
 
-  before_filter :find_xitolite_repository
-  before_filter :can_download_git_revision
-  before_filter :set_download
-  before_filter :validate_download
+  before_action :find_xitolite_repository
+  before_action :can_download_git_revision
+  before_action :set_download
+  before_action :validate_download
 
   helper :redmine_bootstrap_kit
 

@@ -2,9 +2,9 @@ class GitolitePublicKeysController < ApplicationController
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 
-  before_filter :require_login
-  before_filter :find_user
-  before_filter :find_gitolite_public_key, only: [:destroy]
+  before_action :require_login
+  before_action :find_user
+  before_action :find_gitolite_public_key, only: [:destroy]
 
   helper :gitolite_public_keys
   helper :redmine_bootstrap_kit

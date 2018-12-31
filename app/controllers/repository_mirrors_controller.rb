@@ -1,7 +1,7 @@
 class RepositoryMirrorsController < RedmineGitHostingController
 
-  before_filter :check_xitolite_permissions
-  before_filter :find_repository_mirror, except: [:index, :new, :create]
+  before_action :check_xitolite_permissions
+  before_action :find_repository_mirror, except: [:index, :new, :create]
 
   accept_api_auth :index, :show
 

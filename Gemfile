@@ -16,7 +16,6 @@ gem 'hiredis'
 
 # Markdown rendering
 gem 'html-pipeline'
-gem 'rouge'
 gem 'task_list'
 gem 'rinku'
 
@@ -26,7 +25,6 @@ gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
 gem 'asciidoctor'
-gem 'rdoc', '>= 2.4.2'
 
 # Rack parser for Hrack
 gem 'rack-parser', require: 'rack/parser'
@@ -39,7 +37,6 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 2.7.0'
   gem 'shoulda-context'
 
-  gem 'factory_girl'
   gem 'factory_girl_rails'
   gem 'faker', '1.7.3'
   gem 'sshkey'
@@ -52,7 +49,7 @@ end
 group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
-  gem 'quiet_assets'
+#  gem 'quiet_assets'
 
   gem 'brakeman'
   gem 'bullet'

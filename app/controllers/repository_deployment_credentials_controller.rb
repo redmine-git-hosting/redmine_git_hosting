@@ -2,10 +2,10 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 
-  before_filter :check_xitolite_permissions
-  before_filter :find_deployment_credential, only: [:edit, :update, :destroy]
-  before_filter :find_key,                   only: [:edit, :update, :destroy]
-  before_filter :find_all_keys,              only: [:index, :new, :create]
+  before_action :check_xitolite_permissions
+  before_action :find_deployment_credential, only: [:edit, :update, :destroy]
+  before_action :find_key,                   only: [:edit, :update, :destroy]
+  before_action :find_all_keys,              only: [:index, :new, :create]
 
   helper :gitolite_public_keys
 

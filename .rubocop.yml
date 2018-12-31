@@ -1,0 +1,46 @@
+Rails:
+  Enabled: true
+
+AllCops:
+  TargetRubyVersion: 2.2
+  TargetRailsVersion: 5.2
+
+Metrics/AbcSize:
+  Max: 65
+
+Metrics/BlockLength:
+  Max: 60
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 20
+
+Metrics/LineLength:
+  Max: 140
+
+Metrics/MethodLength:
+  Max: 60
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 25
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+
+# we drop this, if we drop Rails 4.2 support
+Rails/ApplicationRecord:
+  Enabled: false
+
+Style/AutoResourceCleanup:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false

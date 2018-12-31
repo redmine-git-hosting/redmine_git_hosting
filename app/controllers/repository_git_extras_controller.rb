@@ -2,7 +2,7 @@ class RepositoryGitExtrasController < RedmineGitHostingController
 
   include RedmineGitHosting::GitoliteAccessor::Methods
 
-  skip_before_filter :set_current_tab
+  skip_before_action :set_current_tab
 
   helper :extend_repositories
 

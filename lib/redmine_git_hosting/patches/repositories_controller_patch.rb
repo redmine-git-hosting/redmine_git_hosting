@@ -8,7 +8,7 @@ module RedmineGitHosting
 
       def self.prepended(base)
         base.class_eval do
-          before_filter :set_current_tab, only: :edit
+          before_action :set_current_tab, only: :edit
 
           helper :redmine_bootstrap_kit
           helper :watchers
