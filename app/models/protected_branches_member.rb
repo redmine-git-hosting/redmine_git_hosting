@@ -1,7 +1,8 @@
 class ProtectedBranchesMember < ActiveRecord::Base
+  include Redmine::SafeAttributes
 
   ## Attributes
-  attr_accessible :principal_id, :inherited_by
+  safe_attributes 'principal_id', 'inherited_by'
 
   ## Relations
   belongs_to :protected_branch, class_name: 'RepositoryProtectedBranche'
@@ -10,16 +11,14 @@ class ProtectedBranchesMember < ActiveRecord::Base
   ## Callbacks
   after_destroy :remove_dependent_objects
 
-
   private
 
+  def remove_dependent_objects
+    return unless principal.class.name == 'Group'
 
-    def remove_dependent_objects
-      return unless principal.class.name == 'Group'
-      principal.users.each do |user|
-        member = self.class.find_by_principal_id_and_inherited_by(user.id, principal.id)
-        member.destroy! unless member.nil?
-      end
+    principal.users.each do |user|
+      member = self.class.find_by_principal_id_and_inherited_by(user.id, principal.id)
+      member.destroy! unless member.nil?
     end
-
+  end
 end
