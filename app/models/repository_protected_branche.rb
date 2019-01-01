@@ -3,7 +3,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   VALID_PERMS  = ['RW+', 'RW', 'R', '-'].freeze
   DEFAULT_PERM = 'RW+'.freeze
 
-  acts_as_list
+  acts_as_positioned
 
   ## Attributes
   safe_attributes 'path', 'permissions', 'position'
