@@ -1,13 +1,5 @@
-class AddIndexesToGitolitePublicKey < ActiveRecord::Migration
-
-  def self.up
-    add_index :gitolite_public_keys, :user_id
+class AddIndexesToGitolitePublicKey < ActiveRecord::Migration[4.2]
+  def change
     add_index :gitolite_public_keys, :identifier
   end
-
-  def self.down
-    remove_index :gitolite_public_keys, :user_id
-    remove_index :gitolite_public_keys, :identifier
-  end
-
 end

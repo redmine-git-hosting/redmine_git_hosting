@@ -1,9 +1,18 @@
+require: rubocop-performance
+
 Rails:
   Enabled: true
 
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
   TargetRailsVersion: 5.2
+  Include:
+    - '**/*.ruby'
+    - '**/*.rake'
+    - '**/*.rb'
+    - '**/*.rsb'
+    - '**/Rakefile'
+    - '**/Gemfile'
 
 Metrics/AbcSize:
   Max: 65
@@ -37,6 +46,9 @@ Rails/CreateTableWithTimestamps:
 
 # app/model/application_record.rb is missing in redmine, we can't use ApplicationRecord
 Rails/ApplicationRecord:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/AutoResourceCleanup:

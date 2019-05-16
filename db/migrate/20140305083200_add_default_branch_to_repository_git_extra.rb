@@ -1,6 +1,5 @@
-class AddDefaultBranchToRepositoryGitExtra < ActiveRecord::Migration
-
-  def self.up
+class AddDefaultBranchToRepositoryGitExtra < ActiveRecord::Migration[4.2]
+  def up
     add_column :repository_git_extras, :default_branch, :string, after: :git_notify
 
     RepositoryGitExtra.reset_column_information
@@ -11,8 +10,7 @@ class AddDefaultBranchToRepositoryGitExtra < ActiveRecord::Migration
     change_column :repository_git_extras, :default_branch, :string, null: false
   end
 
-  def self.down
+  def down
     remove_column :repository_git_extras, :default_branch
   end
-
 end

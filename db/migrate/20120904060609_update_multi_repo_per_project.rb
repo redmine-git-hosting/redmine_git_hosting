@@ -1,7 +1,6 @@
-class UpdateMultiRepoPerProject < ActiveRecord::Migration
-
-  def self.up
-    if !columns('repository_mirrors').index { |x| x.name == 'repository_id' }
+class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
+  def up
+    unless columns('repository_mirrors').index { |x| x.name == 'repository_id' }
       add_column :repository_mirrors, :repository_id, :integer
       begin
         say 'Detaching repository mirrors from projects; attaching them to repositories...'
@@ -15,12 +14,10 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
         say "Error: #{e.message}"
       end
 
-      if columns('repository_mirrors').index { |x| x.name == 'project_id' }
-        remove_column :repository_mirrors, :project_id
-      end
+      remove_column :repository_mirrors, :project_id if columns('repository_mirrors').index { |x| x.name == 'project_id' }
     end
 
-    if !columns('repository_post_receive_urls').index { |x| x.name == 'repository_id' }
+    unless columns('repository_post_receive_urls').index { |x| x.name == 'repository_id' }
       add_column :repository_post_receive_urls, :repository_id, :integer
       begin
         say 'Detaching repository post-receive-urls from projects; attaching them to repositories...'
@@ -42,17 +39,17 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
     add_index :projects, [:identifier]
     if columns('repositories').index { |x| x.name == 'identifier' }
       add_index :repositories, [:identifier]
-      add_index :repositories, [:identifier, :project_id]
+      add_index :repositories, %i[identifier project_id]
     end
     rename_column :git_caches, :proj_identifier, :repo_identifier
 
     begin
       # Add some new settings to settings page, if they don't exist
-      valuehash = (Setting.plugin_redmine_git_hosting).clone
-      if ((Repository.all.map(&:identifier).inject(Hash.new(0)) do |h, x|
-          h[x]+=1 unless x.blank?
-          h
-        end.values.max) || 0) > 1
+      valuehash = Setting.plugin_redmine_git_hosting.clone
+      if (Repository.all.map(&:identifier).inject(Hash.new(0) do |h, x|
+                                                    h[x] += 1 if x.present?
+                                                    h
+                                                  end.values.max) || 0) > 1
         # Oops -- have duplication.      Force to false.
         valuehash['gitRepositoryIdentUnique'] = 'false'
       else
@@ -67,11 +64,10 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
     rescue => e
       say "Error: #{e.message}"
     end
-
   end
 
-  def self.down
-    if !columns('repository_mirrors').index { |x| x.name == 'project_id' }
+  def down
+    unless columns('repository_mirrors').index { |x| x.name == 'project_id' }
       add_column :repository_mirrors, :project_id, :integer
       begin
         say 'Detaching repository mirrors from repositories; re-attaching them to projects...'
@@ -85,12 +81,10 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
         say "Error: #{e.message}"
       end
 
-      if columns('repository_mirrors').index { |x| x.name == 'repository_id' }
-        remove_column :repository_mirrors, :repository_id
-      end
+      remove_column :repository_mirrors, :repository_id if columns('repository_mirrors').index { |x| x.name == 'repository_id' }
     end
 
-    if !columns('repository_post_receive_urls').index { |x| x.name=='project_id' }
+    unless columns('repository_post_receive_urls').index { |x| x.name == 'project_id' }
       add_column :repository_post_receive_urls, :project_id, :integer
       begin
         say 'Detaching repository post-receive-urls from repositories; re-attaching them to projects...'
@@ -112,13 +106,13 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
     remove_index :projects, [:identifier]
     if columns('repositories').index { |x| x.name == 'identifier' }
       remove_index :repositories, [:identifier]
-      remove_index :repositories, [:identifier, :project_id]
+      remove_index :repositories, %i[identifier project_id]
     end
     rename_column :git_caches, :repo_identifier, :proj_identifier
 
     begin
       # Remove above settings from plugin page
-      valuehash = (Setting.plugin_redmine_git_hosting).clone
+      valuehash = Setting.plugin_redmine_git_hosting.clone
       valuehash.delete('gitRepositoryIdentUnique')
 
       if Setting.plugin_redmine_git_hosting != valuehash
@@ -128,7 +122,5 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration
     rescue => e
       say "Error: #{e.message}"
     end
-
   end
-
 end

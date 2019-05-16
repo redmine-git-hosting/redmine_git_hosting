@@ -1,6 +1,5 @@
-class CreateRepositoryProtectedBranches < ActiveRecord::Migration
-
-  def self.up
+class CreateRepositoryProtectedBranches < ActiveRecord::Migration[4.2]
+  def change
     create_table :repository_protected_branches do |t|
       t.column :repository_id, :integer
       t.column :path,          :string
@@ -11,9 +10,4 @@ class CreateRepositoryProtectedBranches < ActiveRecord::Migration
 
     add_index :repository_protected_branches, :repository_id
   end
-
-  def self.down
-    drop_table :repository_protected_branches
-  end
-
 end

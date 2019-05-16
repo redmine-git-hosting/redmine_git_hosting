@@ -1,11 +1,5 @@
-class AddTypeFieldToGitConfigKeys < ActiveRecord::Migration
-
-  def self.up
+class AddTypeFieldToGitConfigKeys < ActiveRecord::Migration[4.2]
+  def change
     add_column :repository_git_config_keys, :type, :string
   end
-
-  def self.down
-    remove_column :repository_git_config_keys, :type
-  end
-
 end

@@ -47,10 +47,8 @@ group :development, :test do
 end
 
 group :development do
-  gem 'spring'
-  gem 'spring-commands-rspec'
-#  gem 'quiet_assets'
-
   gem 'brakeman'
   gem 'bullet'
+  gem 'spring-commands-rspec'
+  gem 'spring'
 end

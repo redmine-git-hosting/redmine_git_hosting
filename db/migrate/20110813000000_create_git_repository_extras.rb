@@ -1,7 +1,6 @@
-class CreateGitRepositoryExtras < ActiveRecord::Migration
-
-  def self.up
-    drop_table :git_repository_extras if self.table_exists?('git_repository_extras')
+class CreateGitRepositoryExtras < ActiveRecord::Migration[4.2]
+  def up
+    drop_table :git_repository_extras if table_exists?(:git_repository_extras)
 
     create_table :git_repository_extras do |t|
       t.column :repository_id, :integer
@@ -11,30 +10,20 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration
       t.column :key,           :string
     end
 
-    if self.table_exists?('git_hook_keys')
-      drop_table :git_hook_keys
-    end
-
-    if self.column_exists?(:repositories, :git_daemon)
-      remove_column :repositories, :git_daemon
-    end
-
-    if self.column_exists?(:repositories, :git_http)
-      remove_column :repositories, :git_http
-    end
-
+    drop_table :git_hook_keys if table_exists?('git_hook_keys')
+    remove_column :repositories, :git_daemon if column_exists?(:repositories, :git_daemon)
+    remove_column :repositories, :git_http if column_exists?(:repositories, :git_http)
   end
 
-  def self.down
+  def down
     drop_table :git_repository_extras
   end
 
-  def self.table_exists?(name)
+  def table_exists?(name)
     ActiveRecord::Base.connection.tables.include?(name)
   end
 
-  def self.column_exists?(table_name, column_name)
+  def column_exists?(table_name, column_name)
     columns(table_name).any? { |c| c.name == column_name.to_s }
   end
-
 end
