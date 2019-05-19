@@ -40,6 +40,6 @@
             %td{ class: 'buttons' }
               - if User.current.git_allowed_to?(:edit_repository_deployment_credentials, @repository) && (User.current.admin? || User.current == credential.user)
                 = link_to l(:button_edit), edit_repository_deployment_credential_path(@repository, credential), class: 'icon icon-edit modal-box'
-                = link_to l(:button_delete), repository_deployment_credential_path(@repository, credential), remote: true, method: :delete, confirm: l(:text_are_you_sure), class: 'icon icon-del'
+                = link_to l(:button_delete), repository_deployment_credential_path(@repository, credential), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del'
   - else
     %p{ class: 'nodata' }= l(:label_no_data)
