@@ -22,10 +22,10 @@
         <% end %>
 
         <td style="width:10%;" class="buttons">
-          <%= link_to l(:button_delete), public_key_path(key, :user_id => params[:id]),
-                                         :method  => 'delete',
-                                         :class   => 'icon icon-del',
-                                         :confirm => l(:text_gitolite_key_destroy_confirmation, :title => keylabel(key)) %>
+          <%= link_to l(:button_delete), public_key_path(key, user_id: params[:id]),
+                                         method: 'delete',
+                                         class: 'icon icon-del',
+                                         data: { confirm: l(:text_gitolite_key_destroy_confirmation, title: keylabel(key) }) %>
         </td>
       </tr>
     <% end %>
