@@ -105,7 +105,8 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   end
 
   def build_new_credential
-    credential = @repository.deployment_credentials.new(params[:repository_deployment_credential])
+    credential = @repository.deployment_credentials.new
+    credential.safe_attributes = params[:repository_deployment_credential]
     key = GitolitePublicKey.find_by(id: params[:repository_deployment_credential][:gitolite_public_key_id])
 
     credential.gitolite_public_key = key unless key.nil?
