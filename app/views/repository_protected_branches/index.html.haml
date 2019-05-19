@@ -24,7 +24,7 @@
       %tbody
         - @repository_protected_branches.each do |protected_branch|
           %tr{ class: 'protected_branch',
-               id: "protected_branch_#{#{protected_branch.id}" }
+               id: "protected_branch_#{protected_branch.id}" }
             %td
               %span{ class: 'handle' }
                 [drag]
