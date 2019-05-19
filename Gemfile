@@ -32,6 +32,7 @@ gem 'rack-parser', require: 'rack/parser'
 # temp autoloading fix
 gem 'sidekiq'
 gem 'faker', '1.7.3'
+gem 'sshkey'
 
 group :development, :test do
   gem 'rspec'
@@ -42,7 +43,6 @@ group :development, :test do
   gem 'shoulda-context'
 
   gem 'factory_girl_rails'
-  gem 'sshkey'
   gem 'database_cleaner'
 
   # Publish to CodeClimate
