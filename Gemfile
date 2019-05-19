@@ -14,8 +14,6 @@ gem 'dalli'
 gem 'redis'
 gem 'hiredis'
 
-gem 'sidekiq'
-
 # Markdown rendering
 gem 'html-pipeline'
 gem 'task_list'
@@ -31,6 +29,10 @@ gem 'asciidoctor'
 # Rack parser for Hrack
 gem 'rack-parser', require: 'rack/parser'
 
+# temp autoloading fix
+gem 'sidekiq'
+gem 'faker', '1.7.3'
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
@@ -40,7 +42,6 @@ group :development, :test do
   gem 'shoulda-context'
 
   gem 'factory_girl_rails'
-  gem 'faker', '1.7.3'
   gem 'sshkey'
   gem 'database_cleaner'
 
