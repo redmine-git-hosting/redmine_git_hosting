@@ -25,7 +25,7 @@ gem 'github-markup'
 gem 'RedCloth'
 gem 'org-ruby'
 gem 'creole'
-gem 'asciidoctor'
+# gem 'asciidoctor'
 gem 'rdoc', '~> 4.3'
 
 # Rack parser for Hrack
