@@ -25,7 +25,7 @@
           <%= link_to l(:button_delete), public_key_path(key, user_id: params[:id]),
                                          method: 'delete',
                                          class: 'icon icon-del',
-                                         data: { confirm: l(:text_gitolite_key_destroy_confirmation, title: keylabel(key) }) %>
+                                         data: { confirm: l(:text_gitolite_key_destroy_confirmation, title: keylabel(key)) } %>
         </td>
       </tr>
     <% end %>
