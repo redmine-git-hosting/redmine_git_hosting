@@ -14,6 +14,8 @@ gem 'dalli'
 gem 'redis'
 gem 'hiredis'
 
+gem 'sidekiq'
+
 # Markdown rendering
 gem 'html-pipeline'
 gem 'task_list'

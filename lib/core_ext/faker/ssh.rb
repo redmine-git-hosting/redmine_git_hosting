@@ -1,3 +1,4 @@
+require 'faker'
 require 'sshkey'
 
 module Faker

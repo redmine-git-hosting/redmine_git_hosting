@@ -1,3 +1,5 @@
+require 'faker'
+
 module Faker
   class Git < Base
     flexible :git
