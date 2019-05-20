@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :repository_gitolite, class: 'Repository::Xitolite' do |f|
     f.is_default  false

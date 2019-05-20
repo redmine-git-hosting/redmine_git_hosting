@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :repository_mirror do |f|
     f.url          { Faker::Git.ssh_url }

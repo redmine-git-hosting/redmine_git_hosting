@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :repository_svn, class: 'Repository::Subversion' do |f|
     f.is_default  false

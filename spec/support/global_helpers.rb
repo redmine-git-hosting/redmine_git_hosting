@@ -2,14 +2,14 @@ module GlobalHelpers
 
   def create_user_with_permissions(project, permissions: [], login: nil)
     role = Role.find_by_name('Manager')
-    role = FactoryGirl.create(:role, name: 'Manager') if role.nil?
+    role = FactoryBot.create(:role, name: 'Manager') if role.nil?
     role.permissions += permissions
     role.save!
 
     if login.nil?
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
     else
-      user = FactoryGirl.create(:user, login: login)
+      user = FactoryBot.create(:user, login: login)
     end
 
     member = Member.new(role_ids: [role.id], user_id: user.id)
@@ -21,10 +21,10 @@ module GlobalHelpers
 
   def create_project(identifier = nil)
     if identifier.nil?
-      FactoryGirl.create(:project)
+      FactoryBot.create(:project)
     else
       project = Project.find_by_identifier(identifier)
-      project = FactoryGirl.create(:project, identifier: identifier) if project.nil?
+      project = FactoryBot.create(:project, identifier: identifier) if project.nil?
       project
     end
   end
@@ -47,30 +47,30 @@ module GlobalHelpers
 
   def create_user(login, admin: false)
     user = User.find_by_login(login)
-    user = FactoryGirl.create(:user, login: login, admin: admin) if user.nil?
+    user = FactoryBot.create(:user, login: login, admin: admin) if user.nil?
     user
   end
 
 
   def create_ssh_key(opts = {})
-    FactoryGirl.create(:gitolite_public_key, opts)
+    FactoryBot.create(:gitolite_public_key, opts)
   end
 
 
   def build_ssh_key(opts = {})
-    FactoryGirl.build(:gitolite_public_key, opts)
+    FactoryBot.build(:gitolite_public_key, opts)
   end
 
 
   def build_git_repository(opts = {})
-    FactoryGirl.build(:repository_gitolite, opts)
+    FactoryBot.build(:repository_gitolite, opts)
   end
 
 
   def find_or_create_git_repository(opts = {})
     repository = Repository::Xitolite.find_by_identifier(opts[:identifier])
     if repository.nil?
-      repository = FactoryGirl.create(:repository_gitolite, opts)
+      repository = FactoryBot.create(:repository_gitolite, opts)
       build_extra(repository)
     end
     repository
@@ -78,7 +78,7 @@ module GlobalHelpers
 
 
   def create_git_repository(opts = {})
-    repository = FactoryGirl.create(:repository_gitolite, opts)
+    repository = FactoryBot.create(:repository_gitolite, opts)
     build_extra(repository)
     repository
   end
@@ -91,7 +91,7 @@ module GlobalHelpers
 
 
   def create_svn_repository(opts = {})
-    FactoryGirl.create(:repository_svn, opts)
+    FactoryBot.create(:repository_svn, opts)
   end
 
 

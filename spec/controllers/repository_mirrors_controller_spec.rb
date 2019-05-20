@@ -11,7 +11,7 @@ describe RepositoryMirrorsController do
 
 
   def create_object
-    FactoryGirl.create(:repository_mirror, repository_id: @repository.id)
+    FactoryBot.create(:repository_mirror, repository_id: @repository.id)
   end
 
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :protected_branch_user_member, class: 'ProtectedBranchesMember' do |f|
     f.association  :protected_branch, factory: :repository_protected_branche

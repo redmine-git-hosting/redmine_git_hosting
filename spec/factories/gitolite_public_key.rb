@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :gitolite_public_key do |f|
     f.sequence(:title) { |n| "test-key#{n}" }

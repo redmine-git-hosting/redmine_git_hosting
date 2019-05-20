@@ -15,10 +15,10 @@ describe RepositoryDeploymentCredentialsController do
 
 
   def create_object
-    FactoryGirl.create(:repository_deployment_credential,
+    FactoryBot.create(:repository_deployment_credential,
       repository_id:          @repository.id,
       user_id:                @member_user.id,
-      gitolite_public_key_id: FactoryGirl.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key).id
+      gitolite_public_key_id: FactoryBot.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key).id
     )
   end
 
@@ -44,7 +44,7 @@ describe RepositoryDeploymentCredentialsController do
 
 
   def valid_params_for_create
-    public_key = FactoryGirl.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key)
+    public_key = FactoryBot.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key)
     { repository_deployment_credential: { gitolite_public_key_id: public_key.id, perm: 'RW+' } }
   end
 

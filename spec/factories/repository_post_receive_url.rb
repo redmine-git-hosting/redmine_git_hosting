@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :repository_post_receive_url do |f|
     f.sequence(:url) { |n| "http://example.com/toto#{n}.php" }

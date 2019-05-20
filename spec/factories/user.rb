@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :user do |f|
     f.sequence(:login)     { |n| "user#{n}" }

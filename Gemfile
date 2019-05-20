@@ -42,7 +42,7 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 2.7.0'
   gem 'shoulda-context'
 
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'database_cleaner'
 
   # Publish to CodeClimate

@@ -11,7 +11,7 @@ describe RepositoryPostReceiveUrlsController do
 
 
   def create_object
-    FactoryGirl.create(:repository_post_receive_url, repository_id: @repository.id)
+    FactoryBot.create(:repository_post_receive_url, repository_id: @repository.id)
   end
 
 

@@ -11,7 +11,7 @@ describe RepositoryGitConfigKeysController do
 
 
   def create_object
-    FactoryGirl.create(:repository_git_config_key, repository_id: @repository.id)
+    FactoryBot.create(:repository_git_config_key, repository_id: @repository.id)
   end
 
 

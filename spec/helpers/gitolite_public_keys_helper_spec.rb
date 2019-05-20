@@ -7,7 +7,7 @@ describe GitolitePublicKeysHelper do
   before(:all) do
     @admin_user          = create_admin_user
     @user_without_perm   = create_anonymous_user
-    @user_with_perm      = create_user_with_permissions(FactoryGirl.create(:project), permissions: [:create_repository_deployment_credentials])
+    @user_with_perm      = create_user_with_permissions(FactoryBot.create(:project), permissions: [:create_repository_deployment_credentials])
     @gitolite_public_key = create_ssh_key(user_id: @user_without_perm.id, key_type: 1, title: 'foo1', key: TEST_KEY)
   end
 

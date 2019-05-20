@@ -12,14 +12,14 @@ ENV['RAILS_ENV'] = 'test'
 require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 require 'rspec/rails'
 
-## Load FactoryGirls factories
+## Load FactoryBots factories
 Dir[Rails.root.join('plugins/*/spec/factories/**/*.rb')].each { |f| require f }
 
 Dir[Rails.root.join('plugins/*/spec/support/**/*.rb')].each { |f| require f }
 
 ## Configure RSpec
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.infer_spec_type_from_file_location!
 

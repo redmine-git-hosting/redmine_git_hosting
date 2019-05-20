@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :repository_git_config_key_base, class: 'RepositoryGitConfigKey' do |f|
     f.sequence(:key) { |n| "hookfoo.foo#{n}" }
