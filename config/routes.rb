@@ -10,10 +10,10 @@ resources :repositories, only: [] do
     get 'download_revision', to: 'download_git_revision#index', as: 'download_git_revision'
   end
 
-  resource  :git_extras, controller: 'repository_git_extras', only: [:update] do
-    match 'sort_urls', via: [:get, :post]
+  resource :git_extras, controller: 'repository_git_extras', only: [:update] do
+    match 'sort_urls', via: %i[get post]
     member do
-      match 'move', via: [:get, :post]
+      match 'move', via: %i[get post]
     end
   end
 
@@ -32,7 +32,7 @@ resources :repositories, only: [] do
 end
 
 # Enable Redirector for Go Lang repositories
-get 'go/:repo_path', repo_path: /([^\/]+\/)*?[^\/]+/, to: 'go_redirector#index'
+get 'go/:repo_path', repo_path: %r{([^/]+/)*?[^/]+}, to: 'go_redirector#index'
 
 get 'admin/settings/plugin/:id/authors', to: 'settings#authors', as: 'plugin_authors'
 get 'admin/settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gitolite_hooks', as: 'install_gitolite_hooks'
@@ -40,8 +40,8 @@ get 'admin/settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gi
 # Enable SmartHTTP Grack support
 mount Grack::Bundle.new({}),
       at: RedmineGitHosting::Config.http_server_subdir,
-      constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) },
-      via: [:get, :post]
+      constraints: ->(request) { %r{[-/\w\.]+\.git/}.match(request.path_info) },
+      via: %i[get post]
 
 # Post Receive Hooks
 mount Hrack::Bundle.new({}), at: 'githooks/post-receive/:type/:projectid', via: [:post]
@@ -57,10 +57,8 @@ get 'archived_projects/:id/repository/:repository_id/revisions',              to
 get 'archived_projects/:id/repository/:repository_id/revisions/:rev/:action(/*path(.:ext))',
     controller: 'archived_repositories',
     format: false,
-    constraints: {
-          action: /(browse|show|entry|raw|annotate|diff)/,
-          rev:    /[a-z0-9\.\-_]+/
-        }
+    constraints: { action: /(browse|show|entry|raw|annotate|diff)/,
+                   rev: /[a-z0-9\.\-_]+/ }
 
 get 'archived_projects/:id/repository/statistics',               to: 'archived_repositories#stats'
 get 'archived_projects/:id/repository/graph',                    to: 'archived_repositories#graph'
@@ -71,10 +69,8 @@ get 'archived_projects/:id/repository/revision',                 to: 'archived_r
 get 'archived_projects/:id/repository/revisions/:rev/:action(/*path(.:ext))',
     controller: 'archived_repositories',
     format: false,
-    constraints: {
-          action: /(browse|show|entry|raw|annotate|diff)/,
-          rev:    /[a-z0-9\.\-_]+/
-        }
+    constraints: { action: /(browse|show|entry|raw|annotate|diff)/,
+                   rev: /[a-z0-9\.\-_]+/ }
 get 'archived_projects/:id/repository/:repository_id/:action(/*path(.:ext))',
     controller: 'archived_repositories',
     action: /(browse|show|entry|raw|changes|annotate|diff)/
