@@ -5,7 +5,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   DEFAULT_PERM = 'RW+'.freeze
 
   ## Attributes
-  safe_attributes ':perm', 'active'
+  safe_attributes 'perm', 'active', 'gitolite_public_key_id'
 
   ## Relations
   belongs_to :repository
