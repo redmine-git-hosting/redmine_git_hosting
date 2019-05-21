@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe UsersController do
-
   describe 'GET #edit' do
     context 'with git hosting patch' do
       let(:user) { create_admin_user }
@@ -10,16 +9,17 @@ describe UsersController do
 
       it 'populates an array of gitolite_user_keys' do
         set_session_user(user)
-        get :edit, id: user.id
+        get :edit,
+            params: { id: user.id }
         expect(assigns(:gitolite_user_keys)).to eq [user_key]
       end
 
       it 'populates an array of gitolite_deploy_keys' do
         set_session_user(user)
-        get :edit, id: user.id
+        get :edit,
+            params: { id: user.id }
         expect(assigns(:gitolite_deploy_keys)).to eq [deploy_key]
       end
     end
   end
-
 end

@@ -45,6 +45,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'database_cleaner'
 
+  gem 'rubocop-rspec'
+
   # Publish to CodeClimate
   gem 'codeclimate-test-reporter', require: false
 end
@@ -52,6 +54,6 @@ end
 group :development do
   gem 'brakeman'
   gem 'bullet'
-  gem 'spring-commands-rspec'
   gem 'spring'
+  gem 'spring-commands-rspec'
 end

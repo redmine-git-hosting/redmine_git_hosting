@@ -1,11 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
 describe RedmineGitHosting::Utils::Git do
-
   include RedmineGitHosting::Utils::Git
 
   describe '.parse_refspec' do
-
     context 'it should accept different refspec format' do
       it 'should accept <name>' do
         expect(parse_refspec('dev')).to eq ({ type: nil, name: 'dev' })
@@ -27,7 +25,5 @@ describe RedmineGitHosting::Utils::Git do
         expect(parse_refspec('refs/heads/experiment')).to eq ({ type: 'heads', name: 'experiment' })
       end
     end
-
   end
-
 end

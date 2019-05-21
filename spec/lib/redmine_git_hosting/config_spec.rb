@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe RedmineGitHosting::Config do
-
   GITOLITE_VERSION_2 = [
     'hello redmine_gitolite_admin_id_rsa, this is gitolite v2.3.1-0-g912a8bd-dt running on git 1.7.2.5',
     'hello gitolite_admin_id_rsa, this is gitolite gitolite-2.3.1 running on git 1.8.1.5',
@@ -20,12 +19,10 @@ describe RedmineGitHosting::Config do
     end
   end
 
-
   GITOLITE_VERSION_3.each do |gitolite_version|
     it 'should recognize Gitolite3' do
       version = RedmineGitHosting::Config.find_version(gitolite_version)
       expect(version).to eq 3
     end
   end
-
 end

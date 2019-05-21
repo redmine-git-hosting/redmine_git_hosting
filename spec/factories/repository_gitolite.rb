@@ -1,8 +1,6 @@
 FactoryBot.define do
-
-  factory :repository_gitolite, class: 'Repository::Xitolite' do |f|
-    f.is_default  false
-    f.association :project
+  factory :repository_gitolite, class: 'Repository::Xitolite' do
+    is_default { false }
+    association :project
   end
-
 end

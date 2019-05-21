@@ -26,7 +26,7 @@ module RedmineGitHosting
       # with its login name as a prefix for readibility.
       def gitolite_identifier
         identifier = [RedmineGitHosting::Config.gitolite_identifier_prefix, stripped_login]
-        identifier.concat(['_', id]) if !RedmineGitHosting::Config.gitolite_identifier_strip_user_id?
+        identifier.concat(['_', id]) unless RedmineGitHosting::Config.gitolite_identifier_strip_user_id?
         identifier.join
       end
 

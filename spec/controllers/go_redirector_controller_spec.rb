@@ -1,13 +1,11 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path('../spec_helper', __dir__)
 
 describe GoRedirectorController do
-
   def check_response_with_smart_http(repository, opts = {})
     enable_go_url(repository)
     yield
     call_page(repository, opts[:status])
   end
-
 
   def check_response_without_smart_http(repository, opts = {})
     disable_go_url(repository)
@@ -15,12 +13,10 @@ describe GoRedirectorController do
     call_page(repository, opts[:status])
   end
 
-
   def call_page(repository, status)
-    get :index, repo_path: repository.redmine_repository_path
+    get :index, params: { repo_path: repository.redmine_repository_path }
     expect(response.status).to eq status
   end
-
 
   def enable_go_url(repository)
     repository.extra[:git_http] = true
@@ -28,19 +24,16 @@ describe GoRedirectorController do
     repository.extra.save!
   end
 
-
   def disable_go_url(repository)
     repository.extra[:git_http] = false
     repository.extra[:git_go]   = false
     repository.extra.save!
   end
 
-
   def enable_public_repo(repository)
     repository.extra[:public_repo] = true
     repository.extra.save!
   end
-
 
   describe 'GET #index' do
     context 'when project is public' do
@@ -86,5 +79,4 @@ describe GoRedirectorController do
       end
     end
   end
-
 end
