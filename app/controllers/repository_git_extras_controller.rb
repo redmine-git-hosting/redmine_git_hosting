@@ -21,8 +21,7 @@ class RepositoryGitExtrasController < RedmineGitHostingController
     @git_extra = @repository.extra
     return unless request.post?
 
-    @git_extra.safe_attributes = params[:repository_git_extra]
-    if @git_extra.save
+    if @git_extra.update(urls_order: params[:repository_git_extra])
       flash.now[:notice] = l(:notice_gitolite_extra_updated)
     else
       flash.now[:error] = l(:notice_gitolite_extra_update_failed)
