@@ -28,11 +28,11 @@ describe RepositoryMirrorsController do
   end
 
   def valid_params_for_create
-    { repository_mirror: { url: Faker::Git.ssh_url, push_mode: 0 } }
+    { repository_mirror: { url: 'ssh://git@example.com:22/john_doe2/john_doe2/john_doe2.git', push_mode: 0 } }
   end
 
   def invalid_params_for_create
-    { repository_mirror: { url: Faker::Git.git_url, push_mode: 0 } }
+    { repository_mirror: { url: 'git@example.com:john_doe3/john_doe3/john_doe3.git', push_mode: 0 } }
   end
 
   def valid_params_for_update
@@ -48,7 +48,7 @@ describe RepositoryMirrorsController do
   end
 
   def invalid_params_for_update
-    { id: @object.id, repository_mirror: { url: Faker::Git.git_url } }
+    { id: @object.id, repository_mirror: { url: 'git@example.com:john_doe3/john_doe3/john_doe3.git' } }
   end
 
   describe 'GET #push' do

@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+require 'sshkey'
+
 describe RepositoryDeploymentCredentialsController do
   def self.skip_actions
     ['show']
@@ -8,14 +10,18 @@ describe RepositoryDeploymentCredentialsController do
   include CrudControllerSpec::Base
 
   def permissions
-    [:manage_repository, :create_repository_deployment_credentials, :view_repository_deployment_credentials, :edit_repository_deployment_credentials]
+    %i[manage_repository create_repository_deployment_credentials view_repository_deployment_credentials
+       edit_repository_deployment_credentials]
   end
 
   def create_object
     FactoryBot.create(:repository_deployment_credential,
-      repository_id: @repository.id,
-      user_id: @member_user.id,
-      gitolite_public_key_id: FactoryBot.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key).id)
+                      repository_id: @repository.id,
+                      user_id: @member_user.id,
+                      gitolite_public_key_id: FactoryBot.create(:gitolite_public_key,
+                                                                user_id: @member_user.id,
+                                                                key_type: 1,
+                                                                key: SSHKey.generate.public_key).id)
   end
 
   def success_url
@@ -35,12 +41,15 @@ describe RepositoryDeploymentCredentialsController do
   end
 
   def valid_params_for_create
-    public_key = FactoryBot.create(:gitolite_public_key, user_id: @member_user.id, key_type: 1, key: Faker::Ssh.public_key)
+    public_key = FactoryBot.create(:gitolite_public_key,
+                                   user_id: @member_user.id,
+                                   key_type: 1,
+                                   key: SSHKey.generate.public_key)
     { repository_deployment_credential: { gitolite_public_key_id: public_key.id, perm: 'RW+' } }
   end
 
   def invalid_params_for_create
-    { repository_deployment_credential: { url: Faker::Git.git_url, push_mode: 0 } }
+    { repository_deployment_credential: { url: 'git@example.com:john_doe3/john_doe3/john_doe3.git', push_mode: 0 } }
   end
 
   def valid_params_for_update

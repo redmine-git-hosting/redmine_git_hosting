@@ -28,11 +28,11 @@ describe RepositoryPostReceiveUrlsController do
   end
 
   def valid_params_for_create
-    { repository_post_receive_url: { url: "http://#{Faker::Internet.domain_name}", mode: :github } }
+    { repository_post_receive_url: { url: 'http://example.com', mode: :github } }
   end
 
   def invalid_params_for_create
-    { repository_post_receive_url: { url: Faker::Internet.domain_name, push_mode: 0 } }
+    { repository_post_receive_url: { url: 'example.com', push_mode: 0 } }
   end
 
   def valid_params_for_update
@@ -48,6 +48,6 @@ describe RepositoryPostReceiveUrlsController do
   end
 
   def invalid_params_for_update
-    { id: @object.id, repository_post_receive_url: { url: Faker::Internet.domain_name } }
+    { id: @object.id, repository_post_receive_url: { url: 'example.com' } }
   end
 end

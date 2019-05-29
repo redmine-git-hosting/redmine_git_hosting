@@ -30,16 +30,13 @@ module RedmineGitHosting
                         ['controllers', 'concerns'],
                         ['models', 'concerns']
 
-
   def logger
     @logger ||= RedmineGitHosting::Logger.init_logs!('RedmineGitHosting', logfile, loglevel)
   end
 
-
   def logfile
     Rails.root.join('log', 'git_hosting.log')
   end
-
 
   def loglevel
     case RedmineGitHosting::Config.gitolite_log_level
@@ -57,7 +54,6 @@ module RedmineGitHosting
   end
 end
 
-
 # Set up autoload of patches
 Rails.configuration.to_prepare do
   # Redmine Git Hosting Libs and Patches
@@ -67,10 +63,4 @@ Rails.configuration.to_prepare do
   require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
   require 'hrack/init'
-
-  # Extensions for Faker
-  unless Rails.env.production?
-    require_dependency 'core_ext/faker/git'
-    require_dependency 'core_ext/faker/ssh'
-  end
 end
