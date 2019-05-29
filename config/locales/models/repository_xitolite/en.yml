@@ -25,6 +25,9 @@ en:
   label_enable_git_notify: Enable Mailing list
   label_enable_git_daemon: Enable Git Daemon
   label_enable_smart_http: Smart HTTP Mode
+  label_enable_smart_https: Smart HTTPS Mode
+  label_enable_ssh_url: Enable SSH URL
+  label_enable_go_url: Enable GO URL
   label_enable_protected_branches: Enable protected branches
   label_enable_public_repo: Make repository public
   label_git_daemon: Git Daemon
