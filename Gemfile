@@ -15,6 +15,7 @@ gem 'redis'
 gem 'hiredis'
 
 # Markdown rendering
+gem 'escape_utils'
 gem 'html-pipeline'
 gem 'rinku'
 gem 'task_list'
