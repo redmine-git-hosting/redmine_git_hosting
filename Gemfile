@@ -36,14 +36,14 @@ gem 'sshkey'
 
 group :development, :test do
   gem 'rspec'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
 
   gem 'shoulda', '~> 3.5.0'
   gem 'shoulda-context'
   gem 'shoulda-matchers', '~> 2.7.0'
 
   gem 'database_cleaner'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '< 5.0'
 
   gem 'rubocop', require: false
   gem 'rubocop-rspec'
