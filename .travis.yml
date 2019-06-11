@@ -2,8 +2,8 @@ language: ruby
 sudo: required
 cache: bundler
 rvm:
-  - 2.5.3
-  - 2.4.5
+  - 2.6.3
+  - 2.4.6
   - 2.3.8
 gemfile:
   - Gemfile
@@ -23,19 +23,8 @@ env:
     - POSTGRES_DATABASE=redmine
     - POSTGRES_USER=postgres
   matrix:
-    - REDMINE_VERSION=3.4-stable USE_SVN=true DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.4-stable USE_SVN=true DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=3.3-stable USE_SVN=true DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.3-stable USE_SVN=true DATABASE_ADAPTER=postgresql
-
-    - REDMINE_VERSION=3.4.6 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.4.6 DATABASE_ADAPTER=postgresql
-    - REDMINE_VERSION=3.3.8 DATABASE_ADAPTER=mysql
-    - REDMINE_VERSION=3.3.8 DATABASE_ADAPTER=postgresql
-matrix:
-  allow_failures:
-  - rvm: 2.5.3
-  - rvm: 2.4.5
+    - REDMINE_VERSION=4.0-stable USE_SVN=true DATABASE_ADAPTER=mysql
+    - REDMINE_VERSION=4.0-stable USE_SVN=true DATABASE_ADAPTER=postgresql
 before_install:
   - cd ../..
   - sudo apt-get update -qq

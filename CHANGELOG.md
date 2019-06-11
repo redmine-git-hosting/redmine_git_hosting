@@ -2,7 +2,7 @@
 
 ### 4.0.0
 
-* compatible with Redmine 4
+* compatible with Redmine 4 (drop Redmine 3.x support)
 
 ### 1.2.3 - 2017-07-17
 
