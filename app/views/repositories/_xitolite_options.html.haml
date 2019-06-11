@@ -46,16 +46,16 @@
 
           .col-md-6
 
-            - unless repository.git_annex_enabled?
-              %p
-                = label_tag 'repository_git_extra[git_notify]', l(:label_enable_git_notify)
-                = f.check_box :git_notify
+            %p
+              = label_tag 'repository_git_extra[git_notify]', l(:label_enable_git_notify)
+              = f.check_box :git_notify
+            - if repository.git_notification_enabled?
               %p
                 = label_tag 'repository_git_extra[notification_sender]', l(:label_git_notification_sender)
-                = f.text_field :notification_sender, disabled: !repository.git_notification_enabled?
+                = f.text_field :notification_sender
               %p
                 = label_tag 'repository_git_extra[notification_prefix]', l(:label_git_notification_prefix)
-                = f.text_field :notification_prefix, disabled: !repository.git_notification_enabled?
+                = f.text_field :notification_prefix
 
             - unless repository.git_annex_enabled?
               %p
