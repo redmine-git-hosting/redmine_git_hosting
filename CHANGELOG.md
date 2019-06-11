@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### 4.0.0
+
+* compatible with Redmine 4
+
 ### 1.2.3 - 2017-07-17
 
 * Merge [#640](https://github.com/jbox-web/redmine_git_hosting/pull/640) ([Views] Fix typo while rendering partial repositories/download_revision)
