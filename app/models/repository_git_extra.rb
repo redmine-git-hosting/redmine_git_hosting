@@ -8,12 +8,12 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   ALLOWED_URLS = %w[ssh http https go git git_annex].freeze
 
-  URLS_ICONS = { go: { label: 'Go', icon: 'fa-google' },
-                 http: { label: 'HTTP', icon: 'fa-external-link' },
-                 https: { label: 'HTTPS', icon: 'fa-external-link' },
-                 ssh: { label: 'SSH', icon: 'fa-shield' },
-                 git: { label: 'Git', icon: 'fa-git' },
-                 git_annex: { label: 'GitAnnex', icon: 'fa-git' } }.freeze
+  URLS_ICONS = { go: { label: 'Go', icon: 'fab_google' },
+                 http: { label: 'HTTP', icon: 'fas_external-link-alt' },
+                 https: { label: 'HTTPS', icon: 'fas_external-link-alt' },
+                 ssh: { label: 'SSH', icon: 'fas_shield-alt' },
+                 git: { label: 'Git', icon: 'fab_git' },
+                 git_annex: { label: 'GitAnnex', icon: 'fab_git' } }.freeze
 
   ## Attributes
   safe_attributes 'git_http', 'git_https', 'git_ssh', 'git_go', 'git_daemon', 'git_notify', 'git_annex', 'default_branch',
@@ -26,7 +26,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   validates :repository_id,       presence: true, uniqueness: true
   validates :default_branch,      presence: true
   validates :key,                 presence: true
-  validates :notification_sender, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX, allow_blank: true }
+  validates :notification_sender, format: { with: URI::MailTo::EMAIL_REGEXP, allow_blank: true }
 
   validate :validate_urls_order
 

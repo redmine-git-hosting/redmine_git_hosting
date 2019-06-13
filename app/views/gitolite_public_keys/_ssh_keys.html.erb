@@ -1,7 +1,3 @@
-<% content_for :header_tags do %>
-  <%= bootstrap_load_module(:font_awesome) %>
-<% end %>
-
 <table class="list">
 
   <% if ssh_keys.empty? %>
@@ -15,7 +11,7 @@
       <tr class="<%= curcycle = cycle('odd', 'even'); (@gitolite_public_key == key) ? 'highlight' : curcycle %>">
         <td style="text-align: left;"><%= h(key) %></td>
 
-        <td style="text-align: left;"><i class="fa fa-check" style="color: green; margin-left: 5px; margin-right: 5px;"></i><%= key.fingerprint %></td>
+        <td style="text-align: left;"><i class="fas fa-check" style="color: green; margin-left: 5px; margin-right: 5px;"></i><%= key.fingerprint %></td>
 
         <% if params[:id] %>
           <td style="text-align: left;"><%= key.gitolite_path %></td>

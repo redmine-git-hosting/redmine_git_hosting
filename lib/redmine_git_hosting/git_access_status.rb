@@ -1,6 +1,5 @@
 module RedmineGitHosting
   class GitAccessStatus
-
     attr_accessor :status, :message
     alias_method :allowed?, :status
 
@@ -12,6 +11,5 @@ module RedmineGitHosting
     def to_json
       { status: @status, message: @message }.to_json
     end
-
   end
 end

@@ -25,18 +25,15 @@ module PluginSettingsValidation
 
       validates :show_repositories_url,      presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
       validates :gitolite_daemon_by_default, presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
-      validates :gitolite_http_by_default,   presence: true, inclusion: { in: ['0', '1', '2', '3'] }, numericality: { only_integer: true }
+      validates :gitolite_http_by_default,   presence: true, inclusion: { in: %w[0 1 2 3] }, numericality: { only_integer: true }
 
       validate  :http_server_subdir_is_relative
     end
 
-
     private
 
-
-      def http_server_subdir_is_relative
-        errors.add(:http_server_subdir, 'must be relative') if http_server_subdir.starts_with?('/')
-      end
-
+    def http_server_subdir_is_relative
+      errors.add(:http_server_subdir, 'must be relative') if http_server_subdir.starts_with?('/')
+    end
   end
 end

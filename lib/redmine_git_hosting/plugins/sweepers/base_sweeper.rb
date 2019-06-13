@@ -1,12 +1,10 @@
 module RedmineGitHosting::Plugins::Sweepers
   class BaseSweeper < RedmineGitHosting::Plugins::GitolitePlugin
-
     attr_reader :repository_data
     attr_reader :gitolite_repo_name
     attr_reader :gitolite_repo_path
     attr_reader :delete_repository
     attr_reader :git_cache_id
-
 
     def initialize(repository_data, options = {})
       @repository_data    = repository_data
@@ -16,13 +14,10 @@ module RedmineGitHosting::Plugins::Sweepers
       @git_cache_id       = repository_data[:git_cache_id]
     end
 
-
     private
 
-
-      def delete_repository?
-        delete_repository == true || delete_repository == 'true'
-      end
-
+    def delete_repository?
+      Additionals.true? delete_repository
+    end
   end
 end

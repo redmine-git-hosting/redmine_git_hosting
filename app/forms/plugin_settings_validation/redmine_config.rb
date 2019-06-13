@@ -19,14 +19,14 @@ module PluginSettingsValidation
       # hierarchical_organisation and unique_repo_identifier are now combined
       #
       before_validation do
-        if self.hierarchical_organisation == 'true'
-          self.unique_repo_identifier = 'false'
-        else
-          self.unique_repo_identifier = 'true'
-        end
+        self.unique_repo_identifier = if Additionals.true? hierarchical_organisation
+                                        'false'
+                                      else
+                                        'true'
+                                      end
 
         ## If we don't auto-create repository, we cannot create README file
-        self.init_repositories_on_create = 'false' if all_projects_use_git == 'false'
+        self.init_repositories_on_create = 'false' unless Additionals.true? all_projects_use_git
       end
 
       validates :redmine_has_rw_access_on_all_repos, presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
@@ -41,17 +41,15 @@ module PluginSettingsValidation
       validate :check_for_duplicated_repo
     end
 
-
     private
 
+    # Check duplication if we are switching from a mode to another
+    #
+    def check_for_duplicated_repo
+      return if !Additionals.true?(current_setting(:hierarchical_organisation)) && Additionals.true?(hierarchical_organisation)
+      return unless Repository::Xitolite.have_duplicated_identifier?
 
-      # Check duplication if we are switching from a mode to another
-      #
-      def check_for_duplicated_repo
-        if current_setting(:hierarchical_organisation) == 'true' && hierarchical_organisation == 'false'
-          errors.add(:base, 'Detected non-unique repository identifiers. Cannot switch to flat mode') if Repository::Xitolite.have_duplicated_identifier?
-        end
-      end
-
+      errors.add(:base, 'Detected non-unique repository identifiers. Cannot switch to flat mode')
+    end
   end
 end

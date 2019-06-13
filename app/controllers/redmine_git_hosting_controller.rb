@@ -8,7 +8,7 @@ class RedmineGitHostingController < ApplicationController
 
   layout(proc { |controller| controller.request.xhr? ? false : 'base' })
 
-  helper :redmine_bootstrap_kit
+  helper :bootstrap_kit
 
   def show
     respond_to do |format|

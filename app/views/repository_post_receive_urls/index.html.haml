@@ -22,8 +22,8 @@
           %tr
             %td= post_receive_url.url
             %td= post_receive_mode(post_receive_url).html_safe
-            %td= checked_image2 post_receive_url.active?
-            %td= checked_image2 post_receive_url.use_triggers?
+            %td= checked_image_with_exclamation post_receive_url.active?
+            %td= checked_image_with_exclamation post_receive_url.use_triggers?
             %td
               - post_receive_url.triggers.each do |trigger|
                 %span{ class: 'label label-info' }= trigger

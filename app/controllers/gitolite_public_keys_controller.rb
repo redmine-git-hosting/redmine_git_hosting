@@ -6,7 +6,7 @@ class GitolitePublicKeysController < ApplicationController
   before_action :find_gitolite_public_key, only: [:destroy]
 
   helper :gitolite_public_keys
-  helper :redmine_bootstrap_kit
+  helper :bootstrap_kit
 
   def index
     @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')

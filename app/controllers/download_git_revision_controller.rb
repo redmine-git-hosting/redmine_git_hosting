@@ -7,8 +7,7 @@ class DownloadGitRevisionController < ApplicationController
   before_action :set_download
   before_action :validate_download
 
-  helper :redmine_bootstrap_kit
-
+  helper :bootstrap_kit
 
   def index
     begin

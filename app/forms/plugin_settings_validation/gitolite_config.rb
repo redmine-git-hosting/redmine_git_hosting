@@ -33,7 +33,7 @@ module PluginSettingsValidation
 
       validates :gitolite_log_level,  presence: true, inclusion: { in: RedmineGitHosting::Logger::LOG_LEVELS }
       validates :git_config_username, presence: true
-      validates :git_config_email,    presence: true, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX }
+      validates :git_config_email,    presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
       validate  :gitolite_config_file_is_relative
       validate  :tmp_dir_is_absolute
@@ -48,18 +48,14 @@ module PluginSettingsValidation
       end
     end
 
-
     private
 
+    def gitolite_config_file_is_relative
+      errors.add(:gitolite_config_file, 'must be relative') if gitolite_config_file.starts_with?('/')
+    end
 
-      def gitolite_config_file_is_relative
-        errors.add(:gitolite_config_file, 'must be relative') if gitolite_config_file.starts_with?('/')
-      end
-
-
-      def tmp_dir_is_absolute
-        errors.add(:gitolite_temp_dir, 'must be absolute') unless gitolite_temp_dir.starts_with?('/')
-      end
-
+    def tmp_dir_is_absolute
+      errors.add(:gitolite_temp_dir, 'must be absolute') unless gitolite_temp_dir.starts_with?('/')
+    end
   end
 end

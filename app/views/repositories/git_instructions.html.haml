@@ -16,7 +16,7 @@
     %h2= l(:label_help_git_setup) + ' :'
     %pre
       :preserve
-          #{link_to l(:label_download_and_install_git), 'http://git-scm.com/download', target: '_blank'}
+          #{link_to l(:label_download_and_install_git), 'https://git-scm.com/download', target: '_blank'}
           git config --global user.name "#{User.current.name(:firstname_lastname)}"
           git config --global user.email #{User.current.mail ? User.current.mail : "mail@example.com"}
           #{link_to "Upload SSH Public Key", { controller: 'my', action: 'account' } if !User.current.anonymous? && User.current.gitolite_public_keys.length == 0}

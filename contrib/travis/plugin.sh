@@ -60,8 +60,8 @@ function install_rspec() {
 }
 
 function install_plugin_dependencies() {
-  git_clone 'redmine_bootstrap_kit' 'https://github.com/jbox-web/redmine_bootstrap_kit.git'
-  git_clone 'redmine_sidekiq'       'https://github.com/ogom/redmine_sidekiq.git'
+  git_clone 'additionals' 'https://github.com/AlphaNodes/additionals.git'
+  git_clone 'redmine_sidekiq' 'https://github.com/ogom/redmine_sidekiq.git'
   install_ssh_key
   install_gitolite
 }

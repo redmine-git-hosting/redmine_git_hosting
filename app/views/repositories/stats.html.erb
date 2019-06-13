@@ -2,9 +2,8 @@
 
 <% content_for :header_tags do %>
   <%= bootstrap_load_base %>
-  <%= high_charts_load_base %>
-  <%= high_charts_load_module(:drilldown) %>
-
+  <%= javascript_include_tag('highcharts/highcharts', plugin: 'redmine_git_hosting') %>
+  <%= javascript_include_tag('highcharts/modules/drilldown', plugin: 'redmine_git_hosting') %>
   <%= stylesheet_link_tag    'application',    plugin: 'redmine_git_hosting' %>
   <%= javascript_include_tag 'set_highcharts', plugin: 'redmine_git_hosting' %>
 <% end %>

@@ -1,7 +1,6 @@
 require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
 class Repository::Xitolite < Repository::Git
-
   # Include Gitolitable concern
   include Gitolitable
 
@@ -28,7 +27,6 @@ class Repository::Xitolite < Repository::Git
   acts_as_watchable
 
   class << self
-
     def scm_adapter_class
       Redmine::Scm::Adapters::XitoliteAdapter
     end
@@ -36,14 +34,11 @@ class Repository::Xitolite < Repository::Git
     def scm_name
       'Gitolite'
     end
-
   end
-
 
   def sti_name
     'Repository::Xitolite'
   end
-
 
   # Override the original method to accept options hash
   # which may contain *bypass_cache* flag.
@@ -52,32 +47,28 @@ class Repository::Xitolite < Repository::Git
     scm.diff(path, rev, rev_to, opts)
   end
 
-
   def rev_list(revision, args = [])
     scm.rev_list(revision, args)
   end
-
 
   def rev_parse(revision)
     scm.rev_parse(revision)
   end
 
-
   def archive(revision, format = 'tar')
     scm.archive(revision, format)
   end
-
 
   def mirror_push(url, branch, args = [])
     scm.mirror_push(url, branch, args)
   end
 
-
   private
 
+  def valid_repository_options
+    return unless Additionals.true? create_readme
+    return unless Additionals.true? enable_git_annex
 
-    def valid_repository_options
-      errors.add(:base, :invalid_options) if create_readme == 'true' && enable_git_annex == 'true'
-    end
-
+    errors.add(:base, :invalid_options)
+  end
 end

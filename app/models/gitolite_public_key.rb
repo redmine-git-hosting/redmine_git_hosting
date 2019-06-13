@@ -77,7 +77,7 @@ class GitolitePublicKey < ActiveRecord::Base
   # by their title in subfolders.
   #
   # This is due to the new gitolite multi-keys organization
-  # using folders. See http://gitolite.com/gitolite/users.html
+  # using folders. See https://gitolite.com/gitolite/users.html
   def gitolite_path
     File.join('keydir', RedmineGitHosting::Config.gitolite_key_subdir, user.gitolite_identifier, location, owner) + '.pub'
   end

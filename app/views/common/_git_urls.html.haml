@@ -1,6 +1,6 @@
 - content_for :header_tags do
   = bootstrap_load_module(:tooltip)
-  = zero_clipboard_load_base
+  = additionals_library_load(:clipboardjs)
 
   = stylesheet_link_tag    'git_urls', plugin: 'redmine_git_hosting'
   = javascript_include_tag 'git_urls', plugin: 'redmine_git_hosting'

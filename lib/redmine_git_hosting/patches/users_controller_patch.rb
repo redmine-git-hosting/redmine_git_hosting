@@ -9,7 +9,7 @@ module RedmineGitHosting
       def self.prepended(base)
         base.class_eval do
           helper :gitolite_public_keys
-          helper :redmine_bootstrap_kit
+          helper :bootstrap_kit
         end
       end
 

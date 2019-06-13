@@ -1,6 +1,5 @@
 module RedmineGitHosting
   module Error
-
     # Used to register errors when pulling and pushing the conf file
     class GitoliteException         < StandardError; end
     class GitoliteWrapperException  < GitoliteException; end
@@ -21,6 +20,5 @@ module RedmineGitHosting
         @output  = output
       end
     end
-
   end
 end

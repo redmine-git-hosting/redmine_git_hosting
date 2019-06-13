@@ -5,7 +5,7 @@
 
   %h3
     = l(:label_git_config_keys)
-    = link_to "(#{l(:label_gitolite_documentation)})", 'http://gitolite.com/gitolite/git-config.html', target: '_blank'
+    = link_to "(#{l(:label_gitolite_documentation)})", 'https://gitolite.com/gitolite/git-config.html', target: '_blank'
 
   = render 'config_keys', git_config_keys: @repository_git_config_keys
 
@@ -15,6 +15,6 @@
 
   %h3
     = l(:label_git_option_keys)
-    = link_to "(#{l(:label_gitolite_documentation)})", 'http://gitolite.com/gitolite/options.html', target: '_blank'
+    = link_to "(#{l(:label_gitolite_documentation)})", 'https://gitolite.com/gitolite/options.html', target: '_blank'
 
   = render 'config_keys', git_config_keys: @repository_git_option_keys

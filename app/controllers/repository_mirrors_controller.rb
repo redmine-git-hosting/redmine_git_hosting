@@ -4,6 +4,8 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   accept_api_auth :index, :show
 
+  helper :additionals_clipboardjs
+
   def index
     @repository_mirrors = @repository.mirrors.all
     render_with_api

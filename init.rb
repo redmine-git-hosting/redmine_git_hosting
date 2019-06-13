@@ -10,6 +10,12 @@ Redmine::Plugin.register :redmine_git_hosting do
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
   settings(partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings)
+
+  begin
+    requires_redmine_plugin :additionals, version_or_higher: '2.0.21'
+  rescue Redmine::PluginNotFound
+    raise 'Please install additionals plugin (https://github.com/alphanodes/additionals)'
+  end
 end
 
 # This *must stay after* Redmine::Plugin.register statement

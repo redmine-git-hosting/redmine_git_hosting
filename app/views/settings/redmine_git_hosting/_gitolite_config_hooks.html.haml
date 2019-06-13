@@ -1,10 +1,10 @@
 / Gitolite Hooks Config
-- gitolite_overwrite_existing_hooks = RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true)
-- gitolite_hooks_are_asynchronous   = RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true)
-- gitolite_hooks_debug              = RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true)
 - gitolite_hooks_url                = RedmineGitHosting::Config.get_setting(:gitolite_hooks_url)
 
-.contextual= link_to label_with_icon(l(:label_install_gitolite_hooks), 'fa-rocket', class: 'fa-align'), install_gitolite_hooks_path('redmine_git_hosting'), remote: true
+.contextual
+  = link_to font_awesome_icon('fas_rocket', post_text: l(:label_install_gitolite_hooks), class: 'fa-lg'),
+            install_gitolite_hooks_path('redmine_git_hosting'),
+            remote: true
 
 %h3= l(:label_gitolite_hooks_config)
 
@@ -12,22 +12,19 @@
   .row
     .col-md-6{ style: 'vertical-align: top;' }
       %p
-        %label= l(:label_gitolite_overwrite_existing_hooks)
-        = bootstrap_switch_tag do
-          = hidden_field_tag 'settings[gitolite_overwrite_existing_hooks]', 'false'
-          = check_box_tag 'settings[gitolite_overwrite_existing_hooks]', gitolite_overwrite_existing_hooks, gitolite_overwrite_existing_hooks
+        = additionals_settings_checkbox :gitolite_overwrite_existing_hooks,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true),
+                                        value_is_bool: true
 
       %p
-        %label= l(:label_gitolite_hooks_are_asynchronous)
-        = bootstrap_switch_tag do
-          = hidden_field_tag 'settings[gitolite_hooks_are_asynchronous]', 'false'
-          = check_box_tag 'settings[gitolite_hooks_are_asynchronous]', gitolite_hooks_are_asynchronous, gitolite_hooks_are_asynchronous
+        = additionals_settings_checkbox :gitolite_hooks_are_asynchronous,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true),
+                                        value_is_bool: true
 
       %p
-        %label= l(:label_gitolite_hooks_debug)
-        = bootstrap_switch_tag do
-          = hidden_field_tag 'settings[gitolite_hooks_debug]', 'false'
-          = check_box_tag 'settings[gitolite_hooks_debug]', gitolite_hooks_debug, gitolite_hooks_debug
+        = additionals_settings_checkbox :gitolite_hooks_debug,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true),
+                                        value_is_bool: true
 
       %p
         %label= l(:label_gitolite_hooks_url)

@@ -3,7 +3,6 @@ require_dependency 'project'
 module RedmineGitHosting
   module Patches
     module ProjectPatch
-
       def self.prepended(base)
         base.class_eval do
           # Add custom scope
