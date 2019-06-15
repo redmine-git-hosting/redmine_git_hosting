@@ -1,0 +1,10 @@
+table.table.table-hover
+  tr
+    td = l(:label_gitolite_hooks_installed)
+    td = render_gitolite_params_status(@gitolite_checks[:hook_files])
+  tr
+    td = l(:label_gitolite_hooks_params_installed)
+    td = render_gitolite_params_status(@gitolite_checks[:global_params])
+  tr
+    td = l(:label_gitolite_mailer_params_installed)
+    td = render_gitolite_params_status(@gitolite_checks[:mailer_params])

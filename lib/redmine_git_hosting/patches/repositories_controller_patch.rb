@@ -62,19 +62,18 @@ module RedmineGitHosting
       end
 
       def call_use_cases
-        if @repository.is_a?(Repository::Xitolite)
-          if !@repository.errors.any?
-            case self.action_name
-            when 'create'
-              # Call UseCase object that will complete Repository creation :
-              # it will create GitExtra association and then the repository in Gitolite.
-              Repositories::Create.call(@repository, creation_options)
-            when 'update'
-              gitolite_accessor.update_repository(@repository)
-            when 'destroy'
-              gitolite_accessor.destroy_repository(@repository)
-            end
-          end
+        return unless @repository.is_a?(Repository::Xitolite)
+        return if @repository.errors.any?
+
+        case action_name
+        when 'create'
+          # Call UseCase object that will complete Repository creation :
+          # it will create GitExtra association and then the repository in Gitolite.
+          Repositories::Create.call(@repository, creation_options)
+        when 'update'
+          gitolite_accessor.update_repository(@repository)
+        when 'destroy'
+          gitolite_accessor.destroy_repository(@repository)
         end
       end
 
@@ -127,12 +126,12 @@ module RedmineGitHosting
           (show_error_not_found; return) unless @diff
           filename = "changeset_r#{@rev}"
           filename << "_r#{@rev_to}" if @rev_to
-          send_data @diff.join, :filename => "#{filename}.diff",
-                                :type => 'text/x-patch',
-                                :disposition => 'attachment'
+          send_data @diff.join, filename: "#{filename}.diff",
+                                type: 'text/x-patch',
+                                disposition: 'attachment'
         else
           @diff_type = params[:type] || User.current.pref[:diff_type] || 'inline'
-          @diff_type = 'inline' unless %w(inline sbs).include?(@diff_type)
+          @diff_type = 'inline' unless %w[inline sbs].include?(@diff_type)
 
           # Save diff type as user preference
           if User.current.logged? && @diff_type != User.current.pref[:diff_type]

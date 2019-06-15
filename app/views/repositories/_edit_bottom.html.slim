@@ -1,0 +1,42 @@
+- if @repository.is_a?(Repository::Xitolite) && !@repository.git_annex_enabled?
+  - content_for :header_tags do
+    javascript:
+      $(document).on('click', 'a.modal-box', function(e){
+        e.preventDefault();
+        openModalBox(this, 'modal-box');
+      });
+
+      $(document).on('click', 'a.modal-box-close-only', function(e){
+        e.preventDefault();
+        openModalBox(this, 'modal-box-close-only');
+      });
+
+  #repository-tabs
+    ul
+      - if User.current.git_allowed_to?(:view_repository_deployment_credentials, @repository)
+        li#tab-repository_deployment_credentials
+          = link_to font_awesome_icon('fas_lock', post_text: l(:label_deployment_credentials)),
+            repository_deployment_credentials_path(@repository)
+
+      - if User.current.git_allowed_to?(:view_repository_mirrors, @repository)
+        li#tab-repository_mirrors
+          = link_to font_awesome_icon('fas_cloud-upload-alt', post_text: l(:label_repository_mirrors)),
+            repository_mirrors_path(@repository)
+
+      - if User.current.git_allowed_to?(:view_repository_post_receive_urls, @repository)
+        li#tab-repository_post_receive_urls
+          = link_to font_awesome_icon('fas_external-link-alt', post_text: l(:label_post_receive_urls)),
+            repository_post_receive_urls_path(@repository)
+
+      - if User.current.git_allowed_to?(:view_repository_git_config_keys, @repository)
+        li#tab-repository_git_config_keys
+          = link_to font_awesome_icon('fas_th-list', post_text: l(:label_git_config_keys)),
+            repository_git_config_keys_path(@repository)
+
+      - if User.current.git_allowed_to?(:view_repository_protected_branches, @repository)
+        li#tab-repository_protected_branches
+          = link_to font_awesome_icon('fas_shield-alt', post_text: l(:label_protected_branches)),
+            repository_protected_branches_path(@repository)
+
+  javascript:
+    $(document).ready(function() { setRepositoryActiveTab('#{@tab}'); });

@@ -1,0 +1,11 @@
+p
+  = label_tag 'settings[rescue][resync_all_projects]', l(:label_resync_all_projects)
+  = check_box_tag 'settings[rescue][resync_all_projects]', 'true', false
+
+p
+  = label_tag 'settings[rescue][resync_all_ssh_keys]', l(:label_resync_all_ssh_keys)
+  = check_box_tag 'settings[rescue][resync_all_ssh_keys]', 'true', false
+
+p
+  = label_tag 'settings[rescue][flush_gitolite_cache]', l(:label_flush_cache)
+  = check_box_tag 'settings[rescue][flush_gitolite_cache]', 'true', false

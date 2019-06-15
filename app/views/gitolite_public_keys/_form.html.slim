@@ -1,0 +1,29 @@
+#validation_messages
+  = error_messages_for 'gitolite_public_key'
+
+= labelled_form_for :gitolite_public_key, GitolitePublicKey.new,
+                    url: { controller: 'gitolite_public_keys', action: 'create', user_id: params[:id], tab: params[:id]&&'keys' },
+                    html: { method: :post } do |f|
+  p
+    = f.text_field :title, label: :label_identifier_can_be_arbitrary, required: true, style: 'width: 97%;'
+
+  - if can_create_deployment_keys_for_some_project(@user)
+    p
+      = f.select :key_type,
+                  options_for_select([[l(:label_user_key), 0 ],[l(:label_deploy_key), 1 ]],),
+                  { required: true, label: :label_key_type },
+                  { class: 'select_key_type' }
+    #key_type_options style="display: none;"
+      p
+        = f.check_box :delete_when_unused, required: true, label: :label_deployment_credential_delete_when_unused
+  p
+    = f.text_area :key, label: :label_public_key, required: true,
+                  style: "width: 97%; height: 200px; overflow: auto;",
+                  cols: nil,
+                  rows: nil
+  em
+    = l(:label_cut_and_paste)
+  br
+  br
+  = submit_tag l(:button_create), name: 'create_button'
+  = submit_tag l(:button_cancel), name: 'cancel_button'

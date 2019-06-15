@@ -1,0 +1,30 @@
+- content_for :header_tags do
+  = javascript_include_tag 'repository_navigation'
+
+= watcher_link(@repository, User.current)
+'  |
+- if @repository.supports_all_revisions?
+  = link_to l(:label_statistics),
+            { action: 'stats', id: @project, repository_id: @repository.identifier_param },
+            class: 'icon icon-stats'
+= form_tag({ action: controller.action_name,
+             id: @project,
+             repository_id: @repository.identifier_param,
+             path: to_path_param(@path),
+             rev: nil },
+             { method: :get, id: 'revision_selector'}) do
+  - if !@repository.branches.nil? && @repository.branches.length > 0
+    '  |
+    = l(:label_branch)
+    ' :
+    = select_tag :branch, options_for_select([''] + @repository.branches, @rev), id: 'branch'
+  - if !@repository.tags.nil? && @repository.tags.length > 0
+    |  |
+    = l(:label_tag)
+    ' :
+    = select_tag :tag, options_for_select([''] + @repository.tags, @rev), id: 'tag'
+  - if @repository.supports_all_revisions?
+    '  |
+    = l(:label_revision)
+    ' :
+    = text_field_tag 'rev', @rev, size: 8

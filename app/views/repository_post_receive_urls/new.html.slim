@@ -1,0 +1,5 @@
+= labelled_form_for :repository_post_receive_url, @post_receive_url,
+                    url: repository_post_receive_urls_path(@repository),
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }

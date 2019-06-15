@@ -1,0 +1,75 @@
+/ Gitolite Display Access
+- gitolite_user = RedmineGitHosting::Config.get_setting(:gitolite_user)
+- ssh_server_domain = RedmineGitHosting::Config.get_setting(:ssh_server_domain)
+- gitolite_global_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir)
+- gitolite_redmine_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir)
+- http_server_subdir = RedmineGitHosting::Config.get_setting(:http_server_subdir)
+- http_server_domain = RedmineGitHosting::Config.http_root_url
+- https_server_domain = RedmineGitHosting::Config.https_root_url
+- hierarchical_organisation = RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true)
+
+.git_hosting_access_box
+
+  h3 = l(:label_repos_current_access_patterns)
+
+  span == l(:display_access_setup1)
+  br
+  br
+  span == l(:display_access_setup2)
+  br
+  br
+  span == l(:display_access_setup3)
+
+  p
+    label = l(:label_default_repository)
+    br
+
+    label = l(:label_storage_directory) + ' :'
+    == "~#{gitolite_user}/#{gitolite_global_storage_dir}#{gitolite_redmine_storage_dir}<em>#{hierarchical_organisation ? 'project1/project2/' : ''}project3.git</em>"
+
+    br
+
+    label = l(:label_ssh_access) + ' :'
+    - gitSHP = ssh_server_domain.match(/:\d+$/)
+    == "#{gitSHP ? 'ssh://' : ''}#{gitolite_user}@#{ssh_server_domain}#{gitSHP ? '/' : ':'}#{gitolite_redmine_storage_dir}<em>#{hierarchical_organisation ? 'project1/project2/' : ''}project3.git</em>"
+
+    br
+
+    label = l(:label_http_access) + ' :'
+    == "http://<em>redmine-user</em>@#{http_server_domain}/#{http_server_subdir}<em>#{hierarchical_organisation ? 'project1/project2/' : ''}project3.git</em>"
+
+    br
+
+    label = l(:label_https_access) + ' :'
+    == "https://<em>redmine-user</em>@#{https_server_domain}/#{http_server_subdir}<em>#{hierarchical_organisation ? 'project1/project2/' : ''}project3.git</em>"
+
+  p
+    label = l(:label_example_repository)
+    br
+
+    label = l(:label_storage_directory) + ' :'
+    == "~#{gitolite_user}/#{gitolite_global_storage_dir}#{gitolite_redmine_storage_dir}<em>#{hierarchical_organisation ? 'project1/project2/project3/' : ''}example.git</em>"
+
+    br
+
+    label = l(:label_ssh_access) + ' :'
+    - gitSHP = ssh_server_domain.match(/:\d+$/)
+    == "#{gitSHP ? 'ssh://' : ''}#{gitolite_user}@#{ssh_server_domain}#{gitSHP ? '/' : ':'}#{gitolite_redmine_storage_dir}<em>#{hierarchical_organisation ? 'project1/project2/project3/' : ''}example.git</em>"
+
+    br
+
+    label = l(:label_http_access) + ' :'
+    == "http://<em>redmine-user</em>@#{http_server_domain}/#{http_server_subdir}<em>#{hierarchical_organisation ? 'project1/project2/project3/' : ''}example.git</em>"
+
+    br
+
+    label = l(:label_https_access) + ' :'
+    == "https://<em>redmine-user</em>@#{https_server_domain}/#{http_server_subdir}<em>#{hierarchical_organisation ? 'project1/project2/project3/' : ''}example.git</em>"
+
+    br
+    br
+
+    label = l(:label_etcetera) + '...'
+
+  == l(:display_access_emphasis)
+  == hierarchical_organisation ? l(:display_access_hierarchical) : l(:display_access_flat)

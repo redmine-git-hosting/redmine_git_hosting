@@ -1,0 +1,9 @@
+.flash-messages = error_messages_for 'git_config_key'
+
+.box
+  p = f.select :type,
+               options_for_select(git_config_key_options, @git_config_key.type),
+              { required: @git_config_key.new_record?, prompt: 'Select a key type' },
+              { disabled: !@git_config_key.new_record? }
+  p = f.text_field :key,   required: true, size: 65, label: :label_key
+  p = f.text_field :value, required: true, size: 65

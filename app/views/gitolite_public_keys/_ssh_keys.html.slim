@@ -1,0 +1,21 @@
+table.list
+  - if ssh_keys.empty?
+    tr
+      td
+        label = l(:label_no_public_keys)
+  - else
+    - ssh_keys.each do |key|
+      tr class="#{'highlight' if @gitolite_public_key == key}"
+        td style="text-align: left;"
+          = h(key)
+        td style="text-align: left;"
+          i.fas.fa-check style="color: green; margin-left: 5px; margin-right: 5px;"
+          = key.fingerprint
+        - if params[:id]
+          td style="text-align: left;"
+            = key.gitolite_path
+        td.buttons style="width: 10%;"
+          = link_to l(:button_delete), public_key_path(key, user_id: params[:id]),
+                                       method: 'delete',
+                                       class: 'icon icon-del',
+                                       data: { confirm: l(:text_gitolite_key_destroy_confirmation, title: keylabel(key)) }

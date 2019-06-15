@@ -1,0 +1,13 @@
+ul.repository.git
+  - @repositories.sort.each do |repo|
+    li.repository.git
+      = link_to_repository(repo, @repository)
+      - if User.current.allowed_to?(:manage_repository, @project)
+        '
+        = link_to "(#{l(:label_settings)})", edit_repository_path(repo)
+
+- if @repository.try(:watchers) && (User.current.allowed_to?(:add_repository_xitolite_watchers, @project) || (@repository.watchers.present? && User.current.allowed_to?(:view_repository_xitolite_watchers, @project)))
+  #watchers= render 'watchers/watchers', watched: @repository
+
+javascript:
+  $(document).ready(function() { $('#sidebar p').remove(); });

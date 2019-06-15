@@ -1,0 +1,15 @@
+- if @repository.is_a?(Repository::Xitolite)
+  - content_for :header_tags do
+    = bootstrap_load_base
+    = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+    = stylesheet_link_tag 'markdown', plugin: 'redmine_git_hosting'
+
+  .git_hosting_urls.box
+    .container
+      .row
+        .col-md-8 style='vertical-align: middle;'
+          - if RedmineGitHosting::Config.show_repositories_url?
+            = render 'common/git_urls', repository: @repository
+        .col-md-4 style='text-align: right; vertical-align: middle;'
+          - if RedmineGitHosting::Config.download_revision_enabled?
+            = render 'repositories/download_revision', repository: @repository

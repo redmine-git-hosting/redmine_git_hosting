@@ -1,0 +1,56 @@
+/ Gitolite Access Config
+- ssh_server_domain = RedmineGitHosting::Config.get_setting(:ssh_server_domain)
+- http_server_domain = RedmineGitHosting::Config.get_setting(:http_server_domain)
+- https_server_domain = RedmineGitHosting::Config.get_setting(:https_server_domain)
+- http_server_subdir = RedmineGitHosting::Config.get_setting(:http_server_subdir)
+
+- gitolite_http_by_default = RedmineGitHosting::Config.get_setting(:gitolite_http_by_default)
+
+h3 = l(:label_gitolite_access_config)
+
+p
+  label = l(:label_ssh_server_domain)
+  = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60
+  br
+  em.info
+    = l(:label_default_domain_name) + ' :'
+    = Setting.host_name.split('/').first
+
+p
+  label = l(:label_http_server_domain)
+  = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60
+  br
+  em.info
+    = l(:label_default_domain_name) + ' :'
+    = Setting.host_name.split('/').first
+
+p
+  label = l(:label_https_server_domain)
+  = text_field_tag 'settings[https_server_domain]', https_server_domain, size: 60
+  br
+  em.info
+    = l(:label_https_server_domain_desc)
+
+p
+  label == l(:label_http_server_subdir)
+  = text_field_tag 'settings[http_server_subdir]', http_server_subdir, size: 60
+
+p
+  label = l(:label_gitolite_http_by_default)
+  = select_tag 'settings[gitolite_http_by_default]', options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, gitolite_http_by_default)
+
+p
+  = additionals_settings_checkbox :show_repositories_url,
+                                  value: RedmineGitHosting::Config.get_setting(:show_repositories_url, true),
+                                  value_is_bool: true
+
+p
+  = additionals_settings_checkbox :gitolite_daemon_by_default,
+                                  value: RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
+                                  value_is_bool: true
+
+p
+  = additionals_settings_checkbox :download_revision_enabled,
+                                  value: RedmineGitHosting::Config.get_setting(:download_revision_enabled, true),
+                                  value_is_bool: true,
+                                  label: l(:label_gitolite_download_revision_enabled)

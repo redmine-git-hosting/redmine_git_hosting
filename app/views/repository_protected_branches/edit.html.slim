@@ -1,0 +1,5 @@
+= labelled_form_for :repository_protected_branche, @protected_branch,
+                    url: repository_protected_branch_path(@repository, @protected_branch),
+                    html: { method: :put, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }

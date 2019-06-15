@@ -1,0 +1,29 @@
+div
+  - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
+    .contextual
+      = link_to l(:label_git_config_key_add),
+                new_repository_git_config_key_path(@repository, type: 'git_config'),
+                class: 'icon icon-add modal-box'
+
+  h3
+    = l(:label_git_config_keys)
+    = link_to "(#{l(:label_gitolite_documentation)})",
+              'https://gitolite.com/gitolite/git-config.html',
+              target: '_blank'
+
+  = render 'config_keys', git_config_keys: @repository_git_config_keys
+
+
+  - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
+    .contextual
+      = link_to l(:label_git_option_key_add),
+                new_repository_git_config_key_path(@repository, type: 'git_option'),
+                class: 'icon icon-add modal-box'
+
+  h3
+    = l(:label_git_option_keys)
+    = link_to "(#{l(:label_gitolite_documentation)})",
+              'https://gitolite.com/gitolite/options.html',
+              target: '_blank'
+
+  = render 'config_keys', git_config_keys: @repository_git_option_keys

@@ -1,0 +1,28 @@
+/ Gitolite SSH Config
+- gitolite_user = RedmineGitHosting::Config.get_setting(:gitolite_user)
+- gitolite_server_host = RedmineGitHosting::Config.get_setting(:gitolite_server_host)
+- gitolite_server_port = RedmineGitHosting::Config.get_setting(:gitolite_server_port)
+- gitolite_ssh_private_key = RedmineGitHosting::Config.get_setting(:gitolite_ssh_private_key)
+- gitolite_ssh_public_key = RedmineGitHosting::Config.get_setting(:gitolite_ssh_public_key)
+
+h3 = l(:label_gitolite_ssh_config)
+
+p
+  label = l(:label_gitolite_user)
+  = text_field_tag 'settings[gitolite_user]', gitolite_user, size: 20
+
+p
+  label = l(:label_gitolite_ssh_private_key)
+  = text_field_tag 'settings[gitolite_ssh_private_key]', gitolite_ssh_private_key, size: 110
+
+p
+  label = l(:label_gitolite_ssh_public_key)
+  = text_field_tag 'settings[gitolite_ssh_public_key]', gitolite_ssh_public_key, size: 110
+
+p
+  label = l(:label_gitolite_server_host)
+  = text_field_tag 'settings[gitolite_server_host]', gitolite_server_host, size: 20
+
+p
+  label = l(:label_gitolite_server_port)
+  = text_field_tag 'settings[gitolite_server_port]', gitolite_server_port, size: 5

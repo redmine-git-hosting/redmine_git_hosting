@@ -1,0 +1,30 @@
+.contextual
+  = render_repository_quick_jump(@repository)
+
+h2
+  = link_to l(:label_settings), settings_project_path(@project, tab: 'repositories')
+  '
+  = Additionals::LIST_SEPARATOR
+  = l(:label_repository)
+  '
+  = Additionals::LIST_SEPARATOR
+  = @repository.redmine_name
+
+.container
+  .row
+    .col-md-12
+      = call_hook(:view_repository_edit_top, repository: @repository, project: @project)
+
+.container
+  .row
+    .col-md-6
+      = labelled_form_for :repository, @repository, url: repository_path(@repository), html: { method: :put, id: 'repository-form' } do |f|
+        = render partial: 'form', locals: { f: f }
+
+    .col-md-6#xitolite-options style='vertical-align: top;'
+      = render 'xitolite_options', repository: @repository
+
+.container
+  .row
+    .col-md-12
+      = call_hook(:view_repository_edit_bottom, repository: @repository, project: @project)

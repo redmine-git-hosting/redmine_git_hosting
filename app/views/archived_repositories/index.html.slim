@@ -1,0 +1,17 @@
+h2 = l(:label_archived_repositories)
+
+- if @archived_projects.any?
+  ul
+    - @archived_projects.each do |project|
+      - if project.repositories.any?
+        li
+          = project.name
+          ul
+            - project.repositories.each do |repository|
+              li
+                = link_to h(repository.url), { controller: 'archived_repositories',
+                                               action: 'show',
+                                               id: project,
+                                               repository_id: repository.identifier_param }
+- else
+  p.nodata = l(:label_no_data)

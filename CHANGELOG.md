@@ -5,6 +5,7 @@
 * compatible with Redmine 4 (drop Redmine 3.x support)
 * drop redmine_bootstrap_kit required plugin
 * requires additionals plugin for latest fontawesome, slim and deface support -> and better maintenance
+* switch from haml to slim templates (because this is already used in additionals plugin)
 * libraries high_charts and bootstrap are moved to this plugin (TODO: high_charts should be migrationed to charts.js, which comes with Redmine 4. Bootstrap should be drop to vanila redmine, to get better theme support)
 
 ### 1.2.3 - 2017-07-17

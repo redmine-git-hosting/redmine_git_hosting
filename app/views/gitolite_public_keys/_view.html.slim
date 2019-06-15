@@ -1,0 +1,37 @@
+h3 = l(:label_my_public_keys)
+
+fieldset.public_key_view
+  legend = l(:label_current_user_keys)
+  = render partial: 'gitolite_public_keys/ssh_keys', locals: { ssh_keys: @gitolite_user_keys }
+
+br
+
+fieldset.public_key_view
+  legend = l(:label_current_deploy_keys)
+  = render partial: 'gitolite_public_keys/ssh_keys', locals: { ssh_keys: @gitolite_deploy_keys }
+
+br
+
+fieldset.public_key_view
+  legend = l(:label_public_key_new)
+  = render partial: 'gitolite_public_keys/form', locals: { user: @user }
+
+- content_for :header_tags do
+  = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+
+javascript:
+  function key_type_change(element) {
+    var idx = element.selectedIndex;
+    if (idx == 0) {
+      $('#key_type_options').hide();
+      $('#gitolite_public_key_delete_when_unused').prop("checked", true);
+    } else {
+      $('#key_type_options').show();
+    }
+  }
+
+  $(document).ready(function() {
+    $('#gitolite_public_key_key_type').on('change', function() {
+      key_type_change(this)
+    });
+  });

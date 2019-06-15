@@ -1,0 +1,9 @@
+= labelled_form_for :repository_deployment_credential, @credential,
+                    url: repository_deployment_credential_path(@repository, @credential),
+                    html: { method: :put, class: 'tabular', remote: true } do |f|
+
+  .flash-messages = error_messages_for 'credential'
+
+  .box
+    p = f.select :perm, options_for_select(RepositoryDeploymentCredential::VALID_PERMS, @credential.perm), required: true
+    p = f.check_box :active

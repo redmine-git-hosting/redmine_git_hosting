@@ -1,0 +1,12 @@
+- content_for :header_tags do
+  = bootstrap_load_base
+  = bootstrap_load_module(:alerts)
+  = bootstrap_load_module(:label)
+  = bootstrap_load_module(:modals)
+  = bootstrap_load_module(:tables)
+  = bootstrap_load_module(:sortable)
+
+  = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'application', plugin: 'redmine_git_hosting'
+
+#modal-box data-label-save="#{l(:button_save)}" data-label-cancel="#{l(:button_cancel)}" data-label-ok="#{l(:button_ok)}"

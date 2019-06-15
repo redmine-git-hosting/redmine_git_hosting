@@ -1,0 +1,99 @@
+h3 = l(:label_permissions_header)
+
+table.table.table-hover
+  tr
+    td = l(:label_temp_dir_writeable)
+    td = render_temp_dir_writeable(RedmineGitHosting::Config.temp_dir_writeable?(reset: true), RedmineGitHosting::Config.gitolite_admin_dir)
+
+  tr
+    td = l(:label_redmine_user)
+    td
+      span.label.label-success = RedmineGitHosting::Config.redmine_user
+
+  tr
+    td = l(:label_gitolite_user)
+    td
+      span.label.label-success = RedmineGitHosting::Config.gitolite_user
+
+  tr
+    td = l(:label_sudo_redmine_to_gitolite_user)
+    td = image_tag (RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
+
+  tr
+    td = l(:label_gitolite_bin_dir)
+    td
+      - if RedmineGitHosting::Config.gitolite_bin_dir
+        span.label.label-success RedmineGitHosting::Config.gitolite_bin_dir
+      - else
+        = image_tag('exclamation.png')
+
+  tr
+    td= l(:label_gitolite_lib_dir)
+    td
+      - if RedmineGitHosting::Config.gitolite_lib_dir
+        span.label.label-success RedmineGitHosting::Config.gitolite_lib_dir
+      - else
+        = image_tag('exclamation.png')
+
+  tr
+    td= l(:label_gitolite_local_code_dir)
+    td
+      - if RedmineGitHosting::Config.gitolite_local_code_dir
+        span.label.label-success = RedmineGitHosting::Config.gitolite_local_code_dir
+      - else
+        = image_tag('exclamation.png')
+
+  - gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
+
+  tr
+    td = l(:label_gitolite_hooks_installed)
+    td = render_gitolite_params_status(gitolite_checks[:hook_files])
+
+  tr
+    td = l(:label_gitolite_hooks_params_installed)
+    td = render_gitolite_params_status(gitolite_checks[:global_params])
+
+  tr
+    td = l(:label_gitolite_mailer_params_installed)
+    td = render_gitolite_params_status(gitolite_checks[:mailer_params])
+
+  tr
+    td = l(:label_mirroring_keys_installed)
+    td = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
+
+  tr
+    td= l(:label_git_version)
+    td
+      span.label.label-success = Repository::Xitolite.scm_version_string
+
+  tr
+    td = l(:label_gitolite_version)
+    td = render_gitolite_version(RedmineGitHosting::Config.gitolite_version)
+
+  tr
+    td = l(:label_gitolite_repository_count)
+    td
+      span.label.label-success = RedmineGitHosting::Config.gitolite_repository_count
+
+  tr
+    td= l(:label_gitolite_rugged_features)
+    td
+      = render_rugged_mandatory_features
+      = render_rugged_optional_features
+
+  tr
+    td = l(:label_gitolite_libgit2_version)
+    td
+      span.label.label-success = RedmineGitHosting::Config.libgit2_version
+
+p
+  label = l(:label_gitolite_banner)
+
+.box
+  pre == RedmineGitHosting::Config.gitolite_banner
+
+p
+  label = l(:label_path_directories)
+
+.box
+  pre == (ENV['PATH']).gsub(/:/, "<br/>")
