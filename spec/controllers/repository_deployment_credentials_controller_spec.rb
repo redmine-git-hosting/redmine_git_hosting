@@ -21,7 +21,7 @@ describe RepositoryDeploymentCredentialsController do
                       gitolite_public_key_id: FactoryBot.create(:gitolite_public_key,
                                                                 user_id: @member_user.id,
                                                                 key_type: 1,
-                                                                key: SSHKey.generate.public_key).id)
+                                                                key: SSHKey.generate.ssh_public_key).id)
   end
 
   def success_url
@@ -44,7 +44,7 @@ describe RepositoryDeploymentCredentialsController do
     public_key = FactoryBot.create(:gitolite_public_key,
                                    user_id: @member_user.id,
                                    key_type: 1,
-                                   key: SSHKey.generate.public_key)
+                                   key: SSHKey.generate.ssh_public_key)
     { repository_deployment_credential: { gitolite_public_key_id: public_key.id, perm: 'RW+' } }
   end
 

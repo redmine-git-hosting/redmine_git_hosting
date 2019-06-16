@@ -9,13 +9,13 @@ describe UsersController do
       let(:user_key) do
         create_ssh_key(user_id: user.id,
                        title: 'user_key',
-                       key: SSHKey.generate(comment: 'faker_user_key@john_doe').public_key,
+                       key: SSHKey.generate(comment: 'faker_user_key@john_doe').ssh_public_key,
                        key_type: 0)
       end
       let(:deploy_key) do
         create_ssh_key(user_id: user.id,
                        title: 'deploy_key',
-                       key: SSHKey.generate(comment: 'faker_deploy_key@john_doe').public_key,
+                       key: SSHKey.generate(comment: 'faker_deploy_key@john_doe').ssh_public_key,
                        key_type: 1)
       end
 
