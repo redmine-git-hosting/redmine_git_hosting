@@ -1,4 +1,4 @@
-en:
+de:
   activemodel:
     errors:
       models:
@@ -14,12 +14,12 @@ en:
         repository_deployment_credential:
           attributes:
             base:
-              invalid_key: Public Key Must Be a Deployment Key
+              invalid_key: Öffentlicher Schlüssel muss ein Deployment Schlüssel sein
               invalid_user: Credential owner cannot be different than owner of Key
         project:
           attributes:
             identifier:
-              invalid: invalid identifier
+              invalid: ungültige Kennung
               taken: matches existing repository identifier
         gitolite_public_key:
           attributes:
@@ -69,7 +69,7 @@ en:
   error_xitolite_repositories_disabled: "Gitolite repositories are disabled, cannot create repository!"
   field_key: this key
   field_mode: Mode
-  field_perm: Access Permissions
+  field_perm: Zugriffsberechtigung
   field_split_payloads: Split the global payload in many payloads
   field_use_triggers: Use triggers
   label_active_for: Active for
@@ -97,14 +97,14 @@ en:
   label_default_repository: Default repository
   label_delete_from_recyle_bin: Delete from recycle bin
   label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
-  label_delete_in_progress: Deleting...
+  label_delete_in_progress: Lösche...
   label_delete_warning: Warning! Deletion is forever!
-  label_deploy_key: Deploy key
+  label_deploy_key: Deployment Schlüssel
   label_deployment_credential_active: Active?
   label_deployment_credential_add: Add Deployment Credential
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_create: Create New Deployment Credential
-  label_deployment_credential_delete_when_unused: Delete key when unused?
+  label_deployment_credential_delete_when_unused: Schlüssel entfernen, wenn unbenutzt?
   label_deployment_credential_delete: Delete Deployment Credential
   label_deployment_credential_edit: Edit Deployment Credential
   label_deployment_credential_honored: Honored?
@@ -136,7 +136,7 @@ en:
   label_first_commit_date: First commit date
   label_flat: Flat
   label_flush_cache: Flush Git Cache?
-  label_friday: Friday
+  label_friday: Freitag
   label_git_annex: GitAnnex
   label_git_config_email_desc: Will be used as author email in commits
   label_git_config_email: Git author email
@@ -227,15 +227,15 @@ en:
   label_help_repository_setup_existing: Setup Existing Repository
   label_help_repository_setup_new: Setup New Repository
   label_hierarchical_organisation: Directory and URL structure for Redmine-managed repositories
-  label_hierarchical: Hierarchical
-  label_http_access: HTTP access
-  label_http_only: HTTP Only
+  label_hierarchical: hierarchisch
+  label_http_access: HTTP Zugriff
+  label_http_only: Nur HTTP
   label_http_server_domain: HTTP server domain
   label_http_server_subdir_desc: Relative to Redmine root url
   label_http_server_subdir: Subdirectory for HTTP access
-  label_https_access: HTTPS access
-  label_https_and_http: HTTPS and HTTP
-  label_https_only: HTTPS Only
+  label_https_access: HTTPS Zugriff
+  label_https_and_http: HTTPS und HTTP
+  label_https_only: Nur HTTPS
   label_https_server_domain_desc: Let it blank if you don't use it
   label_https_server_domain: HTTPS server domain
   label_identifier_can_be_arbitrary_desc: (Can be any meaningful string)
@@ -247,8 +247,8 @@ en:
   label_init_repositories_on_create: Automatically initialize Git repositories with a README file (à la Github)
   label_install_gitolite_hooks: Install hooks !
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
-  label_key_type: Public key type
-  label_key: Key
+  label_key_type: Öffentlicher Schlüsseltyp
+  label_key: Schlüssel
   label_latest_commit_date: Latest commit date
   label_main_git_repository: Main Git Repository
   label_mirror_add: Add Repository Mirror
@@ -275,12 +275,12 @@ en:
   label_mirror: Mirror
   label_mirroring_keys_installed: Mirrors keys installed?
   label_mode: Mode
-  label_monday: Monday
+  label_monday: Montag
   label_move_repository: "Move repository : '%{repo_name}'"
-  label_my_public_keys: My public keys
+  label_my_public_keys: Meine öffentlichen Schlüssel
   label_need_help: Need Help?
-  label_no_public_keys: No public keys defined
-  label_open_issue: Open Issue
+  label_no_public_keys: Keine öffentlichen Schlüssel definiert
+  label_open_issue: Ticket öffnen
   label_path_directories: PATH directories
   label_permissions_header: Required Permissions
   label_post_receive_url_add: Add Post Receive URL
@@ -296,9 +296,9 @@ en:
   label_protected_branches: Protected branches
   label_public_key_edit: Edit existing public key
   label_public_key_new: Enter new public key
-  label_public_key: Public key
-  label_public_keys: Public keys
-  label_public_repo: Public repository
+  label_public_key: Öffentlicher Schlüssel
+  label_public_keys: Öffentliche Schlüssel
+  label_public_repo: Öffentliches Repository
   label_read_only_permission: RO
   label_read_write_permission: RW
   label_recycle_bin_content_size: Size
@@ -324,21 +324,21 @@ en:
   label_repository_statistics_global: Global statistics
   label_resync_all_projects: Resync all projects ?
   label_resync_all_ssh_keys: Resync all SSH keys ?
-  label_saturday: Saturday
+  label_saturday: Samstag
   label_see_other_repositories: See other repositories
-  label_select_all: Select all
+  label_select_all: Alle auswählen
   label_show_repositories_url: Show checkout URL's?
   label_smart_http: Smart HTTP
   label_sort_urls: (Sort urls)
   label_split_payloads: split payloads
-  label_ssh_access: SSH access
+  label_ssh_access: SSH Zugriff
   label_ssh_keys_current_access_patterns: SSH keys Access Patterns
   label_ssh_server_domain: SSH server domain
   label_storage_directory: Storage directory
   label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
   label_sudo_redmine_to_gitolite_user: Redmine user is able to sudo to Git user?
-  label_sunday: Sunday
-  label_tab_access: Access
+  label_sunday: Sonntag
+  label_tab_access: Zugriff
   label_tab_cache: Cache
   label_tab_config_file: Configuration file
   label_tab_config_test: Config Test
@@ -346,19 +346,19 @@ en:
   label_tab_gitolite_rescue: Rescue
   label_tab_global: Global
   label_tab_hooks: Hooks
-  label_tab_notify: Notifications
+  label_tab_notify: Benachrichtigungen
   label_tab_redmine: Redmine
   label_tab_sidekiq_interface: Sidekiq
   label_tab_ssh: SSH
   label_tab_storage: Storage
   label_temp_dir_writeable: Temp directory writeable?
   label_this_urls_has_permissions: "This URL has <span id=\"%{span_id}\"></span> access."
-  label_thursday: Thursday
+  label_thursday: Donnerstag
   label_total_commits: Total commits
   label_total_contributors: Total contributors
   label_triggers: Triggers
   label_true: True
-  label_tuesday: Tuesday
+  label_tuesday: Dienstag
   label_unique_repo_identifier: Repository identifiers are globally unique?
   label_unknown_gitolite_version: Unknown version
   label_url: URL
@@ -367,7 +367,7 @@ en:
   label_user_list: Users allowed
   label_value: Value
   label_warn: Warning
-  label_wednesday: Wednesday
+  label_wednesday: Mittwoch
   notice_deployment_credential_create_failed: Failed to create deployment credential
   notice_deployment_credential_created: Deployment Credential was successfully created.
   notice_deployment_credential_deleted_with_key: Both Deployment Credential and Key were successfully deleted.
@@ -401,7 +401,7 @@ en:
   notice_public_key_deleted: Public key <strong>%{title}</strong> was successfully deleted.
   notice_public_key_updated: Public key <strong>%{title}</strong> was successfully updated.
   permission_add_repository_xitolite_watchers: Add watchers
-  permission_create_gitolite_ssh_key: Create SSH keys
+  permission_create_gitolite_ssh_key: Erstelle SSH Schlüssel
   permission_create_repository_deployment_credentials: Create deployment keys
   permission_create_repository_git_config_keys: Create Git config keys
   permission_create_repository_mirrors: Create repository mirrors
