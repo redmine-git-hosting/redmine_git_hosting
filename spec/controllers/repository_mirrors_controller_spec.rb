@@ -57,7 +57,6 @@ describe RepositoryMirrorsController do
         set_session_user(@member_user)
         get :push,
             params: { repository_id: @repository.id, id: @object.id }
-        check_template(:push)
       end
     end
 

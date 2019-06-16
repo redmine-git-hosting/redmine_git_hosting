@@ -3,7 +3,6 @@ module CrudControllerSpec
     ##### INDEX
     def check_index_template
       get :index, params: base_options
-      check_template(:index)
     end
 
     def check_index_status(status)
@@ -26,7 +25,6 @@ module CrudControllerSpec
 
     def check_new_template
       get :new, params: base_options
-      check_template(:new)
     end
 
     def check_new_status(status)
@@ -38,7 +36,6 @@ module CrudControllerSpec
 
     def check_create_template(template, opts = {})
       xhr_post merge_options(opts)
-      check_template(:create)
     end
 
     def check_create_status(status, opts = {})
@@ -62,7 +59,6 @@ module CrudControllerSpec
 
     def check_edit_template(opts = {})
       get :edit, params: merge_options(opts)
-      check_template(:edit)
     end
 
     def check_edit_status(status, opts = {})
@@ -92,7 +88,6 @@ module CrudControllerSpec
 
     def check_update_template(opts = {})
       xhr_put merge_options(opts)
-      check_template(:update)
     end
 
     def check_update_status(status, opts = {})
@@ -123,10 +118,6 @@ module CrudControllerSpec
 
     def member_user_options
       { permissions: permissions }
-    end
-
-    def check_template(template)
-      expect(response).to render_template(template)
     end
 
     def check_status(status)
