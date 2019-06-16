@@ -29,8 +29,7 @@ module RedmineGitHosting
     def view_repositories_show_bottom(context)
       path        = get_path(context)
       rev         = get_rev(context)
-      repo_id     = get_repo_id(context)
-      repository  = find_repository(context, repo_id)
+      repository  = context[:repository]
       readme_file = find_readme_file(repository, path, rev)
 
       return '' if readme_file.nil?
@@ -49,15 +48,6 @@ module RedmineGitHosting
     def get_rev(context)
       rev = context[:request].params['rev']
       rev.presence
-    end
-
-    def get_repo_id(context)
-      context[:request].params['repository_id']
-    end
-
-    def find_repository(context, repo_id)
-      blk = repo_id ? ->(r) { r.identifier == repo_id } : ->(r) { r.is_default }
-      context[:project].repositories.find(&blk)
     end
 
     def find_readme_file(repository, path, rev)
