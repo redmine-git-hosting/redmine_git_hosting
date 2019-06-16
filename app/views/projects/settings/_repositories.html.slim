@@ -15,7 +15,11 @@
           td = repository.identifier.present? ? repository.identifier : ''
           td = checked_image repository.is_default?
           td = repository.scm_name
-          td = link_to h(repository.url), {controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param}
+          td = link_to h(repository.url),
+                       { controller: 'repositories',
+                         action: 'show',
+                         id: @project,
+                         repository_id: repository.identifier_param }
           td
             - if repository.is_a?(Repository::Xitolite)
               span.label.label-info = repository.git_default_branch

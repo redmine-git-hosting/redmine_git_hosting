@@ -5,6 +5,7 @@
     h3
       = l(:label_repository_access_url)
       - unless @repository.git_annex_enabled?
+        '
         = link_to l(:label_sort_urls),
                   sort_urls_repository_git_extras_path(@repository),
                   class: 'modal-box-close-only'

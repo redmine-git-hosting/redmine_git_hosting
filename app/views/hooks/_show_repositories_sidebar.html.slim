@@ -1,0 +1,3 @@
+- if @repositories.size > 1
+  - content_for :sidebar do
+    = call_hook(:view_repositories_show_sidebar, repository: @repository)
