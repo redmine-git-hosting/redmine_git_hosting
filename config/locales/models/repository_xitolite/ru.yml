@@ -88,7 +88,6 @@ ru:
   label_first_commit_date: Дата первого комита
   label_latest_commit_date: Дата последнего копита
   label_active_for: Активность за
-  label_active_days: дн.
 
   label_commits_number: Количество комитов
   label_commit_plural: Комиты

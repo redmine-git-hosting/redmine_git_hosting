@@ -4,8 +4,8 @@ require 'redmine_permissions'
 # Redmine Menus
 require 'redmine_menus'
 
-# Redmine Views Hooks
-require 'redmine_view_hooks'
+# Redmine Hooks
+require 'redmine_git_hosting/hooks'
 
 # Redmine SCM
 Redmine::Scm::Base.add 'Xitolite'

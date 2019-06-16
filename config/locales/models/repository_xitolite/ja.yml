@@ -88,7 +88,6 @@ ja:
   label_first_commit_date: 最初コミット日
   label_latest_commit_date: 最後コミット日
   label_active_for: 活動経過日数
-  label_active_days: 日
 
   label_commits_number: コミット数
   label_commit_plural: コミット

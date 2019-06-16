@@ -93,8 +93,7 @@ fr:
   label_first_commit_date: Date du premier commit
   label_latest_commit_date: Date du dernier commit
   label_active_for: Actif depuis
-  label_active_days: jours
-
+  
   label_commits_number: Nombre de commits
   label_commit_plural: Commits
   label_commits_per_day: Commits par jour

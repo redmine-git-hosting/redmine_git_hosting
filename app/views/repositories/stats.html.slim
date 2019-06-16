@@ -31,18 +31,14 @@ p = link_to l(:button_back), action: 'show', id: @project
   = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
   = javascript_include_tag 'set_highcharts', plugin: 'redmine_git_hosting'
 
+- charts = @author_charts.map { |chart| 'createZoomableAreaChart(' + chart + ');' }
 javascript:
   $(document).ready(function() {
     createAreaChart(chart_commits_per_month);
     createZoomableAreaChart(chart_commits_per_day);
     createBarChart(chart_commits_per_hour);
     createPieChart(chart_commits_per_weekday);
-
-    <% @author_charts.each do |chart| %>
-    createZoomableAreaChart(<%= chart %>);
-    <% end %>
-
+    #{raw charts.join("\n")}
     createColumnChart(chart_commits_per_author);
-
     $("#statistics-tabs").tabs();
   });
