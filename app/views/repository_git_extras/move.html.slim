@@ -5,9 +5,12 @@ h2 = l(:label_move_repository, repo_name: @repository.gitolite_repository_name)
                       url: move_repository_git_extras_path(@repository),
                       html: { method: :post, class: 'tabular', data: { confirm: l(:text_are_you_sure) } } do |f|
 
-    .flash-messages= error_messages_for 'move_repository_form'
+    .flash-messages = error_messages_for 'move_repository_form'
     p
-      = f.select :project_id, render_options_for_move_repo_select_box(@project), prompt: 'Select a project'
+      = f.select :project_id,
+                 render_options_for_move_repo_select_box(@project),
+                 required: true
     p
       = f.submit l(:button_move)
+      '
       = link_to l(:button_cancel), settings_project_path(@project, tab: 'repositories')

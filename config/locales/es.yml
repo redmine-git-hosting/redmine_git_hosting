@@ -268,7 +268,7 @@ es:
   label_mirror: Réplica
   label_mirroring_keys_installed: ¿Están instaladas las claves de réplicas?
   label_mode: Modo
-  label_move_repository: "Mover repositorio : '%{repo_name}'"
+  label_move_repository: "Mover repositorio: '%{repo_name}'"
   label_my_public_keys: Mis claves públicas
   label_need_help: ¿Necesita ayuda?
   label_no_public_keys: No se ha definido ninguna clave pública

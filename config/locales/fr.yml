@@ -272,7 +272,7 @@ fr:
   label_mirror: Miroir
   label_mirroring_keys_installed: Clés de miroir installées?
   label_mode: Mode
-  label_move_repository: "Déplacement du dépôt : '%{repo_name}'"
+  label_move_repository: "Déplacement du dépôt: '%{repo_name}'"
   label_my_public_keys: Mes clés publiques
   label_need_help: Besoin d'aide?
   label_no_public_keys: Aucune clé publique définie

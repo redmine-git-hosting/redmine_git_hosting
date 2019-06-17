@@ -272,7 +272,7 @@ en:
   label_mirror: Mirror
   label_mirroring_keys_installed: Mirrors keys installed?
   label_mode: Mode
-  label_move_repository: "Move repository : '%{repo_name}'"
+  label_move_repository: "Move repository: '%{repo_name}'"
   label_my_public_keys: My public keys
   label_need_help: Need Help?
   label_no_public_keys: No public keys defined

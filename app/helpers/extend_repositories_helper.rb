@@ -60,6 +60,8 @@ module ExtendRepositoriesHelper
 
   def render_options_for_move_repo_select_box(project)
     projects = Project.active
+                      .where(Project.allowed_to_condition(User.current, :manage_repository))
+                      .where.not(id: project.id)
     project_tree_options_for_select(projects, selected: project) if projects.any?
   end
 end
