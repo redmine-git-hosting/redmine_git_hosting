@@ -361,7 +361,7 @@ de:
   notice_deployment_credential_deleted: Deployment Credential was successfully deleted.
   notice_deployment_credential_update_failed: Failed to update deployment credential
   notice_deployment_credential_updated: Deployment Credential was successfully updated.
-  notice_empty_repository: Repository is empty. Get started by following the instructions below.
+  notice_empty_repository: Leeres Repository. Verwende die nachfolgenden Anweisungen, um Git zu verwenden.
   notice_git_config_key_create_failed: Failed to create Git config key
   notice_git_config_key_created: Git config key was successfully created.
   notice_git_config_key_deleted: Git config key was successfully deleted.

@@ -1,6 +1,7 @@
 ul.repository.git
   - @repositories.sort.each do |repo|
-    li.repository.git
+    - li_class = "#{'repository git' if repo.is_a?(Repository::Xitolite)}"
+    li class="#{li_class}"
       = link_to_repository(repo, @repository)
       - if User.current.allowed_to?(:manage_repository, @project)
         '
