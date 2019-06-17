@@ -5,34 +5,34 @@ de:
         move_repository_form:
           attributes:
             base:
-              identifier_empty: Can't move repository with empty identifier
-              identifier_taken: Repository identifier already used by the new project
-              wrong_target_project: Target project is identical to source project
+              identifier_empty: Repository ohne Kennung ist nicht verschiebbar
+              identifier_taken: Repository Kennung ist schon in Verwendung
+              wrong_target_project: Zielprojekt stimmt mit Quellprojet überein
   activerecord:
     errors:
       models:
-        repository_deployment_credential:
+        gitolite_public_key:
           attributes:
-            base:
-              invalid_key: Öffentlicher Schlüssel muss ein Deployment Schlüssel sein
-              invalid_user: Credential owner cannot be different than owner of Key
+            key:
+              corrupted: scheint beschädigt zu sein.
+              taken_by_you: 'is already in use by you as "%{name}".'
+              taken_by_other: 'is already in use by user "%{login}" as "%{name}".'
+              taken_by_someone: is already in use. It belongs to another user (ask administrator for details).
+              taken_by_gitolite_admin: is already in use as the Gitolite administrator key.
         project:
           attributes:
             identifier:
               invalid: ungültige Kennung
               taken: matches existing repository identifier
-        gitolite_public_key:
+        repository_deployment_credential:
           attributes:
-            key:
-              corrupted: seems to be corrupted.
-              taken_by_you: 'is already in use by you as "%{name}".'
-              taken_by_other: 'is already in use by user "%{login}" as "%{name}".'
-              taken_by_someone: is already in use. It belongs to another user (ask administrator for details).
-              taken_by_gitolite_admin: is already in use as the Gitolite administrator key.
+            base:
+              invalid_key: Öffentlicher Schlüssel muss ein Deployment Schlüssel sein
+              invalid_user: Credential owner cannot be different than owner of Key
         repository_git_config_key:
           attributes:
             key:
-              invalid: "Mauvais format de clé (doit contenir au moin un '.')"
+              invalid: "Falsches Schlüsselformat (es muss mindestestens ein '.' vorhanden sein)"
         repository_mirror:
           attributes:
             base:
@@ -94,7 +94,7 @@ de:
   label_debug: Debug
   label_default_domain_name: Default domain name
   label_default_gitolite_hooks_url: Default URL
-  label_default_repository: Default repository
+  label_default_repository: Standard Repository
   label_delete_from_recyle_bin: Delete from recycle bin
   label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
   label_delete_in_progress: Lösche...
@@ -113,10 +113,9 @@ de:
   label_deployment_credential_public_key_name: Public key name
   label_deployment_credential_select_deploy_key: Select Deployment Key
   label_deployment_credentials: Deployment Credentials
-  label_disabled: Disabled
   label_download_and_install_git: Download and install Git
-  label_download_format: Download as
-  label_download_select_format: Select format
+  label_download_format: Herunterladen als
+  label_download_select_format: Format auswählen
   label_empty_get: Empty&nbsp;GET
   label_empty_recycle_bin: Empty recycle bin
   label_empty_repository: Empty repository?
@@ -132,11 +131,9 @@ de:
   label_error: Error
   label_etcetera: etc
   label_example_repository: Example repository
-  label_false: False
   label_first_commit_date: First commit date
   label_flat: Flat
   label_flush_cache: Flush Git Cache?
-  label_friday: Freitag
   label_git_annex: GitAnnex
   label_git_config_email_desc: Will be used as author email in commits
   label_git_config_email: Git author email
@@ -275,10 +272,9 @@ de:
   label_mirror: Mirror
   label_mirroring_keys_installed: Mirrors keys installed?
   label_mode: Mode
-  label_monday: Montag
   label_move_repository: "Move repository : '%{repo_name}'"
   label_my_public_keys: Meine öffentlichen Schlüssel
-  label_need_help: Need Help?
+  label_need_help: Hilfe?
   label_no_public_keys: Keine öffentlichen Schlüssel definiert
   label_open_issue: Ticket öffnen
   label_path_directories: PATH directories
@@ -303,11 +299,11 @@ de:
   label_read_write_permission: RW
   label_recycle_bin_content_size: Size
   label_recycle_bin_content: Recycle bin content
-  label_redmine_config: Redmine Configuration
+  label_redmine_config: Redmine Konfiguration
   label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
   label_redmine_has_rw_access_on_all_repos: Redmine has RW access on all Gitolite repositories
-  label_redmine_user: Redmine username
+  label_redmine_user: Redmine Benutzername
   label_regenerate_all_ssh_keys_desc: "This will regenerate SSH keys identifier."
   label_regenerate_all_ssh_keys_desc2: "This can be long : all SSH keys will be removed and re-added in Gitolite one by one."
   label_regenerate_all_ssh_keys: Regenerate all SSH keys ?
@@ -324,7 +320,6 @@ de:
   label_repository_statistics_global: Global statistics
   label_resync_all_projects: Resync all projects ?
   label_resync_all_ssh_keys: Resync all SSH keys ?
-  label_saturday: Samstag
   label_see_other_repositories: See other repositories
   label_select_all: Alle auswählen
   label_show_repositories_url: Show checkout URL's?
@@ -337,7 +332,6 @@ de:
   label_storage_directory: Storage directory
   label_sudo_gitolite_to_redmine_user: Git user is able to sudo to Redmine user?
   label_sudo_redmine_to_gitolite_user: Redmine user is able to sudo to Git user?
-  label_sunday: Sonntag
   label_tab_access: Zugriff
   label_tab_cache: Cache
   label_tab_config_file: Configuration file
@@ -353,21 +347,15 @@ de:
   label_tab_storage: Storage
   label_temp_dir_writeable: Temp directory writeable?
   label_this_urls_has_permissions: "This URL has <span id=\"%{span_id}\"></span> access."
-  label_thursday: Donnerstag
   label_total_commits: Total commits
   label_total_contributors: Total contributors
   label_triggers: Triggers
-  label_true: True
-  label_tuesday: Dienstag
   label_unique_repo_identifier: Repository identifiers are globally unique?
   label_unknown_gitolite_version: Unknown version
-  label_url: URL
   label_use_triggers: Use triggers
   label_user_key: User key
   label_user_list: Users allowed
-  label_value: Value
   label_warn: Warning
-  label_wednesday: Mittwoch
   notice_deployment_credential_create_failed: Failed to create deployment credential
   notice_deployment_credential_created: Deployment Credential was successfully created.
   notice_deployment_credential_deleted_with_key: Both Deployment Credential and Key were successfully deleted.

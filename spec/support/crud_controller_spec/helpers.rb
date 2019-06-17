@@ -3,6 +3,7 @@ module CrudControllerSpec
     ##### INDEX
     def check_index_template
       get :index, params: base_options
+      assert_response :success
     end
 
     def check_index_status(status)
@@ -21,10 +22,12 @@ module CrudControllerSpec
 
     def check_new_variable(variable, klass)
       get :new, params: base_options
+      assert_response :success
     end
 
     def check_new_template
       get :new, params: base_options
+      assert_response :success
     end
 
     def check_new_status(status)
@@ -59,6 +62,7 @@ module CrudControllerSpec
 
     def check_edit_template(opts = {})
       get :edit, params: merge_options(opts)
+      assert_response :success
     end
 
     def check_edit_status(status, opts = {})

@@ -11,27 +11,14 @@ ru:
   activerecord:
     errors:
       models:
-        repository/xitolite:
-          attributes:
-            base:
-              blank_default_exists: "Невозможно создать пустой репозиторий, репозиторий уже существует."
-              invalid_options: "Вы не можете инициализировать репозиторий файлом README при подключенном GitAnnex"
-            identifier:
-              cannot_equal_project: "может не совпадать с ID существующего проекта"
-              taken: "уже получен."
-              invalid: ошибочный
-              cannot_change: невозможно изменить
-        repository_mirror:
-          attributes:
-            base:
-              nothing_to_push: Должен включать в себя по меньшей мере один элемент для зеркалирования
-            explicit_refspec:
-              bad_format: неверный формат
-              have_null_component: первый компонент не может быть пустым (будет удалена remote-ветка(и))
-        repository_git_config_key:
+        gitolite_public_key:
           attributes:
             key:
-              invalid: "Неправильный формат ключа (должен содержать '.')"
+              corrupted: возможно поврежден.
+              taken_by_you: 'уже используется вами как "%{name}".'
+              taken_by_other: 'уже используется пользователем "%{login}" как "%{name}".'
+              taken_by_someone: уже используется и принадлежит другому пользователю (обратитесь к Администратору)
+              taken_by_gitolite_admin: уже используется в качестве ключа Администратора Gitolite.
         project:
           attributes:
             identifier:
@@ -42,14 +29,27 @@ ru:
             base:
               invalid_key: Публичный ключ должен быть Ключем развертывания (Deployment Key)
               invalid_user: Владалец полномочий не может отличаться от владельца ключа
-        gitolite_public_key:
+        repository_git_config_key:
           attributes:
             key:
-              corrupted: возможно поврежден.
-              taken_by_you: 'уже используется вами как "%{name}".'
-              taken_by_other: 'уже используется пользователем "%{login}" как "%{name}".'
-              taken_by_someone: уже используется и принадлежит другому пользователю (обратитесь к Администратору)
-              taken_by_gitolite_admin: уже используется в качестве ключа Администратора Gitolite.
+              invalid: "Неправильный формат ключа (должен содержать '.')"
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: Должен включать в себя по меньшей мере один элемент для зеркалирования
+            explicit_refspec:
+              bad_format: неверный формат
+              have_null_component: первый компонент не может быть пустым (будет удалена remote-ветка(и))
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "Невозможно создать пустой репозиторий, репозиторий уже существует."
+              invalid_options: "Вы не можете инициализировать репозиторий файлом README при подключенном GitAnnex"
+            identifier:
+              cannot_equal_project: "может не совпадать с ID существующего проекта"
+              taken: "уже получен."
+              invalid: ошибочный
+              cannot_change: невозможно изменить
   all_branches: Все&nbsp;ветки
   all_references: Все&nbsp;ссылки
   all_tags: Все&nbsp;теги
@@ -113,7 +113,6 @@ ru:
   label_deployment_credential_public_key_name: Имя публичного ключа
   label_deployment_credential_select_deploy_key: Выбрать ключ
   label_deployment_credentials: Полномочия
-  label_disabled: Выключено
   label_download_and_install_git: Скачать и установить Git
   label_download_format: Загрузить как
   label_download_select_format: Выбрать формат
@@ -129,11 +128,9 @@ ru:
   label_error: Ошибка
   label_etcetera: и.т.д.
   label_example_repository: "Репозиторий 'example'"
-  label_false: Ложь
   label_first_commit_date: Дата первого комита
   label_flat: Плоский
   label_flush_cache: Очищать кэш Git?
-  label_friday: Пятница
   label_git_annex: GitAnnex
   label_git_config_email_desc: Будет использовано как e-mail при комитах
   label_git_config_email: E-mail git-автора
@@ -269,7 +266,6 @@ ru:
   label_mirror: Зеркало
   label_mirroring_keys_installed: Установлены ключи зеркалирования?
   label_mode: Режим
-  label_monday: Понедельник
   label_move_repository: "Перемещение репозитория: '%{repo_name}'"
   label_my_public_keys: Мои публичные ключи
   label_need_help: Нужна помощь?
@@ -318,7 +314,6 @@ ru:
   label_repository_statistics_global: Глобальная статистика
   label_resync_all_projects: Синхронизировать проекты?
   label_resync_all_ssh_keys: Синхронизировать SSH ключи?
-  label_saturday: Суббота
   label_see_other_repositories: Другие репозитории
   label_select_all: Выбрать всё
   label_show_repositories_url: Показывать checkout URL's?
@@ -331,7 +326,6 @@ ru:
   label_storage_directory: Каталог хранилища
   label_sudo_gitolite_to_redmine_user: Git пользователь имеет sudo для Redmine пользователя?
   label_sudo_redmine_to_gitolite_user: Пользователь Redmine имеет sudo для Git пользователя?
-  label_sunday: Воскресенье
   label_tab_access: Доступ
   label_tab_cache: Кэш
   label_tab_config_file: Конфиг. файл
@@ -347,21 +341,15 @@ ru:
   label_tab_storage: Хранилище
   label_temp_dir_writeable: Временный каталог доступен для записи?
   label_this_urls_has_permissions: "Данный URL имеет <span id=\"%{span_id}\"></span> доступ."
-  label_thursday: Четверг
   label_total_commits: Всего комитов
   label_total_contributors: Всего участников
   label_triggers: Тригеры
-  label_true: Истина
-  label_tuesday: Вторник
   label_unique_repo_identifier: Глобально уникальный идентификатор репозитория?
   label_unknown_gitolite_version: Незвестная версия
-  label_url: URL
   label_use_triggers: Использовать тригеры
   label_user_key: Пользовательский ключ
   label_user_list: Разрешенные пользователи
-  label_value: Значение
   label_warn: Предупреждение
-  label_wednesday: Среда
   notice_deployment_credential_create_failed: Ошибка при создании полномочий
   notice_deployment_credential_created: Полномочия успешно созданы.
   notice_deployment_credential_deleted_with_key: Полномочия и Ключ успешно удалены.

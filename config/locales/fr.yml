@@ -11,27 +11,14 @@ fr:
   activerecord:
     errors:
       models:
-        repository/xitolite:
-          attributes:
-            base:
-              blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
-              invalid_options: "Vous ne pouvez pas initialiser de fichier README dans un dépot GitAnnex"
-            identifier:
-              cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
-              taken: "correspond à un identifiant de dépôt existant"
-              invalid: invalide
-              cannot_change: ne peut pas changer
-        repository_mirror:
-          attributes:
-            base:
-              nothing_to_push: Must include at least one item to push
-            explicit_refspec:
-              bad_format: is badly formatted
-              have_null_component: cannot have null first component (will delete remote branch(es))
-        repository_git_config_key:
+        gitolite_public_key:
           attributes:
             key:
-              invalid: "Mauvais format de clé (doit contenir au moin un '.')"
+              corrupted: semble être corrompue.
+              taken_by_you: "est déjà utilisée par vous comme « %{name} »."
+              taken_by_other: "est déjà utilisée par l'utilisateur « %{login} » comme « %{name} »."
+              taken_by_someone: est déjà utilisé. Elle appartient à une autre utilisateur (demandez à vôtre administrateur pour les détails).
+              taken_by_gitolite_admin: est déjà utilisée comme clé d'administration Gitolite.
         project:
           attributes:
             identifier:
@@ -42,14 +29,27 @@ fr:
             base:
               invalid_key: Public Key Must Be a Deployment Key
               invalid_user: Credential owner cannot be different than owner of Key
-        gitolite_public_key:
+        repository_git_config_key:
           attributes:
             key:
-              corrupted: semble être corrompue.
-              taken_by_you: "est déjà utilisée par vous comme « %{name} »."
-              taken_by_other: "est déjà utilisée par l'utilisateur « %{login} » comme « %{name} »."
-              taken_by_someone: est déjà utilisé. Elle appartient à une autre utilisateur (demandez à vôtre administrateur pour les détails).
-              taken_by_gitolite_admin: est déjà utilisée comme clé d'administration Gitolite.
+              invalid: "Mauvais format de clé (doit contenir au moin un '.')"
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: Must include at least one item to push
+            explicit_refspec:
+              bad_format: is badly formatted
+              have_null_component: cannot have null first component (will delete remote branch(es))
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "Ne peut pas mettre le dépôt par défaut, car le dépôt par défaut courant a un identifiant vide."
+              invalid_options: "Vous ne pouvez pas initialiser de fichier README dans un dépot GitAnnex"
+            identifier:
+              cannot_equal_project: "ne peut pas correspondre à l'identifiant d'un projet existant"
+              taken: "correspond à un identifiant de dépôt existant"
+              invalid: invalide
+              cannot_change: ne peut pas changer
   all_branches: "Toutes&nbsp;les&nbsp;branches"
   all_references: "Toutes&nbsp;les&nbsp;références"
   all_tags: "Toutes&nbsp;les&nbsp;étiquettes"
@@ -113,7 +113,6 @@ fr:
   label_deployment_credential_public_key_name: Nom de la clé publique
   label_deployment_credential_select_deploy_key: Sélectionnez une clé de déploiement
   label_deployment_credentials: Pièces d'identités de déploiement
-  label_disabled: Désactivé
   label_download_and_install_git: Téléchargez et installez Git
   label_download_format: Télécharger au format
   label_download_select_format: Sélectionnez un format
@@ -132,11 +131,9 @@ fr:
   label_error: Erreur
   label_etcetera: etc
   label_example_repository: Dépôt example
-  label_false: Faux
   label_first_commit_date: Date du premier commit
   label_flat: Plat
   label_flush_cache: Vider le cache Git
-  label_friday: Vendredi
   label_git_annex: GitAnnex
   label_git_config_email_desc: Sera utilisé comme email de l'auteur dans les commits
   label_git_config_email: Email de l'auteur Git
@@ -275,7 +272,6 @@ fr:
   label_mirror: Miroir
   label_mirroring_keys_installed: Clés de miroir installées?
   label_mode: Mode
-  label_monday: Lundi
   label_move_repository: "Déplacement du dépôt : '%{repo_name}'"
   label_my_public_keys: Mes clés publiques
   label_need_help: Besoin d'aide?
@@ -324,7 +320,6 @@ fr:
   label_repository_statistics_global: Statistiques globales
   label_resync_all_projects: Resynchroniser tous les projets
   label_resync_all_ssh_keys: Resynchroniser toutes les clés SSH
-  label_saturday: Samedi
   label_see_other_repositories: Voir les autres dépôts
   label_select_all: Tout sélectionner
   label_show_repositories_url: Afficher les URL des dépôts
@@ -337,7 +332,6 @@ fr:
   label_storage_directory: Répertoire de stockage
   label_sudo_gitolite_to_redmine_user: L'utilisateur Git peut sudo vers l'utilisateur Redmine?
   label_sudo_redmine_to_gitolite_user: L'utilisateur Redmine peut sudo vers l'utilisateur Git?
-  label_sunday: Dimanche
   label_tab_access: Accès
   label_tab_cache: Cache
   label_tab_config_file: Fichier de configuration
@@ -353,21 +347,15 @@ fr:
   label_tab_storage: Stockage
   label_temp_dir_writeable: Le répertoire temporaire est accessible en écriture?
   label_this_urls_has_permissions: "Cette URL est accessilbe en <span id=\"%{span_id}\"></span>."
-  label_thursday: Jeudi
   label_total_commits: Nombre total de commits
   label_total_contributors: Nombre total de contributeurs
   label_triggers: Déclencheurs
-  label_true: Vrai
-  label_tuesday: Mardi
   label_unique_repo_identifier: Les identifiants de dépôts sont unique
   label_unknown_gitolite_version: Version inconnue
-  label_url: URL
   label_use_triggers: Utilise les déclencheurs
   label_user_key: Clé utilisateur
   label_user_list: Liste des utilisateurs autorisés
-  label_value: Valeur
   label_warn: Avertissement
-  label_wednesday: Mercredi
   notice_deployment_credential_create_failed: Échec de création de la pièce d'identité de déploiement
   notice_deployment_credential_created: La pièce d'identité de déploiement a été créée avec succès.
   notice_deployment_credential_deleted_with_key: La pièce d'identité de déploiement et la clé associée ont été supprimées avec succès.

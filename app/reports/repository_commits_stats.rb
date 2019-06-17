@@ -81,19 +81,19 @@ class RepositoryCommitsStats < ReportBase
       commits_by_day.each do |commit_date, commit_count|
         case commit_date.to_date.wday
         when 0
-          week_day[l(:label_sunday)] += commit_count
+          week_day[day_name(0)] += commit_count
         when 1
-          week_day[l(:label_monday)] += commit_count
+          week_day[day_name(1)] += commit_count
         when 2
-          week_day[l(:label_tuesday)] += commit_count
+          week_day[day_name(2)] += commit_count
         when 3
-          week_day[l(:label_wednesday)] += commit_count
+          week_day[day_name(3)] += commit_count
         when 4
-          week_day[l(:label_thursday)] += commit_count
+          week_day[day_name(4)] += commit_count
         when 5
-          week_day[l(:label_friday)] += commit_count
+          week_day[day_name(5)] += commit_count
         when 6
-          week_day[l(:label_saturday)] += commit_count
+          week_day[day_name(6)] += commit_count
         end
       end
       week_day
