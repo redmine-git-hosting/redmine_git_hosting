@@ -18,13 +18,13 @@
                {},
                onchange: "post_mode_change(this); return false;"
 
-  #payload_options style = @post_receive_url.github_mode? ? '' : 'display: none;'
+  #payload_options style="#{@post_receive_url.github_mode? ? '' : 'display: none;'}"
     p = f.check_box :split_payloads
 
   - if @repository.branches.any?
     p = f.check_box :use_triggers, onchange: 'trigger_mode_change(this); return false;'
 
-    #triggers_options style = @post_receive_url.use_triggers? ? '' : 'display: none;'
+    #triggers_options style="#{@post_receive_url.use_triggers? ? '' : 'display: none;'}"
       = hidden_field_tag 'repository_post_receive_url[triggers][]', ''
       - @repository.branches.each do |branch|
         p

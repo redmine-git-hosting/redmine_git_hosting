@@ -16,7 +16,7 @@
                { label: :label_mirror_push_mode },
                onchange: "push_mode_change(this); return false;"
 
-  #ref_spec_options style="@mirror.mirror_mode? ? 'display: none;' : ''"
+  #ref_spec_options style="#{@mirror.mirror_mode? ? 'display: none;' : ''}"
     p = f.check_box :include_all_branches, label: :label_mirror_include_all_branches
     p = f.check_box :include_all_tags, label: :label_mirror_include_all_tags
     p = f.text_field :explicit_refspec, label: :label_mirror_explicit_refspec, size: 65
