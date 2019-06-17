@@ -117,7 +117,7 @@ de:
   label_download_format: Herunterladen als
   label_download_select_format: Format auswählen
   label_empty_get: Empty&nbsp;GET
-  label_empty_recycle_bin: Empty recycle bin
+  label_empty_recycle_bin: Papierkorb leeren
   label_empty_repository: Empty repository?
   label_enable_git_daemon: Enable Git Daemon
   label_enable_git_notify: Enable Mailing list
@@ -297,8 +297,7 @@ de:
   label_public_repo: Öffentliches Repository
   label_read_only_permission: RO
   label_read_write_permission: RW
-  label_recycle_bin_content_size: Size
-  label_recycle_bin_content: Recycle bin content
+  label_recycle_bin_content_size: Größe
   label_redmine_config: Redmine Konfiguration
   label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
@@ -336,7 +335,7 @@ de:
   label_tab_cache: Cache
   label_tab_config_file: Configuration file
   label_tab_config_test: Config Test
-  label_tab_gitolite_recycle_bin: Recycle Bin
+  label_tab_gitolite_recycle_bin: Papierkorb
   label_tab_gitolite_rescue: Rescue
   label_tab_global: Global
   label_tab_hooks: Hooks

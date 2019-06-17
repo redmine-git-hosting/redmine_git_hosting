@@ -298,7 +298,6 @@ en:
   label_read_only_permission: RO
   label_read_write_permission: RW
   label_recycle_bin_content_size: Size
-  label_recycle_bin_content: Recycle bin content
   label_redmine_config: Redmine Configuration
   label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki

@@ -45,6 +45,18 @@ REPOSITORY EDIT
 /*
 REPOSITORY VIEW
 */
+
+#sidebar li.repository.git::before {
+  font-family: Font Awesome\ 5 Brands;
+  font-size: 1.2em;
+  content: "\f841"; /* fab fa-git-alt */
+  padding-right: 4px;
+}
+
+#sidebar ul.repository.git {
+  padding-left: 0;
+}
+
 #git_hosting_download_buttons {
   margin-top: 20px;
 }

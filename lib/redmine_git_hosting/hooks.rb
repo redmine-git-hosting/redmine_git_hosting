@@ -4,7 +4,7 @@ module RedmineGitHosting
     render_on :view_repository_edit_top, partial: 'repositories/edit_top'
     render_on :view_repositories_show_contextual, partial: 'repositories/show_top'
     render_on :view_repository_edit_bottom, partial: 'repositories/edit_bottom'
-    render_on :view_repositories_show_sidebar, partial: 'repositories/sidebar'
+    render_on :view_repositories_show_sidebar, partial: 'repositories/git_hosting_sidebar'
     render_on :view_repositories_navigation, partial: 'repositories/git_hosting_navigation'
 
     def view_layouts_base_html_head(_context = {})

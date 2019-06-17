@@ -3,12 +3,12 @@ h3 = l(:label_empty_recycle_bin)
 - if !RedmineGitHosting::RecycleBin || !RedmineGitHosting::RecycleBin.content.empty?
   table.table.table-hover
     tr
-      th = l(:label_recycle_bin_content)
+      th = l(:label_repository)
       th = l(:label_recycle_bin_content_size)
       th
         = l(:label_delete_from_recyle_bin)
         |  (
-          = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
+        = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
         | )
 
     - RedmineGitHosting::RecycleBin.content.each do |trash_object|

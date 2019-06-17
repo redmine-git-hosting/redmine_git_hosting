@@ -298,7 +298,6 @@ fr:
   label_read_only_permission: RO
   label_read_write_permission: RW
   label_recycle_bin_content_size: Taille
-  label_recycle_bin_content: Contenu de la corbeille
   label_redmine_config: Configuration de Redmine
   label_redmine_git_hosting_issue: Redmine Git Hosting - Ouvrir une demande
   label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
