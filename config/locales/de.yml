@@ -72,19 +72,19 @@ de:
   field_perm: Zugriffsberechtigung
   field_split_payloads: Split the global payload in many payloads
   field_use_triggers: Use triggers
-  label_active_for: Active for
+  label_active_for: Aktiv seit
   label_all_projects_use_git: Automatically initialize Git repositories for new projects?
   label_archived_repositories: Archived repositories
-  label_average_commit_per_day: Average commits per day
-  label_average_contributor_commits: Average commits per contributor
+  label_average_commit_per_day: Durchschnitt Commits pro Tag
+  label_average_contributor_commits: Durchschnitt Commits pro Mitwirkenden
   label_backup_in_progress: Saving...
   label_branch_path: Branch path
   label_browse_repository: Browse repository
   label_commit_plural: Commits
   label_commits_number: Number of commits
-  label_commits_per_day: Commits per day
-  label_commits_per_hour: Commits per hour
-  label_commits_per_weekday: Commits per weekday
+  label_commits_per_day: Commits am Tag
+  label_commits_per_hour: Commits in der Stunde
+  label_commits_per_weekday: Commits an Wochentagen
   label_copied_to_clipboard: Copied!
   label_copy_to_clipboard: Copy to clipboard
   label_current_deploy_keys: Current deployment keys
@@ -98,7 +98,7 @@ de:
   label_delete_from_recyle_bin: Delete from recycle bin
   label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
   label_delete_in_progress: Lösche...
-  label_delete_warning: Warning! Deletion is forever!
+  label_delete_warning: Warnung! Löschvorgang kann nicht rückgängig gemacht werden!
   label_deploy_key: Deployment Schlüssel
   label_deployment_credential_active: Active?
   label_deployment_credential_add: Add Deployment Credential
@@ -131,7 +131,7 @@ de:
   label_error: Error
   label_etcetera: etc
   label_example_repository: Example repository
-  label_first_commit_date: First commit date
+  label_first_commit_date: Erster Commit
   label_flat: Flat
   label_flush_cache: Flush Git Cache?
   label_git_annex: GitAnnex
@@ -246,7 +246,7 @@ de:
   label_key_cannot_be_changed_please_create_new_key: 'The key cannot be altered anymore. However, you can delete it and create a new one.'
   label_key_type: Öffentlicher Schlüsseltyp
   label_key: Schlüssel
-  label_latest_commit_date: Latest commit date
+  label_latest_commit_date: Neuster Commit
   label_main_git_repository: Main Git Repository
   label_mirror_add: Add Repository Mirror
   label_mirror_create: Create Repository Mirror
@@ -315,9 +315,9 @@ de:
   label_repository_exists_in_gitolite: Repository exists in Gitolite
   label_repository_mirrors: Repository Mirrors
   label_repository_options: Repository options
-  label_repository_statistics_commits: Commits statistics
-  label_repository_statistics_contributors: Contributors statistics
-  label_repository_statistics_global: Global statistics
+  label_repository_statistics_commits: Commits
+  label_repository_statistics_contributors: Mitwirkende
+  label_repository_statistics_global: Übersicht
   label_resync_all_projects: Resync all projects ?
   label_resync_all_ssh_keys: Resync all SSH keys ?
   label_see_other_repositories: See other repositories
@@ -347,8 +347,8 @@ de:
   label_tab_storage: Storage
   label_temp_dir_writeable: Temp directory writeable?
   label_this_urls_has_permissions: "This URL has <span id=\"%{span_id}\"></span> access."
-  label_total_commits: Total commits
-  label_total_contributors: Total contributors
+  label_total_commits: Anzahl Commits
+  label_total_contributors: Anzahl Mitwirkende
   label_triggers: Triggers
   label_unique_repo_identifier: Repository identifiers are globally unique?
   label_unknown_gitolite_version: Unknown version

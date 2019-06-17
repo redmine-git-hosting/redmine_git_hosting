@@ -7,8 +7,9 @@ h3 = l(:label_empty_recycle_bin)
       th = l(:label_recycle_bin_content_size)
       th
         = l(:label_delete_from_recyle_bin)
-        = surround '(', ')' do
+        |  (
           = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
+        | )
 
     - RedmineGitHosting::RecycleBin.content.each do |trash_object|
       tr
