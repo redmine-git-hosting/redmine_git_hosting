@@ -10,6 +10,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
   settings(partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings)
+  requires_redmine version_or_higher: '4.0.3'
 
   begin
     requires_redmine_plugin :additionals, version_or_higher: '2.0.21'
