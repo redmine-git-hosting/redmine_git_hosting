@@ -46,7 +46,7 @@ module GitHosting
     end
 
     def debug_mode?
-      Additionals.true? config['debugmode']
+      config['debugmode'] == 'true'
     end
 
     def loglevel
