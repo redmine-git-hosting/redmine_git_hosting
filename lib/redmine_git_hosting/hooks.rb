@@ -1,3 +1,5 @@
+require 'github/markup'
+
 module RedmineGitHosting
   class GitHostingHookListener < Redmine::Hook::ViewListener
     render_on :view_projects_show_left, partial: 'projects/git_urls'
