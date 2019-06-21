@@ -1,9 +1,9 @@
 namespace :redmine_git_hosting do
   namespace :ci do
-    return if Rails.env.production?
-
-    RSpec::Core::RakeTask.new do |task|
-      task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
+    unless Rails.env.production?
+      RSpec::Core::RakeTask.new do |task|
+        task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
+      end
     end
 
     desc 'Check unit tests results'
