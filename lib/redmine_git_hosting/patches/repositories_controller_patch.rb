@@ -4,7 +4,6 @@ module RedmineGitHosting
   module Patches
     module RepositoriesControllerPatch
       include RedmineGitHosting::GitoliteAccessor::Methods
-
       def self.prepended(base)
         base.class_eval do
           before_action :set_current_tab, only: :edit
