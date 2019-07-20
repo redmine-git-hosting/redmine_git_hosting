@@ -145,8 +145,6 @@ module RedmineGitHosting
               show_error_not_found
               return
             end
-
-            show_error_not_found unless @diff
           end
 
           @changeset = @repository.find_changeset_by_name(@rev)
