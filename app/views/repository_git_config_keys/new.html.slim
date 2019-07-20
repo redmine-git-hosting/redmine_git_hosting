@@ -1,0 +1,5 @@
+= labelled_form_for :repository_git_config_key, @git_config_key,
+                    url: repository_git_config_keys_path(@repository),
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }

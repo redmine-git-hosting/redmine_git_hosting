@@ -1,24 +1,410 @@
 ru:
-
-  redmine_git_hosting: Redmine Git Hosting
-
-  ########### MISCELANOUS ###########
-  label_enabled: Включено
-  label_disabled: Выключено
-  label_true: Истина
-  label_false: Ложь
-  label_backup_in_progress: Сохранение...
-  label_delete_in_progress: Удаление...
-  label_url: URL
-  label_mode: Режим
-  label_hour: Час
-  button_ok: OK
+  activemodel:
+    errors:
+      models:
+        move_repository_form:
+          attributes:
+            base:
+              identifier_empty: Не возможно переместить репозиторий с пустым идентификатором
+              identifier_taken: Идентификатор репозитория уже используется новым проектом
+              wrong_target_project: Целевой проект совпадает с исходным
+  activerecord:
+    errors:
+      models:
+        gitolite_public_key:
+          attributes:
+            key:
+              corrupted: возможно поврежден.
+              taken_by_you: 'уже используется вами как "%{name}".'
+              taken_by_other: 'уже используется пользователем "%{login}" как "%{name}".'
+              taken_by_someone: уже используется и принадлежит другому пользователю (обратитесь к Администратору)
+              taken_by_gitolite_admin: уже используется в качестве ключа Администратора Gitolite.
+        project:
+          attributes:
+            identifier:
+              invalid: неверный идентификатор
+              taken: совпадает с существующим идентификатором репозитория
+        repository_deployment_credential:
+          attributes:
+            base:
+              invalid_key: Публичный ключ должен быть Ключем развертывания (Deployment Key)
+              invalid_user: Владалец полномочий не может отличаться от владельца ключа
+        repository_git_config_key:
+          attributes:
+            key:
+              invalid: "Неправильный формат ключа (должен содержать '.')"
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: Должен включать в себя по меньшей мере один элемент для зеркалирования
+            explicit_refspec:
+              bad_format: неверный формат
+              have_null_component: первый компонент не может быть пустым (будет удалена remote-ветка(и))
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "Невозможно создать пустой репозиторий, репозиторий уже существует."
+              invalid_options: "Вы не можете инициализировать репозиторий файлом README при подключенном GitAnnex"
+            identifier:
+              cannot_equal_project: "может не совпадать с ID существующего проекта"
+              taken: "уже получен."
+              invalid: ошибочный
+              cannot_change: невозможно изменить
+  all_branches: Все&nbsp;ветки
+  all_references: Все&nbsp;ссылки
+  all_tags: Все&nbsp;теги
   button_clone: Клонировать
-
-  label_monday: Понедельник
-  label_tuesday: Вторник
-  label_wednesday: Среда
-  label_thursday: Четверг
-  label_friday: Пятница
-  label_saturday: Суббота
-  label_sunday: Воскресенье
+  button_ok: OK
+  display_access_emphasis: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
+  display_access_flat: "Родителские проекты не включены в URL для <em>Плоского</em> режима."
+  display_access_hierarchical: "Родителские проекты включены в URL для <em>Иерархического</em> режима."
+  display_access_setup1: "Предположим что <em>project1</em> является родительским для <em>project2</em>, а <em>project2</em> является родительским для <em>project3</em>."
+  display_access_setup2: "Также, предположим что проект <em>project3</em> имеет 2 репозитория: <em>default</em> и <em>example</em>."
+  display_access_setup3: "С учетом текущей конфигурации проекта <em>project3</em>, он имеет следующие параметры:"
+  error_download_revision_no_such_commit: "Не найден комит %{commit}"
+  error_project_not_found: "Проект с данными идентификатором не найден"
+  error_public_key_create_failed: Ошибка при создании публичного ключа.
+  error_public_key_update_failed: Ошибка при обновлении публичного ключа.
+  error_repository_not_found: "Репозиторий с данными идентификатором не найден"
+  error_xitolite_repositories_disabled: "Репозитории Gitolite отключены, невозможно создать репозиторий!"
+  field_key: ключ
+  field_mode: Режим
+  field_perm: Права доступа
+  field_split_payloads: Разбить payload
+  field_use_triggers: Использовать тригеры
+  label_active_for: Активность за
+  label_all_projects_use_git: Автоматически инициализировать Git репозитории для новых проектов?
+  label_archived_repositories: Архив репозиториев
+  label_average_commit_per_day: В среднем комитов в день
+  label_average_contributor_commits: В среднем комитов на участника
+  label_backup_in_progress: Сохранение...
+  label_branch_path: Путь к ветке
+  label_browse_repository: Просмотр репозитория
+  label_commit_plural: Комиты
+  label_commits_number: Количество комитов
+  label_commits_per_day: Комитов в день
+  label_commits_per_hour: Комитов в час
+  label_commits_per_weekday: Комитов в неделю
+  label_copied_to_clipboard: Сокпировано!
+  label_copy_to_clipboard: Сокопировать в буфер
+  label_current_deploy_keys: Текущие полномочные ключи (Deployment Keys)
+  label_current_public_keys: Текущие публичные ключи
+  label_current_user_keys: Текущие ключи пользователя
+  label_cut_and_paste: Скопируйте и вставьте содержимое .pub файла
+  label_debug: Отладка
+  label_default_domain_name: Домен по умолчанию
+  label_default_gitolite_hooks_url: URL по умолчанию
+  label_default_repository: "Репозиторий 'default'"
+  label_delete_from_recyle_bin: Удалить из корзины
+  label_delete_git_repositories: Удалять Git репозиторий при удалении проекта?<br/>(будет перемещен в корзину)
+  label_delete_in_progress: Удаление...
+  label_delete_warning: Внимание! Удаление безвозвратно!
+  label_deploy_key: Полномочный deploy-ключ
+  label_deployment_credential_active: Активный?
+  label_deployment_credential_add: Добавить полномочия
+  label_deployment_credential_create_key_first: Ключ(и) не определены. Вы должны создать один для начала.
+  label_deployment_credential_create: Создать новые полномочия
+  label_deployment_credential_delete_when_unused: Удалять ключ когда не используется?
+  label_deployment_credential_delete: Удалить полномочия
+  label_deployment_credential_edit: Редактировать полномочия
+  label_deployment_credential_honored: Привелегированный?
+  label_deployment_credential_owner: Владелец
+  label_deployment_credential_public_key_file: Файл публичного ключа
+  label_deployment_credential_public_key_name: Имя публичного ключа
+  label_deployment_credential_select_deploy_key: Выбрать ключ
+  label_deployment_credentials: Полномочия
+  label_download_and_install_git: Скачать и установить Git
+  label_download_format: Загрузить как
+  label_download_select_format: Выбрать формат
+  label_empty_get: Пустой&nbsp;GET
+  label_empty_recycle_bin: Очистка корзины
+  label_empty_repository: Пустой?
+  label_enable_git_daemon: Включить режим Git Daemon
+  label_enable_git_notify: Включить почтовую рассылку
+  label_enable_protected_branches: Включить защищенные ветки
+  label_enable_public_repo: Сделать публичным
+  label_enable_smart_http: Включить Smart HTTP
+  label_enabled: Включено
+  label_error: Ошибка
+  label_etcetera: и.т.д.
+  label_example_repository: "Репозиторий 'example'"
+  label_first_commit_date: Дата первого комита
+  label_flat: Плоский
+  label_flush_cache: Очищать кэш Git?
+  label_git_annex: GitAnnex
+  label_git_config_email_desc: Будет использовано как e-mail при комитах
+  label_git_config_email: E-mail git-автора
+  label_git_config_key_add: Добавить парметр Git
+  label_git_config_key_create: Создать парметр Git
+  label_git_config_key_delete: Удалить парметр Git
+  label_git_config_key_edit: Изменить парметр Git
+  label_git_config_keys: Конфиг. ключи Git
+  label_git_config_username_desc: Будет использовано как имя автора при комитах
+  label_git_config_username: Git-автор
+  label_git_daemon: Git Daemon
+  label_git_key_type_config: Парметр Git
+  label_git_key_type_option: Парметр Gitolite
+  label_git_notify: Уведомления Git
+  label_git_objects_count: Кол-во объектов в Git
+  label_git_option_key_add: Добавить параметр Gitolite
+  label_git_option_keys: Конфиг. опции Gitolite
+  label_git_version: Версия Git
+  label_github_post: GitHub&nbsp;POST
+  label_gitolite_access_config: Настройки доступа
+  label_gitolite_banner: Баннер Gitolite
+  label_gitolite_bin_dir: Каталог с двоичный Gitolite
+  label_gitolite_cache_adapter_desc: Необходим рестарт Redmine после внесения изменений
+  label_gitolite_cache_adapter: Кэш-адаптер
+  label_gitolite_cache_config: Настройки кэша Gitolite
+  label_gitolite_cache_max_elements: Макс. кол-во кэшируемых элементов
+  label_gitolite_cache_max_size: Макс. размер элемента в кэше
+  label_gitolite_cache_max_time: Макс. время кэша
+  label_gitolite_config_file: Конфигурационный файл Gitolite
+  label_gitolite_daemon_by_default: Включать по умолчанию режим Git Daemon для новых репозиториев?
+  label_gitolite_documentation: Документация Gitolite
+  label_gitolite_download_revision_enabled: Включить скачивание git-ревизий
+  label_gitolite_global_config: Общие настройки Gitolite
+  label_gitolite_global_storage_dir_desc: Относительно домашнего каталога пользователя Gitolite
+  label_gitolite_global_storage_dir: Каталог репозиториев Gitolite
+  label_gitolite_hook_dirs_installed: Каталог хуков установлен?
+  label_gitolite_hook_untouched: хук без изменений
+  label_gitolite_hooks_are_asynchronous: Запускать хуки асинхронно
+  label_gitolite_hooks_config: Настройка Gitolite хуков
+  label_gitolite_hooks_debug: Запускать хуки в режиме отладки
+  label_gitolite_hooks_installed: Хуки установлены?
+  label_gitolite_hooks_namespace: Git namespace
+  label_gitolite_hooks_params_installed: Установленны параметры хуков?
+  label_gitolite_hooks_url: Хук-URL
+  label_gitolite_http_by_default: Включать по умолчанию режим Smart HTTP для новых репозиториев?
+  label_gitolite_identifier_prefix_desc: Будет использован при генерации идентификаторов SSH-ключей
+  label_gitolite_identifier_prefix: Префикс Gitolite
+  label_gitolite_identifier_strip_user_id: Удалить идентификатор пользователя из Gitolite идентификатора
+  label_gitolite_lib_dir: Каталог с библиотеками Gitolite
+  label_gitolite_libgit2_version: Версия libgit2
+  label_gitolite_local_code_dir: Каталог внешних хуков Gitolite
+  label_gitolite_log_level_desc: Необходим рестарт Redmine после внесения изменений
+  label_gitolite_log_level: Уровень журналирования Gitolite
+  label_gitolite_mailer_params_installed: Установленны параметры доставки почты?
+  label_gitolite_notify_by_default: "Включить по умолчанию 'Git Notifications' хук для новых репозиториев?"
+  label_gitolite_notify_config: Настройка Git-рассылки
+  label_gitolite_notify_global_exclude: Исключить из Git-рассылки
+  label_gitolite_notify_global_include: Вклчить в Git-рассылку
+  label_gitolite_notify_global_prefix: Глобальный префикс Git-рассылки
+  label_gitolite_notify_global_sender_address: Глобальный адрес отправителя Git-рассылки
+  label_gitolite_overwrite_existing_hooks: Перекрывать существующие хуки
+  label_gitolite_recycle_bin_dir_desc: Относительно домашнего каталога пользователя Gitolite
+  label_gitolite_recycle_bin_dir: Каталог корзины
+  label_gitolite_recycle_bin_expiration_time_desc: Часы
+  label_gitolite_recycle_bin_expiration_time: Время хранения репозитория в корзине
+  label_gitolite_redmine_storage_dir_desc: Относительно каталога репозиториев Gitolite
+  label_gitolite_redmine_storage_dir: Подкаталог управляемых через Redmine репозиториев
+  label_gitolite_repository_count: Количество репозиториев в Gitolite
+  label_gitolite_rescue: Восстановление Gitolite
+  label_gitolite_rugged_features: Rugged скомпилирован с поддержкой
+  label_gitolite_server_host: SSH/Gitolite хост
+  label_gitolite_server_port: SSH/Gitolite порт
+  label_gitolite_ssh_config: Настройки SSH для Gitolite
+  label_gitolite_ssh_private_key: Приватный ключ Gitolite/SSH
+  label_gitolite_ssh_public_key: Публичный ключ Gitolite/SSH
+  label_gitolite_storage_config: Конфигурация хранилища Gitolite
+  label_gitolite_temp_dir_desc: Абсолютный путь
+  label_gitolite_temp_dir: Временный каталог для lock-файлов и данных
+  label_gitolite_use_sidekiq: Использовать Sidekiq для запуска асинхронных задач
+  label_gitolite_user: Системный пользователь Gitolite
+  label_gitolite_version: Версия Gitolite
+  label_help_git_setup: Установка Git
+  label_help_no_repo_rights: "Простите, вы не имеете доступа к данному репозиторию. Вы не можете производить никакие действия."
+  label_help_repository_clone: Клонирование репозитория
+  label_help_repository_setup_existing: Настройка существующего репозитория
+  label_help_repository_setup_new: Настройка нового репозитория
+  label_hierarchical_organisation: Структура каталогов для репозиториев под управлением Redmine
+  label_hierarchical: Иерарх.
+  label_http_access: HTTP доступ
+  label_http_only: Только HTTP
+  label_http_server_domain: Домен HTTP-сервера
+  label_http_server_subdir_desc: Относительно корневного URL Redmine
+  label_http_server_subdir: Подкаталог для HTTP доступа
+  label_https_access: HTTPS доступ
+  label_https_and_http: HTTPS и HTTP
+  label_https_only: Только HTTPS
+  label_https_server_domain_desc: Оставьте пустым, если не используется
+  label_https_server_domain: Домен HTTPS-сервера
+  label_identifier_can_be_arbitrary_desc: (Может быть любой значимой строкой)
+  label_identifier_can_be_arbitrary: Идентификатор
+  label_identifier_cannot_be_changed: Идентификатор<br/><em>(Не может быть изменен)</em>
+  label_info: Инфо
+  label_init_repo_with_git_annex: Инициализировать репозиторий c GitAnnex
+  label_init_repo_with_readme: Инициализировать репозиторий README файлом
+  label_init_repositories_on_create: Автоматически инициализировать Git репозиторий с README файлом (а-ля Github)
+  label_install_gitolite_hooks: Установить хуки!
+  label_key_cannot_be_changed_please_create_new_key: 'Ключ не может быть изменен, но вы можете удалить его и создать новый.'
+  label_key_type: Тип публичного ключа
+  label_key: Ключ
+  label_latest_commit_date: Дата последнего копита
+  label_main_git_repository: Основной Git репозиторий
+  label_mirror_add: Добавить зеркало
+  label_mirror_create: Создать зеркало
+  label_mirror_delete: Удалить зеркало
+  label_mirror_edit: Редактировать зеркало
+  label_mirror_explicit_refspec: Явное определение
+  label_mirror_fast_forward: Fast Forward (Unforced)
+  label_mirror_forced_update: Force Update Remote
+  label_mirror_full_mirror: Complete Mirroring
+  label_mirror_help: Зеркала должны предоставлять доступ на запись следующему публичному ключу
+  label_mirror_inactive: Неактивно
+  label_mirror_include_all_branches: Зеркалировать все ветки
+  label_mirror_include_all_tags: Зеркалировать все теги
+  label_mirror_push_fail: Ошибка
+  label_mirror_push_info_html: "Зеркалирование в <b>%{mirror_url}</b> : <span class=\"label label-%{status_css}\">%{status}</span>"
+  label_mirror_push_mode: Режим обновления
+  label_mirror_push_output: Отправлено
+  label_mirror_push_sucess: Успешно
+  label_mirror_push_title: Зеркалировать
+  label_mirror_push: Зеркалировать
+  label_mirror_refspec: Refspec
+  label_mirror_url_accepted_format: Формат URL
+  label_mirror: Зеркало
+  label_mirroring_keys_installed: Установлены ключи зеркалирования?
+  label_mode: Режим
+  label_move_repository: "Перемещение репозитория: '%{repo_name}'"
+  label_my_public_keys: Мои публичные ключи
+  label_need_help: Нужна помощь?
+  label_no_public_keys: Публичные ключи не определены
+  label_open_issue: Открытые проблемы
+  label_path_directories: Каталоги входящие в PATH
+  label_permissions_header: Необходимые разрешения
+  label_post_receive_url_add: Добавить Post Receive URL
+  label_post_receive_url_create: Создать Post-receive URL
+  label_post_receive_url_delete: Удалить Post-receive URL
+  label_post_receive_url_edit: Изменить Post-receive URL
+  label_post_receive_urls: Post Receive URLs
+  label_protected_branch_add: Добавить защищенную ветку
+  label_protected_branch_create: Создать защищенную ветку
+  label_protected_branch_delete: Удалить защищенную ветку
+  label_protected_branch_edit: Редактировать защищенную ветку
+  label_protected_branch: Защищенные ветки
+  label_protected_branches: Защищенные ветки
+  label_public_key_edit: Редактировать публичный ключ
+  label_public_key_new: Ввод нового публичного ключа
+  label_public_key: Публичный ключ
+  label_public_keys: Публичные ключи
+  label_public_repo: Публичный
+  label_read_only_permission: RO
+  label_read_write_permission: RW
+  label_recycle_bin_content_size: Размер
+  label_redmine_config: Настройки Redmine
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Открытые проблемы
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_has_rw_access_on_all_repos: Redmine имеет RW доступ ко всем Gitolite репозиториям
+  label_redmine_user: Системный пользователь Redmine
+  label_regenerate_all_ssh_keys_desc: "Это позволить восстановить идентификаторы SSH ключей"
+  label_regenerate_all_ssh_keys_desc2: "Можеть занять время: все ключи SSH будут удалены и повторно добавлены в Gitolite один за другим."
+  label_regenerate_all_ssh_keys: Перегенерировать SSH ключи?
+  label_repos_current_access_patterns: Текущий шаблон доступа
+  label_repository_access_not_configured: Доступ к репозиторию не настроен. Обратитесь к Администратору!
+  label_repository_access_url: Ссылки для доступа
+  label_repository_default_branch: Ветка по умолчанию
+  label_repository_enabled_capabilities: Подключенные опции
+  label_repository_exists_in_gitolite: Репозиторий существует в Gitolite
+  label_repository_mirrors: Зеркала
+  label_repository_options: Параметры репозитория
+  label_repository_statistics_commits: Статистика комитов
+  label_repository_statistics_contributors: Статистика участников
+  label_repository_statistics_global: Глобальная статистика
+  label_resync_all_projects: Синхронизировать проекты?
+  label_resync_all_ssh_keys: Синхронизировать SSH ключи?
+  label_see_other_repositories: Другие репозитории
+  label_select_all: Выбрать всё
+  label_show_repositories_url: Показывать checkout URL's?
+  label_smart_http: Smart HTTP
+  label_sort_urls: (Изменить порядок)
+  label_split_payloads: Разбить payload
+  label_ssh_access: SSH доступ
+  label_ssh_keys_current_access_patterns: Шаблон доступа по SSH-ключам
+  label_ssh_server_domain: Домен SSH-сервера
+  label_storage_directory: Каталог хранилища
+  label_sudo_gitolite_to_redmine_user: Git пользователь имеет sudo для Redmine пользователя?
+  label_sudo_redmine_to_gitolite_user: Пользователь Redmine имеет sudo для Git пользователя?
+  label_tab_access: Доступ
+  label_tab_cache: Кэш
+  label_tab_config_file: Конфиг. файл
+  label_tab_config_test: Тест настроек
+  label_tab_gitolite_recycle_bin: Корзина
+  label_tab_gitolite_rescue: Восстановление
+  label_tab_global: Общие
+  label_tab_hooks: Хуки
+  label_tab_notify: Уведомления
+  label_tab_redmine: Redmine
+  label_tab_sidekiq_interface: Sidekiq
+  label_tab_ssh: SSH
+  label_tab_storage: Хранилище
+  label_temp_dir_writeable: Временный каталог доступен для записи?
+  label_this_urls_has_permissions: "Данный URL имеет <span id=\"%{span_id}\"></span> доступ."
+  label_total_commits: Всего комитов
+  label_total_contributors: Всего участников
+  label_triggers: Тригеры
+  label_unique_repo_identifier: Глобально уникальный идентификатор репозитория?
+  label_unknown_gitolite_version: Незвестная версия
+  label_use_triggers: Использовать тригеры
+  label_user_key: Пользовательский ключ
+  label_user_list: Разрешенные пользователи
+  label_warn: Предупреждение
+  notice_deployment_credential_create_failed: Ошибка при создании полномочий
+  notice_deployment_credential_created: Полномочия успешно созданы.
+  notice_deployment_credential_deleted_with_key: Полномочия и Ключ успешно удалены.
+  notice_deployment_credential_deleted: Полномочия успешно удалены.
+  notice_deployment_credential_update_failed: Ошибка при обновлении полномочий
+  notice_deployment_credential_updated: Полномочия успешно обновлены.
+  notice_empty_repository: Репозиторий пуст. Следуйте расположенным ниже инструкциям.
+  notice_git_config_key_create_failed: Ошибка при создании параметра Git
+  notice_git_config_key_created: Парметр Git успешно создан.
+  notice_git_config_key_deleted: Парметр Git успешно удален.
+  notice_git_config_key_update_failed: Ошибка при обновлении параметра Git
+  notice_git_config_key_updated: Парметр Git успешно обновлен.
+  notice_gitolite_extra_update_failed: Ошибка при обновлении параметров
+  notice_gitolite_extra_updated: Параметры успешно обновлены
+  notice_mirror_create_failed: Ошибка при создании зеркала.
+  notice_mirror_created: Зеркало успешно создано.
+  notice_mirror_deleted: Зеркало успешно удалено.
+  notice_mirror_update_failed: Ошибка при обновлении зеркала.
+  notice_mirror_updated: Зеркало успешно обновлена.
+  notice_post_receive_url_create_failed: Ошибка при создании post-receive URL.
+  notice_post_receive_url_created: Post-receive URL успешно создан.
+  notice_post_receive_url_deleted: Post-receive URL успешно удален.
+  notice_post_receive_url_update_failed: Ошибка при обновлении post-receive URL.
+  notice_post_receive_url_updated: Post-receive URL успешно обновлен.
+  notice_protected_branch_create_failed: Ошибка при создании защищенной ветки
+  notice_protected_branch_created: Защищенная ветка успешно создана.
+  notice_protected_branch_deleted: Защищенная ветка успешно удалена.
+  notice_protected_branch_update_failed: Ошибка при обновлении защищенной ветки
+  notice_protected_branch_updated: Защищенная ветка успешно обновлена.
+  notice_public_key_created: Публичный ключ <strong>%{title}</strong> успешно создан.
+  notice_public_key_deleted: Публичный ключ <strong>%{title}</strong> успешно удален.
+  notice_public_key_updated: Публичный ключ <strong>%{title}</strong> успешно обновлен.
+  permission_create_gitolite_ssh_key: Создание SSH ключей
+  permission_create_repository_deployment_credentials: Создание полномочий (Deployment Keys)
+  permission_create_repository_git_config_keys: Создание Git-config ключей
+  permission_create_repository_git_notifications: Создание рассылок
+  permission_create_repository_mirrors: Создание зеркал
+  permission_create_repository_post_receive_urls: Создание post-receive URLs
+  permission_create_repository_protected_branches: Создание защищенных веток
+  permission_download_git_revision: Загрузка zip-архива ревизии
+  permission_edit_repository_deployment_credentials: Изменение полномочий (Deployment Keys)
+  permission_edit_repository_git_config_keys: Изменение Git-config ключей
+  permission_edit_repository_git_notifications: Изменение рассылок
+  permission_edit_repository_mirrors: Изменение зеркал
+  permission_edit_repository_post_receive_urls: Изменение post-receive URLs
+  permission_edit_repository_protected_branches: Изменение защищенных веток
+  permission_push_repository_mirrors: Зеркалирование
+  permission_receive_git_notifications: Получение уведомлений о комитах
+  permission_view_repository_deployment_credentials: Просмотр полномочий (Deployment Keys)
+  permission_view_repository_git_config_keys: Просмотр Git-config ключей
+  permission_view_repository_git_notifications: Просмотр рассылок
+  permission_view_repository_mirrors: Просмотр зеркал
+  permission_view_repository_post_receive_urls: Просмотр post-receive URLs
+  permission_view_repository_protected_branches: Просмотр защищенных веток
+  protected_branches_reminder: Защищенные ветки не включены. Включите защищенные ветки в настройках репозитария.
+  redmine_git_hosting: Redmine Git Hosting
+  select_other_keys: Другие ключи
+  text_gitolite_key_destroy_confirmation: "Вы уверены, что хотите удалить данный ключ: %{title}?"
+  text_scm_command_not_available_git_hosting: SCM команда недоступна. Проверьте настройки плагина Redmine Git Hosting.

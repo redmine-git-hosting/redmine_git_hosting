@@ -1,0 +1,49 @@
+- report = RepositoryCommitsStats.new(repository)
+
+#chart_commits_per_month style='height: 300px; width: 47%; margin: 10px; float: left;'
+#chart_commits_per_day style='height: 300px; width: 47%; margin: 10px; float: left;'
+
+.clear-both style='margin: 10px;'
+
+#chart_commits_per_hour style = 'height: 500px; width: 47%; margin: 10px; float: left;'
+#chart_commits_per_weekday style= 'height: 300px; width: 47%; margin: 10px; float: left;'
+
+#chart_commits_per_weekday style='margin-top: 20px;'
+
+javascript:
+  var chart_commits_per_month          = new Object();
+  chart_commits_per_month.label        = "#{l(:label_commits_per_month)}";
+  chart_commits_per_month.label_y_axis = "#{l(:label_commits_number)}";
+  chart_commits_per_month.target       = '#chart_commits_per_month';
+  chart_commits_per_month.categories   = #{report.commits_per_month[:categories].to_json.html_safe};
+  chart_commits_per_month.series       = #{report.commits_per_month[:series].to_json.html_safe};
+
+  var chart_commits_per_day          = new Object();
+  chart_commits_per_day.label        = "#{l(:label_commits_per_day)}";
+  chart_commits_per_day.label_y_axis = "#{l(:label_commits_number)}";
+  chart_commits_per_day.target       = '#chart_commits_per_day';
+  chart_commits_per_day.categories   = #{report.commits_per_day[:categories].to_json.html_safe};
+  chart_commits_per_day.series       = #{report.commits_per_day[:series].to_json.html_safe};
+  chart_commits_per_day.legend       = {
+    layout: 'vertical',
+    align: 'left',
+    verticalAlign: 'top',
+    x: 50,
+    y: 50,
+    floating: true,
+    borderWidth: 1,
+    backgroundColor: '#fff'
+  };
+
+  var chart_commits_per_hour          = new Object();
+  chart_commits_per_hour.label        = "#{l(:label_commits_per_hour)}";
+  chart_commits_per_hour.label_y_axis = "#{l(:label_hour)}";
+  chart_commits_per_hour.label_x_axis = "#{l(:label_commits_number)}";
+  chart_commits_per_hour.target       = '#chart_commits_per_hour';
+  chart_commits_per_hour.categories   = #{report.commits_per_hours[:categories].to_json.html_safe};
+  chart_commits_per_hour.series       = #{report.commits_per_hours[:series].to_json.html_safe};
+
+  var chart_commits_per_weekday     = new Object();
+  chart_commits_per_weekday.label   = "#{l(:label_commits_per_weekday)}";
+  chart_commits_per_weekday.target  = '#chart_commits_per_weekday';
+  chart_commits_per_weekday.series  = #{report.commits_per_weekday.to_json.html_safe};

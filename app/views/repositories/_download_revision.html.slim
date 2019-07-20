@@ -1,0 +1,6 @@
+- if repository.downloadable?
+  = font_awesome_icon 'fas_download', post_text: l(:label_download_format)
+  '
+  = select_tag :download, options_for_select(available_download_format(repository, @rev)),
+               prompt: l(:label_download_select_format),
+               onchange: "if (this.value != '') { window.location = this.value; }"

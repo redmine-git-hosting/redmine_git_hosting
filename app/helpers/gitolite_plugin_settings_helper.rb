@@ -1,23 +1,20 @@
 module GitolitePluginSettingsHelper
-
   def render_gitolite_params_status(params)
     content_tag(:ul, class: 'list-unstyled') do
       content = ''
       params.each do |param, installed|
         content << content_tag(:li, style: 'padding: 2px;') do
           image_tag(image_for_param(installed), style: 'vertical-align: bottom; padding-right: 5px;') +
-          content_tag(:em, label_for_param(param, installed))
+            content_tag(:em, label_for_param(param, installed))
         end
       end
       content.html_safe
     end
   end
 
-
   def label_for_param(param, install_status)
     install_status == 2 ? "#{param} (#{l(:label_gitolite_hook_untouched)})" : param
   end
-
 
   def image_for_param(install_status)
     case install_status
@@ -30,7 +27,6 @@ module GitolitePluginSettingsHelper
     end
   end
 
-
   def render_gitolite_version(version)
     if version.nil?
       css_class = 'label label-important'
@@ -42,12 +38,10 @@ module GitolitePluginSettingsHelper
     content_tag(:span, label, class: css_class)
   end
 
-
   def render_temp_dir_writeable(state, label)
     css_class = state ? 'label label-success' : 'label label-important'
     content_tag(:span, label, class: css_class)
   end
-
 
   def gitolite_plugin_settings_tabs
     [
@@ -67,7 +61,6 @@ module GitolitePluginSettingsHelper
     ]
   end
 
-
   def git_cache_options
     [
       ['Cache Disabled', '0'],
@@ -79,35 +72,31 @@ module GitolitePluginSettingsHelper
     ]
   end
 
-
   def log_level_options
     RedmineGitHosting::Logger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
   end
 
-
   def render_rugged_mandatory_features
     content = ''
     RedmineGitHosting::Config.rugged_mandatory_features.each do |feature|
-      if RedmineGitHosting::Config.rugged_features.include?(feature)
-        opts = { class: 'label label-success' }
-      else
-        opts = { class: 'label label-important' }
-      end
+      opts = if RedmineGitHosting::Config.rugged_features.include?(feature)
+               { class: 'label label-success' }
+             else
+               { class: 'label label-important' }
+             end
       content << content_tag(:span, feature, opts) + "\n"
     end
     content.html_safe
   end
 
-
   def render_rugged_optional_features
     content = ''
     RedmineGitHosting::Config.rugged_features.each do |feature|
-      if !RedmineGitHosting::Config.rugged_mandatory_features.include?(feature)
+      unless RedmineGitHosting::Config.rugged_mandatory_features.include?(feature)
         opts = { class: 'label label-success' }
         content << content_tag(:span, feature, opts)
       end
     end
     content.html_safe
   end
-
 end

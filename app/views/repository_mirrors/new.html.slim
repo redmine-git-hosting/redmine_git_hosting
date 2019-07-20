@@ -1,0 +1,5 @@
+= labelled_form_for :repository_mirror, @mirror,
+                    url: repository_mirrors_path(@repository),
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }

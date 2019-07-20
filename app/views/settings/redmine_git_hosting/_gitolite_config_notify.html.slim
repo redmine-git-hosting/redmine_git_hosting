@@ -1,0 +1,38 @@
+/ Gitolite Notifications Config
+- gitolite_notify_global_prefix = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_prefix)
+- gitolite_notify_global_sender_address = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_sender_address)
+- gitolite_notify_global_include = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_include)
+- gitolite_notify_global_exclude = RedmineGitHosting::Config.get_setting(:gitolite_notify_global_exclude)
+
+h3 = l(:label_gitolite_notify_config)
+
+p
+  = additionals_settings_checkbox :gitolite_notify_by_default,
+                                  value: RedmineGitHosting::Config.get_setting(:gitolite_notify_by_default, true),
+                                  value_is_bool: true
+
+p
+  label = l(:label_gitolite_notify_global_prefix)
+  = text_field_tag 'settings[gitolite_notify_global_prefix]', gitolite_notify_global_prefix, size: 60
+
+p
+  label = l(:label_gitolite_notify_global_sender_address)
+  = text_field_tag 'settings[gitolite_notify_global_sender_address]', gitolite_notify_global_sender_address, size: 60
+
+p
+  label = l(:label_gitolite_notify_global_include)
+  = additionals_select2_tag 'settings[gitolite_notify_global_include]',
+                            options_for_select(gitolite_notify_global_include.map { |mail| [mail, mail] }, gitolite_notify_global_include),
+                            data: gitolite_notify_global_include,
+                            multiple: true,
+                            placeholder: '+ add email',
+                            tags: true
+
+p
+  label = l(:label_gitolite_notify_global_exclude)
+  = additionals_select2_tag 'settings[gitolite_notify_global_exclude]',
+                            options_for_select(gitolite_notify_global_exclude.map { |mail| [mail, mail] }, gitolite_notify_global_exclude),
+                            data: gitolite_notify_global_exclude,
+                            multiple: true,
+                            placeholder: '+ add email',
+                            tags: true

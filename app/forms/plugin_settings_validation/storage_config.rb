@@ -2,7 +2,7 @@ module PluginSettingsValidation
   module StorageConfig
     extend ActiveSupport::Concern
 
-    PATHS_TO_VALIDATE = [:gitolite_global_storage_dir, :gitolite_redmine_storage_dir, :gitolite_recycle_bin_dir]
+    PATHS_TO_VALIDATE = %i[gitolite_global_storage_dir gitolite_redmine_storage_dir gitolite_recycle_bin_dir].freeze
 
     included do
       # Gitolite Storage Config
@@ -22,6 +22,5 @@ module PluginSettingsValidation
         record.errors.add(attr, 'must be relative') if value.starts_with?('/')
       end
     end
-
   end
 end

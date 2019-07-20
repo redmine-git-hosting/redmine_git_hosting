@@ -1,11 +1,5 @@
-class AddSplitPayloadsToPostReceive < ActiveRecord::Migration
-
-  def self.up
+class AddSplitPayloadsToPostReceive < ActiveRecord::Migration[4.2]
+  def change
     add_column :repository_post_receive_urls, :split_payloads, :boolean, default: false
   end
-
-  def self.down
-    remove_column :repository_post_receive_urls, :split_payloads
-  end
-
 end

@@ -1,6 +1,7 @@
 api.user do
   api.id         @user.id
   api.login      @user.login if User.current.admin? || (User.current == @user)
+  api.admin      @user.admin? if User.current.admin? || (User.current == @user)
   api.firstname  @user.firstname
   api.lastname   @user.lastname
   api.mail       @user.mail if User.current.admin? || !@user.pref.hide_mail
@@ -11,11 +12,13 @@ api.user do
 
   render_api_custom_values @user.visible_custom_field_values, api
 
-  api.array :groups do |groups|
-    @user.groups.each do |group|
-      api.group :id => group.id, :name => group.name
+  if User.current.admin? && include_in_api_response?('groups')
+    api.array :groups do |groups|
+      @user.groups.each do |group|
+        api.group id: group.id, name: group.name
+      end
     end
-  end if User.current.admin? && include_in_api_response?('groups')
+  end
 
   api.array :memberships do
     @memberships.each do |membership|
@@ -45,5 +48,4 @@ api.user do
       end
     end
   end
-
 end

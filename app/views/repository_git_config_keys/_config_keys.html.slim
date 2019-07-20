@@ -1,0 +1,28 @@
+- if git_config_keys.any?
+  table.table.table-hover
+    thead
+      tr
+        th = l(:label_key)
+        th = l(:field_value)
+        th
+    tbody
+      - git_config_keys.each do |git_config_key|
+        tr
+          td
+            span.label.label-info = git_config_key.key
+          td
+            span.label.label-success = git_config_key.value
+          td.buttons
+            - if User.current.git_allowed_to?(:edit_repository_git_config_keys, @repository)
+              = link_to l(:button_edit),
+                        edit_repository_git_config_key_path(@repository, git_config_key),
+                        class: 'icon icon-edit modal-box'
+              = link_to l(:button_delete),
+                        repository_git_config_key_path(@repository, git_config_key),
+                        remote: true,
+                        method: :delete,
+                        data: { confirm: l(:text_are_you_sure) },
+                        class: 'icon icon-del'
+
+- else
+  p.nodata = l(:label_no_data)

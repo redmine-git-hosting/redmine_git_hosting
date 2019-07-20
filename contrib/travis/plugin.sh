@@ -13,7 +13,6 @@ function install_plugin() {
   install_plugin_libs
   move_plugin
   install_database
-  install_gemfile
   install_rspec
   install_plugin_dependencies
 }
@@ -21,13 +20,11 @@ function install_plugin() {
 
 ## PRIVATE
 
-
 function install_plugin_libs() {
   log_title "INSTALL ADDITIONAL PACKAGES"
   sudo apt-get install -qq libicu-dev libssh2-1 libssh2-1-dev cmake
   log_ok
 }
-
 
 function move_plugin() {
   log_title "MOVE PLUGIN"
@@ -42,7 +39,6 @@ function move_plugin() {
   log_ok
 }
 
-
 function install_database() {
   log_title "INSTALL DATABASE FILE"
   if [ "$DATABASE_ADAPTER" == "mysql" ] ; then
@@ -56,14 +52,6 @@ function install_database() {
   log_ok
 }
 
-
-function install_gemfile() {
-  log_title "INSTALL RAILS 4 GEMFILE"
-  cp "${CONTRIB_DATA_DIR}/gem_files/rails4.gemfile" "${PLUGIN_DIR}/Gemfile"
-  log_ok
-}
-
-
 function install_rspec() {
   log_title "INSTALL RSPEC FILE"
   mkdir "redmine/spec"
@@ -71,21 +59,18 @@ function install_rspec() {
   log_ok
 }
 
-
 function install_plugin_dependencies() {
-  git_clone 'redmine_bootstrap_kit' 'https://github.com/jbox-web/redmine_bootstrap_kit.git'
-  git_clone 'redmine_sidekiq'       'https://github.com/ogom/redmine_sidekiq.git'
+  git_clone 'additionals' 'https://github.com/AlphaNodes/additionals.git'
+  git_clone 'redmine_sidekiq' 'https://github.com/ogom/redmine_sidekiq.git'
   install_ssh_key
   install_gitolite
 }
-
 
 function install_ssh_key() {
   log_title "INSTALL ADMIN SSH KEY"
   ssh-keygen -N '' -f "${PLUGIN_DIR}/ssh_keys/redmine_gitolite_admin_id_rsa"
   log_ok
 }
-
 
 function install_gitolite() {
   log_title "INSTALL GITOLITE V3"

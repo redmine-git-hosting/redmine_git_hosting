@@ -1,0 +1,85 @@
+- if repository.is_a?(Repository::Xitolite)
+  = form_for repository.extra, url: repository_git_extras_path(repository), html: { method: :put, remote: true } do |f|
+    .box.tabular
+      .container
+
+        .row
+          .col-md-12
+            #xitolite-messages
+              = error_messages_for repository.extra
+
+        .row
+          .col-md-6
+            - unless repository.git_annex_enabled?
+              p
+                = label_tag 'repository_git_extra[git_daemon]', l(:label_enable_git_daemon)
+                = f.check_box :git_daemon, disabled: (!repository.public_project? && !repository.public_repo?)
+
+              - if User.current.git_allowed_to?(:create_repository_protected_branches, repository)
+                p
+                  = label_tag 'repository_git_extra[protected_branch]', l(:label_enable_protected_branches)
+                  = f.check_box :protected_branch
+
+              p
+                = label_tag 'repository_git_extra[public_repo]', l(:label_enable_public_repo)
+                = f.check_box :public_repo
+
+              p
+                = label_tag 'repository_git_extra[git_http]', l(:label_enable_smart_http)
+                = f.check_box :git_http
+
+              p
+                = label_tag 'repository_git_extra[git_https]', l(:label_enable_smart_https)
+                = f.check_box :git_https
+
+              p
+                = label_tag 'repository_git_extra[git_go]', l(:label_enable_go_url)
+                = f.check_box :git_go
+
+              p
+                = label_tag 'repository_git_extra[git_ssh]', l(:label_enable_ssh_url)
+                = f.check_box :git_ssh
+
+          .col-md-6
+
+            p
+              = label_tag 'repository_git_extra[git_notify]', l(:label_enable_git_notify)
+              = f.check_box :git_notify
+            - if repository.git_notification_enabled?
+              p
+                = label_tag 'repository_git_extra[notification_sender]', l(:label_git_notification_sender)
+                = f.text_field :notification_sender
+              p
+                = label_tag 'repository_git_extra[notification_prefix]', l(:label_git_notification_prefix)
+                = f.text_field :notification_prefix
+
+            - unless repository.git_annex_enabled?
+              p
+                = label_tag 'repository_git_extra[default_branch]', l(:label_repository_default_branch)
+                - if repository.branches.present?
+                  = f.select :default_branch, repository_branches_list(repository.branches)
+                - else
+                  span.label.label-info = repository.git_default_branch
+
+              p
+                label= l(:label_mirroring_keys_installed)
+                = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
+
+            p
+              label = l(:label_repository_exists_in_gitolite)
+              = image_tag (repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
+
+            p
+              - if repository.empty_in_gitolite?
+                label = l(:label_empty_repository)
+                = image_tag('true.png')
+              - else
+                label = l(:label_git_objects_count)
+                = repository.git_objects_count
+
+            p
+              label= l(:label_browse_repository)
+              = link_to h(repository.url),
+                        { controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param }
+
+    p = f.submit l(:button_save)

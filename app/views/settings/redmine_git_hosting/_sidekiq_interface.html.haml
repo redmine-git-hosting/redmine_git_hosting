@@ -1,8 +1,0 @@
-/ Gitolite Sidekiq Config
-- gitolite_use_sidekiq = RedmineGitHosting::Config.get_setting(:gitolite_use_sidekiq, true)
-
-%p
-  %label= l(:label_gitolite_use_sidekiq)
-  = bootstrap_switch_tag do
-    = hidden_field_tag 'settings[gitolite_use_sidekiq]', 'false'
-    = check_box_tag 'settings[gitolite_use_sidekiq]', gitolite_use_sidekiq, gitolite_use_sidekiq

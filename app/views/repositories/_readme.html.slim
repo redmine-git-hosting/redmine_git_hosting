@@ -1,0 +1,14 @@
+#readme_container.box
+  h2.readme_trigger style='cursor: pointer;'
+    | README
+
+  hr
+
+  #readme_at_repo_dir.wiki
+    - if html.html_safe.respond_to?(:force_encoding)
+      = html.html_safe.force_encoding('UTF-8')
+    - else
+      = html.html_safe
+
+javascript:
+  $(document).ready(function() { $("#readme_trigger").click(function(){ $("#readme_at_repo_dir").toggle(500); }); });

@@ -1,24 +1,428 @@
 ja:
-
-  redmine_git_hosting: Redmine Git Hosting
-
-  ########### MISCELANOUS ###########
-  label_enabled: 有効
-  label_disabled: 無効
-  label_true: True
-  label_false: False
-  label_backup_in_progress: 保存中...
-  label_delete_in_progress: 削除中...
-  label_url: URL
-  label_mode: モード
-  label_hour: 時
-  button_ok: OK
+  activemodel:
+    errors:
+      models:
+        move_repository_form:
+          attributes:
+            base:
+              identifier_empty: 空タイトルのリポジトリは移動できません
+              identifier_taken: 指定したリポジトリのタイトルは既に他のプロジェクトに使用されています
+              wrong_target_project: 移動先と移動元のプロジェクトは同じです
+  activerecord:
+    errors:
+      models:
+        gitolite_public_key:
+          attributes:
+            key:
+              corrupted: は破損したようです。
+              taken_by_you: 'はあなた（"%{name}"）により既に使用されています。'
+              taken_by_other: 'は他のユーザー（"%{login}" - "%{name}"）により既に使用されています。'
+              taken_by_someone: 'は既に使用されています。詳細はシステム管理者に連絡してください。'
+              taken_by_gitolite_admin: 'はGitoliteの管理キーとして既に使用されています。'
+        project:
+          attributes:
+            identifier:
+              invalid: タイトルは不正です
+              taken: タイトルは既に存在しています
+        repository_deployment_credential:
+          attributes:
+            base:
+              invalid_key: パプリックキーはデプロイキーでなければなりません
+              invalid_user: クレデンシャルの所有者はキーの所有者でなければなりません
+        repository_git_config_key:
+          attributes:
+            key:
+              invalid: "キーの形式は不正です (ドット「.」が含まれる必要があります)"
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: プッシュするためのアイテムを少なくとも1つが必要です
+            explicit_refspec:
+              bad_format: は不正な形式です
+              have_null_component: cannot have null first component (will delete remote branch(es))
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "空リポジトリが既に存在しているためリポジトリは作成できません。"
+              invalid_options: "GitAnnexによりREADMEファイルありのリポジトリは作成できません。"
+            identifier:
+              cannot_equal_project: "既存プロジェクトのIDは使用できません。"
+              taken: "は既に使用されています。"
+              invalid: 不正
+              cannot_change: 編集不可
+  all_branches: 全ブランチ
+  all_references: 全参照
+  all_tags: 全タグ
   button_clone: クローン
-
-  label_monday: 月曜日
-  label_tuesday: 火曜日
-  label_wednesday: 水曜日
-  label_thursday: 木曜日
-  label_friday: 金曜日
-  label_saturday: 土曜日
-  label_sunday: 日曜日
+  button_ok: OK
+  display_access_emphasis: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
+  display_access_flat: "<em>フラット</em>モードのため、親ディレクトリはURLに含まれていません。"
+  display_access_hierarchical: "<em>階層</em>モードのため、親ディレクトリもURLに含まれています。"
+  display_access_setup1: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
+  display_access_setup2: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
+  display_access_setup3: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
+  error_download_revision_no_such_commit: "コミット%{commit}が存在しません"
+  error_project_not_found: "このタイトルのプロジェクトが見つかりません。"
+  error_public_key_create_failed: パプリックキー作成エラー
+  error_public_key_update_failed: パプリックキー編集エラー
+  error_repository_not_found: "このタイトルのリポジトリが見つかりません。"
+  error_xitolite_repositories_disabled: "Gitoliteは無効になっています。リポジトリを作成できません。"
+  field_key: this key
+  field_mode: モード
+  field_perm: アクセス権限
+  field_split_payloads: グローバルペイロードを複数ペイロードに分割する
+  field_use_triggers: 使用トリガー
+  git_notifications_reminder: 上記のメールリストは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
+  label_active_for: 活動経過日数
+  label_all_projects_use_git: 新プロジェクト作成時にGitリポジトリを自動作成する？
+  label_archived_repositories: アーカイブリポジトリ
+  label_average_commit_per_day: 1日あたりの平均コミット数
+  label_average_contributor_commits: 開発者あたりの平均コミット数
+  label_backup_in_progress: 保存中...
+  label_branch_path: ブランチパス
+  label_browse_repository: リポジトリ閲覧
+  label_commit_plural: コミット
+  label_commits_number: コミット数
+  label_commits_per_day: 日別のコミット
+  label_commits_per_hour: 時間別のコミット
+  label_commits_per_weekday: 曜日別のコミット
+  label_copied_to_clipboard: コピー済み!
+  label_copy_to_clipboard: クリップボードにコピー
+  label_current_deploy_keys: 現在のデプロイキー
+  label_current_public_keys: 現在のパプリックキー
+  label_current_user_keys: 現在のユーザーキー
+  label_cut_and_paste: パプリックキー（通常は.pubの拡張子のファイル）の内容を上記に貼り付けてください。
+  label_debug: Debug
+  label_default_domain_name: 既定ドメイン名
+  label_default_gitolite_hooks_url: 既定URL
+  label_default_repository: defaultリポジトリ
+  label_delete_from_recyle_bin: ゴミ箱から削除
+  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？<br/>(ゴミ箱に移動します)
+  label_delete_in_progress: 削除中...
+  label_delete_warning: 注意！完全に削除してもいいですか？
+  label_deploy_key: デプロイキー
+  label_deployment_credential_active: Active?
+  label_deployment_credential_add: デプロイクレデンシャル情報の追加
+  label_deployment_credential_create_key_first: デプロイキーが見つかりません。新しいデプロイキーを作成してください。
+  label_deployment_credential_create: デプロイクレデンシャル情報の作成
+  label_deployment_credential_delete_when_unused: 使用しないキーを削除する？
+  label_deployment_credential_delete: デプロイクレデンシャル情報の作成
+  label_deployment_credential_edit: デプロイクレデンシャル情報の編集
+  label_deployment_credential_honored: Honored?
+  label_deployment_credential_owner: 所有者
+  label_deployment_credential_public_key_file: パプリックキーファイル
+  label_deployment_credential_public_key_name: パプリックキー名
+  label_deployment_credential_select_deploy_key: デプロイキーの選択
+  label_deployment_credentials: デプロイクレデンシャル
+  label_download_and_install_git: Gitのダウンロードとインストール
+  label_download_format: ダウンロード
+  label_download_select_format: タイプ選択
+  label_empty_get: Empty&nbsp;GET
+  label_empty_recycle_bin: ゴミ箱を空にする
+  label_empty_repository: 空リポジトリ？
+  label_enable_git_daemon: Git Daemon有効化
+  label_enable_git_notify: メールリスト有効化
+  label_enable_protected_branches: ブランチ保護有効化
+  label_enable_public_repo: リポジトリを公開する
+  label_enable_smart_http: Smart HTTPモード
+  label_enabled: 有効
+  label_error: Error
+  label_etcetera: etc
+  label_example_repository: exampleリポジトリ
+  label_first_commit_date: 最初コミット日
+  label_flat: フラット
+  label_flush_cache: Gitキャッシュをフラッシュする？
+  label_git_annex: GitAnnex
+  label_git_config_email_desc: コミットの作者メールアドレスに使用します
+  label_git_config_email: Git作者メール
+  label_git_config_key_add: Git設定キー追加
+  label_git_config_key_create: 新しいGit設定キー作成
+  label_git_config_key_delete: Git設定キー削除
+  label_git_config_key_edit: Git設定キー修正
+  label_git_config_keys: Git設定キー
+  label_git_config_username_desc: コミットの作者名に使用します
+  label_git_config_username: Git作者名
+  label_git_daemon: Git Daemon
+  label_git_key_type_config: Git設定キー
+  label_git_key_type_option: Gitoliteオプション
+  label_git_notification_default_list: 既定トリスト
+  label_git_notification_effective_list: 効果リスト
+  label_git_notification_exclude_list: 除外リスト
+  label_git_notification_include_list: 包含リスト
+  label_git_notifications_add: メールリスト追加
+  label_git_notifications_create: メールリスト作成
+  label_git_notifications_delete: メールリスト削除
+  label_git_notifications_edit: メールリスト編集
+  label_git_notifications: メールリスト
+  label_git_notify: Git通知
+  label_git_objects_count: Gitオブジェクト数
+  label_git_option_key_add: Gitoliteオプション追加
+  label_git_option_keys: Gitolite設定オプション
+  label_git_version: Gitバージョン
+  label_github_post: GitHub&nbsp;POST
+  label_gitolite_access_config: Gitoliteアクセス設定
+  label_gitolite_banner: Gitoliteバーナー
+  label_gitolite_bin_dir: Gitolite実行ディレクトリ
+  label_gitolite_cache_adapter_desc: 有効にするにはRedmineの再起動が必要です
+  label_gitolite_cache_adapter: キャッシュアダプター
+  label_gitolite_cache_config: Gitoliteキャッシュ設定
+  label_gitolite_cache_max_elements: 最大キャッシュ要素数
+  label_gitolite_cache_max_size: 最大キャッシュ要素サイズ
+  label_gitolite_cache_max_time: 最大キャッシュ時間
+  label_gitolite_config_file: Gitolite設定ファイル
+  label_gitolite_daemon_by_default: 新リポジトリ作成時にGit Daemonモードをデフォルトに有効化？
+  label_gitolite_documentation: Gitoliteドキュメント
+  label_gitolite_download_revision_enabled: Gitリビジョンダウンロードを有効化
+  label_gitolite_global_config: Gitolite全般設定
+  label_gitolite_global_storage_dir_desc: Gitoliteユーザーホームに対する相対パス
+  label_gitolite_global_storage_dir: Gitoliteリポジトリのバースパス
+  label_gitolite_hook_dirs_installed: フックディレクトリインストール済み？
+  label_gitolite_hook_untouched: フックアクセス不可
+  label_gitolite_hooks_are_asynchronous: フックを非同期実行
+  label_gitolite_hooks_config: Gitoliteフック設定
+  label_gitolite_hooks_debug: フックのデバグモード有効化
+  label_gitolite_hooks_installed: フックインストール済み？
+  label_gitolite_hooks_namespace: フックGit名前空間
+  label_gitolite_hooks_params_installed: フックパラメータインストール済み？
+  label_gitolite_hooks_url: フックURL
+  label_gitolite_http_by_default: 新リポジトリ作成時にSmart HTTPモードをデフォルトに有効化？
+  label_gitolite_identifier_prefix_desc: SSHキータイトルの生成に使用します
+  label_gitolite_identifier_prefix: Gitolite接頭辞
+  label_gitolite_identifier_strip_user_id_desc: 有効にするにはRedmineの再起動が必要です
+  label_gitolite_identifier_strip_user_id: GitoliteタイトルからユーザーIDを除外する
+  label_gitolite_lib_dir: Gitoliteライブラリディレクトリ
+  label_gitolite_libgit2_version: libgit2バージョン
+  label_gitolite_local_code_dir: Gitoliteでないフックディレクトリ
+  label_gitolite_log_level_desc: 有効にするにはRedmineの再起動が必要です
+  label_gitolite_log_level: Gitoliteログレベル
+  label_gitolite_mailer_params_installed: メーラーパラメータインストール済み？
+  label_gitolite_notify_by_default: 新リポジトリ作成時にGit通知をデフォルトに有効化？
+  label_gitolite_notify_config: Gitメールリスト設定
+  label_gitolite_notify_global_exclude: Gitメールリストのグローバル除外リスト
+  label_gitolite_notify_global_include: Gitメールリストのグローバル包含リスト
+  label_gitolite_notify_global_prefix: Gitメールリストのグローバル接頭辞
+  label_gitolite_notify_global_sender_address: Gitメールリストのグローバル宛先
+  label_gitolite_notify_prefix: メールリスト接頭辞
+  label_gitolite_notify_sender_address: メールリスト宛先
+  label_gitolite_overwrite_existing_hooks: 既存のフックを上書き
+  label_gitolite_recycle_bin_dir_desc: Gitoliteユーザーホームに対する相対パス
+  label_gitolite_recycle_bin_dir: Gitoliteゴミ箱のベースパス
+  label_gitolite_recycle_bin_expiration_time_desc: 時
+  label_gitolite_recycle_bin_expiration_time: ゴミ箱内のリポジトリの有効期間
+  label_gitolite_redmine_storage_dir_desc: Gitoliteリポジトリのベースパスに対する相対パス
+  label_gitolite_redmine_storage_dir: Redmine管理上のリポジトリのサブディレクトリ
+  label_gitolite_repository_count: Gitolite上の物理的なリポジトリ数
+  label_gitolite_rescue: Gitoliteレスキュー
+  label_gitolite_rugged_features: Ruggedコンパイル機能
+  label_gitolite_server_host: SSH/Gitoliteサーバーホスト
+  label_gitolite_server_port: SSH/Gitoliteサーバーポート
+  label_gitolite_ssh_config: Gitolite SSH設定
+  label_gitolite_ssh_private_key: Gitolite SSHプライベートキー
+  label_gitolite_ssh_public_key: Gitolite SSHパプリックキー
+  label_gitolite_storage_config: Gitoliteのストレージの設定
+  label_gitolite_temp_dir_desc: 絶対パス
+  label_gitolite_temp_dir: ロックファイルとデータ用の一時的なディレクトリ
+  label_gitolite_use_sidekiq: 非同期ジョブの立ち上げにSidekiqを使用する
+  label_gitolite_user: Gitoliteユーザー名
+  label_gitolite_version: Gitoliteバージョン
+  label_help_git_setup: Git設定
+  label_help_no_repo_rights: このリポジトリへのアクセス権限がありません。"
+  label_help_repository_clone: リポジトリのクローン
+  label_help_repository_setup_existing: 既存リポジトリの設定
+  label_help_repository_setup_new: 新しいリポジトリの設定
+  label_hierarchical_organisation: Redmine管理上のリポジトリのディレクトリとURLの形式
+  label_hierarchical: 階層
+  label_http_access: HTTPアクセス
+  label_http_only: HTTPのみ
+  label_http_server_domain: HTTPサーバードメイン
+  label_http_server_subdir_desc: RedmineルートURLに対する相対パス
+  label_http_server_subdir: HTTPアクセス用のサブディレクトリ
+  label_https_access: HTTPSアクセス
+  label_https_and_http: HTTPSおよびHTTP
+  label_https_only: HTTPSのみ
+  label_https_server_domain_desc: 使用しない場合は空にしてもいいです
+  label_https_server_domain: HTTPSサーバードメイン
+  label_identifier_can_be_arbitrary_desc: （任意文字列）
+  label_identifier_can_be_arbitrary: タイトル
+  label_identifier_cannot_be_changed: タイトル<br/><em>（編集できません）</em>
+  label_info: Info
+  label_init_repo_with_git_annex: GitAnnexによりリポジトリを作成する
+  label_init_repo_with_readme: READMEありのリポジトリを作成する
+  label_init_repositories_on_create: Gitリポジトリ作成時にREADMEを自動作成する？(Githubと同様)
+  label_install_gitolite_hooks: フックインストール！
+  label_key_cannot_be_changed_please_create_new_key: 'キーの内容は編集できません。ただしキーを削除し新しいキーを作成することはできます。'
+  label_key_type: パプリックキー種類
+  label_key: キー
+  label_latest_commit_date: 最後コミット日
+  label_main_git_repository: メインのGitリポジトリ
+  label_mirror_add: ミラーリポジトリ追加
+  label_mirror_create: ミラーリポジトリ作成
+  label_mirror_delete: ミラーリポジトリ削除
+  label_mirror_edit: ミラーリポジトリ編集
+  label_mirror_explicit_refspec: 明示参照仕様
+  label_mirror_fast_forward: ファストフォワード (非強制)
+  label_mirror_forced_update: リモート更新強制
+  label_mirror_full_mirror: 複製完了
+  label_mirror_help: ミラーリポジトリに以下のパプリックキーの書き込み権限の付与が必要です
+  label_mirror_inactive: 非活性
+  label_mirror_include_all_branches: 全ブランチプッシュ
+  label_mirror_include_all_tags: 全タグプッシュ
+  label_mirror_push_fail: エラー
+  label_mirror_push_info_html: "ミラーリポジトリへプッシュ中<b>%{mirror_url}</b>：<span class=\"label label-%{status_css}\">%{status}</span>"
+  label_mirror_push_mode: ミラーリポジトリ編集モード
+  label_mirror_push_output: 出力
+  label_mirror_push_sucess: 成功
+  label_mirror_push_title: ミラーリポジトリへプッシュ
+  label_mirror_push: プッシュ
+  label_mirror_refspec: 参照仕様
+  label_mirror_url_accepted_format: 許可されたURL形式
+  label_mirror: ミラーリポジトリ
+  label_mirroring_keys_installed: ミラーキーインストール済み？
+  label_mode: モード
+  label_move_repository: "リポジトリを移動する：'%{repo_name}'"
+  label_my_public_keys: パプリックキー
+  label_need_help: Need Help?
+  label_no_public_keys: パプリックキーがまだ作成されていません
+  label_open_issue: Open Issue
+  label_path_directories: PATHディレクトリ
+  label_permissions_header: 必要なアクセス許可
+  label_post_receive_url_add: Post Receive URL追加
+  label_post_receive_url_create: Post-receive URLレポジトリ作成
+  label_post_receive_url_delete: Post-receive URLレポジトリ削除
+  label_post_receive_url_edit: Post-receive URLレポジトリ編集
+  label_post_receive_urls: Post Receive URLs
+  label_protected_branch_add: 保護ブランチ追加
+  label_protected_branch_create: 保護ブランチ作成
+  label_protected_branch_delete: 保護ブランチ削除
+  label_protected_branch_edit: 保護ブランチ編集
+  label_protected_branch: 保護ブランチ
+  label_protected_branches: 保護ブランチ
+  label_public_key_edit: 現在のパプリックキーの編集
+  label_public_key_new: 新パプリックキーの作成
+  label_public_key: パプリックキー
+  label_public_keys: パプリックキー
+  label_public_repo: 公開リポジトリ
+  label_read_only_permission: RO
+  label_read_write_permission: RW
+  label_recycle_bin_content_size: サイズ
+  label_redmine_config: Redmine設定
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Open Issue
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_has_rw_access_on_all_repos: Redmineは全GitoliteリポジトリのRWアクセス権限を持っています
+  label_redmine_user: Redmineユーザー名
+  label_regenerate_all_ssh_keys_desc: "本処理はSSHキーのタイトルを再作成します"
+  label_regenerate_all_ssh_keys_desc2: "時間がかかる場合があります。全SSHキーを１つずつ削除してからGitoliteに再追加します。"
+  label_regenerate_all_ssh_keys: 全SSHキーを再作成する？
+  label_repos_current_access_patterns: 現リポジトリのアクセスパターン
+  label_repository_access_not_configured: リポジトリのアクセスが設定されていません。システム管理者に連絡してください。
+  label_repository_access_url: リポジトリアクセスリンク
+  label_repository_default_branch: リポジトリのデフォルトブランチ
+  label_repository_enabled_capabilities: リポジトリの有効化済機能
+  label_repository_exists_in_gitolite: Gitoliteにリポジトリは既に存在しています
+  label_repository_mirrors: ミラーリポジトリ
+  label_repository_options: リポジトリ設定
+  label_repository_statistics_commits: コミット統計
+  label_repository_statistics_contributors: 開発者統計
+  label_repository_statistics_global: 全体統計
+  label_resync_all_projects: 全プロジェクトを再同期する？
+  label_resync_all_ssh_keys: 全SSHキーを再同期する？
+  label_see_other_repositories: 他のリポジトリの閲覧
+  label_select_all: 全選択
+  label_show_repositories_url: クローン用のリポジトリURLを表示する？
+  label_smart_http: Smart HTTP
+  label_sort_urls: (Urls並び替え)
+  label_split_payloads: ペイロード分割
+  label_ssh_access: SSHアクセス
+  label_ssh_keys_current_access_patterns: SSHキーアクセスパターン
+  label_ssh_server_domain: SSHサーバードメイン
+  label_storage_directory: Git格納ディレクトリ
+  label_sudo_gitolite_to_redmine_user: GitユーザーはRedmineユーザーに対してsudo可能？
+  label_sudo_redmine_to_gitolite_user: RedmineユーザーはGitユーザーに対してsudo可能？
+  label_tab_access: アクセス
+  label_tab_cache: キャッシュ
+  label_tab_config_file: 設定ファイル
+  label_tab_config_test: 設定テスト
+  label_tab_gitolite_recycle_bin: ゴミ箱
+  label_tab_gitolite_rescue: レスキュー
+  label_tab_global: 全般
+  label_tab_hooks: フック
+  label_tab_notify: 通知
+  label_tab_redmine: Redmine
+  label_tab_sidekiq_interface: Sidekiq
+  label_tab_ssh: SSH
+  label_tab_storage: ストレージ
+  label_temp_dir_writeable: テンプディレクトリへ書き込み可能？
+  label_this_urls_has_permissions: "このURLに<span id=\"%{span_id}\"></span>のアクセス権限があります。"
+  label_total_commits: コミット数
+  label_total_contributors: 開発者数
+  label_triggers: トリガー
+  label_unique_repo_identifier: リポジトリのタイトルは全体的にユニークですか？
+  label_unknown_gitolite_version: バージョン不明
+  label_use_triggers: 使用トリガー
+  label_user_key: ユーザーキー
+  label_user_list: 許可ユーザー
+  label_warn: Warning
+  notice_deployment_credential_create_failed: デプロイクレデンシャル情報作成エラー
+  notice_deployment_credential_created: デプロイクレデンシャル情報は正常に作成できました。
+  notice_deployment_credential_deleted_with_key: デプロイクレデンシャル情報およびキーは正常に削除できました。
+  notice_deployment_credential_deleted: デプロイクレデンシャル情報は正常に削除できました。
+  notice_deployment_credential_update_failed: デプロイクレデンシャル情報編集エラー
+  notice_deployment_credential_updated: デプロイクレデンシャル情報は正常に編集できました。
+  notice_empty_repository: 空リポジトリです。リポジトリの使用開始は以下の手順を参考してください。
+  notice_git_config_key_create_failed: Git設定キー作成エラー
+  notice_git_config_key_created: Git設定キーは正常に作成できました。
+  notice_git_config_key_deleted: Git設定キーは正常に削除できました。
+  notice_git_config_key_update_failed: Git設定キー編集エラー
+  notice_git_config_key_updated: Git設定キーは正常に編集できました。
+  notice_git_notifications_create_failed: メールリスト作成エラー。
+  notice_git_notifications_created: メールリストは正常に作成できました。
+  notice_git_notifications_deleted: メールリストは正常に削除できました。
+  notice_git_notifications_update_failed: メールリスト編集エラー。
+  notice_git_notifications_updated: メールリストは正常に編集できました。
+  notice_gitolite_extra_update_failed: 設定更新エラー
+  notice_gitolite_extra_updated: 設定更新成功
+  notice_mirror_create_failed: ミラーリポジトリ作成エラー。
+  notice_mirror_created: ミラーリポジトリは正常に作成できました。
+  notice_mirror_deleted: ミラーリポジトリは正常に削除できました。
+  notice_mirror_update_failed: ミラーリポジトリ編集エラー。
+  notice_mirror_updated: ミラーリポジトリは正常に編集できました。
+  notice_post_receive_url_create_failed: Post-receive URL作成エラー。
+  notice_post_receive_url_created: Post-receive URLは正常に作成できました。
+  notice_post_receive_url_deleted: Post-receive URLは正常に削除できました。
+  notice_post_receive_url_update_failed: Post-receive URL編集エラー。
+  notice_post_receive_url_updated: Post-receive URLは正常に編集できました。
+  notice_protected_branch_create_failed: 保護ブランチ作成エラー
+  notice_protected_branch_created: 保護ブランチは正常に作成できました。
+  notice_protected_branch_deleted: 保護ブランチは正常に削除できました。
+  notice_protected_branch_update_failed: 保護ブランチ編集エラー
+  notice_protected_branch_updated: 保護ブランチは正常に編集できました。
+  notice_public_key_created: パプリックキー <strong>%{title}</strong>は正常に作成できました。
+  notice_public_key_deleted: パプリックキー <strong>%{title}</strong>は正常に削除できました。
+  notice_public_key_updated: パプリックキー <strong>%{title}</strong>は正常に編集できました。
+  permission_create_gitolite_ssh_key: SSHキーの作成
+  permission_create_repository_deployment_credentials: デプロイキーの作成
+  permission_create_repository_git_config_keys: Git設定キーの作成
+  permission_create_repository_git_notifications: Gitメールリストの作成
+  permission_create_repository_mirrors: ミラーリポジトリの作成
+  permission_create_repository_post_receive_urls: Post-receive URLの作成
+  permission_create_repository_protected_branches: 保護ブランチの作成
+  permission_download_git_revision: アーカイブGitリビジョンのダウンロード
+  permission_edit_repository_deployment_credentials: デプロイキーの編集
+  permission_edit_repository_git_config_keys: Git設定キーの編集
+  permission_edit_repository_git_notifications: Gitメールリストの編集
+  permission_edit_repository_mirrors: ミラーリポジトリの編集
+  permission_edit_repository_post_receive_urls: Post-receive URLの編集
+  permission_edit_repository_protected_branches: 保護ブランチの編集
+  permission_push_repository_mirrors: ミラーリポジトリへのプッシュ
+  permission_receive_git_notifications: コミット時のGit通知の受信
+  permission_view_repository_deployment_credentials: デプロイキーの閲覧
+  permission_view_repository_git_config_keys: Git設定キーの閲覧
+  permission_view_repository_git_notifications: Gitメールリストの閲覧
+  permission_view_repository_mirrors: ミラーリポジトリの閲覧
+  permission_view_repository_post_receive_urls: Post-receive URLの閲覧
+  permission_view_repository_protected_branches: 保護ブランチの閲覧
+  protected_branches_reminder: 上記の保護ブランチは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
+  redmine_git_hosting: Redmine Git Hosting
+  select_other_keys: 他のキー
+  text_gitolite_key_destroy_confirmation: "このキーを削除してもよろしいですか: %{title}？"
+  text_scm_command_not_available_git_hosting: SMCコマンドが使用できません。Redmine Git Hostingの管理設定を確認してください。

@@ -1,0 +1,27 @@
+/ Gitolite Storage Config
+- gitolite_global_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_global_storage_dir)
+- gitolite_redmine_storage_dir = RedmineGitHosting::Config.get_setting(:gitolite_redmine_storage_dir)
+- gitolite_recycle_bin_dir = RedmineGitHosting::Config.get_setting(:gitolite_recycle_bin_dir)
+
+h3 = l(:label_gitolite_storage_config)
+
+p
+  label = l(:label_gitolite_global_storage_dir)
+  = text_field_tag 'settings[gitolite_global_storage_dir]', gitolite_global_storage_dir, size: 60
+  br
+  em.info
+    = l(:label_gitolite_global_storage_dir_desc)
+
+p
+  label = l(:label_gitolite_recycle_bin_dir)
+  = text_field_tag 'settings[gitolite_recycle_bin_dir]', gitolite_recycle_bin_dir, size: 60
+  br
+  em.info
+    = l(:label_gitolite_recycle_bin_dir_desc)
+
+p
+  label = l(:label_gitolite_redmine_storage_dir)
+  = text_field_tag 'settings[gitolite_redmine_storage_dir]', gitolite_redmine_storage_dir, size: 60
+  br
+  em.info
+    = l(:label_gitolite_redmine_storage_dir_desc)

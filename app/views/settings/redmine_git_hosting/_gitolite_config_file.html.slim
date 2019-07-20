@@ -1,0 +1,45 @@
+/ Gitolite Config File
+- gitolite_config_file = RedmineGitHosting::Config.get_setting(:gitolite_config_file)
+- gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
+- gitolite_identifier_strip_user_id = RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+
+- disable_button = (gitolite_config_file == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE ? true : false)
+
+h3 = l(:label_gitolite_config_file)
+
+p
+  label = l(:label_gitolite_config_file)
+  = text_field_tag 'settings[gitolite_config_file]', gitolite_config_file, size: 60
+
+p
+  label = l(:label_gitolite_identifier_prefix)
+  = hidden_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix if disable_button
+  = text_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix, size: 60, disabled: disable_button
+  br
+  em.info
+    = l(:label_gitolite_identifier_prefix_desc)
+
+p
+  = additionals_settings_checkbox :gitolite_identifier_strip_user_id,
+                                  value: gitolite_identifier_strip_user_id,
+                                  value_is_bool: true,
+                                  disabled: disable_button
+  br
+  em.info
+    = l(:label_gitolite_identifier_strip_user_id_desc)
+br
+
+.git_hosting_access_box
+  h3 = l(:label_ssh_keys_current_access_patterns)
+
+  - gitolite_identifier_suffix = !gitolite_identifier_strip_user_id ? '_user_id' : ''
+
+  pre
+    markdown:
+      SSH Key : #{gitolite_identifier_prefix}admin<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
+      SSH Key : #{gitolite_identifier_prefix}bob<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
+
+      repo    repositories/test
+        RW+                        = <em>#{gitolite_identifier_prefix}</em>admin<em>#{gitolite_identifier_suffix}</em> <em>#{gitolite_identifier_prefix}</em>john<em>#{gitolite_identifier_suffix}</em>
+        RW                         = <em>#{gitolite_identifier_prefix}</em>bob<em>#{gitolite_identifier_suffix}</em> alice
+        R                          = <em>#{gitolite_identifier_prefix}</em>reporter<em>#{gitolite_identifier_suffix}</em> mike gitweb

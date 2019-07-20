@@ -1,0 +1,16 @@
+- if project.module_enabled?(:repository)
+  - if project.repository && project.repository.is_a?(Repository::Xitolite)
+    - if RedmineGitHosting::Config.show_repositories_url? && User.current.allowed_to?(:view_changesets, project)
+      .git_hosting.box
+        h3
+          = project.repositories.count > 1 ? l(:label_repository_plural) : l(:label_repository)
+        = render partial: 'common/git_urls', locals: { repositories: project.gitolite_repos }
+        - if project.repositories.count > 1
+          .clear-both
+          p
+            = link_to l(:label_see_other_repositories), { controller: '/repositories',
+                                                          action: 'show',
+                                                          id: project,
+                                                          repository_id: project.repository.identifier_param,
+                                                          rev: nil,
+                                                          path: nil }

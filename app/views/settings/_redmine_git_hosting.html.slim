@@ -1,0 +1,23 @@
+= render partial: 'common/git_hosting_js_headers'
+- content_for :header_tags do
+  = additionals_library_load(:select2)
+
+span
+  = l(:label_need_help) + ':'
+  '
+  = link_to l(:label_redmine_git_hosting_wiki), RedmineGitHosting::Config::GITHUB_WIKI, class: 'external'
+
+br
+
+span
+  = l(:label_open_issue) + ':'
+  '
+  = link_to l(:label_redmine_git_hosting_issue), RedmineGitHosting::Config::GITHUB_ISSUE, class: 'external'
+
+br
+br
+
+= render_tabs gitolite_plugin_settings_tabs
+
+javascript:
+  $(document).ready(function() { setSettingsActiveTab(); setBootstrapSwitch(); });

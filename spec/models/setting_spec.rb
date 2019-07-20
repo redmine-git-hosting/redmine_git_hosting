@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Setting do
-
   before do
     RedmineGitHosting::Config.reload_from_file!
     @settings = Setting.plugin_redmine_git_hosting

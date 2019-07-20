@@ -1,0 +1,4 @@
+div style='height: 50%;'
+  ul.authors-list
+    - @authors.each do |author|
+      li = mail_to author.email, author.name

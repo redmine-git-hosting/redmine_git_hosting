@@ -1,0 +1,55 @@
+div
+  - if User.current.git_allowed_to?(:create_repository_mirrors, @repository)
+    .contextual= link_to l(:label_mirror_add), new_repository_mirror_path(@repository), class: 'icon icon-add modal-box'
+
+  h3 = l(:label_repository_mirrors)
+
+  - if @repository_mirrors.any?
+    table.table.table-hover
+      thead
+        tr
+          th = l(:field_url)
+          th = l(:label_mirror_refspec)
+          th = l(:label_mode)
+          th = l(:label_enabled)
+          th
+      tbody
+        - @repository_mirrors.each do |mirror|
+          tr
+            td = mirror.url
+            td = refspec(mirror, 64).html_safe
+            td = mirror_mode(mirror).html_safe
+            td = checked_image_with_exclamation mirror.active?
+
+            td.buttons
+              - if User.current.git_allowed_to?(:push_repository_mirrors, @repository)
+                = link_to font_awesome_icon('fas_rocket', post_text: l(:label_mirror_push), class: 'fa-lg'),
+                          push_repository_mirror_path(@repository, mirror),
+                          class: 'modal-box-close-only'
+
+              - if User.current.git_allowed_to?(:edit_repository_mirrors, @repository)
+                = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), class: 'icon icon-edit modal-box'
+                = link_to l(:button_delete),
+                          repository_mirror_path(@repository, mirror),
+                          remote: true,
+                          method: :delete,
+                          data: { confirm: l(:text_are_you_sure) },
+                          class: 'icon icon-del'
+
+  - else
+    p.nodata = l(:label_no_data)
+
+  .git_hosting_spacer
+
+  div style='margin: 2px 3px; width: 99%;'
+    div
+      = clipboardjs_button_for('mirror_pubkey')
+      span style='margin-left: 10px;'
+        = l(:label_mirror_help) + ' :'
+
+    .git_hosting_spacer
+
+    textarea#mirror_pubkey readonly='readonly' style='height: 100px; width: 99%; font-family: sans-serif;'
+      = RedmineGitHosting::Config.mirroring_public_key
+
+  .git_hosting_spacer

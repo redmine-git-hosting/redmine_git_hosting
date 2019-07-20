@@ -1,0 +1,78 @@
+#flash_warning.flash.warning = l(:notice_empty_repository)
+
+- if @repository.urls_are_viewable?
+  - content_for :header_tags do
+    = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
+
+  .git_hosting_urls.box
+    .container
+      .row
+        .col-md-8 style='vertical-align: middle;'
+          = render 'common/git_urls', repository: @repository
+        .col-md-4 style='text-align: right; vertical-align: middle;'
+
+.box
+  - if User.current.allowed_to?(:view_changesets, @project)
+    h3 = l(:label_help_git_setup) + ' :'
+    pre
+      code.shell.syntaxhl
+        | #{link_to l(:label_download_and_install_git), 'https://git-scm.com/download', target: 'external' }
+        br
+        | git config --global user.name "#{User.current.name(:firstname_lastname)}"
+        br
+        | git config --global user.email #{User.current.mail ? User.current.mail : "mail@example.com"}
+        - if !User.current.anonymous? && User.current.gitolite_public_keys.length == 0
+          br
+          | #{link_to "Upload SSH Public Key", public_keys_path}
+
+    - if User.current.allowed_to?(:commit_access, @project)
+      #repository_setup
+        h3 = l(:label_help_repository_setup_new) + ' :'
+        pre
+          code.shell.syntaxhl
+            | mkdir #{@repository.redmine_name}
+            br
+            | cd #{@repository.redmine_name}
+            br
+            | git init
+            br
+            | touch readme.txt
+            br
+            | git add readme.txt
+            br
+            | git commit -m 'Initializing #{@repository.redmine_name} repository'
+            br
+            | git remote add origin <span class="git_url_access"></span>
+            br
+            | git push -u origin master
+
+        h3 = l(:label_help_repository_setup_existing) + ' :'
+        pre
+          code.shell.syntaxhl
+            | cd existing_git_repo
+            br
+            | git remote add origin <span class="git_url_access"></span>
+            br
+            | git push -u origin master
+
+      h3 = l(:label_help_repository_clone) + ' :'
+      pre
+        code.shell.syntaxhl
+          | git clone <span class="git_url_access"></span>
+
+  - else
+    = l(:label_help_no_repo_rights)
+
+- content_for :sidebar do
+  h3 = l(:label_repository_plural)
+  ul.repository.git
+    - @repositories.sort.each do |repo|
+      - li_class = "#{'repository git' if repo.is_a?(Repository::Xitolite)}"
+      li class="#{li_class}"
+        = link_to_repository(repo, @repository)
+        - if User.current.allowed_to?(:manage_repository, @project)
+          '
+          = link_to "(#{l(:label_settings)})", edit_repository_path(repo)
+
+javascript:
+  $(document).ready(function() { setGitUrlsInstructions('.git_url'); });

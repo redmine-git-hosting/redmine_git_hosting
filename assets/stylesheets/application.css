@@ -1,11 +1,4 @@
 /*
-PLUGIN ICONS
-*/
-.icon-git-logo { background-image: url('../images/git_icon.png'); padding-right: 5px; }
-.icon-clone { background-image: url('../images/clone.png'); }
-.icon-move { background-image: url('../images/move.png'); }
-
-/*
 PLUGIN SETTINGS
 */
 .git_hosting_access_box {
@@ -35,14 +28,6 @@ PLUGIN SETTINGS
   color: #467AA7;
 }
 
-.bootstrap-switch {
-  margin-left: 10px;
-}
-
-#tab-content-gitolite_redmine_config .switch-extended {
-  min-width: 175px;
-}
-
 #settings p {
   margin-bottom: 15px;
   margin-top: 15px;
@@ -60,6 +45,18 @@ REPOSITORY EDIT
 /*
 REPOSITORY VIEW
 */
+
+#sidebar li.repository.git::before {
+  font-family: Font Awesome\ 5 Brands;
+  font-size: 1.2em;
+  content: "\f841"; /* fab fa-git-alt */
+  padding-right: 4px;
+}
+
+#sidebar ul.repository.git {
+  padding-left: 0;
+}
+
 #git_hosting_download_buttons {
   margin-top: 20px;
 }
@@ -234,11 +231,6 @@ STATISTICS
   color: #999999;
   font-weight: normal;
   line-height: 1;
-}
-
-/*FONT AWESOME*/
-.fa-align {
-  padding-right: 5px;
 }
 
 li.url_type {

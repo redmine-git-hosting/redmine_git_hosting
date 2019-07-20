@@ -1,0 +1,11 @@
+#sortable-url-messages
+
+ul#sortable-url.list-unstyled data-remote="true" data-update-url="#{sort_urls_repository_git_extras_path(@repository)}"
+  - @repository.available_urls_sorted.keys.each do |url_type|
+    li.url_type.draggable id="repository_git_extra_#{url_type}"
+      = icon_for_url_type(url_type)
+      '
+      span = label_for_url_type(url_type)
+
+javascript:
+  $(document).ready(function() { setSortableElement('#sortable-url', '#sortable-url'); });

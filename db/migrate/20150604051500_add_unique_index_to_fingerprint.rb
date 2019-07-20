@@ -1,11 +1,5 @@
-class AddUniqueIndexToFingerprint < ActiveRecord::Migration
-
-  def self.up
+class AddUniqueIndexToFingerprint < ActiveRecord::Migration[4.2]
+  def change
     add_index :gitolite_public_keys, :fingerprint, unique: true
   end
-
-  def self.down
-    remove_index :gitolite_public_keys, :fingerprint
-  end
-
 end

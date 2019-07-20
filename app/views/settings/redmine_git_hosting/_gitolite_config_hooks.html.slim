@@ -1,0 +1,46 @@
+/ Gitolite Hooks Config
+- gitolite_hooks_url = RedmineGitHosting::Config.get_setting(:gitolite_hooks_url)
+
+.contextual
+  = link_to font_awesome_icon('fas_rocket', post_text: l(:label_install_gitolite_hooks), class: 'fa-lg'),
+            install_gitolite_hooks_path('redmine_git_hosting'),
+            remote: true
+
+h3 = l(:label_gitolite_hooks_config)
+
+.container
+  .row
+    .col-md-6 style='vertical-align: top;'
+      p
+        = additionals_settings_checkbox :gitolite_overwrite_existing_hooks,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_overwrite_existing_hooks, true),
+                                        value_is_bool: true
+
+      p
+        = additionals_settings_checkbox :gitolite_hooks_are_asynchronous,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_hooks_are_asynchronous, true),
+                                        value_is_bool: true
+
+      p
+        = additionals_settings_checkbox :gitolite_hooks_debug,
+                                        value: RedmineGitHosting::Config.get_setting(:gitolite_hooks_debug, true),
+                                        value_is_bool: true
+
+      p
+        label = l(:label_gitolite_hooks_url)
+        = text_field_tag 'settings[gitolite_hooks_url]', gitolite_hooks_url, size: 60
+        br
+        em.info
+          = l(:label_default_gitolite_hooks_url) + ' :'
+          = "#{Setting.protocol}://#{Setting.host_name.split('/').first}"
+
+      p
+        label = l(:label_gitolite_hooks_url)
+        span.label.label-info = RedmineGitHosting::Config.gitolite_hooks_url
+
+      p
+        label= l(:label_gitolite_hooks_namespace)
+        span.label.label-info = RedmineGitHosting::Config.gitolite_hooks_namespace
+
+    .col-md-6
+      #install_gitolite_hooks

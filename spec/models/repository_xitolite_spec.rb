@@ -9,8 +9,8 @@ describe Repository::Xitolite do
     Setting.plugin_redmine_git_hosting[:http_server_subdir] = 'git/'
     User.current = nil
 
-    @project_parent = FactoryGirl.create(:project, identifier: 'project-parent')
-    @project_child  = FactoryGirl.create(:project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false)
+    @project_parent = FactoryBot.create(:project, identifier: 'project-parent')
+    @project_child  = FactoryBot.create(:project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false)
   end
 
 

@@ -2,7 +2,6 @@ module RedmineGitHosting
   module Cache
     class Database < AbstractCache
       class << self
-
         def set_cache(repo_id, command, output)
           logger.debug("DB Adapter : inserting cache entry for repository '#{repo_id}'")
           begin
@@ -13,7 +12,6 @@ module RedmineGitHosting
             false
           end
         end
-
 
         def get_cache(repo_id, command)
           cached = GitCache.find_by_repo_identifier_and_command(repo_id, command)
@@ -32,28 +30,25 @@ module RedmineGitHosting
           out
         end
 
-
         def flush_cache!
           ActiveRecord::Base.connection.execute('TRUNCATE git_caches')
         end
 
-
         def clear_obsolete_cache_entries
-          deleted = GitCache.delete_all(['created_at < ?', time_limit])
+          return if time_limit.nil?
+
+          deleted = GitCache.where('created_at < ?', time_limit).delete_all
           logger.info("DB Adapter : removed '#{deleted}' expired cache entries among all repositories")
         end
 
-
         def clear_cache_for_repository(repo_id)
-          deleted = GitCache.delete_all(['repo_identifier = ?', repo_id])
+          deleted = GitCache.where(repo_identifier: repo_id).delete_all
           logger.info("DB Adapter : removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
         end
-
 
         def apply_cache_limit
           GitCache.find(:last, order: 'created_at DESC').destroy if max_cache_elements >= 0 && GitCache.count > max_cache_elements
         end
-
       end
     end
   end

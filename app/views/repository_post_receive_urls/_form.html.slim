@@ -1,0 +1,33 @@
+.flash-messages = error_messages_for 'post_receive_url'
+
+.box
+  p = f.text_field :url, required: true, size: 65
+  em
+    p
+      = l(:label_mirror_url_accepted_format) + ' :'
+      br
+      | http://example.com
+      br
+      | https://example.com
+
+  p = f.check_box :active
+
+  p = f.select :mode,
+               [['Github-style POST', :github],
+               ['Empty GET request', :get]],
+               {},
+               onchange: "post_mode_change(this); return false;"
+
+  #payload_options style="#{@post_receive_url.github_mode? ? '' : 'display: none;'}"
+    p = f.check_box :split_payloads
+
+  - if @repository.branches.any?
+    p = f.check_box :use_triggers, onchange: 'trigger_mode_change(this); return false;'
+
+    #triggers_options style="#{@post_receive_url.use_triggers? ? '' : 'display: none;'}"
+      = hidden_field_tag 'repository_post_receive_url[triggers][]', ''
+      - @repository.branches.each do |branch|
+        p
+          label
+            = check_box_tag 'repository_post_receive_url[triggers][]', branch.to_s, @post_receive_url.triggers.include?(branch.to_s)
+            = branch.to_s

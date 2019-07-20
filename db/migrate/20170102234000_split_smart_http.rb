@@ -1,6 +1,5 @@
-class SplitSmartHttp < ActiveRecord::Migration
-
-  def self.up
+class SplitSmartHttp < ActiveRecord::Migration[4.2]
+  def up
     add_column :repository_git_extras, :git_https, :boolean, default: false, after: :git_http
     add_column :repository_git_extras, :git_ssh,   :boolean, default: true,  after: :git_https
     add_column :repository_git_extras, :git_go,    :boolean, default: false, after: :git_https
@@ -16,7 +15,7 @@ class SplitSmartHttp < ActiveRecord::Migration
       when 2 # HTTPS and HTTP
         git_extra.update_column(:git_https, true)
         git_extra.update_column(:git_http_temp, true)
-      when # HTTP only
+      else # HTTP only
         git_extra.update_column(:git_http_temp, true)
       end
     end
@@ -25,7 +24,7 @@ class SplitSmartHttp < ActiveRecord::Migration
     rename_column :repository_git_extras, :git_http_temp, :git_http
   end
 
-  def self.down
+  def down
     add_column :repository_git_extras, :git_http_temp, :integer, after: :git_http
 
     RepositoryGitExtra.reset_column_information
@@ -47,5 +46,4 @@ class SplitSmartHttp < ActiveRecord::Migration
     remove_column :repository_git_extras, :git_http
     rename_column :repository_git_extras, :git_http_temp, :git_http
   end
-
 end

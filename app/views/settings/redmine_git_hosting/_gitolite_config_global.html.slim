@@ -1,0 +1,43 @@
+/ Gitolite Global Config
+- gitolite_recycle_bin_expiration_time = RedmineGitHosting::Config.get_setting(:gitolite_recycle_bin_expiration_time)
+- gitolite_temp_dir = RedmineGitHosting::Config.get_setting(:gitolite_temp_dir)
+- gitolite_log_level = RedmineGitHosting::Config.get_setting(:gitolite_log_level)
+- git_config_username = RedmineGitHosting::Config.get_setting(:git_config_username)
+- git_config_email = RedmineGitHosting::Config.get_setting(:git_config_email)
+
+h3 = l(:label_gitolite_global_config)
+
+p
+  label = l(:label_gitolite_temp_dir)
+  = text_field_tag 'settings[gitolite_temp_dir]', gitolite_temp_dir, size: 60
+  br
+  em.info
+    = l(:label_gitolite_temp_dir_desc)
+
+p
+  label = l(:label_gitolite_recycle_bin_expiration_time)
+  = text_field_tag 'settings[gitolite_recycle_bin_expiration_time]', gitolite_recycle_bin_expiration_time, size: 10
+  br
+  em.info
+    = l(:label_gitolite_recycle_bin_expiration_time_desc)
+
+p
+  label = l(:label_gitolite_log_level)
+  = select_tag 'settings[gitolite_log_level]', options_for_select(log_level_options, gitolite_log_level)
+  br
+  em.info
+    = l(:label_gitolite_log_level_desc)
+
+p
+  label = l(:label_git_config_username)
+  = text_field_tag 'settings[git_config_username]', "#{git_config_username}", size: 60
+  br
+  em.info
+    = l(:label_git_config_username_desc)
+
+p
+  label = l(:label_git_config_email)
+  = text_field_tag 'settings[git_config_email]', "#{git_config_email}", size: 60
+  br
+  em.info
+    = l(:label_git_config_email_desc)

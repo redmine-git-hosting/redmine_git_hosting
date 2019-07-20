@@ -1,7 +1,5 @@
-FactoryGirl.define do
-
-  factory :group do |f|
-    f.sequence(:lastname)  { |n| "GroupTest#{n}" }
+FactoryBot.define do
+  factory :group do
+    sequence(:lastname) { |n| "GroupTest#{n}" }
   end
-
 end

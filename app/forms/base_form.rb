@@ -8,22 +8,19 @@ module BaseForm
     extend ActiveModel::Naming
   end
 
-
   def persisted?
     false
   end
-
 
   def submit(attributes = {})
     attributes.each do |name, value|
       send("#{name}=", value)
     end
     if valid?
-      valid_form_submitted if self.respond_to?(:valid_form_submitted)
+      valid_form_submitted if respond_to?(:valid_form_submitted)
       true
     else
       false
     end
   end
-
 end

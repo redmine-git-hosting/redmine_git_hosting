@@ -1,8 +1,0 @@
-require 'redmine_git_hosting/hooks/add_plugin_icon'
-require 'redmine_git_hosting/hooks/add_public_keys_link'
-require 'redmine_git_hosting/hooks/display_git_urls_on_project'
-require 'redmine_git_hosting/hooks/display_git_urls_on_repository_edit'
-require 'redmine_git_hosting/hooks/display_git_urls_on_repository_show'
-require 'redmine_git_hosting/hooks/display_repository_extras'
-require 'redmine_git_hosting/hooks/display_repository_readme'
-require 'redmine_git_hosting/hooks/display_repository_sidebar'

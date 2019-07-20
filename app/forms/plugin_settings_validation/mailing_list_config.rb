@@ -16,20 +16,19 @@ module PluginSettingsValidation
       end
 
       validates :gitolite_notify_by_default,            presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
-      validates :gitolite_notify_global_sender_address, presence: true, format: { with: RedmineGitHosting::Validators::EMAIL_REGEX }
+      validates :gitolite_notify_global_sender_address, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
       validate  :git_notifications_intersection
     end
 
-
     private
 
+    # Validate intersection of global_include/global_exclude
+    #
+    def git_notifications_intersection
+      intersection = gitolite_notify_global_include & gitolite_notify_global_exclude
+      return unless intersection.count.positive?
 
-      # Validate intersection of global_include/global_exclude
-      #
-      def git_notifications_intersection
-        intersection = gitolite_notify_global_include & gitolite_notify_global_exclude
-        errors.add(:base, 'duplicated entries detected in gitolite_notify_global_include and gitolite_notify_global_exclude') if intersection.length > 0
-      end
-
+      errors.add(:base, 'duplicated entries detected in gitolite_notify_global_include and gitolite_notify_global_exclude')
+    end
   end
 end

@@ -1,0 +1,8 @@
+- report = RepositoryGlobalStats.new(repository).build
+
+ul.thumbnails
+  - report.each do |key, value|
+    li.span4
+      .thumbnail
+        .title = key
+        .value = value

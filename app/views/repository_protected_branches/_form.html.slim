@@ -1,0 +1,35 @@
+.flash-messages= error_messages_for 'protected_branch'
+
+.box
+  p = f.text_field :path, required: true, size: 65, label: l(:label_branch_path)
+  p = f.select :permissions,
+               options_for_select(RepositoryProtectedBranche::VALID_PERMS, @protected_branch.permissions),
+               required: true,
+               label: :label_permissions
+
+  = hidden_field_tag 'user_ids[]', ''
+  = hidden_field_tag 'group_ids[]', ''
+
+  .container
+    .row
+      .col-md-6
+        h4
+          = font_awesome_icon 'fas_user', post_text: l(:label_user_plural), class: 'fa-lg'
+
+        - @project.users_available.each do |user|
+          p style='padding: 0px;'
+            label style='margin-left: 0; width: auto; font-weight: lighter;'
+              = check_box_tag 'user_ids[]', user.id, @protected_branch.users.include?(user)
+              = user
+            br
+
+      .col-md-6
+        h4
+          = font_awesome_icon 'fas_users', post_text: l(:label_group_plural), class: 'fa-lg'
+
+        - @project.groups_available.each do |group|
+          p style= 'padding: 0px;'
+            label style='margin-left: 0; width: auto; font-weight: lighter;'
+              = check_box_tag 'group_ids[]', group.id, @protected_branch.groups.include?(group)
+              = group
+            br

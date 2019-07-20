@@ -1,0 +1,28 @@
+h3 = l(:label_empty_recycle_bin)
+
+- if !RedmineGitHosting::RecycleBin || !RedmineGitHosting::RecycleBin.content.empty?
+  table.table.table-hover
+    tr
+      th = l(:label_repository)
+      th = l(:label_recycle_bin_content_size)
+      th
+        = l(:label_delete_from_recyle_bin)
+        |  (
+        = link_to l(:label_select_all), 'javascript:void(0);', id: 'select_all_delete'
+        | )
+
+    - RedmineGitHosting::RecycleBin.content.each do |trash_object|
+      tr
+        td = trash_object.path
+        td = trash_object.size
+        td = check_box_tag 'settings[rescue][delete_trash_repo][]', trash_object.path, false, class: 'empty_trash'
+
+  #delete_warning.alert.alert-error style='display: none;'
+    = l(:label_delete_warning)
+
+- else
+  p.nodata style='padding: 5px 0 0;'
+    = l(:label_no_data)
+
+javascript:
+  $(document).ready(function() { setRecycleBinWarnings(); });

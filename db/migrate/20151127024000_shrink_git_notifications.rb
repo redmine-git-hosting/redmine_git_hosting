@@ -1,12 +1,11 @@
-class ShrinkGitNotifications < ActiveRecord::Migration
-
-  def self.up
+class ShrinkGitNotifications < ActiveRecord::Migration[4.2]
+  def up
     add_column :repository_git_extras, :notification_sender, :string
     add_column :repository_git_extras, :notification_prefix, :string
     drop_table :repository_git_notifications
   end
 
-  def self.down
+  def down
     remove_column :repository_git_extras, :notification_sender
     remove_column :repository_git_extras, :notification_prefix
 
@@ -17,6 +16,7 @@ class ShrinkGitNotifications < ActiveRecord::Migration
       t.string  :prefix
       t.string  :sender_address
     end
-  end
 
+    add_index :repository_git_notifications, :repository_id, unique: true
+  end
 end

@@ -1,9 +1,9 @@
 namespace :redmine_git_hosting do
-
   namespace :ci do
-
-    RSpec::Core::RakeTask.new do |task|
-      task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
+    unless Rails.env.production?
+      RSpec::Core::RakeTask.new do |task|
+        task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
+      end
     end
 
     desc 'Check unit tests results'
@@ -47,11 +47,9 @@ namespace :redmine_git_hosting do
       puts %x[ ls -hal "#{dir}" ]
       puts ''
     end
-
   end
 
   task default: 'redmine_git_hosting:ci:all'
   task rspec:   'redmine_git_hosting:ci:all'
   task test:    'redmine_git_hosting:ci:all'
-
 end

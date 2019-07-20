@@ -1,0 +1,32 @@
+/ Redmine Config
+- all_projects_use_git = RedmineGitHosting::Config.get_setting(:all_projects_use_git, true)
+
+h3= l(:label_redmine_config)
+
+p
+  = additionals_settings_checkbox :redmine_has_rw_access_on_all_repos,
+                                  value: RedmineGitHosting::Config.get_setting(:redmine_has_rw_access_on_all_repos, true),
+                                  value_is_bool: true
+
+p
+  = additionals_settings_checkbox :all_projects_use_git, value: all_projects_use_git, value_is_bool: true
+
+p
+  = additionals_settings_checkbox :init_repositories_on_create,
+                                  value: RedmineGitHosting::Config.get_setting(:init_repositories_on_create, true),
+                                  value_is_bool: true,
+                                  disabled: !all_projects_use_git
+
+p
+  = additionals_settings_checkbox :delete_git_repositories,
+                                  value: RedmineGitHosting::Config.get_setting(:delete_git_repositories, true),
+                                  value_is_bool: true
+
+p
+  = additionals_settings_checkbox :hierarchical_organisation,
+                                  value: RedmineGitHosting::Config.get_setting(:hierarchical_organisation, true),
+                                  value_is_bool: true
+
+br
+
+= render partial: 'settings/redmine_git_hosting/gitolite_display_access'

@@ -1,0 +1,12 @@
+= labelled_form_for :repository_deployment_credential, @credential,
+                    url: repository_deployment_credentials_path(@repository),
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
+
+  .flash-messages= error_messages_for 'credential'
+
+  .box
+    - if @user_keys.present? || @other_keys.present?
+      p = f.select :gitolite_public_key_id, build_list_of_keys(@user_keys, @other_keys, @disabled_keys), required: true, label: :label_deployment_credential_select_deploy_key
+      p = f.select :perm, options_for_select(RepositoryDeploymentCredential::VALID_PERMS, RepositoryDeploymentCredential::DEFAULT_PERM), required: true, label: :label_permissions
+    - else
+      = link_to l(:label_deployment_credential_create_key_first), public_keys_path

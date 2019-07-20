@@ -29,6 +29,5 @@ module PluginSettingsValidation
         record.errors.add(attr, 'must exists on filesystem') unless File.exists?(value)
       end
     end
-
   end
 end

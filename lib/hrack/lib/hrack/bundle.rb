@@ -4,7 +4,7 @@ require 'hrack/server'
 
 module Hrack
   module Bundle
-    extend self
+    module_function
 
     def new(config)
       Rack::Builder.new do
@@ -12,6 +12,5 @@ module Hrack
         run Hrack::Server.new(config)
       end
     end
-
   end
 end

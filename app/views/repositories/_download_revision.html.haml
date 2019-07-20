@@ -1,8 +1,0 @@
-- if repository.downloadable?
-  - content_for :header_tags do
-    = bootstrap_load_module(:font_awesome)
-
-  = label_with_icon(l(:label_download_format), 'fa-download')
-  = select_tag  :download, options_for_select(available_download_format(repository, @rev)),
-                prompt: l(:label_download_select_format),
-                onchange: "if (this.value != '') { window.location = this.value; }"

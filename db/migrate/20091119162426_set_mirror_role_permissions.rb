@@ -1,9 +1,8 @@
-class SetMirrorRolePermissions < ActiveRecord::Migration
-
-  def self.up
-    manager_role_name = I18n.t(:default_role_manager, { locale: Setting.default_language })
+class SetMirrorRolePermissions < ActiveRecord::Migration[4.2]
+  def up
+    manager_role_name = I18n.t(:default_role_manager, locale: Setting.default_language)
     say "Updating role : '#{manager_role_name}'..."
-    manager_role = Role.find_by_name(manager_role_name)
+    manager_role = Role.find_by(name: manager_role_name)
     if !manager_role.nil?
       manager_role.add_permission! :view_repository_mirrors
       manager_role.add_permission! :create_repository_mirrors
@@ -14,9 +13,9 @@ class SetMirrorRolePermissions < ActiveRecord::Migration
       say "Role '#{manager_role_name}' not found, exit !"
     end
 
-    developer_role_name = I18n.t(:default_role_developer, { locale: Setting.default_language })
+    developer_role_name = I18n.t(:default_role_developer, locale: Setting.default_language)
     say "Updating role : '#{developer_role_name}'..."
-    developer_role = Role.find_by_name(developer_role_name)
+    developer_role = Role.find_by(name: developer_role_name)
     if !developer_role.nil?
       developer_role.add_permission! :view_repository_mirrors
       developer_role.save
@@ -26,10 +25,10 @@ class SetMirrorRolePermissions < ActiveRecord::Migration
     end
   end
 
-  def self.down
-    manager_role_name = I18n.t(:default_role_manager, { locale: Setting.default_language })
+  def down
+    manager_role_name = I18n.t(:default_role_manager, locale: Setting.default_language)
     say "Updating role : '#{manager_role_name}'..."
-    manager_role = Role.find_by_name(manager_role_name)
+    manager_role = Role.find_by(name: manager_role_name)
     if !manager_role.nil?
       manager_role.remove_permission! :view_repository_mirrors
       manager_role.remove_permission! :create_repository_mirrors
@@ -40,9 +39,9 @@ class SetMirrorRolePermissions < ActiveRecord::Migration
       say "Role '#{manager_role_name}' not found, exit !"
     end
 
-    developer_role_name = I18n.t(:default_role_developer, { locale: Setting.default_language })
+    developer_role_name = I18n.t(:default_role_developer, locale: Setting.default_language)
     say "Updating role : '#{developer_role_name}'..."
-    developer_role = Role.find_by_name(developer_role_name)
+    developer_role = Role.find_by(name: developer_role_name)
     if !developer_role.nil?
       developer_role.remove_permission! :view_repository_mirrors
       developer_role.save
@@ -51,5 +50,4 @@ class SetMirrorRolePermissions < ActiveRecord::Migration
       say "Role '#{developer_role_name}' not found, exit !"
     end
   end
-
 end

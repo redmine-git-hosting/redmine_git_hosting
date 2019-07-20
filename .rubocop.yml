@@ -1,0 +1,60 @@
+require:
+  - rubocop-rspec
+  - rubocop-performance
+
+Rails:
+  Enabled: true
+
+AllCops:
+  TargetRubyVersion: 2.3
+  TargetRailsVersion: 5.2
+  Include:
+    - '**/*.ruby'
+    - '**/*.rake'
+    - '**/*.rb'
+    - '**/*.rsb'
+    - '**/Rakefile'
+    - '**/Gemfile'
+
+Metrics/AbcSize:
+  Max: 65
+
+Metrics/BlockLength:
+  Max: 60
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 20
+
+Metrics/LineLength:
+  Max: 140
+
+Metrics/MethodLength:
+  Max: 60
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 25
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+
+# app/model/application_record.rb is missing in redmine, we can't use ApplicationRecord
+Rails/ApplicationRecord:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/AutoResourceCleanup:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false

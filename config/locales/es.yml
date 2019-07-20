@@ -1,24 +1,411 @@
 es:
-
-  redmine_git_hosting: Redmine Git Hosting
-
-  ########### MISCELANOUS ###########
-  label_enabled: Activado
-  label_disabled: Desactivado
-  label_true: Cierto
-  label_false: Falso
-  label_backup_in_progress: Guardando...
-  label_delete_in_progress: Borrando...
-  label_url: URL
-  label_mode: Modo
-  label_hour: Hora
-  button_ok: Aceptar
+  activemodel:
+    errors:
+      models:
+        move_repository_form:
+          attributes:
+            base:
+              identifier_empty: No es posible mover un repositorio con el identificador vacío
+              identifier_taken: El identificador del repositorio ya está siendo usado por el proyecto nuevo
+              wrong_target_project: El proyecto de destino es idéntico al proyecto de origen
+  activerecord:
+    errors:
+      models:
+        gitolite_public_key:
+          attributes:
+            key:
+              corrupted: parece estar corrompida.
+              taken_by_you: 'ya se está utilizando por usted como "%{name}".'
+              taken_by_other: 'ya se está utilizando por el usuario "%{login}" como "%{name}".'
+              taken_by_someone: ya se está utilizando. Pertenece a otro usuario (pregunte al administrador acerca de los detalles).
+              taken_by_gitolite_admin: ya se está utilizando como la clave de administrador de Gitolite.
+        project:
+          attributes:
+            identifier:
+              invalid: identificador inválido
+              taken: coincide con un identificador de repositorio preexistente
+        repository_deployment_credential:
+          attributes:
+            base:
+              invalid_key: La clave pública debe ser una clave de despliegue
+              invalid_user: El propietario de la credencial no puede ser distinto al propietario de la clave
+        repository_git_config_key:
+          attributes:
+            key:
+              invalid: "Formato de clave incorrecto (debe contener al menos un '.')"
+        repository_mirror:
+          attributes:
+            base:
+              nothing_to_push: Debe incluir al menos un elemento a enviar
+            explicit_refspec:
+              bad_format: tiene un formato incorrecto
+              have_null_component: no puede tener un primer componente nulo (borrará la(s) rama(s) remota(s))
+        repository/xitolite:
+          attributes:
+            base:
+              blank_default_exists: "No se puede crear el repositiorio puesto que ya existe un repositorio en blanco."
+              invalid_options: "No se puede inicializar un fichero README en un repositorio con GitAnnex"
+            identifier:
+              cannot_equal_project: "no se puede asociar con la ID de un proyecto existente"
+              taken: "ya está en uso."
+              invalid: inválido
+              cannot_change: no se puede cambiar
+  all_branches: Todas&nbsp;las&nbsp;ramas
+  all_references: Todas&nbsp;las&nbsp;referencias
+  all_tags: Todas&nbsp;las&nbsp;etiquetas
   button_clone: Clonar
-
-  label_monday: Lunes
-  label_tuesday: Martes
-  label_wednesday: Miércoles
-  label_thursday: Jueves
-  label_friday: Viernes
-  label_saturday: Sábado
-  label_sunday: Domingo
+  button_ok: Aceptar
+  display_access_emphasis: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
+  display_access_flat: "Los proyectos padre no se incluyen en las URLs, ya que el repositorio está en modo <em>plano</em>."
+  display_access_hierarchical: "Los proyectos padre se incluyen en las URLs, ya que el repositorio está en modo <em>jerárquico</em>."
+  display_access_setup1: "Asumiendo que <em>proyecto1</em> es padre de <em>proyecto2</em>, y que <em>proyecto2</em> es padre de <em>proyecto3</em>."
+  display_access_setup2: "Además, asumiendo que el proyecto <em>proyecto3</em> tiene 2 repositorios: el repositorio <em>pordefecto</em> y el repositorio <em>ejemplo</em>."
+  display_access_setup3: "Con dicha configuración, el proyecto <em>proyecto3</em> tiene las siguientes propiedades:"
+  error_download_revision_no_such_commit: "No existe el commit %{commit}"
+  error_project_not_found: "No se ha encontrado ningún proyecto con este identificador"
+  error_public_key_create_failed: Ha fallado la creación de la clave pública.
+  error_public_key_update_failed: Ha fallado la actualización de la clave pública.
+  error_repository_not_found: "No se ha encontrado ningún repositorio con este identificador"
+  error_xitolite_repositories_disabled: "los repositorios Gitolite están deshabilitados, no se puede crear el repositorio!"
+  field_key: esta clave
+  field_mode: Modo
+  field_perm: Permisos de acceso
+  field_split_payloads: Dividir el payload global en varios payloads
+  field_use_triggers: Usar triggers
+  label_active_for: Activo durante
+  label_all_projects_use_git: ¿Inicializar automáticamente un repositorio Git en los proyectos nuevos?
+  label_archived_repositories: Repositorios archivados
+  label_average_commit_per_day: Media de commits por día
+  label_average_contributor_commits: Media de commits por contribuidor
+  label_backup_in_progress: Guardando...
+  label_branch_path: Camino de la rama
+  label_browse_repository: Navegar por el repositorio
+  label_commit_plural: Commits
+  label_commits_number: Número de commits
+  label_commits_per_day: Commits por día
+  label_commits_per_hour: Commits por hora
+  label_commits_per_weekday: Commits por día de la semana
+  label_copied_to_clipboard: ¡Copiado!
+  label_copy_to_clipboard: Copiar al portapapeles
+  label_current_deploy_keys: Claves de despliegue actuales
+  label_current_public_keys: Claves públicas actuales
+  label_current_user_keys: Claves de usuario actuales
+  label_cut_and_paste: Corte y pegue el fichero .pub entero.
+  label_debug: Depuración
+  label_default_domain_name: Nombre de dominio por defecto
+  label_default_gitolite_hooks_url: URL por defecto
+  label_default_repository: Repository por defecto
+  label_delete_from_recyle_bin: Borrar de la papelera de reciclaje
+  label_delete_git_repositories: ¿Borrar el repositorio de Git cuando se borre el proyecto?<br/> (se moverá a la papelera de reciclaje)
+  label_delete_in_progress: Borrando...
+  label_delete_warning: ¡Atención! ¡El borrado es permanente!
+  label_deploy_key: Clave de despliegue
+  label_deployment_credential_active: ¿Activo?
+  label_deployment_credential_add: Añadir credencial de despliegue
+  label_deployment_credential_create_key_first: No se ha detectado ninguna clave de despliegue. Debe crear una antes.
+  label_deployment_credential_create: Crear nueva credencial de despliegue
+  label_deployment_credential_delete_when_unused: ¿Borrar la clave cuando no se use?
+  label_deployment_credential_delete: Borrar credencial de despliegue
+  label_deployment_credential_edit: Editar credencial de despliegue
+  label_deployment_credential_honored: ¿Autorizado?
+  label_deployment_credential_owner: Propietario
+  label_deployment_credential_public_key_file: Fichero de la clave pública
+  label_deployment_credential_public_key_name: Nombre de la clave pública
+  label_deployment_credential_select_deploy_key: Seleccione una clave de despliegue
+  label_deployment_credentials: Credenciales de despliegue
+  label_download_and_install_git: Descargar e instalar Git
+  label_download_format: Descargar como
+  label_download_select_format: Seleccionar formato
+  label_empty_get: GET&nbsp;vacío
+  label_empty_recycle_bin: Vaciar la papelera de reciclaje
+  label_empty_repository: ¿Repositorio vacío?
+  label_enable_git_daemon: Activar el daemon de Git
+  label_enable_git_notify: Activar la lista de correo
+  label_enable_protected_branches: Activar las ramas protegidas
+  label_enable_public_repo: Hacer público el repositorio
+  label_enable_smart_http: Modo HTTP inteligente
+  label_enabled: Activado
+  label_error: Error
+  label_etcetera: etc.
+  label_example_repository: Repository de ejemplo
+  label_first_commit_date: Fecha del primer commit
+  label_flat: Plano
+  label_flush_cache: ¿Desechar la caché de Git?
+  label_git_annex: GitAnnex
+  label_git_config_email_desc: Se usará como la dirección de correo del autor en los commits
+  label_git_config_email: Dirección de correo del autor de Git
+  label_git_config_key_add: Añadir una clave de configuración de Git
+  label_git_config_key_create: Crear una nueva clave de configuración de Git
+  label_git_config_key_delete: Borrar la clave de configuración de Git
+  label_git_config_key_edit: Crear la clave de configuración de Git
+  label_git_config_keys: Claves de configuración de Git
+  label_git_config_username_desc: Se usará como el nombre del autor en los commits
+  label_git_config_username: Nombre del autor de Git
+  label_git_daemon: Daemon de Git
+  label_git_key_type_config: Clave de configuración de Git
+  label_git_key_type_option: Opciones de Gitolite
+  label_git_notification_prefix: Prefijo de la lista de correo
+  label_git_notification_sender: Remitente de la lista de correo
+  label_git_notify: Notificaciones de Git
+  label_git_objects_count: Recuento de objetos de Git
+  label_git_option_key_add: Añadir una opción de Gitolite
+  label_git_option_keys: Optiones de configuración de Gitolite
+  label_git_version: Versión de Git
+  label_github_post: POST&nbsp;GitHub
+  label_gitolite_access_config: Configuración de acceso de Gitolite
+  label_gitolite_banner: Banner de Gitolite
+  label_gitolite_bin_dir: Carpeta de binarios de Gitolite
+  label_gitolite_cache_adapter_desc: Debe reiniciar Redmine para que surja efecto
+  label_gitolite_cache_adapter: Adaptador de caché
+  label_gitolite_cache_config: Configuración de la caché de Gitolite
+  label_gitolite_cache_max_elements: Máximo de elementos en caché
+  label_gitolite_cache_max_size: Tamaño máximo de elementos en caché
+  label_gitolite_cache_max_time: Tiempo máximo de caché
+  label_gitolite_config_file: Fichero de configuración de Gitolite
+  label_gitolite_daemon_by_default: ¿Activar por defecto el modo Daemon de Git en los reposiotios nuevos?
+  label_gitolite_documentation: Documentación de Gitolite
+  label_gitolite_download_revision_enabled: Activar la descarga de revisiones de Git
+  label_gitolite_global_config: Configuración global de Gitolite
+  label_gitolite_global_storage_dir_desc: Relativa al directorio del usuario de Gitolite
+  label_gitolite_global_storage_dir: Ruta base de los repositorios de Gitolite
+  label_gitolite_hook_dirs_installed: ¿Está instalada la carpeta de hooks?
+  label_gitolite_hook_untouched: no se ha modificado el hook
+  label_gitolite_hooks_are_asynchronous: Ejecutar los hooks asíncronamente
+  label_gitolite_hooks_config: Configuración de los Hooks de Gitolite
+  label_gitolite_hooks_debug: Ejecutar los hooks en modo de depuración
+  label_gitolite_hooks_installed: ¿Están los hooks instalados?
+  label_gitolite_hooks_namespace: Espacio de nombres de hooks de Git
+  label_gitolite_hooks_params_installed: ¿Están instalados los parámetros de hooks?
+  label_gitolite_hooks_url: URL de hooks
+  label_gitolite_http_by_default: ¿Activar por defecto el modo HTTP inteligente en los reposiotios nuevos?
+  label_gitolite_identifier_prefix_desc: Se usará para generar los identificadores de las claves SSH
+  label_gitolite_identifier_prefix: Prefijo de Gitolite
+  label_gitolite_identifier_strip_user_id: Eliminar el ID de usuario del identificador de Gitolite
+  label_gitolite_lib_dir: Carpeta de bibliotecas de Gitolite
+  label_gitolite_libgit2_version: Versión de libgit2
+  label_gitolite_local_code_dir: Carpeta de hooks non-core de Gitolite
+  label_gitolite_log_level_desc: Debe reiniciar Redmine para que surja efecto
+  label_gitolite_log_level: Nivel de registro de Gitolite
+  label_gitolite_mailer_params_installed: ¿Están instalados lo parámetros del Mailer?
+  label_gitolite_notify_by_default: "Activar por defecto el hook de 'Notificationes de Git' en los repositorios nuevos?"
+  label_gitolite_notify_config: Configuración de la lista de correo de Git
+  label_gitolite_notify_global_exclude: Listado global de exclusiones de la lista de correo de Git
+  label_gitolite_notify_global_include: Listado global de inclusiones de la lista de correo de Git
+  label_gitolite_notify_global_prefix: Prefijo global de la lista de correo de Git
+  label_gitolite_notify_global_sender_address: Remitente global de la lista de correo de Git
+  label_gitolite_overwrite_existing_hooks: Sobreescribir los hooks preexistentes
+  label_gitolite_recycle_bin_dir_desc: Relativa al directorio del usuario de Gitolite
+  label_gitolite_recycle_bin_dir: Ruta base de la papelera de reciclaje de Gitolite
+  label_gitolite_recycle_bin_expiration_time_desc: En horas
+  label_gitolite_recycle_bin_expiration_time: Tiempo de expiración de los repositorios en la papelera de reciclaje
+  label_gitolite_redmine_storage_dir_desc: Relativa al directorio de repositorios de Gitolite
+  label_gitolite_redmine_storage_dir: Subcarpeta para los repositorios gestionados por Redmine-managed
+  label_gitolite_repository_count: Recuento de repositorios físicos en Gitolite
+  label_gitolite_rescue: Rescate de Gitolite
+  label_gitolite_rugged_features: Características de Rugged compiladas
+  label_gitolite_server_host: host del servidor SSH/Gitolite
+  label_gitolite_server_port: puerto del servidor SSH/Gitolite
+  label_gitolite_ssh_config: Configuración SSH de Gitolite
+  label_gitolite_ssh_private_key: Clave privada SSH de Gitolite
+  label_gitolite_ssh_public_key: Clave pública SSH de Gitolite
+  label_gitolite_storage_config: Configuración del almacenamiento de Gitolite
+  label_gitolite_temp_dir_desc: Debe ser absoluta
+  label_gitolite_temp_dir: Carpeta temporal para los datos y el fichero de bloqueo
+  label_gitolite_use_sidekiq: Usar Sidekiq para lanzar tareas asíncronas
+  label_gitolite_user: Usuario de Gitolite
+  label_gitolite_version: Versión de Gitolite
+  label_help_git_setup: Configuración de Git
+  label_help_no_repo_rights: "Vaya, no tiene acceso a este repositorio. No hay nada que pueda hacer aquí."
+  label_help_repository_clone: Clonar repositorio
+  label_help_repository_setup_existing: Configurar repositorio preexistente
+  label_help_repository_setup_new: Configurar nuevo repositorio
+  label_hierarchical_organisation: Estructura de carpetas y URL para los repositorios gestionados por Redmine
+  label_hierarchical: Jerárquico
+  label_http_access: Acceso HTTP
+  label_http_only: Solo HTTP
+  label_http_server_domain: Dominio del servidor HTTP
+  label_http_server_subdir_desc: Relativa a la URL raíz de Redmine
+  label_http_server_subdir: Subcarpeta para el acceso HTTP
+  label_https_access: Acceso HTTPS
+  label_https_and_http: HTTPS y HTTP
+  label_https_only: Solo HTTPS
+  label_https_server_domain_desc: Déjelo en blanco si no lo usa
+  label_https_server_domain: Dominio del servidor HTTPS
+  label_identifier_can_be_arbitrary_desc: (Puede ser cualquier cadena de texto con significado)
+  label_identifier_can_be_arbitrary: Identificador
+  label_identifier_cannot_be_changed: Identificador<br/><em>(no puede cambiarse)</em>
+  label_info: Info
+  label_init_repo_with_git_annex: Inicializar este repositorio con GitAnnex
+  label_init_repo_with_readme: Inicializar este repositorio con un fichero README
+  label_init_repositories_on_create: Inicializar los repositorios de Git automaticamente con un fichero README (à la Github)
+  label_install_gitolite_hooks: ¡Instalar los hooks!
+  label_key_cannot_be_changed_please_create_new_key: 'No es posible modificar la clave. Sin embargo, puede borrarla y crear una nueva.'
+  label_key_type: Tipo de clave pública
+  label_key: Clave
+  label_latest_commit_date: Fecha del último commit
+  label_main_git_repository: Repositorio principal de Git
+  label_mirror_add: Añadir una réplica del repositorio
+  label_mirror_create: Crear una réplica del repositorio
+  label_mirror_delete: Borrar una réplica del repositorio
+  label_mirror_edit: Modificar una réplica del repositorio
+  label_mirror_explicit_refspec: Especificación de referencias explícitas
+  label_mirror_fast_forward: Avance rápido (no forzado)
+  label_mirror_forced_update: Forzar la actualización de la réplica
+  label_mirror_full_mirror: Réplica completa
+  label_mirror_help: Las réplicas deben autorizar el acceso de escritura a la siguiente clave pública
+  label_mirror_inactive: Inactivo
+  label_mirror_include_all_branches: Enviar todas las ramas
+  label_mirror_include_all_tags: Enviar todas las etiquetas
+  label_mirror_push_fail: Erróneo
+  label_mirror_push_info_html: "Enviando cambios a la réplica <b>%{mirror_url}</b> : <span class=\"label label-%{status_css}\">%{status}</span>"
+  label_mirror_push_mode: Método de actualización de la réplica
+  label_mirror_push_output: Resultado
+  label_mirror_push_sucess: Satisfactorio
+  label_mirror_push_title: Enviar a la réplica
+  label_mirror_push: Enviar
+  label_mirror_refspec: Refspec
+  label_mirror_url_accepted_format: Formatos de URL aceptado
+  label_mirror: Réplica
+  label_mirroring_keys_installed: ¿Están instaladas las claves de réplicas?
+  label_mode: Modo
+  label_move_repository: "Mover repositorio: '%{repo_name}'"
+  label_my_public_keys: Mis claves públicas
+  label_need_help: ¿Necesita ayuda?
+  label_no_public_keys: No se ha definido ninguna clave pública
+  label_open_issue: Abrir un asunto
+  label_path_directories: Carpetas del PATH
+  label_permissions_header: Permisos requeridos
+  label_post_receive_url_add: Añadir una URL de post-recepción
+  label_post_receive_url_create: Crear una URL de post-recepción
+  label_post_receive_url_delete: Borrar la URL de post-recepción
+  label_post_receive_url_edit: Editar la URL de post-recepción
+  label_post_receive_urls: URL de post-recepción
+  label_protected_branch_add: Añadir una rama protegida
+  label_protected_branch_create: Crear una rama protegida
+  label_protected_branch_delete: Borrar una rama protegida
+  label_protected_branch_edit: Editar una rama protegida
+  label_protected_branch: Ramas protegidas
+  label_protected_branches: Ramas protegidas
+  label_public_key_edit: Editar una clave pública existente
+  label_public_key_new: Introducir una nueva clave pública
+  label_public_key: Clave pública
+  label_public_keys: Claves públicas
+  label_public_repo: Repositorio pública
+  label_read_only_permission: RO
+  label_read_write_permission: RW
+  label_recycle_bin_content_size: Tamaño
+  label_redmine_config: Configuración de Redmine
+  label_redmine_git_hosting_issue: Redmine Git Hosting - Abrir un asunto
+  label_redmine_git_hosting_wiki: Redmine Git Hosting - Wiki
+  label_redmine_has_rw_access_on_all_repos: Redmine tiene acceso RW a todos los repositorios de Gitolite
+  label_redmine_user: Usuario de Redmine
+  label_regenerate_all_ssh_keys_desc: "Esto regenerará todos los identificadores de las claves SSH."
+  label_regenerate_all_ssh_keys_desc2: "Esto puede tomar un tiempo: todas las claves SSH serán eliminadas y añadidas de nuevo a Gitolite una por una."
+  label_regenerate_all_ssh_keys: ¿Regenerar todas las claves SSH?
+  label_repos_current_access_patterns: Patrones de acceso a repositorio actuales
+  label_repository_access_not_configured: El acceso al repositorio no está configurado, por favor contacte con su administrador.
+  label_repository_access_url: Enlaces de acceso al repositorio
+  label_repository_default_branch: Rama por defecto del repositorio
+  label_repository_enabled_capabilities: Características del repositorio activas
+  label_repository_exists_in_gitolite: El repositorio existe en Gitolite
+  label_repository_mirrors: Réplicas del repositorio
+  label_repository_options: Opciones del repositorio
+  label_repository_statistics_commits: Estadísticas de commits
+  label_repository_statistics_contributors: Estadísticas de contribuidores
+  label_repository_statistics_global: Estadísticas globales
+  label_resync_all_projects: ¿Resincronizar todos los proyectos?
+  label_resync_all_ssh_keys: ¿Resincronizar todas las claves SSH?
+  label_see_other_repositories: Ver otros repositorios
+  label_select_all: Seleccionar todo
+  label_show_repositories_url: ¿Mostrar URLs de checkout?
+  label_smart_http: HTTP inteligente
+  label_sort_urls: (Ordenar URLs)
+  label_split_payloads: dividir payloads
+  label_ssh_access: Acceso SSH
+  label_ssh_keys_current_access_patterns: Patrones de acceso de las claves SSH
+  label_ssh_server_domain: Dominio del servidor SSH
+  label_storage_directory: Carpeta de almacenamiento
+  label_sudo_gitolite_to_redmine_user: ¿Puede el usuario de Git hacer sudo al usuario de Redmine?
+  label_sudo_redmine_to_gitolite_user: ¿Puede el usuario de Redmine hacer sudo al usuario de Git?
+  label_tab_access: Acceso
+  label_tab_cache: Caché
+  label_tab_config_file: Fichero de configuración
+  label_tab_config_test: Test de configuración
+  label_tab_gitolite_recycle_bin: Papelera de reciclaje
+  label_tab_gitolite_rescue: Rescate
+  label_tab_global: Global
+  label_tab_hooks: Hooks
+  label_tab_notify: Notificaciones
+  label_tab_redmine: Redmine
+  label_tab_sidekiq_interface: Sidekiq
+  label_tab_ssh: SSH
+  label_tab_storage: Almacenamiento
+  label_temp_dir_writeable: ¿Se puede escribir en la carpeta temporal?
+  label_this_urls_has_permissions: "Esta URL tiene acceso <span id=\"%{span_id}\"></span>."
+  label_total_commits: Commits totales
+  label_total_contributors: Contribuidores totales
+  label_triggers: Triggers
+  label_unique_repo_identifier: ¿Los identificadores del repositorio son únicos a nivel global?
+  label_unknown_gitolite_version: Versión desconocida
+  label_use_triggers: Usar triggers
+  label_user_key: Clave de usuario
+  label_user_list: Usuarios autorizados
+  label_warn: Alerta
+  notice_deployment_credential_create_failed: No ha sido posible crear la credencial de despliegue
+  notice_deployment_credential_created: La credencial de despliegue se ha creado correctamente.
+  notice_deployment_credential_deleted_with_key: La credencial y la clave de despliegue se han borrado correctamente.
+  notice_deployment_credential_deleted: La credencial de despliegue se ha borrado correctamente.
+  notice_deployment_credential_update_failed: No ha sido posible actualizar la credencial de despliegue
+  notice_deployment_credential_updated: La credencial de despliegue se ha actualizado correctamente.
+  notice_empty_repository: El repositorio está vacío. Empieze a usarlo siguiendo las instrucciones a continuación.
+  notice_git_config_key_create_failed: No ha sido posible crear la clave de configuración de Git
+  notice_git_config_key_created: La clave de configuración de Git se ha creado correctamente.
+  notice_git_config_key_deleted: La clave de configuración de Git se ha borrado correctamente.
+  notice_git_config_key_update_failed: No ha sido posible actualizar la clave de configuración de Git
+  notice_git_config_key_updated: La clave de configuración de Git se ha actualizado correctamente.
+  notice_gitolite_extra_update_failed: Ha habido un error al actualizar las opciones
+  notice_gitolite_extra_updated: Las opciones se han actualizado correctamente
+  notice_mirror_create_failed: No ha sido posible crear la réplica.
+  notice_mirror_created: La réplica se ha creado correctamente.
+  notice_mirror_deleted: La réplica se ha borrado correctamente.
+  notice_mirror_update_failed: No ha sido posible actualizar la réplica.
+  notice_mirror_updated: La réplica se ha actualizado correctamente.
+  notice_post_receive_url_create_failed: No ha sido posible crear la URL de post-recepción.
+  notice_post_receive_url_created: La URL de post-recepción se ha creado correctamente.
+  notice_post_receive_url_deleted: La URL de post-recepción se ha borrado correctamente.
+  notice_post_receive_url_update_failed: No ha sido posible actualizar la URL de post-recepción.
+  notice_post_receive_url_updated: La URL de post-recepción se ha actualizado correctamente.
+  notice_protected_branch_create_failed: No ha sido posible crear la rama protegida
+  notice_protected_branch_created: La rama protegida se ha creado correctamente.
+  notice_protected_branch_deleted: La rama protegida se ha borrado correctamente.
+  notice_protected_branch_update_failed: No ha sido posible actualizar la rama protegida
+  notice_protected_branch_updated: La rama protegida se ha actualizado correctamente.
+  notice_public_key_created: La clave pública <strong>%{title}</strong> se ha creado correctamente.
+  notice_public_key_deleted: La clave pública <strong>%{title}</strong> se ha borrado correctamente.
+  notice_public_key_updated: La clave pública <strong>%{title}</strong> se ha actualizado correctamente.
+  permission_add_repository_xitolite_watchers: Añadir watchers
+  permission_create_gitolite_ssh_key: Crear claves SSH
+  permission_create_repository_deployment_credentials: Crear claves de despliegue
+  permission_create_repository_git_config_keys: Crear claves de configuración de Git
+  permission_create_repository_mirrors: Crear réplicas de repositorios
+  permission_create_repository_post_receive_urls: Crear URLs de post-recepción
+  permission_create_repository_protected_branches: Crear ramas protegidas
+  permission_delete_repository_xitolite_watchers: Borrar watchers
+  permission_download_git_revision: Descargar el archivo de revisiones de Git
+  permission_edit_repository_deployment_credentials: Editar las claves de despliegue
+  permission_edit_repository_git_config_keys: Editar las claves de configuración de Git
+  permission_edit_repository_mirrors: Editar réplicas de repositorios
+  permission_edit_repository_post_receive_urls: Editar las URLs de post-recepción
+  permission_edit_repository_protected_branches: Editar las ramas protegidas
+  permission_push_repository_mirrors: Enviar cambios a réplicas de repositorios
+  permission_view_repository_deployment_credentials: Ver las claves de despliegue
+  permission_view_repository_git_config_keys: Ver las claves de configuración de Git
+  permission_view_repository_mirrors: Ver las réplicas de repositorios
+  permission_view_repository_post_receive_urls: Ver las URLs de post-recepción
+  permission_view_repository_protected_branches: Ver las ramas protegidas
+  permission_view_repository_xitolite_watchers: Ver los watchers
+  protected_branches_reminder: Las ramas protegidas listadas arriba no están activadas. Por favor, active las Ramas protegidas más arriba en los parámetros del repositorio.
+  redmine_git_hosting: Redmine Git Hosting
+  select_other_keys: Otras claves
+  text_gitolite_key_destroy_confirmation: "¿Seguro que quiere destruir esta clave: %{title}?"
+  text_scm_command_not_available_git_hosting: el comando SCM no está disponible. Por favor, compruebe la configuración en el panel de administración del conector Redmine Git Hosting.

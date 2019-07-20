@@ -1,0 +1,34 @@
+- report = RepositoryContributorsStats.new(repository)
+
+ul.thumbnails
+  - @author_charts = []
+  - report.commits_per_author.each do |commits_data|
+    - idx = report.commits_per_author.index(commits_data)
+    - @author_charts.push("chart_commits_per_author_#{idx}")
+    javascript:
+      var chart_commits_per_author_#{idx}          = new Object();
+      chart_commits_per_author_#{idx}.label        = "";
+      chart_commits_per_author_#{idx}.label_y_axis = "#{l(:label_commits_number)}";
+      chart_commits_per_author_#{idx}.target       = '#chart_commits_per_author_#{idx}';
+      chart_commits_per_author_#{idx}.categories   = #{commits_data[:categories].to_json.html_safe};
+      chart_commits_per_author_#{idx}.series       = #{commits_data[:series].to_json.html_safe};
+      chart_commits_per_author_#{idx}.legend       = {};
+
+    li.span6
+      .thumbnail id="contributor-#{idx}"
+        h4
+          = commits_data[:author_name]
+          '
+          small = commits_data[:author_mail]
+
+        h5 = commits_data[:total_commits]
+        div id="chart_commits_per_author_#{idx}" style='height: 200px; width: 100%'
+
+#chart_commits_per_author
+javascript:
+  var chart_commits_per_author          = new Object();
+  chart_commits_per_author.label        = "#{l(:label_commits_per_author)}";
+  chart_commits_per_author.label_y_axis = "#{l(:label_commits_number)}";
+  chart_commits_per_author.target       = '#chart_commits_per_author';
+  chart_commits_per_author.categories   = #{report.commits_per_author_global[:categories].to_json.html_safe};
+  chart_commits_per_author.series       = #{report.commits_per_author_global[:series].to_json.html_safe};

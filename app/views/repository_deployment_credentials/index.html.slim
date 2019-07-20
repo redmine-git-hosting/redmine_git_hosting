@@ -1,0 +1,44 @@
+div
+  - if User.current.git_allowed_to?(:create_repository_deployment_credentials, @repository)
+    .contextual
+      - css_class = (@user_keys.present? || @other_keys.present?) ? 'modal-box' : 'modal-box-close-only'
+      = link_to l(:label_deployment_credential_add),
+                new_repository_deployment_credential_path(@repository),
+                class: "icon icon-add #{css_class}"
+
+  h3 = l(:label_deployment_credentials)
+
+  - if @repository_deployment_credentials.any?
+    table.table.table-hover
+      thead
+        tr
+          th = l(:label_deployment_credential_owner)
+          th = l(:label_deployment_credential_public_key_name)
+          th = l(:label_deployment_credential_public_key_file)
+          th = l(:label_permissions)
+          th = l(:label_deployment_credential_honored)
+          th = l(:label_deployment_credential_active)
+          th
+      tbody
+        - @repository_deployment_credentials.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |credential|
+          tr
+            td= credential.user.login
+            td
+              - if credential.user == User.current
+                = link_to credential.gitolite_public_key.title, public_keys_path
+              - elsif User.current.admin?
+                = link_to credential.gitolite_public_key.title, edit_user_path(credential.user, tab: 'keys')
+              - else
+                = credential.gitolite_public_key.title
+
+            td = credential.gitolite_public_key.gitolite_path
+            td = credential.perm
+            td = checked_image_with_exclamation credential.honored?
+            td = checked_image_with_exclamation credential.active?
+
+            td.buttons
+              - if User.current.git_allowed_to?(:edit_repository_deployment_credentials, @repository) && (User.current.admin? || User.current == credential.user)
+                = link_to l(:button_edit), edit_repository_deployment_credential_path(@repository, credential), class: 'icon icon-edit modal-box'
+                = link_to l(:button_delete), repository_deployment_credential_path(@repository, credential), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del'
+  - else
+    p.nodata = l(:label_no_data)

@@ -1,5 +1,13 @@
 ## CHANGELOG
 
+### 4.0.0
+
+* compatible with Redmine 4 (drop Redmine 3.x support)
+* drop redmine_bootstrap_kit required plugin
+* requires additionals plugin for latest fontawesome, slim and deface support -> and better maintenance
+* switch from haml to slim templates (because this is already used in additionals plugin)
+* libraries high_charts and bootstrap are moved to this plugin (TODO: high_charts should be migrationed to charts.js, which comes with Redmine 4. Bootstrap should be drop to vanila redmine, to get better theme support)
+
 ### 1.2.3 - 2017-07-17
 
 * Merge [#640](https://github.com/jbox-web/redmine_git_hosting/pull/640) ([Views] Fix typo while rendering partial repositories/download_revision)
@@ -46,7 +54,7 @@
 ### 1.2.0 - 2015-11-18
 
 * Enhance protected branches permissions support : [#389](https://github.com/jbox-web/redmine_git_hosting/issues/389), [#414](https://github.com/jbox-web/redmine_git_hosting/issues/414)
-* Add support for [Gitolite options](http://gitolite.com/gitolite/options.html) : [#415](https://github.com/jbox-web/redmine_git_hosting/issues/415)
+* Add support for [Gitolite options](https://gitolite.com/gitolite/options.html) : [#415](https://github.com/jbox-web/redmine_git_hosting/issues/415)
 * Enhance global repository access : [#465](https://github.com/jbox-web/redmine_git_hosting/issues/465). You can now choose if Redmine has RW access on all repositories.
 * Improve validation of plugin settings. Validation errors are now displayed in the view.
 * Use our own Rack implementation to render Gitolite hooks
@@ -333,7 +341,7 @@ gitolite-admin.git/
 
   **Important !**
 
-As explained in [Gitolite documentation](http://gitolite.com/gitolite/non-core.html#localcode) hooks should be installed in a separate directory.
+As explained in [Gitolite documentation](https://gitolite.com/gitolite/non-core.html#localcode) hooks should be installed in a separate directory.
 This new version fixes Gitolite hooks install path for Gitolite v3.
 
 Hooks are now stored by default in ```<gitolite user home dir>/local```. You can override this in the plugin settings.

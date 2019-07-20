@@ -1,11 +1,5 @@
-class AddGitAnnexToGitExtras < ActiveRecord::Migration
-
-  def self.up
+class AddGitAnnexToGitExtras < ActiveRecord::Migration[4.2]
+  def change
     add_column :repository_git_extras, :git_annex, :boolean, default: false, after: :git_notify
   end
-
-  def self.down
-    remove_column :repository_git_extras, :git_annex
-  end
-
 end

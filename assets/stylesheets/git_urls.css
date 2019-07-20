@@ -64,7 +64,6 @@ GIT_URL_BOX
   border-color: #BBBBBB;
 }
 
-
 .git_url_list li a:hover,
 .git_url_list li a:focus {
   background-color: #507AAA;
@@ -81,7 +80,6 @@ GIT_URL_BOX
   border-bottom-color: #507AAA;
 }
 
-
 .git_url_list li.selected a {
   background-color: #BBBBBB;
   background:  url('../images/button_selected.svg') 0 0 repeat; /* Opera  needs an "image" :( - using svg for this so it will scale properly without looking too ugly */
@@ -96,9 +94,9 @@ GIT_URL_BOX
   border-color: #BBBBBB;
 }
 
-
-.git_hosting h3 {
-  background: url('../images/git_icon.png') no-repeat scroll 0 50% rgba(0, 0, 0, 0);
-  padding-left: 20px;
-  margin-bottom: 10px;
+.git_hosting h3::before {
+  font-family: Font Awesome\ 5 Brands;
+  content: "\f841"; /* fab git-alt */
+  padding-right: 4px;
+  font-size: 18px;
 }
