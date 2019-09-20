@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 
 import sys
 import os
@@ -32,4 +32,4 @@ if enabled:
   # Read changes from stdin and send notification emails:
   git_multimail.run_as_post_receive_hook(environment, mailer)
 else:
-  print "    multimailhook is disabled"
+  print("    multimailhook is disabled")
