@@ -100,3 +100,12 @@ GIT_URL_BOX
   padding-right: 4px;
   font-size: 18px;
 }
+
+.clipboard_button {
+  padding-left: 6px;
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 25px;
+}
