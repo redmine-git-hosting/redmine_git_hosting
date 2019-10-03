@@ -25,9 +25,6 @@ module RedmineGitHosting
       { script_name: Redmine::Utils.relative_url_root }
     end
 
-    REDMINE_MARKDOWN_EXT = %w[.txt].freeze
-    GITHUB_MARKDOWN_EXT  = %w[.markdown .mdown .mkdn .md].freeze
-
     def view_repositories_show_bottom(context)
       path        = get_path(context)
       rev         = get_rev(context)
@@ -71,11 +68,11 @@ module RedmineGitHosting
     end
 
     def redmine_file?(file)
-      REDMINE_MARKDOWN_EXT.include?(File.extname(file.path))
+      %w[.txt].include?(File.extname(file.path))
     end
 
     def github_file?(file)
-      GITHUB_MARKDOWN_EXT.include?(File.extname(file.path))
+      %w[.markdown .mdown .mkdn .md].include?(File.extname(file.path))
     end
   end
 end
