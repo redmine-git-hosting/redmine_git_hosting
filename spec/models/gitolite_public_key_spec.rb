@@ -15,7 +15,7 @@ describe GitolitePublicKey do
   # There is an isolation issue in tests.
   # Try to workaround it...
   def test_user
-    'redmine_git_user1_15'
+    'redmine_git_user1_12'
   end
 
   describe 'Valid SSH key build' do
@@ -104,7 +104,7 @@ describe GitolitePublicKey do
     end
 
     it 'has a fingerprint' do
-      expect(ssh_key.fingerprint).to eq 'af:af:da:41:5f:7e:6b:dd:e3:d9:bc:78:a6:8a:fc:be'
+      expect(ssh_key.fingerprint).to eq "SHA256:VgXjWgUbURtD6go5HV7Eop2UqVjmIAI68shaB66yv+c"
     end
 
     it 'has a owner' do
@@ -236,7 +236,7 @@ describe GitolitePublicKey do
     end
 
     it 'should have 6 keys' do
-      expect(GitolitePublicKey.all.length).to be == 6
+      expect(GitolitePublicKey.all.length).to be == 5
     end
 
     it 'should have 2 user keys' do
@@ -244,7 +244,7 @@ describe GitolitePublicKey do
     end
 
     it 'should have 4 deploy keys' do
-      expect(GitolitePublicKey.deploy_key.length).to be == 4
+      expect(GitolitePublicKey.deploy_key.length).to be == 3
     end
 
     it 'user1 should have 2 keys' do
