@@ -7,6 +7,9 @@ rvm:
   - 2.3.8
 gemfile:
   - Gemfile
+services:
+  - mysql
+  - postgresql
 branches:
   only:
     - devel
