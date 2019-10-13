@@ -40,14 +40,6 @@ describe RepositoryMirror do
 
     subject { @mirror }
 
-    ## Attributes
-    it { should allow_mass_assignment_of(:url) }
-    it { should allow_mass_assignment_of(:push_mode) }
-    it { should allow_mass_assignment_of(:include_all_branches) }
-    it { should allow_mass_assignment_of(:include_all_tags) }
-    it { should allow_mass_assignment_of(:explicit_refspec) }
-    it { should allow_mass_assignment_of(:active) }
-
     ## Relations
     it { should belong_to(:repository) }
 

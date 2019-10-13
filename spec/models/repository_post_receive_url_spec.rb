@@ -6,14 +6,6 @@ describe RepositoryPostReceiveUrl do
 
   subject { post_receive_url }
 
-  ## Attributes
-  it { should allow_mass_assignment_of(:url) }
-  it { should allow_mass_assignment_of(:mode) }
-  it { should allow_mass_assignment_of(:active) }
-  it { should allow_mass_assignment_of(:use_triggers) }
-  it { should allow_mass_assignment_of(:triggers) }
-  it { should allow_mass_assignment_of(:split_payloads) }
-
   ## Relations
   it { should belong_to(:repository) }
 

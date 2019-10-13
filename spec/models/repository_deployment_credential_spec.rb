@@ -27,10 +27,6 @@ describe RepositoryDeploymentCredential do
 
     subject { @deployment_credential }
 
-    ## Attributes
-    it { should allow_mass_assignment_of(:perm) }
-    it { should allow_mass_assignment_of(:active) }
-
     ## Relations
     it { should belong_to(:repository) }
     it { should belong_to(:gitolite_public_key) }

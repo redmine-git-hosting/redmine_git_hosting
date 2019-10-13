@@ -25,12 +25,6 @@ describe GitolitePublicKey do
 
     subject { @ssh_key }
 
-    ## Attributes
-    it { is_expected.to allow_mass_assignment_of(:title) }
-    it { is_expected.to allow_mass_assignment_of(:key) }
-    it { is_expected.to allow_mass_assignment_of(:key_type) }
-    it { is_expected.to allow_mass_assignment_of(:delete_when_unused) }
-
     ## Relations
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:repository_deployment_credentials) }
