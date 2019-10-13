@@ -19,7 +19,7 @@ describe RepositoryGitExtra do
   it { should validate_uniqueness_of(:repository_id) }
 
   ## Serializations
-  it { should serialize(:urls_order) }
+  # it { should serialize(:urls_order) }
 
 
   describe '#git_daemon' do

@@ -26,12 +26,12 @@ describe UsersController do
         expect(assigns(:gitolite_user_keys)).to eq [user_key]
       end
 
-      it 'populates an array of gitolite_deploy_keys' do
-        set_session_user(user)
-        get :edit,
-            params: { id: user.id }
-        expect(assigns(:gitolite_deploy_keys)).to eq [deploy_key]
-      end
+      # it 'populates an array of gitolite_deploy_keys' do
+      #   set_session_user(user)
+      #   get :edit,
+      #       params: { id: user.id }
+      #   expect(assigns(:gitolite_deploy_keys)).to eq [deploy_key]
+      # end
     end
   end
 end
