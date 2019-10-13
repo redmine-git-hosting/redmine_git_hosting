@@ -34,6 +34,7 @@ gem 'sshkey'
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
+  gem 'rails-controller-testing'
 
   gem 'shoulda', '~> 3.5.0'
   gem 'shoulda-context'
