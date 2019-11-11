@@ -6,11 +6,6 @@ describe RepositoryProtectedBranche do
 
   subject { protected_branch }
 
-  ## Attributes
-  it { should allow_mass_assignment_of(:path) }
-  it { should allow_mass_assignment_of(:permissions) }
-  it { should allow_mass_assignment_of(:position) }
-
   ## Relations
   it { should belong_to(:repository) }
   it { should have_many(:protected_branches_members).with_foreign_key(:protected_branch_id).dependent(:destroy) }

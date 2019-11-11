@@ -6,11 +6,6 @@ describe RepositoryGitConfigKey do
 
   subject { git_config_key }
 
-  ## Attributes
-  it { should allow_mass_assignment_of(:type) }
-  it { should allow_mass_assignment_of(:key) }
-  it { should allow_mass_assignment_of(:value) }
-
   ## Relations
   it { should belong_to(:repository) }
 

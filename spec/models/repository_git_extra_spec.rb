@@ -6,17 +6,6 @@ describe RepositoryGitExtra do
 
   subject { git_extra }
 
-  ## Attributes
-  it { should allow_mass_assignment_of(:git_http) }
-  it { should allow_mass_assignment_of(:git_daemon) }
-  it { should allow_mass_assignment_of(:git_notify) }
-  it { should allow_mass_assignment_of(:git_annex) }
-  it { should allow_mass_assignment_of(:default_branch) }
-  it { should allow_mass_assignment_of(:protected_branch) }
-  it { should allow_mass_assignment_of(:public_repo) }
-  it { should allow_mass_assignment_of(:key) }
-  it { should allow_mass_assignment_of(:urls_order) }
-
   ## Relations
   it { should belong_to(:repository) }
 
@@ -30,7 +19,7 @@ describe RepositoryGitExtra do
   it { should validate_uniqueness_of(:repository_id) }
 
   ## Serializations
-  it { should serialize(:urls_order) }
+  # it { should serialize(:urls_order) }
 
 
   describe '#git_daemon' do

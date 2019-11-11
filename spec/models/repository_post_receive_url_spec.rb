@@ -6,14 +6,6 @@ describe RepositoryPostReceiveUrl do
 
   subject { post_receive_url }
 
-  ## Attributes
-  it { should allow_mass_assignment_of(:url) }
-  it { should allow_mass_assignment_of(:mode) }
-  it { should allow_mass_assignment_of(:active) }
-  it { should allow_mass_assignment_of(:use_triggers) }
-  it { should allow_mass_assignment_of(:triggers) }
-  it { should allow_mass_assignment_of(:split_payloads) }
-
   ## Relations
   it { should belong_to(:repository) }
 
@@ -31,7 +23,7 @@ describe RepositoryPostReceiveUrl do
   it { should allow_value('http://foo.com', 'https://bar.com/baz').for(:url) }
 
   ## Serializations
-  it { should serialize(:triggers) }
+  # it { should serialize(:triggers) }
 
   ## Attributes content
   it { expect(post_receive_url.active).to be true }
@@ -41,19 +33,19 @@ describe RepositoryPostReceiveUrl do
   it { expect(post_receive_url.split_payloads).to be false }
 
 
-  describe '.active' do
-    it 'should return an array of active post_receive_urls' do
-      expect(RepositoryPostReceiveUrl).to receive(:where).with(active: true)
-      RepositoryPostReceiveUrl.active
-    end
-  end
+  # describe '.active' do
+  #   it 'should return an array of active post_receive_urls' do
+  #     expect(RepositoryPostReceiveUrl).to receive(:where).with(active: true)
+  #     RepositoryPostReceiveUrl.active
+  #   end
+  # end
 
 
-  describe '.inactive' do
-    it 'should return an array of inactive post_receive_urls' do
-      expect(RepositoryPostReceiveUrl).to receive(:where).with(active: false)
-      RepositoryPostReceiveUrl.inactive
-    end
-  end
+  # describe '.inactive' do
+  #   it 'should return an array of inactive post_receive_urls' do
+  #     expect(RepositoryPostReceiveUrl).to receive(:where).with(active: false)
+  #     RepositoryPostReceiveUrl.inactive
+  #   end
+  # end
 
 end
