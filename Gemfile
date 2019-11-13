@@ -15,7 +15,7 @@ gem 'hiredis'
 gem 'escape_utils'
 gem 'html-pipeline'
 gem 'rinku'
-gem 'task_list'
+gem 'deckar01-task_list'
 
 # Syntaxic coloration
 gem 'github-markup'
