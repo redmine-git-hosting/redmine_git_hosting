@@ -6,21 +6,10 @@ sidebar_accordion: true
 entries:
 - title: Sidebar
   subcategories:
-    - title: Ressources
-      items:
-        - title: Configuration variables
-          url: /configuration/variables/
-        - title: Configuration notes
-          url: /configuration/notes/
-        - title: Troubleshooting
-          url: /troubleshooting/
-        - title: Screenshots
-          url: /screenshots/
-        - title: FAQ
-          url: /faq/
-
     - title: How-To
       items:
+        - title: Get started
+          url: /get_started/
         - title: How to migrate
           url: /how-to/migrate/
         - title: How to upgrade
@@ -40,20 +29,24 @@ entries:
         - title: Help in development
           url: /how-to/help-development/
 
+    - title: Ressources
+      items:
+        - title: Configuration variables
+          url: /configuration/variables/
+        - title: Configuration notes
+          url: /configuration/notes/
+        - title: Troubleshooting
+          url: /troubleshooting/
+        - title: Screenshots
+          url: /screenshots/
+        - title: FAQ
+          url: /faq/
+
     - title: About
       items:
         - title: Releases
-          url: /about/releases/
-        - title: Roadmap
-          url: /about/roadmap/
+          url: https://github.com/jbox-web/redmine_git_hosting/releases
         - title: License
           url: /about/license/
         - title: How to contribute?
           url: /about/how-to-contribute/
-
-    - title: Archives
-      items:
-        - title: Posts
-          url: /archives/posts/
-        - title: Releases notes
-          url: /archives/releases-notes/

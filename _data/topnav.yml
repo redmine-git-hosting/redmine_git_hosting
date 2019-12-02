@@ -8,14 +8,14 @@ topnav:
       url: /features/
     - title: Get started
       url: /get_started/
-    - title: Blog
-      url: /blog/
+    - title: Documentation
+      url: /how-to/
 
 # Topnav dropdowns
 topnav_dropdowns:
 - title: Topnav dropdowns
   subcategories:
-    - title: Ressources
+    - title: Documentation
       items:
         - title: Configuration variables
           url: /configuration/variables/
@@ -25,11 +25,9 @@ topnav_dropdowns:
           url: /troubleshooting/
         - title: Screenshots
           url: /screenshots/
-        - title: FAQ
+        - title: Ressources
           url: /faq/
         - title: How-To
           url: /how-to/
         - title: About
           url: /about/
-        - title: Archives
-          url: /archives/
