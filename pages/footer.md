@@ -16,7 +16,7 @@ search: exclude
       </li>
 
       <li>
-        <a href="https://travis-ci.org/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}"><img src="https://travis-ci.org/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}.svg?branch=devel" alt="Build Status" /></a>
+        <a href="https://travis-ci.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}"><img src="https://travis-ci.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}.svg?branch=devel" alt="Build Status" /></a>
       </li>
 
       <li>

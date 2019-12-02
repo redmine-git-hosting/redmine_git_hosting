@@ -32,8 +32,8 @@ layout: homepage
     <ul class="list-unstyled">
       <li><strong>Ruby :</strong> works with Ruby <strong>2.x</strong></li>
       <li><strong>Git :</strong> works with Git from <strong>1.7.x</strong> to <strong>2.x</strong></li>
-      <li><strong>Redmine :</strong> works with Redmine <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>{{ site.data.project.release.latest_redmine_version }}</strong>)</li>
-      <li><strong>Gitolite :</strong> works with Gitolite <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.org/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>{{ site.data.project.release.latest_gitolite_version }}</strong>)</li>
+      <li><strong>Redmine :</strong> works with Redmine <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.com/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>{{ site.data.project.release.latest_redmine_version }}</strong>)</li>
+      <li><strong>Gitolite :</strong> works with Gitolite <strong>2.x</strong> and <strong>3.x</strong> (<a href="https://travis-ci.com/jbox-web/redmine_git_hosting">Tested</a> with latest stable : <strong>{{ site.data.project.release.latest_gitolite_version }}</strong>)</li>
       <li><strong>Database :</strong> works with MySQL and Postgres</li>
     </ul>
   </div>
