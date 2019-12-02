@@ -7,9 +7,7 @@ github_repository: redmine_git_hosting
 
 release:
   year: 2017
-  version: 1.2.3
-  latest_redmine_version: 3.4.2
-  latest_gitolite_version: v3.6.6-6-g7c8f0ab
+  version: 4.0.0
 
 author:
   name: JBox Web
