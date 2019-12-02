@@ -18,10 +18,6 @@ search: exclude
       <li>
         <a href="https://travis-ci.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}"><img src="https://travis-ci.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}.svg?branch=devel" alt="Build Status" /></a>
       </li>
-
-      <li>
-        <a href="https://gemnasium.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}"><img src="https://gemnasium.com/{{ site.data.project.github_user }}/{{ site.data.project.github_repository }}.svg" alt="Dependency Status" /></a>
-      </li>
     </ul>
   </span>
 </div>
