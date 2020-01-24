@@ -46,7 +46,7 @@ module PluginSettingsValidation
     # Check duplication if we are switching from a mode to another
     #
     def check_for_duplicated_repo
-      return if !Additionals.true?(current_setting(:hierarchical_organisation)) && Additionals.true?(hierarchical_organisation)
+      return if Additionals.true?(hierarchical_organisation)
       return unless Repository::Xitolite.have_duplicated_identifier?
 
       errors.add(:base, 'Detected non-unique repository identifiers. Cannot switch to flat mode')
