@@ -9,11 +9,7 @@
 
 This plugin allows straightforward management of Gitolite within Redmine.
 
-You can follow announcements [here](http://redmine-git-hosting.io/blog/) or take a look at the [roadmap](http://redmine-git-hosting.io/about/roadmap/).
-
 Looking for maintainers, mail me if you're interested.
-
-**[Latest stable version : 1.2.3](http://redmine-git-hosting.io/releases-notes/release-1.2.3.html)**
 
 ## Installation
 
