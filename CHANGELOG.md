@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### devel
+
+- Redmine 4.1 support
+
 ### 4.0.0
 
 * compatible with Redmine 4 (drop Redmine 3.x support)

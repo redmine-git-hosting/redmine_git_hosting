@@ -43,9 +43,6 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails', '< 5.0'
 
-  gem 'rubocop', require: false
-  gem 'rubocop-rspec'
-
   # Publish to CodeClimate
   gem 'codeclimate-test-reporter', require: false
 end
