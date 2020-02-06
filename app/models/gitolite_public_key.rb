@@ -32,6 +32,7 @@ class GitolitePublicKey < ActiveRecord::Base
   ## Scopes
   scope :user_key,   -> { where(key_type: KEY_TYPE_USER) }
   scope :deploy_key, -> { where(key_type: KEY_TYPE_DEPLOY) }
+  scope :sorted, -> { order(:title, :created_at) }
 
   ## Callbacks
   before_validation :strip_whitespace

@@ -9,7 +9,7 @@ module RedmineGitHosting
         base.send :helper, GitHostingUsersHelper
         base.class_eval do
           helper :gitolite_public_keys
-          helper :bootstrap_kit
+          helper :git_hosting
         end
       end
 

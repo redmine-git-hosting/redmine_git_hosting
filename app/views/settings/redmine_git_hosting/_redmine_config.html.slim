@@ -21,6 +21,8 @@ p
   = additionals_settings_checkbox :delete_git_repositories,
                                   value: RedmineGitHosting::Config.get_setting(:delete_git_repositories, true),
                                   value_is_bool: true
+  em.info
+    = l(:info_delete_git_repositories)
 
 p
   = additionals_settings_checkbox :hierarchical_organisation,

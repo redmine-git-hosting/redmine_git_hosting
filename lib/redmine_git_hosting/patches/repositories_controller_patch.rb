@@ -8,7 +8,7 @@ module RedmineGitHosting
         base.class_eval do
           before_action :set_current_tab, only: :edit
 
-          helper :bootstrap_kit
+          helper :git_hosting
           helper :additionals_clipboardjs
           helper :watchers
 

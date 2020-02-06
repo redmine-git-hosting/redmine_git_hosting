@@ -15,7 +15,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   # Only allow HTTP(s) format
   validates :url, presence: true,
                   uniqueness: { case_sensitive: false, scope: :repository_id },
-                  format: { with: URI::regexp(%w[http https]) }
+                  format: { with: URI.regexp(%w[http https]) }
 
   validates :mode, presence: true, inclusion: { in: %i[github get] }
 
@@ -23,8 +23,9 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   serialize :triggers, Array
 
   ## Scopes
-  scope :active,   -> { where(active: true) }
+  scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+  scope :sorted, -> { order(:url) }
 
   ## Callbacks
   before_validation :strip_whitespace

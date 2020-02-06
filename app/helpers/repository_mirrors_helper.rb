@@ -1,10 +1,8 @@
 module RepositoryMirrorsHelper
-
   # Mirror Mode
   def mirror_mode(mirror)
     [l(:label_mirror_full_mirror), l(:label_mirror_forced_update), l(:label_mirror_fast_forward)][mirror.push_mode]
   end
-
 
   # Refspec for mirrors
   def refspec(mirror, max_refspec = 0)
@@ -14,12 +12,11 @@ module RepositoryMirrorsHelper
       result = []
       result << l(:all_branches) if mirror.include_all_branches
       result << l(:all_tags) if mirror.include_all_tags
-      result << mirror.explicit_refspec if (max_refspec == 0) || ((1..max_refspec) === mirror.explicit_refspec.length)
-      result << l(:explicit) if (max_refspec > 0) && (mirror.explicit_refspec.length > max_refspec)
+      result << mirror.explicit_refspec if max_refspec.zero? || ((1..max_refspec) === mirror.explicit_refspec.length)
+      result << l(:explicit) if max_refspec.positive? && (mirror.explicit_refspec.length > max_refspec)
       result.join(',<br />')
     end
   end
-
 
   def mirrors_options
     [
@@ -28,7 +25,6 @@ module RepositoryMirrorsHelper
       [l(:label_mirror_fast_forward), 2]
     ]
   end
-
 
   def render_push_state(mirror, error)
     if error
@@ -41,5 +37,4 @@ module RepositoryMirrorsHelper
 
     l(:label_mirror_push_info_html, mirror_url: mirror.url, status: status, status_css: status_css).html_safe
   end
-
 end

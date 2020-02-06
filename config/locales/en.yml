@@ -96,7 +96,8 @@ en:
   label_default_gitolite_hooks_url: Default URL
   label_default_repository: Default repository
   label_delete_from_recyle_bin: Delete from recycle bin
-  label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
+  label_delete_git_repositories: Delete Git repository when project deleted?
+  info_delete_git_repositories: (will be place in recycle bin)
   label_delete_in_progress: Deleting...
   label_delete_warning: Warning! Deletion is forever!
   label_deploy_key: Deploy key
@@ -413,3 +414,4 @@ en:
   select_other_keys: Other keys
   text_gitolite_key_destroy_confirmation: "Are you sure you want to destroy this key : %{title} ?"
   text_scm_command_not_available_git_hosting: SCM command is not available. Please check settings on the administration panel of Redmine Git Hosting plugin.
+  label_install_hook_results: Install hook results

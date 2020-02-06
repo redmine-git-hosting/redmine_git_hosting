@@ -96,7 +96,8 @@ ru:
   label_default_gitolite_hooks_url: URL по умолчанию
   label_default_repository: "Репозиторий 'default'"
   label_delete_from_recyle_bin: Удалить из корзины
-  label_delete_git_repositories: Удалять Git репозиторий при удалении проекта?<br/>(будет перемещен в корзину)
+  label_delete_git_repositories: Удалять Git репозиторий при удалении проекта?
+  info_delete_git_repositories: (будет перемещен в корзину)
   label_delete_in_progress: Удаление...
   label_delete_warning: Внимание! Удаление безвозвратно!
   label_deploy_key: Полномочный deploy-ключ
@@ -408,3 +409,4 @@ ru:
   select_other_keys: Другие ключи
   text_gitolite_key_destroy_confirmation: "Вы уверены, что хотите удалить данный ключ: %{title}?"
   text_scm_command_not_available_git_hosting: SCM команда недоступна. Проверьте настройки плагина Redmine Git Hosting.
+  label_install_hook_results: Install hook results

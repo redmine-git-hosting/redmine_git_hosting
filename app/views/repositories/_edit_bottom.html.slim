@@ -1,16 +1,4 @@
 - if @repository.is_a?(Repository::Xitolite) && !@repository.git_annex_enabled?
-  - content_for :header_tags do
-    javascript:
-      $(document).on('click', 'a.modal-box', function(e){
-        e.preventDefault();
-        openModalBox(this, 'modal-box');
-      });
-
-      $(document).on('click', 'a.modal-box-close-only', function(e){
-        e.preventDefault();
-        openModalBox(this, 'modal-box-close-only');
-      });
-
   #repository-tabs
     ul
       - if User.current.git_allowed_to?(:view_repository_deployment_credentials, @repository)

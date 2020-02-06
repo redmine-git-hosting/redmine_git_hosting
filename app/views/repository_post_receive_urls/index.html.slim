@@ -1,12 +1,14 @@
 div
   - if User.current.git_allowed_to?(:create_repository_post_receive_urls, @repository)
     .contextual
-      = link_to l(:label_post_receive_url_add), new_repository_post_receive_url_path(@repository), class: 'icon icon-add modal-box'
+      = link_to l(:label_post_receive_url_add),
+                new_repository_post_receive_url_path(@repository),
+                remote: true, class: 'icon icon-add'
 
   h3 = l(:label_post_receive_urls)
 
   - if @repository_post_receive_urls.any?
-    table.table.table-hover
+    table.list
       thead
         tr
           th = l(:field_url)
@@ -28,7 +30,7 @@ div
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_post_receive_urls, @repository)
-                = link_to l(:button_edit), edit_repository_post_receive_url_path(@repository, post_receive_url), class: 'icon icon-edit modal-box'
+                = link_to l(:button_edit), edit_repository_post_receive_url_path(@repository, post_receive_url), remote: true, class: 'icon icon-edit'
                 = link_to l(:button_delete), repository_post_receive_url_path(@repository, post_receive_url), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del'
 
   - else

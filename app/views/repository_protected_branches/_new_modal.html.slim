@@ -1,0 +1,11 @@
+h3.title = l(:label_protected_branch_add)
+
+= labelled_form_for :repository_protected_branche, @protected_branch,
+                    url: repository_protected_branches_path(@repository),
+                    html: { method: :post, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }
+  .buttons
+    = submit_tag l(:button_add)
+    '
+    = link_to_function l(:button_cancel), "hideModal(this);"

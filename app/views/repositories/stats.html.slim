@@ -25,7 +25,6 @@ p = link_to l(:button_back), action: 'show', id: @project
 - html_title(l(:label_repository), l(:label_statistics))
 
 - content_for :header_tags do
-  = bootstrap_load_base
   = javascript_include_tag('highcharts/highcharts', plugin: 'redmine_git_hosting')
   = javascript_include_tag('highcharts/modules/drilldown', plugin: 'redmine_git_hosting')
   = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'

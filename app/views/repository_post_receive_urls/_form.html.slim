@@ -1,14 +1,10 @@
 .flash-messages = error_messages_for 'post_receive_url'
 
 .box
-  p = f.text_field :url, required: true, size: 65
-  em
-    p
-      = l(:label_mirror_url_accepted_format) + ' :'
-      br
-      | http://example.com
-      br
-      | https://example.com
+  p = f.url_field :url,
+                  size: 65,
+                  placeholder: 'https://example.com',
+                  required: true
 
   p = f.check_box :active
 

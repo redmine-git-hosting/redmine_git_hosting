@@ -1,6 +1,6 @@
 h3 = l(:label_permissions_header)
 
-table.table.table-hover
+table.list.git-results
   tr
     td = l(:label_temp_dir_writeable)
     td = render_temp_dir_writeable(RedmineGitHosting::Config.temp_dir_writeable?(reset: true), RedmineGitHosting::Config.gitolite_admin_dir)
@@ -81,19 +81,12 @@ table.table.table-hover
       = render_rugged_mandatory_features
       = render_rugged_optional_features
 
-  tr
-    td = l(:label_gitolite_libgit2_version)
-    td
-      span.label.label-success = RedmineGitHosting::Config.libgit2_version
-
-p
-  label = l(:label_gitolite_banner)
-
-.box
+br
+fieldset.box.tabular
+  legend = l(:label_gitolite_banner)
   pre == RedmineGitHosting::Config.gitolite_banner
 
-p
-  label = l(:label_path_directories)
-
-.box
+br
+fieldset.box.tabular
+  legend = l(:label_path_directories)
   pre == (ENV['PATH']).gsub(/:/, "<br/>")

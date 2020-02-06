@@ -9,14 +9,19 @@ h3 = l(:label_gitolite_global_config)
 
 p
   label = l(:label_gitolite_temp_dir)
-  = text_field_tag 'settings[gitolite_temp_dir]', gitolite_temp_dir, size: 60
+  = text_field_tag 'settings[gitolite_temp_dir]', gitolite_temp_dir, size: 60, required: true
   br
   em.info
     = l(:label_gitolite_temp_dir_desc)
 
 p
   label = l(:label_gitolite_recycle_bin_expiration_time)
-  = text_field_tag 'settings[gitolite_recycle_bin_expiration_time]', gitolite_recycle_bin_expiration_time, size: 10
+  = number_field_tag 'settings[gitolite_recycle_bin_expiration_time]',
+                   gitolite_recycle_bin_expiration_time,
+                   size: 10,
+                   required: true,
+                   min: -1
+
   br
   em.info
     = l(:label_gitolite_recycle_bin_expiration_time_desc)
@@ -30,14 +35,20 @@ p
 
 p
   label = l(:label_git_config_username)
-  = text_field_tag 'settings[git_config_username]', "#{git_config_username}", size: 60
+  = text_field_tag 'settings[git_config_username]',
+                   "#{git_config_username}",
+                   size: 60,
+                   required: true
   br
   em.info
     = l(:label_git_config_username_desc)
 
 p
   label = l(:label_git_config_email)
-  = text_field_tag 'settings[git_config_email]', "#{git_config_email}", size: 60
+  = text_field_tag 'settings[git_config_email]',
+                   "#{git_config_email}",
+                   size: 60,
+                   required: true
   br
   em.info
     = l(:label_git_config_email_desc)

@@ -97,7 +97,8 @@ ja:
   label_default_gitolite_hooks_url: 既定URL
   label_default_repository: defaultリポジトリ
   label_delete_from_recyle_bin: ゴミ箱から削除
-  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？<br/>(ゴミ箱に移動します)
+  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？
+  info_delete_git_repositories: (ゴミ箱に移動します)
   label_delete_in_progress: 削除中...
   label_delete_warning: 注意！完全に削除してもいいですか？
   label_deploy_key: デプロイキー
@@ -426,3 +427,4 @@ ja:
   select_other_keys: 他のキー
   text_gitolite_key_destroy_confirmation: "このキーを削除してもよろしいですか: %{title}？"
   text_scm_command_not_available_git_hosting: SMCコマンドが使用できません。Redmine Git Hostingの管理設定を確認してください。
+  label_install_hook_results: Install hook results

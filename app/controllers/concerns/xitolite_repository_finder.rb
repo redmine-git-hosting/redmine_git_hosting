@@ -12,7 +12,6 @@ module XitoliteRepositoryFinder
     end
   end
 
-
   def find_xitolite_repository_by_path
     repo_path = params[:repo_path] + '.git'
     repository = Repository::Xitolite.find_by_path(repo_path, loose: true)
@@ -27,5 +26,4 @@ module XitoliteRepositoryFinder
       @repository = repository
     end
   end
-
 end

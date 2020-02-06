@@ -1,0 +1,11 @@
+h3.title = l(:label_mirror_edit)
+
+= labelled_form_for :repository_mirror, @mirror,
+                    url: repository_mirror_path(@repository, @mirror),
+                    html: { method: :put, class: 'tabular', remote: true } do |f|
+
+  = render partial: 'form', locals: { f: f }
+  .buttons
+    = submit_tag l(:button_save)
+    '
+    = link_to_function l(:button_cancel), "hideModal(this);"

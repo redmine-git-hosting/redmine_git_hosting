@@ -29,8 +29,9 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   validate :owner_matches_key
 
   ## Scopes
-  scope :active,   -> { where(active: true) }
+  scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+  scope :sorted, -> { order(:id) }
 
   def to_s
     "#{repository.identifier}-#{gitolite_public_key.identifier} : #{perm}"

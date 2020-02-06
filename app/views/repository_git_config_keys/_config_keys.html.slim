@@ -1,5 +1,5 @@
 - if git_config_keys.any?
-  table.table.table-hover
+  table.list
     thead
       tr
         th = l(:label_key)
@@ -16,7 +16,7 @@
             - if User.current.git_allowed_to?(:edit_repository_git_config_keys, @repository)
               = link_to l(:button_edit),
                         edit_repository_git_config_key_path(@repository, git_config_key),
-                        class: 'icon icon-edit modal-box'
+                        class: 'icon icon-edit'
               = link_to l(:button_delete),
                         repository_git_config_key_path(@repository, git_config_key),
                         remote: true,

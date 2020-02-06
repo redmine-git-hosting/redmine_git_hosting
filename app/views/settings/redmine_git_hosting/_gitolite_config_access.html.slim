@@ -10,7 +10,7 @@ h3 = l(:label_gitolite_access_config)
 
 p
   label = l(:label_ssh_server_domain)
-  = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60
+  = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60, required: true
   br
   em.info
     = l(:label_default_domain_name) + ' :'
@@ -18,7 +18,7 @@ p
 
 p
   label = l(:label_http_server_domain)
-  = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60
+  = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60, required: true
   br
   em.info
     = l(:label_default_domain_name) + ' :'

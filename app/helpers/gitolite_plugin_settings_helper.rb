@@ -3,7 +3,7 @@ module GitolitePluginSettingsHelper
     content_tag(:ul, class: 'list-unstyled') do
       content = ''
       params.each do |param, installed|
-        content << content_tag(:li, style: 'padding: 2px;') do
+        content << content_tag(:li) do
           image_tag(image_for_param(installed), style: 'vertical-align: bottom; padding-right: 5px;') +
             content_tag(:em, label_for_param(param, installed))
         end

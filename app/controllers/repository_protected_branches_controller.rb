@@ -7,7 +7,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   accept_api_auth :index, :show
 
   def index
-    @repository_protected_branches = @repository.protected_branches.all
+    @repository_protected_branches = @repository.protected_branches.sorted
     render_with_api
   end
 
@@ -18,7 +18,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
   def create
     @protected_branch = @repository.protected_branches.new
     @protected_branch.safe_attributes = params[:repository_protected_branche]
-    return unless @protected_branch.save
+    return render action: 'new' unless @protected_branch.save
 
     check_members
     flash[:notice] = l(:notice_protected_branch_created)
@@ -27,7 +27,7 @@ class RepositoryProtectedBranchesController < RedmineGitHostingController
 
   def update
     @protected_branch.safe_attributes = params[:repository_protected_branche]
-    return unless @protected_branch.save
+    return render action: 'edit' unless @protected_branch.save
 
     check_members
     flash[:notice] = l(:notice_protected_branch_updated)

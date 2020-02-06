@@ -1,5 +1,4 @@
 class GithubComment < ActiveRecord::Base
-
   ## Relations
   belongs_to :journal
 

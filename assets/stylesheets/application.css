@@ -241,3 +241,53 @@ li.url_type {
 .draggable {
   cursor: move;
 }
+
+.label {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  background-color: #999999;
+}
+
+
+.label:empty
+  display: none;
+}
+
+
+.label-important {
+  background-color: #b94a48;
+}
+
+.label-warning {
+  background-color: #f89406;
+}
+
+.label-success {
+  background-color: #468847;
+}
+
+.label-info {
+  background-color: #3a87ad;
+}
+
+table.git-results td {
+  vertical-align: top;
+  text-align: left;
+  padding: 5px;
+}
+
+table.git-results ul, table.git-results li {
+  padding-left: 0;
+}
+
+ul.list-unstyled, ol.list-unstyled {
+  list-style-type: none;
+}

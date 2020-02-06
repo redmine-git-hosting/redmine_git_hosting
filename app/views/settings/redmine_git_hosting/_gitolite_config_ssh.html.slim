@@ -9,20 +9,37 @@ h3 = l(:label_gitolite_ssh_config)
 
 p
   label = l(:label_gitolite_user)
-  = text_field_tag 'settings[gitolite_user]', gitolite_user, size: 20
+  = text_field_tag 'settings[gitolite_user]',
+                   gitolite_user,
+                   size: 20,
+                   required: true
 
 p
   label = l(:label_gitolite_ssh_private_key)
-  = text_field_tag 'settings[gitolite_ssh_private_key]', gitolite_ssh_private_key, size: 110
+  = text_field_tag 'settings[gitolite_ssh_private_key]',
+                    gitolite_ssh_private_key,
+                    size: 110,
+                    required: true
 
 p
   label = l(:label_gitolite_ssh_public_key)
-  = text_field_tag 'settings[gitolite_ssh_public_key]', gitolite_ssh_public_key, size: 110
+  = text_field_tag 'settings[gitolite_ssh_public_key]',
+                    gitolite_ssh_public_key,
+                    size: 110,
+                    required: true
 
 p
   label = l(:label_gitolite_server_host)
-  = text_field_tag 'settings[gitolite_server_host]', gitolite_server_host, size: 20
+  = text_field_tag 'settings[gitolite_server_host]',
+                   gitolite_server_host,
+                   size: 20,
+                   required: true
 
 p
   label = l(:label_gitolite_server_port)
-  = text_field_tag 'settings[gitolite_server_port]', gitolite_server_port, size: 5
+  = number_field_tag 'settings[gitolite_server_port]',
+                     gitolite_server_port,
+                     size: 5,
+                     min: 1,
+                     max: 65535,
+                     required: true

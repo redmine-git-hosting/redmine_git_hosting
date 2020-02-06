@@ -1,11 +1,15 @@
 div
   - if User.current.git_allowed_to?(:create_repository_mirrors, @repository)
-    .contextual= link_to l(:label_mirror_add), new_repository_mirror_path(@repository), class: 'icon icon-add modal-box'
+    .contextual
+      = link_to l(:label_mirror_add),
+                new_repository_mirror_path(@repository),
+                remote: true,
+                class: 'icon icon-add'
 
   h3 = l(:label_repository_mirrors)
 
   - if @repository_mirrors.any?
-    table.table.table-hover
+    table.list
       thead
         tr
           th = l(:field_url)
@@ -24,11 +28,10 @@ div
             td.buttons
               - if User.current.git_allowed_to?(:push_repository_mirrors, @repository)
                 = link_to font_awesome_icon('fas_rocket', post_text: l(:label_mirror_push), class: 'fa-lg'),
-                          push_repository_mirror_path(@repository, mirror),
-                          class: 'modal-box-close-only'
+                          push_repository_mirror_path(@repository, mirror), remote: true
 
               - if User.current.git_allowed_to?(:edit_repository_mirrors, @repository)
-                = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), class: 'icon icon-edit modal-box'
+                = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), remote: true, class: 'icon icon-edit'
                 = link_to l(:button_delete),
                           repository_mirror_path(@repository, mirror),
                           remote: true,
@@ -45,7 +48,7 @@ div
     div
       = clipboardjs_button_for('mirror_pubkey')
       span style='margin-left: 10px;'
-        = l(:label_mirror_help) + ' :'
+        = l(:label_mirror_help) + ': '
 
     .git_hosting_spacer
 

@@ -1,5 +1,4 @@
 module RepositoryPostReceiveUrlsHelper
-
   # Post-receive Mode
   def post_receive_mode(prurl)
     label = []
@@ -11,5 +10,4 @@ module RepositoryPostReceiveUrlsHelper
     end
     label.join(' ')
   end
-
 end

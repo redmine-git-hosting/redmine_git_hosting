@@ -9,7 +9,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   helper :gitolite_public_keys
 
   def index
-    @repository_deployment_credentials = @repository.deployment_credentials.all
+    @repository_deployment_credentials = @repository.deployment_credentials.sorted
     render layout: false
   end
 
@@ -25,7 +25,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def create
     @credential = build_new_credential
-    return unless @credential.save
+    return render action: 'new' unless @credential.save
 
     flash[:notice] = l(:notice_deployment_credential_created)
     call_use_case_and_redirect
@@ -33,7 +33,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def update
     @credential.safe_attributes = params[:repository_deployment_credential]
-    return unless @credential.save
+    return render action: 'edit' unless @credential.save
 
     flash[:notice] = l(:notice_deployment_credential_updated)
     call_use_case_and_redirect

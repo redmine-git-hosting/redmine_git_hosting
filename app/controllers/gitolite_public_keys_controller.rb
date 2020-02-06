@@ -6,11 +6,11 @@ class GitolitePublicKeysController < ApplicationController
   before_action :find_gitolite_public_key, only: [:destroy]
 
   helper :gitolite_public_keys
-  helper :bootstrap_kit
+  helper :git_hosting
 
   def index
-    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order('title ASC, created_at ASC')
-    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order('title ASC, created_at ASC')
+    @gitolite_user_keys   = @user.gitolite_public_keys.user_key.sorted
+    @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.sorted
   end
 
   def create

@@ -3,14 +3,14 @@ div
     .contextual
       = link_to l(:label_protected_branch_add),
                 new_repository_protected_branch_path(@repository),
-                class: 'icon icon-add modal-box'
+                remote: true, class: 'icon icon-add'
 
   h3
     = l(:label_protected_branches)
     = link_to "(#{l(:label_gitolite_documentation)})", 'https://gitolite.com/gitolite/conf.html#rules', class: 'external'
 
   - if @repository_protected_branches.any?
-    table#protected_branches.table.table-hover data-update-url="#{sort_repository_protected_branches_url}" style="opacity: #{@repository.protected_branches_enabled? ? '1' : '0.5'};"
+    table#protected_branches.list data-update-url="#{sort_repository_protected_branches_url}" style="opacity: #{@repository.protected_branches_enabled? ? '1' : '0.5'};"
       thead
         tr
           th
@@ -37,8 +37,8 @@ div
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
-                = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-edit modal-box'
-                = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), class: 'icon icon-copy modal-box'
+                = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), remote: true, class: 'icon icon-edit'
+                = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), remote: true, class: 'icon icon-copy'
                 = link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del'
 
     - unless @repository.protected_branches_enabled?

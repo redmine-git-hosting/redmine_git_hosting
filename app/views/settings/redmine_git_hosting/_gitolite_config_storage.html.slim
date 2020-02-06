@@ -7,14 +7,20 @@ h3 = l(:label_gitolite_storage_config)
 
 p
   label = l(:label_gitolite_global_storage_dir)
-  = text_field_tag 'settings[gitolite_global_storage_dir]', gitolite_global_storage_dir, size: 60
+  = text_field_tag 'settings[gitolite_global_storage_dir]',
+                   gitolite_global_storage_dir,
+                   size: 60,
+                   required: true
   br
   em.info
     = l(:label_gitolite_global_storage_dir_desc)
 
 p
   label = l(:label_gitolite_recycle_bin_dir)
-  = text_field_tag 'settings[gitolite_recycle_bin_dir]', gitolite_recycle_bin_dir, size: 60
+  = text_field_tag 'settings[gitolite_recycle_bin_dir]',
+                   gitolite_recycle_bin_dir,
+                   size: 60,
+                   required: true
   br
   em.info
     = l(:label_gitolite_recycle_bin_dir_desc)
