@@ -54,7 +54,6 @@ fr:
   all_references: "Toutes&nbsp;les&nbsp;références"
   all_tags: "Toutes&nbsp;les&nbsp;étiquettes"
   button_clone: Cloner
-  button_ok: OK
   display_access_emphasis: "Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte."
   display_access_flat: "Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>."
   display_access_hierarchical: "Les projets parents sont inclus dans l'URL, car le dépôt est en mode <em>Hiérarchique</em>."
@@ -101,7 +100,6 @@ fr:
   label_delete_in_progress: Effacement...
   label_delete_warning: Attention! La suppression est définitive!
   label_deploy_key: Clé de déploiement
-  label_deployment_credential_active: Activée?
   label_deployment_credential_add: Ajouter une pièce d'identité de déploiement
   label_deployment_credential_create_key_first: Aucune clé de déploiement n'a été détectée. Vous devriez commencer par en créer une.
   label_deployment_credential_create: Créer une nouvelle pièce d'identité de déploiement
@@ -128,7 +126,6 @@ fr:
   label_enable_smart_http: Activer SmartHTTP
   label_enable_smart_https: Activer SmartHTTPS
   label_enable_ssh_url: Afficher l'url SSH
-  label_enabled: Activé
   label_error: Erreur
   label_etcetera: etc
   label_example_repository: Dépôt example
@@ -258,7 +255,6 @@ fr:
   label_mirror_forced_update: Forcer la mise à jour du miroir
   label_mirror_full_mirror: Miroir complet
   label_mirror_help: Le miroir doit donner les droits d'écriture à la clé publique suivante
-  label_mirror_inactive: Inactif
   label_mirror_include_all_branches: Envoyer toutes les branches
   label_mirror_include_all_tags: Envoyer toutes les étiquettes
   label_mirror_push_fail: Échec

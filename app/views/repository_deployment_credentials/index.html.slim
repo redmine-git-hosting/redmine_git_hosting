@@ -17,7 +17,7 @@ div
           th = l(:label_deployment_credential_public_key_file)
           th = l(:label_permissions)
           th = l(:label_deployment_credential_honored)
-          th = l(:label_deployment_credential_active)
+          th = l(:field_active)
           th
       tbody
         - @repository_deployment_credentials.sort_by {|x| [x.user.login, x.gitolite_public_key.title]}.each do |credential|
@@ -33,8 +33,8 @@ div
 
             td = credential.gitolite_public_key.gitolite_path
             td = credential.perm
-            td = checked_image_with_exclamation credential.honored?
-            td = checked_image_with_exclamation credential.active?
+            td.tick = checked_image_with_exclamation credential.honored?
+            td.tick = checked_image_with_exclamation credential.active?
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_deployment_credentials, @repository) && (User.current.admin? || User.current == credential.user)

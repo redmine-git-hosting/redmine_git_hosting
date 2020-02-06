@@ -54,7 +54,6 @@ ja:
   all_references: 全参照
   all_tags: 全タグ
   button_clone: クローン
-  button_ok: OK
   display_access_emphasis: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
   display_access_flat: "<em>フラット</em>モードのため、親ディレクトリはURLに含まれていません。"
   display_access_hierarchical: "<em>階層</em>モードのため、親ディレクトリもURLに含まれています。"
@@ -102,7 +101,6 @@ ja:
   label_delete_in_progress: 削除中...
   label_delete_warning: 注意！完全に削除してもいいですか？
   label_deploy_key: デプロイキー
-  label_deployment_credential_active: Active?
   label_deployment_credential_add: デプロイクレデンシャル情報の追加
   label_deployment_credential_create_key_first: デプロイキーが見つかりません。新しいデプロイキーを作成してください。
   label_deployment_credential_create: デプロイクレデンシャル情報の作成
@@ -126,7 +124,6 @@ ja:
   label_enable_protected_branches: ブランチ保護有効化
   label_enable_public_repo: リポジトリを公開する
   label_enable_smart_http: Smart HTTPモード
-  label_enabled: 有効
   label_error: Error
   label_etcetera: etc
   label_example_repository: exampleリポジトリ
@@ -265,7 +262,6 @@ ja:
   label_mirror_forced_update: リモート更新強制
   label_mirror_full_mirror: 複製完了
   label_mirror_help: ミラーリポジトリに以下のパプリックキーの書き込み権限の付与が必要です
-  label_mirror_inactive: 非活性
   label_mirror_include_all_branches: 全ブランチプッシュ
   label_mirror_include_all_tags: 全タグプッシュ
   label_mirror_push_fail: エラー

@@ -15,7 +15,7 @@ div
           th = l(:field_url)
           th = l(:label_mirror_refspec)
           th = l(:label_mode)
-          th = l(:label_enabled)
+          th = l(:field_active)
           th
       tbody
         - @repository_mirrors.each do |mirror|
@@ -23,7 +23,7 @@ div
             td = mirror.url
             td = refspec(mirror, 64).html_safe
             td = mirror_mode(mirror).html_safe
-            td = checked_image_with_exclamation mirror.active?
+            td.tick = checked_image_with_exclamation mirror.active?
 
             td.buttons
               - if User.current.git_allowed_to?(:push_repository_mirrors, @repository)

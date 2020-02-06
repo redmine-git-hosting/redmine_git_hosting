@@ -53,8 +53,7 @@ de:
   all_branches: All&nbsp;Branches
   all_references: All&nbsp;Refs
   all_tags: All&nbsp;Tags
-  button_clone: Clone
-  button_ok: OK
+  button_clone: Klonen
   display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
@@ -68,7 +67,7 @@ de:
   error_repository_not_found: "No repository with this identifier was found"
   error_xitolite_repositories_disabled: "Gitolite repositories are disabled, cannot create repository!"
   field_key: this key
-  field_mode: Mode
+  field_mode: Modus
   field_perm: Zugriffsberechtigung
   field_split_payloads: Split the global payload in many payloads
   field_use_triggers: Use triggers
@@ -101,7 +100,6 @@ de:
   label_delete_in_progress: Lösche...
   label_delete_warning: Warnung! Löschvorgang kann nicht rückgängig gemacht werden!
   label_deploy_key: Deployment Schlüssel
-  label_deployment_credential_active: Active?
   label_deployment_credential_add: Add Deployment Credential
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_create: Create New Deployment Credential
@@ -128,8 +126,7 @@ de:
   label_enable_smart_http: Smart HTTP Mode
   label_enable_smart_https: Smart HTTPS Mode
   label_enable_ssh_url: Enable SSH URL
-  label_enabled: Enabled
-  label_error: Error
+  label_error: Fehler
   label_etcetera: etc
   label_example_repository: Example repository
   label_first_commit_date: Erster Commit
@@ -258,7 +255,6 @@ de:
   label_mirror_forced_update: Force Update Remote
   label_mirror_full_mirror: Complete Mirroring
   label_mirror_help: Mirrors must grant write access to the following public key
-  label_mirror_inactive: Inactive
   label_mirror_include_all_branches: Push all Branches
   label_mirror_include_all_tags: Push all Tags
   label_mirror_push_fail: Failed

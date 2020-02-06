@@ -54,7 +54,6 @@ ru:
   all_references: Все&nbsp;ссылки
   all_tags: Все&nbsp;теги
   button_clone: Клонировать
-  button_ok: OK
   display_access_emphasis: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
   display_access_flat: "Родителские проекты не включены в URL для <em>Плоского</em> режима."
   display_access_hierarchical: "Родителские проекты включены в URL для <em>Иерархического</em> режима."
@@ -101,7 +100,6 @@ ru:
   label_delete_in_progress: Удаление...
   label_delete_warning: Внимание! Удаление безвозвратно!
   label_deploy_key: Полномочный deploy-ключ
-  label_deployment_credential_active: Активный?
   label_deployment_credential_add: Добавить полномочия
   label_deployment_credential_create_key_first: Ключ(и) не определены. Вы должны создать один для начала.
   label_deployment_credential_create: Создать новые полномочия
@@ -125,7 +123,6 @@ ru:
   label_enable_protected_branches: Включить защищенные ветки
   label_enable_public_repo: Сделать публичным
   label_enable_smart_http: Включить Smart HTTP
-  label_enabled: Включено
   label_error: Ошибка
   label_etcetera: и.т.д.
   label_example_repository: "Репозиторий 'example'"
@@ -252,7 +249,6 @@ ru:
   label_mirror_forced_update: Force Update Remote
   label_mirror_full_mirror: Complete Mirroring
   label_mirror_help: Зеркала должны предоставлять доступ на запись следующему публичному ключу
-  label_mirror_inactive: Неактивно
   label_mirror_include_all_branches: Зеркалировать все ветки
   label_mirror_include_all_tags: Зеркалировать все теги
   label_mirror_push_fail: Ошибка

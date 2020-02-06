@@ -54,7 +54,6 @@ en:
   all_references: All&nbsp;Refs
   all_tags: All&nbsp;Tags
   button_clone: Clone
-  button_ok: OK
   display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
@@ -101,7 +100,6 @@ en:
   label_delete_in_progress: Deleting...
   label_delete_warning: Warning! Deletion is forever!
   label_deploy_key: Deploy key
-  label_deployment_credential_active: Active?
   label_deployment_credential_add: Add Deployment Credential
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_create: Create New Deployment Credential
@@ -128,7 +126,6 @@ en:
   label_enable_smart_http: Smart HTTP Mode
   label_enable_smart_https: Smart HTTPS Mode
   label_enable_ssh_url: Enable SSH URL
-  label_enabled: Enabled
   label_error: Error
   label_etcetera: etc
   label_example_repository: Example repository
@@ -258,7 +255,6 @@ en:
   label_mirror_forced_update: Force Update Remote
   label_mirror_full_mirror: Complete Mirroring
   label_mirror_help: Mirrors must grant write access to the following public key
-  label_mirror_inactive: Inactive
   label_mirror_include_all_branches: Push all Branches
   label_mirror_include_all_tags: Push all Tags
   label_mirror_push_fail: Failed

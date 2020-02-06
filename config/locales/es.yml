@@ -54,7 +54,6 @@ es:
   all_references: Todas&nbsp;las&nbsp;referencias
   all_tags: Todas&nbsp;las&nbsp;etiquetas
   button_clone: Clonar
-  button_ok: Aceptar
   display_access_emphasis: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
   display_access_flat: "Los proyectos padre no se incluyen en las URLs, ya que el repositorio está en modo <em>plano</em>."
   display_access_hierarchical: "Los proyectos padre se incluyen en las URLs, ya que el repositorio está en modo <em>jerárquico</em>."
@@ -101,7 +100,6 @@ es:
   label_delete_in_progress: Borrando...
   label_delete_warning: ¡Atención! ¡El borrado es permanente!
   label_deploy_key: Clave de despliegue
-  label_deployment_credential_active: ¿Activo?
   label_deployment_credential_add: Añadir credencial de despliegue
   label_deployment_credential_create_key_first: No se ha detectado ninguna clave de despliegue. Debe crear una antes.
   label_deployment_credential_create: Crear nueva credencial de despliegue
@@ -125,7 +123,6 @@ es:
   label_enable_protected_branches: Activar las ramas protegidas
   label_enable_public_repo: Hacer público el repositorio
   label_enable_smart_http: Modo HTTP inteligente
-  label_enabled: Activado
   label_error: Error
   label_etcetera: etc.
   label_example_repository: Repository de ejemplo
@@ -254,7 +251,6 @@ es:
   label_mirror_forced_update: Forzar la actualización de la réplica
   label_mirror_full_mirror: Réplica completa
   label_mirror_help: Las réplicas deben autorizar el acceso de escritura a la siguiente clave pública
-  label_mirror_inactive: Inactivo
   label_mirror_include_all_branches: Enviar todas las ramas
   label_mirror_include_all_tags: Enviar todas las etiquetas
   label_mirror_push_fail: Erróneo
