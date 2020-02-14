@@ -1,5 +1,4 @@
 require 'html/pipeline'
-require 'task_list/filter'
 
 module RedmineGitHosting
   module MarkdownRenderer
@@ -21,7 +20,6 @@ module RedmineGitHosting
       def filters
         [
           RedmineGitHosting::RedcarpetFilter,
-          TaskList::Filter,
           HTML::Pipeline::AutolinkFilter,
           HTML::Pipeline::TableOfContentsFilter
         ]
