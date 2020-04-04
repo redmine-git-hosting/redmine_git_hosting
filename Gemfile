@@ -34,9 +34,10 @@ gem 'sidekiq'
 gem 'sshkey'
 
 group :development, :test do
+  gem 'brakeman'
+  gem 'rails-controller-testing'
   gem 'rspec'
   gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
-  gem 'rails-controller-testing'
 
   gem 'shoulda', '~> 3.5.0'
   gem 'shoulda-context'
@@ -50,7 +51,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'brakeman'
   gem 'bullet'
   gem 'spring'
   gem 'spring-commands-rspec'

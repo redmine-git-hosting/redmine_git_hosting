@@ -33,3 +33,7 @@ jobs:
     - name: Run RuboCop
       run: |
         bundle exec rubocop -S
+
+    - name: Run Brakeman
+      run: |
+        bundle exec brakeman -5
