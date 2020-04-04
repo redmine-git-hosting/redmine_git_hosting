@@ -9,35 +9,29 @@ module Redmine
   module Scm
     module Adapters
       class XitoliteAdapter < AbstractAdapter
-
         # Git executable name
-        XITOLITE_BIN = Redmine::Configuration['scm_git_command'] || "git"
+        XITOLITE_BIN = Redmine::Configuration['scm_git_command'] || 'git'
 
         class GitBranch < Branch
           attr_accessor :is_default
         end
 
         class << self
-
           def client_command
             @@bin ||= XITOLITE_BIN
           end
-
 
           def sq_bin
             @@sq_bin ||= shell_quote_command
           end
 
-
           def client_version
             @@client_version ||= (scm_command_version || [])
           end
 
-
           def client_available
             !client_version.empty?
           end
-
 
           def scm_command_version
             scm_version = scm_version_from_command_line.dup
@@ -49,25 +43,20 @@ module Redmine
             end
           end
 
-
           # Change from the original method
           def scm_version_from_command_line
             RedmineGitHosting::Commands.git_version
           end
-
         end
-
 
         def initialize(url, root_url = nil, login = nil, password = nil, path_encoding = nil)
           super
           @path_encoding = path_encoding.blank? ? 'UTF-8' : path_encoding
         end
 
-
         def path_encoding
           @path_encoding
         end
-
 
         def info
           begin
@@ -76,7 +65,6 @@ module Redmine
             nil
           end
         end
-
 
         def branches
           return @branches if !@branches.nil?
@@ -98,7 +86,6 @@ module Redmine
           []
         end
 
-
         def tags
           return @tags if !@tags.nil?
           @tags = []
@@ -112,7 +99,6 @@ module Redmine
           []
         end
 
-
         def default_branch
           bras = self.branches
           return nil if bras.nil?
@@ -121,7 +107,6 @@ module Redmine
           master_bras = bras.select { |x| x.to_s == 'master' }
           master_bras.empty? ? bras.first.to_s : 'master'
         end
-
 
         def entry(path = nil, identifier = nil)
           parts = path.to_s.split(%r{[\/\\]}).select { |n| !n.blank? }
@@ -136,7 +121,6 @@ module Redmine
             es ? es.detect { |e| e.name == search_name } : nil
           end
         end
-
 
         def entries(path = nil, identifier = nil, options = {})
           path ||= ''
@@ -175,7 +159,6 @@ module Redmine
           []
         end
 
-
         def lastrev(path, rev)
           return nil if path.nil?
           cmd_args = %w|log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1|
@@ -204,7 +187,6 @@ module Redmine
           logger.error(e.message)
           nil
         end
-
 
         def revisions(path, identifier_from, identifier_to, options = {})
           revs = Revisions.new
@@ -348,7 +330,6 @@ module Redmine
           nil
         end
 
-
         def annotate(path, identifier = nil)
           identifier = 'HEAD' if identifier.blank?
           cmd_args = %w|blame --encoding=UTF-8|
@@ -399,7 +380,6 @@ module Redmine
           nil
         end
 
-
         # Added to be compatible with EmailDiff plugin
         #
         def changed_files(path = nil, rev = 'HEAD')
@@ -416,7 +396,6 @@ module Redmine
           changed_files
         end
 
-
         # Added for GitDownloadRevision
         #
         def rev_list(revision, args)
@@ -430,7 +409,6 @@ module Redmine
           []
         end
 
-
         # Added for GitDownloadRevision / GithubPayload
         #
         def rev_parse(revision)
@@ -443,7 +421,6 @@ module Redmine
           logger.error(e.message)
           nil
         end
-
 
         # Added for GitDownloadRevision
         #
@@ -472,7 +449,6 @@ module Redmine
           nil
         end
 
-
         # Added for MirrorPush
         #
         def mirror_push(mirror_url, branch = nil, args = [])
@@ -481,7 +457,6 @@ module Redmine
           RedmineGitHosting::Utils::Exec.capture(cmd, cmd_args, { merge_output: true })
         end
 
-
         class Revision < Redmine::Scm::Adapters::Revision
           # Returns the readable identifier
           def format_identifier
@@ -489,91 +464,79 @@ module Redmine
           end
         end
 
-
         private
 
+        def logger
+          RedmineGitHosting.logger
+        end
 
-          def logger
-            RedmineGitHosting.logger
+        def git_cmd(args, options = {}, &block)
+          # Get options
+          bypass_cache = options.delete(:bypass_cache) { false }
+
+          # Build git command line
+          cmd_str = prepare_command(args)
+
+          # Insert cache between shell execution and caller
+          if !git_cache_id.nil? && git_cache_enabled? && !bypass_cache
+            RedmineGitHosting::ShellRedirector.execute(cmd_str, git_cache_id, options, &block)
+          else
+            Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
           end
+        end
 
+        def prepare_command(args)
+          # Get our basics args
+          full_args = base_args
+          # Concat with Redmine args
+          full_args += args
+          # Quote args
+          full_args.map { |e| shell_quote(e.to_s) }.join(' ')
+        end
 
-          def git_cmd(args, options = {}, &block)
-            # Get options
-            bypass_cache = options.delete(:bypass_cache) { false }
+        # Compute string from repo_path that should be same as: repo.git_cache_id
+        # If only we had access to the repo (we don't).
+        # We perform caching here to speed this up, since this function gets called
+        # many times during the course of a repository lookup.
+        def git_cache_id
+          logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
+          @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
+          logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
+          logger.debug("git_cache_id found : #{@git_cache_id}") if !@git_cache_id.nil?
+          @git_cache_id
+        end
 
-            # Build git command line
-            cmd_str = prepare_command(args)
+        def base_args
+          RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path).concat(git_args)
+        end
 
-            # Insert cache between shell execution and caller
-            if !git_cache_id.nil? && git_cache_enabled? && !bypass_cache
-              RedmineGitHosting::ShellRedirector.execute(cmd_str, git_cache_id, options, &block)
-            else
-              Redmine::Scm::Adapters::AbstractAdapter.shellout(cmd_str, options, &block)
-            end
+        def git_mirror_cmd
+          RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path, git_push_args)
+        end
+
+        def git_push_args
+          ['env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}"]
+        end
+
+        def repo_path
+          root_url || url
+        end
+
+        def git_args
+          self.class.client_version_above?([1, 7, 2]) ? ['-c', 'core.quotepath=false', '-c', 'log.decorate=no'] : []
+        end
+
+        def git_cache_enabled?
+          RedmineGitHosting::Config.gitolite_cache_max_time != 0
+        end
+
+        def binary_data?(content)
+          if Gem::Version.new(Redmine::VERSION.to_s) >= Gem::Version.new('3.4')
+            ScmData.binary?(content)
+          else
+            content.is_binary_data?
           end
-
-
-          def prepare_command(args)
-            # Get our basics args
-            full_args = base_args
-            # Concat with Redmine args
-            full_args += args
-            # Quote args
-            full_args.map { |e| shell_quote(e.to_s) }.join(' ')
-          end
-
-
-          # Compute string from repo_path that should be same as: repo.git_cache_id
-          # If only we had access to the repo (we don't).
-          # We perform caching here to speed this up, since this function gets called
-          # many times during the course of a repository lookup.
-          def git_cache_id
-            logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
-            @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
-            logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
-            logger.debug("git_cache_id found : #{@git_cache_id}") if !@git_cache_id.nil?
-            @git_cache_id
-          end
-
-
-          def base_args
-            RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path).concat(git_args)
-          end
-
-
-          def git_mirror_cmd
-            RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path, git_push_args)
-          end
-
-
-          def git_push_args
-            ['env', "GIT_SSH=#{RedmineGitHosting::Config.gitolite_mirroring_script}"]
-          end
-
-
-          def repo_path
-            root_url || url
-          end
-
-
-          def git_args
-            self.class.client_version_above?([1, 7, 2]) ? ['-c', 'core.quotepath=false', '-c', 'log.decorate=no'] : []
-          end
-
-
-          def git_cache_enabled?
-            RedmineGitHosting::Config.gitolite_cache_max_time != 0
-          end
-
-          def binary_data?(content)
-            if Gem::Version.new(Redmine::VERSION.to_s) >= Gem::Version.new('3.4')
-              ScmData.binary?(content)
-            else
-              content.is_binary_data?
-            end
-          end
-
+        end
       end
     end
   end

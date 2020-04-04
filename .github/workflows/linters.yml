@@ -1,4 +1,4 @@
-name: Run RuboCop
+name: Run Linters
 
 on: [push]
 

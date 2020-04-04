@@ -1,5 +1,4 @@
 namespace :redmine_git_hosting do
-
   desc 'Update plugin settings in database (This will read settings from `<redmine_root>/redmine_git_hosting.yml` and `<plugin_root>/settings.yml`)'
   task update_settings: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Reloading settings from command line') do
@@ -7,12 +6,10 @@ namespace :redmine_git_hosting do
     end
   end
 
-
   desc 'Dump plugin settings in console'
   task dump_settings: [:environment] do
     RedmineGitHosting::Config.dump_settings
   end
-
 
   desc 'Purge expired repositories from Recycle Bin'
   task purge_recycle_bin: [:environment] do
@@ -21,14 +18,12 @@ namespace :redmine_git_hosting do
     end
   end
 
-
   desc 'Update/repair Gitolite configuration'
   task update_repositories: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual update_repositories operation from command line') do
       RedmineGitHosting::GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
     end
   end
-
 
   desc 'Fetch commits from gitolite repositories/update gitolite configuration'
   task fetch_changesets: [:environment] do
@@ -37,7 +32,6 @@ namespace :redmine_git_hosting do
       Repository.fetch_changesets
     end
   end
-
 
   desc 'Check repositories identifier uniqueness'
   task check_repository_uniqueness: [:environment] do
@@ -51,14 +45,12 @@ namespace :redmine_git_hosting do
     end
   end
 
-
   desc 'Resync ssh_keys'
   task resync_ssh_keys: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual resync_ssh_keys operation from command line') do
       RedmineGitHosting::GitoliteAccessor.resync_ssh_keys(bypass_sidekiq: true)
     end
   end
-
 
   desc 'Regenerate ssh_keys'
   task regenerate_ssh_keys: [:environment] do
@@ -67,14 +59,12 @@ namespace :redmine_git_hosting do
     end
   end
 
-
   desc 'Install/update Gitolite hooks'
   task install_hook_files: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Installing/updating Gitolite hooks') do
       puts YAML::dump(RedmineGitHosting::Config.install_hooks!)
     end
   end
-
 
   desc 'Install/update Gitolite hook parameters'
   task install_hook_parameters: [:environment] do
@@ -94,5 +84,4 @@ namespace :redmine_git_hosting do
     line = File.read(Rails.root.join(path))[/^\s*version\s*.*/]
     line.match(/.*version\s*['"](.*)['"]/)[1]
   end
-
 end
