@@ -3,7 +3,6 @@ require_dependency 'group'
 module RedmineGitHosting
   module Patches
     module GroupPatch
-
       def self.prepended(base)
         base.class_eval do
           # Relations
@@ -12,26 +11,21 @@ module RedmineGitHosting
         end
       end
 
-
       def user_added(user)
         super
         protected_branches.each do |pb|
-          RepositoryProtectedBranches::MemberManager.new(pb).add_user_from_group(user, self.id)
+          RepositoryProtectedBranches::MemberManager.new(pb).add_user_from_group(user, id)
         end
       end
-
 
       def user_removed(user)
         super
         protected_branches.each do |pb|
-          RepositoryProtectedBranches::MemberManager.new(pb).remove_user_from_group(user, self.id)
+          RepositoryProtectedBranches::MemberManager.new(pb).remove_user_from_group(user, id)
         end
       end
-
     end
   end
 end
 
-unless Group.included_modules.include?(RedmineGitHosting::Patches::GroupPatch)
-  Group.send(:prepend, RedmineGitHosting::Patches::GroupPatch)
-end
+Group.prepend RedmineGitHosting::Patches::GroupPatch unless Group.included_modules.include?(RedmineGitHosting::Patches::GroupPatch)

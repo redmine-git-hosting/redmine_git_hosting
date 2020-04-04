@@ -84,7 +84,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def find_all_keys
     # display create_with_key view.  Find preexisting keys to offer to user
-    @user_keys     = User.current.gitolite_public_keys.deploy_key.order('title ASC')
+    @user_keys     = User.current.gitolite_public_keys.deploy_key.order(:title)
     @disabled_keys = @repository.deployment_credentials.map(&:gitolite_public_key)
     @other_keys    = []
     # Admin can use other's deploy keys as well
@@ -92,7 +92,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   end
 
   def other_deployment_keys
-    users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order('title ASC') }.flatten
+    users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order(:title) }.flatten
   end
 
   def users_allowed_to_create_deployment_keys

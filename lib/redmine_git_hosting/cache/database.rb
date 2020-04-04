@@ -14,7 +14,7 @@ module RedmineGitHosting
         end
 
         def get_cache(repo_id, command)
-          cached = GitCache.find_by_repo_identifier_and_command(repo_id, command)
+          cached = GitCache.find_by(repo_identifier: repo_id, command: command)
           if cached
             if valid_cache_entry?(cached.created_at)
               # Update updated_at flag
@@ -47,7 +47,7 @@ module RedmineGitHosting
         end
 
         def apply_cache_limit
-          GitCache.find(:last, order: 'created_at DESC').destroy if max_cache_elements >= 0 && GitCache.count > max_cache_elements
+          GitCache.order(:created_at).first.destroy if max_cache_elements >= 0 && GitCache.count > max_cache_elements
         end
       end
     end

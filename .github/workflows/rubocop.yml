@@ -1,0 +1,35 @@
+name: Run RuboCop
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+
+    - name: Set Gemfile
+      run: |
+        echo "">> Gemfile
+        echo "group :test do">> Gemfile
+        echo "  gem 'rubocop', require: false" >> Gemfile
+        echo "  gem 'rubocop-performance', require: false" >> Gemfile
+        echo "  gem 'rubocop-rails', require: false" >> Gemfile
+        echo "  gem 'rubocop-rspec', require: false" >> Gemfile
+        echo "end">> Gemfile
+
+    - name: Setup gems
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Run RuboCop
+      run: |
+        bundle exec rubocop -S
