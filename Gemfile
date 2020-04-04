@@ -1,3 +1,5 @@
+source 'https://rubygems.org'
+
 # Gitolite Admin repository management
 gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.2.0'
 
