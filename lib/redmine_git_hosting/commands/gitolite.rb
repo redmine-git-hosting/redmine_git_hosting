@@ -28,10 +28,10 @@ module RedmineGitHosting
         logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
         begin
           sudo_shell(*gitolite_command)
-          return true
+          true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error(e.output)
-          return false
+          false
         end
       end
 

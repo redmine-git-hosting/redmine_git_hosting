@@ -1,6 +1,6 @@
 RedmineGitHosting::GitoliteHooks.register_hooks do
   # Set source dir
-  source_dir    Rails.root.join('plugins', 'redmine_git_hosting', 'contrib', 'hooks').to_s
+  source_dir    Rails.root.join('plugin/redmine_git_hosting/contrib/hooks').to_s
 
   # Declare GitoliteHooks to install
 
@@ -67,7 +67,7 @@ end
 # Gitolite hooks can be found in Redmine root dir or in plugin root dir
 [
   Rails.root.join('redmine_git_hosting_hooks.rb').to_s,
-  Rails.root.join('plugins', 'redmine_git_hosting', 'custom_hooks.rb').to_s
+  Rails.root.join('plugins/redmine_git_hosting/custom_hooks.rb').to_s
 ].each do |file|
   require_dependency file if File.exist?(file)
 end

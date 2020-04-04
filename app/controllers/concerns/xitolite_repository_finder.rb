@@ -2,14 +2,12 @@ module XitoliteRepositoryFinder
   extend ActiveSupport::Concern
 
   def find_xitolite_repository
-    begin
-      @repository = Repository::Xitolite.find(find_repository_param)
-    rescue ActiveRecord::RecordNotFound => e
-      render_404
-    else
-      @project = @repository.project
-      render_404 if @project.nil?
-    end
+    @repository = Repository::Xitolite.find(find_repository_param)
+  rescue ActiveRecord::RecordNotFound => e
+    render_404
+  else
+    @project = @repository.project
+    render_404 if @project.nil?
   end
 
   def find_xitolite_repository_by_path

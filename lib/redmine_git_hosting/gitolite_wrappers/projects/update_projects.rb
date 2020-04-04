@@ -2,9 +2,9 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Projects
       class UpdateProjects < GitoliteWrappers::Base
-
         def call
           return if git_projects.empty?
+
           admin.transaction do
             git_projects.each do |project|
               if project.gitolite_repos.any?
@@ -15,11 +15,9 @@ module RedmineGitHosting
           end
         end
 
-
         def git_projects
           @git_projects ||= projects.uniq.select { |p| p.gitolite_repos.any? }
         end
-
 
         def projects
           @projects ||=
@@ -35,13 +33,11 @@ module RedmineGitHosting
             end
         end
 
-
         def handle_project_update(project)
           project.gitolite_repos.each do |repository|
             options[:force] == true ? create_gitolite_repository(repository) : update_gitolite_repository(repository)
           end
         end
-
       end
     end
   end

@@ -9,12 +9,10 @@ class DownloadGitRevisionController < ApplicationController
   helper :git_hosting
 
   def index
-    begin
-      send_data(@download.content, filename: @download.filename, type: @download.content_type)
-    rescue => e
-      flash.now[:error] = l(:git_archive_timeout, timeout: e.output)
-      render_404
-    end
+    send_data(@download.content, filename: @download.filename, type: @download.content_type)
+  rescue => e
+    flash.now[:error] = l(:git_archive_timeout, timeout: e.output)
+    render_404
   end
 
   private

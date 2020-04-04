@@ -1,12 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe RepositoryProtectedBranches::MemberManager do
-
   def build_member_manager(opts = {})
     protected_branch = build(:repository_protected_branche)
     member_manager = RepositoryProtectedBranches::MemberManager.new(protected_branch)
   end
-
 
   let(:member_manager) { build_member_manager }
 
@@ -20,7 +18,6 @@ describe RepositoryProtectedBranches::MemberManager do
     end
   end
 
-
   describe '#current_group_ids' do
     it 'should return an array of group ids' do
       group = build(:group, id: 12)
@@ -29,14 +26,12 @@ describe RepositoryProtectedBranches::MemberManager do
     end
   end
 
-
   describe '#current_members' do
     it 'should return the current protected_branch members' do
       expect(member_manager.protected_branch).to receive(:protected_branches_members)
       member_manager.current_members
     end
   end
-
 
   describe '#users_by_group_id' do
     it 'should return the members of a protected_branch group' do
@@ -47,7 +42,6 @@ describe RepositoryProtectedBranches::MemberManager do
     end
   end
 
-
   describe '#add_users' do
     it 'should add users passed' do
       expect(member_manager).to receive(:current_user_ids).and_return([1])
@@ -55,7 +49,6 @@ describe RepositoryProtectedBranches::MemberManager do
       member_manager.add_users(['10'])
     end
   end
-
 
   describe '#add_groups' do
     it 'should add users passed' do
@@ -70,7 +63,6 @@ describe RepositoryProtectedBranches::MemberManager do
     end
   end
 
-
   describe '#create_user_member' do
     it 'should create a new user member' do
       expect(member_manager).to receive(:create_member).with([1], [], 'User', {})
@@ -78,14 +70,12 @@ describe RepositoryProtectedBranches::MemberManager do
     end
   end
 
-
   describe '#create_group_member' do
     it 'should create a new group member' do
       expect(member_manager).to receive(:create_member).with([1], [], 'Group', {})
       member_manager.create_group_member([1], [])
     end
   end
-
 
   describe '#add_user_from_group' do
     it 'should add a user from a group' do
@@ -97,7 +87,6 @@ describe RepositoryProtectedBranches::MemberManager do
       member_manager.add_user_from_group(user1, 10)
     end
   end
-
 
   describe '#remove_user_from_group' do
     context 'when user exists' do
@@ -118,7 +107,6 @@ describe RepositoryProtectedBranches::MemberManager do
       end
     end
   end
-
 
   describe '#create_member' do
     it 'should create member' do
@@ -147,5 +135,4 @@ describe RepositoryProtectedBranches::MemberManager do
       end
     end
   end
-
 end

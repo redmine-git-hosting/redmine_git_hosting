@@ -32,18 +32,18 @@ module RedmineGitHosting
   end
 
   def logfile
-    Rails.root.join('log', 'git_hosting.log')
+    Rails.root.join('log/git_hosting.log')
   end
 
   def loglevel
     case RedmineGitHosting::Config.gitolite_log_level
-    when 'debug' then
+    when 'debug'
       Logger::DEBUG
-    when 'info' then
+    when 'info'
       Logger::INFO
-    when 'warn' then
+    when 'warn'
       Logger::WARN
-    when 'error' then
+    when 'error'
       Logger::ERROR
     else
       Logger::INFO

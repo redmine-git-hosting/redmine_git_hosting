@@ -10,21 +10,21 @@ gem 'gitlab-grack', '~> 2.0.0', git: 'https://github.com/jbox-web/grack.git', re
 gem 'dalli'
 
 # Redis client for GitCache
-gem 'redis'
 gem 'hiredis'
+gem 'redis'
 
 # Markdown rendering
+gem 'deckar01-task_list'
 gem 'escape_utils'
 gem 'html-pipeline'
 gem 'rinku'
-gem 'deckar01-task_list'
 
 # Syntaxic coloration
-gem 'github-markup'
-gem 'RedCloth'
-gem 'org-ruby'
-gem 'creole'
 gem 'asciidoctor'
+gem 'creole'
+gem 'github-markup'
+gem 'org-ruby'
+gem 'RedCloth'
 
 # Rack parser for Hrack
 gem 'rack-parser', require: 'rack/parser'

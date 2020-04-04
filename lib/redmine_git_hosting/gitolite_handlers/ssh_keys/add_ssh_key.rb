@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteHandlers
     module SshKeys
       class AddSshKey < Base
-
         def call
           repo_key = find_gitolite_key(key.owner, key.location)
 
@@ -18,7 +17,6 @@ module RedmineGitHosting
             repo_key.location = key.location
           end
         end
-
       end
     end
   end

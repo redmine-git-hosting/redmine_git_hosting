@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Projects
       module Common
-
         def handle_repositories_move(projects)
           repo_list = []
           delete_parent_path = []
@@ -16,13 +15,11 @@ module RedmineGitHosting
           delete_parent_path
         end
 
-
         def clean_path(path_list)
           path_list.compact.uniq.sort.reverse.each do |path|
             rmdir(path)
           end
         end
-
 
         def rmdir(path)
           logger.info("#{context} : cleaning repository path : '#{path}'")
@@ -32,7 +29,6 @@ module RedmineGitHosting
             logger.error("#{context} : error while cleaning repository path '#{path}'")
           end
         end
-
       end
     end
   end
