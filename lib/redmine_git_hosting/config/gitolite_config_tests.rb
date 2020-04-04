@@ -31,13 +31,12 @@ module RedmineGitHosting
         @temp_dir_path
       end
 
-
       @temp_dir_writeable = false
 
       def temp_dir_writeable?(opts = {})
         @temp_dir_writeable = false if opts.has_key?(:reset) && opts[:reset] == true
 
-        if !@temp_dir_writeable
+        unless @temp_dir_writeable
           file_logger.debug("Testing if Gitolite Admin directory '#{create_temp_dir}' is writeable ...")
           mytestfile = File.join(create_temp_dir, 'writecheck')
           if !File.directory?(create_temp_dir)
@@ -57,7 +56,6 @@ module RedmineGitHosting
         @temp_dir_writeable
       end
 
-
       ###############################
       ##                           ##
       ##        SUDO TESTS         ##
@@ -67,6 +65,7 @@ module RedmineGitHosting
       ## SUDO TEST1
       def can_redmine_sudo_to_gitolite_user?
         return true unless gitolite_use_sudo?
+
         file_logger.info("Testing if Redmine user '#{redmine_user}' can sudo to Gitolite user '#{gitolite_user}'...")
         result = execute_sudo_test(gitolite_user) do
           RedmineGitHosting::Commands.sudo_capture('whoami')
@@ -75,21 +74,19 @@ module RedmineGitHosting
         result
       end
 
-
       def execute_sudo_test(user, &block)
         begin
           test = yield if block_given?
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          return false
+          false
         else
           if test.match(/#{user}/)
-            return true
+            true
           else
-            return false
+            false
           end
         end
       end
-
     end
   end
 end

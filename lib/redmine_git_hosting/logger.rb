@@ -2,7 +2,6 @@ require 'logger'
 
 module RedmineGitHosting
   class Logger < ::Logger
-
     LOG_LEVELS = [
       'debug',
       'info',
@@ -19,6 +18,5 @@ module RedmineGitHosting
       end
       logger
     end
-
   end
 end

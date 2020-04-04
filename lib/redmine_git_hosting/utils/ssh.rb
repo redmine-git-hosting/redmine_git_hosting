@@ -19,7 +19,6 @@ module RedmineGitHosting
         end
       end
 
-
       def sanitize_ssh_key(key)
         # First -- let the first control char or space stand (to divide key type from key)
         # Really, this is catching a special case in which there is a \n between type and key.
@@ -36,7 +35,6 @@ module RedmineGitHosting
         # Return the sanitized key
         key
       end
-
     end
   end
 end

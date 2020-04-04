@@ -2,20 +2,16 @@ require 'stringio'
 
 module RedmineGitHosting
   class ShellRedirector
-
     # Redirector states
     WAIT_TO_CHECK = 0
     RUNNING_SHELL = 1
     STRING_IO     = 2
     DEAD          = 3
 
-
     class << self
-
       def logger
         RedmineGitHosting.logger
       end
-
 
       # Rewritten version of caching functionality to accommodate Redmine 1.4+
       # When the shell is called with options[:write_stdin], then part of the
@@ -52,11 +48,9 @@ module RedmineGitHosting
           raise Redmine::Scm::Adapters::XitoliteAdapter::ScmCommandAborted, "Git exited with non-zero status : #{status.exitstatus} : #{cmd_str}"
         end
 
-        return retio
+        retio
       end
-
     end
-
 
     def initialize(cmd_str, repo_id, options = {})
       @cmd_str     = cmd_str
@@ -74,7 +68,6 @@ module RedmineGitHosting
         startup_shell
       end
     end
-
 
     def startup_shell
       Thread.abort_on_exception = true
@@ -112,21 +105,20 @@ module RedmineGitHosting
       @state = RUNNING_SHELL
     end
 
-
     def exit_shell
       # If shell was running, kill off wrapper thread
       if @state == RUNNING_SHELL
         @wrap_thread.run
         @wrap_thread.join
         @state = DEAD
-        if !@buffer_full
+        unless @buffer_full
           # Insert result into cache
           RedmineGitHosting::Cache.set_cache(@repo_id, @buffer, @cmd_str, @extra_args)
         end
       end
-      return [@retio, @status]
-    end
 
+      [@retio, @status]
+    end
 
     # Catch any extra args placed into stdin.  We explicitly code the
     # output (write) functions here.  Below, 'method_missing' traps the
@@ -137,17 +129,13 @@ module RedmineGitHosting
       @extra_args << args.join("\n") + "\n"
     end
 
-
     def write(obj)
       @extra_args << obj.to_s
     end
 
-
     # Ignore this -- must handle it before we have chosen output stream
     #
-    def binmode
-    end
-
+    def binmode; end
 
     def close_write
       cached = RedmineGitHosting::Cache.get_cache(@repo_id, @cmd_str, @extra_args)
@@ -159,11 +147,9 @@ module RedmineGitHosting
       end
     end
 
-
     def logger
       RedmineGitHosting.logger
     end
-
 
     # This class wraps a given enumerator and produces another one
     # that logs all read data into the buffer.
@@ -178,6 +164,7 @@ module RedmineGitHosting
 
       def each
         return to_enum :each unless block_given?
+
         @enum.each do |value|
           @redirector.add_to_buffer(value)
           yield value
@@ -185,16 +172,15 @@ module RedmineGitHosting
       end
     end
 
-
     def add_to_buffer(value)
       return if @buffer_full
+
       if value.is_a?(Array)
         value.each { |next_value| push_to_buffer(next_value) }
       else
         push_to_buffer(value)
       end
     end
-
 
     def push_to_buffer(value)
       next_chunk = value.is_a?(Integer) ? value.chr : value
@@ -205,7 +191,6 @@ module RedmineGitHosting
       end
     end
 
-
     ###############################################
     # Duck-typing of an IO interface              #
     ###############################################
@@ -214,11 +199,9 @@ module RedmineGitHosting
       io_method?(method) || super(method, *args, &block)
     end
 
-
     def io_method?(method)
       IO.instance_methods.map(&:to_sym).include?(method.to_sym)
     end
-
 
     # On-the-fly compilation of any missing functions, including all of the
     # read functions (with and without blocks), which we divert into the buffer
@@ -263,7 +246,6 @@ module RedmineGitHosting
       self.send(method, *args, &block)
     end
 
-
     def inject_enumerator_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
@@ -285,7 +267,6 @@ module RedmineGitHosting
       EOF
     end
 
-
     def inject_read_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
@@ -296,7 +277,6 @@ module RedmineGitHosting
       EOF
     end
 
-
     def inject_proxy_method(method)
       self.class.class_eval <<-EOF, __FILE__, __LINE__
       def #{method}(*args, &block)
@@ -304,7 +284,6 @@ module RedmineGitHosting
       end
       EOF
     end
-
 
     ##############################################################################
     # The following three functions are the generic versions of what is          #
@@ -330,7 +309,6 @@ module RedmineGitHosting
       end
     end
 
-
     # Class #2 functions (Return of Array, String, or Integer)
     #
     def normal_diverter(method, *args)
@@ -339,12 +317,10 @@ module RedmineGitHosting
       value
     end
 
-
     # Class #3 functions (Everything by read functions)
     #
     def simple_proxy(method, *args, &block)
       @read_stream.send(method, *args, &block)
     end
-
   end
 end
