@@ -4,13 +4,11 @@ module Gitolitable
 
     included do
       class << self
-
         # Are repositories identifier unique?
         #
         def repo_ident_unique?
           RedmineGitHosting::Config.unique_repo_identifier?
         end
-
 
         # Translate repository path into a unique ID for use in caching of git commands.
         #
@@ -18,7 +16,6 @@ module Gitolitable
           repo = find_by_path(repo_path, loose: true)
           repo ? repo.git_cache_id : nil
         end
-
 
         # Parse a path of the form <proj1>/<proj2>/<proj3>/<repo> and return the specified
         # repository.  If either 'repo_ident_unique?' is true or the <repo> is a project
@@ -60,10 +57,8 @@ module Gitolitable
             end
           end
         end
-
       end
     end
-
 
     # If repositories identifiers are unique, identifier forms a unique label,
     # else use directory notation: <project identifier>/<repo identifier>
@@ -79,12 +74,10 @@ module Gitolitable
       end
     end
 
-
     # Note: RedmineGitHosting::Cache doesn't know about repository object, it only knows *git_cache_id*.
     #
     def empty_cache!
       RedmineGitHosting::Cache.clear_cache_for_repository(git_cache_id)
     end
-
   end
 end

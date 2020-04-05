@@ -14,12 +14,10 @@ module RedmineGitHosting
 
     class << self
       def mirroring_public_key(gitolite_ssh_public_key)
-        begin
-          format_mirror_key(File.read(gitolite_ssh_public_key))
-        rescue => e
-          RedmineGitHosting.logger.error("Error while loading mirroring public key : #{e.inspect}")
-          nil
-        end
+        format_mirror_key(File.read(gitolite_ssh_public_key))
+      rescue => e
+        RedmineGitHosting.logger.error("Error while loading mirroring public key : #{e.inspect}")
+        nil
       end
 
       def format_mirror_key(key)

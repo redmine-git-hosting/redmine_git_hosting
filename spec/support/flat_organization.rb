@@ -8,92 +8,92 @@ RSpec.shared_context 'flat_organisation' do
 
   UNIQUE_REPOSITORIES_MATRIX = {
     repository_1: {
-      is_default:                    true,
-      identifier:                    '',
-      url:                           'repositories/redmine/project-child.git',
-      root_url:                      'repositories/redmine/project-child.git',
-      git_cache_id:                  'project-child',
-      redmine_name:                  'project-child',
-      gitolite_repository_path:      'repositories/redmine/project-child.git',
+      is_default: true,
+      identifier: '',
+      url: 'repositories/redmine/project-child.git',
+      root_url: 'repositories/redmine/project-child.git',
+      git_cache_id: 'project-child',
+      redmine_name: 'project-child',
+      gitolite_repository_path: 'repositories/redmine/project-child.git',
       gitolite_full_repository_path: '/home/git/repositories/redmine/project-child.git',
-      gitolite_repository_name:      'redmine/project-child',
-      redmine_repository_path:       'project-child',
-      new_repository_name:           'redmine/project-child',
-      old_repository_name:           'redmine/project-child',
-      http_user_login:               '',
-      git_access_path:               'redmine/project-child.git',
-      http_access_path:              'git/project-child.git',
-      ssh_url:                       "ssh://#{GIT_USER}@localhost/redmine/project-child.git",
-      git_url:                       'git://localhost/redmine/project-child.git',
-      http_url:                      'http://localhost/git/project-child.git',
-      https_url:                     'https://localhost/git/project-child.git',
+      gitolite_repository_name: 'redmine/project-child',
+      redmine_repository_path: 'project-child',
+      new_repository_name: 'redmine/project-child',
+      old_repository_name: 'redmine/project-child',
+      http_user_login: '',
+      git_access_path: 'redmine/project-child.git',
+      http_access_path: 'git/project-child.git',
+      ssh_url: "ssh://#{GIT_USER}@localhost/redmine/project-child.git",
+      git_url: 'git://localhost/redmine/project-child.git',
+      http_url: 'http://localhost/git/project-child.git',
+      https_url: 'https://localhost/git/project-child.git',
     },
 
     repository_2: {
-      is_default:                    false,
-      identifier:                    'repo1-test',
-      url:                           'repositories/redmine/repo1-test.git',
-      root_url:                      'repositories/redmine/repo1-test.git',
-      git_cache_id:                  'repo1-test',
-      redmine_name:                  'repo1-test',
-      gitolite_repository_path:      'repositories/redmine/repo1-test.git',
+      is_default: false,
+      identifier: 'repo1-test',
+      url: 'repositories/redmine/repo1-test.git',
+      root_url: 'repositories/redmine/repo1-test.git',
+      git_cache_id: 'repo1-test',
+      redmine_name: 'repo1-test',
+      gitolite_repository_path: 'repositories/redmine/repo1-test.git',
       gitolite_full_repository_path: '/home/git/repositories/redmine/repo1-test.git',
-      gitolite_repository_name:      'redmine/repo1-test',
-      redmine_repository_path:       'repo1-test',
-      new_repository_name:           'redmine/repo1-test',
-      old_repository_name:           'redmine/repo1-test',
-      http_user_login:               '',
-      git_access_path:               'redmine/repo1-test.git',
-      http_access_path:              'git/repo1-test.git',
-      ssh_url:                       "ssh://#{GIT_USER}@localhost/redmine/repo1-test.git",
-      git_url:                       'git://localhost/redmine/repo1-test.git',
-      http_url:                      'http://localhost/git/repo1-test.git',
-      https_url:                     'https://localhost/git/repo1-test.git',
+      gitolite_repository_name: 'redmine/repo1-test',
+      redmine_repository_path: 'repo1-test',
+      new_repository_name: 'redmine/repo1-test',
+      old_repository_name: 'redmine/repo1-test',
+      http_user_login: '',
+      git_access_path: 'redmine/repo1-test.git',
+      http_access_path: 'git/repo1-test.git',
+      ssh_url: "ssh://#{GIT_USER}@localhost/redmine/repo1-test.git",
+      git_url: 'git://localhost/redmine/repo1-test.git',
+      http_url: 'http://localhost/git/repo1-test.git',
+      https_url: 'https://localhost/git/repo1-test.git',
     },
 
     repository_3: {
-      is_default:                    true,
-      identifier:                    '',
-      url:                           'repositories/redmine/project-parent.git',
-      root_url:                      'repositories/redmine/project-parent.git',
-      git_cache_id:                  'project-parent',
-      redmine_name:                  'project-parent',
-      gitolite_repository_path:      'repositories/redmine/project-parent.git',
+      is_default: true,
+      identifier: '',
+      url: 'repositories/redmine/project-parent.git',
+      root_url: 'repositories/redmine/project-parent.git',
+      git_cache_id: 'project-parent',
+      redmine_name: 'project-parent',
+      gitolite_repository_path: 'repositories/redmine/project-parent.git',
       gitolite_full_repository_path: '/home/git/repositories/redmine/project-parent.git',
-      gitolite_repository_name:      'redmine/project-parent',
-      redmine_repository_path:       'project-parent',
-      new_repository_name:           'redmine/project-parent',
-      old_repository_name:           'redmine/project-parent',
-      http_user_login:               '',
-      git_access_path:               'redmine/project-parent.git',
-      http_access_path:              'git/project-parent.git',
-      ssh_url:                       "ssh://#{GIT_USER}@localhost/redmine/project-parent.git",
-      git_url:                       'git://localhost/redmine/project-parent.git',
-      http_url:                      'http://localhost/git/project-parent.git',
-      https_url:                     'https://localhost/git/project-parent.git',
+      gitolite_repository_name: 'redmine/project-parent',
+      redmine_repository_path: 'project-parent',
+      new_repository_name: 'redmine/project-parent',
+      old_repository_name: 'redmine/project-parent',
+      http_user_login: '',
+      git_access_path: 'redmine/project-parent.git',
+      http_access_path: 'git/project-parent.git',
+      ssh_url: "ssh://#{GIT_USER}@localhost/redmine/project-parent.git",
+      git_url: 'git://localhost/redmine/project-parent.git',
+      http_url: 'http://localhost/git/project-parent.git',
+      https_url: 'https://localhost/git/project-parent.git',
     },
 
     repository_4: {
-      is_default:                    false,
-      identifier:                    'repo2-test',
-      url:                           'repositories/redmine/repo2-test.git',
-      root_url:                      'repositories/redmine/repo2-test.git',
-      git_cache_id:                  'repo2-test',
-      redmine_name:                  'repo2-test',
-      gitolite_repository_path:      'repositories/redmine/repo2-test.git',
+      is_default: false,
+      identifier: 'repo2-test',
+      url: 'repositories/redmine/repo2-test.git',
+      root_url: 'repositories/redmine/repo2-test.git',
+      git_cache_id: 'repo2-test',
+      redmine_name: 'repo2-test',
+      gitolite_repository_path: 'repositories/redmine/repo2-test.git',
       gitolite_full_repository_path: '/home/git/repositories/redmine/repo2-test.git',
-      gitolite_repository_name:      'redmine/repo2-test',
-      redmine_repository_path:       'repo2-test',
-      new_repository_name:           'redmine/repo2-test',
-      old_repository_name:           'redmine/repo2-test',
-      http_user_login:               '',
-      git_access_path:               'redmine/repo2-test.git',
-      http_access_path:              'git/repo2-test.git',
-      ssh_url:                       "ssh://#{GIT_USER}@localhost/redmine/repo2-test.git",
-      git_url:                       'git://localhost/redmine/repo2-test.git',
-      http_url:                      'http://localhost/git/repo2-test.git',
-      https_url:                     'https://localhost/git/repo2-test.git',
-    },
+      gitolite_repository_name: 'redmine/repo2-test',
+      redmine_repository_path: 'repo2-test',
+      new_repository_name: 'redmine/repo2-test',
+      old_repository_name: 'redmine/repo2-test',
+      http_user_login: '',
+      git_access_path: 'redmine/repo2-test.git',
+      http_access_path: 'git/repo2-test.git',
+      ssh_url: "ssh://#{GIT_USER}@localhost/redmine/repo2-test.git",
+      git_url: 'git://localhost/redmine/repo2-test.git',
+      http_url: 'http://localhost/git/repo2-test.git',
+      https_url: 'https://localhost/git/repo2-test.git'
+    }
   }
 
   def build_collection_of_unique_repositories
@@ -108,7 +108,6 @@ RSpec.shared_context 'flat_organisation' do
     @repository_4.valid?
   end
 
-
   def create_collection_of_unique_repositories
     @repository_1 = create_git_repository(project: @project_child, is_default: true)
     @repository_2 = create_git_repository(project: @project_child, identifier: 'repo1-test')
@@ -116,7 +115,6 @@ RSpec.shared_context 'flat_organisation' do
     @repository_3 = create_git_repository(project: @project_parent, is_default: true)
     @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo2-test')
   end
-
 
   context 'when flat_organisation with unique_identifier: fast tests' do
     before(:all) do
@@ -137,7 +135,6 @@ RSpec.shared_context 'flat_organisation' do
       end
     end
   end
-
 
   context 'when flat_organisation with unique_identifier: long tests' do
     describe '.repo_ident_unique?' do
