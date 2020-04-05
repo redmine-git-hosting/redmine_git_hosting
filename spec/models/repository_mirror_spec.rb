@@ -1,7 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RepositoryMirror do
-
   VALID_URLS = [
     'ssh://user@host.xz:2222/path/to/repo.git',
     'ssh://user@host.xz/path/to/repo.git',
@@ -17,21 +16,17 @@ describe RepositoryMirror do
     'ssh://host.xz/~/path.to/repo.git'
   ]
 
-
   def build_mirror(opts = {})
     build(:repository_mirror, opts)
   end
-
 
   def expect_invalid_refspec(refspec)
     expect(build_mirror(push_mode: 1, explicit_refspec: refspec)).not_to be_valid
   end
 
-
   def expect_valid_refspec(refspec)
     expect(build_mirror(push_mode: 1, explicit_refspec: refspec)).to be_valid
   end
-
 
   describe 'Valid RepositoryMirror creation' do
     before(:each) do
@@ -105,9 +100,7 @@ describe RepositoryMirror do
         expect_valid_refspec '+devel:devel/*'
       end
     end
-
   end
-
 
   describe 'Invalid Mirror creation' do
     ## Test presence conflicts
@@ -149,7 +142,6 @@ describe RepositoryMirror do
     end
   end
 
-
   context 'when many mirror are saved' do
     before do
       create(:repository_mirror, active: true)
@@ -161,5 +153,4 @@ describe RepositoryMirror do
     it { expect(RepositoryMirror.active.length).to be == 3 }
     it { expect(RepositoryMirror.inactive.length).to be == 2 }
   end
-
 end

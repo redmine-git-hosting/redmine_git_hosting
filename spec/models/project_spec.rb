@@ -34,5 +34,4 @@ describe Project do
   it 'should not match Gitolite Admin repository identifier' do
     expect(build(:project, identifier: 'gitolite-admin')).to be_invalid
   end
-
 end

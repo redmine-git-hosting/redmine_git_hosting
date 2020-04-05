@@ -104,7 +104,7 @@ describe GitolitePublicKey do
     end
 
     it 'has a fingerprint' do
-      expect(ssh_key.fingerprint).to eq "SHA256:VgXjWgUbURtD6go5HV7Eop2UqVjmIAI68shaB66yv+c"
+      expect(ssh_key.fingerprint).to eq 'SHA256:VgXjWgUbURtD6go5HV7Eop2UqVjmIAI68shaB66yv+c'
     end
 
     it 'has a owner' do

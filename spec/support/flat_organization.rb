@@ -1,5 +1,4 @@
 RSpec.shared_context 'flat_organisation' do
-
   ##################################################
   #                                                #
   #  FLAT ORGANISATION / UNIQUE REPOSITORIES TESTS #
@@ -26,7 +25,7 @@ RSpec.shared_context 'flat_organisation' do
       ssh_url: "ssh://#{GIT_USER}@localhost/redmine/project-child.git",
       git_url: 'git://localhost/redmine/project-child.git',
       http_url: 'http://localhost/git/project-child.git',
-      https_url: 'https://localhost/git/project-child.git',
+      https_url: 'https://localhost/git/project-child.git'
     },
 
     repository_2: {
@@ -48,7 +47,7 @@ RSpec.shared_context 'flat_organisation' do
       ssh_url: "ssh://#{GIT_USER}@localhost/redmine/repo1-test.git",
       git_url: 'git://localhost/redmine/repo1-test.git',
       http_url: 'http://localhost/git/repo1-test.git',
-      https_url: 'https://localhost/git/repo1-test.git',
+      https_url: 'https://localhost/git/repo1-test.git'
     },
 
     repository_3: {
@@ -70,7 +69,7 @@ RSpec.shared_context 'flat_organisation' do
       ssh_url: "ssh://#{GIT_USER}@localhost/redmine/project-parent.git",
       git_url: 'git://localhost/redmine/project-parent.git',
       http_url: 'http://localhost/git/project-parent.git',
-      https_url: 'https://localhost/git/project-parent.git',
+      https_url: 'https://localhost/git/project-parent.git'
     },
 
     repository_4: {
@@ -94,7 +93,7 @@ RSpec.shared_context 'flat_organisation' do
       http_url: 'http://localhost/git/repo2-test.git',
       https_url: 'https://localhost/git/repo2-test.git'
     }
-  }
+  }.freeze
 
   def build_collection_of_unique_repositories
     @repository_1 = build_git_repository(project: @project_child, is_default: true)
