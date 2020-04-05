@@ -1,0 +1,90 @@
+name: Test
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  test:
+    name: Ruby ${{ matrix.ruby }} / Redmine ${{ matrix.redmine }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ['2.6', '2.4']
+        redmine: ['4.0-stable', '4.1-stable', 'master']
+      fail-fast: false
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: p
+          POSTGRES_PASSWORD: p
+          POSTGRES_DB: db
+        ports: [5432/tcp]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Update package archives
+        run: sudo apt-get update --yes --quiet
+
+      - name: Install package dependencies
+        run: >
+          sudo apt-get install --yes --quiet
+          libpq-dev
+          subversion
+
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          architecture: 'x64'
+
+      - name: Setup Cache
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: v1-ruby-${{ matrix.ruby }}-redmine-${{ matrix.redmine }}
+
+      - name: Setup Bundler
+        run: |
+          gem install bundler -v '~> 1.0'
+          bundle config path "$(pwd)/vendor/bundle"
+
+      - name: Install Ruby dependencies
+        run: |
+          bundle install --jobs=4 --retry=3 --without development
+
+      - name: Setup local redmine
+        env:
+          PLUGIN_NAME: redmine_git_hosting
+          REDMINE_VERSION: ${{ matrix.redmine }}
+          REDMINE_PATH: $HOME/redmine
+          BUNDLE_OPTS: --without development
+          RAILS_ENV: test
+          REDMINE_GIT_REPO: git://github.com/redmine/redmine.git
+          DATABASE_URL: postgresql://p:p@localhost:${{ job.services.postgres.ports[5432] }}/db
+          USE_SVN: true
+        run: |
+          echo $(pwd)
+          cd ../..
+          sudo apt-get update -qq
+          ./jbox-web/redmine_git_hosting/contrib/travis/install_redmine.sh
+          cd redmine
+          echo $(pwd)
+          export BUNDLE_GEMFILE=$PWD/Gemfile
+          mysql -e 'create database redmine;'
+          psql -c 'create database redmine;' -U postgres
+          bundle exec rake generate_secret_token
+          bundle exec rake db:migrate
+          bundle exec rake redmine:load_default_data
+          bundle exec rake redmine:plugins:migrate
+          bundle exec rake db:test:prepare
+
+      - name: Run tests
+        env:
+          REDMINE_VERSION: ${{ matrix.redmine }}
+        run: bundle exec rake redmine_git_hosting:ci:all
