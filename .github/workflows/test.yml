@@ -62,14 +62,14 @@ jobs:
           REDMINE_VERSION: ${{ matrix.redmine }}
           BUNDLE_OPTS: --without development
           RAILS_ENV: test
-          REDMINE_GIT_REPO: git://github.com/redmine/redmine.git
+          REDMINE_GIT_REPO: https://github.com/redmine/redmine.git
           DATABASE_URL: postgresql://p:p@localhost:${{ job.services.postgres.ports[5432] }}/db
           USE_SVN: true
         run: |
           cd $GITHUB_WORKSPACE
           git clone $REDMINE_GIT_REPO redmine
           cd redmine
-          if [[ "$REDMINE_VER" != "master" ]]; then git checkout -b $REDMINE_VER origin/$REDMINE_VER; fi
+          if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
           ln -s $GITHUB_WORKSPACE/$PLUGIN_NAME $GITHUB_WORKSPACE/redmine/plugins/$PLUGIN_NAME
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate

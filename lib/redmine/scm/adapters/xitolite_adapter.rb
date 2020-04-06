@@ -100,10 +100,12 @@ module Redmine
         end
 
         def default_branch
-          bras = self.branches
+          bras = branches
           return nil if bras.nil?
+
           default_bras = bras.select { |x| x.is_default == true }
-          return default_bras.first.to_s if !default_bras.empty?
+          return default_bras.first.to_s unless default_bras.empty?
+
           master_bras = bras.select { |x| x.to_s == 'master' }
           master_bras.empty? ? bras.first.to_s : 'master'
         end
@@ -137,19 +139,17 @@ module Redmine
                 sha  = $2
                 size = $3
                 name = $4
-                if name.respond_to?(:force_encoding)
-                  name.force_encoding(@path_encoding)
-                end
+                name.force_encoding(@path_encoding) if name.respond_to?(:force_encoding)
                 full_path = p.empty? ? name : "#{p}/#{name}"
                 n      = scm_iconv('UTF-8', @path_encoding, name)
                 full_p = scm_iconv('UTF-8', @path_encoding, full_path)
-                entries << Entry.new({:name => n,
-                 :path => full_p,
-                 :kind => (type == "tree") ? 'dir' : 'file',
-                 :size => (type == "tree") ? nil : size,
-                 :lastrev => options[:report_last_commit] ?
-                                 lastrev(full_path, identifier) : Revision.new
-                }) unless entries.detect { |entry| entry.name == name }
+                unless entries.detect { |entry| entry.name == name }
+                  entries << Entry.new({ name: n,
+                                         path: full_p,
+                                         kind: (type == 'tree') ? 'dir' : 'file',
+                                         size: (type == 'tree') ? nil : size,
+                                         lastrev: options[:report_last_commit] ? lastrev(full_path, identifier) : Revision.new })
+                end
               end
             end
           end
@@ -163,25 +163,23 @@ module Redmine
           return nil if path.nil?
           cmd_args = %w|log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1|
           cmd_args << rev if rev
-          cmd_args << "--" << path unless path.empty?
+          cmd_args << '--' << path unless path.empty?
           lines = []
           git_cmd(cmd_args) { |io| lines = io.readlines }
           begin
-              id = lines[0].split[1]
-              author = lines[1].match('Author:\s+(.*)$')[1]
-              time = Time.parse(lines[4].match('CommitDate:\s+(.*)$')[1])
+            id = lines[0].split[1]
+            author = lines[1].match('Author:\s+(.*)$')[1]
+            time = Time.parse(lines[4].match('CommitDate:\s+(.*)$')[1])
 
-              Revision.new({
-                :identifier => id,
-                :scmid      => id,
-                :author     => author,
-                :time       => time,
-                :message    => nil,
-                :paths      => nil
-                })
+            Revision.new({ identifier: id,
+                           scmid: id,
+                           author: author,
+                           time: time,
+                           message: nil,
+                           paths: nil })
           rescue NoMethodError => e
             logger.error("The revision '#{path}' has a wrong format")
-            return nil
+            nil
           end
         rescue ScmCommandAborted => e
           logger.error(e.message)
@@ -191,9 +189,9 @@ module Redmine
         def revisions(path, identifier_from, identifier_to, options = {})
           revs = Revisions.new
           cmd_args = %w|log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin|
-          cmd_args << "--reverse" if options[:reverse]
-          cmd_args << "-n" << "#{options[:limit].to_i}" if options[:limit]
-          cmd_args << "--" << scm_iconv(@path_encoding, 'UTF-8', path) if path && !path.empty?
+          cmd_args << '--reverse' if options[:reverse]
+          cmd_args << '-n' << "#{options[:limit].to_i}" if options[:limit]
+          cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path && !path.empty?
           revisions = []
           if identifier_from || identifier_to
             revisions << ''
@@ -224,15 +222,13 @@ module Redmine
                 parents_str = $2
                 if parsing_descr == 1 || parsing_descr == 2
                   parsing_descr = 0
-                  revision = Revision.new({
-                    :identifier => changeset[:commit],
-                    :scmid      => changeset[:commit],
-                    :author     => changeset[:author],
-                    :time       => Time.parse(changeset[:date]),
-                    :message    => changeset[:description],
-                    :paths      => files,
-                    :parents    => changeset[:parents]
-                  })
+                  revision = Revision.new({ identifier: changeset[:commit],
+                                            scmid: changeset[:commit],
+                                            author: changeset[:author],
+                                            time: Time.parse(changeset[:date]),
+                                            message: changeset[:description],
+                                            paths: files,
+                                            parents: changeset[:parents] })
                   if block_given?
                     yield revision
                   else
@@ -242,7 +238,7 @@ module Redmine
                   files = []
                 end
                 changeset[:commit] = $1
-                unless parents_str.nil? or parents_str == ''
+                unless parents_str.nil? || parents_str == ''
                   changeset[:parents] = parents_str.strip.split(' ')
                 end
               elsif (parsing_descr == 0) && line =~ /^(\w+):\s*(.*)$/
@@ -278,15 +274,13 @@ module Redmine
             end
 
             if changeset[:commit]
-              revision = Revision.new({
-                :identifier => changeset[:commit],
-                :scmid      => changeset[:commit],
-                :author     => changeset[:author],
-                :time       => Time.parse(changeset[:date]),
-                :message    => changeset[:description],
-                :paths      => files,
-                :parents    => changeset[:parents]
-              })
+              revision = Revision.new({ identifier: changeset[:commit],
+                                        scmid: changeset[:commit],
+                                        author: changeset[:author],
+                                        time: Time.parse(changeset[:date]),
+                                        message: changeset[:description],
+                                        paths: files,
+                                        parents: changeset[:parents] })
               if block_given?
                 yield revision
               else
@@ -304,7 +298,6 @@ module Redmine
             revs
           end
         end
-
 
         # Override the original method to accept options hash
         # which may contain *bypass_cache* flag and pass the options hash to *git_cmd*.
@@ -339,6 +332,7 @@ module Redmine
           git_cmd(cmd_args) { |io| io.binmode; content = io.read }
           # git annotates binary files
           return nil if binary_data?(content)
+
           identifier = ''
           # git shows commit author on the first occurrence only
           authors_by_commit = {}
@@ -348,12 +342,10 @@ module Redmine
             elsif line =~ /^author (.+)/
               authors_by_commit[identifier] = $1.strip
             elsif line =~ /^\t(.*)/
-              blame.add_line($1, Revision.new(
-                                    :identifier => identifier,
-                                    :revision   => identifier,
-                                    :scmid      => identifier,
-                                    :author     => authors_by_commit[identifier]
-                                    ))
+              blame.add_line($1, Revision.new(identifier: identifier,
+                                              revision: identifier,
+                                              scmid: identifier,
+                                              author: authors_by_commit[identifier]))
               identifier = ''
               author = ''
             end
@@ -363,7 +355,6 @@ module Redmine
           logger.error(e.message)
           nil
         end
-
 
         def cat(path, identifier = nil)
           identifier = 'HEAD' if identifier.nil?
@@ -401,7 +392,7 @@ module Redmine
         def rev_list(revision, args)
           cmd_args = ['rev-list', *args, revision]
           git_cmd(cmd_args) do |io|
-            @revisions_list = io.readlines.map { |t| t.strip }
+            @revisions_list = io.readlines.map(&:strip)
           end
           @revisions_list
         rescue ScmCommandAborted => e
@@ -414,7 +405,7 @@ module Redmine
         def rev_parse(revision)
           cmd_args = ['rev-parse', '--quiet', '--verify', revision]
           git_cmd(cmd_args) do |io|
-            @parsed_revision = io.readlines.map { |t| t.strip }.first
+            @parsed_revision = io.readlines.map(&:strip).first
           end
           @parsed_revision
         rescue ScmCommandAborted => e
@@ -502,7 +493,7 @@ module Redmine
           logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
           @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
           logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
-          logger.debug("git_cache_id found : #{@git_cache_id}") if !@git_cache_id.nil?
+          logger.debug("git_cache_id found : #{@git_cache_id}") unless @git_cache_id.nil?
           @git_cache_id
         end
 
