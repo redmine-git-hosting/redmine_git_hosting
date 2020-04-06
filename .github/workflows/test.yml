@@ -2,8 +2,6 @@ name: Test
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '0 4 * * *'
 
 jobs:
   test:
@@ -62,19 +60,17 @@ jobs:
         env:
           PLUGIN_NAME: redmine_git_hosting
           REDMINE_VERSION: ${{ matrix.redmine }}
-          REDMINE_PATH: $HOME/redmine
           BUNDLE_OPTS: --without development
           RAILS_ENV: test
           REDMINE_GIT_REPO: git://github.com/redmine/redmine.git
           DATABASE_URL: postgresql://p:p@localhost:${{ job.services.postgres.ports[5432] }}/db
           USE_SVN: true
         run: |
-          echo $(pwd)
-          echo $REDMINE_PATH
-          git clone $REDMINE_GIT_REPO $REDMINE_PATH
-          cd $REDMINE_PATH
+          cd $GITHUB_WORKSPACE
+          git clone $REDMINE_GIT_REPO redmine
+          cd redmine
           if [[ "$REDMINE_VER" != "master" ]]; then git checkout -b $REDMINE_VER origin/$REDMINE_VER; fi
-          ln -s $BUILD_DIR $REDMINE_PATH/plugins/$PLUGIN_NAME
+          ln -s $GITHUB_WORKSPACE/$PLUGIN_NAME $GITHUB_WORKSPACE/redmine/plugins/$PLUGIN_NAME
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate
           bundle exec rake redmine:load_default_data

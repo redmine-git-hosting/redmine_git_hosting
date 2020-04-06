@@ -31,6 +31,7 @@ module RedmineGitHosting
 
       def serialize_data(data)
         return data if data.empty?
+
         serialized = {}
         data.each do |k, v|
           serialized[k.to_s] = v.to_json

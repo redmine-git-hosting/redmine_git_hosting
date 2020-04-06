@@ -57,7 +57,6 @@ module RedmineGitHosting
           true
         end
 
-
         private
 
         def create_or_update_repo_references(repo_id, reference)

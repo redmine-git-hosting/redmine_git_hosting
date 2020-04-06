@@ -50,8 +50,8 @@ module RedmineGitHosting
       # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
       #
       def sudo_test(path, testarg)
-        _, _ , code = sudo_shell('test', testarg, path)
-        return code == 0
+        _, _, code = sudo_shell('test', testarg, path)
+        code.zero?
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.debug("File check for #{path} failed : #{e.message}")
         false
@@ -123,7 +123,7 @@ module RedmineGitHosting
       # Test if file permissions has changed
       #
       def sudo_file_perms_changed?(filemode, dest_file)
-        current_mode = sudo_capture('stat', '-c', "%a", dest_file)
+        current_mode = sudo_capture('stat', '-c', '%a', dest_file)
         current_mode.chomp != filemode
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.error(e.output)
