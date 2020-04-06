@@ -13,7 +13,7 @@ module RedmineGitHosting
 
           # If *max_cache_time* is set to -1 (until next commit) then
           # set the cache time to 1 day (we don't know when will be the next commit)
-          cache_time = max_cache_time.negative? ? 86_400 : max_cache_time
+          cache_time = max_cache_time.to_i.negative? ? 86_400 : max_cache_time
 
           begin
             client.set(hashed_command, output, ex: cache_time)

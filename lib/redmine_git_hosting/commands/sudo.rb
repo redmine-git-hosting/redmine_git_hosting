@@ -51,7 +51,7 @@ module RedmineGitHosting
       #
       def sudo_test(path, testarg)
         _, _, code = sudo_shell('test', testarg, path)
-        code.zero?
+        code.to_i.zero?
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.debug("File check for #{path} failed : #{e.message}")
         false
