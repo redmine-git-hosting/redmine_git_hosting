@@ -2,19 +2,13 @@ language: ruby
 sudo: required
 cache: bundler
 rvm:
-  - 2.6.3
-  - 2.4.6
-  - 2.3.8
+  - 2.6
+  - 2.5
 gemfile:
   - Gemfile
 services:
   - mysql
   - postgresql
-branches:
-  only:
-    - devel
-    - /^fix_.*$/
-    - /^feat_.*$/
 env:
   global:
     - REDMINE_LANG=en

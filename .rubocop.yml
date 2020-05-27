@@ -6,7 +6,7 @@ Rails:
   Enabled: true
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
   TargetRailsVersion: 5.2
   Include:
     - '**/*.ruby'
