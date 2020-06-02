@@ -2,7 +2,7 @@ h2 = l(:label_move_repository, repo_name: @repository.gitolite_repository_name)
 
 .box
   = labelled_form_for :repository_mover, @move_repository_form,
-                      url: move_repository_git_extras_path(@repository),
+                      url: move_repository_git_extras_path(@repository), authenticity_token: form_authenticity_token,
                       html: { method: :post, class: 'tabular', data: { confirm: l(:text_are_you_sure) } } do |f|
 
     .flash-messages = error_messages_for 'move_repository_form'

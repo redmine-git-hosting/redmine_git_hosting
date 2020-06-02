@@ -54,6 +54,9 @@ class RedmineGitHostingController < ApplicationController
   def render_js_redirect
     respond_to do |format|
       format.js { render js: "window.location = #{success_url.to_json};" }
+      format.html do
+        redirect_to success_url
+      end
     end
   end
 

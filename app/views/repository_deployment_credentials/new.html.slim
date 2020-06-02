@@ -1,5 +1,5 @@
 = labelled_form_for :repository_deployment_credential, @credential,
-                    url: repository_deployment_credentials_path(@repository),
+                    url: repository_deployment_credentials_path(@repository), authenticity_token: form_authenticity_token,
                     html: { method: :post, class: 'tabular', remote: true } do |f|
 
   .flash-messages= error_messages_for 'credential'
