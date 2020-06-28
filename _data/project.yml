@@ -6,8 +6,7 @@ github_user: jbox-web
 github_repository: redmine_git_hosting
 
 release:
-  year: 2017
-  version: 4.0.0
+  version: 4.0.2
 
 author:
   name: JBox Web
