@@ -5,7 +5,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
   author      'A lot of people! A big thank to them for their contribution!'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version     '4.0.1'
+  version     '4.0.2'
   url         'http://redmine-git-hosting.io/'
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
