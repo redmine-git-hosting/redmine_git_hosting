@@ -23,7 +23,7 @@ module Gitolitable
 
 
     def ssh_url
-      "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}/#{git_access_path}"
+      "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}:#{RedmineGitHosting::Config.gitolite_server_port}/#{git_access_path}"
     end
 
 
