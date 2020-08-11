@@ -1,12 +1,12 @@
 / Gitolite Hooks Config
-- gitolite_hooks_url = RedmineGitHosting::Config.get_setting(:gitolite_hooks_url)
+- gitolite_hooks_url = RedmineGitHosting::Config.get_setting :gitolite_hooks_url
 
 .contextual
   = link_to font_awesome_icon('fas_rocket', post_text: l(:label_install_gitolite_hooks), class: 'fa-lg'),
             install_gitolite_hooks_path('redmine_git_hosting'),
             remote: true
 
-h3 = l(:label_gitolite_hooks_config)
+h3 = l :label_gitolite_hooks_config
 
 .container
   .col-md-6 style='vertical-align: top;'
@@ -26,19 +26,20 @@ h3 = l(:label_gitolite_hooks_config)
                                       value_is_bool: true
 
     p
-      label = l(:label_gitolite_hooks_url)
+      label = l :label_gitolite_hooks_url
       = url_field_tag 'settings[gitolite_hooks_url]', gitolite_hooks_url, size: 60, required: true
       br
       em.info
-        = l(:label_default_gitolite_hooks_url) + ' :'
+        = l :label_default_gitolite_hooks_url
+        ' :
         = "#{Setting.protocol}://#{Setting.host_name.split('/').first}"
 
     p
-      label = l(:label_gitolite_hooks_url)
+      label = l :label_gitolite_hooks_url
       span.label.label-info = RedmineGitHosting::Config.gitolite_hooks_url
 
     p
-      label= l(:label_gitolite_hooks_namespace)
+      label = l :label_gitolite_hooks_namespace
       span.label.label-info = RedmineGitHosting::Config.gitolite_hooks_namespace
 
 #install_gitolite_hooks
