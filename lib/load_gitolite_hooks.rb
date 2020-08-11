@@ -1,6 +1,6 @@
 RedmineGitHosting::GitoliteHooks.register_hooks do
   # Set source dir
-  source_dir    Rails.root.join('plugin/redmine_git_hosting/contrib/hooks').to_s
+  source_dir    Rails.root.join('plugins/redmine_git_hosting/contrib/hooks').to_s
 
   # Declare GitoliteHooks to install
 
