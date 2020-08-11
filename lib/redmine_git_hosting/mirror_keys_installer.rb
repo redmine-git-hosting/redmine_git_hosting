@@ -1,10 +1,8 @@
 module RedmineGitHosting
   class MirrorKeysInstaller
-    attr_reader :gitolite_home_dir
-    attr_reader :gitolite_ssh_public_key
-    attr_reader :gitolite_ssh_private_key
+    attr_reader :gitolite_home_dir, :gitolite_ssh_public_key, :gitolite_ssh_private_key
 
-    GITOLITE_MIRRORING_KEYS_NAME = 'redmine_gitolite_admin_id_rsa_mirroring'
+    GITOLITE_MIRRORING_KEYS_NAME = 'redmine_gitolite_admin_id_rsa_mirroring'.freeze
 
     def initialize(gitolite_home_dir, gitolite_ssh_public_key, gitolite_ssh_private_key)
       @gitolite_home_dir        = gitolite_home_dir

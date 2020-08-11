@@ -6,8 +6,9 @@ Rails:
   Enabled: true
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   TargetRailsVersion: 5.2
+  NewCops: enable
   Include:
     - '**/*.ruby'
     - '**/*.rake'
@@ -26,13 +27,13 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Max: 20
+  Enabled: false
 
 Layout/LineLength:
   Max: 140
 
 Metrics/MethodLength:
-  Max: 60
+  Enabled: false
 
 Metrics/ModuleLength:
   Enabled: false
@@ -71,17 +72,8 @@ Style/Documentation:
 Style/ExpandPathArguments:
   Enabled: false
 
-Style/HashEachMethods:
-  Enabled: true
-
 Style/HashTransformKeys:
   Enabled: false
 
 Style/HashTransformValues:
   Enabled: false
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true

@@ -36,7 +36,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
       end
     end
 
-    add_index :projects, [:identifier]
+    add_index :projects, [:identifier] unless index_exists?(:projects, :identifier)
     if columns('repositories').index { |x| x.name == 'identifier' }
       add_index :repositories, [:identifier]
       add_index :repositories, %i[identifier project_id]

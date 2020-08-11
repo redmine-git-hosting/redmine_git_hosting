@@ -24,8 +24,8 @@ module RedmineGitHosting
                         'reports',
                         'services',
                         'use_cases',
-                        ['controllers', 'concerns'],
-                        ['models', 'concerns']
+                        %w[controllers concerns],
+                        %w[models concerns]
 
   def logger
     @logger ||= RedmineGitHosting::Logger.init_logs!('RedmineGitHosting', logfile, loglevel)
