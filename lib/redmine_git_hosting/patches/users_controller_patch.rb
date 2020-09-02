@@ -6,10 +6,10 @@ module RedmineGitHosting
       include RedmineGitHosting::GitoliteAccessor::Methods
 
       def self.prepended(base)
-        base.send :helper, GitHostingUsersHelper
         base.class_eval do
           helper :gitolite_public_keys
           helper :git_hosting
+          helper :git_hosting_users
         end
       end
 
