@@ -411,3 +411,4 @@ en:
   text_gitolite_key_destroy_confirmation: "Are you sure you want to destroy this key : %{title} ?"
   text_scm_command_not_available_git_hosting: SCM command is not available. Please check settings on the administration panel of Redmine Git Hosting plugin.
   label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

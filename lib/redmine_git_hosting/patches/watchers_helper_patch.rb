@@ -5,7 +5,6 @@ require_dependency 'watchers_helper'
 module RedmineGitHosting
   module Patches
     module WatchersHelperPatch
-
       def self.prepended(base)
         base.class_eval do
           alias_method :watcher_css_without_git_hosting, :watcher_css
@@ -16,11 +15,9 @@ module RedmineGitHosting
         end
       end
 
-
       def watcher_css_with_git_hosting(objects, &block)
         watcher_css_without_git_hosting(objects, &block).gsub('/', '-')
       end
-
 
       def watchers_list_with_git_hosting(object, &block)
         remove_allowed = User.current.allowed_to?("delete_#{object.class.name.underscore}_watchers".gsub('/', '_').to_sym, object.project)

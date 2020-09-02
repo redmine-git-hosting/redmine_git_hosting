@@ -424,3 +424,4 @@ ja:
   text_gitolite_key_destroy_confirmation: "このキーを削除してもよろしいですか: %{title}？"
   text_scm_command_not_available_git_hosting: SMCコマンドが使用できません。Redmine Git Hostingの管理設定を確認してください。
   label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

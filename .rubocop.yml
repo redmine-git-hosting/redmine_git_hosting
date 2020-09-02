@@ -39,7 +39,7 @@ Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:
-  Max: 25
+  Max: 35
 
 Rails/ApplicationJob:
   Enabled: false
