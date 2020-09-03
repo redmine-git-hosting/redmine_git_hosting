@@ -66,7 +66,7 @@ jobs:
           git clone $REDMINE_GIT_REPO redmine
           cd redmine
           if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
-          ln -sv $GITHUB_WORKSPACE redmine/plugins/redmine_git_hosting
+          ln -sv $GITHUB_WORKSPACE plugins/redmine_git_hosting
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp "$GITHUB_WORKSPACE/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
