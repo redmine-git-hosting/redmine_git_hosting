@@ -88,10 +88,7 @@ jobs:
         working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
-          bundle exec rake db:create
-          bundle exec rake db:migrate
-          bundle exec rake redmine:load_default_data
-          bundle exec rake redmine:plugins:migrate
+          bundle exec rake db:create db:migrate redmine:plugins:migrate
           bundle exec rake db:test:prepare
 
       - name: Run tests
