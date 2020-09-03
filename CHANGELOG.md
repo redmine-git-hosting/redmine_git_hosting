@@ -4,6 +4,8 @@
 
 - Redmine 4.1 support
 - Dashboard support for Repository URLs
+- Dropped archived repository view
+- Switch CI from Travis to Github Actions
 
 ### 4.0.0
 
