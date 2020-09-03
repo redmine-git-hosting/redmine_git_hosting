@@ -1,15 +1,15 @@
-h3.title = l(:label_install_hook_results)
+h3.title = l :label_install_hook_results
 
 table.list.git-results
   tr
-    td = l(:label_gitolite_hooks_installed)
-    td = render_gitolite_params_status(@gitolite_checks[:hook_files])
+    td = l :label_gitolite_hooks_installed
+    td = render_gitolite_params_status @gitolite_checks[:hook_files]
   tr
-    td = l(:label_gitolite_hooks_params_installed)
-    td = render_gitolite_params_status(@gitolite_checks[:global_params])
+    td = l :label_gitolite_hooks_params_installed
+    td = render_gitolite_params_status @gitolite_checks[:global_params]
   tr
-    td = l(:label_gitolite_mailer_params_installed)
-    td = render_gitolite_params_status(@gitolite_checks[:mailer_params])
+    td = l :label_gitolite_mailer_params_installed
+    td = render_gitolite_params_status @gitolite_checks[:mailer_params]
 
 .buttons
-  = link_to_function l(:button_cancel), "hideModal(this);"
+  = link_to_function l(:button_cancel), 'hideModal(this);'

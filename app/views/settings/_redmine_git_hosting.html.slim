@@ -3,15 +3,15 @@
   = additionals_library_load(:select2)
 
 span
-  = l(:label_need_help) + ':'
-  '
+  = l :label_need_help
+  ' :
   = link_to l(:label_redmine_git_hosting_wiki), RedmineGitHosting::Config::GITHUB_WIKI, class: 'external'
 
 br
 
 span
-  = l(:label_open_issue) + ':'
-  '
+  = l :label_open_issue
+  ' :
   = link_to l(:label_redmine_git_hosting_issue), RedmineGitHosting::Config::GITHUB_ISSUE, class: 'external'
 
 br

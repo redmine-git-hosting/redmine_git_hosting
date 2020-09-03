@@ -21,7 +21,6 @@ describe RepositoryGitExtra do
   ## Serializations
   # it { should serialize(:urls_order) }
 
-
   describe '#git_daemon' do
     it 'should return the value for git_daemon' do
       expect(git_extra.git_daemon).to be true

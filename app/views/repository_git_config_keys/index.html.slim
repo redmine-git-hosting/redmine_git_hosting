@@ -15,7 +15,6 @@ div
 
   = render 'config_keys', git_config_keys: @repository_git_config_keys
 
-
   - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
     .contextual
       = link_to l(:label_git_option_key_add),

@@ -28,7 +28,7 @@ table.list.git-results
         = image_tag('exclamation.png')
 
   tr
-    td= l(:label_gitolite_lib_dir)
+    td = l(:label_gitolite_lib_dir)
     td
       - if RedmineGitHosting::Config.gitolite_lib_dir
         span.label.label-success RedmineGitHosting::Config.gitolite_lib_dir
@@ -36,7 +36,7 @@ table.list.git-results
         = image_tag('exclamation.png')
 
   tr
-    td= l(:label_gitolite_local_code_dir)
+    td = l(:label_gitolite_local_code_dir)
     td
       - if RedmineGitHosting::Config.gitolite_local_code_dir
         span.label.label-success = RedmineGitHosting::Config.gitolite_local_code_dir
@@ -62,7 +62,7 @@ table.list.git-results
     td = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
 
   tr
-    td= l(:label_git_version)
+    td = l(:label_git_version)
     td
       span.label.label-success = Repository::Xitolite.scm_version_string
 
@@ -76,7 +76,7 @@ table.list.git-results
       span.label.label-success = RedmineGitHosting::Config.gitolite_repository_count
 
   tr
-    td= l(:label_gitolite_rugged_features)
+    td = l(:label_gitolite_rugged_features)
     td
       = render_rugged_mandatory_features
       = render_rugged_optional_features
