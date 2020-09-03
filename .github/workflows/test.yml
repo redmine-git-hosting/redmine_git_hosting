@@ -52,10 +52,6 @@ jobs:
           gem install bundler -v '~> 1.0'
           bundle config path "$(pwd)/vendor/bundle"
 
-      - name: Install Ruby dependencies
-        run: |
-          bundle install --jobs=4 --retry=3 --without development
-
       - name: Setup local redmine
         env:
           PLUGIN_NAME: redmine_git_hosting
@@ -71,6 +67,10 @@ jobs:
           cd redmine
           if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
           ln -s $GITHUB_WORKSPACE/$PLUGIN_NAME $GITHUB_WORKSPACE/redmine/plugins/$PLUGIN_NAME
+          sed -i '/rubocop/d' Gemfile
+          rm -f .rubocop*
+          cp $GITHUB_WORKSPACE/$PLUGIN_NAME/contrib/travis/data/db_files/database_postgres.yml config/database.yml
+          bundle install --jobs=4 --retry=3 --without development
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate
           bundle exec rake redmine:load_default_data
