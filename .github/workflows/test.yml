@@ -112,6 +112,9 @@ jobs:
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_git_hosting/contrib/github/database-${{ matrix.db }}.yml config/database.yml
+          cat config/database.yml
+          mysql --version
+          mysqlshow -u root -h localhost -P 3306
 
       - name: Install admin ssh key
         working-directory: redmine
