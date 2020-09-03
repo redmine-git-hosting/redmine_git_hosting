@@ -42,6 +42,18 @@ jobs:
           repository: AlphaNodes/additionals
           path: redmine/plugins/additionals
 
+      - name: Checkout redmine_sidekiq
+        uses: actions/checkout@v2
+        with:
+          repository: ogom/redmine_sidekiq.git
+          path: redmine/plugins/redmine_sidekiq
+
+      - name: Checkout gitolite
+        uses: actions/checkout@v2
+        with:
+          repository: sitaramc/gitolite
+          path: gitolite
+
       - name: Update package archives
         run: sudo apt-get update --yes --quiet
 
@@ -50,6 +62,10 @@ jobs:
           sudo apt-get install --yes --quiet
           libpq-dev
           subversion
+          libicu-dev
+          libssh2-1
+          libssh2-1-dev
+          cmake
 
       - name: Setup Ruby
         uses: actions/setup-ruby@v1
@@ -75,6 +91,21 @@ jobs:
           rm -f .rubocop*
           cp plugins/redmine_git_hosting/contrib/github/database.yml config/database.yml
 
+      - name: Install admin ssh key
+        working-directory: redmine
+        run: |
+          ssh-keygen -N '' -f plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
+
+      - name: Install Gitolite
+        working-directory: redmine
+        run: |
+          sudo useradd --create-home git
+          sudo -n -u git -i mkdir bin
+          sudo -n -u git -i $GITHUB_WORKSPACE/gitolite/install -to /home/git/bin
+          sudo cp plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub /home/git/
+          sudo chown git.git /home/git/redmine_gitolite_admin_id_rsa.pub
+          sudo -n -u git -i gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
+
       - name: Install Ruby dependencies
         working-directory: redmine
         run: |
@@ -90,6 +121,13 @@ jobs:
           bundle exec rake generate_secret_token
           bundle exec rake db:create db:migrate redmine:plugins:migrate
           bundle exec rake db:test:prepare
+
+      - name: Install rspec file
+        env:
+        working-directory: redmine
+        run: |
+          mkdir spec
+          cp plugins/redmine_git_hosting/spec/root_spec_helper.rb spec/spec_helper.rb
 
       - name: Run tests
         env:
