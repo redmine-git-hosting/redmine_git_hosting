@@ -17,10 +17,10 @@ jobs:
       postgres:
         image: postgres:12
         env:
-          POSTGRES_USER: p
-          POSTGRES_PASSWORD: p
-          POSTGRES_DB: db
-        ports: [5432/tcp]
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -81,6 +81,8 @@ jobs:
           bundle install --jobs=4 --retry=3 --without development
 
       - name: Run Redmine rake tasks
+        env:
+          RAILS_ENV: test
         working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
@@ -92,6 +94,7 @@ jobs:
 
       - name: Run tests
         env:
+          RAILS_ENV: test
           REDMINE_VERSION: ${{ matrix.redmine }}
         working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all
