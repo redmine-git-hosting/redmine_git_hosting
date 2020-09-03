@@ -54,7 +54,6 @@ jobs:
 
       - name: Setup local redmine
         env:
-          PLUGIN_NAME: redmine_git_hosting
           REDMINE_VERSION: ${{ matrix.redmine }}
           BUNDLE_OPTS: --without development
           RAILS_ENV: test
@@ -63,13 +62,14 @@ jobs:
           USE_SVN: true
         run: |
           cd $GITHUB_WORKSPACE
+          cd ..
           git clone $REDMINE_GIT_REPO redmine
           cd redmine
           if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
-          ln -sv $GITHUB_WORKSPACE/$PLUGIN_NAME $GITHUB_WORKSPACE/redmine/plugins/$PLUGIN_NAME
+          ln -sv $GITHUB_WORKSPACE redmine/plugins/redmine_git_hosting
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
-          cp "$GITHUB_WORKSPACE/$PLUGIN_NAME/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
+          cp "$GITHUB_WORKSPACE/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
           bundle install --jobs=4 --retry=3 --without development
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate
