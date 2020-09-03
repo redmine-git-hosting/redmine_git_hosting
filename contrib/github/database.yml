@@ -1,0 +1,23 @@
+## PostgreSQL configuration example
+## Data come from environment variables so the test suite can be run
+## on Travis or Jenkins (see https://github.com/lmlima/jenkins-postgresql-job-databases-plugin)
+production:
+  adapter: postgresql
+  host: localhost
+  database: redmine
+  username: postgres
+  encoding: utf8
+
+development:
+  adapter: postgresql
+  host: localhost
+  database: redmine
+  username: postgres
+  encoding: utf8
+
+test:
+  adapter: postgresql
+  host: localhost
+  database: redmine
+  username: postgres
+  encoding: utf8

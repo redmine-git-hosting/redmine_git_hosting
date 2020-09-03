@@ -73,7 +73,7 @@ jobs:
         run: |
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
-          cp plugins/redmine_git_hosting/contrib/travis/data/db_files/database_postgres.yml config/database.yml
+          cp plugins/redmine_git_hosting/contrib/github/database.yml config/database.yml
 
       - name: Install Ruby dependencies
         working-directory: redmine
@@ -84,6 +84,7 @@ jobs:
         working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
+          bundle exec rake db:create
           bundle exec rake db:migrate
           bundle exec rake redmine:load_default_data
           bundle exec rake redmine:plugins:migrate
