@@ -12,7 +12,9 @@ jobs:
       matrix:
         ruby: ['2.6', '2.4']
         redmine: ['4.1-stable', 'master']
+        db: ['postgres', 'mysql']
       fail-fast: false
+
     services:
       postgres:
         image: postgres:12
@@ -22,6 +24,15 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      mysql:
+          image: mysql:5.7
+          env:
+              MYSQL_ALLOW_EMPTY_PASSWORD: yes
+              MYSQL_DATABASE: redmine
+          ports:
+            - 5432:5432
+          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout Redmine
@@ -65,6 +76,7 @@ jobs:
           libgpg-error-dev
           libicu-dev
           libpq-dev
+          libmysqlclient-dev
           libssh2-1
           libssh2-1-dev
           subversion
@@ -91,7 +103,7 @@ jobs:
         run: |
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
-          cp plugins/redmine_git_hosting/contrib/github/database.yml config/database.yml
+          cp plugins/redmine_git_hosting/contrib/github/database-${{ matrix.db }}.yml config/database.yml
 
       - name: Install admin ssh key
         working-directory: redmine
@@ -116,8 +128,6 @@ jobs:
       - name: Run Redmine rake tasks
         env:
           RAILS_ENV: test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
         working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
@@ -133,8 +143,6 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
           REDMINE_VERSION: ${{ matrix.redmine }}
         working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all

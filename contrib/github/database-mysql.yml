@@ -1,0 +1,23 @@
+production:
+  adapter: mysql2
+  database: redmine
+  host: localhost
+  username: root
+  password:
+  encoding: utf8mb4
+
+development:
+  adapter: mysql2
+  database: redmine
+  host: localhost
+  username: root
+  password:
+  encoding: utf8mb4
+
+test:
+  adapter: mysql2
+  database: redmine
+  host: localhost
+  username: root
+  password:
+  encoding: utf8mb4
