@@ -42,11 +42,6 @@ p
   = select_tag 'settings[gitolite_http_by_default]', options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, gitolite_http_by_default)
 
 p
-  = additionals_settings_checkbox :show_repositories_url,
-                                  value: RedmineGitHosting::Config.get_setting(:show_repositories_url, true),
-                                  value_is_bool: true
-
-p
   = additionals_settings_checkbox :gitolite_daemon_by_default,
                                   value: RedmineGitHosting::Config.get_setting(:gitolite_daemon_by_default, true),
                                   value_is_bool: true

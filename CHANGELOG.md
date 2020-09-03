@@ -1,8 +1,9 @@
 ## CHANGELOG
 
-### devel
+### 4.0.3
 
 - Redmine 4.1 support
+- Dashboard support for Repository URLs
 
 ### 4.0.0
 

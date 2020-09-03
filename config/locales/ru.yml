@@ -312,7 +312,6 @@ ru:
   label_resync_all_ssh_keys: Синхронизировать SSH ключи?
   label_see_other_repositories: Другие репозитории
   label_select_all: Выбрать всё
-  label_show_repositories_url: Показывать checkout URL's?
   label_smart_http: Smart HTTP
   label_sort_urls: (Изменить порядок)
   label_split_payloads: Разбить payload

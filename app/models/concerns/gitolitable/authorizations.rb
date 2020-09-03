@@ -31,7 +31,7 @@ module Gitolitable
     # These are for repository URLs
 
     def urls_are_viewable?
-      RedmineGitHosting::Config.show_repositories_url? && User.current.allowed_to?(:view_changesets, project)
+      User.current.allowed_to?(:view_changesets, project)
     end
 
     def ssh_access_available?

@@ -314,7 +314,6 @@ es:
   label_resync_all_ssh_keys: ¿Resincronizar todas las claves SSH?
   label_see_other_repositories: Ver otros repositorios
   label_select_all: Seleccionar todo
-  label_show_repositories_url: ¿Mostrar URLs de checkout?
   label_smart_http: HTTP inteligente
   label_sort_urls: (Ordenar URLs)
   label_split_payloads: dividir payloads

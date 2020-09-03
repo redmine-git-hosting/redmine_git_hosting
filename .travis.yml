@@ -28,10 +28,10 @@ env:
     - POSTGRES_DATABASE=redmine
     - POSTGRES_USER=postgres
   jobs:
-    - REDMINE_VERSION=4.0-stable DATABASE_ADAPTER=mysql USE_SVN=true
-    - REDMINE_VERSION=4.0-stable DATABASE_ADAPTER=postgresql USE_SVN=true
     - REDMINE_VERSION=4.1-stable DATABASE_ADAPTER=mysql USE_SVN=true
     - REDMINE_VERSION=4.1-stable DATABASE_ADAPTER=postgresql USE_SVN=true
+    - REDMINE_VERSION=master DATABASE_ADAPTER=mysql USE_SVN=true
+    - REDMINE_VERSION=master DATABASE_ADAPTER=postgresql USE_SVN=true
 before_install:
   - cd ../..
   - sudo apt-get update -qq

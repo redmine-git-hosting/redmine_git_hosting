@@ -25,6 +25,7 @@ function install_redmine() {
   else
     install_redmine_from_package
   fi
+  post_redmine_tasks
 }
 
 function finish_install() {
@@ -64,6 +65,12 @@ function install_redmine_from_svn() {
   log_ok
 }
 
+function post_redmine_tasks() {
+  log_title "POST TASKS TO PREPARE REDMINE FOR TESTING"
+  sed -i '/rubocop/d' "${REDMINE_NAME}/Gemfile"
+  rm -f "${REDMINE_NAME}/.rubocop*"
+  log_ok
+}
 
 function install_redmine_from_git() {
   log_title "GET SOURCES FROM GIT"

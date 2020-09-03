@@ -318,7 +318,6 @@ de:
   label_resync_all_ssh_keys: Resync all SSH keys ?
   label_see_other_repositories: See other repositories
   label_select_all: Alle auswählen
-  label_show_repositories_url: Show checkout URL's?
   label_smart_http: Smart HTTP
   label_sort_urls: (Sort urls)
   label_split_payloads: split payloads

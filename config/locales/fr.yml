@@ -318,7 +318,6 @@ fr:
   label_resync_all_ssh_keys: Resynchroniser toutes les clés SSH
   label_see_other_repositories: Voir les autres dépôts
   label_select_all: Tout sélectionner
-  label_show_repositories_url: Afficher les URL des dépôts
   label_smart_http: Smart HTTP
   label_sort_urls: (Trier les urls)
   label_split_payloads: split payloads

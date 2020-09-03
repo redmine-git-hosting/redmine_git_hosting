@@ -325,7 +325,6 @@ ja:
   label_resync_all_ssh_keys: 全SSHキーを再同期する？
   label_see_other_repositories: 他のリポジトリの閲覧
   label_select_all: 全選択
-  label_show_repositories_url: クローン用のリポジトリURLを表示する？
   label_smart_http: Smart HTTP
   label_sort_urls: (Urls並び替え)
   label_split_payloads: ペイロード分割

@@ -40,7 +40,6 @@ ssh_server_domain:                'localhost'
 http_server_domain:               'localhost'
 https_server_domain:              'localhost'
 http_server_subdir:               ''
-show_repositories_url:            'true'
 gitolite_daemon_by_default:       'false'
 gitolite_http_by_default:         '1'
 
