@@ -14,9 +14,9 @@ div
       thead
         tr
           th
-          th = l(:label_permissions)
-          th = l(:label_branch_path)
-          th = l(:label_user_list)
+          th = l :label_permissions
+          th = l :label_branch_path
+          th = l :label_user_list
           th
 
       tbody
@@ -33,7 +33,8 @@ div
             td style='font-family: Consolas;'
               = protected_branch.path
 
-            td = protected_branch.users.map { |u| link_to(u) }.join(', ').html_safe
+            td
+              = protected_branch.users.map { |u| link_to(u) }.join(', ')
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)

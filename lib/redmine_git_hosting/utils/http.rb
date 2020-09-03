@@ -15,14 +15,14 @@ module RedmineGitHosting
         send_http_request(http, request)
       end
 
-      def http_get(url, opts = {})
+      def http_get(url, _opts = {})
         http, request = build_get_request(url)
         send_http_request(http, request)
       end
 
       def valid_url?(url)
         uri = URI.parse(url)
-        uri.kind_of?(URI::HTTP)
+        uri.is_a?(URI::HTTP)
       rescue URI::InvalidURIError
         false
       end
@@ -43,13 +43,13 @@ module RedmineGitHosting
         uri, http = build_http_request(url)
         request = Net::HTTP::Post.new(uri.request_uri)
         request.set_form_data(data)
-        return http, request
+        [http, request]
       end
 
       def build_get_request(url)
         uri, http = build_http_request(url)
         request = Net::HTTP::Get.new(uri.request_uri)
-        return http, request
+        [http, request]
       end
 
       def build_http_request(url)
@@ -59,7 +59,7 @@ module RedmineGitHosting
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
-        return uri, http
+        [uri, http]
       end
 
       def send_http_request(http, request)
@@ -74,12 +74,12 @@ module RedmineGitHosting
             message = res.body
             failed = false
           end
-        rescue => e
+        rescue StandardError => e
           message = "Exception : #{e.message}"
           failed = true
         end
 
-        return failed, message
+        [failed, message]
       end
     end
   end

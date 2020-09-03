@@ -11,22 +11,31 @@ div
     table.list
       thead
         tr
-          th = l(:field_url)
-          th = l(:label_mode)
-          th = l(:field_active)
-          th = l(:label_use_triggers)
-          th = l(:label_triggers)
+          th = l :field_url
+          th = l :label_mode
+          th = l :field_active
+          th = l :label_use_triggers
+          th = l :label_triggers
           th
       tbody
         - @repository_post_receive_urls.each do |post_receive_url|
           tr
-            td = post_receive_url.url
-            td = post_receive_mode(post_receive_url).html_safe
-            td.tick = checked_image_with_exclamation post_receive_url.active?
-            td.tick = checked_image_with_exclamation post_receive_url.use_triggers?
+            td
+              = post_receive_url.url
+
+            td
+              = post_receive_mode post_receive_url
+
+            td.tick
+              = checked_image_with_exclamation post_receive_url.active?
+
+            td.tick
+              = checked_image_with_exclamation post_receive_url.use_triggers?
+
             td
               - post_receive_url.triggers.each do |trigger|
-                span.label.label-info = trigger
+                span.label.label-info
+                  = trigger
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_post_receive_urls, @repository)

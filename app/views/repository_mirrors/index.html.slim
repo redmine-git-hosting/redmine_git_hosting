@@ -20,10 +20,17 @@ div
       tbody
         - @repository_mirrors.each do |mirror|
           tr
-            td = mirror.url
-            td = refspec(mirror, 64).html_safe
-            td = mirror_mode(mirror).html_safe
-            td.tick = checked_image_with_exclamation mirror.active?
+            td
+              = mirror.url
+
+            td
+              = refspec mirror, 64
+
+            td
+              = mirror_mode mirror
+
+            td.tick
+              = checked_image_with_exclamation mirror.active?
 
             td.buttons
               - if User.current.git_allowed_to?(:push_repository_mirrors, @repository)
