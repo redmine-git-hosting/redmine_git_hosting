@@ -28,6 +28,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: redmine/redmine
+          ref: ${{ matrix.redmine }}
           path: redmine
 
       - name: Checkout redmine_git_hosting
@@ -66,13 +67,6 @@ jobs:
         run: |
           gem install bundler -v '~> 1.0'
           bundle config path "$(pwd)/vendor/bundle"
-
-      - name: Set redmine branch
-        env:
-          REDMINE_VERSION: ${{ matrix.redmine }}
-        working-directory: redmine
-        run: |
-          if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
 
       - name: Prepare Redmine source
         working-directory: redmine
