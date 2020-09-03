@@ -73,7 +73,6 @@ fr:
   field_use_triggers: Utiliser les déclencheurs
   label_active_for: Actif depuis
   label_all_projects_use_git: Créer automatiquement un dépôt Git pour les nouveaux projets
-  label_archived_repositories: Dépôts archivés
   label_average_commit_per_day: Moyenne des commits par jour
   label_average_contributor_commits: Moyenne des commits par contributeur
   label_backup_in_progress: Enregistrement...

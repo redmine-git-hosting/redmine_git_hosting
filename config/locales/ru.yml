@@ -73,7 +73,6 @@ ru:
   field_use_triggers: Использовать тригеры
   label_active_for: Активность за
   label_all_projects_use_git: Автоматически инициализировать Git репозитории для новых проектов?
-  label_archived_repositories: Архив репозиториев
   label_average_commit_per_day: В среднем комитов в день
   label_average_contributor_commits: В среднем комитов на участника
   label_backup_in_progress: Сохранение...

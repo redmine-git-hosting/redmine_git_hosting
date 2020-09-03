@@ -73,7 +73,6 @@ es:
   field_use_triggers: Usar triggers
   label_active_for: Activo durante
   label_all_projects_use_git: ¿Inicializar automáticamente un repositorio Git en los proyectos nuevos?
-  label_archived_repositories: Repositorios archivados
   label_average_commit_per_day: Media de commits por día
   label_average_contributor_commits: Media de commits por contribuidor
   label_backup_in_progress: Guardando...

@@ -40,44 +40,8 @@ get 'admin/settings/plugin/:id/install_gitolite_hooks', to: 'settings#install_gi
 # Enable SmartHTTP Grack support
 mount Grack::Bundle.new({}),
       at: RedmineGitHosting::Config.http_server_subdir,
-      constraints: ->(request) { %r{[-/\w\.]+\.git/}.match(request.path_info) },
+      constraints: ->(request) { %r{[-/\w.]+\.git/}.match(request.path_info) },
       via: %i[get post]
 
 # Post Receive Hooks
 mount Hrack::Bundle.new({}), at: 'githooks/post-receive/:type/:projectid', via: [:post]
-
-# Archived Repositories
-get 'archived_projects/index',                                                to: 'archived_repositories#index'
-get 'archived_projects/:id/repository/:repository_id/statistics',             to: 'archived_repositories#stats'
-get 'archived_projects/:id/repository/:repository_id/graph',                  to: 'archived_repositories#graph'
-get 'archived_projects/:id/repository/:repository_id/changes(/*path(.:ext))', to: 'archived_repositories#changes'
-get 'archived_projects/:id/repository/:repository_id/revisions/:rev',         to: 'archived_repositories#revision'
-get 'archived_projects/:id/repository/:repository_id/revision',               to: 'archived_repositories#revision'
-get 'archived_projects/:id/repository/:repository_id/revisions',              to: 'archived_repositories#revisions'
-get 'archived_projects/:id/repository/:repository_id/revisions/:rev/:action(/*path(.:ext))',
-    controller: 'archived_repositories',
-    format: false,
-    constraints: { action: /(browse|show|entry|raw|annotate|diff)/,
-                   rev: /[a-z0-9\.\-_]+/ }
-
-get 'archived_projects/:id/repository/statistics',               to: 'archived_repositories#stats'
-get 'archived_projects/:id/repository/graph',                    to: 'archived_repositories#graph'
-get 'archived_projects/:id/repository/changes(/*path(.:ext))',   to: 'archived_repositories#changes'
-get 'archived_projects/:id/repository/revisions',                to: 'archived_repositories#revisions'
-get 'archived_projects/:id/repository/revisions/:rev',           to: 'archived_repositories#revision'
-get 'archived_projects/:id/repository/revision',                 to: 'archived_repositories#revision'
-get 'archived_projects/:id/repository/revisions/:rev/:action(/*path(.:ext))',
-    controller: 'archived_repositories',
-    format: false,
-    constraints: { action: /(browse|show|entry|raw|annotate|diff)/,
-                   rev: /[a-z0-9\.\-_]+/ }
-get 'archived_projects/:id/repository/:repository_id/:action(/*path(.:ext))',
-    controller: 'archived_repositories',
-    action: /(browse|show|entry|raw|changes|annotate|diff)/
-
-get 'archived_projects/:id/repository/:action(/*path(.:ext))',
-    controller: 'archived_repositories',
-    action: /(browse|show|entry|raw|changes|annotate|diff)/
-
-get 'archived_projects/:id/repository/:repository_id', to: 'archived_repositories#show', path: nil
-get 'archived_projects/:id/repository',                to: 'archived_repositories#show', path: nil

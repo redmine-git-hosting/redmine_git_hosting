@@ -74,7 +74,6 @@ ja:
   git_notifications_reminder: 上記のメールリストは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
   label_active_for: 活動経過日数
   label_all_projects_use_git: 新プロジェクト作成時にGitリポジトリを自動作成する？
-  label_archived_repositories: アーカイブリポジトリ
   label_average_commit_per_day: 1日あたりの平均コミット数
   label_average_contributor_commits: 開発者あたりの平均コミット数
   label_backup_in_progress: 保存中...
