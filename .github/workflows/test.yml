@@ -45,7 +45,7 @@ jobs:
       - name: Checkout redmine_sidekiq
         uses: actions/checkout@v2
         with:
-          repository: ogom/redmine_sidekiq.git
+          repository: ogom/redmine_sidekiq
           path: redmine/plugins/redmine_sidekiq
 
       - name: Checkout gitolite
