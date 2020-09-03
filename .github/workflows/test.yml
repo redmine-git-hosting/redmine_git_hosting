@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    name: Redmine ${{ matrix.redmine }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
+    name: ${{ matrix.redmine }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,7 +23,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       mysql:
           image: mysql:5.7
@@ -31,7 +36,11 @@ jobs:
               MYSQL_ALLOW_EMPTY_PASSWORD: yes
           ports:
             - 3306:3306
-          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          options: >-
+            --health-cmd="mysqladmin ping"
+            --health-interval=10s
+            --health-timeout=5s
+            --health-retries=3
 
     steps:
       - name: Checkout Redmine
