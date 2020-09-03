@@ -60,12 +60,14 @@ jobs:
       - name: Install package dependencies
         run: >
           sudo apt-get install --yes --quiet
-          libpq-dev
-          subversion
+          build-essential
+          cmake
+          libgpg-error-dev
           libicu-dev
+          libpq-dev
           libssh2-1
           libssh2-1-dev
-          cmake
+          subversion
 
       - name: Setup Ruby
         uses: actions/setup-ruby@v1
