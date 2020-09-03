@@ -83,6 +83,8 @@ jobs:
       - name: Run Redmine rake tasks
         env:
           RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
@@ -95,6 +97,8 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           REDMINE_VERSION: ${{ matrix.redmine }}
         working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all

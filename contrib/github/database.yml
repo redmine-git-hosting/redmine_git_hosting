@@ -5,19 +5,22 @@ production:
   adapter: postgresql
   host: localhost
   database: redmine
-  username: postgres
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
   encoding: utf8
 
 development:
   adapter: postgresql
   host: localhost
   database: redmine
-  username: postgres
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
   encoding: utf8
 
 test:
   adapter: postgresql
   host: localhost
   database: redmine
-  username: postgres
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
   encoding: utf8
