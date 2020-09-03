@@ -24,7 +24,22 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout Redmine
+        uses: actions/checkout@v2
+        with:
+          repository: redmine/redmine
+          path: redmine
+
+      - name: Checkout redmine_git_hosting
+        uses: actions/checkout@v2
+        with:
+          path: redmine/plugins/redmine_git_hosting
+
+      - name: Checkout additionals
+        uses: actions/checkout@v2
+        with:
+          repository: AlphaNodes/additionals
+          path: redmine/plugins/additionals
 
       - name: Update package archives
         run: sudo apt-get update --yes --quiet
@@ -52,32 +67,36 @@ jobs:
           gem install bundler -v '~> 1.0'
           bundle config path "$(pwd)/vendor/bundle"
 
-      - name: Setup local redmine
+      - name: Set redmine branch
         env:
           REDMINE_VERSION: ${{ matrix.redmine }}
-          BUNDLE_OPTS: --without development
-          RAILS_ENV: test
-          REDMINE_GIT_REPO: https://github.com/redmine/redmine.git
-          DATABASE_URL: postgresql://p:p@localhost:${{ job.services.postgres.ports[5432] }}/db
-          USE_SVN: true
         run: |
-          cd $GITHUB_WORKSPACE
-          cd ..
-          git clone $REDMINE_GIT_REPO redmine
-          cd redmine
           if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
-          ln -sv $GITHUB_WORKSPACE plugins/redmine_git_hosting
+        working-directory: ./redmine
+
+      - name: Prepare Redmine source
+        run: |
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
-          cp "$GITHUB_WORKSPACE/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
+          cp ../redmine_git_hosting/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
+        working-directory: ./redmine
+
+      - name: Install Ruby dependencies
+        run: |
           bundle install --jobs=4 --retry=3 --without development
+        working-directory: ./redmine
+
+      - name: Run Redmine rake tasks
+        run: |
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate
           bundle exec rake redmine:load_default_data
           bundle exec rake redmine:plugins:migrate
           bundle exec rake db:test:prepare
+        working-directory: ./redmine
 
       - name: Run tests
         env:
           REDMINE_VERSION: ${{ matrix.redmine }}
         run: bundle exec rake redmine_git_hosting:ci:all
+        working-directory: ./redmine
