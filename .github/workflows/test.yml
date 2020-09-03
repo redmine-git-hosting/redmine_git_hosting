@@ -33,7 +33,9 @@ jobs:
       mysql:
           image: mysql:5.7
           env:
-              MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_USER: root
+            MYSQL_PASSWORD: ''
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
           ports:
             - 3306:3306
           options: >-
@@ -43,6 +45,10 @@ jobs:
             --health-retries=3
 
     steps:
+      - name: Verify MySQL connection from host
+        run: |
+          mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW DATABASES"
+
       - name: Checkout Redmine
         uses: actions/checkout@v2
         with:
@@ -112,9 +118,6 @@ jobs:
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_git_hosting/contrib/github/database-${{ matrix.db }}.yml config/database.yml
-          cat config/database.yml
-          mysql --version
-          mysqlshow -u root -h localhost -P 3306
 
       - name: Install admin ssh key
         working-directory: redmine
