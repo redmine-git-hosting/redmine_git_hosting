@@ -70,33 +70,33 @@ jobs:
       - name: Set redmine branch
         env:
           REDMINE_VERSION: ${{ matrix.redmine }}
+        working-directory: redmine
         run: |
           if [[ "$REDMINE_VERSION" != "master" ]]; then git checkout -b $REDMINE_VERSION origin/$REDMINE_VERSION; fi
-        working-directory: ./redmine
 
       - name: Prepare Redmine source
+        working-directory: redmine
         run: |
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp ../redmine_git_hosting/contrib/travis/data/db_files/database_postgres.yml" config/database.yml
-        working-directory: ./redmine
 
       - name: Install Ruby dependencies
+        working-directory: redmine
         run: |
           bundle install --jobs=4 --retry=3 --without development
-        working-directory: ./redmine
 
       - name: Run Redmine rake tasks
+        working-directory: redmine
         run: |
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate
           bundle exec rake redmine:load_default_data
           bundle exec rake redmine:plugins:migrate
           bundle exec rake db:test:prepare
-        working-directory: ./redmine
 
       - name: Run tests
         env:
           REDMINE_VERSION: ${{ matrix.redmine }}
+        working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all
-        working-directory: ./redmine
