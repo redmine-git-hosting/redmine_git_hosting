@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Verify MySQL connection from host
         run: |
-          mysql --host 127.0.0.1 -uroot -e "SHOW DATABASES"
+          mysql -uroot -e "SHOW DATABASES"
         if: matrix.db == 'mysql'
 
       - name: Checkout Redmine
