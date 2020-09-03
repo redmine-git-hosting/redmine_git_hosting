@@ -34,7 +34,6 @@ gem 'sidekiq'
 gem 'sshkey'
 
 group :development, :test do
-  gem 'brakeman'
   gem 'rails-controller-testing'
   gem 'rspec'
   gem 'rspec-rails', '~> 3.5', '>= 3.5.2'

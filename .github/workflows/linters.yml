@@ -1,4 +1,4 @@
-name: Run Rubocop
+name: Run Linters
 
 on: [push]
 
@@ -23,10 +23,15 @@ jobs:
         echo "  gem 'rubocop-performance', require: false" >> Gemfile
         echo "  gem 'rubocop-rails', require: false" >> Gemfile
         echo "  gem 'rubocop-rspec', require: false" >> Gemfile
-        echo "end">> Gemfile
+        echo "  gem 'slim_lint', require: false" >> Gemfile
+        echo "end" >> Gemfile
         gem install bundler
         bundle install --jobs 4 --retry 3
 
     - name: Run RuboCop
       run: |
         bundle exec rubocop -S
+
+    - name: Run Slim-Lint
+      run: |
+        bundle exec slim-lint app/views
