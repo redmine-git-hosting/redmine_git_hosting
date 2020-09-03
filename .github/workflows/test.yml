@@ -142,4 +142,4 @@ jobs:
         if: always()
         with:
           name: coverage-report
-          path: remdine/coverage
+          path: redmine/coverage
