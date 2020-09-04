@@ -1,6 +1,6 @@
 require File.expand_path "#{File.dirname __FILE__}/../../../spec/spec_helper"
 
-HOME_BASE_DIR = Additionals.os_is_mac? ? '/Users' : '/home'
+HOME_BASE_DIR = RUBY_PLATFORM.include?('darwin') ? '/Users' : '/home'
 
 ## Configure RSpec
 RSpec.configure do |config|

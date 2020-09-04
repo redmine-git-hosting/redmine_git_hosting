@@ -7,7 +7,7 @@ if ENV['COVERAGE']
   end
 end
 
-HOME_BASE_DIR = Additionals.os_is_mac? ? '/Users' : '/home'
+HOME_BASE_DIR = RUBY_PLATFORM.include?('darwin') ? '/Users' : '/home'
 
 ## Load Redmine App
 ENV['RAILS_ENV'] = 'test'
@@ -18,7 +18,6 @@ require 'rspec/rails'
 Dir[Rails.root.join('plugins/*/spec/factories/**/*.rb')].each { |f| require f }
 
 Dir[Rails.root.join('plugins/*/spec/support/**/*.rb')].each { |f| require f }
-
 
 ## Configure RSpec
 RSpec.configure do |config|
