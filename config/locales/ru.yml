@@ -83,8 +83,6 @@ ru:
   label_commits_per_day: Комитов в день
   label_commits_per_hour: Комитов в час
   label_commits_per_weekday: Комитов в неделю
-  label_copied_to_clipboard: Сокпировано!
-  label_copy_to_clipboard: Сокопировать в буфер
   label_current_deploy_keys: Текущие полномочные ключи (Deployment Keys)
   label_current_public_keys: Текущие публичные ключи
   label_current_user_keys: Текущие ключи пользователя

@@ -83,8 +83,6 @@ es:
   label_commits_per_day: Commits por día
   label_commits_per_hour: Commits por hora
   label_commits_per_weekday: Commits por día de la semana
-  label_copied_to_clipboard: ¡Copiado!
-  label_copy_to_clipboard: Copiar al portapapeles
   label_current_deploy_keys: Claves de despliegue actuales
   label_current_public_keys: Claves públicas actuales
   label_current_user_keys: Claves de usuario actuales

@@ -84,8 +84,6 @@ ja:
   label_commits_per_day: 日別のコミット
   label_commits_per_hour: 時間別のコミット
   label_commits_per_weekday: 曜日別のコミット
-  label_copied_to_clipboard: コピー済み!
-  label_copy_to_clipboard: クリップボードにコピー
   label_current_deploy_keys: 現在のデプロイキー
   label_current_public_keys: 現在のパプリックキー
   label_current_user_keys: 現在のユーザーキー
