@@ -50,9 +50,9 @@ fr:
               taken: "correspond à un identifiant de dépôt existant"
               invalid: invalide
               cannot_change: ne peut pas changer
-  all_branches: "Toutes&nbsp;les&nbsp;branches"
-  all_references: "Toutes&nbsp;les&nbsp;références"
-  all_tags: "Toutes&nbsp;les&nbsp;étiquettes"
+  all_branches: "Toutes les branches"
+  all_references: "Toutes les références"
+  all_tags: "Toutes les étiquettes"
   button_clone: Cloner
   display_access_emphasis: "Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte."
   display_access_flat: "Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>."
@@ -112,7 +112,7 @@ fr:
   label_download_and_install_git: Téléchargez et installez Git
   label_download_format: Télécharger au format
   label_download_select_format: Sélectionnez un format
-  label_empty_get: "GET&nbsp;vide"
+  label_empty_get: "GET vide"
   label_empty_recycle_bin: Vider la corbeille
   label_empty_repository: Dépot vide?
   label_enable_git_daemon: Activer le daemon Git
@@ -149,7 +149,7 @@ fr:
   label_git_option_key_add: Ajouter une option de configuration Gitolite
   label_git_option_keys: Options de configuration Gitolite
   label_git_version: Version de Git
-  label_github_post: "POST&nbsp;GitHub"
+  label_github_post: "POST GitHub"
   label_gitolite_access_config: Configuration des accès Gitolite
   label_gitolite_banner: Gitolite banner
   label_gitolite_bin_dir: Répertoire des binaires Gitolite
