@@ -17,7 +17,7 @@ class RepositoryPresenter < SimpleDelegator
   end
 
   def git_urls_box
-    content_tag(:div, class: 'git_url_box', id: urls_container_id) do
+    tag.div(class: 'git_url_box', id: urls_container_id) do
       render_git_urls +
         render_git_url_text +
         render_permissions +
@@ -28,31 +28,31 @@ class RepositoryPresenter < SimpleDelegator
   private
 
   def render_git_urls
-    content_tag(:ul, render_url_list, class: 'git_url_list')
+    tag.ul(render_url_list, class: 'git_url_list')
   end
 
   def render_url_list
     s = ''
     repository.available_urls_sorted.each do |key, value|
-      s << content_tag(:li, link_to(key.upcase, 'javascript:void(0)').html_safe, options_for_git_url(key, value))
+      s << tag.li(link_to(key.upcase, 'javascript:void(0)').html_safe, options_for_git_url(key, value))
     end
     s.html_safe
   end
 
-  def options_for_git_url(key, value)
+  def options_for_git_url(_key, value)
     { class: 'git_url', data: { url: value[:url], target: element_name, committer: committer_label(value) } }
   end
 
   def render_git_url_text
-    content_tag(:input, '', class: 'git_url_text', id: url_text_container_id, readonly: 'readonly')
+    tag.input '', class: 'git_url_text', id: url_text_container_id, readonly: 'readonly'
   end
 
   def render_permissions
-    content_tag(:div, content_tag(:span, '', id: permissions_container_id), class: 'git_url_permissions')
+    tag.div tag.span('', id: permissions_container_id), class: 'git_url_permissions'
   end
 
   def render_clipboard_button
-    clipboardjs_button_for(url_text_container_id)
+    clipboardjs_button_for url_text_container_id
   end
 
   def committer_label(value)
