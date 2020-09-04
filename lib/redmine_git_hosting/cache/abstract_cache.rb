@@ -48,8 +48,7 @@ module RedmineGitHosting
           return if max_cache_time.to_i.negative? # No expiration needed
 
           current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
-          limit = current_time - max_cache_time
-          limit
+          current_time - max_cache_time
         end
 
         def valid_cache_entry?(cached_entry_date)
