@@ -2,9 +2,7 @@ module Repositories
   class Base
     include RedmineGitHosting::GitoliteAccessor::Methods
 
-    attr_reader :repository
-    attr_reader :options
-    attr_reader :project
+    attr_reader :repository, :options, :project
 
     def initialize(repository, opts = {})
       @repository = repository

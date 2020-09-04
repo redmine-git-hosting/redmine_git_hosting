@@ -70,5 +70,5 @@ module RedmineGitHosting
 end
 
 unless UsersController.included_modules.include?(RedmineGitHosting::Patches::UsersControllerPatch)
-  UsersController.send(:prepend, RedmineGitHosting::Patches::UsersControllerPatch)
+  UsersController.prepend RedmineGitHosting::Patches::UsersControllerPatch
 end

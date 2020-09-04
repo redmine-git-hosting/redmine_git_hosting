@@ -1,4 +1,4 @@
-h3.title = l(:label_mirror_edit)
+h3.title = l :label_mirror_edit
 
 = labelled_form_for :repository_mirror, @mirror,
                     url: repository_mirror_path(@repository, @mirror),
@@ -8,4 +8,4 @@ h3.title = l(:label_mirror_edit)
   .buttons
     = submit_tag l(:button_save)
     '
-    = link_to_function l(:button_cancel), "hideModal(this);"
+    = link_to_function l(:button_cancel), 'hideModal(this);'

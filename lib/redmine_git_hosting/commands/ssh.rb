@@ -7,7 +7,8 @@ module RedmineGitHosting
       #
       def ssh_capture(*params)
         cmd = ssh.concat(params)
-        capture(cmd)
+
+        capture cmd
       end
 
       # Execute a command in the gitolite forced environment through this user
@@ -17,7 +18,8 @@ module RedmineGitHosting
       #
       def ssh_shell(*params)
         cmd = ssh.concat(params)
-        execute(cmd)
+
+        execute cmd
       end
 
       private

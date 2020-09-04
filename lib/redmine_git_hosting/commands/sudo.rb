@@ -15,20 +15,20 @@ module RedmineGitHosting
       # Expect file content to end with EOL (\n)
       #
       def sudo_install_file(content, dest_file, filemode)
-        stdin = [ 'cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
+        stdin = ['cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
 
         begin
           sudo_pipe_data(stdin)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error(e.output)
-          return false
+          false
         else
           begin
             sudo_chmod(filemode, dest_file)
-            return true
+            true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error(e.output)
-            return false
+            false
           end
         end
       end
@@ -36,13 +36,13 @@ module RedmineGitHosting
       # Test if a file exists with size > 0
       #
       def sudo_file_exists?(filename)
-        sudo_test(filename, '-s')
+        sudo_test filename, '-s'
       end
 
       # Test if a directory exists
       #
       def sudo_dir_exists?(dirname)
-        sudo_test(dirname, '-r')
+        sudo_test dirname, '-r'
       end
 
       # Test properties of a path from the git user.
@@ -68,7 +68,7 @@ module RedmineGitHosting
       # Syntaxic sugar for 'mkdir -p'
       #
       def sudo_mkdir_p(path)
-        sudo_mkdir('-p', path)
+        sudo_mkdir '-p', path
       end
 
       # Calls chmod with the given arguments on the git user's side.

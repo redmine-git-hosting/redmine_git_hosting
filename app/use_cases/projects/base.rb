@@ -2,8 +2,7 @@ module Projects
   class Base
     include RedmineGitHosting::GitoliteAccessor::Methods
 
-    attr_reader :project
-    attr_reader :options
+    attr_reader :project, :options
 
     def initialize(project, opts = {})
       @project = project

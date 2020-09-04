@@ -1,10 +1,8 @@
 module GitolitePublicKeys
   class GenerateIdentifier
-    DEPLOY_PSEUDO_USER = 'deploy_key'
+    DEPLOY_PSEUDO_USER = 'deploy_key'.freeze
 
-    attr_reader :public_key
-    attr_reader :user
-    attr_reader :skip_auto_increment
+    attr_reader :public_key, :user, :skip_auto_increment
 
     def initialize(public_key, user, opts = {})
       @public_key          = public_key
@@ -45,10 +43,11 @@ module GitolitePublicKeys
     #
     def set_identifier_for_deploy_key
       count = 0
-      begin
+      loop do
         key_id = generate_deploy_key_identifier(count)
         count += 1
-      end while user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
+        break unless user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
+      end
       key_id
     end
 

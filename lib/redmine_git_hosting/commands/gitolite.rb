@@ -10,7 +10,7 @@ module RedmineGitHosting
       #################################
 
       def gitolite_infos
-        ssh_capture('info')
+        ssh_capture 'info'
       end
 
       def sudo_gitolite_query_rc(param)

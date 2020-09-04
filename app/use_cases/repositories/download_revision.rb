@@ -1,13 +1,6 @@
 module Repositories
   class DownloadRevision
-    attr_reader :repository
-    attr_reader :revision
-    attr_reader :format
-    attr_reader :gitolite_repository_path
-
-    attr_reader :commit_id
-    attr_reader :content_type
-    attr_reader :filename
+    attr_reader :repository, :revision, :format, :gitolite_repository_path, :commit_id, :content_type, :filename
 
     def initialize(repository, revision, format)
       @repository = repository
@@ -69,10 +62,10 @@ module Repositories
 
     def fill_data
       case format
-      when 'tar.gz' then
+      when 'tar.gz'
         extension     = 'tar.gz'
         @content_type = 'application/x-gzip'
-      when 'zip' then
+      when 'zip'
         extension     = 'zip'
         @content_type = 'application/x-zip'
       else

@@ -1,8 +1,6 @@
 module Projects
   class ExecuteHooks
-    attr_reader :project
-    attr_reader :hook_type
-    attr_reader :params
+    attr_reader :project, :hook_type, :params
 
     def initialize(project, hook_type, params = {})
       @project    = project

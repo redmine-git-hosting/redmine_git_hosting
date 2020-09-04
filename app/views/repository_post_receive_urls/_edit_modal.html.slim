@@ -1,4 +1,4 @@
-h3.title = l(:label_post_receive_url_edit)
+h3.title = l :label_post_receive_url_edit
 
 = labelled_form_for :repository_post_receive_url, @post_receive_url,
                     url: repository_post_receive_url_path(@repository, @post_receive_url),
@@ -8,4 +8,4 @@ h3.title = l(:label_post_receive_url_edit)
   .buttons
     = submit_tag l(:button_save)
     '
-    = link_to_function l(:button_cancel), "hideModal(this);"
+    = link_to_function l(:button_cancel), 'hideModal(this);'

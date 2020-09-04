@@ -1,5 +1,5 @@
 div
-  - if User.current.git_allowed_to?(:create_repository_post_receive_urls, @repository)
+  - if User.current.git_allowed_to? :create_repository_post_receive_urls, @repository
     .contextual
       = link_to l(:label_post_receive_url_add),
                 new_repository_post_receive_url_path(@repository),

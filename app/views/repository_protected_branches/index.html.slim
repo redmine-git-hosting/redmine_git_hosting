@@ -1,5 +1,5 @@
 div
-  - if User.current.git_allowed_to?(:create_repository_protected_branches, @repository)
+  - if User.current.git_allowed_to? :create_repository_protected_branches, @repository
     .contextual
       = link_to l(:label_protected_branch_add),
                 new_repository_protected_branch_path(@repository),
@@ -38,12 +38,23 @@ div
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
-                = link_to l(:button_edit), edit_repository_protected_branch_path(@repository, protected_branch), remote: true, class: 'icon icon-edit'
-                = link_to l(:button_clone), clone_repository_protected_branch_path(@repository, protected_branch), remote: true, class: 'icon icon-copy'
-                = link_to l(:button_delete), repository_protected_branch_path(@repository, protected_branch), remote: true, method: :delete, data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del'
+                = link_to l(:button_edit),
+                          edit_repository_protected_branch_path(@repository, protected_branch),
+                          remote: true,
+                          class: 'icon icon-edit'
+                = link_to l(:button_clone),
+                          clone_repository_protected_branch_path(@repository, protected_branch),
+                          remote: true,
+                          class: 'icon icon-copy'
+                = link_to l(:button_delete),
+                          repository_protected_branch_path(@repository, protected_branch),
+                          remote: true,
+                          method: :delete,
+                          data: { confirm: l(:text_are_you_sure) },
+                          class: 'icon icon-del'
 
     - unless @repository.protected_branches_enabled?
-      em = l(:protected_branches_reminder)
+      em = l :protected_branches_reminder
 
   - else
     p.nodata = l :label_no_data

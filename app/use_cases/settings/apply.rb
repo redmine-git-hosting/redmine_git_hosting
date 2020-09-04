@@ -2,12 +2,7 @@ module Settings
   class Apply
     include RedmineGitHosting::GitoliteAccessor::Methods
 
-    attr_reader :previous_settings
-    attr_reader :resync_projects
-    attr_reader :resync_ssh_keys
-    attr_reader :regenerate_ssh_keys
-    attr_reader :flush_cache
-    attr_reader :delete_trash_repo
+    attr_reader :previous_settings, :resync_projects, :resync_ssh_keys, :regenerate_ssh_keys, :flush_cache, :delete_trash_repo
 
     def initialize(previous_settings, opts = {})
       @previous_settings   = previous_settings

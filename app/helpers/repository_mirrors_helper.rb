@@ -1,7 +1,9 @@
 module RepositoryMirrorsHelper
   # Mirror Mode
   def mirror_mode(mirror)
-    [l(:label_mirror_full_mirror), l(:label_mirror_forced_update), l(:label_mirror_fast_forward)][mirror.push_mode]
+    [l(:label_mirror_full_mirror),
+     l(:label_mirror_forced_update),
+     l(:label_mirror_fast_forward)][mirror.push_mode]
   end
 
   # Refspec for mirrors

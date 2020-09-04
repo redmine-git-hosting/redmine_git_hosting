@@ -1,4 +1,4 @@
-h3.title = l(:label_git_config_keys)
+h3.title = l :label_git_config_keys
 
 = labelled_form_for :repository_git_config_key, @git_config_key,
                     url: repository_git_config_key_path(@repository, @git_config_key),
@@ -8,4 +8,4 @@ h3.title = l(:label_git_config_keys)
   .buttons
     = submit_tag l(:button_save)
     '
-    = link_to_function l(:button_cancel), "hideModal(this);"
+    = link_to_function l(:button_cancel), 'hideModal(this);'

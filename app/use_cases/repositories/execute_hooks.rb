@@ -1,8 +1,6 @@
 module Repositories
   class ExecuteHooks
-    attr_reader :repository
-    attr_reader :hook_type
-    attr_reader :payloads
+    attr_reader :repository, :hook_type, :payloads
 
     def initialize(repository, hook_type, payloads = {})
       @repository = repository

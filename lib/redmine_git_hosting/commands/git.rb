@@ -12,16 +12,17 @@ module RedmineGitHosting
       # Send Git command with Sudo
       #
       def sudo_git(*params)
-        if RedmineGitHosting::Config.gitolite_use_sudo?
-          cmd = sudo_git_cmd.concat(params)
-        else
-          cmd = ['git'].concat(params)
-        end
-        capture(cmd)
+        cmd = if RedmineGitHosting::Config.gitolite_use_sudo?
+                sudo_git_cmd.concat(params)
+              else
+                ['git'].concat(params)
+              end
+
+        capture cmd
       end
 
       def sudo_git_cmd(args = [])
-        sudo.concat(git(args))
+        sudo.concat git(args)
       end
 
       def sudo_git_args_for_repo(repo_path, args = [])
@@ -33,14 +34,14 @@ module RedmineGitHosting
 
         begin
           _, _, code = sudo_shell('git', 'config', '--global', '--unset', key)
-          return true
+          true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           if code == 5
-            return true
+            true
           else
             logger.error("Error while removing Git global parameter : #{key}")
             logger.error(e.output)
-            return false
+            false
           end
         end
       end
@@ -54,11 +55,11 @@ module RedmineGitHosting
 
         begin
           sudo_git('config', '--global', key, value)
-          return true
+          true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error("Error while setting Git global parameter : #{key} (#{value})")
           logger.error(e.output)
-          return false
+          false
         end
       end
 
@@ -106,7 +107,8 @@ module RedmineGitHosting
 
         params.each do |value_pair|
           next if value_pair.empty?
-          next if !value_pair.start_with?(namespace)
+          next unless value_pair.start_with? namespace
+
           global_key = value_pair.split(' ')[0]
           value      = value_pair.split(' ')[1]
           key        = global_key.split('.')[1]

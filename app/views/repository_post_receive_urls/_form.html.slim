@@ -12,7 +12,7 @@
                [['Github-style POST', :github],
                ['Empty GET request', :get]],
                {},
-               onchange: "post_mode_change(this); return false;"
+               onchange: 'post_mode_change(this); return false;'
 
   #payload_options style="#{@post_receive_url.github_mode? ? '' : 'display: none;'}"
     p = f.check_box :split_payloads

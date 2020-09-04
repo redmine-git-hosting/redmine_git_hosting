@@ -1,7 +1,6 @@
 module RepositoryMirrors
   class Base
-    attr_reader :mirror
-    attr_reader :repository
+    attr_reader :mirror, :repository
 
     def initialize(mirror)
       @mirror     = mirror

@@ -1,4 +1,4 @@
-h3.title = l(:label_protected_branch_edit)
+h3.title = l :label_protected_branch_edit
 
 = labelled_form_for :repository_protected_branche, @protected_branch,
                     url: repository_protected_branch_path(@repository, @protected_branch),
@@ -8,4 +8,4 @@ h3.title = l(:label_protected_branch_edit)
   .buttons
     = submit_tag l(:button_save)
     '
-    = link_to_function l(:button_cancel), "hideModal(this);"
+    = link_to_function l(:button_cancel), 'hideModal(this);'
