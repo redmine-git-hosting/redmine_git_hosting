@@ -85,7 +85,7 @@ describe Repository::Xitolite do
             delete_repository: true,
             git_cache_id: 'project-child',
             repo_name: 'redmine/project-parent/project-child',
-            repo_path: '/home/git/repositories/redmine/project-parent/project-child.git'
+            repo_path: "#{HOME_BASE_DIR}/repositories/redmine/project-parent/project-child.git"
           }
         )
       end

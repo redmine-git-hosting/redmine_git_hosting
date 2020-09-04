@@ -43,11 +43,10 @@ module GitolitePublicKeys
     #
     def set_identifier_for_deploy_key
       count = 0
-      loop do
+      begin
         key_id = generate_deploy_key_identifier(count)
         count += 1
-        break unless user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
-      end
+      end while user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
       key_id
     end
 

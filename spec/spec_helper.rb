@@ -1,4 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../../spec/spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../../../spec/spec_helper"
+
+HOME_BASE_DIR = Additionals.os_is_mac? ? '/Users' : '/home'
 
 ## Configure RSpec
 RSpec.configure do |config|
@@ -7,6 +9,6 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     RedmineGitHosting::Config.reload_from_file!
-    Setting.enabled_scm = ['Git', 'Subversion', 'Xitolite']
+    Setting.enabled_scm = %w[Git Subversion Xitolite]
   end
 end

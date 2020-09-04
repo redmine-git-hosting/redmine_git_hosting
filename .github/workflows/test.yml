@@ -161,10 +161,3 @@ jobs:
           REDMINE_VERSION: ${{ matrix.redmine }}
         working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all
-
-      - name: Upload coverage results
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: coverage-report
-          path: redmine/coverage
