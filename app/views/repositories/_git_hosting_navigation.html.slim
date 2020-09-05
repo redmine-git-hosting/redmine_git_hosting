@@ -1,1 +1,2 @@
-= watcher_link(@repository, User.current)
+- if User.current.allowed_to? :add_repository_xitolite_watchers, @project
+  = watcher_link @repository, User.current
