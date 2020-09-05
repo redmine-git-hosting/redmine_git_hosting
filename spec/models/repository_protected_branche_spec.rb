@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryProtectedBranche do
   let(:protected_branch) { build(:repository_protected_branche) }

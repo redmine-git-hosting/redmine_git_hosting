@@ -82,7 +82,7 @@ module GlobalHelpers
   end
 
   def load_yaml_fixture(fixture)
-    YAML::load(load_fixture(fixture))
+    YAML.load(load_fixture(fixture))
   end
 
   def load_fixture(fixture)

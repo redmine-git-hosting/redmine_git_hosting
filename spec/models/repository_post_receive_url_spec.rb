@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryPostReceiveUrl do
   let(:post_receive_url) { build(:repository_post_receive_url) }

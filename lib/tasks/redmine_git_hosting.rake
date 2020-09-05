@@ -38,7 +38,7 @@ namespace :redmine_git_hosting do
     RedmineGitHosting::ConsoleLogger.title('Checking repositories identifier uniqueness...') do
       if Repository::Xitolite.have_duplicated_identifier?
         RedmineGitHosting::ConsoleLogger.warn('Detected non-unique repository identifiers!')
-        puts YAML::dump(Repository::Xitolite.identifiers_to_hash.reject! { |k, v| v == 1 })
+        puts YAML.dump(Repository::Xitolite.identifiers_to_hash.reject! { |_k, v| v == 1 })
       else
         RedmineGitHosting::ConsoleLogger.info('No duplication detected, good !')
       end
@@ -62,22 +62,22 @@ namespace :redmine_git_hosting do
   desc 'Install/update Gitolite hooks'
   task install_hook_files: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Installing/updating Gitolite hooks') do
-      puts YAML::dump(RedmineGitHosting::Config.install_hooks!)
+      puts YAML.dump(RedmineGitHosting::Config.install_hooks!)
     end
   end
 
   desc 'Install/update Gitolite hook parameters'
   task install_hook_parameters: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Installing/updating Gitolite hook parameters') do
-      puts YAML::dump(RedmineGitHosting::Config.update_hook_params!)
+      puts YAML.dump(RedmineGitHosting::Config.update_hook_params!)
     end
   end
 
-  task install_gitolite_hooks: [:install_hook_files, :install_hook_parameters]
+  task install_gitolite_hooks: %i[install_hook_files install_hook_parameters]
 
   desc 'Show library version'
   task :version do
-    puts "Redmine Git Hosting #{version("plugins/redmine_git_hosting/init.rb")}"
+    puts "Redmine Git Hosting #{version('plugins/redmine_git_hosting/init.rb')}"
   end
 
   def version(path)

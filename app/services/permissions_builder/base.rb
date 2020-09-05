@@ -1,8 +1,6 @@
 module PermissionsBuilder
   class Base
-    attr_reader :repository
-    attr_reader :gitolite_users
-    attr_reader :old_permissions
+    attr_reader :repository, :gitolite_users, :old_permissions
 
     def initialize(repository, gitolite_users, old_permissions = {})
       @repository      = repository
@@ -22,7 +20,7 @@ module PermissionsBuilder
 
     private
 
-    def has_no_users?(type)
+    def no_users?(type)
       gitolite_users[type].blank?
     end
   end

@@ -70,15 +70,13 @@ module Hrack
     end
 
     def find_project
-      if path_parameters.has_key?(:projectid)
-        Project.find_by_identifier(path_parameters[:projectid])
-      end
+      Project.find_by_identifier(path_parameters[:projectid]) if path_parameters.key?(:projectid)
     end
 
     # Locate that actual repository that is in use here.
     # Notice that an empty "repositoryid" is assumed to refer to the default repo for a project
     def find_repository
-      if params[:repositoryid] && !params[:repositoryid].blank?
+      if params[:repositoryid].present?
         @project.repositories.find_by_identifier(params[:repositoryid])
       else
         # return default or first repo with blank identifier

@@ -261,8 +261,11 @@ li.url_type {
   display: none;
 }
 
-
 .label-important {
+  background-color: #b94a48;
+}
+
+.label-error {
   background-color: #b94a48;
 }
 

@@ -68,5 +68,5 @@ end
   Rails.root.join('redmine_git_hosting_hooks.rb').to_s,
   Rails.root.join('plugins/redmine_git_hosting/custom_hooks.rb').to_s
 ].each do |file|
-  require_dependency file if File.exist?(file)
+  require_dependency file if File.exist? file
 end

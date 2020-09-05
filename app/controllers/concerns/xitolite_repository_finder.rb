@@ -11,8 +11,8 @@ module XitoliteRepositoryFinder
   end
 
   def find_xitolite_repository_by_path
-    repo_path = params[:repo_path] + '.git'
-    repository = Repository::Xitolite.find_by_path(repo_path, loose: true)
+    repo_path = "#{params[:repo_path]}.git"
+    repository = Repository::Xitolite.find_by_path repo_path, loose: true
     if repository.nil?
       RedmineGitHosting.logger.error("GoRedirector : repository not found at path : '#{repo_path}', exiting !")
       render_404

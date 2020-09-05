@@ -31,13 +31,13 @@ module RepositoryMirrorsHelper
 
   def render_push_state(mirror, error)
     if error
-      status = l(:label_mirror_push_fail)
-      status_css = 'important'
+      status = l :label_mirror_push_fail
+      status_css = 'error'
     else
-      status = l(:label_mirror_push_sucess)
+      status = l :label_mirror_push_sucess
       status_css = 'success'
     end
 
-    l(:label_mirror_push_info_html, mirror_url: mirror.url, status: status, status_css: status_css).html_safe
+    t :label_mirror_push_info_html, mirror_url: mirror.url, status: status, status_css: status_css
   end
 end

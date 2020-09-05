@@ -99,14 +99,14 @@ module RedmineGitHosting
     private
 
     def load_setting_file(file)
-      return {} unless File.exists?(file)
+      return {} unless File.exist? file
 
-      data = YAML::load(ERB.new(IO.read(file)).result) || {}
+      data = YAML.safe_load(ERB.new(IO.read(file)).result) || {}
       data.symbolize_keys
     end
 
     def load_authors_file
-      return [] unless File.exists?(authors_file)
+      return [] unless File.exist? authors_file
 
       File.read(authors_file).split("\n").map { |a| RedmineGitHosting::PluginAuthor.new(a) }
     end
@@ -124,7 +124,7 @@ module RedmineGitHosting
 
     def autoload_paths!
       autoloaded_paths.each do |dir|
-        ActiveSupport::Dependencies.autoload_paths += [dir] if Dir.exists?(dir)
+        ActiveSupport::Dependencies.autoload_paths += [dir] if Dir.exist?(dir)
       end
     end
 

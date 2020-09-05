@@ -19,14 +19,14 @@ module PluginSettingsValidation
         self.gitolite_ssh_public_key  = strip_value(gitolite_ssh_public_key)
       end
 
-      validates :gitolite_user,            presence: true
-      validates :gitolite_server_host,     presence: true
-      validates :gitolite_server_port,     presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 65_536 }
-      validates :gitolite_ssh_private_key, presence: true
-      validates :gitolite_ssh_public_key,  presence: true
+      validates :gitolite_user, :gitolite_server_host, :gitolite_ssh_private_key, :gitolite_ssh_public_key,
+                presence: true
+      validates :gitolite_server_port,
+                presence: true,
+                numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 65_536 }
 
       validates_each :gitolite_ssh_private_key, :gitolite_ssh_public_key do |record, attr, value|
-        record.errors.add(attr, 'must exists on filesystem') unless File.exists?(value)
+        record.errors.add(attr, 'must exists on filesystem') unless File.exist? value
       end
     end
   end

@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe GitolitePublicKeysHelper do
   TEST_KEY = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpOU1DzQzU4/acdt3wWhk43acGs3Jp7jVlnEtc+2C8QFAUiJMrAOzyUnEliwxarGonJ5gKbI9NkqqPpz9LATBQw382+3FjAlptgqn7eGBih0DgwN6wdHflTRdE6sRn7hxB5h50p547n26FpbX9GSOHPhgxSnyvGXnC+YZyTfMiw5JMhw68SfLS8YENrXukg2ItJPspn6mPqIHrcM2NJOG4Bm+1ibYpDfrWJqYp3Q6disgwrsN08pS6lDfoQRiRHXg8WFbQbHloVaYFpdT6VoBQiAydeSpDSYTBJd/v3qTpK8aheC8sdnrddZf1T6L51z7WZ6vPVKQYPjpAxZ4p6eef nicolas@tchoum'
