@@ -13,7 +13,7 @@ module ExtendProjectsHelper
     base_label << label
     base_label << "(#{l(:label_disabled)})" unless enabled
 
-    content_tag(:i, '', title: base_label.join(' '), class: base_class)
+    tag.i '', title: base_label.join(' '), class: base_class
   end
 
   def deployment_credentials_feature(repository)

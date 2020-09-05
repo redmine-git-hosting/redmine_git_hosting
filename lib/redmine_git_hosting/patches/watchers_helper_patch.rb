@@ -15,36 +15,37 @@ module RedmineGitHosting
         end
       end
 
-      def watcher_css_with_git_hosting(objects, &block)
-        watcher_css_without_git_hosting(objects, &block).gsub('/', '-')
+      def watcher_css_with_git_hosting(objects)
+        watcher_css_without_git_hosting(objects).tr '/', '-'
       end
 
-      def watchers_list_with_git_hosting(object, &block)
-        remove_allowed = User.current.allowed_to?("delete_#{object.class.name.underscore}_watchers".gsub('/', '_').to_sym, object.project)
+      def watchers_list_with_git_hosting(object)
+        remove_allowed = User.current.allowed_to? "delete_#{object.class.name.underscore}_watchers".tr('/', '_').to_sym, object.project
         content = ''.html_safe
-        lis = object.watcher_users.collect do |user|
+        object.watcher_users.preload(:email_address).each do |user|
           s = ''.html_safe
-          s << avatar(user, :size => "16").to_s
-          s << link_to_user(user, :class => 'user')
+          s << avatar(user, size: '16').to_s
+          s << link_to_user(user, class: 'user')
           if remove_allowed
-            url = {:controller => 'watchers',
-                   :action => 'destroy',
-                   :object_type => object.class.to_s.underscore,
-                   :object_id => object.id,
-                   :user_id => user}
+            url = { controller: 'watchers',
+                    action: 'destroy',
+                    object_type: object.class.to_s.underscore,
+                    object_id: object.id,
+                    user_id: user }
             s << ' '
-            s << link_to(image_tag('delete.png'), url,
-                         :remote => true, :method => 'delete', :class => "delete")
+            s << link_to(l(:button_delete), url,
+                         remote: true, method: 'delete',
+                         class: 'delete icon-only icon-del',
+                         title: l(:button_delete))
           end
-          content << content_tag('li', s, :class => "user-#{user.id}")
+          content << tag.li(s, class: "user-#{user.id}")
         end
-        content.present? ? content_tag('ul', content, :class => 'watchers') : content
+        content.present? ? tag.ul(content, class: 'watchers') : content
       end
-
     end
   end
 end
 
 unless WatchersHelper.included_modules.include?(RedmineGitHosting::Patches::WatchersHelperPatch)
-  WatchersHelper.send(:prepend, RedmineGitHosting::Patches::WatchersHelperPatch)
+  WatchersHelper.prepend RedmineGitHosting::Patches::WatchersHelperPatch
 end
