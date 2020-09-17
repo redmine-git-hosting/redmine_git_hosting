@@ -1,7 +1,6 @@
 module RedmineHooks
   class Base
-    attr_reader :object
-    attr_reader :payloads
+    attr_reader :object, :payloads
 
     def initialize(object, payloads = {})
       @object   = object
@@ -37,16 +36,16 @@ module RedmineHooks
     end
 
     def log_hook_succeeded
-      logger.info('Succeeded!')
+      logger.info 'Succeeded!'
     end
 
     def log_hook_failed
-      logger.error('Failed!')
+      logger.error 'Failed!'
     end
 
     def execute_hook(&block)
       y = ''
-      logger.info(start_message)
+      logger.info start_message
       y << "  - #{start_message} ... "
       yield y
       y

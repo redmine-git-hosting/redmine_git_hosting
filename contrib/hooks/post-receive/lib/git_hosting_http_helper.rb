@@ -6,17 +6,17 @@ require 'uri'
 module GitHosting
   module HttpHelper
     def http_post(url, opts = {}, &block)
-      http, request = build_post_request(url, opts)
-      send_http_request(http, request, &block)
+      http, request = build_post_request url, opts
+      send_http_request http, request, &block
     end
 
     def http_get(url, opts = {}, &block)
-      http, request = build_get_request(url, opts)
-      send_http_request(http, request, &block)
+      http, request = build_get_request url, opts
+      send_http_request http, request, &block
     end
 
     def valid_url?(url)
-      uri = URI.parse(url)
+      uri = URI.parse url
       uri.is_a?(URI::HTTP)
     rescue URI::InvalidURIError
       false
@@ -43,11 +43,11 @@ module GitHosting
       params = opts.delete(:params) { {} }
 
       # Build request
-      uri, http = build_http_request(url, opts)
-      request = Net::HTTP::Post.new(uri.request_uri)
+      uri, http = build_http_request url, opts
+      request = Net::HTTP::Post.new uri.request_uri
 
       # Set request
-      request.body         = serialize_params(params)
+      request.body         = serialize_params params
       request.content_type = 'application/x-www-form-urlencoded'
 
       [http, request]
@@ -56,11 +56,11 @@ module GitHosting
     def build_get_request(url, opts = {})
       # Get params
       params = opts.delete(:params) { {} }
-      params = serialize_params(params)
+      params = serialize_params params
 
       # Build request
-      uri, http = build_http_request(url, opts)
-      request = Net::HTTP::Get.new(uri.request_uri)
+      uri, http = build_http_request url, opts
+      request = Net::HTTP::Get.new uri.request_uri
 
       [http, request]
     end

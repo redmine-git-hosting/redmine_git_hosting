@@ -10,7 +10,8 @@
 
   p = f.select :mode,
                [['Github-style POST', :github],
-               ['Empty GET request', :get]],
+                ['Empty POST request', :post],
+                ['Empty GET request', :get]],
                {},
                onchange: 'post_mode_change(this); return false;'
 

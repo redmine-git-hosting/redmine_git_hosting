@@ -19,11 +19,11 @@ module RedmineHooks
     private
 
     def github_issue
-      GithubIssue.find_by_github_id(params[:issue][:id])
+      GithubIssue.find_by_github_id params[:issue][:id]
     end
 
     def redmine_issue
-      Issue.find_by_subject(params[:issue][:title])
+      Issue.find_by_subject params[:issue][:title]
     end
 
     def sync_with_github
@@ -31,16 +31,15 @@ module RedmineHooks
 
       ## We don't have stored relation
       if github_issue.nil?
+        create_relation = true
 
         ## And we don't have issue in Redmine
-        if redmine_issue.nil?
-          create_relation = true
-          redmine_issue = create_redmine_issue
-        else
-          ## Create relation and update issue
-          create_relation = true
-          redmine_issue = update_redmine_issue(redmine_issue)
-        end
+        redmine_issue = if redmine_issue.nil?
+                          create_redmine_issue
+                        else
+                          ## Create relation and update issue
+                          update_redmine_issue(redmine_issue)
+                        end
       else
         ## We have one relation, update issue
         redmine_issue = update_redmine_issue(github_issue.issue)
@@ -105,11 +104,11 @@ module RedmineHooks
     def update_redmine_issue(issue)
       logger.info("Github Issues Sync : update issue '##{issue.id}'")
 
-      if params[:issue][:state] == 'closed'
-        issue.status_id = 5
-      else
-        issue.status_id = 1
-      end
+      issue.status_id = if params[:issue][:state] == 'closed'
+                          5
+                        else
+                          1
+                        end
 
       issue.subject = params[:issue][:title].chomp[0, 255]
       issue.description = params[:issue][:body]

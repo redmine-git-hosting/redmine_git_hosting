@@ -29,7 +29,7 @@ module Repositories
     end
 
     def execute_update_mirrors_hook
-      message = 'Notifying mirrors about changes to this repository :'
+      message = 'Notifying mirrors about changes to this repository:'
       y = ''
 
       ## Post to each post-receive URL
@@ -46,7 +46,7 @@ module Repositories
     end
 
     def execute_call_webservices_hook
-      message = 'Notifying post receive urls about changes to this repository :'
+      message = 'Notifying post receive urls about changes to this repository:'
       y = ''
 
       ## Post to each post-receive URL

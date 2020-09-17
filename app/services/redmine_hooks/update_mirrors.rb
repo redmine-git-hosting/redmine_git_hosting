@@ -37,12 +37,12 @@ module RedmineHooks
     def check_ref_spec
       refspec_parse = RedmineGitHosting::Validators.valid_git_refspec?(mirror.explicit_refspec)
       payloads.each do |payload|
-        if splitpath = RedmineGitHosting::Utils::Git.parse_refspec(payload[:ref])
-          return true if payload[:ref] == refspec_parse[1]  # Explicit Reference Spec complete path
-          return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
-          return true if mirror.include_all_branches? && splitpath[:type] == 'heads'
-          return true if mirror.include_all_tags? && splitpath[:type] == 'tags'
-        end
+        next unless splitpath = RedmineGitHosting::Utils::Git.parse_refspec(payload[:ref])
+
+        return true if payload[:ref] == refspec_parse[1] # Explicit Reference Spec complete path
+        return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
+        return true if mirror.include_all_branches? && splitpath[:type] == 'heads'
+        return true if mirror.include_all_tags? && splitpath[:type] == 'tags'
       end
       false
     end

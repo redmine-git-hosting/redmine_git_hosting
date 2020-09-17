@@ -17,7 +17,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
                   uniqueness: { case_sensitive: false, scope: :repository_id },
                   format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }
 
-  validates :mode, presence: true, inclusion: { in: %i[github get] }
+  validates :mode, presence: true, inclusion: { in: %i[github get post] }
 
   ## Serializations
   serialize :triggers, Array

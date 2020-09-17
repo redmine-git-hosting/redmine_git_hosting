@@ -6,6 +6,8 @@
 - Dashboard support for Repository URLs
 - Dropped archived repository view
 - Switch CI from Travis to Github Actions
+- Add Basic Auth support for post_receive_urls
+- Add post_receive_url :post empty support
 
 ### 4.0.0
 

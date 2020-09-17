@@ -17,7 +17,7 @@ module RedmineHooks
           out << call_webservice
         else
           out << "#{skip_message}\n"
-          logger.info(skip_message)
+          logger.info skip_message
         end
       end
     end
@@ -27,14 +27,25 @@ module RedmineHooks
     end
 
     def needs_push?
+      return true if post_receive_url.mode == :post
       return false if payloads.empty?
       return true unless use_triggers?
       return false if post_receive_url.triggers.empty?
-      return !payloads_to_send.empty?
+
+      !payloads_to_send.empty?
     end
 
     def start_message
-      "Notifying #{post_receive_url.url}"
+      uri = URI post_receive_url.url
+      secure_url = if uri.password.present?
+                     uri.user = nil
+                     uri.password = nil
+                     uri.to_s
+                   else
+                     post_receive_url.url
+                   end
+
+      "Notifying #{secure_url}"
     end
 
     def skip_message
@@ -44,26 +55,26 @@ module RedmineHooks
     private
 
     def set_payloads_to_send
-      if use_triggers?
-        @payloads_to_send = extract_payloads
-      else
-        @payloads_to_send = payloads
-      end
+      @payloads_to_send = if post_receive_url.mode == :post
+                            {}
+                          elsif use_triggers?
+                            extract_payloads
+                          else
+                            payloads
+                          end
     end
 
     def extract_payloads
       new_payloads = []
       payloads.each do |payload|
         data = RedmineGitHosting::Utils::Git.parse_refspec(payload[:ref])
-        if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
-          new_payloads << payload
-        end
+        new_payloads << payload if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
       end
       new_payloads
     end
 
     def use_method
-      post_receive_url.mode == :github ? :http_post : :http_get
+      post_receive_url.mode == :get ? :http_get : :http_post
     end
 
     def use_triggers?
@@ -82,20 +93,20 @@ module RedmineHooks
         end
         y
       else
-        do_call_webservice(payloads_to_send)
+        do_call_webservice payloads_to_send
       end
     end
 
     def do_call_webservice(payload)
-      post_failed, post_message = self.send(use_method, post_receive_url.url, { data: { payload: payload } })
+      post_failed, post_message = send(use_method, post_receive_url.url, { data: { payload: payload } })
 
       if post_failed
-        logger.error('Failed!')
-        logger.error(post_message)
-        (split_payloads? ? failure_message.gsub("\n", '') : failure_message)
+        logger.error 'Failed!'
+        logger.error post_message
+        (split_payloads? ? failure_message.delete("\n") : failure_message)
       else
         log_hook_succeeded
-        (split_payloads? ? success_message.gsub("\n", '') : success_message)
+        (split_payloads? ? success_message.delete("\n") : success_message)
       end
     end
   end

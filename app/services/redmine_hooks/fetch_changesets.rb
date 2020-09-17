@@ -23,7 +23,7 @@ module RedmineHooks
       success_message
     rescue ::Redmine::Scm::Adapters::CommandFailed => e
       log_hook_failed
-      logger.error("Error during fetching changesets : #{e.message}")
+      logger.error "Error during fetching changesets : #{e.message}"
       failure_message
     end
   end

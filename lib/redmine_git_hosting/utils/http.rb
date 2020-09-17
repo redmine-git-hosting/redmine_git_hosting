@@ -10,14 +10,14 @@ module RedmineGitHosting
 
       def http_post(url, opts = {})
         data = opts.delete(:data) { {} }
-        data = serialize_data(data)
-        http, request = build_post_request(url, data)
-        send_http_request(http, request)
+        data = serialize_data data
+        http, request = build_post_request url, data
+        send_http_request http, request
       end
 
       def http_get(url, _opts = {})
-        http, request = build_get_request(url)
-        send_http_request(http, request)
+        http, request = build_get_request url
+        send_http_request http, request
       end
 
       def valid_url?(url)
@@ -40,21 +40,22 @@ module RedmineGitHosting
       end
 
       def build_post_request(url, data)
-        uri, http = build_http_request(url)
-        request = Net::HTTP::Post.new(uri.request_uri)
-        request.set_form_data(data)
+        uri, http = build_http_request url
+        request = Net::HTTP::Post.new uri.request_uri
+        request.basic_auth(uri.user, uri.password) if uri.user.present? && uri.password.present?
+        request.set_form_data data
         [http, request]
       end
 
       def build_get_request(url)
-        uri, http = build_http_request(url)
-        request = Net::HTTP::Get.new(uri.request_uri)
+        uri, http = build_http_request url
+        request = Net::HTTP::Get.new uri.request_uri
         [http, request]
       end
 
       def build_http_request(url)
-        uri  = URI(url)
-        http = Net::HTTP.new(uri.host, uri.port)
+        uri  = URI url
+        http = Net::HTTP.new uri.host, uri.port
         if uri.scheme == 'https'
           http.use_ssl = true
           # @NOTE: do not allow requests with invalid certificates
