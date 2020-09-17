@@ -8,7 +8,7 @@ Assuming that you have Redmine installed :
 
     # First git clone Additionals
     redmine$ cd REDMINE_ROOT/plugins
-    redmine$ git clone -b v2-stable git://github.com/alphanodes/additionals.git
+    redmine$ git clone -b v2-stable https://github.com/AlphaNodes/additionals.git
 
     # Then Redmine Git Hosting plugin
     redmine$ cd REDMINE_ROOT/plugins
