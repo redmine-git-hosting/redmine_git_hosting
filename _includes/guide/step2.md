@@ -6,11 +6,9 @@ Assuming that you have Redmine installed :
     # Switch user
     root# su - redmine
 
-    # First git clone Bootstrap Kit
+    # First git clone Additionals
     redmine$ cd REDMINE_ROOT/plugins
-    redmine$ git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
-    redmine$ cd redmine_bootstrap_kit/
-    redmine$ git checkout 0.2.5
+    redmine$ git clone -b v2-stable git://github.com/alphanodes/additionals.git
 
     # Then Redmine Git Hosting plugin
     redmine$ cd REDMINE_ROOT/plugins
@@ -21,11 +19,8 @@ Assuming that you have Redmine installed :
     # Install gems and migrate database
     redmine$ cd REDMINE_ROOT
     redmine$ bundle install --without development test
+    redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=additionals
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting
-
-{{ site.data.callouts.alertwarning }}
-  Before running ```bundle exec``` you **must** edit plugin's Gemfile (```REDMINE_ROOT/plugins/redmine_git_hosting/Gemfile```) and comment / uncomment the lines corresponding to your Redmine version (2.x or 3.x).
-{{ site.data.callouts.end }}
 
 Otherwise you can install Redmine by following the wiki : [How to install Redmine]({{ site.baseurl }}/how-to/install-redmine).
 
