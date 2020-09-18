@@ -49,7 +49,7 @@ module Gitolitable
     # This is the url used by Go to clone repository
     #
     def go_access_url
-      return '' if !smart_http_enabled?
+      return '' unless smart_http_enabled?
       return https_url if https_access_available?
       return http_url if http_access_available?
     end
@@ -57,7 +57,7 @@ module Gitolitable
     # This is the url to add in Go files
     #
     def go_url
-      return '' if !smart_http_enabled?
+      return '' unless smart_http_enabled?
       return "#{RedmineGitHosting::Config.https_root_url}/#{go_access_path}" if https_access_available?
       return "#{RedmineGitHosting::Config.http_root_url}/#{go_access_path}" if http_access_available?
     end

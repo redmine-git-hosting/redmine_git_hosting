@@ -9,7 +9,7 @@ module Gitolitable
 
       # Make sure that identifier does not match Gitolite Admin repository
       #
-      validates_exclusion_of :identifier, in: %w(gitolite-admin)
+      validates_exclusion_of :identifier, in: %w[gitolite-admin]
 
       # Place additional constraints on repository identifiers
       # because of multi repos
@@ -28,7 +28,7 @@ module Gitolitable
         #
         def identifiers_to_hash
           all.map(&:identifier).inject(Hash.new(0)) do |h, x|
-            h[x] += 1 unless x.blank?
+            h[x] += 1 if x.present?
             h
           end
         end
@@ -94,7 +94,7 @@ module Gitolitable
     def identifier_dont_change
       return if new_record?
 
-      errors.add(:identifier, :cannot_change) if (identifier_was.blank? && !identifier.blank?) || (!identifier_was.blank? && identifier_changed?)
+      errors.add(:identifier, :cannot_change) if (identifier_was.blank? && identifier.present?) || (identifier_was.present? && identifier_changed?)
     end
 
     # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier

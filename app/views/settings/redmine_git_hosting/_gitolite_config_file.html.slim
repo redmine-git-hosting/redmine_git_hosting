@@ -1,23 +1,24 @@
 / Gitolite Config File
-- gitolite_config_file = RedmineGitHosting::Config.get_setting(:gitolite_config_file)
-- gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
-- gitolite_identifier_strip_user_id = RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+ruby:
+  gitolite_config_file = RedmineGitHosting::Config.get_setting(:gitolite_config_file)
+  gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
+  gitolite_identifier_strip_user_id = RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+  disable_button = gitolite_config_file == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
 
-- disable_button = (gitolite_config_file == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE ? true : false)
-
-h3 = l(:label_gitolite_config_file)
+h3 = l :label_gitolite_config_file
 
 p
-  label = l(:label_gitolite_config_file)
+  label = l :label_gitolite_config_file
   = text_field_tag 'settings[gitolite_config_file]', gitolite_config_file, size: 60, required: true
 
 p
-  label = l(:label_gitolite_identifier_prefix)
-  = hidden_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix if disable_button
-  = text_field_tag "settings[gitolite_identifier_prefix]", gitolite_identifier_prefix, size: 60, disabled: disable_button
+  label = l :label_gitolite_identifier_prefix
+  - if disable_button
+    = hidden_field_tag 'settings[gitolite_identifier_prefix]', gitolite_identifier_prefix
+  = text_field_tag 'settings[gitolite_identifier_prefix]', gitolite_identifier_prefix, size: 60, disabled: disable_button
   br
   em.info
-    = l(:label_gitolite_identifier_prefix_desc)
+    = l :label_gitolite_identifier_prefix_desc
 
 p
   = additionals_settings_checkbox :gitolite_identifier_strip_user_id,
@@ -26,11 +27,11 @@ p
                                   disabled: disable_button
   br
   em.info
-    = l(:label_gitolite_identifier_strip_user_id_desc)
+    = l :label_gitolite_identifier_strip_user_id_desc
 br
 
 .git_hosting_access_box
-  h3 = l(:label_ssh_keys_current_access_patterns)
+  h3 = l :label_ssh_keys_current_access_patterns
 
   - gitolite_identifier_suffix = !gitolite_identifier_strip_user_id ? '_user_id' : ''
 
