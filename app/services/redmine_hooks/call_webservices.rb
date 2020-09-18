@@ -37,15 +37,13 @@ module RedmineHooks
 
     def start_message
       uri = URI post_receive_url.url
-      secure_url = if uri.password.present?
-                     uri.user = nil
-                     uri.password = nil
-                     uri.to_s
-                   else
-                     post_receive_url.url
-                   end
-
-      "Notifying #{secure_url}"
+      if uri.password.present?
+        uri.user = nil
+        uri.password = nil
+        "Notifying #{uri} (with base auth)"
+      else
+        "Notifying #{post_receive_url.url}"
+      end
     end
 
     def skip_message
