@@ -16,7 +16,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   validates :repository_id,          presence: true,
                                      uniqueness: { scope: :gitolite_public_key_id }
 
-  validates :gitolite_public_key_id, presence: true
+  validates :gitolite_public_key_id, presence: true, exclusion: { in: [-1] }
   validates :user_id,                presence: true
   validates :perm,                   presence: true,
                                      inclusion: { in: VALID_PERMS }

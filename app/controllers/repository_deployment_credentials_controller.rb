@@ -84,15 +84,16 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def find_all_keys
     # display create_with_key view.  Find preexisting keys to offer to user
-    @user_keys     = User.current.gitolite_public_keys.deploy_key.order(:title)
+    @user_keys = User.current.gitolite_public_keys.deploy_key.order(:title)
     @disabled_keys = @repository.deployment_credentials.map(&:gitolite_public_key)
-    @other_keys    = []
+    @other_keys = []
     # Admin can use other's deploy keys as well
-    @other_keys    = other_deployment_keys if User.current.admin?
+    @other_keys = other_deployment_keys if User.current.admin?
   end
 
   def other_deployment_keys
-    users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order(:title) }.flatten
+    keys = users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order(:title) }
+    keys.flatten
   end
 
   def users_allowed_to_create_deployment_keys
@@ -101,7 +102,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
 
   def call_use_case(opts = {})
     options = opts.merge(message: "Update deploy keys for repository : '#{@repository.gitolite_repository_name}'")
-    gitolite_accessor.update_repository(@repository, options)
+    gitolite_accessor.update_repository @repository, options
   end
 
   def build_new_credential

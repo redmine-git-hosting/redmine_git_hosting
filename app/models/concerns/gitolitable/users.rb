@@ -67,19 +67,19 @@ module Gitolitable
     end
 
     def rewind_deploy_users
-      deploy_users_for_keys(rewind_deploy_keys)
+      deploy_users_for_keys rewind_deploy_keys
     end
 
     def read_deploy_users
-      deploy_users_for_keys(read_deploy_keys)
+      deploy_users_for_keys read_deploy_keys
     end
 
     def rewind_deploy_keys
-      deploy_keys_by_perm('RW+')
+      deploy_keys_by_perm 'RW+'
     end
 
     def read_deploy_keys
-      deploy_keys_by_perm('R')
+      deploy_keys_by_perm 'R'
     end
 
     def deploy_keys_by_perm(perm)
