@@ -115,10 +115,14 @@ module RedmineGitHosting
       File.dirname(file) == plugin_hooks_dir.to_s
     end
 
+    def skip_lib_file?(file)
+      # Exclude Redmine Views Hooks from Rails loader to avoid multiple calls to hooks on reload in dev environment.
+      true if hook_file?(file) || (file.include?('journal_logger.rb') && !Object.const_defined?('Account'))
+    end
+
     def autoload_libs!
       Dir.glob(required_lib_dirs).each do |file|
-        # Exclude Redmine Views Hooks from Rails loader to avoid multiple calls to hooks on reload in dev environment.
-        require_dependency file unless hook_file?(file)
+        require_dependency file unless skip_lib_file?(file)
       end
     end
 

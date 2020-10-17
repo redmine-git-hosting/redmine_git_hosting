@@ -28,7 +28,15 @@ module RedmineGitHosting
                         %w[models concerns]
 
   def logger
-    @logger ||= RedmineGitHosting::Logger.init_logs!('RedmineGitHosting', logfile, loglevel)
+    @logger ||= if ['Journald::Logger', 'Journald::TraceLogger'].include? Rails.logger.class.to_s
+                  RedmineGitHosting::JournalLogger.init_logs! logprogname, loglevel
+                else
+                  RedmineGitHosting::FileLogger.init_logs! logprogname, logfile, loglevel
+                end
+  end
+
+  def logprogname
+    'redmine_git_hosting'
   end
 
   def logfile

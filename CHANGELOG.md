@@ -5,12 +5,13 @@
 - Redmine 4.1 support
 - Dashboard support for Repository URLs
 - Dropped archived repository view
-- Switch CI from Travis to Github Actions
-- Add Basic Auth support for post_receive_urls
-- Add post_receive_url :post empty support
+- switch CI from Travis to Github Actions
+- add Basic Auth support for post_receive_urls
+- add post_receive_url :post empty support
+- add logging to journal, if configured for Redmine (see https://github.com/theforeman/journald-logger)
 
 ### 4.0.0
-
+https://github.com/theforeman/journald-logger
 * compatible with Redmine 4 (drop Redmine 3.x support)
 * drop redmine_bootstrap_kit required plugin
 * requires additionals plugin for latest fontawesome, slim and deface support -> and better maintenance
