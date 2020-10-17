@@ -99,7 +99,7 @@ module GitolitePluginSettingsHelper
   end
 
   def log_level_options
-    RedmineGitHosting::Logger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
+    RedmineGitHosting::FileLogger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
   end
 
   def render_rugged_mandatory_features

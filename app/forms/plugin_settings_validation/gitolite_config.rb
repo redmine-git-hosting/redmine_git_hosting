@@ -31,7 +31,7 @@ module PluginSettingsValidation
       validates :gitolite_temp_dir, presence: true
       validates :gitolite_recycle_bin_expiration_time, presence: true, numericality: true
 
-      validates :gitolite_log_level,  presence: true, inclusion: { in: RedmineGitHosting::Logger::LOG_LEVELS }
+      validates :gitolite_log_level,  presence: true, inclusion: { in: RedmineGitHosting::FileLogger::LOG_LEVELS }
       validates :git_config_username, presence: true
       validates :git_config_email,    presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
