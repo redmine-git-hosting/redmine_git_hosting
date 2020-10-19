@@ -11,7 +11,7 @@ module GitHosting
     def exec
       ## Execute extra hooks
       extra_hooks = get_extra_hooks
-      return if extra_hooks.blank?
+      return if extra_hooks.nil? || extra_hooks.none?
 
       logger.info 'Calling additional post-receive hooks...'
       call_extra_hooks extra_hooks
