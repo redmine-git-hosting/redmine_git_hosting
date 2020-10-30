@@ -1,5 +1,5 @@
 module ExtendRepositoriesHelper
-  def encoding_field(form, repository)
+  def encoding_field(form, _repository)
     tag.p do
       form.select(
         :path_encoding, [nil] + Setting::ENCODINGS,
@@ -37,10 +37,11 @@ module ExtendRepositoriesHelper
   end
 
   def render_repository_quick_jump(repository)
-    options = repository.project.repositories.map { |r| [r.redmine_name, edit_repository_path(r)] }
-    select_tag('repository_quick_jump_box',
+    options = repository.project.repositories.sort
+    options.map! { |r| [r.redmine_name, edit_repository_path(r)] }
+    select_tag 'repository_quick_jump_box',
                options_for_select(options, selected: edit_repository_path(repository)),
-               onchange: 'if (this.value != \'\') { window.location = this.value; }')
+               onchange: 'if (this.value != \'\') { window.location = this.value; }'
   end
 
   def link_to_repository(repo, current_repo)
