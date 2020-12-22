@@ -95,7 +95,9 @@ ruby:
     br
     br
 
-    label = l(:label_etcetera) + '...'
+    label
+      = l(:label_etcetera)
+      | ...
 
   == l :display_access_emphasis
   == hierarchical_organisation ? l(:display_access_hierarchical) : l(:display_access_flat)

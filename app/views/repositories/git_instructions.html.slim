@@ -75,7 +75,7 @@
   h3 = l :label_repository_plural
   ul.repository.git
     - @repositories.sort.each do |repo|
-      - li_class = "#{'repository git' if repo.is_a?(Repository::Xitolite)}"
+      - li_class = repo.is_a?(Repository::Xitolite) ? 'repository git' : ''
       li class="#{li_class}"
         = link_to_repository(repo, @repository)
         - if User.current.allowed_to?(:manage_repository, @project)

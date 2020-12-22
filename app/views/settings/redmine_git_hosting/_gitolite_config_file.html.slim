@@ -33,7 +33,7 @@ br
 .git_hosting_access_box
   h3 = l :label_ssh_keys_current_access_patterns
 
-  - gitolite_identifier_suffix = !gitolite_identifier_strip_user_id ? '_user_id' : ''
+  - gitolite_identifier_suffix = gitolite_identifier_strip_user_id ? '' : '_user_id'
 
   pre
     markdown:
