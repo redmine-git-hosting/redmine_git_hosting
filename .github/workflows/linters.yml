@@ -24,12 +24,12 @@ jobs:
       run: |
         echo "source 'https://rubygems.org'" > Gemfile
         echo "group :test do" >> Gemfile
+        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
         echo "  gem 'rubocop', require: false" >> Gemfile
         echo "  gem 'rubocop-performance', require: false" >> Gemfile
         echo "  gem 'rubocop-rails', require: false" >> Gemfile
         echo "  gem 'rubocop-rspec', require: false" >> Gemfile
         echo "  gem 'slim_lint', require: false" >> Gemfile
-        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
         echo "end" >> Gemfile
         gem install bundler
         bundle install --jobs 4 --retry 3
