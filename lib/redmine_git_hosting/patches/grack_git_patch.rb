@@ -23,7 +23,8 @@ module RedmineGitHosting
       # This method is called :
       #  * to get repository Git config (http.uploadpack || http.receivepack)
       #  * to get repository info refs :
-      #    0087deab8f3d612a47e7e153ed21bbc52a480205035a refs/heads/devel report-status delete-refs side-band-64k quiet ofs-delta agent=git/1.9.1
+      #    0087deab8f3d612a47e7e153ed21bbc52a480205035a refs/heads/devel report-status delete-refs side-band-64k quiet \
+      #    ofs-delta agent=git/1.9.1
       #  * to get repository refs :
       #    003f91a7b1dad21020e96d52119c585881c02f2fae45 refs/heads/master
 

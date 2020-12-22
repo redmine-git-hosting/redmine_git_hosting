@@ -29,7 +29,9 @@ module Hrack
     def post_receive_redmine
       @repository = find_repository
       return render_404('Repository Not Found') if @repository.nil?
-      return render_403('The hook key provided is not valid. Please let your server admin know about it') if !valid_encoded_time?(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
+      if !valid_encoded_time?(params[:clear_time], params[:encoded_time], @repository.gitolite_hook_key)
+        return render_403('The hook key provided is not valid. Please let your server admin know about it')
+      end
 
       @res = Rack::Response.new
       @res.status = 200

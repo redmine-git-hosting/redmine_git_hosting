@@ -1,5 +1,8 @@
 namespace :redmine_git_hosting do
-  desc 'Update plugin settings in database (This will read settings from `<redmine_root>/redmine_git_hosting.yml` and `<plugin_root>/settings.yml`)'
+  desc <<-DESCRIPTION
+  Update plugin settings in database (This will read settings from `<redmine_root>/redmine_git_hosting.yml`
+  and `<plugin_root>/settings.yml`)
+  DESCRIPTION
   task update_settings: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Reloading settings from command line') do
       RedmineGitHosting::Config.reload_from_file!

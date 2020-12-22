@@ -13,7 +13,9 @@ module Gitolitable
     # Call File.expand_path to add then remove heading /
     #
     def redmine_repository_path
-      File.expand_path(File.join('./', get_full_parent_path, git_cache_id), '/')[1..-1]
+      File.expand_path(File.join('./',
+                                 get_full_parent_path,
+                                 git_cache_id), '/')[1..-1]
     end
 
     # This is the Gitolite repository identifier as it should appear in Gitolite config file.
@@ -23,7 +25,10 @@ module Gitolitable
     # Call File.expand_path to add then remove heading /
     #
     def gitolite_repository_name
-      File.expand_path(File.join('./', RedmineGitHosting::Config.gitolite_redmine_storage_dir, get_full_parent_path, git_cache_id), '/')[1..-1]
+      File.expand_path(File.join('./',
+                                 RedmineGitHosting::Config.gitolite_redmine_storage_dir,
+                                 get_full_parent_path,
+                                 git_cache_id), '/')[1..-1]
     end
 
     # The Gitolite repository identifier with the .git extension.

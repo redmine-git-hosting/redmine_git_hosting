@@ -33,7 +33,7 @@ module RedmineGitHosting
           if wrappers.key?(action)
             wrappers[action]
           else
-            raise RedmineGitHosting::Error::GitoliteWrapperException.new("No available Wrapper for action '#{action}' found.")
+            raise RedmineGitHosting::Error::GitoliteWrapperException, "No available Wrapper for action '#{action}' found."
           end
         end
       end

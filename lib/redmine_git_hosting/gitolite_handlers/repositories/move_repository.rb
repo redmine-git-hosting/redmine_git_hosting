@@ -110,7 +110,8 @@ module RedmineGitHosting
 
           ## CASE 3
           elsif !new_path_exists && !old_path_exists
-            logger.error("#{context} : both old repository '#{old_path}' and new repository '#{new_path}' does not exist, cannot move it, exit but let Gitolite create the new repo !")
+            logger.error "#{context} : both old repository '#{old_path}' and new repository '#{new_path}' does not exist, cannot move it," \
+                         ' exit but let Gitolite create the new repo !'
             return true
 
           ## CASE 4
@@ -125,7 +126,8 @@ module RedmineGitHosting
             logger.warn("#{context} : target repository '#{new_path}' already exists and is empty, remove it ...")
             delete_directory!(new_path, :target)
           else
-            logger.warn("#{context} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove the old_path if empty")
+            logger.warn "#{context} : target repository '#{new_path}' exists and is not empty, considered as already moved, try to remove" \
+                        ' the old_path if empty'
             if empty_repository?(old_path)
               delete_directory!(old_path, :source)
             else

@@ -36,7 +36,9 @@ module RedmineGitHosting
           end
 
           # Delete DUMMY_REDMINE_KEY if present
-          repo_conf.permissions[0]['RW+'][''].delete('DUMMY_REDMINE_KEY') if repo_conf.permissions[0]['RW+'][''].include?('DUMMY_REDMINE_KEY')
+          return unless repo_conf.permissions[0]['RW+'][''].include?('DUMMY_REDMINE_KEY')
+
+          repo_conf.permissions[0]['RW+'][''].delete('DUMMY_REDMINE_KEY')
         end
       end
     end

@@ -83,7 +83,9 @@ module Gitolitable
         errors.add(:identifier, :cannot_equal_project) if Project.find_by_identifier(identifier)
 
         # See if a repo for another project has the same identifier (existing validations already check for current project)
-        errors.add(:identifier, :taken) if self.class.repo_ident_unique? && Repository.where("identifier = ? and project_id <> ?", identifier, project.id).any?
+        if self.class.repo_ident_unique? && Repository.where("identifier = ? and project_id <> ?", identifier, project.id).any?
+          errors.add :identifier, :taken
+        end
       end
     end
 
@@ -94,7 +96,9 @@ module Gitolitable
     def identifier_dont_change
       return if new_record?
 
-      errors.add(:identifier, :cannot_change) if (identifier_was.blank? && identifier.present?) || (identifier_was.present? && identifier_changed?)
+      if (identifier_was.blank? && identifier.present?) || (identifier_was.present? && identifier_changed?)
+        errors.add :identifier, :cannot_change
+      end
     end
 
     # Need to make sure that we don't take the default slot away from a sibling repo with blank identifier

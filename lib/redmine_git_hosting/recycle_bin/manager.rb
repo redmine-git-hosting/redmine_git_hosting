@@ -45,11 +45,17 @@ module RedmineGitHosting
       end
 
       def get_recycle_bin_content
-        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-prune', '-print').chomp.split("\n")
+        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir,
+                                                 '-type', 'd', '-regex', '.*\.git', '-prune', '-print')
+                                   .chomp
+                                   .split("\n")
       end
 
       def get_expired_content(expiration_time)
-        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{expiration_time}", '-prune', '-print').chomp.split("\n")
+        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir,
+                                                 '-type', 'd', '-regex', '.*\.git', '-cmin', "+#{expiration_time}", '-prune', '-print')
+                                   .chomp
+                                   .split("\n")
       end
 
       def create_recycle_bin_directory

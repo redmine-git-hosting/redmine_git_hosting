@@ -1,12 +1,16 @@
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe GitolitePublicKeysHelper do
-  TEST_KEY = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpOU1DzQzU4/acdt3wWhk43acGs3Jp7jVlnEtc+2C8QFAUiJMrAOzyUnEliwxarGonJ5gKbI9NkqqPpz9LATBQw382+3FjAlptgqn7eGBih0DgwN6wdHflTRdE6sRn7hxB5h50p547n26FpbX9GSOHPhgxSnyvGXnC+YZyTfMiw5JMhw68SfLS8YENrXukg2ItJPspn6mPqIHrcM2NJOG4Bm+1ibYpDfrWJqYp3Q6disgwrsN08pS6lDfoQRiRHXg8WFbQbHloVaYFpdT6VoBQiAydeSpDSYTBJd/v3qTpK8aheC8sdnrddZf1T6L51z7WZ6vPVKQYPjpAxZ4p6eef nicolas@tchoum'
+  TEST_KEY = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpOU1DzQzU4/acdt3wWhk43acGs3Jp7jVlnEtc+2C8QFAUiJMrAOzyUnEliwxarGonJ5gKbI9NkqqPpz9LATB' \
+             'Qw382+3FjAlptgqn7eGBih0DgwN6wdHflTRdE6sRn7hxB5h50p547n26FpbX9GSOHPhgxSnyvGXnC+YZyTfMiw5JMhw68SfLS8YENrXukg2ItJPspn6mPqIHrcM' \
+             '2NJOG4Bm+1ibYpDfrWJqYp3Q6disgwrsN08pS6lDfoQRiRHXg8WFbQbHloVaYFpdT6VoBQiAydeSpDSYTBJd/v3qTpK8aheC8sdnrddZf1T6L51z7WZ6vPVKQYP' \
+             'jpAxZ4p6eef nicolas@tchoum'
 
   # before(:all) do
   #   @admin_user          = create_admin_user
   #   @user_without_perm   = create_anonymous_user
-  #   @user_with_perm      = create_user_with_permissions(FactoryBot.create(:project), permissions: [:create_repository_deployment_credentials])
+  #   @user_with_perm      = create_user_with_permissions(FactoryBot.create(:project),
+  #                                                       permissions: [:create_repository_deployment_credentials])
   #   @gitolite_public_key = create_ssh_key(user_id: @user_without_perm.id, key_type: 1, title: 'foo1', key: TEST_KEY)
   # end
 

@@ -1,15 +1,30 @@
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe GitolitePublicKey do
-  SSH_KEY_0 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpqFJzsx3wTi3t3X/eOizU6rdtNQoqg5uSjL89F+Ojjm2/sah3ouzx+3E461FDYaoJL58Qs9eRhL+ev0BY7khYXph8nIVDzNEjhLqjevX+YhpaW9Ll7V807CwAyvMNm08aup/NrrlI/jO+At348/ivJrfO7ClcPhq4+Id9RZfvbrKaitGOURD7q6Bd7xjUjELUN8wmYxu5zvx/2n/5woVdBUMXamTPxOY5y6DxTNJ+EYzrCr+bNb7459rWUvBHUQGI2fXDGmFpGiv6ShKRhRtwob1JHI8QC9OtxonrIUesa2dW6RFneUaM7tfRfffC704Uo7yuSswb7YK+p1A9QIt5 nicolas@tchoum'.freeze
-  SSH_KEY_1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz0pLXcQWS4gLUimUSLwDOvEmQF8l8EKoj0LjxOyM3y2dpLsn0aiqS0ecA0G/ROomaawop8EZGFetoJKJM468OZlx2aKoQemzvFIq0Mn1ZhcrlA1alAsDYqzZI8iHO4JIS3YbeLLkVGAlYA+bmA5enXN9mGhC9cgoMC79EZiLD9XvOw4iXDjqXaCzFZHU1shMWwaJfpyxBm+Mxs2vtZzwETDqeu9rohNMl60dODf6+JoXYiahP+B+P2iKlL7ORb1YsAH/4ZMsVgRckj8snb4uc3XgwLRNNw+oB78ApZGr0j3Zc32U9rpmulbHIroWO07OV4Xsplnu8lhGvfodA2gjb nicolas@tchoum'.freeze
-  SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5+JfM82k03J98GWL6ghJ4TYM8DbvDnVh1s1rUDNlM/1U5rwbgXHOR4xV3lulgYEYRtYeMoL3rt4ZpEyXWkOreOVsUlkW66SZJR5aGVTNJOLX7HruEDqj7RWlt0u0MH6DgBVAJimQrxYN50jYD4XnDUjb/qv55EhPvbJ3jcAb3zuyRXMKZYGNVzVFLUagbvVaOwR23csWSLDTsAEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pRHOqRcZHcOgIhKiaLX nicolas@tchoum'.freeze
-  SSH_KEY_3 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/VG05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9yUxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3omd297/zzcQm3p nicolas@tchoum'.freeze
-  SSH_KEY_4 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zVI35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4C8cGYljjUWkx3v nicolas@tchoum'.freeze
+  SSH_KEY_0 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpqFJzsx3wTi3t3X/eOizU6rdtNQoqg5uSjL89F+Ojjm2/sah3ouzx+3E461FDYaoJL58Qs9eRhL+ev0BY7k' \
+              'hYXph8nIVDzNEjhLqjevX+YhpaW9Ll7V807CwAyvMNm08aup/NrrlI/jO+At348/ivJrfO7ClcPhq4+Id9RZfvbrKaitGOURD7q6Bd7xjUjELUN8wmYxu5zvx/' \
+              '2n/5woVdBUMXamTPxOY5y6DxTNJ+EYzrCr+bNb7459rWUvBHUQGI2fXDGmFpGiv6ShKRhRtwob1JHI8QC9OtxonrIUesa2dW6RFneUaM7tfRfffC704Uo7yuSs' \
+              'wb7YK+p1A9QIt5 nicolas@tchoum'.freeze
+  SSH_KEY_1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz0pLXcQWS4gLUimUSLwDOvEmQF8l8EKoj0LjxOyM3y2dpLsn0aiqS0ecA0G/ROomaawop8EZGFetoJKJM46' \
+              '8OZlx2aKoQemzvFIq0Mn1ZhcrlA1alAsDYqzZI8iHO4JIS3YbeLLkVGAlYA+bmA5enXN9mGhC9cgoMC79EZiLD9XvOw4iXDjqXaCzFZHU1shMWwaJfpyxBm+Mx' \
+              's2vtZzwETDqeu9rohNMl60dODf6+JoXYiahP+B+P2iKlL7ORb1YsAH/4ZMsVgRckj8snb4uc3XgwLRNNw+oB78ApZGr0j3Zc32U9rpmulbHIroWO07OV4Xspln' \
+              'u8lhGvfodA2gjb nicolas@tchoum'.freeze
+  SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5+JfM82k03J98GWL6ghJ4TYM8DbvDnVh1s1rUDNlM/1U5rwbgXHOR4xV3lulgYEYRtYeMoL3rt4ZpEyXWkO' \
+              'reOVsUlkW66SZJR5aGVTNJOLX7HruEDqj7RWlt0u0MH6DgBVAJimQrxYN50jYD4XnDUjb/qv55EhPvbJ3jcAb3zuyRXMKZYGNVzVFLUagbvVaOwR23csWSLDTs' \
+              'AEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pRHOq' \
+              'RcZHcOgIhKiaLX nicolas@tchoum'.freeze
+  SSH_KEY_3 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/V' \
+              'G05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9y' \
+              'UxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3' \
+              'omd297/zzcQm3p nicolas@tchoum'.freeze
+  SSH_KEY_4 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zV' \
+              'I35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+' \
+              'vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4' \
+              'C8cGYljjUWkx3v nicolas@tchoum'.freeze
 
   before(:all) do
-    @user1 = create_user('git_user1')
-    @user2 = create_user('git_user2')
+    @user1 = create_user 'git_user1'
+    @user2 = create_user 'git_user2'
   end
 
   # There is an isolation issue in tests.
@@ -172,9 +187,17 @@ describe GitolitePublicKey do
   describe 'Valid SSH key format' do
     describe 'when ssh key format is valid' do
       ssh_keys = [
-        'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/Ec2gummukPxlpPHZ7K96iBdG5n8v0PJEDvTVZRRFlS0QYa407gj9HuMrPjwEfVHqy+3KZmvKLWQBsSlf0Fn+eAPgnoqwVfZaJnfgkSxJiAzRraKQZX1m2wx2SVMfjw7/1j59zV60UhFiwEQ3Eqlg3xjQmjvrwDM+SoshrWB+TeqwO/K+QEP1ZbURYoCxc92GrLYWKixsAov/zr0loXqul9fydZcWwJE3H/BWC7PTtn4jfjG9+9F+SZ0OMwQvSGKhVlj3GBDtaDBnsuoHGh/CA2W240nwpQysG2BJ5DWXu6vKbjNn6uV91wXeKDEDpuWqv5Vi2XAxGTWKc5lF0IJ5 nicolas@tchoum',
-        'ssh-dss AAAAB3NzaC1kc3MAAACBAKscxrmjRgXtb0ZUaaBUteBtF2cI0vStnni9KVQd94L8qqxvKLbDl5JTKjUvG2s7rD4sVRzBoTkuDGb7OZLf56wJyF3k+k8uNRJzvH/CZbkKM2hjuRVYVort1EwcH7JiEQr7bCLe7MRaltuo/M1vhapwy7fhKxAo9YoYVWiGoFTVAAAAFQDPywT8yFDahFvxtt/95Q9Emq8R7QAAAIBHYnvt3hT9NYy+nOuZG+cQTz0hnVzUIWuj0XF2iyx52s2eSmF0HxIsZ0D9g2A0L1Xr/vlkWBMq/zJZJgJw2Ifys8L47HzjhL8K0Skdm23Z6rQR9hlOEZ5Rcank98U6VRYPWpYk7OLdRDruwXb+Ms5YhIztxsGO3YfRBdSBrW4DMAAAAIAJmmwivw3XoFP6C97LB+tJAjWRYJHpiDwOWNDKu0dZewUzUAo40NuHNgKJS2nsxW0sphaeMtf70IbvDsFQG45I+G2dlt+s19t4YCbVcz7xrw7LceEz+f0UR2/Z+LIK2GPIIoyymOq/kIIxni3xgKDl4mvvt45TTsQzs0zhkmEy/g== nicolas@tchoum',
-        'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLIcYw8NbJc28tDsC+8sf/o14hQmQfdC31OFP0eb5qFVRgEjMJ9mwolqWIW+AcbIAhX2GJVdTLZoUJj6T5PiUtM= nicolas@tchoum'
+        'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/Ec2gummukPxlpPHZ7K96iBdG5n8v0PJEDvTVZRRFlS0QYa407gj9HuMrPjwEfVHqy+3KZmvKLWQBsSlf0Fn+eAPg' \
+        'noqwVfZaJnfgkSxJiAzRraKQZX1m2wx2SVMfjw7/1j59zV60UhFiwEQ3Eqlg3xjQmjvrwDM+SoshrWB+TeqwO/K+QEP1ZbURYoCxc92GrLYWKixsAov/zr0loXqul9fy' \
+        'dZcWwJE3H/BWC7PTtn4jfjG9+9F+SZ0OMwQvSGKhVlj3GBDtaDBnsuoHGh/CA2W240nwpQysG2BJ5DWXu6vKbjNn6uV91wXeKDEDpuWqv5Vi2XAxGTWKc5lF0IJ5' \
+        ' nicolas@tchoum',
+        'ssh-dss AAAAB3NzaC1kc3MAAACBAKscxrmjRgXtb0ZUaaBUteBtF2cI0vStnni9KVQd94L8qqxvKLbDl5JTKjUvG2s7rD4sVRzBoTkuDGb7OZLf56wJyF3k+k8uNRJz' \
+        'vH/CZbkKM2hjuRVYVort1EwcH7JiEQr7bCLe7MRaltuo/M1vhapwy7fhKxAo9YoYVWiGoFTVAAAAFQDPywT8yFDahFvxtt/95Q9Emq8R7QAAAIBHYnvt3hT9NYy+nOuZ' \
+        'G+cQTz0hnVzUIWuj0XF2iyx52s2eSmF0HxIsZ0D9g2A0L1Xr/vlkWBMq/zJZJgJw2Ifys8L47HzjhL8K0Skdm23Z6rQR9hlOEZ5Rcank98U6VRYPWpYk7OLdRDruwXb+' \
+        'Ms5YhIztxsGO3YfRBdSBrW4DMAAAAIAJmmwivw3XoFP6C97LB+tJAjWRYJHpiDwOWNDKu0dZewUzUAo40NuHNgKJS2nsxW0sphaeMtf70IbvDsFQG45I+G2dlt+s19t4' \
+        'YCbVcz7xrw7LceEz+f0UR2/Z+LIK2GPIIoyymOq/kIIxni3xgKDl4mvvt45TTsQzs0zhkmEy/g== nicolas@tchoum',
+        'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLIcYw8NbJc28tDsC+8sf/o14hQmQfdC31OFP0eb5qFVRgEjMJ9mwolq' \
+        'WIW+AcbIAhX2GJVdTLZoUJj6T5PiUtM= nicolas@tchoum'
       ]
 
       ssh_keys.each do |valid_key|
@@ -222,7 +245,9 @@ describe GitolitePublicKey do
 
   context 'when Gitolite Admin ssh key is reused' do
     it 'should not be valid' do
-      expect(build_ssh_key(user_id: @user1.id, title: 'foo', key: File.read(RedmineGitHosting::Config.gitolite_ssh_public_key))).not_to be_valid
+      expect(build_ssh_key(user_id: @user1.id,
+                           title: 'foo',
+                           key: File.read(RedmineGitHosting::Config.gitolite_ssh_public_key))).not_to be_valid
     end
   end
 

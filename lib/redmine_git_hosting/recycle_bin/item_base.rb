@@ -26,7 +26,10 @@ module RedmineGitHosting
       end
 
       def find_trashed_object(regex)
-        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', regex, '-prune', '-print').chomp.split("\n").sort { |x, y| y <=> x }
+        RedmineGitHosting::Commands.sudo_capture('find', recycle_bin_dir, '-type', 'd', '-regex', regex, '-prune', '-print')
+                                   .chomp
+                                   .split("\n")
+                                   .sort { |x, y| y <=> x }
       end
     end
   end

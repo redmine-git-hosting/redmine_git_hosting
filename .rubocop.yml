@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 require:
   - rubocop-performance
   - rubocop-rails
@@ -39,7 +41,7 @@ Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:
-  Max: 35
+  Max: 45
 
 Rails/ApplicationJob:
   Enabled: false

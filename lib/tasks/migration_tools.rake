@@ -14,20 +14,27 @@ namespace :redmine_git_hosting do
         puts "new_name : #{new_name}"
 
         # Get the old migration name
-        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')} WHERE #{ActiveRecord::Base.connection.quote_string('version')} = '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
-        result = ActiveRecord::Base.connection.execute(query)
+        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
+                 " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
+                 " '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
+        result = ActiveRecord::Base.connection.execute query
 
         # If present, rename
         if !result.to_a.empty?
-          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')} WHERE #{ActiveRecord::Base.connection.quote_string('version')} = '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
-          ActiveRecord::Base.connection.execute(query)
+          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
+                  " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
+                  " '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
+          ActiveRecord::Base.connection.execute query
 
-          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string('schema_migrations')} (VERSION) VALUES ('#{ActiveRecord::Base.connection.quote_string(new_name)}');"
-          ActiveRecord::Base.connection.execute(query)
+          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string('schema_migrations')} (VERSION)" \
+                  " VALUES ('#{ActiveRecord::Base.connection.quote_string(new_name)}');"
+          ActiveRecord::Base.connection.execute query
         else
           # Check the new name is present
-          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')} WHERE #{ActiveRecord::Base.connection.quote_string('version')} = '#{ActiveRecord::Base.connection.quote_string(new_name)}';"
-          result = ActiveRecord::Base.connection.execute(query)
+          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
+                   " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
+                   " '#{ActiveRecord::Base.connection.quote_string(new_name)}';"
+          result = ActiveRecord::Base.connection.execute query
 
           if result.to_a.empty?
             puts "Error : migration is missing #{new_name}"
@@ -146,7 +153,6 @@ namespace :redmine_git_hosting do
 
   end
 
-
   desc 'Migrate to v1.0 version'
   task migrate_to_v1: [:environment] do
     ## First step : rename migrations in DB
@@ -159,5 +165,4 @@ namespace :redmine_git_hosting do
     ## Update repositories type
     task('redmine_git_hosting:migration_tools:update_repositories_type').invoke
   end
-
 end

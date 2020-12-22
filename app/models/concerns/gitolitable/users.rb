@@ -55,7 +55,9 @@ module Gitolitable
     end
 
     def read_users
-      @read_users ||= users.select { |u| u.allowed_to?(:view_changesets, project) }.map { |u| u.gitolite_identifier }.sort - rewind_users - write_users
+      @read_users ||= users.select { |u| u.allowed_to?(:view_changesets, project) }
+                           .map { |u| u.gitolite_identifier }
+                           .sort - rewind_users - write_users
     end
 
     def developer_team
