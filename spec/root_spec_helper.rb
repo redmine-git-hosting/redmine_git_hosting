@@ -7,7 +7,9 @@ if ENV['COVERAGE']
   end
 end
 
-HOME_BASE_DIR = RUBY_PLATFORM.include?('darwin') ? '/Users' : '/home'
+unless defined? 'HOME_BASE_DIR'
+  HOME_BASE_DIR = RUBY_PLATFORM.include?('darwin') ? '/Users' : '/home'
+end
 
 ## Load Redmine App
 ENV['RAILS_ENV'] = 'test'

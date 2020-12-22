@@ -1,7 +1,7 @@
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe Repository::Xitolite do
-  GIT_USER = 'git'
+  GIT_USER = 'git'.freeze
 
   before(:all) do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
@@ -39,7 +39,7 @@ describe Repository::Xitolite do
     it { expect(@repository_1.report_last_commit).to be true }
     it { expect(@repository_1.extra_report_last_commit).to be true }
     it { expect(@repository_1.git_default_branch).to eq 'master' }
-    it { expect(@repository_1.gitolite_hook_key).to match /\A[a-zA-Z0-9]+\z/ }
+    it { expect(@repository_1.gitolite_hook_key).to match(/\A[a-zA-Z0-9]+\z/) }
     it { expect(@repository_1.git_daemon_enabled?).to be true }
     it { expect(@repository_1.git_annex_enabled?).to be false }
     it { expect(@repository_1.git_notification_enabled?).to be true }
@@ -66,14 +66,16 @@ describe Repository::Xitolite do
 
     describe '#empty_in_gitolite?' do
       it 'should check if repository is empty on Gitolite side' do
-        expect(RedmineGitHosting::Commands).to receive(:sudo_repository_empty?).with('repositories/redmine/project-parent/project-child.git')
+        expect(RedmineGitHosting::Commands).to receive(:sudo_repository_empty?)
+          .with('repositories/redmine/project-parent/project-child.git')
         @repository_1.empty_in_gitolite?
       end
     end
 
     describe '#git_objects_count' do
       it 'should return repository objects count' do
-        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count).with('repositories/redmine/project-parent/project-child.git/objects')
+        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count)
+          .with('repositories/redmine/project-parent/project-child.git/objects')
         @repository_1.git_objects_count
       end
     end
@@ -85,7 +87,7 @@ describe Repository::Xitolite do
             delete_repository: true,
             git_cache_id: 'project-child',
             repo_name: 'redmine/project-parent/project-child',
-            repo_path: "#{HOME_BASE_DIR}/repositories/redmine/project-parent/project-child.git"
+            repo_path: "#{HOME_BASE_DIR}/git/repositories/redmine/project-parent/project-child.git"
           }
         )
       end
@@ -245,7 +247,7 @@ describe Repository::Xitolite do
       @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
     end
 
-   context 'when blank identifier' do
+    context 'when blank identifier' do
       it 'should not allow identifier changes' do
         @repository_1.identifier = 'new_repo'
         expect(@repository_1).to be_invalid

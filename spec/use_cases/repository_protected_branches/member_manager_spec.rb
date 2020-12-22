@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.expand_path("#{File.dirname __FILE__}/../../spec_helper")
 
 describe RepositoryProtectedBranches::MemberManager do
-  def build_member_manager(opts = {})
+  def build_member_manager(_opts = {})
     protected_branch = build(:repository_protected_branche)
     member_manager = RepositoryProtectedBranches::MemberManager.new(protected_branch)
   end

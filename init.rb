@@ -5,7 +5,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
   author      'A lot of people! A big thank to them for their contribution!'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version     '4.0.3-master'
+  version     RedmineGitHosting::VERSION
   url         'http://redmine-git-hosting.io/'
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
@@ -20,7 +20,7 @@ Redmine::Plugin.register :redmine_git_hosting do
        parent: :new_object
 
   begin
-    requires_redmine_plugin :additionals, version_or_higher: '3.0.0'
+    requires_redmine_plugin :additionals, version_or_higher: '3.0.1'
   rescue Redmine::PluginNotFound
     raise 'Please install additionals plugin (https://github.com/alphanodes/additionals)'
   end

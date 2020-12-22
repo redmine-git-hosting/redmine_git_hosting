@@ -8,42 +8,42 @@ module CrudControllerSpec
 
     def check_index_status(status)
       get :index, params: base_options
-      check_status(status)
+      check_status status
     end
 
     ##### SHOW
 
     def check_api_response(status, opts = {})
       get :show, params: merge_options(opts).merge(format: 'json')
-      check_status(status)
+      check_status status
     end
 
     ##### NEW
 
-    def check_new_variable(variable, klass)
-      get :new, params: base_options
+    def check_new_variable(_variable, _klass)
+      get :new, params: base_options, xhr: true
       assert_response :success
     end
 
     def check_new_template
-      get :new, params: base_options
+      get :new, params: base_options, xhr: true
       assert_response :success
     end
 
     def check_new_status(status)
-      get :new, params: base_options
-      check_status(status)
+      get :new, params: base_options, xhr: true
+      check_status status
     end
 
     ##### CREATE
 
-    def check_create_template(template, opts = {})
-      xhr_post merge_options(opts)
+    def check_create_template(_template, opts = {})
+      xhr_post merge_options opts
     end
 
     def check_create_status(status, opts = {})
-      xhr_post merge_options(opts)
-      check_status(status)
+      xhr_post merge_options opts
+      check_status status
     end
 
     def check_counter_incremented_on_create(klass, opts = {})
@@ -57,17 +57,17 @@ module CrudControllerSpec
     ##### EDIT
 
     def check_edit_variable(variable, value, opts = {})
-      get :edit, params: merge_options(opts)
+      get :edit, params: merge_options(opts), xhr: true
     end
 
     def check_edit_template(opts = {})
-      get :edit, params: merge_options(opts)
+      get :edit, params: merge_options(opts), xhr: true
       assert_response :success
     end
 
     def check_edit_status(status, opts = {})
-      get :edit, params: merge_options(opts)
-      check_status(status)
+      get :edit, params: merge_options(opts), xhr: true
+      check_status status
     end
 
     ##### UPDATE
@@ -96,7 +96,7 @@ module CrudControllerSpec
 
     def check_update_status(status, opts = {})
       xhr_put merge_options(opts)
-      check_status(status)
+      check_status status
     end
 
     ##### DELETE
@@ -107,7 +107,7 @@ module CrudControllerSpec
 
     def check_delete_status(status, opts = {})
       delete :destroy, params: merge_options(opts).merge(format: 'js')
-      check_status(status)
+      check_status status
     end
 
     private
