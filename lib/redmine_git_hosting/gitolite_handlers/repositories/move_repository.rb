@@ -65,12 +65,12 @@ module RedmineGitHosting
         end
 
         def old_relative_path
-         @old_relative_path ||= repository.url
-       end
+          @old_relative_path ||= repository.url
+        end
 
         def new_relative_path
-         @new_relative_path ||= repository.gitolite_repository_path
-       end
+          @new_relative_path ||= repository.gitolite_repository_path
+        end
 
         def old_relative_parent_path
           @old_relative_parent_path ||= old_relative_path.gsub(repo_id + '.git', '')

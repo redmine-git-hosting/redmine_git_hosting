@@ -79,16 +79,16 @@ module RedmineGitHosting
 
     def gitolite_admin_settings
       {
-        git_user:     RedmineGitHosting::Config.gitolite_user,
-        hostname:     "#{RedmineGitHosting::Config.gitolite_server_host}:#{RedmineGitHosting::Config.gitolite_server_port}",
-        host:     "#{RedmineGitHosting::Config.gitolite_server_host}:#{RedmineGitHosting::Config.gitolite_server_port}",
-        author_name:  RedmineGitHosting::Config.git_config_username,
+        git_user: RedmineGitHosting::Config.gitolite_user,
+        hostname: "#{RedmineGitHosting::Config.gitolite_server_host}:#{RedmineGitHosting::Config.gitolite_server_port}",
+        host: "#{RedmineGitHosting::Config.gitolite_server_host}:#{RedmineGitHosting::Config.gitolite_server_port}",
+        author_name: RedmineGitHosting::Config.git_config_username,
         author_email: RedmineGitHosting::Config.git_config_email,
-        public_key:   RedmineGitHosting::Config.gitolite_ssh_public_key,
-        private_key:  RedmineGitHosting::Config.gitolite_ssh_private_key,
-        key_subdir:   RedmineGitHosting::Config.gitolite_key_subdir,
-        config_file:  RedmineGitHosting::Config.gitolite_config_file,
-        config_dir:   RedmineGitHosting::Config.gitolite_config_dir
+        public_key: RedmineGitHosting::Config.gitolite_ssh_public_key,
+        private_key: RedmineGitHosting::Config.gitolite_ssh_private_key,
+        key_subdir: RedmineGitHosting::Config.gitolite_key_subdir,
+        config_file: RedmineGitHosting::Config.gitolite_config_file,
+        config_dir: RedmineGitHosting::Config.gitolite_config_dir
       }
     end
 

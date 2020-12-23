@@ -48,10 +48,10 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   # Strip leading and trailing whitespace
   def strip_whitespace
     self.url = begin
-                 url.strip
-               rescue StandardError
-                 ''
-               end
+      url.strip
+    rescue StandardError
+      ''
+    end
   end
 
   # Remove blank entries in triggers

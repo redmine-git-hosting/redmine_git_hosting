@@ -1,13 +1,10 @@
 namespace :redmine_git_hosting do
-
   namespace :migration_tools do
-
     desc 'Fix migration numbers (add missing trailing 0 to some migrations)'
     task fix_migration_numbers: [:environment] do
       puts ''
 
       %w[2011072600000 2011080700000 2011081300000 2011081700000 2012052100000 2012052100001 2012052200000].each do |migration|
-
         old_name = "#{migration}-redmine_git_hosting"
         new_name = "#{migration}0-redmine_git_hosting"
         puts "old_name : #{old_name}"
@@ -50,10 +47,8 @@ namespace :redmine_git_hosting do
       puts 'Done!'
     end
 
-
     desc 'Rename SSH keys'
     task rename_ssh_keys: [:environment] do
-
       puts ''
       puts 'Delete SSH keys in Gitolite and reset identifier :'
       puts ''
@@ -81,10 +76,8 @@ namespace :redmine_git_hosting do
       puts 'Done!'
     end
 
-
     desc 'Update repositories type (from Git to Xitolite)'
     task update_repositories_type: [:environment] do
-
       puts ''
       puts 'Update repositories type (from Git to Xitolite) :'
       puts ''
@@ -95,13 +88,13 @@ namespace :redmine_git_hosting do
 
         # Don't update orphan repositories
         if repository.project.nil?
-          puts "Repository with id : '#{repository.id}' doesn't have a project, skipping !!"
+          puts "Repository with id: '#{repository.id}' doesn't have a project, skipping!!"
           puts ''
           next
         end
 
         # Update Gitolite repositories
-        if repository.identifier.nil? || repository.identifier.empty?
+        if repository.identifier.blank?
           puts repository.project.identifier
           repository.update_attribute(:type, 'Repository::Xitolite')
           puts 'Done!'
@@ -115,10 +108,8 @@ namespace :redmine_git_hosting do
       end
     end
 
-
     desc 'Check GitExtras presence'
     task check_git_extras_presence: [:environment] do
-
       puts ''
       puts 'Checking for GitExtras presence'
       puts ''
@@ -134,12 +125,12 @@ namespace :redmine_git_hosting do
         else
           puts " - Repository '#{repository.redmine_name}' has no entry in RepositoryGitExtras table, create it :"
           default_extra_options = {
-            git_http:       RedmineGitHosting::Config.gitolite_http_by_default?,
-            git_daemon:     RedmineGitHosting::Config.gitolite_daemon_by_default?,
-            git_notify:     RedmineGitHosting::Config.gitolite_notify_by_default?,
-            git_annex:      false,
+            git_http: RedmineGitHosting::Config.gitolite_http_by_default?,
+            git_daemon: RedmineGitHosting::Config.gitolite_daemon_by_default?,
+            git_notify: RedmineGitHosting::Config.gitolite_notify_by_default?,
+            git_annex: false,
             default_branch: 'master',
-            key:            RedmineGitHosting::Utils::Crypto.generate_secret(64)
+            key: RedmineGitHosting::Utils::Crypto.generate_secret(64)
           }
           extra = repository.build_extra(default_extra_options)
           extra.save!
@@ -150,7 +141,6 @@ namespace :redmine_git_hosting do
 
       puts 'Done!'
     end
-
   end
 
   desc 'Migrate to v1.0 version'

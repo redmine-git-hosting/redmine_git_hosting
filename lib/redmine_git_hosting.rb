@@ -47,8 +47,6 @@ module RedmineGitHosting
     case RedmineGitHosting::Config.gitolite_log_level
     when 'debug'
       Logger::DEBUG
-    when 'info'
-      Logger::INFO
     when 'warn'
       Logger::WARN
     when 'error'

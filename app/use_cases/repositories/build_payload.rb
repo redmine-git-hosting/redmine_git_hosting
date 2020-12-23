@@ -23,13 +23,14 @@ module Repositories
         # Get revisions range
         range = get_revisions_from_ref(ref)
         next if range.nil?
+
         @payloads << build_payload(ref, range)
       end
       @payloads
     end
 
     def get_revisions_from_ref(ref)
-      oldhead, newhead, refname = ref.split(',')
+      oldhead, newhead, refname = ref.split ','
 
       # Only pay attention to branch updates
       return nil if !refname.match(/refs\/heads\//)
@@ -57,7 +58,7 @@ module Repositories
       logger.debug("Revisions in range : #{revisions_in_range.join(' ')}")
 
       # Get refs
-      oldhead, newhead, refname = ref.split(',')
+      oldhead, newhead, refname = ref.split ','
 
       # Build payload hash
       repository.github_payload
@@ -69,6 +70,7 @@ module Repositories
       revisions_in_range.each do |rev|
         changeset = repository.find_changeset_by_name(rev)
         next if changeset.nil?
+
         commits_list << changeset.github_payload
       end
       commits_list

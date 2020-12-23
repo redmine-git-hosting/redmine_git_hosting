@@ -70,7 +70,7 @@ module Settings
 
         # Need to update everyone!
         # We take all root projects (even those who are closed) and move each hierarchy individually
-        count = Project.includes(:repositories).all.select { |x| x if x.parent_id.nil? }.length
+        count = Project.includes(:repositories).all.count { |x| x if x.parent_id.nil? }
         gitolite_accessor.move_repositories_tree(count) if count.positive?
       end
     end

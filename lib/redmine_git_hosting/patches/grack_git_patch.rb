@@ -60,16 +60,14 @@ module RedmineGitHosting
       # Notes : this method is called in *service_rpc* (not overriden)
       #
       def popen_env
-         { 'PATH' => ENV['PATH'] }
+        { 'PATH' => ENV['PATH'] }
       end
 
       private
 
-
       def directory_exists?(dir)
         RedmineGitHosting::Commands.sudo_dir_exists?(dir)
       end
-
 
       # We sometimes need to add *--git-dir* arg to Git command otherwise
       # Git looks for the repository in the current path.
@@ -82,7 +80,7 @@ module RedmineGitHosting
       end
 
       def command_require_chdir?(cmd)
-        cmd == 'update-server-info' || cmd == 'http.receivepack'  || cmd == 'http.uploadpack' || cmd == 'rev-parse'
+        cmd == 'update-server-info' || cmd == 'http.receivepack' || cmd == 'http.uploadpack' || cmd == 'rev-parse'
       end
 
       def git_command_without_chdir

@@ -68,6 +68,7 @@ module Redmine
 
         def branches
           return @branches if !@branches.nil?
+
           @branches = []
           cmd_args = %w|branch --no-color --verbose --no-abbrev|
           git_cmd(cmd_args) do |io|
@@ -88,6 +89,7 @@ module Redmine
 
         def tags
           return @tags if !@tags.nil?
+
           @tags = []
           cmd_args = %w|tag|
           git_cmd(cmd_args) do |io|
@@ -161,6 +163,7 @@ module Redmine
 
         def lastrev(path, rev)
           return nil if path.nil?
+
           cmd_args = %w|log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1|
           cmd_args << rev if rev
           cmd_args << '--' << path unless path.empty?
@@ -326,7 +329,7 @@ module Redmine
         def annotate(path, identifier = nil)
           identifier = 'HEAD' if identifier.blank?
           cmd_args = %w|blame --encoding=UTF-8|
-          cmd_args << '-p' << identifier << '--' <<  scm_iconv(@path_encoding, 'UTF-8', path)
+          cmd_args << '-p' << identifier << '--' << scm_iconv(@path_encoding, 'UTF-8', path)
           blame = Annotate.new
           content = nil
           git_cmd(cmd_args) { |io| io.binmode; content = io.read }
@@ -418,8 +421,6 @@ module Redmine
         def archive(revision, format)
           cmd_args = ['archive']
           case format
-          when 'tar' then
-            cmd_args << '--format=tar'
           when 'tar.gz' then
             cmd_args << '--format=tar.gz'
             cmd_args << '-7'
@@ -522,11 +523,7 @@ module Redmine
         end
 
         def binary_data?(content)
-          if Gem::Version.new(Redmine::VERSION.to_s) >= Gem::Version.new('3.4')
-            ScmData.binary?(content)
-          else
-            content.is_binary_data?
-          end
+          ScmData.binary? content
         end
       end
     end

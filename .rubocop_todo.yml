@@ -6,132 +6,12 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: start_of_line, begin
-Layout/BeginEndAlignment:
-  Exclude:
-    - 'app/models/repository_post_receive_url.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: start_of_line, def
-Layout/DefEndAlignment:
-  Exclude:
-    - 'lib/redmine_git_hosting/gitolite_handlers/repositories/move_repository.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'app/use_cases/repositories/build_payload.rb'
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/redmine_git_hosting/error.rb'
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-    - 'lib/tasks/migration_tools.rake'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'lib/tasks/migration_tools.rake'
-    - 'spec/models/project_spec.rb'
-    - 'spec/models/repository_git_extra_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
-# SupportedHashRocketStyles: key, separator, table
-# SupportedColonStyles: key, separator, table
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/HashAlignment:
-  Exclude:
-    - 'lib/redmine_git_hosting/config/gitolite_hooks.rb'
-    - 'lib/redmine_git_hosting/gitolite_wrapper.rb'
-    - 'lib/tasks/migration_tools.rake'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Width, IgnoredPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'lib/redmine_git_hosting/gitolite_handlers/repositories/move_repository.rb'
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-
 # Offense count: 35
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
 Layout/LineLength:
   Max: 614
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - 'lib/redmine_git_hosting/patches/repositories_controller_patch.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/RescueEnsureAlignment:
-  Exclude:
-    - 'app/models/repository_post_receive_url.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'lib/redmine_git_hosting/commands/sudo.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Layout/SpaceInsidePercentLiteralDelimiters:
-  Exclude:
-    - 'lib/tasks/ci_tools.rake'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'spec/models/repository_git_extra_spec.rb'
 
 # Offense count: 4
 # Configuration parameters: AllowSafeAssignment.
@@ -155,13 +35,6 @@ Lint/ConstantDefinitionInBlock:
     - 'spec/models/repository_xitolite_spec.rb'
     - 'spec/support/flat_organization.rb'
     - 'spec/support/hierarchical_organisation.rb'
-
-# Offense count: 3
-Lint/DuplicateBranch:
-  Exclude:
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting.rb'
-    - 'lib/redmine_git_hosting/cache.rb'
 
 # Offense count: 1
 # Configuration parameters: AllowComments, AllowEmptyLambdas.
@@ -254,11 +127,6 @@ Metrics/ParameterLists:
   Exclude:
     - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
 
-# Offense count: 1
-# Configuration parameters: IgnoredMethods.
-Metrics/PerceivedComplexity:
-  Max: 43
-
 # Offense count: 7
 Naming/AccessorMethodName:
   Exclude:
@@ -338,12 +206,6 @@ Performance/CompareWithBlock:
   Exclude:
     - 'lib/redmine_git_hosting/patches/project_patch.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/Count:
-  Exclude:
-    - 'app/use_cases/settings/apply.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Performance/Detect:
@@ -394,13 +256,6 @@ Performance/StringInclude:
     - 'app/use_cases/repositories/build_payload.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: NilOrEmpty, NotPresent, UnlessPresent.
-Rails/Blank:
-  Exclude:
-    - 'lib/tasks/migration_tools.rake'
-
-# Offense count: 1
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: strict, flexible
 Rails/Date:
@@ -424,13 +279,6 @@ Rails/Delegate:
 # AllowedReceivers: Gem::Specification
 Rails/DynamicFindBy:
   Enabled: false
-
-# Offense count: 3
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: slashes, arguments
-Rails/FilePath:
-  Exclude:
-    - 'db/migrate/20130807223227_migrate_parameters.rb'
 
 # Offense count: 9
 # Configuration parameters: Include.

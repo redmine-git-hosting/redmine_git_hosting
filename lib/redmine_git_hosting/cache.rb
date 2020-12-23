@@ -38,8 +38,6 @@ module RedmineGitHosting
 
     def adapter
       case RedmineGitHosting::Config.gitolite_cache_adapter
-      when 'database'
-        Database
       when 'memcached'
         Memcached
       when 'redis'
