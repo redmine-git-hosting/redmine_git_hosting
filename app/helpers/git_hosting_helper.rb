@@ -10,6 +10,10 @@ module GitHostingHelper
     checked ? image_tag('toggle_check.png') : image_tag('exclamation.png')
   end
 
+  def render_shell_text(text)
+    Redmine::SyntaxHighlighting.highlight_by_language text, 'shell'
+  end
+
   def gitolite_project_settings_tabs
     tabs = []
 

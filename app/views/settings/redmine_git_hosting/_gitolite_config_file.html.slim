@@ -36,11 +36,20 @@ br
   - gitolite_identifier_suffix = gitolite_identifier_strip_user_id ? '' : '_user_id'
 
   pre
-    markdown:
-      SSH Key : #{gitolite_identifier_prefix}admin<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
-      SSH Key : #{gitolite_identifier_prefix}bob<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
+    div
+      | SSH Key: #{gitolite_identifier_prefix}admin<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
+    div
+      | SSH Key: #{gitolite_identifier_prefix}bob<em>#{gitolite_identifier_suffix}</em>@redmine_1394507971_600081.pub
 
-      repo    repositories/test
-        RW+                        = <em>#{gitolite_identifier_prefix}</em>admin<em>#{gitolite_identifier_suffix}</em> <em>#{gitolite_identifier_prefix}</em>john<em>#{gitolite_identifier_suffix}</em>
-        RW                         = <em>#{gitolite_identifier_prefix}</em>bob<em>#{gitolite_identifier_suffix}</em> alice
-        R                          = <em>#{gitolite_identifier_prefix}</em>reporter<em>#{gitolite_identifier_suffix}</em> mike gitweb
+    br
+
+    div
+      | repo repositories/test
+
+    div
+      |   RW+ = <em>#{gitolite_identifier_prefix}</em>admin<em>#{gitolite_identifier_suffix}</em>
+      |   <em>#{gitolite_identifier_prefix}</em>john<em>#{gitolite_identifier_suffix}</em>
+    div
+      |   RW  = <em>#{gitolite_identifier_prefix}</em>bob<em>#{gitolite_identifier_suffix}</em> alice
+    div
+      |   R   = <em>#{gitolite_identifier_prefix}</em>reporter<em>#{gitolite_identifier_suffix}</em> mike gitweb

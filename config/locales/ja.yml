@@ -54,12 +54,12 @@ ja:
   all_references: 全参照
   all_tags: 全タグ
   button_clone: クローン
-  display_access_emphasis: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
+  display_access_emphasis_html: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
   display_access_flat: "<em>フラット</em>モードのため、親ディレクトリはURLに含まれていません。"
   display_access_hierarchical: "<em>階層</em>モードのため、親ディレクトリもURLに含まれています。"
-  display_access_setup1: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
-  display_access_setup2: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
-  display_access_setup3: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
+  display_access_setup1_html: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
+  display_access_setup2_html: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
+  display_access_setup3_html: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
   error_download_revision_no_such_commit: "コミット%{commit}が存在しません"
   error_project_not_found: "このタイトルのプロジェクトが見つかりません。"
   error_public_key_create_failed: パプリックキー作成エラー

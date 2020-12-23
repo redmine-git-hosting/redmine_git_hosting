@@ -103,9 +103,10 @@ module Gitolitable
 
       hash = {}
       urls_order.each do |url|
-        next unless available_urls[url.to_sym]
+        available_url = available_urls[url.to_sym]
+        next if available_url.blank?
 
-        hash[url.to_sym] = available_urls[url.to_sym]
+        hash[url.to_sym] = available_url
       end
       hash
     end

@@ -54,12 +54,12 @@ en:
   all_references: All Refs
   all_tags: All Tags
   button_clone: Clone
-  display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
+  display_access_emphasis_html: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
-  display_access_setup1: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
-  display_access_setup2: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
-  display_access_setup3: "Given the current configuration, project <em>project3</em> has the following properties :"
+  display_access_setup1_html: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
+  display_access_setup2_html: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
+  display_access_setup3_html: "Given the current configuration, project <em>project3</em> has the following properties :"
   error_download_revision_no_such_commit: "No such commit %{commit}"
   error_project_not_found: "No project with this identifier was found"
   error_public_key_create_failed: Failed to create public key.

@@ -2,7 +2,7 @@
   .contextual
     = link_to l(:label_administration), plugin_settings_path(id: 'redmine_git_hosting'), class: 'icon icon-settings'
 
-- if User.current.allowed_to?(:manage_repository, @project)
+- if User.current.allowed_to? :manage_repository, @project
   p = link_to l(:label_repository_new),
               new_project_repository_path(@project),
               class: 'icon icon-add'
@@ -12,17 +12,17 @@
     table.list
       thead
         tr
-          th = l(:field_identifier)
-          th = l(:field_repository_is_default)
-          th = l(:label_scm)
-          th = l(:label_repository)
-          th = l(:label_repository_default_branch)
-          th = l(:label_repository_enabled_capabilities)
+          th = l :field_identifier
+          th = l :field_repository_is_default
+          th = l :label_scm
+          th = l :label_repository
+          th = l :label_repository_default_branch
+          th = l :label_repository_enabled_capabilities
           th
       tbody
         - @project.repositories.sort.each do |repository|
           tr
-            td = repository.identifier.present? ? repository.identifier : ''
+            td = repository.identifier.presence || ''
             td = checked_image repository.is_default?
             td = repository.scm_name
             td = link_to h(repository.url),
@@ -31,33 +31,28 @@
                            id: @project,
                            repository_id: repository.identifier_param }
             td
-              - if repository.is_a?(Repository::Xitolite)
+              - if repository.is_a? Repository::Xitolite
                 span.label.label-info = repository.git_default_branch
             td align='center'
-              - if repository.is_a?(Repository::Xitolite)
+              - if repository.is_a? Repository::Xitolite
                 - if repository.git_annex_enabled?
-                  = render_feature(repository, :git_annex)
+                  = render_feature repository, :git_annex
                 - else
-                  = render_feature(repository, :deployment_credentials)
-                  = render_feature(repository, :post_receive_urls)
-                  = render_feature(repository, :mirrors)
-                  = render_feature(repository, :git_daemon)
-                  = render_feature(repository, :git_http)
-                  = render_feature(repository, :git_notify)
-                  = render_feature(repository, :protected_branch)
-                  = render_feature(repository, :public_repo)
+                  = render_feature repository, :deployment_credentials
+                  = render_feature repository, :post_receive_urls
+                  = render_feature repository, :mirrors
+                  = render_feature repository, :git_daemon
+                  = render_feature repository, :git_http
+                  = render_feature repository, :git_notify
+                  = render_feature repository, :protected_branch
+                  = render_feature repository, :public_repo
 
             td.buttons
-              - if User.current.allowed_to?(:manage_repository, @project)
-                = link_to l(:label_user_plural), committers_repository_path(repository),
-                                                 class: 'icon icon-user'
-
-                = link_to l(:button_edit), edit_repository_path(repository),
-                                           class: 'icon icon-edit'
-
-                = link_to l(:button_move), move_repository_git_extras_path(repository),
-                                           class: 'icon icon-move' if repository.is_a?(Repository::Xitolite) && repository.movable?
-
+              - if User.current.allowed_to? :manage_repository, @project
+                = link_to l(:label_user_plural), committers_repository_path(repository), class: 'icon icon-user'
+                = link_to l(:button_edit), edit_repository_path(repository), class: 'icon icon-edit'
+                - if repository.is_a?(Repository::Xitolite) && repository.movable?
+                  = link_to l(:button_move), move_repository_git_extras_path(repository), class: 'icon icon-move'
                 = delete_link repository_path(repository)
 
   javascript:
@@ -67,7 +62,3 @@
 
 - else
   p.nodata = l :label_no_data
-
-/- content_for :header_tags do
-  /= bootstrap_load_module(:label)
-  /= bootstrap_load_module(:tables)

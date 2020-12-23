@@ -54,12 +54,12 @@ ru:
   all_references: Все ссылки
   all_tags: Все теги
   button_clone: Клонировать
-  display_access_emphasis: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
+  display_access_emphasis_html: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
   display_access_flat: "Родителские проекты не включены в URL для <em>Плоского</em> режима."
   display_access_hierarchical: "Родителские проекты включены в URL для <em>Иерархического</em> режима."
-  display_access_setup1: "Предположим что <em>project1</em> является родительским для <em>project2</em>, а <em>project2</em> является родительским для <em>project3</em>."
-  display_access_setup2: "Также, предположим что проект <em>project3</em> имеет 2 репозитория: <em>default</em> и <em>example</em>."
-  display_access_setup3: "С учетом текущей конфигурации проекта <em>project3</em>, он имеет следующие параметры:"
+  display_access_setup1_html: "Предположим что <em>project1</em> является родительским для <em>project2</em>, а <em>project2</em> является родительским для <em>project3</em>."
+  display_access_setup2_html: "Также, предположим что проект <em>project3</em> имеет 2 репозитория: <em>default</em> и <em>example</em>."
+  display_access_setup3_html: "С учетом текущей конфигурации проекта <em>project3</em>, он имеет следующие параметры:"
   error_download_revision_no_such_commit: "Не найден комит %{commit}"
   error_project_not_found: "Проект с данными идентификатором не найден"
   error_public_key_create_failed: Ошибка при создании публичного ключа.

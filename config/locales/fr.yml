@@ -54,12 +54,12 @@ fr:
   all_references: "Toutes les références"
   all_tags: "Toutes les étiquettes"
   button_clone: Cloner
-  display_access_emphasis: "Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte."
+  display_access_emphasis_html: "Dans l'exemple ci-dessus, les termes en <em>emphase</em> représentent des éléments qui dépendent du contexte."
   display_access_flat: "Les projets parents ne sont pas inclus dans l'URL, car le dépôt est en mode <em>Plat</em>."
   display_access_hierarchical: "Les projets parents sont inclus dans l'URL, car le dépôt est en mode <em>Hiérarchique</em>."
-  display_access_setup1: "Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>."
-  display_access_setup2: "Assumez aussi que le projet <em>project3</em> a 2 dépôts : le dépôt par <em>défaut</em> et un dépôt <em>example</em>."
-  display_access_setup3: "Avec la configuration courante, le projet <em>project3</em> a les propriétés suivantes :"
+  display_access_setup1_html: "Assumez que <em>project1</em> est le parent de <em>project2</em> et que <em>project2</em> est le parent de <em>project3</em>."
+  display_access_setup2_html: "Assumez aussi que le projet <em>project3</em> a 2 dépôts : le dépôt par <em>défaut</em> et un dépôt <em>example</em>."
+  display_access_setup3_html: "Avec la configuration courante, le projet <em>project3</em> a les propriétés suivantes :"
   error_download_revision_no_such_commit: "Le commit %{commit} n'a pas été trouvé"
   error_project_not_found: "Aucun projet avec cet identifiant n'a été trouvé"
   error_public_key_create_failed: Échec de création de clé publique.

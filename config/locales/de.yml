@@ -54,12 +54,12 @@ de:
   all_references: Alle Refs
   all_tags: Alle TAGs
   button_clone: Klonen
-  display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
+  display_access_emphasis_html: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_flat: "Eltern Projekte sind nicht in der URL enthalten, da das Repository in einem <em>Flat</em> Modus ist."
   display_access_hierarchical: "Eltern Projekte sind in der URL enthalten, da das Repository in einem  <em>Hierarchical</em> Modus ist."
-  display_access_setup1: "Geh davon aus, dass <em>project1</em> das Elternprojekt von <em>project2</em>, und <em>project2</em> das Elternprojekt von <em>project3</em> ist."
-  display_access_setup2: "Geh auch davon aus, dass das <em>project3</em> 2 Repositories hat: ein <em>default</em> Repository und ein <em>example</em> Repository."
-  display_access_setup3: "Bezogen auf die aktuelle Konfiguration, hat Projekt <em>project3</em> folgende Optionen:"
+  display_access_setup1_html: "Geh davon aus, dass <em>project1</em> das Elternprojekt von <em>project2</em>, und <em>project2</em> das Elternprojekt von <em>project3</em> ist."
+  display_access_setup2_html: "Geh auch davon aus, dass das <em>project3</em> 2 Repositories hat: ein <em>default</em> Repository und ein <em>example</em> Repository."
+  display_access_setup3_html: "Bezogen auf die aktuelle Konfiguration, hat Projekt <em>project3</em> folgende Optionen:"
   error_download_revision_no_such_commit: "Kein Commit %{commit}"
   error_project_not_found: "Kein Projekt mit dem Identifier gefunden"
   error_public_key_create_failed: Public key konnte nicht erzeugt werden.

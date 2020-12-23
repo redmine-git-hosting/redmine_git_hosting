@@ -10,7 +10,9 @@ div
     = link_to "(#{l(:label_gitolite_documentation)})", 'https://gitolite.com/gitolite/conf.html#rules', class: 'external'
 
   - if @repository_protected_branches.any?
-    table#protected_branches.list data-update-url="#{sort_repository_protected_branches_url}" style="opacity: #{@repository.protected_branches_enabled? ? '1' : '0.5'};"
+    table#protected_branches.list[
+      data-update-url="#{sort_repository_protected_branches_url}"
+      style="opacity: #{@repository.protected_branches_enabled? ? '1' : '0.5'}"]
       thead
         tr
           th
@@ -34,7 +36,12 @@ div
               = protected_branch.path
 
             td
-              = protected_branch.users.map { |u| link_to(u) }.join(', ')
+              - cnt = 0
+              - protected_branch.users.each do |user|
+                - if cnt.positive?
+                  ' ,
+                = link_to_user user
+                - cnt += 1
 
             td.buttons
               - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)

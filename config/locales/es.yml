@@ -54,12 +54,12 @@ es:
   all_references: Todas las referencias
   all_tags: Todas las etiquetas
   button_clone: Clonar
-  display_access_emphasis: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
+  display_access_emphasis_html: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
   display_access_flat: "Los proyectos padre no se incluyen en las URLs, ya que el repositorio está en modo <em>plano</em>."
   display_access_hierarchical: "Los proyectos padre se incluyen en las URLs, ya que el repositorio está en modo <em>jerárquico</em>."
-  display_access_setup1: "Asumiendo que <em>proyecto1</em> es padre de <em>proyecto2</em>, y que <em>proyecto2</em> es padre de <em>proyecto3</em>."
-  display_access_setup2: "Además, asumiendo que el proyecto <em>proyecto3</em> tiene 2 repositorios: el repositorio <em>pordefecto</em> y el repositorio <em>ejemplo</em>."
-  display_access_setup3: "Con dicha configuración, el proyecto <em>proyecto3</em> tiene las siguientes propiedades:"
+  display_access_setup1_html: "Asumiendo que <em>proyecto1</em> es padre de <em>proyecto2</em>, y que <em>proyecto2</em> es padre de <em>proyecto3</em>."
+  display_access_setup2_html: "Además, asumiendo que el proyecto <em>proyecto3</em> tiene 2 repositorios: el repositorio <em>pordefecto</em> y el repositorio <em>ejemplo</em>."
+  display_access_setup3_html: "Con dicha configuración, el proyecto <em>proyecto3</em> tiene las siguientes propiedades:"
   error_download_revision_no_such_commit: "No existe el commit %{commit}"
   error_project_not_found: "No se ha encontrado ningún proyecto con este identificador"
   error_public_key_create_failed: Ha fallado la creación de la clave pública.
