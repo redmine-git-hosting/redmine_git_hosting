@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Users
       class ResyncSshKeys < GitoliteWrappers::Base
-
         def call
           admin.transaction do
             GitolitePublicKey.all.each do |ssh_key|
@@ -11,7 +10,6 @@ module RedmineGitHosting
             end
           end
         end
-
       end
     end
   end

@@ -14,13 +14,10 @@ module RedmineGitHosting
       def parse_refspec(spec)
         parsed_refspec = spec.match(REF_COMPONENT_REGEX)
         return nil if parsed_refspec.nil?
+
         if parsed_refspec[1]
           # Should be first class.  If no type component, return fail
-          if parsed_refspec[3]
-            { type: parsed_refspec[3], name: parsed_refspec[4] }
-          else
-            nil
-          end
+          { type: parsed_refspec[3], name: parsed_refspec[4] } if parsed_refspec[3]
         elsif parsed_refspec[3]
           { type: nil, name: "#{parsed_refspec[3]}/#{parsed_refspec[4]}" }
         else
@@ -28,16 +25,13 @@ module RedmineGitHosting
         end
       end
 
-
       def author_name(committer)
         committer.gsub(/\A([^<]+)\s+.*\z/, '\1')
       end
 
-
       def author_email(committer)
         committer.gsub(/\A.*<([^>]+)>.*\z/, '\1')
       end
-
     end
   end
 end

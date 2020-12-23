@@ -7,7 +7,7 @@ module RedmineGitHosting
 
       def self.prepended(base)
         base.class_eval do
-          helper :bootstrap_kit
+          helper :git_hosting
           helper :additionals_clipboardjs
           helper :extend_projects
         end

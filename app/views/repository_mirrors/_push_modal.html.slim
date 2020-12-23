@@ -1,0 +1,9 @@
+p style='white-space: nowrap;'
+  = render_push_state @mirror, @push_failed
+
+strong
+  = l :label_mirror_push_output
+  ' :
+
+pre class="mirror-push-#{'error' if @push_failed}"
+  = @shellout

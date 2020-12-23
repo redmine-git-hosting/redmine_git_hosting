@@ -4,7 +4,8 @@
   p = f.text_field :url, required: true, size: 65
   em
     p
-      = l(:label_mirror_url_accepted_format) + ' :'
+      = l :label_mirror_url_accepted_format
+      ' :
       br
       | ssh://git@redmine.example.org/project1/project2/project3/project4.git
       br
@@ -14,9 +15,9 @@
   p = f.select :push_mode,
                options_for_select(mirrors_options, @mirror.push_mode),
                { label: :label_mirror_push_mode },
-               onchange: "push_mode_change(this); return false;"
+               onchange: 'push_mode_change(this); return false;'
 
-  #ref_spec_options style="#{@mirror.mirror_mode? ? 'display: none;' : ''}"
+  #ref_spec_options style="#{'display: none;' if @mirror.mirror_mode?}"
     p = f.check_box :include_all_branches, label: :label_mirror_include_all_branches
     p = f.check_box :include_all_tags, label: :label_mirror_include_all_tags
     p = f.text_field :explicit_refspec, label: :label_mirror_explicit_refspec, size: 65

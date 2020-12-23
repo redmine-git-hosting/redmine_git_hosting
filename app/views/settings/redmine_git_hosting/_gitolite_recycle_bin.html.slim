@@ -1,7 +1,7 @@
 h3 = l(:label_empty_recycle_bin)
 
 - if !RedmineGitHosting::RecycleBin || !RedmineGitHosting::RecycleBin.content.empty?
-  table.table.table-hover
+  table.list
     tr
       th = l(:label_repository)
       th = l(:label_recycle_bin_content_size)

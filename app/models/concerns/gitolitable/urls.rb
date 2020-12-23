@@ -6,99 +6,86 @@ module Gitolitable
       User.current.anonymous? ? '' : "#{User.current.login}@"
     end
 
-
     def git_access_path
       gitolite_repository_name_with_extension
     end
-
 
     def http_access_path
       "#{RedmineGitHosting::Config.http_server_subdir}#{redmine_repository_path}.git"
     end
 
-
     def go_access_path
       "go/#{redmine_repository_path}"
     end
 
-
     def ssh_url
-      if RedmineGitHosting::Config.gitolite_server_port == '22'
-        "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}/#{git_access_path}"
-      else
-        "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}:#{RedmineGitHosting::Config.gitolite_server_port}/#{git_access_path}"
-      end
-    end
+      url = "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}"
 
+      url << if RedmineGitHosting::Config.gitolite_server_port == '22'
+               "/#{git_access_path}"
+             else
+               ":#{RedmineGitHosting::Config.gitolite_server_port}/#{git_access_path}"
+             end
+
+      url
+    end
 
     def git_url
       "git://#{RedmineGitHosting::Config.ssh_server_domain}/#{git_access_path}"
     end
 
-
     def http_url
       "http://#{http_user_login}#{RedmineGitHosting::Config.http_root_url}/#{http_access_path}"
     end
-
 
     def https_url
       "https://#{http_user_login}#{RedmineGitHosting::Config.https_root_url}/#{http_access_path}"
     end
 
-
     def git_annex_url
       "#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}:#{git_access_path}"
     end
 
-
     # This is the url used by Go to clone repository
     #
     def go_access_url
-      return '' if !smart_http_enabled?
+      return '' unless smart_http_enabled?
       return https_url if https_access_available?
       return http_url if http_access_available?
     end
 
-
     # This is the url to add in Go files
     #
     def go_url
-      return '' if !smart_http_enabled?
+      return '' unless smart_http_enabled?
       return "#{RedmineGitHosting::Config.https_root_url}/#{go_access_path}" if https_access_available?
       return "#{RedmineGitHosting::Config.http_root_url}/#{go_access_path}" if http_access_available?
     end
 
-
     def ssh_access
       { url: ssh_url, committer: User.current.allowed_to_commit?(self).to_s }
     end
-
 
     ## Unsecure channels (clear password), commit is disabled
     def http_access
       { url: http_url, committer: 'false' }
     end
 
-
     def https_access
       { url: https_url, committer: User.current.allowed_to_commit?(self).to_s }
     end
-
 
     def git_access
       { url: git_url, committer: 'false' }
     end
 
-
     def git_annex_access
       { url: git_annex_url, committer: User.current.allowed_to_commit?(self).to_s }
     end
 
-
     def go_access
       { url: go_url, committer: 'false' }
     end
-
 
     def available_urls
       hash = {}
@@ -111,16 +98,17 @@ module Gitolitable
       hash
     end
 
-
     def available_urls_sorted
-      return available_urls if urls_order.nil? || urls_order.empty?
+      return available_urls if urls_order.blank?
+
       hash = {}
       urls_order.each do |url|
-        next if !available_urls[url.to_sym]
-        hash[url.to_sym] = available_urls[url.to_sym]
+        available_url = available_urls[url.to_sym]
+        next if available_url.blank?
+
+        hash[url.to_sym] = available_url
       end
       hash
     end
-
   end
 end

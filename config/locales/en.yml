@@ -50,17 +50,16 @@ en:
               taken: "is already taken."
               invalid: invalid
               cannot_change: cannot change
-  all_branches: All&nbsp;Branches
-  all_references: All&nbsp;Refs
-  all_tags: All&nbsp;Tags
+  all_branches: All Branches
+  all_references: All Refs
+  all_tags: All Tags
   button_clone: Clone
-  button_ok: OK
-  display_access_emphasis: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
+  display_access_emphasis_html: "In the above patterns, <em>emphasized</em> components represent context-dependent elements."
   display_access_flat: "Parent projects are not included in the URLs, since the repository is in <em>Flat</em> mode."
   display_access_hierarchical: "Parent projects are included in the URLs, since the repository is in <em>Hierarchical</em> mode."
-  display_access_setup1: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
-  display_access_setup2: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
-  display_access_setup3: "Given the current configuration, project <em>project3</em> has the following properties :"
+  display_access_setup1_html: "Assume that <em>project1</em> is a parent of <em>project2</em>, and <em>project2</em> is a parent of <em>project3</em>."
+  display_access_setup2_html: "Also, assume that project <em>project3</em> has 2 repositories : the <em>default</em> repository and a repository <em>example</em>."
+  display_access_setup3_html: "Given the current configuration, project <em>project3</em> has the following properties :"
   error_download_revision_no_such_commit: "No such commit %{commit}"
   error_project_not_found: "No project with this identifier was found"
   error_public_key_create_failed: Failed to create public key.
@@ -74,7 +73,6 @@ en:
   field_use_triggers: Use triggers
   label_active_for: Active for
   label_all_projects_use_git: Automatically initialize Git repositories for new projects?
-  label_archived_repositories: Archived repositories
   label_average_commit_per_day: Average commits per day
   label_average_contributor_commits: Average commits per contributor
   label_backup_in_progress: Saving...
@@ -85,8 +83,6 @@ en:
   label_commits_per_day: Commits per day
   label_commits_per_hour: Commits per hour
   label_commits_per_weekday: Commits per weekday
-  label_copied_to_clipboard: Copied!
-  label_copy_to_clipboard: Copy to clipboard
   label_current_deploy_keys: Current deployment keys
   label_current_public_keys: Current public keys
   label_current_user_keys: Current user keys
@@ -96,11 +92,11 @@ en:
   label_default_gitolite_hooks_url: Default URL
   label_default_repository: Default repository
   label_delete_from_recyle_bin: Delete from recycle bin
-  label_delete_git_repositories: Delete Git repository when project deleted?<br/>(will be place in recycle bin)
+  label_delete_git_repositories: Delete Git repository when project deleted?
+  info_delete_git_repositories: (will be place in recycle bin)
   label_delete_in_progress: Deleting...
   label_delete_warning: Warning! Deletion is forever!
   label_deploy_key: Deploy key
-  label_deployment_credential_active: Active?
   label_deployment_credential_add: Add Deployment Credential
   label_deployment_credential_create_key_first: Deployment key(s) not detected. You should create one first.
   label_deployment_credential_create: Create New Deployment Credential
@@ -116,7 +112,7 @@ en:
   label_download_and_install_git: Download and install Git
   label_download_format: Download as
   label_download_select_format: Select format
-  label_empty_get: Empty&nbsp;GET
+  label_empty_get: Empty GET
   label_empty_recycle_bin: Empty recycle bin
   label_empty_repository: Empty repository?
   label_enable_git_daemon: Enable Git Daemon
@@ -127,7 +123,6 @@ en:
   label_enable_smart_http: Smart HTTP Mode
   label_enable_smart_https: Smart HTTPS Mode
   label_enable_ssh_url: Enable SSH URL
-  label_enabled: Enabled
   label_error: Error
   label_etcetera: etc
   label_example_repository: Example repository
@@ -154,7 +149,7 @@ en:
   label_git_option_key_add: Add Gitolite option
   label_git_option_keys: Gitolite configuration options
   label_git_version: Git version
-  label_github_post: GitHub&nbsp;POST
+  label_github_post: GitHub POST
   label_gitolite_access_config: Gitolite Access Configuration
   label_gitolite_banner: Gitolite banner
   label_gitolite_bin_dir: Gitolite binaries directory
@@ -257,7 +252,6 @@ en:
   label_mirror_forced_update: Force Update Remote
   label_mirror_full_mirror: Complete Mirroring
   label_mirror_help: Mirrors must grant write access to the following public key
-  label_mirror_inactive: Inactive
   label_mirror_include_all_branches: Push all Branches
   label_mirror_include_all_tags: Push all Tags
   label_mirror_push_fail: Failed
@@ -321,7 +315,6 @@ en:
   label_resync_all_ssh_keys: Resync all SSH keys ?
   label_see_other_repositories: See other repositories
   label_select_all: Select all
-  label_show_repositories_url: Show checkout URL's?
   label_smart_http: Smart HTTP
   label_sort_urls: (Sort urls)
   label_split_payloads: split payloads
@@ -413,3 +406,5 @@ en:
   select_other_keys: Other keys
   text_gitolite_key_destroy_confirmation: "Are you sure you want to destroy this key : %{title} ?"
   text_scm_command_not_available_git_hosting: SCM command is not available. Please check settings on the administration panel of Redmine Git Hosting plugin.
+  label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

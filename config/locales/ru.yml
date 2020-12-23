@@ -50,17 +50,16 @@ ru:
               taken: "уже получен."
               invalid: ошибочный
               cannot_change: невозможно изменить
-  all_branches: Все&nbsp;ветки
-  all_references: Все&nbsp;ссылки
-  all_tags: Все&nbsp;теги
+  all_branches: Все ветки
+  all_references: Все ссылки
+  all_tags: Все теги
   button_clone: Клонировать
-  button_ok: OK
-  display_access_emphasis: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
+  display_access_emphasis_html: "В приведенных шаблонах, <em>курсивом</em> выделены контекстно зависимые элементы."
   display_access_flat: "Родителские проекты не включены в URL для <em>Плоского</em> режима."
   display_access_hierarchical: "Родителские проекты включены в URL для <em>Иерархического</em> режима."
-  display_access_setup1: "Предположим что <em>project1</em> является родительским для <em>project2</em>, а <em>project2</em> является родительским для <em>project3</em>."
-  display_access_setup2: "Также, предположим что проект <em>project3</em> имеет 2 репозитория: <em>default</em> и <em>example</em>."
-  display_access_setup3: "С учетом текущей конфигурации проекта <em>project3</em>, он имеет следующие параметры:"
+  display_access_setup1_html: "Предположим что <em>project1</em> является родительским для <em>project2</em>, а <em>project2</em> является родительским для <em>project3</em>."
+  display_access_setup2_html: "Также, предположим что проект <em>project3</em> имеет 2 репозитория: <em>default</em> и <em>example</em>."
+  display_access_setup3_html: "С учетом текущей конфигурации проекта <em>project3</em>, он имеет следующие параметры:"
   error_download_revision_no_such_commit: "Не найден комит %{commit}"
   error_project_not_found: "Проект с данными идентификатором не найден"
   error_public_key_create_failed: Ошибка при создании публичного ключа.
@@ -74,7 +73,6 @@ ru:
   field_use_triggers: Использовать тригеры
   label_active_for: Активность за
   label_all_projects_use_git: Автоматически инициализировать Git репозитории для новых проектов?
-  label_archived_repositories: Архив репозиториев
   label_average_commit_per_day: В среднем комитов в день
   label_average_contributor_commits: В среднем комитов на участника
   label_backup_in_progress: Сохранение...
@@ -85,8 +83,6 @@ ru:
   label_commits_per_day: Комитов в день
   label_commits_per_hour: Комитов в час
   label_commits_per_weekday: Комитов в неделю
-  label_copied_to_clipboard: Сокпировано!
-  label_copy_to_clipboard: Сокопировать в буфер
   label_current_deploy_keys: Текущие полномочные ключи (Deployment Keys)
   label_current_public_keys: Текущие публичные ключи
   label_current_user_keys: Текущие ключи пользователя
@@ -96,11 +92,11 @@ ru:
   label_default_gitolite_hooks_url: URL по умолчанию
   label_default_repository: "Репозиторий 'default'"
   label_delete_from_recyle_bin: Удалить из корзины
-  label_delete_git_repositories: Удалять Git репозиторий при удалении проекта?<br/>(будет перемещен в корзину)
+  label_delete_git_repositories: Удалять Git репозиторий при удалении проекта?
+  info_delete_git_repositories: (будет перемещен в корзину)
   label_delete_in_progress: Удаление...
   label_delete_warning: Внимание! Удаление безвозвратно!
   label_deploy_key: Полномочный deploy-ключ
-  label_deployment_credential_active: Активный?
   label_deployment_credential_add: Добавить полномочия
   label_deployment_credential_create_key_first: Ключ(и) не определены. Вы должны создать один для начала.
   label_deployment_credential_create: Создать новые полномочия
@@ -116,7 +112,7 @@ ru:
   label_download_and_install_git: Скачать и установить Git
   label_download_format: Загрузить как
   label_download_select_format: Выбрать формат
-  label_empty_get: Пустой&nbsp;GET
+  label_empty_get: Пустой GET
   label_empty_recycle_bin: Очистка корзины
   label_empty_repository: Пустой?
   label_enable_git_daemon: Включить режим Git Daemon
@@ -124,7 +120,6 @@ ru:
   label_enable_protected_branches: Включить защищенные ветки
   label_enable_public_repo: Сделать публичным
   label_enable_smart_http: Включить Smart HTTP
-  label_enabled: Включено
   label_error: Ошибка
   label_etcetera: и.т.д.
   label_example_repository: "Репозиторий 'example'"
@@ -149,7 +144,7 @@ ru:
   label_git_option_key_add: Добавить параметр Gitolite
   label_git_option_keys: Конфиг. опции Gitolite
   label_git_version: Версия Git
-  label_github_post: GitHub&nbsp;POST
+  label_github_post: GitHub POST
   label_gitolite_access_config: Настройки доступа
   label_gitolite_banner: Баннер Gitolite
   label_gitolite_bin_dir: Каталог с двоичный Gitolite
@@ -251,7 +246,6 @@ ru:
   label_mirror_forced_update: Force Update Remote
   label_mirror_full_mirror: Complete Mirroring
   label_mirror_help: Зеркала должны предоставлять доступ на запись следующему публичному ключу
-  label_mirror_inactive: Неактивно
   label_mirror_include_all_branches: Зеркалировать все ветки
   label_mirror_include_all_tags: Зеркалировать все теги
   label_mirror_push_fail: Ошибка
@@ -315,7 +309,6 @@ ru:
   label_resync_all_ssh_keys: Синхронизировать SSH ключи?
   label_see_other_repositories: Другие репозитории
   label_select_all: Выбрать всё
-  label_show_repositories_url: Показывать checkout URL's?
   label_smart_http: Smart HTTP
   label_sort_urls: (Изменить порядок)
   label_split_payloads: Разбить payload
@@ -408,3 +401,5 @@ ru:
   select_other_keys: Другие ключи
   text_gitolite_key_destroy_confirmation: "Вы уверены, что хотите удалить данный ключ: %{title}?"
   text_scm_command_not_available_git_hosting: SCM команда недоступна. Проверьте настройки плагина Redmine Git Hosting.
+  label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

@@ -1,1 +1,2 @@
-$('#sortable-url-messages').html("<%= escape_javascript render_flash_messages %>");
+$('#ajax-modal').html('<%= escape_javascript(render partial: 'repository_git_extras/sort_urls_modal') %>');
+showModal('ajax-modal', '400px');

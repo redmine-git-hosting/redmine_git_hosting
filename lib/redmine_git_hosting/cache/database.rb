@@ -14,7 +14,7 @@ module RedmineGitHosting
         end
 
         def get_cache(repo_id, command)
-          cached = GitCache.find_by_repo_identifier_and_command(repo_id, command)
+          cached = GitCache.find_by(repo_identifier: repo_id, command: command)
           if cached
             if valid_cache_entry?(cached.created_at)
               # Update updated_at flag

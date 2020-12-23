@@ -1,5 +1,4 @@
 class GoRedirectorController < ApplicationController
-
   include XitoliteRepositoryFinder
 
   # prevents login action to be filtered by check_if_login_required application scope filter
@@ -7,8 +6,5 @@ class GoRedirectorController < ApplicationController
 
   before_action :find_xitolite_repository_by_path
 
-
-  def index
-  end
-
+  def index; end
 end

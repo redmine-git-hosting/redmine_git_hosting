@@ -1,4 +1,4 @@
-#flash_warning.flash.warning = l(:notice_empty_repository)
+#flash_warning.flash.warning = l :notice_empty_repository
 
 - if @repository.urls_are_viewable?
   - content_for :header_tags do
@@ -12,63 +12,73 @@
         .col-md-4 style='text-align: right; vertical-align: middle;'
 
 .box
-  - if User.current.allowed_to?(:view_changesets, @project)
-    h3 = l(:label_help_git_setup) + ' :'
+  - if User.current.allowed_to? :view_changesets, @project
+    h3
+      = l :label_help_git_setup
+      | :
     pre
       code.shell.syntaxhl
-        | #{link_to l(:label_download_and_install_git), 'https://git-scm.com/download', target: 'external' }
+        = link_to l(:label_download_and_install_git), 'https://git-scm.com/download', class: 'external'
         br
-        | git config --global user.name "#{User.current.name(:firstname_lastname)}"
+        == render_shell_text "git config --global user.name \"#{User.current.name(:firstname_lastname)}\""
         br
-        | git config --global user.email #{User.current.mail ? User.current.mail : "mail@example.com"}
-        - if !User.current.anonymous? && User.current.gitolite_public_keys.length == 0
+        == render_shell_text "git config --global user.email #{User.current.mail || 'mail@example.com'}"
+        - if !User.current.anonymous? && User.current.gitolite_public_keys.empty?
           br
-          | #{link_to "Upload SSH Public Key", public_keys_path}
+          = link_to 'Upload SSH Public Key', public_keys_path
 
-    - if User.current.allowed_to?(:commit_access, @project)
+    - if User.current.allowed_to? :commit_access, @project
       #repository_setup
-        h3 = l(:label_help_repository_setup_new) + ' :'
+        h3
+          = l :label_help_repository_setup_new
+          | :
         pre
           code.shell.syntaxhl
-            | mkdir #{@repository.redmine_name}
+            == render_shell_text "mkdir #{@repository.redmine_name}"
             br
-            | cd #{@repository.redmine_name}
+            == render_shell_text "cd #{@repository.redmine_name}"
             br
-            | git init
+            == render_shell_text 'git init'
             br
-            | touch readme.txt
+            == render_shell_text 'touch readme.txt'
             br
-            | git add readme.txt
+            == render_shell_text 'git add readme.txt'
             br
-            | git commit -m 'Initializing #{@repository.redmine_name} repository'
+            == render_shell_text "git commit -m 'Initializing #{@repository.redmine_name} repository'"
             br
-            | git remote add origin <span class="git_url_access"></span>
+            ' git remote add origin
+            span.git_url_access
             br
-            | git push -u origin master
+            == render_shell_text 'git push -u origin master'
 
-        h3 = l(:label_help_repository_setup_existing) + ' :'
+        h3
+          = l :label_help_repository_setup_existing
+          | :
         pre
           code.shell.syntaxhl
-            | cd existing_git_repo
+            == render_shell_text 'cd existing_git_rep'
             br
-            | git remote add origin <span class="git_url_access"></span>
+            ' git remote add origin
+            span.git_url_access
             br
-            | git push -u origin master
+            == render_shell_text 'git push -u origin master'
 
-      h3 = l(:label_help_repository_clone) + ' :'
+      h3
+        = l :label_help_repository_clone
+        | :
       pre
         code.shell.syntaxhl
-          | git clone <span class="git_url_access"></span>
+          ' git clone
+          span.git_url_access
 
   - else
-    = l(:label_help_no_repo_rights)
+    = l :label_help_no_repo_rights
 
 - content_for :sidebar do
-  h3 = l(:label_repository_plural)
+  h3 = l :label_repository_plural
   ul.repository.git
     - @repositories.sort.each do |repo|
-      - li_class = "#{'repository git' if repo.is_a?(Repository::Xitolite)}"
-      li class="#{li_class}"
+      li class="#{'repository git' if repo.is_a?(Repository::Xitolite)}"
         = link_to_repository(repo, @repository)
         - if User.current.allowed_to?(:manage_repository, @project)
           '

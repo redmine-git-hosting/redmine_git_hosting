@@ -13,7 +13,6 @@ describe RepositoryGitConfigKey::Option do
   it { should validate_uniqueness_of(:key).scoped_to(:repository_id) }
   it { should allow_value('hookfoo', 'hookfoo.foo', 'hookfoo.foo.bar').for(:key) }
 
-
   context 'when key is updated' do
     before do
       @git_config_key.save

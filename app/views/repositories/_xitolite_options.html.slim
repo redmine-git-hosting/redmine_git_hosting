@@ -1,4 +1,4 @@
-- if repository.is_a?(Repository::Xitolite)
+- if repository.is_a? Repository::Xitolite
   = form_for repository.extra, url: repository_git_extras_path(repository), html: { method: :put, remote: true } do |f|
     .box.tabular
       .container
@@ -62,23 +62,23 @@
                   span.label.label-info = repository.git_default_branch
 
               p
-                label= l(:label_mirroring_keys_installed)
-                = image_tag (RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
+                label = l :label_mirroring_keys_installed
+                = image_tag(RedmineGitHosting::Config.mirroring_keys_installed? ? 'true.png' : 'exclamation.png')
 
             p
-              label = l(:label_repository_exists_in_gitolite)
-              = image_tag (repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
+              label = l :label_repository_exists_in_gitolite
+              = image_tag(repository.exists_in_gitolite? ? 'true.png' : 'exclamation.png')
 
             p
               - if repository.empty_in_gitolite?
-                label = l(:label_empty_repository)
-                = image_tag('true.png')
+                label = l :label_empty_repository
+                = image_tag 'true.png'
               - else
-                label = l(:label_git_objects_count)
+                label = l :label_git_objects_count
                 = repository.git_objects_count
 
             p
-              label= l(:label_browse_repository)
+              label = l :label_browse_repository
               = link_to h(repository.url),
                         { controller: 'repositories', action: 'show', id: @project, repository_id: repository.identifier_param }
 

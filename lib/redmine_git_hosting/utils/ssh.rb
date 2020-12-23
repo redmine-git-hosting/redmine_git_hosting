@@ -11,14 +11,13 @@ module RedmineGitHosting
         begin
           output = Utils::Exec.capture('ssh-keygen', ['-l', '-f', file.path])
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          raise RedmineGitHosting::Error::InvalidSshKey.new("Invalid Ssh Key : #{key}")
+          raise RedmineGitHosting::Error::InvalidSshKey, "Invalid Ssh Key : #{key}"
         else
           output.split[1]
         ensure
           file.unlink
         end
       end
-
 
       def sanitize_ssh_key(key)
         # First -- let the first control char or space stand (to divide key type from key)
@@ -36,7 +35,6 @@ module RedmineGitHosting
         # Return the sanitized key
         key
       end
-
     end
   end
 end

@@ -1,20 +1,16 @@
 module PermissionsBuilder
   class ProtectedBranches < Base
-
     attr_reader :permissions
-
 
     def initialize(*args)
       super
       @permissions = []
     end
 
-
     def build
       build_protected_branch_permissions
       permissions
     end
-
 
     def build_protected_branch_permissions
       repository.protected_branches.each do |branch|
@@ -24,6 +20,5 @@ module PermissionsBuilder
         permissions.push(perms)
       end
     end
-
   end
 end

@@ -1,48 +1,45 @@
 / Gitolite Access Config
-- ssh_server_domain = RedmineGitHosting::Config.get_setting(:ssh_server_domain)
-- http_server_domain = RedmineGitHosting::Config.get_setting(:http_server_domain)
-- https_server_domain = RedmineGitHosting::Config.get_setting(:https_server_domain)
-- http_server_subdir = RedmineGitHosting::Config.get_setting(:http_server_subdir)
+ruby:
+  ssh_server_domain = RedmineGitHosting::Config.get_setting :ssh_server_domain
+  http_server_domain = RedmineGitHosting::Config.get_setting :http_server_domain
+  https_server_domain = RedmineGitHosting::Config.get_setting :https_server_domain
+  http_server_subdir = RedmineGitHosting::Config.get_setting :http_server_subdir
+  gitolite_http_by_default = RedmineGitHosting::Config.get_setting :gitolite_http_by_default
 
-- gitolite_http_by_default = RedmineGitHosting::Config.get_setting(:gitolite_http_by_default)
-
-h3 = l(:label_gitolite_access_config)
+h3 = l :label_gitolite_access_config
 
 p
-  label = l(:label_ssh_server_domain)
-  = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60
+  label = l :label_ssh_server_domain
+  = text_field_tag 'settings[ssh_server_domain]', ssh_server_domain, size: 60, required: true
   br
   em.info
-    = l(:label_default_domain_name) + ' :'
+    = l :label_default_domain_name
+    ' :
     = Setting.host_name.split('/').first
 
 p
-  label = l(:label_http_server_domain)
-  = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60
+  label = l :label_http_server_domain
+  = text_field_tag 'settings[http_server_domain]', http_server_domain, size: 60, required: true
   br
   em.info
-    = l(:label_default_domain_name) + ' :'
+    = l :label_default_domain_name
+    ' :
     = Setting.host_name.split('/').first
 
 p
-  label = l(:label_https_server_domain)
+  label = l :label_https_server_domain
   = text_field_tag 'settings[https_server_domain]', https_server_domain, size: 60
   br
   em.info
-    = l(:label_https_server_domain_desc)
+    = l :label_https_server_domain_desc
 
 p
-  label == l(:label_http_server_subdir)
+  label = l :label_http_server_subdir
   = text_field_tag 'settings[http_server_subdir]', http_server_subdir, size: 60
 
 p
-  label = l(:label_gitolite_http_by_default)
+  label = l :label_gitolite_http_by_default
   = select_tag 'settings[gitolite_http_by_default]', options_for_select(RepositoryGitExtra::SMART_HTTP_OPTIONS, gitolite_http_by_default)
-
-p
-  = additionals_settings_checkbox :show_repositories_url,
-                                  value: RedmineGitHosting::Config.get_setting(:show_repositories_url, true),
-                                  value_is_bool: true
 
 p
   = additionals_settings_checkbox :gitolite_daemon_by_default,

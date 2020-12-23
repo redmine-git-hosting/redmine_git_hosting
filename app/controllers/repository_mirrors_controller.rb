@@ -7,7 +7,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
   helper :additionals_clipboardjs
 
   def index
-    @repository_mirrors = @repository.mirrors.all
+    @repository_mirrors = @repository.mirrors.sorted
     render_with_api
   end
 
@@ -18,7 +18,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
   def create
     @mirror = @repository.mirrors.new
     @mirror.safe_attributes = params[:repository_mirror]
-    return unless @mirror.save
+    return render action: 'new' unless @mirror.save
 
     flash[:notice] = l(:notice_mirror_created)
     render_js_redirect
@@ -26,7 +26,7 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   def update
     @mirror.safe_attributes = params[:repository_mirror]
-    return unless @mirror.save
+    return render action: 'edit' unless @mirror.save
 
     flash[:notice] = l(:notice_mirror_updated)
     render_js_redirect

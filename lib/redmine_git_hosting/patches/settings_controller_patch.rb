@@ -5,7 +5,7 @@ module RedmineGitHosting
     module SettingsControllerPatch
       def self.prepended(base)
         base.class_eval do
-          helper :bootstrap_kit
+          helper :git_hosting
           helper :gitolite_plugin_settings
         end
       end
@@ -72,5 +72,5 @@ module RedmineGitHosting
 end
 
 unless SettingsController.included_modules.include?(RedmineGitHosting::Patches::SettingsControllerPatch)
-  SettingsController.send(:prepend, RedmineGitHosting::Patches::SettingsControllerPatch)
+  SettingsController.prepend RedmineGitHosting::Patches::SettingsControllerPatch
 end

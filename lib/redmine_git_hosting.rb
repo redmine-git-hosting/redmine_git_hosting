@@ -24,26 +24,32 @@ module RedmineGitHosting
                         'reports',
                         'services',
                         'use_cases',
-                        ['controllers', 'concerns'],
-                        ['models', 'concerns']
+                        %w[controllers concerns],
+                        %w[models concerns]
 
   def logger
-    @logger ||= RedmineGitHosting::Logger.init_logs!('RedmineGitHosting', logfile, loglevel)
+    @logger ||= if ['Journald::Logger', 'Journald::TraceLogger'].include? Rails.logger.class.to_s
+                  RedmineGitHosting::JournalLogger.init_logs! logprogname, loglevel
+                else
+                  RedmineGitHosting::FileLogger.init_logs! logprogname, logfile, loglevel
+                end
+  end
+
+  def logprogname
+    'redmine_git_hosting'
   end
 
   def logfile
-    Rails.root.join('log', 'git_hosting.log')
+    Rails.root.join('log/git_hosting.log')
   end
 
   def loglevel
     case RedmineGitHosting::Config.gitolite_log_level
-    when 'debug' then
+    when 'debug'
       Logger::DEBUG
-    when 'info' then
-      Logger::INFO
-    when 'warn' then
+    when 'warn'
       Logger::WARN
-    when 'error' then
+    when 'error'
       Logger::ERROR
     else
       Logger::INFO

@@ -1,0 +1,162 @@
+name: Test
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.redmine }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ['2.6', '2.4']
+        redmine: ['4.1-stable', 'master']
+        db: ['postgres', 'mysql']
+      fail-fast: false
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_USER: root
+          MYSQL_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Verify MySQL connection from host
+        run: |
+          mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW DATABASES"
+        if: matrix.db == 'mysql'
+
+      - name: Checkout Redmine
+        uses: actions/checkout@v2
+        with:
+          repository: redmine/redmine
+          ref: ${{ matrix.redmine }}
+          path: redmine
+
+      - name: Checkout redmine_git_hosting
+        uses: actions/checkout@v2
+        with:
+          path: redmine/plugins/redmine_git_hosting
+
+      - name: Checkout additionals
+        uses: actions/checkout@v2
+        with:
+          repository: AlphaNodes/additionals
+          path: redmine/plugins/additionals
+
+      - name: Checkout redmine_sidekiq
+        uses: actions/checkout@v2
+        with:
+          repository: ogom/redmine_sidekiq
+          path: redmine/plugins/redmine_sidekiq
+
+      - name: Checkout gitolite
+        uses: actions/checkout@v2
+        with:
+          repository: sitaramc/gitolite
+          path: gitolite
+
+      - name: Update package archives
+        run: sudo apt-get update --yes --quiet
+
+      - name: Install package dependencies
+        run: >
+          sudo apt-get install --yes --quiet
+          build-essential
+          cmake
+          libgpg-error-dev
+          libicu-dev
+          libpq-dev
+          libmysqlclient-dev
+          libssh2-1
+          libssh2-1-dev
+          subversion
+
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Setup Cache
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: v1-ruby-${{ matrix.ruby }}-redmine-${{ matrix.redmine }}
+
+      - name: Setup Bundler
+        run: |
+          gem install bundler -v '~> 1.0'
+          bundle config path "$(pwd)/vendor/bundle"
+
+      - name: Prepare Redmine source
+        working-directory: redmine
+        run: |
+          sed -i '/rubocop/d' Gemfile
+          rm -f .rubocop*
+          cp plugins/redmine_git_hosting/contrib/github/database-${{ matrix.db }}.yml config/database.yml
+
+      - name: Install admin ssh key
+        working-directory: redmine
+        run: |
+          ssh-keygen -N '' -f plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
+
+      - name: Install Gitolite
+        working-directory: redmine
+        run: |
+          sudo useradd --create-home git
+          sudo -n -u git -i mkdir bin
+          sudo -n -u git -i $GITHUB_WORKSPACE/gitolite/install -to /home/git/bin
+          sudo cp plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub /home/git/
+          sudo chown git.git /home/git/redmine_gitolite_admin_id_rsa.pub
+          sudo -n -u git -i bin/gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
+
+      - name: Install Ruby dependencies
+        working-directory: redmine
+        run: |
+          bundle install --jobs=4 --retry=3 --without development
+
+      - name: Run Redmine rake tasks
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: |
+          bundle exec rake generate_secret_token
+          bundle exec rake db:create db:migrate redmine:plugins:migrate
+          bundle exec rake db:test:prepare
+
+      - name: Install rspec file
+        working-directory: redmine
+        run: |
+          mkdir spec
+          cp plugins/redmine_git_hosting/spec/root_spec_helper.rb spec/spec_helper.rb
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          REDMINE_VERSION: ${{ matrix.redmine }}
+        working-directory: redmine
+        run: bundle exec rake redmine_git_hosting:ci:all

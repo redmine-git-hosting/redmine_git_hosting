@@ -37,7 +37,6 @@ module Gitolitable
       repo_conf
     end
 
-
     def gitolite_options
       repo_conf = {}
 
@@ -48,30 +47,25 @@ module Gitolitable
       repo_conf
     end
 
-
     def owner
       { name: Setting['app_title'], email: Setting['mail_from'] }
     end
 
-
     def github_payload
       {
-        repository: {
-          owner:        owner,
-          description:  project.description,
-          fork:         false,
-          forks:        0,
-          homepage:     project.homepage,
-          name:         redmine_name,
-          open_issues:  project.issues.open.length,
-          watchers:     0,
-          private:      !project.is_public,
-          url:          repository_url
-        },
-        pusher: owner,
+        repository: { owner: owner,
+                      description: project.description,
+                      fork: false,
+                      forks: 0,
+                      homepage: project.homepage,
+                      name: redmine_name,
+                      open_issues: project.issues.open.length,
+                      watchers: 0,
+                      private: !project.is_public,
+                      url: repository_url },
+        pusher: owner
       }
     end
-
 
     def repository_url
       Rails.application.routes.url_helpers.url_for(
@@ -80,6 +74,5 @@ module Gitolitable
         only_path: false, host: Setting['host_name'], protocol: Setting['protocol']
       )
     end
-
   end
 end

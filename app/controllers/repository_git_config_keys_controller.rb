@@ -19,7 +19,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   def create
     @git_config_key = @repository.send(key_type).new
     @git_config_key.safe_attributes = params[:repository_git_config_key]
-    return unless @git_config_key.save
+    return render action: 'new' unless @git_config_key.save
 
     flash[:notice] = l(:notice_git_config_key_created)
     call_use_case_and_redirect
@@ -27,7 +27,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
   def update
     @git_config_key.safe_attributes = params[:repository_git_config_key]
-    return unless @git_config_key.save
+    return render action: 'edit' unless @git_config_key.save
 
     flash[:notice] = l(:notice_git_config_key_updated)
     options = @git_config_key.key_has_changed? ? { delete_git_config_key: @git_config_key.old_key } : {}

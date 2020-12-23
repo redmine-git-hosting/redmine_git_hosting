@@ -10,7 +10,6 @@ module RedmineGitHosting
         RedmineGitHosting::Utils::Exec.capture(cmd, args, opts)
       end
 
-
       # Wrapper to Open3.capture.
       #
       def execute(args = [], opts = {})
@@ -18,14 +17,11 @@ module RedmineGitHosting
         RedmineGitHosting::Utils::Exec.execute(cmd, args, opts)
       end
 
-
       private
 
-
-        def logger
-          RedmineGitHosting.logger
-        end
-
+      def logger
+        RedmineGitHosting.logger
+      end
     end
   end
 end

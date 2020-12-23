@@ -12,7 +12,6 @@ module RedmineGitHosting
         secret = secret.split(//).sample(length).join('')
         secret
       end
-
     end
   end
 end

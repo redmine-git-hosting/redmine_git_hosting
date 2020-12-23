@@ -5,7 +5,8 @@ class ArchivedRepositoriesController < RepositoriesController
   before_action :can_view_archived_projects
 
   def index
-    @archived_projects = Project.where("status = #{Project::STATUS_ARCHIVED}").includes(:repositories)
+    @archived_projects = Project.where(status: Project::STATUS_ARCHIVED)
+                                .includes(:repositories)
   end
 
   private

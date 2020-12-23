@@ -11,56 +11,51 @@ module RedmineGitHosting
       #                        #
       ##########################
 
-
       # Pipe file content via sudo to dest_file.
       # Expect file content to end with EOL (\n)
       #
       def sudo_install_file(content, dest_file, filemode)
-        stdin = [ 'cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF" ].join(' ')
+        stdin = ['cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF"].join(' ')
 
         begin
           sudo_pipe_data(stdin)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           logger.error(e.output)
-          return false
+          false
         else
           begin
             sudo_chmod(filemode, dest_file)
-            return true
+            true
           rescue RedmineGitHosting::Error::GitoliteCommandException => e
             logger.error(e.output)
-            return false
+            false
           end
         end
       end
 
-
       # Test if a file exists with size > 0
       #
       def sudo_file_exists?(filename)
-        sudo_test(filename, '-s')
+        sudo_test filename, '-s'
       end
-
 
       # Test if a directory exists
       #
       def sudo_dir_exists?(dirname)
-        sudo_test(dirname, '-r')
+        sudo_test dirname, '-r'
       end
-
 
       # Test properties of a path from the git user.
       #
       # e.g., Test if a directory exists: sudo_test('~/somedir', '-d')
       #
       def sudo_test(path, testarg)
-        _, _ , code = sudo_shell('test', testarg, path)
-        return code == 0
+        _, _, code = sudo_shell('test', testarg, path)
+        code.to_i.zero?
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.debug("File check for #{path} failed : #{e.message}")
         false
       end
-
 
       # Calls mkdir with the given arguments on the git user's side.
       #
@@ -70,13 +65,11 @@ module RedmineGitHosting
         sudo_shell('mkdir', *args)
       end
 
-
       # Syntaxic sugar for 'mkdir -p'
       #
       def sudo_mkdir_p(path)
-        sudo_mkdir('-p', path)
+        sudo_mkdir '-p', path
       end
-
 
       # Calls chmod with the given arguments on the git user's side.
       #
@@ -85,7 +78,6 @@ module RedmineGitHosting
       def sudo_chmod(mode, file)
         sudo_shell('chmod', mode, file)
       end
-
 
       # Removes a directory and all subdirectories below gitolite_user's $HOME.
       #
@@ -102,13 +94,11 @@ module RedmineGitHosting
         end
       end
 
-
       # Syntaxic sugar for 'rm -rf' command
       #
       def sudo_rm_rf(path)
         sudo_rmdir(path, true)
       end
-
 
       # Moves a file/directory to a new target.
       #
@@ -116,16 +106,13 @@ module RedmineGitHosting
         sudo_shell('mv', old_path, new_path)
       end
 
-
       def sudo_get_dir_size(directory)
         sudo_capture('du', '-sh', directory).split(' ')[0] rescue ''
       end
 
-
       def sudo_cat(file)
         sudo_capture('cat', file) rescue ''
       end
-
 
       # Test if file content has changed
       #
@@ -133,17 +120,15 @@ module RedmineGitHosting
         hash_content(content_from_redmine_side(source_file)) != hash_content(content_from_gitolite_side(dest_file))
       end
 
-
       # Test if file permissions has changed
       #
       def sudo_file_perms_changed?(filemode, dest_file)
-        current_mode = sudo_capture('stat', '-c', "%a", dest_file)
+        current_mode = sudo_capture('stat', '-c', '%a', dest_file)
         current_mode.chomp != filemode
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
         logger.error(e.output)
         false
       end
-
 
       # Return only the output of the shell command.
       # Throws an exception if the shell command does not exit with code 0.
@@ -152,7 +137,6 @@ module RedmineGitHosting
         cmd = sudo.concat(params)
         capture(cmd)
       end
-
 
       # Execute a command as the gitolite user defined in +GitoliteWrapper.gitolite_user+.
       #
@@ -163,7 +147,6 @@ module RedmineGitHosting
         execute(cmd)
       end
 
-
       # Write data on stdin and return the output of the shell command.
       # Throws an exception if the shell command does not exit with code 0.
       #
@@ -172,56 +155,49 @@ module RedmineGitHosting
         capture(cmd, { stdin_data: stdin, binmode: true })
       end
 
-
       private
 
-
-        # Return the Sudo command with basic args.
-        #
-        def sudo
-          if RedmineGitHosting::Config.gitolite_use_sudo?
-            ['sudo', *sudo_shell_params]
-          else
-            []
-          end
+      # Return the Sudo command with basic args.
+      #
+      def sudo
+        if RedmineGitHosting::Config.gitolite_use_sudo?
+          ['sudo', *sudo_shell_params]
+        else
+          []
         end
+      end
 
+      # Returns the sudo prefix to all sudo_* commands.
+      #
+      # These are as follows:
+      # * (-i) login as `gitolite_user` (setting ENV['HOME')
+      # * (-n) non-interactive
+      # * (-u `gitolite_user`) target user
+      #
+      def sudo_shell_params
+        ['-n', '-u', RedmineGitHosting::Config.gitolite_user, '-i']
+      end
 
-        # Returns the sudo prefix to all sudo_* commands.
-        #
-        # These are as follows:
-        # * (-i) login as `gitolite_user` (setting ENV['HOME')
-        # * (-n) non-interactive
-        # * (-u `gitolite_user`) target user
-        #
-        def sudo_shell_params
-          ['-n', '-u', RedmineGitHosting::Config.gitolite_user, '-i']
-        end
+      # Return a md5 hash of the string passed.
+      #
+      def hash_content(content)
+        Digest::MD5.hexdigest(content)
+      end
 
+      # Return the content of a local (Redmine side) file.
+      #
+      def content_from_redmine_side(file)
+        File.read(file)
+      rescue Errno::ENOENT => e
+        logger.error(e.message)
+        ''
+      end
 
-        # Return a md5 hash of the string passed.
-        #
-        def hash_content(content)
-          Digest::MD5.hexdigest(content)
-        end
-
-
-        # Return the content of a local (Redmine side) file.
-        #
-        def content_from_redmine_side(file)
-          File.read(file)
-        rescue Errno::ENOENT => e
-          logger.error(e.message)
-          ''
-        end
-
-
-        # Return the content of a file on Gitolite side.
-        #
-        def content_from_gitolite_side(destination_path)
-          sudo_cat(destination_path)
-        end
-
+      # Return the content of a file on Gitolite side.
+      #
+      def content_from_gitolite_side(destination_path)
+        sudo_cat(destination_path)
+      end
     end
   end
 end

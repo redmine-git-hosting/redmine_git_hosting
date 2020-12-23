@@ -33,7 +33,6 @@ class RepositoryGitExtrasController < RedmineGitHostingController
     return unless request.post?
 
     @move_repository_form = MoveRepositoryForm.new(@repository)
-
     return unless @move_repository_form.submit(params[:repository_mover])
 
     redirect_to settings_project_path(@repository.project, tab: 'repositories')

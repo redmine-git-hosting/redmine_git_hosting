@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Repositories
       class UpdateRepository < GitoliteWrappers::Base
-
         def call
           if !repository.nil?
             update_repository
@@ -11,11 +10,9 @@ module RedmineGitHosting
           end
         end
 
-
         def repository
           @repository ||= Repository.find_by_id(object_id)
         end
-
 
         def update_repository
           admin.transaction do
@@ -32,7 +29,6 @@ module RedmineGitHosting
           # Fetch changeset
           repository.fetch_changesets
         end
-
       end
     end
   end

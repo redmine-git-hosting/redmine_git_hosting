@@ -1,8 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe Repository::Xitolite do
-
-  GIT_USER = 'git'
+  GIT_USER = 'git'.freeze
 
   before(:all) do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
@@ -12,7 +11,6 @@ describe Repository::Xitolite do
     @project_parent = FactoryBot.create(:project, identifier: 'project-parent')
     @project_child  = FactoryBot.create(:project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false)
   end
-
 
   describe 'common_tests : fast tests' do
     before(:each) do
@@ -41,7 +39,7 @@ describe Repository::Xitolite do
     it { expect(@repository_1.report_last_commit).to be true }
     it { expect(@repository_1.extra_report_last_commit).to be true }
     it { expect(@repository_1.git_default_branch).to eq 'master' }
-    it { expect(@repository_1.gitolite_hook_key).to match /\A[a-zA-Z0-9]+\z/ }
+    it { expect(@repository_1.gitolite_hook_key).to match(/\A[a-zA-Z0-9]+\z/) }
     it { expect(@repository_1.git_daemon_enabled?).to be true }
     it { expect(@repository_1.git_annex_enabled?).to be false }
     it { expect(@repository_1.git_notification_enabled?).to be true }
@@ -55,11 +53,9 @@ describe Repository::Xitolite do
     it { expect(@repository_1.public_repo?).to be false }
     it { expect(@repository_1.urls_order).to eq [] }
 
-
     it 'should not allow identifier gitolite-admin' do
       expect(build_git_repository(project: @project_parent, identifier: 'gitolite-admin')).to be_invalid
     end
-
 
     describe '#exists_in_gitolite?' do
       it 'should check if repository exists on Gitolite side' do
@@ -70,26 +66,30 @@ describe Repository::Xitolite do
 
     describe '#empty_in_gitolite?' do
       it 'should check if repository is empty on Gitolite side' do
-        expect(RedmineGitHosting::Commands).to receive(:sudo_repository_empty?).with('repositories/redmine/project-parent/project-child.git')
+        expect(RedmineGitHosting::Commands).to receive(:sudo_repository_empty?)
+          .with('repositories/redmine/project-parent/project-child.git')
         @repository_1.empty_in_gitolite?
       end
     end
 
     describe '#git_objects_count' do
       it 'should return repository objects count' do
-        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count).with('repositories/redmine/project-parent/project-child.git/objects')
+        expect(RedmineGitHosting::Commands).to receive(:sudo_git_objects_count)
+          .with('repositories/redmine/project-parent/project-child.git/objects')
         @repository_1.git_objects_count
       end
     end
 
     describe '#data_for_destruction' do
       it 'should return a hash of data' do
-        expect(@repository_1.data_for_destruction).to eq({
-          delete_repository: true,
-          git_cache_id:      'project-child',
-          repo_name:         'redmine/project-parent/project-child',
-          repo_path:         '/home/git/repositories/redmine/project-parent/project-child.git',
-        })
+        expect(@repository_1.data_for_destruction).to eq(
+          {
+            delete_repository: true,
+            git_cache_id: 'project-child',
+            repo_name: 'redmine/project-parent/project-child',
+            repo_path: "#{HOME_BASE_DIR}/git/repositories/redmine/project-parent/project-child.git"
+          }
+        )
       end
     end
 
@@ -122,11 +122,11 @@ describe Repository::Xitolite do
 
       context 'with all options' do
         my_hash = {
-          ssh:   { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git",     committer: 'true' },
+          ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'true' },
           https: { url: 'https://redmine-test-user@localhost/git/project-parent/project-child.git', committer: 'true' },
-          http:  { url: 'http://redmine-test-user@localhost/git/project-parent/project-child.git',  committer: 'false' },
-          go:    { url: 'localhost/go/project-parent/project-child',                                committer: 'false' },
-          git:   { url: 'git://localhost/redmine/project-parent/project-child.git',                 committer: 'false' }
+          http: { url: 'http://redmine-test-user@localhost/git/project-parent/project-child.git', committer: 'false' },
+          go: { url: 'localhost/go/project-parent/project-child', committer: 'false' },
+          git: { url: 'git://localhost/redmine/project-parent/project-child.git', committer: 'false' }
         }
 
         it 'should return a Hash of Git url' do
@@ -210,7 +210,7 @@ describe Repository::Xitolite do
       context 'with http and https' do
         my_hash = {
           https: { url: 'https://localhost/git/project-parent/project-child.git', committer: 'false' },
-          http:  { url: 'http://localhost/git/project-parent/project-child.git',  committer: 'false' }
+          http: { url: 'http://localhost/git/project-parent/project-child.git', committer: 'false' }
         }
 
         it 'should return a Hash of Git url' do
@@ -227,7 +227,6 @@ describe Repository::Xitolite do
       end
     end
 
-
     describe 'Repository::Xitolite class' do
       it { expect(Repository::Xitolite).to respond_to(:repo_ident_unique?) }
       it { expect(Repository::Xitolite).to respond_to(:have_duplicated_identifier?) }
@@ -235,7 +234,6 @@ describe Repository::Xitolite do
       it { expect(Repository::Xitolite).to respond_to(:find_by_path) }
     end
   end
-
 
   describe 'common_tests : long tests' do
     before do
@@ -249,7 +247,7 @@ describe Repository::Xitolite do
       @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
     end
 
-   context 'when blank identifier' do
+    context 'when blank identifier' do
       it 'should not allow identifier changes' do
         @repository_1.identifier = 'new_repo'
         expect(@repository_1).to be_invalid
@@ -264,7 +262,6 @@ describe Repository::Xitolite do
         expect(@repository_2.identifier).to eq 'repo-test'
       end
     end
-
 
     describe 'Test uniqueness' do
       context 'when blank identifier is already taken by a repository' do
