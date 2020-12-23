@@ -30,9 +30,10 @@ class RepositoryMirror < ActiveRecord::Base
   validate :mirror_configuration
 
   ## Scopes
-  scope :active,               -> { where(active: true) }
-  scope :inactive,             -> { where(active: false) }
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
   scope :has_explicit_refspec, -> { where(push_mode: '> 0') }
+  scope :sorted, -> { order(:url) }
 
   ## Callbacks
   before_validation :strip_whitespace

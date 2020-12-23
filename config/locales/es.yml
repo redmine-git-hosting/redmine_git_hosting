@@ -50,17 +50,16 @@ es:
               taken: "ya está en uso."
               invalid: inválido
               cannot_change: no se puede cambiar
-  all_branches: Todas&nbsp;las&nbsp;ramas
-  all_references: Todas&nbsp;las&nbsp;referencias
-  all_tags: Todas&nbsp;las&nbsp;etiquetas
+  all_branches: Todas las ramas
+  all_references: Todas las referencias
+  all_tags: Todas las etiquetas
   button_clone: Clonar
-  button_ok: Aceptar
-  display_access_emphasis: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
+  display_access_emphasis_html: "En los patrones de arriba, los componentes <em>resaltados</em> representan elementos dependientes del contexto."
   display_access_flat: "Los proyectos padre no se incluyen en las URLs, ya que el repositorio está en modo <em>plano</em>."
   display_access_hierarchical: "Los proyectos padre se incluyen en las URLs, ya que el repositorio está en modo <em>jerárquico</em>."
-  display_access_setup1: "Asumiendo que <em>proyecto1</em> es padre de <em>proyecto2</em>, y que <em>proyecto2</em> es padre de <em>proyecto3</em>."
-  display_access_setup2: "Además, asumiendo que el proyecto <em>proyecto3</em> tiene 2 repositorios: el repositorio <em>pordefecto</em> y el repositorio <em>ejemplo</em>."
-  display_access_setup3: "Con dicha configuración, el proyecto <em>proyecto3</em> tiene las siguientes propiedades:"
+  display_access_setup1_html: "Asumiendo que <em>proyecto1</em> es padre de <em>proyecto2</em>, y que <em>proyecto2</em> es padre de <em>proyecto3</em>."
+  display_access_setup2_html: "Además, asumiendo que el proyecto <em>proyecto3</em> tiene 2 repositorios: el repositorio <em>pordefecto</em> y el repositorio <em>ejemplo</em>."
+  display_access_setup3_html: "Con dicha configuración, el proyecto <em>proyecto3</em> tiene las siguientes propiedades:"
   error_download_revision_no_such_commit: "No existe el commit %{commit}"
   error_project_not_found: "No se ha encontrado ningún proyecto con este identificador"
   error_public_key_create_failed: Ha fallado la creación de la clave pública.
@@ -74,7 +73,6 @@ es:
   field_use_triggers: Usar triggers
   label_active_for: Activo durante
   label_all_projects_use_git: ¿Inicializar automáticamente un repositorio Git en los proyectos nuevos?
-  label_archived_repositories: Repositorios archivados
   label_average_commit_per_day: Media de commits por día
   label_average_contributor_commits: Media de commits por contribuidor
   label_backup_in_progress: Guardando...
@@ -85,8 +83,6 @@ es:
   label_commits_per_day: Commits por día
   label_commits_per_hour: Commits por hora
   label_commits_per_weekday: Commits por día de la semana
-  label_copied_to_clipboard: ¡Copiado!
-  label_copy_to_clipboard: Copiar al portapapeles
   label_current_deploy_keys: Claves de despliegue actuales
   label_current_public_keys: Claves públicas actuales
   label_current_user_keys: Claves de usuario actuales
@@ -96,11 +92,11 @@ es:
   label_default_gitolite_hooks_url: URL por defecto
   label_default_repository: Repository por defecto
   label_delete_from_recyle_bin: Borrar de la papelera de reciclaje
-  label_delete_git_repositories: ¿Borrar el repositorio de Git cuando se borre el proyecto?<br/> (se moverá a la papelera de reciclaje)
+  label_delete_git_repositories: ¿Borrar el repositorio de Git cuando se borre el proyecto?
+  info_delete_git_repositories: (se moverá a la papelera de reciclaje)
   label_delete_in_progress: Borrando...
   label_delete_warning: ¡Atención! ¡El borrado es permanente!
   label_deploy_key: Clave de despliegue
-  label_deployment_credential_active: ¿Activo?
   label_deployment_credential_add: Añadir credencial de despliegue
   label_deployment_credential_create_key_first: No se ha detectado ninguna clave de despliegue. Debe crear una antes.
   label_deployment_credential_create: Crear nueva credencial de despliegue
@@ -116,7 +112,7 @@ es:
   label_download_and_install_git: Descargar e instalar Git
   label_download_format: Descargar como
   label_download_select_format: Seleccionar formato
-  label_empty_get: GET&nbsp;vacío
+  label_empty_get: GET vacío
   label_empty_recycle_bin: Vaciar la papelera de reciclaje
   label_empty_repository: ¿Repositorio vacío?
   label_enable_git_daemon: Activar el daemon de Git
@@ -124,7 +120,6 @@ es:
   label_enable_protected_branches: Activar las ramas protegidas
   label_enable_public_repo: Hacer público el repositorio
   label_enable_smart_http: Modo HTTP inteligente
-  label_enabled: Activado
   label_error: Error
   label_etcetera: etc.
   label_example_repository: Repository de ejemplo
@@ -151,7 +146,7 @@ es:
   label_git_option_key_add: Añadir una opción de Gitolite
   label_git_option_keys: Optiones de configuración de Gitolite
   label_git_version: Versión de Git
-  label_github_post: POST&nbsp;GitHub
+  label_github_post: POST GitHub
   label_gitolite_access_config: Configuración de acceso de Gitolite
   label_gitolite_banner: Banner de Gitolite
   label_gitolite_bin_dir: Carpeta de binarios de Gitolite
@@ -253,7 +248,6 @@ es:
   label_mirror_forced_update: Forzar la actualización de la réplica
   label_mirror_full_mirror: Réplica completa
   label_mirror_help: Las réplicas deben autorizar el acceso de escritura a la siguiente clave pública
-  label_mirror_inactive: Inactivo
   label_mirror_include_all_branches: Enviar todas las ramas
   label_mirror_include_all_tags: Enviar todas las etiquetas
   label_mirror_push_fail: Erróneo
@@ -317,7 +311,6 @@ es:
   label_resync_all_ssh_keys: ¿Resincronizar todas las claves SSH?
   label_see_other_repositories: Ver otros repositorios
   label_select_all: Seleccionar todo
-  label_show_repositories_url: ¿Mostrar URLs de checkout?
   label_smart_http: HTTP inteligente
   label_sort_urls: (Ordenar URLs)
   label_split_payloads: dividir payloads
@@ -409,3 +402,5 @@ es:
   select_other_keys: Otras claves
   text_gitolite_key_destroy_confirmation: "¿Seguro que quiere destruir esta clave: %{title}?"
   text_scm_command_not_available_git_hosting: el comando SCM no está disponible. Por favor, compruebe la configuración en el panel de administración del conector Redmine Git Hosting.
+  label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

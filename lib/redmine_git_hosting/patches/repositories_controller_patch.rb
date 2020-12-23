@@ -8,7 +8,7 @@ module RedmineGitHosting
         base.class_eval do
           before_action :set_current_tab, only: :edit
 
-          helper :bootstrap_kit
+          helper :git_hosting
           helper :additionals_clipboardjs
           helper :watchers
 
@@ -138,7 +138,7 @@ module RedmineGitHosting
             User.current.preference.save
           end
           @cache_key = "repositories/diff/#{@repository.id}/" +
-                          Digest::MD5.hexdigest("#{@path}-#{@rev}-#{@rev_to}-#{@diff_type}-#{current_language}")
+                       Digest::MD5.hexdigest("#{@path}-#{@rev}-#{@rev_to}-#{@diff_type}-#{current_language}")
           unless read_fragment(@cache_key)
             @diff = @repository.diff(@path, @rev, @rev_to)
             unless @diff

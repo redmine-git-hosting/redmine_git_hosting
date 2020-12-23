@@ -2,11 +2,14 @@ module RedmineGitHosting
   module Error
     # Used to register errors when pulling and pushing the conf file
     class GitoliteException         < StandardError; end
+
     class GitoliteWrapperException  < GitoliteException; end
+
     class InvalidSshKey             < GitoliteException; end
 
     class InvalidRefspec  < GitoliteException
       class BadFormat     < InvalidRefspec; end
+
       class NullComponent < InvalidRefspec; end
     end
 

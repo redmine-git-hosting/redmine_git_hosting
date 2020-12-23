@@ -31,7 +31,7 @@ GIT_URL_BOX
   float: left;
   font-family: "DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",monospace;
   font-size: 10px;
-  height: 18px;
+  height: 25px;
   margin: 0;
   min-width: 55%;
   padding: 3px 5px 2px;
@@ -99,4 +99,13 @@ GIT_URL_BOX
   content: "\f841"; /* fab git-alt */
   padding-right: 4px;
   font-size: 18px;
+}
+
+.clipboard-button {
+  padding-left: 6px;
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 25px;
 }

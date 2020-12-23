@@ -1,11 +1,11 @@
 module GitolitePluginSettingsHelper
   def render_gitolite_params_status(params)
-    content_tag(:ul, class: 'list-unstyled') do
+    tag.ul class: 'list-unstyled' do
       content = ''
       params.each do |param, installed|
-        content << content_tag(:li, style: 'padding: 2px;') do
+        content << tag.li do
           image_tag(image_for_param(installed), style: 'vertical-align: bottom; padding-right: 5px;') +
-            content_tag(:em, label_for_param(param, installed))
+            tag.em(label_for_param(param, installed))
         end
       end
       content.html_safe
@@ -29,35 +29,61 @@ module GitolitePluginSettingsHelper
 
   def render_gitolite_version(version)
     if version.nil?
-      css_class = 'label label-important'
+      css_class = 'label label-error'
       label = l(:label_unknown_gitolite_version)
     else
       css_class = 'label label-success'
       label = version
     end
-    content_tag(:span, label, class: css_class)
+    tag.span label, class: css_class
   end
 
   def render_temp_dir_writeable(state, label)
-    css_class = state ? 'label label-success' : 'label label-important'
-    content_tag(:span, label, class: css_class)
+    css_class = state ? 'label label-success' : 'label label-error'
+    tag.span label, class: css_class
   end
 
   def gitolite_plugin_settings_tabs
     [
-      { name: 'gitolite_config_ssh',        partial: 'settings/redmine_git_hosting/gitolite_config_ssh',     label: :label_tab_ssh },
-      { name: 'gitolite_config_storage',    partial: 'settings/redmine_git_hosting/gitolite_config_storage', label: :label_tab_storage },
-      { name: 'gitolite_config_file',       partial: 'settings/redmine_git_hosting/gitolite_config_file',    label: :label_tab_config_file },
-      { name: 'gitolite_config_global',     partial: 'settings/redmine_git_hosting/gitolite_config_global',  label: :label_tab_global },
-      { name: 'gitolite_config_access',     partial: 'settings/redmine_git_hosting/gitolite_config_access',  label: :label_tab_access },
-      { name: 'gitolite_config_hooks',      partial: 'settings/redmine_git_hosting/gitolite_config_hooks',   label: :label_tab_hooks },
-      { name: 'gitolite_config_cache',      partial: 'settings/redmine_git_hosting/gitolite_config_cache',   label: :label_tab_cache },
-      { name: 'gitolite_config_notify',     partial: 'settings/redmine_git_hosting/gitolite_config_notify',  label: :label_tab_notify },
-      { name: 'gitolite_redmine_config',    partial: 'settings/redmine_git_hosting/redmine_config',          label: :label_tab_redmine },
-      { name: 'gitolite_sidekiq_interface', partial: 'settings/redmine_git_hosting/sidekiq_interface',       label: :label_tab_sidekiq_interface },
-      { name: 'gitolite_config_test',       partial: 'settings/redmine_git_hosting/gitolite_config_test',    label: :label_tab_config_test },
-      { name: 'gitolite_recycle_bin',       partial: 'settings/redmine_git_hosting/gitolite_recycle_bin',    label: :label_tab_gitolite_recycle_bin },
-      { name: 'gitolite_rescue',            partial: 'settings/redmine_git_hosting/gitolite_rescue',         label: :label_tab_gitolite_rescue }
+      { name: 'gitolite_config_ssh',
+        partial: 'settings/redmine_git_hosting/gitolite_config_ssh',
+        label: :label_tab_ssh },
+      { name: 'gitolite_config_storage',
+        partial: 'settings/redmine_git_hosting/gitolite_config_storage',
+        label: :label_tab_storage },
+      { name: 'gitolite_config_file',
+        partial: 'settings/redmine_git_hosting/gitolite_config_file',
+        label: :label_tab_config_file },
+      { name: 'gitolite_config_global',
+        partial: 'settings/redmine_git_hosting/gitolite_config_global',
+        label: :label_tab_global },
+      { name: 'gitolite_config_access',
+        partial: 'settings/redmine_git_hosting/gitolite_config_access',
+        label: :label_tab_access },
+      { name: 'gitolite_config_hooks',
+        partial: 'settings/redmine_git_hosting/gitolite_config_hooks',
+        label: :label_tab_hooks },
+      { name: 'gitolite_config_cache',
+        partial: 'settings/redmine_git_hosting/gitolite_config_cache',
+        label: :label_tab_cache },
+      { name: 'gitolite_config_notify',
+        partial: 'settings/redmine_git_hosting/gitolite_config_notify',
+        label: :label_tab_notify },
+      { name: 'gitolite_redmine_config',
+        partial: 'settings/redmine_git_hosting/redmine_config',
+        label: :label_tab_redmine },
+      { name: 'gitolite_sidekiq_interface',
+        partial: 'settings/redmine_git_hosting/sidekiq_interface',
+        label: :label_tab_sidekiq_interface },
+      { name: 'gitolite_config_test',
+        partial: 'settings/redmine_git_hosting/gitolite_config_test',
+        label: :label_tab_config_test },
+      { name: 'gitolite_recycle_bin',
+        partial: 'settings/redmine_git_hosting/gitolite_recycle_bin',
+        label: :label_tab_gitolite_recycle_bin },
+      { name: 'gitolite_rescue',
+        partial: 'settings/redmine_git_hosting/gitolite_rescue',
+        label: :label_tab_gitolite_rescue }
     ]
   end
 
@@ -73,7 +99,7 @@ module GitolitePluginSettingsHelper
   end
 
   def log_level_options
-    RedmineGitHosting::Logger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
+    RedmineGitHosting::FileLogger::LOG_LEVELS.map { |level| [l("label_#{level}"), level] }
   end
 
   def render_rugged_mandatory_features
@@ -82,9 +108,9 @@ module GitolitePluginSettingsHelper
       opts = if RedmineGitHosting::Config.rugged_features.include?(feature)
                { class: 'label label-success' }
              else
-               { class: 'label label-important' }
+               { class: 'label label-error' }
              end
-      content << content_tag(:span, feature, opts) + "\n"
+      content << "#{tag.span feature, opts}\n"
     end
     content.html_safe
   end
@@ -94,7 +120,7 @@ module GitolitePluginSettingsHelper
     RedmineGitHosting::Config.rugged_features.each do |feature|
       unless RedmineGitHosting::Config.rugged_mandatory_features.include?(feature)
         opts = { class: 'label label-success' }
-        content << content_tag(:span, feature, opts)
+        content << tag.span(feature, opts)
       end
     end
     content.html_safe

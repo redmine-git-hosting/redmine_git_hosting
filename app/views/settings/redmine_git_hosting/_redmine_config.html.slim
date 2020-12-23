@@ -1,7 +1,7 @@
 / Redmine Config
 - all_projects_use_git = RedmineGitHosting::Config.get_setting(:all_projects_use_git, true)
 
-h3= l(:label_redmine_config)
+h3 = l :label_redmine_config
 
 p
   = additionals_settings_checkbox :redmine_has_rw_access_on_all_repos,
@@ -21,6 +21,8 @@ p
   = additionals_settings_checkbox :delete_git_repositories,
                                   value: RedmineGitHosting::Config.get_setting(:delete_git_repositories, true),
                                   value_is_bool: true
+  em.info
+    = l(:info_delete_git_repositories)
 
 p
   = additionals_settings_checkbox :hierarchical_organisation,

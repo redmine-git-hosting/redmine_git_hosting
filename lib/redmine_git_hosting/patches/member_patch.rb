@@ -3,7 +3,6 @@ require_dependency 'member'
 module RedmineGitHosting
   module Patches
     module MemberPatch
-
       include RedmineGitHosting::GitoliteAccessor::Methods
 
       def self.prepended(base)
@@ -14,15 +13,12 @@ module RedmineGitHosting
 
       private
 
-        def update_project
-          options = { message: "Membership changes on project '#{project}', update!" }
-          gitolite_accessor.update_projects([project.id], options)
-        end
-
+      def update_project
+        options = { message: "Membership changes on project '#{project}', update!" }
+        gitolite_accessor.update_projects([project.id], options)
+      end
     end
   end
 end
 
-unless Member.included_modules.include?(RedmineGitHosting::Patches::MemberPatch)
-  Member.send(:prepend, RedmineGitHosting::Patches::MemberPatch)
-end
+Member.prepend RedmineGitHosting::Patches::MemberPatch unless Member.included_modules.include?(RedmineGitHosting::Patches::MemberPatch)

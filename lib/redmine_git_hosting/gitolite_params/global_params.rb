@@ -1,7 +1,6 @@
 module RedmineGitHosting
   module GitoliteParams
     class GlobalParams
-
       include BaseParam
 
       attr_reader :gitolite_hooks_url
@@ -10,7 +9,6 @@ module RedmineGitHosting
 
       attr_reader :namespace
       attr_reader :current_params
-
 
       def initialize
         # Params to set
@@ -28,7 +26,6 @@ module RedmineGitHosting
         @installed = {}
       end
 
-
       def installed?
         @installed['redmineurl'] = (current_params['redmineurl'] == gitolite_hooks_url)
         @installed['debugmode']  = (current_params['debugmode'] == debug_mode)
@@ -36,14 +33,12 @@ module RedmineGitHosting
         @installed
       end
 
-
       def install!
         @installed['redmineurl'] = set_git_config_param(namespace, 'redmineurl', gitolite_hooks_url)
         @installed['debugmode']  = set_git_config_param(namespace, 'debugmode', debug_mode)
         @installed['asyncmode']  = set_git_config_param(namespace, 'asyncmode', async_mode)
         @installed
       end
-
     end
   end
 end

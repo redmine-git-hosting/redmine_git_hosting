@@ -1,9 +1,10 @@
 ## ![logo](https://raw.github.com/jbox-web/redmine_git_hosting/gh-pages/images/git_logo.png) Redmine Git Hosting Plugin
 
-[![GitHub license](https://img.shields.io/github/license/jbox-web/redmine_git_hosting.svg)](https://github.com/jbox-web/redmine_git_hosting/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/jbox-web/redmine_git_hosting.svg)](https://github.com/jbox-web/redmine_git_hosting/blob/devel/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/jbox-web/redmine_git_hosting.svg)](https://github.com/jbox-web/redmine_git_hosting/releases/latest)
-[![Code Climate](https://codeclimate.com/github/jbox-web/redmine_git_hosting.png)](https://codeclimate.com/github/jbox-web/redmine_git_hosting)
-[![Build Status](https://travis-ci.com/jbox-web/redmine_git_hosting.svg?branch=master)](https://travis-ci.com/jbox-web/redmine_git_hosting)
+[![Brakeman security tests](../../workflows/Run%20Brakeman/badge.svg)](../../actions?query=workflow%3A%22Run+Brakeman%22)
+[![Coding standards](../../workflows/Run%20Linters/badge.svg)](../../actions?query=workflow%3A%22Run+Linters%22)
+[![Tests](../../workflows/Test/badge.svg)](../../actions?query=workflow%3ATest)
 
 ### A Redmine plugin which makes configuring your own Git hosting easy ;)
 
@@ -19,7 +20,7 @@ Read the documentation and more on the [project's website](http://redmine-git-ho
 
 ## Contributors
 
-A big thank to [them](https://github.com/jbox-web/redmine_git_hosting/blob/master/AUTHORS) for their contribution!
+A big thank to [them](https://github.com/jbox-web/redmine_git_hosting/blob/devel/AUTHORS) for their contribution!
 
 ## Contribute
 

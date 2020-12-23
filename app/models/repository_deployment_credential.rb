@@ -16,7 +16,7 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   validates :repository_id,          presence: true,
                                      uniqueness: { scope: :gitolite_public_key_id }
 
-  validates :gitolite_public_key_id, presence: true
+  validates :gitolite_public_key_id, presence: true, exclusion: { in: [-1] }
   validates :user_id,                presence: true
   validates :perm,                   presence: true,
                                      inclusion: { in: VALID_PERMS }
@@ -29,8 +29,9 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   validate :owner_matches_key
 
   ## Scopes
-  scope :active,   -> { where(active: true) }
+  scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+  scope :sorted, -> { order(:id) }
 
   def to_s
     "#{repository.identifier}-#{gitolite_public_key.identifier} : #{perm}"

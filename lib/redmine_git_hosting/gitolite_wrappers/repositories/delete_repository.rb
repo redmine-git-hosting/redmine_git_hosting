@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Repositories
       class DeleteRepository < GitoliteWrappers::Base
-
         def call
           if !repository.nil? && !repository.empty?
             delete_repository
@@ -11,11 +10,9 @@ module RedmineGitHosting
           end
         end
 
-
         def repository
           @repository ||= object_id.symbolize_keys
         end
-
 
         def delete_repository
           admin.transaction do
@@ -29,7 +26,6 @@ module RedmineGitHosting
           # Move repository to RecycleBin
           RedmineGitHosting::Plugins.execute(:post_delete, repository)
         end
-
       end
     end
   end

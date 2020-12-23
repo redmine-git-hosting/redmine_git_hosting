@@ -1,4 +1,6 @@
 require 'html/pipeline'
+require 'task_list/filter'
+require 'task_list/railtie'
 
 module RedmineGitHosting
   module MarkdownRenderer
@@ -8,22 +10,17 @@ module RedmineGitHosting
       pipeline.call(markdown)[:output].to_s
     end
 
-
     private
 
+    def pipeline
+      HTML::Pipeline.new(filters)
+    end
 
-      def pipeline
-        HTML::Pipeline.new(filters)
-      end
-
-
-      def filters
-        [
-          RedmineGitHosting::RedcarpetFilter,
-          HTML::Pipeline::AutolinkFilter,
-          HTML::Pipeline::TableOfContentsFilter
-        ]
-      end
-
+    def filters
+      [RedmineGitHosting::RedcarpetFilter,
+       TaskList::Filter,
+       HTML::Pipeline::AutolinkFilter,
+       HTML::Pipeline::TableOfContentsFilter]
+    end
   end
 end

@@ -10,12 +10,10 @@ module RedmineGitHosting
   end
 
   class RedcarpetFilter < HTML::Pipeline::TextFilter
-
     def initialize(text, context = nil, result = nil)
       super text, context, result
       @text = @text.delete "\r"
     end
-
 
     # Convert Markdown to HTML using the best available implementation
     # and convert into a DocumentFragment.
@@ -26,23 +24,21 @@ module RedmineGitHosting
       html
     end
 
-
     def self.renderer
       @renderer ||= begin
         Redcarpet::Markdown.new(HTMLwithRouge, markdown_options)
       end
     end
 
-
     def self.markdown_options
       @markdown_options ||= {
         fenced_code_blocks: true,
-        lax_spacing:        true,
-        strikethrough:      true,
-        autolink:           true,
-        tables:             true,
-        underline:          true,
-        highlight:          true
+        lax_spacing: true,
+        strikethrough: true,
+        autolink: true,
+        tables: true,
+        underline: true,
+        highlight: true
       }.freeze
     end
 

@@ -18,7 +18,7 @@ class ProtectedBranchesMember < ActiveRecord::Base
 
     principal.users.each do |user|
       member = self.class.find_by_principal_id_and_inherited_by(user.id, principal.id)
-      member.destroy! unless member.nil?
+      member&.destroy!
     end
   end
 end

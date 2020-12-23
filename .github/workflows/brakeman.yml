@@ -1,0 +1,35 @@
+name: Run Brakeman
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install package dependencies
+      run: >
+        sudo apt-get install --yes --quiet
+        pandoc
+
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+
+    - name: Setup gems
+      run: |
+        echo "source 'https://rubygems.org'" > Gemfile
+        echo "group :test do" >> Gemfile
+        echo "  gem 'brakeman', require: false" >> Gemfile
+        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
+        echo "end">> Gemfile
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Run Brakeman
+      run: |
+        bundle exec brakeman -5

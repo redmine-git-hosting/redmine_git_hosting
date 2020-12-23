@@ -22,7 +22,6 @@ module RedmineGitHosting
         merge_output ? stdout + stderr : stdout
       end
 
-
       # Executes the given command and a list of parameters on the shell
       # and returns stdout, stderr, and the exit code.
       #
@@ -35,7 +34,6 @@ module RedmineGitHosting
         RedmineGitHosting.logger.debug(error_msg)
         raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
       end
-
     end
   end
 end

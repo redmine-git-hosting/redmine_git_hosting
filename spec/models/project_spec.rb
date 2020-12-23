@@ -1,7 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe Project do
-
   before(:all) do
     @project    = create(:project)
     @git_repo_1 = create_git_repository(project: @project, is_default: true)
@@ -34,5 +33,4 @@ describe Project do
   it 'should not match Gitolite Admin repository identifier' do
     expect(build(:project, identifier: 'gitolite-admin')).to be_invalid
   end
-
 end

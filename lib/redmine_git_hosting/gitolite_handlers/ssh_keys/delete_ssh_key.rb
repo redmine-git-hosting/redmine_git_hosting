@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteHandlers
     module SshKeys
       class DeleteSshKey < Base
-
         def call
           repo_key = find_gitolite_key(key[:owner], key[:location])
 
@@ -13,7 +12,6 @@ module RedmineGitHosting
             logger.info("#{context} : SSH key '#{key[:owner]}@#{key[:location]}' does not exits in Gitolite, exit !")
           end
         end
-
       end
     end
   end

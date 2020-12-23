@@ -1,7 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryGitExtra do
-
   let(:git_extra) { build(:repository_git_extra) }
 
   subject { git_extra }
@@ -20,7 +19,6 @@ describe RepositoryGitExtra do
 
   ## Serializations
   # it { should serialize(:urls_order) }
-
 
   describe '#git_daemon' do
     it 'should return the value for git_daemon' do
@@ -72,7 +70,7 @@ describe RepositoryGitExtra do
 
   describe '#key' do
     it 'should return the value for key' do
-      expect(git_extra.key).to match /\A[a-zA-Z0-9]+\z/
+      expect(git_extra.key).to match(/\A[a-zA-Z0-9]+\z/)
     end
   end
 end

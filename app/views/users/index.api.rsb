@@ -8,7 +8,9 @@ api.array :users, api_meta(total_count: @user_count, offset: @offset, limit: @li
       api.lastname   user.lastname
       api.mail       user.mail
       api.created_on user.created_on
+      api.updated_on user.updated_on
       api.last_login_on user.last_login_on
+      api.passwd_changed_on user.passwd_changed_on
 
       api.array :ssh_keys do
         user.gitolite_public_keys.each do |key|

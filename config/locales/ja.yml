@@ -54,13 +54,12 @@ ja:
   all_references: 全参照
   all_tags: 全タグ
   button_clone: クローン
-  button_ok: OK
-  display_access_emphasis: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
+  display_access_emphasis_html: "上記の記載では, <em>斜体</em>部分は要素依存部分を表しています。"
   display_access_flat: "<em>フラット</em>モードのため、親ディレクトリはURLに含まれていません。"
   display_access_hierarchical: "<em>階層</em>モードのため、親ディレクトリもURLに含まれています。"
-  display_access_setup1: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
-  display_access_setup2: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
-  display_access_setup3: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
+  display_access_setup1_html: "<em>project1</em>は<em>project2</em>の親、なお<em>project2</em>は<em>project3</em>の親とします。"
+  display_access_setup2_html: "それに<em>project3</em>は次の2つのリポジトリを持っているとします：<em>default</em>と<em>example</em>。"
+  display_access_setup3_html: "現在の設定により、プロジェクト<em>project3</em>のパス構造は次のようになります。"
   error_download_revision_no_such_commit: "コミット%{commit}が存在しません"
   error_project_not_found: "このタイトルのプロジェクトが見つかりません。"
   error_public_key_create_failed: パプリックキー作成エラー
@@ -75,7 +74,6 @@ ja:
   git_notifications_reminder: 上記のメールリストは有効化されていません。上記のリポジトリの設定で有効化を行ってください。
   label_active_for: 活動経過日数
   label_all_projects_use_git: 新プロジェクト作成時にGitリポジトリを自動作成する？
-  label_archived_repositories: アーカイブリポジトリ
   label_average_commit_per_day: 1日あたりの平均コミット数
   label_average_contributor_commits: 開発者あたりの平均コミット数
   label_backup_in_progress: 保存中...
@@ -86,8 +84,6 @@ ja:
   label_commits_per_day: 日別のコミット
   label_commits_per_hour: 時間別のコミット
   label_commits_per_weekday: 曜日別のコミット
-  label_copied_to_clipboard: コピー済み!
-  label_copy_to_clipboard: クリップボードにコピー
   label_current_deploy_keys: 現在のデプロイキー
   label_current_public_keys: 現在のパプリックキー
   label_current_user_keys: 現在のユーザーキー
@@ -97,11 +93,11 @@ ja:
   label_default_gitolite_hooks_url: 既定URL
   label_default_repository: defaultリポジトリ
   label_delete_from_recyle_bin: ゴミ箱から削除
-  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？<br/>(ゴミ箱に移動します)
+  label_delete_git_repositories: プロジェクト削除時にGitリポジトリを削除する？
+  info_delete_git_repositories: (ゴミ箱に移動します)
   label_delete_in_progress: 削除中...
   label_delete_warning: 注意！完全に削除してもいいですか？
   label_deploy_key: デプロイキー
-  label_deployment_credential_active: Active?
   label_deployment_credential_add: デプロイクレデンシャル情報の追加
   label_deployment_credential_create_key_first: デプロイキーが見つかりません。新しいデプロイキーを作成してください。
   label_deployment_credential_create: デプロイクレデンシャル情報の作成
@@ -117,7 +113,7 @@ ja:
   label_download_and_install_git: Gitのダウンロードとインストール
   label_download_format: ダウンロード
   label_download_select_format: タイプ選択
-  label_empty_get: Empty&nbsp;GET
+  label_empty_get: Empty GET
   label_empty_recycle_bin: ゴミ箱を空にする
   label_empty_repository: 空リポジトリ？
   label_enable_git_daemon: Git Daemon有効化
@@ -125,7 +121,6 @@ ja:
   label_enable_protected_branches: ブランチ保護有効化
   label_enable_public_repo: リポジトリを公開する
   label_enable_smart_http: Smart HTTPモード
-  label_enabled: 有効
   label_error: Error
   label_etcetera: etc
   label_example_repository: exampleリポジトリ
@@ -159,7 +154,7 @@ ja:
   label_git_option_key_add: Gitoliteオプション追加
   label_git_option_keys: Gitolite設定オプション
   label_git_version: Gitバージョン
-  label_github_post: GitHub&nbsp;POST
+  label_github_post: GitHub POST
   label_gitolite_access_config: Gitoliteアクセス設定
   label_gitolite_banner: Gitoliteバーナー
   label_gitolite_bin_dir: Gitolite実行ディレクトリ
@@ -264,7 +259,6 @@ ja:
   label_mirror_forced_update: リモート更新強制
   label_mirror_full_mirror: 複製完了
   label_mirror_help: ミラーリポジトリに以下のパプリックキーの書き込み権限の付与が必要です
-  label_mirror_inactive: 非活性
   label_mirror_include_all_branches: 全ブランチプッシュ
   label_mirror_include_all_tags: 全タグプッシュ
   label_mirror_push_fail: エラー
@@ -328,7 +322,6 @@ ja:
   label_resync_all_ssh_keys: 全SSHキーを再同期する？
   label_see_other_repositories: 他のリポジトリの閲覧
   label_select_all: 全選択
-  label_show_repositories_url: クローン用のリポジトリURLを表示する？
   label_smart_http: Smart HTTP
   label_sort_urls: (Urls並び替え)
   label_split_payloads: ペイロード分割
@@ -426,3 +419,5 @@ ja:
   select_other_keys: 他のキー
   text_gitolite_key_destroy_confirmation: "このキーを削除してもよろしいですか: %{title}？"
   text_scm_command_not_available_git_hosting: SMCコマンドが使用できません。Redmine Git Hostingの管理設定を確認してください。
+  label_install_hook_results: Install hook results
+  label_repository_url_plural: Repository URLs

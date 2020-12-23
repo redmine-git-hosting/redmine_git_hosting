@@ -1,19 +1,15 @@
 module RedmineGitHosting
   module RecycleBin
     class Item
-
       attr_reader :path
-
 
       def initialize(path)
         @path = path
       end
 
-
       def size
         RedmineGitHosting::Commands.sudo_get_dir_size(path)
       end
-
 
       def destroy!
         logger.info("Deleting '#{path}' from Recycle Bin")
@@ -25,14 +21,11 @@ module RedmineGitHosting
         end
       end
 
-
       private
 
-
-        def logger
-          RedmineGitHosting.logger
-        end
-
+      def logger
+        RedmineGitHosting.logger
+      end
     end
   end
 end

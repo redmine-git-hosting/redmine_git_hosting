@@ -1,10 +1,10 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryGitConfigKeysController do
   include CrudControllerSpec::Base
 
   def permissions
-    [:manage_repository, :create_repository_git_config_keys, :view_repository_git_config_keys, :edit_repository_git_config_keys]
+    %i[manage_repository create_repository_git_config_keys view_repository_git_config_keys edit_repository_git_config_keys]
   end
 
   def create_object

@@ -35,10 +35,6 @@ module RedmineGitHosting
         get_setting(:init_repositories_on_create, true)
       end
 
-      def show_repositories_url?
-        get_setting(:show_repositories_url, true)
-      end
-
       def download_revision_enabled?
         get_setting(:download_revision_enabled, true)
       end

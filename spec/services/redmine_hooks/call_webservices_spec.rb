@@ -1,17 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe RedmineHooks::CallWebservices do
-
   let(:global_payload) { load_yaml_fixture('global_payload.yml') }
   let(:master_payload) { load_yaml_fixture('master_payload.yml') }
   let(:branches_payload) { load_yaml_fixture('branches_payload.yml') }
-
 
   def build_web_hook(payload, opts = {})
     post_receive_url = build(:repository_post_receive_url, opts)
     RedmineHooks::CallWebservices.new(post_receive_url, payload)
   end
-
 
   describe '#needs_push' do
     context 'when payload is empty' do
@@ -52,5 +49,4 @@ describe RedmineHooks::CallWebservices do
       end
     end
   end
-
 end

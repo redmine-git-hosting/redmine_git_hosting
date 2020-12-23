@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteWrappers
     module Global
       class EnableRwAccess < GitoliteWrappers::Base
-
         include Common
 
         def call
@@ -19,7 +18,6 @@ module RedmineGitHosting
             end
           end
         end
-
 
         def add_redmine_key
           # RedmineGitHosting key must be in RW+ group
@@ -38,9 +36,10 @@ module RedmineGitHosting
           end
 
           # Delete DUMMY_REDMINE_KEY if present
-          repo_conf.permissions[0]['RW+'][''].delete('DUMMY_REDMINE_KEY') if repo_conf.permissions[0]['RW+'][''].include?('DUMMY_REDMINE_KEY')
-        end
+          return unless repo_conf.permissions[0]['RW+'][''].include?('DUMMY_REDMINE_KEY')
 
+          repo_conf.permissions[0]['RW+'][''].delete('DUMMY_REDMINE_KEY')
+        end
       end
     end
   end

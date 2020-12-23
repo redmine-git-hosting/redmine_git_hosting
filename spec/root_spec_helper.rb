@@ -1,4 +1,4 @@
-unless ENV['DISABLE_COVERAGE'] == 'true'
+if ENV['COVERAGE']
   require 'simplecov'
 
   ## Start Simplecov
@@ -7,9 +7,13 @@ unless ENV['DISABLE_COVERAGE'] == 'true'
   end
 end
 
+unless defined? 'HOME_BASE_DIR'
+  HOME_BASE_DIR = RUBY_PLATFORM.include?('darwin') ? '/Users' : '/home'
+end
+
 ## Load Redmine App
 ENV['RAILS_ENV'] = 'test'
-require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
+require File.expand_path "#{File.dirname __FILE__}/../config/environment"
 require 'rspec/rails'
 
 ## Load FactoryBots factories

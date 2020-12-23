@@ -67,13 +67,12 @@ module RedmineGitHosting::Plugins::Extenders
     def create_commit(repo, index)
       commit_tree = index.write_tree(repo)
       Rugged::Commit.create(repo,
-        author:     commit_author,
-        committer:  commit_author,
-        message:    'Add README file',
-        parents:    repo.empty? ? [] : [ repo.head.target ].compact,
-        tree:       commit_tree,
-        update_ref: 'HEAD'
-      )
+                            author: commit_author,
+                            committer: commit_author,
+                            message: 'Add README file',
+                            parents: repo.empty? ? [] : [repo.head.target].compact,
+                            tree: commit_tree,
+                            update_ref: 'HEAD')
     end
 
     def push_commit(repo)
@@ -86,8 +85,8 @@ module RedmineGitHosting::Plugins::Extenders
 
     def credentials
       Rugged::Credentials::SshKey.new(
-        username:   RedmineGitHosting::Config.gitolite_user,
-        publickey:  RedmineGitHosting::Config.gitolite_ssh_public_key,
+        username: RedmineGitHosting::Config.gitolite_user,
+        publickey: RedmineGitHosting::Config.gitolite_ssh_public_key,
         privatekey: RedmineGitHosting::Config.gitolite_ssh_private_key
       )
     end
@@ -95,8 +94,8 @@ module RedmineGitHosting::Plugins::Extenders
     def commit_author
       @commit_author ||= {
         email: RedmineGitHosting::Config.git_config_username,
-        name:  RedmineGitHosting::Config.git_config_email,
-        time:  Time.now
+        name: RedmineGitHosting::Config.git_config_email,
+        time: Time.now
       }
     end
   end

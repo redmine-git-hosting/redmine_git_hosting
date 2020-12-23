@@ -2,7 +2,6 @@ module RedmineGitHosting
   module GitoliteHandlers
     module Repositories
       class AddRepository < Base
-
         def call
           if !configuration_exists?
             # Create repository in Gitolite
@@ -19,16 +18,13 @@ module RedmineGitHosting
           end
         end
 
-
         def gitolite_repo_name
           repository.gitolite_repository_name
         end
 
-
         def gitolite_repo_path
           repository.gitolite_repository_path
         end
-
 
         attr_reader :force
 
@@ -37,7 +33,6 @@ module RedmineGitHosting
           @force     = options.delete(:force) { false }
           @old_perms = options.delete(:old_perms) { {} }
         end
-
       end
     end
   end

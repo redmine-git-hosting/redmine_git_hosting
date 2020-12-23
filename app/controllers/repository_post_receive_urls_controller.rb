@@ -3,9 +3,10 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   before_action :find_repository_post_receive_url, except: %i[index new create]
 
   accept_api_auth :index, :show
+  # skip_before_action :verify_authenticity_token, only: %i[create update]
 
   def index
-    @repository_post_receive_urls = @repository.post_receive_urls.all
+    @repository_post_receive_urls = @repository.post_receive_urls.sorted
     render_with_api
   end
 
@@ -16,7 +17,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   def create
     @post_receive_url = @repository.post_receive_urls.new
     @post_receive_url.safe_attributes = params[:repository_post_receive_url]
-    return unless @post_receive_url.save
+    return render action: 'new' unless @post_receive_url.save
 
     flash[:notice] = l(:notice_post_receive_url_created)
     render_js_redirect
@@ -24,7 +25,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
 
   def update
     @post_receive_url.safe_attributes = params[:repository_post_receive_url]
-    return unless @post_receive_url.save
+    return render action: 'edit' unless @post_receive_url.save
 
     flash[:notice] = l(:notice_post_receive_url_updated)
     render_js_redirect

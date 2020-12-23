@@ -1,6 +1,6 @@
 module ExtendRepositoriesHelper
-  def encoding_field(form, repository)
-    content_tag(:p) do
+  def encoding_field(form, _repository)
+    tag.p do
       form.select(
         :path_encoding, [nil] + Setting::ENCODINGS,
         label: l(:field_scm_path_encoding)
@@ -12,22 +12,22 @@ module ExtendRepositoriesHelper
     %w[zip tar tar.gz].map { |f| [f, download_git_revision_repository_path(repository, rev: rev, download_format: f)] }
   end
 
-  def create_readme_field(form, repository)
+  def create_readme_field(_form, repository)
     return unless repository.new_record?
 
-    content_tag(:p) do
+    tag.p do
       hidden_field_tag('repository[create_readme]', 'false', id: '') +
-        content_tag(:label, l(:label_init_repo_with_readme), for: 'repository_create_readme') +
+        tag.label(l(:label_init_repo_with_readme), for: 'repository_create_readme') +
         check_box_tag('repository[create_readme]', 'true', RedmineGitHosting::Config.init_repositories_on_create?)
     end
   end
 
-  def enable_git_annex_field(form, repository)
+  def enable_git_annex_field(_form, repository)
     return unless repository.new_record?
 
-    content_tag(:p) do
+    tag.p do
       hidden_field_tag('repository[enable_git_annex]', 'false', id: '') +
-        content_tag(:label, l(:label_init_repo_with_git_annex), for: 'repository_enable_git_annex') +
+        tag.label(l(:label_init_repo_with_git_annex), for: 'repository_enable_git_annex') +
         check_box_tag('repository[enable_git_annex]', 'true')
     end
   end
@@ -37,10 +37,11 @@ module ExtendRepositoriesHelper
   end
 
   def render_repository_quick_jump(repository)
-    options = repository.project.repositories.map { |r| [r.redmine_name, edit_repository_path(r)] }
-    select_tag('repository_quick_jump_box',
+    options = repository.project.repositories.sort
+    options.map! { |r| [r.redmine_name, edit_repository_path(r)] }
+    select_tag 'repository_quick_jump_box',
                options_for_select(options, selected: edit_repository_path(repository)),
-               onchange: 'if (this.value != \'\') { window.location = this.value; }')
+               onchange: 'if (this.value != \'\') { window.location = this.value; }'
   end
 
   def link_to_repository(repo, current_repo)

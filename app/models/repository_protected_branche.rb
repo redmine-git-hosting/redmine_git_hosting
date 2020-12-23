@@ -20,6 +20,7 @@ class RepositoryProtectedBranche < ActiveRecord::Base
 
   ## Scopes
   default_scope { order(position: :asc) }
+  scope :sorted, -> { order(:path) }
 
   class << self
     def clone_from(parent)

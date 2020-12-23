@@ -29,11 +29,11 @@ namespace :redmine_git_hosting do
         puts ''
         puts 'GIT STATUS :'
         puts '------------'
-        puts %x[ git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" status ]
+        puts %x[git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" status]
         puts ''
         puts 'GIT LOG :'
         puts '---------'
-        puts %x[ git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" log ]
+        puts %x[git --work-tree "#{repo.workdir}" --git-dir "#{repo.path}" log]
       rescue => e
         puts 'Error while getting tests results'
         puts e.message
@@ -44,7 +44,7 @@ namespace :redmine_git_hosting do
 
     def ls_dir(dir)
       puts "* ls -hal #{dir}"
-      puts %x[ ls -hal "#{dir}" ]
+      puts %x[ls -hal "#{dir}"]
       puts ''
     end
   end
