@@ -25,8 +25,6 @@ module RedmineGitHosting
 
             # Return old path to delete it
             old_relative_parent_path
-          else
-            nil
           end
         end
 

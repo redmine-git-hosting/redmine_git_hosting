@@ -501,14 +501,6 @@ Style/EachWithObject:
   Exclude:
     - 'app/models/concerns/gitolitable/validations.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty, nil, both
-Style/EmptyElse:
-  Exclude:
-    - 'lib/redmine_git_hosting/config/gitolite_infos.rb'
-
 # Offense count: 3
 Style/EvalWithLocation:
   Exclude:
