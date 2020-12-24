@@ -1,22 +1,41 @@
 # Changelog
 
-## 4.0.3
+## 5.0.0 - 2020-12-24 🎄
 
-- Redmine 4.1 support
+### Added
+
+- Basic Auth support for post_receive_urls
+- post_receive_url :post empty support
+- Logging to journal, if configured for Redmine (see https://github.com/theforeman/journald-logger)
 - Dashboard support for Repository URLs
-- Dropped archived repository view
-- switch CI from Travis to Github Actions
-- add Basic Auth support for post_receive_urls
-- add post_receive_url :post empty support
-- add logging to journal, if configured for Redmine (see https://github.com/theforeman/journald-logger)
-- drop redmine_bootstrap_kit required plugin
-- requires additionals plugin for latest fontawesome, slim and deface support -> and better maintenance
-- switch from haml to slim templates (because this is already used in additionals plugin)
-- libraries high_charts and bootstrap are moved to this plugin (TODO: high_charts should be migrationed to charts.js, which comes with Redmine 4. Bootstrap should be drop to vanila redmine, to get better theme support)
 
-## 4.0.0
+### Changed
+
+- Switch CI from Travis to Github Actions
+
+### BREAKING CHANGE
+
+- Redmine 4.1+ is required
+- Dropped archived repository view
+
+##  4.0.2 - 2020-06-29
+
+- Support both python 2 and 3
+- Fix repository settings form template to work with redmine 4.x
+- Fix #715 by correcting misuse of ActiveRecord API for GitCache objects
+
+## 4.0.1 - 2020-02-14
+
+- Resolve Redmine 4.1 incompatiblity
+- Fix unneccesary checking of duplicate repositories
+
+## 4.0.0 - 2019-12-03
 
 * compatible with Redmine 4 (drop Redmine 3.x support)
+* drop redmine_bootstrap_kit required plugin
+* requires additionals plugin for latest fontawesome, slim and deface support -> and better maintenance
+* switch from haml to slim templates (because this is already used in additionals plugin)
+* libraries high_charts and bootstrap are moved to this plugin (TODO: high_charts should be migrationed to charts.js, which comes with Redmine 4. Bootstrap should be drop to vanila redmine, to get better theme support)
 
 ## 1.2.3 - 2017-07-17
 
