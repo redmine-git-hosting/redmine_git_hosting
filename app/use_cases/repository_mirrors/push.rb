@@ -35,7 +35,7 @@ module RepositoryMirrors
     end
 
     def branch
-      "#{dequote(mirror.explicit_refspec)}" unless mirror.explicit_refspec.blank?
+      dequote(mirror.explicit_refspec).to_s unless mirror.explicit_refspec.blank?
     end
 
     # Put backquote in front of crucial characters

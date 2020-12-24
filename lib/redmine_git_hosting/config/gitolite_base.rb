@@ -13,7 +13,7 @@ module RedmineGitHosting
       end
 
       def redmine_user
-        @redmine_user ||= (%x[whoami]).chomp.strip
+        @redmine_user ||= %x[whoami].chomp.strip
       end
 
       def gitolite_use_sudo?
@@ -62,10 +62,10 @@ module RedmineGitHosting
 
       def gitolite_config_dir
         dirs = File.dirname(gitolite_config_file).split('/')
-        if dirs[0] != '.'
-          File.join('conf', *dirs)
-        else
+        if dirs[0] == '.'
           'conf'
+        else
+          File.join('conf', *dirs)
         end
       end
 

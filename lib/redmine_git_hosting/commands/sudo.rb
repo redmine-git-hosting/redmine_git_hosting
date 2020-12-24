@@ -15,7 +15,7 @@ module RedmineGitHosting
       # Expect file content to end with EOL (\n)
       #
       def sudo_install_file(content, dest_file, filemode)
-        stdin = ['cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + "EOF"].join(' ')
+        stdin = ['cat', '<<\EOF', '>' + dest_file, "\n" + content.to_s + 'EOF'].join(' ')
 
         begin
           sudo_pipe_data(stdin)
@@ -107,7 +107,7 @@ module RedmineGitHosting
       end
 
       def sudo_get_dir_size(directory)
-        sudo_capture('du', '-sh', directory).split(' ')[0] rescue ''
+        sudo_capture('du', '-sh', directory).split[0] rescue ''
       end
 
       def sudo_cat(file)

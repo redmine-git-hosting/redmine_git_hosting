@@ -6,7 +6,7 @@ module RedmineGitHosting
     class Memcached < AbstractCache
       class << self
         def set_cache(repo_id, command, output)
-          logger.debug("Memcached Adapter : inserting cache entry for repository '#{repo_id}'")
+          logger.debug "Memcached Adapter : inserting cache entry for repository '#{repo_id}'"
 
           # Create a SHA256 of the Git command as key id
           hashed_command = hash_key(command)
@@ -16,7 +16,7 @@ module RedmineGitHosting
             client.set(hashed_command, output)
             true
           rescue => e
-            logger.error("Memcached Adapter : could not insert in cache, this is the error : '#{e.message}'")
+            logger.error "Memcached Adapter : could not insert in cache, this is the error : '#{e.message}'"
             false
           end
         end
@@ -44,9 +44,9 @@ module RedmineGitHosting
           return true if repo_references.nil?
 
           # Delete reference keys
-          repo_references = repo_references.split(',').select { |r| !r.empty? }
+          repo_references = repo_references.split(',').reject(&:empty?)
           repo_references.map { |key| client.delete(key) }
-          logger.info("Memcached Adapter : removed '#{repo_references.size}' expired cache entries for repository '#{repo_id}'")
+          logger.info "Memcached Adapter : removed '#{repo_references.size}' expired cache entries for repository '#{repo_id}'"
           # Reset references count
           client.set(hashed_repo_id, '', max_cache_time, raw: true)
         end

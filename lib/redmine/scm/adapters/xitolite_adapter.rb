@@ -30,14 +30,12 @@ module Redmine
           end
 
           def client_available
-            !client_version.empty?
+            client_version.present?
           end
 
           def scm_command_version
             scm_version = scm_version_from_command_line.dup
-            if scm_version.respond_to?(:force_encoding)
-              scm_version.force_encoding('ASCII-8BIT')
-            end
+            scm_version.force_encoding('ASCII-8BIT') if scm_version.respond_to?(:force_encoding)
             if m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)})
               m[2].scan(%r{\d+}).collect(&:to_i)
             end
@@ -113,7 +111,7 @@ module Redmine
         end
 
         def entry(path = nil, identifier = nil)
-          parts = path.to_s.split(%r{[\/\\]}).select { |n| !n.blank? }
+          parts = path.to_s.split(%r{[\/\\]}).select(&:present?)
           search_path = parts[0..-2].join('/')
           search_name = parts[-1]
           if search_path.blank? && search_name.blank?
@@ -148,8 +146,8 @@ module Redmine
                 unless entries.detect { |entry| entry.name == name }
                   entries << Entry.new({ name: n,
                                          path: full_p,
-                                         kind: (type == 'tree') ? 'dir' : 'file',
-                                         size: (type == 'tree') ? nil : size,
+                                         kind: type == 'tree' ? 'dir' : 'file',
+                                         size: type == 'tree' ? nil : size,
                                          lastrev: options[:report_last_commit] ? lastrev(full_path, identifier) : Revision.new })
                 end
               end
@@ -193,13 +191,13 @@ module Redmine
           revs = Revisions.new
           cmd_args = %w|log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin|
           cmd_args << '--reverse' if options[:reverse]
-          cmd_args << '-n' << "#{options[:limit].to_i}" if options[:limit]
+          cmd_args << '-n' << options[:limit].to_i.to_s if options[:limit]
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path && !path.empty?
           revisions = []
           if identifier_from || identifier_to
             revisions << ''
             revisions[0] << "#{identifier_from}.." if identifier_from
-            revisions[0] << "#{identifier_to}" if identifier_to
+            revisions[0] << identifier_to.to_s if identifier_to
           else
             revisions += options[:includes] unless options[:includes].blank?
             revisions += options[:excludes].map { |r| "^#{r}" } unless options[:excludes].blank?
@@ -241,10 +239,8 @@ module Redmine
                   files = []
                 end
                 changeset[:commit] = $1
-                unless parents_str.nil? || parents_str == ''
-                  changeset[:parents] = parents_str.strip.split(' ')
-                end
-              elsif (parsing_descr == 0) && line =~ /^(\w+):\s*(.*)$/
+                changeset[:parents] = parents_str.strip.split unless parents_str.nil? || parents_str == ''
+              elsif parsing_descr.zero? && line =~ /^(\w+):\s*(.*)$/
                 key = $1
                 value = $2
                 if key == 'Author'
@@ -252,7 +248,7 @@ module Redmine
                 elsif key == 'CommitDate'
                   changeset[:date] = value
                 end
-              elsif (parsing_descr == 0) && line.chomp.to_s == ''
+              elsif parsing_descr.zero? && line.chomp.to_s == ''
                 parsing_descr = 1
                 changeset[:description] = ''
               elsif (parsing_descr == 1 || parsing_descr == 2) \
@@ -271,7 +267,7 @@ module Redmine
                 files << { action: fileaction, path: p }
               elsif (parsing_descr == 1) && line.chomp.to_s == ''
                 parsing_descr = 2
-              elsif (parsing_descr == 1)
+              elsif parsing_descr == 1
                 changeset[:description] << line[4..-1]
               end
             end

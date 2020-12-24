@@ -38,8 +38,8 @@ module RedmineGitHosting
           status = nil
         else
           # Create redirector stream and call block
-          redirector = self.new(cmd_str, repo_id, options)
-          block.call(redirector)
+          redirector = new cmd_str, repo_id, options
+          block.call redirector
           retio, status = redirector.exit_shell
         end
 
@@ -100,9 +100,7 @@ module RedmineGitHosting
       end
 
       # Wait until subthread gets far enough
-      while !proxy_started
-        Thread.pass
-      end
+      Thread.pass until proxy_started
       @state = RUNNING_SHELL
     end
 
@@ -244,7 +242,7 @@ module RedmineGitHosting
       end
 
       # Call new function once
-      self.send(method, *args, &block)
+      send(method, *args, &block)
     end
 
     def inject_enumerator_method(method)

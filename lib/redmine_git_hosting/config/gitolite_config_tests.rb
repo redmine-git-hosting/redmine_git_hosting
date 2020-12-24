@@ -39,9 +39,7 @@ module RedmineGitHosting
         unless @temp_dir_writeable
           file_logger.debug("Testing if Gitolite Admin directory '#{create_temp_dir}' is writeable ...")
           mytestfile = File.join(create_temp_dir, 'writecheck')
-          if !File.directory?(create_temp_dir)
-            @temp_dir_writeable = false
-          else
+          if File.directory? create_temp_dir
             begin
               FileUtils.touch mytestfile
               FileUtils.rm mytestfile
@@ -50,6 +48,8 @@ module RedmineGitHosting
             else
               @temp_dir_writeable = true
             end
+          else
+            @temp_dir_writeable = false
           end
         end
 

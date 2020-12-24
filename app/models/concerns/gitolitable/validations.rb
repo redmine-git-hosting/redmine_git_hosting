@@ -83,7 +83,7 @@ module Gitolitable
         errors.add(:identifier, :cannot_equal_project) if Project.find_by_identifier(identifier)
 
         # See if a repo for another project has the same identifier (existing validations already check for current project)
-        if self.class.repo_ident_unique? && Repository.where("identifier = ? and project_id <> ?", identifier, project.id).any?
+        if self.class.repo_ident_unique? && Repository.where(identifier: identifier).where.not(project_id: project.id).any?
           errors.add :identifier, :taken
         end
       end

@@ -13,14 +13,14 @@ module RedmineGitHosting
         if bool
           Additionals.true? do_get_setting(setting)
         else
-          do_get_setting(setting)
+          do_get_setting setting
         end
       end
 
       def reload_from_file!
         ## Get default config from init.rb
         default_hash = Redmine::Plugin.find('redmine_git_hosting').settings[:default]
-        do_reload_config(default_hash)
+        do_reload_config default_hash
       end
 
       def dump_settings
@@ -51,7 +51,7 @@ module RedmineGitHosting
         Setting.check_cache
 
         ## Get actual values
-        valuehash = (Setting.plugin_redmine_git_hosting).clone rescue {}
+        valuehash = Setting.plugin_redmine_git_hosting.clone rescue {}
 
         ## Update!
         changes = 0
@@ -65,23 +65,23 @@ module RedmineGitHosting
         end
 
         if changes.zero?
-          console_logger.info('No changes necessary.')
+          console_logger.info 'No changes necessary.'
         else
-          commit_changes(valuehash)
+          commit_changes valuehash
         end
       end
 
       def commit_changes(valuehash)
-        console_logger.info('Committing changes ... ')
+        console_logger.info 'Committing changes ... '
         begin
           ## Update Settings
           Setting.plugin_redmine_git_hosting = valuehash
           ## Refresh Settings cache
           Setting.check_cache
-          console_logger.info('Success!')
+          console_logger.info 'Success!'
         rescue => e
-          console_logger.error('Failure.')
-          console_logger.error(e.message)
+          console_logger.error 'Failure.'
+          console_logger.error e.message
         end
       end
 

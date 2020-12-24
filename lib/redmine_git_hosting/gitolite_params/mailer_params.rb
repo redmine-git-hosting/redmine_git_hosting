@@ -61,7 +61,7 @@ module RedmineGitHosting
 
       def smtpauth_enabled?
         auth = ActionMailer::Base.smtp_settings[:authentication]
-        auth != nil && auth != '' && auth != :none
+        auth.present? && auth != :none
       end
     end
   end

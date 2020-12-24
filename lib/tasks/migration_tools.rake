@@ -17,7 +17,7 @@ namespace :redmine_git_hosting do
         result = ActiveRecord::Base.connection.execute query
 
         # If present, rename
-        if !result.to_a.empty?
+        if result.to_a.present?
           query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
                   " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
                   " '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
@@ -96,15 +96,13 @@ namespace :redmine_git_hosting do
         # Update Gitolite repositories
         if repository.identifier.blank?
           puts repository.project.identifier
-          repository.update_attribute(:type, 'Repository::Xitolite')
-          puts 'Done!'
-          puts ''
         else
           puts repository.identifier
-          repository.update_attribute(:type, 'Repository::Xitolite')
-          puts 'Done!'
-          puts ''
         end
+
+        repository.update_attribute(:type, 'Repository::Xitolite')
+        puts 'Done!'
+        puts ''
       end
     end
 

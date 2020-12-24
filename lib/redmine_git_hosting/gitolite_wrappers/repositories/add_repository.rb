@@ -3,10 +3,10 @@ module RedmineGitHosting
     module Repositories
       class AddRepository < GitoliteWrappers::Base
         def call
-          if !repository.nil?
-            create_repository
-          else
+          if repository.nil?
             log_object_dont_exist
+          else
+            create_repository
           end
         end
 
@@ -22,15 +22,15 @@ module RedmineGitHosting
             @recovered = RedmineGitHosting::RecycleBin.restore_object_from_recycle repository.gitolite_repository_name,
                                                                                    repository.gitolite_full_repository_path
 
-            if !@recovered
-              logger.info("#{context} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'")
+            if @recovered
+              logger.info "#{context} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update"
             else
-              logger.info("#{context} : restored existing Gitolite repository '#{repository.gitolite_repository_path}' for update")
+              logger.info "#{context} : let Gitolite create empty repository '#{repository.gitolite_repository_path}'"
             end
           end
 
           # Call Gitolite plugins
-          logger.info('Execute Gitolite Plugins')
+          logger.info 'Execute Gitolite Plugins'
 
           # Create README file or initialize GitAnnex
           RedmineGitHosting::Plugins.execute(:post_create, repository, options.merge(recovered: @recovered))

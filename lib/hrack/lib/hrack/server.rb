@@ -6,8 +6,7 @@ module Hrack
 
     PLAIN_TYPE = { 'Content-Type' => 'text/plain' }
 
-    def initialize(config = {})
-    end
+    def initialize(config = {}); end
 
     def call(env)
       dup._call(env)
@@ -23,7 +22,7 @@ module Hrack
       return render_404('Command Not Found') unless command
       return render_404('Project Not Found') unless @project
 
-      self.method(command).call()
+      method(command).call
     end
 
     def post_receive_redmine
@@ -45,7 +44,7 @@ module Hrack
 
     def post_receive_github
       Projects::ExecuteHooks.call(@project, :github, params)
-      render_200('OK!')
+      render_200 'OK!'
     end
 
     private

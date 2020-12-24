@@ -69,12 +69,12 @@ module RedmineGitHosting
 
         begin
           res = http.start { |openhttp| openhttp.request request }
-          if !res.is_a?(Net::HTTPSuccess)
-            message = "Return code : #{res.code} (#{res.message})."
-            failed = true
-          else
+          if res.is_a?(Net::HTTPSuccess)
             message = res.body
             failed = false
+          else
+            message = "Return code : #{res.code} (#{res.message})."
+            failed = true
           end
         rescue StandardError => e
           message = "Exception : #{e.message}"

@@ -160,3 +160,10 @@ jobs:
           REDMINE_VERSION: ${{ matrix.redmine }}
         working-directory: redmine
         run: bundle exec rake redmine_git_hosting:ci:all
+
+      - name: Run uninstall test
+        env:
+          RAILS_ENV: test
+          REDMINE_VERSION: ${{ matrix.redmine }}
+        working-directory: redmine
+        run: bundle exec rake redmine:plugins:migrate NAME=redmine_git_hosting VERSION=0

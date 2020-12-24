@@ -10,11 +10,13 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def post_create
+      return unless installable?
+
       if repository_empty?
         do_create_readme_file
       else
-        logger.warn("Repository is not empty, cannot create README file in path '#{gitolite_repo_path}'")
-      end if installable?
+        logger.warn "Repository is not empty, cannot create README file in path '#{gitolite_repo_path}'"
+      end
     end
 
     private

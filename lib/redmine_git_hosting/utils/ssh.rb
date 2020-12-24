@@ -30,10 +30,7 @@ module RedmineGitHosting
         key = key.sub(/=[ \r\n\t]/, '= ')
 
         # Delete any remaining control characters....
-        key = key.gsub(/[\a\r\n\t]/, '').strip
-
-        # Return the sanitized key
-        key
+        key.gsub(/[\a\r\n\t]/, '').strip
       end
     end
   end

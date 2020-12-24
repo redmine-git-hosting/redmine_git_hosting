@@ -14,7 +14,7 @@ module RedmineGitHosting
       end
 
       def rugged_mandatory_features
-        [:threads, :ssh]
+        %i[threads ssh]
       end
 
       def libgit2_version
@@ -48,8 +48,6 @@ module RedmineGitHosting
           2
         elsif line.include?('running gitolite3')
           3
-        else
-          nil
         end
       end
 
@@ -57,9 +55,7 @@ module RedmineGitHosting
         if gitolite_version == 2
           ['gl-setup']
         elsif gitolite_version == 3
-          ['gitolite', 'setup']
-        else
-          nil
+          %w[gitolite setup]
         end
       end
 

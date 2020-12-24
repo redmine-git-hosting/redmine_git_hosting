@@ -3,10 +3,10 @@ module RedmineGitHosting
     module Repositories
       class UpdateRepository < GitoliteWrappers::Base
         def call
-          if !repository.nil?
-            update_repository
-          else
+          if repository.nil?
             log_object_dont_exist
+          else
+            update_repository
           end
         end
 

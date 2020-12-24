@@ -40,7 +40,7 @@ namespace :redmine_git_hosting do
       end
     end
 
-    task all: ['spec', 'check_unit_tests_results']
+    task all: %w[spec check_unit_tests_results]
 
     def ls_dir(dir)
       puts "* ls -hal #{dir}"

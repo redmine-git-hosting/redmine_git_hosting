@@ -109,8 +109,8 @@ module RedmineGitHosting
           next if value_pair.empty?
           next unless value_pair.start_with? namespace
 
-          global_key = value_pair.split(' ')[0]
-          value      = value_pair.split(' ')[1]
+          global_key = value_pair.split[0]
+          value      = value_pair.split[1]
           key        = global_key.split('.')[1]
           value_hash[key] = value
         end

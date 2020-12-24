@@ -4,13 +4,13 @@ module RedmineGitHosting
       include RecycleBin::ItemBase
 
       def move!(source_path)
-        if !directory_exists?(source_path)
-          logger.warn("Source directory does not exist '#{source_path}', exiting!")
-          false
+        if directory_exists? source_path
+          logger.info "Moving '#{object_name}' to Recycle Bin..."
+          logger.debug "'#{source_path}' => '#{target_path}'"
+          do_move source_path
         else
-          logger.info("Moving '#{object_name}' to Recycle Bin...")
-          logger.debug("'#{source_path}' => '#{target_path}'")
-          do_move(source_path)
+          logger.warn "Source directory does not exist '#{source_path}', exiting!"
+          false
         end
       end
 
@@ -21,11 +21,11 @@ module RedmineGitHosting
       private
 
       def do_move(source_path)
-        RedmineGitHosting::Commands.sudo_move(source_path, target_path)
-        logger.info('Done !')
+        RedmineGitHosting::Commands.sudo_move source_path, target_path
+        logger.info 'Done !'
         true
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        logger.error("Attempt to move '#{source_path}' to Recycle Bin failed !")
+        logger.error "Attempt to move '#{source_path}' to Recycle Bin failed!"
         false
       end
     end
