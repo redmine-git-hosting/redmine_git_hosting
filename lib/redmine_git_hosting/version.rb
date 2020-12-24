@@ -1,3 +1,3 @@
 module RedmineGitHosting
-  VERSION = '4.0.3-master'.freeze
+  VERSION = '5.0.0'.freeze
 end
