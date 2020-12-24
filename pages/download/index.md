@@ -30,9 +30,9 @@ layout: homepage
     <h2>Requirements</h2>
 
     <ul>
-      <li>Ruby: 2.3+</li>
+      <li>Ruby: 2.4+</li>
       <li>Git: 2.0+</li>
-      <li>Redmine: 4.0.3+</li>
+      <li>Redmine: 4.1+</li>
       <li>Gitolite: 3.0+</li>
       <li>Database: MySQL or Postgres</li>
     </ul>
