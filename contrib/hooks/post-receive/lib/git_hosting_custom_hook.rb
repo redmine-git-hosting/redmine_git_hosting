@@ -50,14 +50,14 @@ module GitHosting
       executables = []
       if File.directory?(directory)
         Dir.foreach(directory) do |item|
-          next if item == '.' || item == '..'
+          next if ['.', '..'].include? item
 
           # Use full relative path
           path = "#{directory}/#{item}"
           # Test if the file is executable
-          if File.executable?(path)
+          if File.executable? path
             # Remember it, if so
-            executables.push(path)
+            executables.push path
           end
         end
       end

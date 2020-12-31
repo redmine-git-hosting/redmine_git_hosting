@@ -35,12 +35,12 @@ module RepositoryMirrors
     end
 
     def branch
-      dequote(mirror.explicit_refspec).to_s unless mirror.explicit_refspec.blank?
+      dequote(mirror.explicit_refspec).to_s if mirror.explicit_refspec.present?
     end
 
     # Put backquote in front of crucial characters
     def dequote(in_string)
-      in_string.gsub(/[$,"\\\n]/) { |x| "\\" + x }
+      in_string.gsub(/[$,"\\\n]/) { |x| '\\' + x }
     end
   end
 end

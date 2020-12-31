@@ -79,7 +79,7 @@ namespace :redmine_git_hosting do
   task install_gitolite_hooks: %i[install_hook_files install_hook_parameters]
 
   desc 'Show library version'
-  task :version do
+  task version: [:environment] do
     puts "Redmine Git Hosting #{version('plugins/redmine_git_hosting/init.rb')}"
   end
 

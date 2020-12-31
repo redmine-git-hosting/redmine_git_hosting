@@ -49,7 +49,7 @@ module Redmine
 
         def initialize(url, root_url = nil, login = nil, password = nil, path_encoding = nil)
           super
-          @path_encoding = path_encoding.blank? ? 'UTF-8' : path_encoding
+          @path_encoding = path_encoding.presence || 'UTF-8'
         end
 
         def path_encoding
@@ -65,7 +65,7 @@ module Redmine
         end
 
         def branches
-          return @branches if !@branches.nil?
+          return @branches unless @branches.nil?
 
           @branches = []
           cmd_args = %w|branch --no-color --verbose --no-abbrev|
@@ -86,7 +86,7 @@ module Redmine
         end
 
         def tags
-          return @tags if !@tags.nil?
+          return @tags unless @tags.nil?
 
           @tags = []
           cmd_args = %w|tag|
@@ -134,23 +134,23 @@ module Redmine
           git_cmd(cmd_args) do |io|
             io.each_line do |line|
               e = line.chomp.to_s
-              if e =~ /^\d+\s+(\w+)\s+([0-9a-f]{40})\s+([0-9-]+)\t(.+)$/
-                type = $1
-                sha  = $2
-                size = $3
-                name = $4
-                name.force_encoding(@path_encoding) if name.respond_to?(:force_encoding)
-                full_path = p.empty? ? name : "#{p}/#{name}"
-                n      = scm_iconv('UTF-8', @path_encoding, name)
-                full_p = scm_iconv('UTF-8', @path_encoding, full_path)
-                unless entries.detect { |entry| entry.name == name }
-                  entries << Entry.new({ name: n,
-                                         path: full_p,
-                                         kind: type == 'tree' ? 'dir' : 'file',
-                                         size: type == 'tree' ? nil : size,
-                                         lastrev: options[:report_last_commit] ? lastrev(full_path, identifier) : Revision.new })
-                end
-              end
+              next unless e =~ /^\d+\s+(\w+)\s+([0-9a-f]{40})\s+([0-9-]+)\t(.+)$/
+
+              type = $1
+              sha  = $2
+              size = $3
+              name = $4
+              name.force_encoding(@path_encoding) if name.respond_to?(:force_encoding)
+              full_path = p.empty? ? name : "#{p}/#{name}"
+              n      = scm_iconv('UTF-8', @path_encoding, name)
+              full_p = scm_iconv('UTF-8', @path_encoding, full_path)
+              next if entries.detect { |entry| entry.name == name }
+
+              entries << Entry.new({ name: n,
+                                     path: full_p,
+                                     kind: type == 'tree' ? 'dir' : 'file',
+                                     size: type == 'tree' ? nil : size,
+                                     lastrev: options[:report_last_commit] ? lastrev(full_path, identifier) : Revision.new })
             end
           end
           entries.sort_by_name
@@ -192,15 +192,15 @@ module Redmine
           cmd_args = %w|log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin|
           cmd_args << '--reverse' if options[:reverse]
           cmd_args << '-n' << options[:limit].to_i.to_s if options[:limit]
-          cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path && !path.empty?
+          cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path.present?
           revisions = []
           if identifier_from || identifier_to
             revisions << ''
             revisions[0] << "#{identifier_from}.." if identifier_from
             revisions[0] << identifier_to.to_s if identifier_to
           else
-            revisions += options[:includes] unless options[:includes].blank?
-            revisions += options[:excludes].map { |r| "^#{r}" } unless options[:excludes].blank?
+            revisions += options[:includes] if options[:includes].present?
+            revisions += options[:excludes].map { |r| "^#{r}" } if options[:excludes].present?
           end
 
           git_cmd(cmd_args, { write_stdin: true }) do |io|
@@ -221,7 +221,7 @@ module Redmine
                 key = 'commit'
                 value = $1
                 parents_str = $2
-                if parsing_descr == 1 || parsing_descr == 2
+                if [1, 2].include? parsing_descr
                   parsing_descr = 0
                   revision = Revision.new({ identifier: changeset[:commit],
                                             scmid: changeset[:commit],
@@ -251,15 +251,13 @@ module Redmine
               elsif parsing_descr.zero? && line.chomp.to_s == ''
                 parsing_descr = 1
                 changeset[:description] = ''
-              elsif (parsing_descr == 1 || parsing_descr == 2) \
-                  && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\t(.+)$/
+              elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\t(.+)$/
                 parsing_descr = 2
                 fileaction    = $1
                 filepath      = $2
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
                 files << { action: fileaction, path: p }
-              elsif (parsing_descr == 1 || parsing_descr == 2) \
-                  && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/
+              elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/
                 parsing_descr = 2
                 fileaction    = $1
                 filepath      = $3

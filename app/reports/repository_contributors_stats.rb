@@ -45,7 +45,7 @@ class RepositoryContributorsStats < ReportBase
   # registered_committers = [ committer,... ]
   #
   def commits_per_author_with_aliases
-    return @commits_per_author_with_aliases if !@commits_per_author_with_aliases.nil?
+    return @commits_per_author_with_aliases unless @commits_per_author_with_aliases.nil?
 
     @commits_per_author_with_aliases = nil
 

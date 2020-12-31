@@ -3,7 +3,7 @@ module RedmineGitHosting
     module Repositories
       class DeleteRepository < GitoliteWrappers::Base
         def call
-          if !repository.nil? && !repository.empty?
+          if repository.present?
             delete_repository
           else
             log_object_dont_exist

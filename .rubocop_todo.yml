@@ -315,29 +315,6 @@ Rails/Pluck:
   Exclude:
     - 'app/reports/repository_contributors_stats.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/Presence:
-  Exclude:
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
-Rails/Present:
-  Exclude:
-    - 'app/use_cases/repository_mirrors/push.rb'
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/gitolite_wrappers/repositories/delete_repository.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: **/Rakefile, **/*.rake
-Rails/RakeEnvironment:
-  Exclude:
-    - 'lib/tasks/redmine_git_hosting.rake'
-
 # Offense count: 6
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -358,20 +335,6 @@ Rails/UniqueValidationWithoutIndex:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/Validation:
-  Exclude:
-    - 'app/models/concerns/gitolitable/validations.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/WhereEquals:
-  Exclude:
-    - 'app/reports/repository_commits_stats.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Security/YAMLLoad:
   Exclude:
     - 'spec/support/global_helpers.rb'
@@ -389,14 +352,6 @@ Style/AccessorGrouping:
     - 'lib/redmine_git_hosting/gitolite_params/mailer_params.rb'
     - 'lib/redmine_git_hosting/gitolite_wrappers/base.rb'
     - 'lib/redmine_git_hosting/recycle_bin/item_base.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'lib/redmine_git_hosting/git_access_status.rb'
 
 # Offense count: 9
 # Configuration parameters: AllowedChars.
@@ -550,16 +505,6 @@ Style/MultilineWhenThen:
     - 'db/migrate/20130807223227_migrate_parameters.rb'
     - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
 
-# Offense count: 7
-# Cop supports --auto-correct.
-Style/MultipleComparison:
-  Exclude:
-    - 'contrib/hooks/post-receive/lib/git_hosting_custom_hook.rb'
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/patches/grack_git_patch.rb'
-    - 'spec/support/flat_organization.rb'
-    - 'spec/support/hierarchical_organisation.rb'
-
 # Offense count: 15
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -576,33 +521,6 @@ Style/MutableConstant:
     - 'spec/helpers/gitolite_public_keys_helper_spec.rb'
     - 'spec/models/repository_deployment_credential_spec.rb'
     - 'spec/models/repository_mirror_spec.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - 'app/reports/repository_contributors_stats.rb'
-    - 'app/use_cases/repositories/build_payload.rb'
-    - 'lib/hrack/lib/hrack/server.rb'
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/gitolite_handlers/repositories/move_repository.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/NestedTernaryOperator:
-  Exclude:
-    - 'app/reports/report_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, MinBodyLength.
-# SupportedStyles: skip_modifier_ifs, always
-Style/Next:
-  Exclude:
-    - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
-    - 'lib/redmine_git_hosting/config/base.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -641,13 +559,6 @@ Style/PerlBackrefs:
   Exclude:
     - 'lib/redmine/scm/adapters/xitolite_adapter.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowedCompactTypes.
-# SupportedStyles: compact, exploded
-Style/RaiseArgs:
-  EnforcedStyle: exploded
-
 # Offense count: 8
 # Cop supports --auto-correct.
 Style/RedundantBegin:
@@ -658,12 +569,6 @@ Style/RedundantBegin:
     - 'lib/redmine_git_hosting/gitolite_handlers/repositories/move_repository.rb'
     - 'lib/redmine_git_hosting/gitolite_wrapper.rb'
     - 'lib/redmine_git_hosting/recycle_bin/restorable_item.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/RedundantRegexpCharacterClass:
-  Exclude:
-    - 'lib/redmine_git_hosting/validators.rb'
 
 # Offense count: 8
 # Cop supports --auto-correct.
@@ -763,14 +668,6 @@ Style/StringConcatenation:
     - 'spec/models/repository_git_config_key/git_config_spec.rb'
     - 'spec/models/repository_git_config_key/option_spec.rb'
     - 'spec/services/redmine_hooks/call_webservices_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'app/use_cases/repository_mirrors/push.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.

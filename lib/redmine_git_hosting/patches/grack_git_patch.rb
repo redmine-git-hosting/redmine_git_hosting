@@ -80,15 +80,15 @@ module RedmineGitHosting
       end
 
       def command_require_chdir?(cmd)
-        cmd == 'update-server-info' || cmd == 'http.receivepack' || cmd == 'http.uploadpack' || cmd == 'rev-parse'
+        ['update-server-info', 'http.receivepack', 'http.uploadpack', 'rev-parse'].include? cmd
       end
 
       def git_command_without_chdir
-        RedmineGitHosting::Commands.sudo_git_cmd(smart_http_args)
+        RedmineGitHosting::Commands.sudo_git_cmd smart_http_args
       end
 
       def git_command_with_chdir
-        RedmineGitHosting::Commands.sudo_git_args_for_repo(@repo, smart_http_args)
+        RedmineGitHosting::Commands.sudo_git_args_for_repo @repo, smart_http_args
       end
 
       def smart_http_args

@@ -9,7 +9,7 @@ module Gitolitable
 
       # Make sure that identifier does not match Gitolite Admin repository
       #
-      validates_exclusion_of :identifier, in: %w[gitolite-admin]
+      validates :identifier, exclusion: { in: %w[gitolite-admin] }
 
       # Place additional constraints on repository identifiers
       # because of multi repos

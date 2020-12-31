@@ -6,7 +6,7 @@ module RedmineGitHosting
     # ssh://git@redmine.example.org/project1/project2/project3/project4.git
     # ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
     #
-    GIT_SSH_URL_REGEX = /\A(ssh:\/\/)([\w\-\.@]+)(\:[\d]+)?([\w\/\-\.~]+)(\.git)?\z/i
+    GIT_SSH_URL_REGEX = /\A(ssh:\/\/)([\w\-\.@]+)(\:\d+)?([\w\/\-\.~]+)(\.git)?\z/i
 
     def valid_git_ssh_url?(url)
       url.match(GIT_SSH_URL_REGEX)

@@ -1,7 +1,7 @@
 module RedmineGitHosting
   class GitAccessStatus
     attr_accessor :status, :message
-    alias_method :allowed?, :status
+    alias allowed? status
 
     def initialize(status, message = '')
       @status  = status

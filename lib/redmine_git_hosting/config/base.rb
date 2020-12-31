@@ -57,11 +57,11 @@ module RedmineGitHosting
         changes = 0
 
         default_hash.each do |key, value|
-          if valuehash[key] != value
-            console_logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
-            valuehash[key] = value
-            changes += 1
-          end
+          next if valuehash[key] == value
+
+          console_logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
+          valuehash[key] = value
+          changes += 1
         end
 
         if changes.zero?

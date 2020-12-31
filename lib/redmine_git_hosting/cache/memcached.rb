@@ -61,18 +61,18 @@ module RedmineGitHosting
 
         def create_or_update_repo_references(repo_id, reference)
           # Create a SHA256 of the repo_id as key id
-          hashed_repo_id = hash_key(repo_id)
+          hashed_repo_id = hash_key repo_id
           # Find it in Memcached
-          repo_references = client.get(hashed_repo_id)
+          repo_references = client.get hashed_repo_id
           if repo_references.nil?
-            client.set(hashed_repo_id, reference, max_cache_time, raw: true)
+            client.set hashed_repo_id, reference, max_cache_time, raw: true
           else
-            client.append(hashed_repo_id, ',' + reference)
+            client.append hashed_repo_id, ",#{reference}"
           end
         end
 
         def hash_key(key)
-          Digest::SHA256.hexdigest(key)
+          Digest::SHA256.hexdigest key
         end
 
         def client

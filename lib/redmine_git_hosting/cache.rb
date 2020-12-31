@@ -33,7 +33,7 @@ module RedmineGitHosting
 
     # Clear the cache entries for given repository / git_cache_id
     def clear_cache_for_repository(repo_id)
-      adapter.clear_cache_for_repository(repo_id)
+      adapter.clear_cache_for_repository repo_id
     end
 
     def adapter
@@ -51,7 +51,7 @@ module RedmineGitHosting
 
     def compose_key(key1, key2)
       if key2&.present?
-        key1 + "\n" + key2
+        "#{key1}\n#{key2}"
       else
         key1
       end

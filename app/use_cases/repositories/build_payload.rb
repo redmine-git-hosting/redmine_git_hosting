@@ -33,7 +33,7 @@ module Repositories
       oldhead, newhead, refname = ref.split ','
 
       # Only pay attention to branch updates
-      return nil if !refname.match(/refs\/heads\//)
+      return nil unless refname.match(/refs\/heads\//)
 
       # Get branch name
       branch_name = refname.gsub('refs/heads/', '')

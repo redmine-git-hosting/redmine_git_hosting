@@ -124,8 +124,9 @@ RSpec.shared_context 'hierarchical_organisation' do
 
     NON_UNIQUE_REPOSITORIES_MATRIX.each do |repo, attributes|
       describe repo do
+        valid_values = [true, false]
         attributes.each do |key, value|
-          if value == true || value == false
+          if valid_values.include? value
             it { expect(instance_variable_get("@#{repo}").send(key)).to be value }
           else
             it { expect(instance_variable_get("@#{repo}").send(key)).to eq value }

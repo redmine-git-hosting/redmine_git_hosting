@@ -71,11 +71,11 @@ module RedmineGitHosting
         end
 
         def old_relative_parent_path
-          @old_relative_parent_path ||= old_relative_path.gsub(repo_id + '.git', '')
+          @old_relative_parent_path ||= old_relative_path.gsub("#{repo_id}.git", '')
         end
 
         def new_relative_parent_path
-          @new_relative_parent_path ||= new_relative_path.gsub(repo_id + '.git', '')
+          @new_relative_parent_path ||= new_relative_path.gsub("#{repo_id}.git", '')
         end
 
         def debug_output
@@ -138,7 +138,7 @@ module RedmineGitHosting
         def move_physical_repo_case_2(old_path, new_path, new_parent_path)
           logger.debug("#{context} : really moving Gitolite repository from '#{old_path}' to '#{new_path}'")
 
-          create_parent_directory(new_parent_path) if !directory_exists?(new_parent_path)
+          create_parent_directory(new_parent_path) unless directory_exists? new_parent_path
 
           begin
             RedmineGitHosting::Commands.sudo_move(old_path, new_path)

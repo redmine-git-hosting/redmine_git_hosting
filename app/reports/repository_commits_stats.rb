@@ -54,7 +54,7 @@ class RepositoryCommitsStats < ReportBase
 
     @total_changes_by_day = nil
     changes = {}
-    Changeset.where('repository_id = ?', repository.id).includes(:filechanges).order(:commit_date).each do |changeset|
+    Changeset.where(repository_id: repository.id).includes(:filechanges).order(:commit_date).each do |changeset|
       changes[changeset.commit_date] = 0 unless changes.key?(changeset.commit_date)
       changes[changeset.commit_date] += changeset.filechanges.size
     end
