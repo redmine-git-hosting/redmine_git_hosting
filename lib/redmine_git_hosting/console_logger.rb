@@ -3,9 +3,9 @@ module RedmineGitHosting
     extend self
 
     def title(message, &block)
-      info("\n * #{message} :")
+      info("\n * #{message}:")
       yield if block_given?
-      info("   Done !\n\n")
+      info(" Done!\n\n")
     end
 
     def debug(message)

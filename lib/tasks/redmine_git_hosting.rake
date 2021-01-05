@@ -24,7 +24,9 @@ namespace :redmine_git_hosting do
   desc 'Update/repair Gitolite configuration'
   task update_repositories: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual update_repositories operation from command line') do
-      RedmineGitHosting::GitoliteAccessor.update_projects('all', { message: "Resync all projects (#{Project.all.length})..." })
+      RedmineGitHosting::GitoliteAccessor.update_projects 'all',
+                                                          message: "Resync all projects (#{Project.all.length})...",
+                                                          force: true
     end
   end
 
@@ -40,10 +42,10 @@ namespace :redmine_git_hosting do
   task check_repository_uniqueness: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Checking repositories identifier uniqueness...') do
       if Repository::Xitolite.have_duplicated_identifier?
-        RedmineGitHosting::ConsoleLogger.warn('Detected non-unique repository identifiers!')
+        RedmineGitHosting::ConsoleLogger.warn 'Detected non-unique repository identifiers!'
         puts YAML.dump(Repository::Xitolite.identifiers_to_hash.reject! { |_k, v| v == 1 })
       else
-        RedmineGitHosting::ConsoleLogger.info('No duplication detected, good !')
+        RedmineGitHosting::ConsoleLogger.info 'No duplication detected, good!'
       end
     end
   end
@@ -51,14 +53,14 @@ namespace :redmine_git_hosting do
   desc 'Resync ssh_keys'
   task resync_ssh_keys: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual resync_ssh_keys operation from command line') do
-      RedmineGitHosting::GitoliteAccessor.resync_ssh_keys(bypass_sidekiq: true)
+      RedmineGitHosting::GitoliteAccessor.resync_ssh_keys bypass_sidekiq: true
     end
   end
 
   desc 'Regenerate ssh_keys'
   task regenerate_ssh_keys: [:environment] do
     RedmineGitHosting::ConsoleLogger.title('Performing manual regenerate_ssh_keys operation from command line') do
-      RedmineGitHosting::GitoliteAccessor.regenerate_ssh_keys(bypass_sidekiq: true)
+      RedmineGitHosting::GitoliteAccessor.regenerate_ssh_keys bypass_sidekiq: true
     end
   end
 
@@ -80,11 +82,6 @@ namespace :redmine_git_hosting do
 
   desc 'Show library version'
   task version: [:environment] do
-    puts "Redmine Git Hosting #{version('plugins/redmine_git_hosting/init.rb')}"
-  end
-
-  def version(path)
-    line = File.read(Rails.root.join(path))[/^\s*version\s*.*/]
-    line.match(/.*version\s*['"](.*)['"]/)[1]
+    puts "Redmine Git Hosting #{RedmineGitHosting::VERSION}"
   end
 end
