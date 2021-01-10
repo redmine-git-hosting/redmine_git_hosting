@@ -20,7 +20,7 @@ Read the documentation and more on the [project's website](http://redmine-git-ho
 
 ## Contributors
 
-A big thank to [them](https://github.com/jbox-web/redmine_git_hosting/blob/devel/AUTHORS) for their contribution!
+A big thank to [them](https://github.com/jbox-web/redmine_git_hosting/blob/master/AUTHORS) for their contribution!
 
 ## Contribute
 
