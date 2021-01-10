@@ -113,6 +113,7 @@ en:
   label_download_format: Download as
   label_download_select_format: Select format
   label_empty_get: Empty GET
+  label_empty_post: Empty POST
   label_empty_recycle_bin: Empty recycle bin
   label_empty_repository: Empty repository?
   label_enable_git_daemon: Enable Git Daemon

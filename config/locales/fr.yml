@@ -113,6 +113,7 @@ fr:
   label_download_format: Télécharger au format
   label_download_select_format: Sélectionnez un format
   label_empty_get: "GET vide"
+  label_empty_post: Empty POST
   label_empty_recycle_bin: Vider la corbeille
   label_empty_repository: Dépot vide?
   label_enable_git_daemon: Activer le daemon Git

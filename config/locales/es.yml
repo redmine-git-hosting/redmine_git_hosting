@@ -113,6 +113,7 @@ es:
   label_download_format: Descargar como
   label_download_select_format: Seleccionar formato
   label_empty_get: GET vacío
+  label_empty_post: Empty POST
   label_empty_recycle_bin: Vaciar la papelera de reciclaje
   label_empty_repository: ¿Repositorio vacío?
   label_enable_git_daemon: Activar el daemon de Git

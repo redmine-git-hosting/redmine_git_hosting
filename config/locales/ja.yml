@@ -114,6 +114,7 @@ ja:
   label_download_format: ダウンロード
   label_download_select_format: タイプ選択
   label_empty_get: Empty GET
+  label_empty_post: Empty POST
   label_empty_recycle_bin: ゴミ箱を空にする
   label_empty_repository: 空リポジトリ？
   label_enable_git_daemon: Git Daemon有効化

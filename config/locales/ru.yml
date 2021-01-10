@@ -113,6 +113,7 @@ ru:
   label_download_format: Загрузить как
   label_download_select_format: Выбрать формат
   label_empty_get: Пустой GET
+  label_empty_post: Empty POST
   label_empty_recycle_bin: Очистка корзины
   label_empty_repository: Пустой?
   label_enable_git_daemon: Включить режим Git Daemon
