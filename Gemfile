@@ -34,11 +34,10 @@ gem 'sidekiq'
 gem 'sshkey'
 
 group :development, :test do
-  gem 'rails-controller-testing'
   gem 'rspec'
-  gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
+  gem 'rspec-rails'
 
-  gem 'shoulda', '~> 3.5.0'
+  gem 'shoulda'
   gem 'shoulda-context'
   gem 'shoulda-matchers', '~> 2.7.0'
 
