@@ -41,11 +41,8 @@ group :development, :test do
   gem 'shoulda-context'
   gem 'shoulda-matchers', '~> 2.7.0'
 
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'factory_bot_rails', '< 5.0'
-
-  # Publish to CodeClimate
-  gem 'codeclimate-test-reporter', require: false
 end
 
 group :development do
