@@ -55,11 +55,9 @@ module RedmineGitHosting
         when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
           if @user
             RedmineGitHosting::GitAccess.new.download_access_check(@user, repository, is_ssl?).allowed?
-          elsif repository.public_project? || repository.public_repo?
-            # Allow clone/fetch for public projects
-            true
           else
-            false
+            # Allow clone/fetch for public projects
+            repository.public_project? || repository.public_repo?
           end
         when *RedmineGitHosting::GitAccess::PUSH_COMMANDS
           # Push requires valid SSL

@@ -58,11 +58,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_default_branch_changed
-    self.default_branch_has_changed = if default_branch_changed?
-                                        true
-                                      else
-                                        false
-                                      end
+    self.default_branch_has_changed = default_branch_changed?
   end
 
   def check_urls_order_consistency
@@ -79,17 +75,17 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   def check_git_http_urls
     if git_http? && git_https?
-      add_url('http')
-      add_url('https')
+      add_url 'http'
+      add_url 'https'
     elsif git_http?
-      add_url('http')
-      remove_url('https')
+      add_url 'http'
+      remove_url 'https'
     elsif git_https?
-      add_url('https')
-      remove_url('http')
+      add_url 'https'
+      remove_url 'http'
     else
-      remove_url('http')
-      remove_url('https')
+      remove_url 'http'
+      remove_url 'https'
     end
   end
 
@@ -106,7 +102,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   end
 
   def remove_url(url)
-    urls_order.delete(url)
+    urls_order.delete url
   end
 
   def add_url(url)

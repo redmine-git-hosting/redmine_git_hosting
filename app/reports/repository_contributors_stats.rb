@@ -14,7 +14,7 @@ class RepositoryContributorsStats < ReportBase
         commits = commits.merge(count_changes_for_committer(committer)) { |key, oldval, newval| newval + oldval }
       end
 
-      commits = Hash[commits.sort]
+      commits = commits.sort.to_h
       commits_data = {}
       commits_data[:author_name]   = committer_hash[:name]
       commits_data[:author_mail]   = committer_hash[:mail]
@@ -31,10 +31,11 @@ class RepositoryContributorsStats < ReportBase
   def commits_per_author_global
     merged = commits_per_author_with_aliases
     data = {}
-    data[:categories] = merged.map { |x| x[:name] }
+
+    data[:categories] = merged.pluck(:name)
     data[:series] = []
-    data[:series] << { name: l(:label_commit_plural), data: merged.map { |x| x[:commits] } }
-    data[:series] << { name: l(:label_change_plural), data: merged.map { |x| x[:changes] } }
+    data[:series] << { name: l(:label_commit_plural), data: merged.pluck(:commits) }
+    data[:series] << { name: l(:label_change_plural), data: merged.pluck(:changes) }
     data
   end
 
@@ -65,9 +66,9 @@ class RepositoryContributorsStats < ReportBase
     merged = []
     commits_by_author.each do |committer, count|
       # skip all registered users
-      next if registered_committers.include?(committer)
+      next if registered_committers.include? committer
 
-      name = committer.gsub(%r{<.+@.+>}, '').strip
+      name = committer.gsub(/<.+@.+>/, '').strip
       mail = committer[/<(.+@.+)>/, 1]
       merged << { name: name, mail: mail, commits: count, changes: changes_by_author[committer] || 0, committers: [committer] }
     end
@@ -90,7 +91,7 @@ class RepositoryContributorsStats < ReportBase
   end
 
   def sorted_commits_per_author_with_aliases
-    @committers ||= commits_per_author_with_aliases.sort! { |x, y| y[:commits] <=> x[:commits] }
+    @sorted_commits_per_author_with_aliases ||= commits_per_author_with_aliases.sort! { |x, y| y[:commits] <=> x[:commits] }
   end
 
   def count_changes_for_committer(committer)

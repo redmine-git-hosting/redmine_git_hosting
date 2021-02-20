@@ -58,7 +58,7 @@ module RedmineGitHosting
           # Execute post actions
           execute_post_actions(old_settings, options)
 
-          flash[:notice] = l(:notice_successful_update)
+          flash[:notice] = l :notice_successful_update
         else
           flash[:error] = settings_form.errors.full_messages.join('<br>')
         end

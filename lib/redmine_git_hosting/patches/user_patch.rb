@@ -42,26 +42,26 @@ module RedmineGitHosting
       end
 
       def allowed_to_commit?(repository)
-        allowed_to?(:commit_access, repository.project)
+        allowed_to? :commit_access, repository.project
       end
 
       def allowed_to_clone?(repository)
-        allowed_to?(:view_changesets, repository.project)
+        allowed_to? :view_changesets, repository.project
       end
 
       def allowed_to_create_ssh_keys?
-        allowed_to?(:create_gitolite_ssh_key, nil, global: true)
+        allowed_to? :create_gitolite_ssh_key, nil, global: true
       end
 
       def allowed_to_download?(repository)
-        git_allowed_to?(:download_git_revision, repository)
+        git_allowed_to? :download_git_revision, repository
       end
 
       def git_allowed_to?(permission, repository)
         if repository.project.active?
-          allowed_to?(permission, repository.project)
+          allowed_to? permission, repository.project
         else
-          allowed_to?(permission, nil, global: true)
+          allowed_to? permission, nil, global: true
         end
       end
 
@@ -72,11 +72,7 @@ module RedmineGitHosting
       # We need to save it in virtual attribute to trigger Gitolite resync if changed.
       #
       def check_if_status_changed
-        self.status_has_changed = if status_changed?
-                                    true
-                                  else
-                                    false
-                                  end
+        self.status_has_changed = status_changed?
       end
 
       def stripped_login

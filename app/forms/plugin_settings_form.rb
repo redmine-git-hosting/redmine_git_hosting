@@ -30,7 +30,7 @@ class PluginSettingsForm
   end
 
   def params
-    Hash[self.class.all_accessors.map { |v| [v, send(v)] }]
+    self.class.all_accessors.map { |v| [v, send(v)] }.to_h
   end
 
   private
@@ -46,11 +46,11 @@ class PluginSettingsForm
   end
 
   def filter_email_list(list)
-    list.select(&:present?).select { |m| valid_email?(m) }
+    list.select { |m| m.present? && valid_email?(m) }
   end
 
   def valid_email?(email)
-    RedmineGitHosting::Validators.valid_email?(email)
+    RedmineGitHosting::Validators.valid_email? email
   end
 
   def convert_time(time)
