@@ -74,7 +74,8 @@ module GitHosting
       http = Net::HTTP.new(uri.host, uri.port)
       if uri.scheme == 'https'
         http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        # @NOTE: do not allow requests with invalid certificates
+        # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
 
       # Set HTTP options
