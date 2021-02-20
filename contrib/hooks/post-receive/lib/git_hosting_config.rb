@@ -93,7 +93,7 @@ module GitHosting
     end
 
     def get_gitolite_config(var_name)
-      %x[git config #{var_name}].chomp.strip
+      `git config #{var_name.shellescape}`.chomp.strip
     end
 
     def sanitize(var_name)

@@ -2,7 +2,7 @@ table.list
   - if ssh_keys.empty?
     tr
       td
-        label = l(:label_no_public_keys)
+        label = l :label_no_public_keys
   - else
     - ssh_keys.each do |key|
       tr class="#{'highlight' if @gitolite_public_key == key}"
