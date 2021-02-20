@@ -92,7 +92,7 @@ class RepositoryDeploymentCredentialsController < RedmineGitHostingController
   end
 
   def other_deployment_keys
-    keys = users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.order(:title) }
+    keys = users_allowed_to_create_deployment_keys.map { |user| user.gitolite_public_keys.deploy_key.sorted }
     keys.flatten
   end
 

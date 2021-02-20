@@ -43,8 +43,8 @@ module RedmineGitHosting
 
       # Add in values for viewing public keys:
       def set_public_key_values
-        @gitolite_user_keys   = @user.gitolite_public_keys.user_key.order(:title, :created_at)
-        @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.order(:title, :created_at)
+        @gitolite_user_keys   = @user.gitolite_public_keys.user_key.sorted
+        @gitolite_deploy_keys = @user.gitolite_public_keys.deploy_key.sorted
       end
 
       def update_projects
