@@ -4,16 +4,28 @@ table.list
       td
         label = l :label_no_public_keys
   - else
+    tbody
     - ssh_keys.each do |key|
       tr class="#{'highlight' if @gitolite_public_key == key}"
-        td style="text-align: left;"
-          = h(key)
-        td style="text-align: left;"
+        td.name
+          - used_in = []
+          - if defined?(deploy_keys) && deploy_keys
+            - key.repository_deployment_credentials.each do |deployment_credential|
+              - used_in << deployment_credential.repository.name
+          - if used_in.count.positive?
+            = tag.acronym h(key), title: used_in.sort.join(', ')
+          - else
+            = h key
+        td.description
           i.fas.fa-check style="color: green; margin-left: 5px; margin-right: 5px;"
           = key.fingerprint
         - if params[:id]
           td style="text-align: left;"
             = key.gitolite_path
+        - if defined?(deploy_keys) && deploy_keys
+          td.tick
+            - if key.delete_when_unused
+              i.fas.fa-minus-circle title="#{l :label_deployment_credential_delete_when_unused}"
         td.buttons style="width: 10%;"
           = link_to l(:button_delete), public_key_path(key, user_id: params[:id]),
                                        method: 'delete',

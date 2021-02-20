@@ -10,7 +10,7 @@ br
 fieldset.public_key_view
   legend = l(:label_current_deploy_keys)
   = render partial: 'gitolite_public_keys/ssh_keys',
-           locals: { ssh_keys: @gitolite_deploy_keys }
+           locals: { ssh_keys: @gitolite_deploy_keys, deploy_keys: true }
 
 br
 
