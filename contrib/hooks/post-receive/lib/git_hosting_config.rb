@@ -1,3 +1,4 @@
+require 'shellwords'
 require 'digest/sha1'
 
 module GitHosting
