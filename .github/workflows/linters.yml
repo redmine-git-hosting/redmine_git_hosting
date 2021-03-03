@@ -15,10 +15,11 @@ jobs:
         sudo apt-get install --yes --quiet
         pandoc
 
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6.x
+        ruby-version: 2.6
+        bundler-cache: true
 
     - name: Setup gems
       run: |
@@ -31,7 +32,6 @@ jobs:
         echo "  gem 'rubocop-rspec', require: false" >> Gemfile
         echo "  gem 'slim_lint', require: false" >> Gemfile
         echo "end" >> Gemfile
-        gem install bundler
         bundle install --jobs 4 --retry 3
 
     - name: Run RuboCop

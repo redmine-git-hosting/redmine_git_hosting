@@ -15,7 +15,7 @@ module RedmineGitHosting
         stdout, stderr, code = execute(command, args, opts, &block)
         if code != 0
           error_msg = "Non-zero exit code #{code} for `#{command} #{args.join(' ')}`"
-          RedmineGitHosting.logger.debug(error_msg)
+          RedmineGitHosting.logger.debug error_msg
           raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
         end
 
@@ -31,7 +31,7 @@ module RedmineGitHosting
         Open3.capture3(command, *args, opts, &block)
       rescue => e
         error_msg = "Exception occured executing `#{command} #{args.join(' ')}` : #{e.message}"
-        RedmineGitHosting.logger.debug(error_msg)
+        RedmineGitHosting.logger.debug error_msg
         raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)
       end
     end

@@ -97,20 +97,10 @@ jobs:
           subversion
 
       - name: Setup Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-
-      - name: Setup Cache
-        uses: actions/cache@v1
-        with:
-          path: vendor
-          key: v1-ruby-${{ matrix.ruby }}-redmine-${{ matrix.redmine }}
-
-      - name: Setup Bundler
-        run: |
-          gem install bundler -v '~> 1.0'
-          bundle config path "$(pwd)/vendor/bundle"
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: Prepare Redmine source
         working-directory: redmine
