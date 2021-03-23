@@ -45,13 +45,13 @@ describe RepositoryMirror do
     it { should validate_presence_of(:url) }
     it { should validate_presence_of(:push_mode) }
 
-    it { should validate_uniqueness_of(:url).scoped_to(:repository_id) }
+    it { should validate_uniqueness_of(:url).case_insensitive.scoped_to(:repository_id) }
 
     it { should allow_value(*VALID_URLS).for(:url) }
 
     it { should validate_numericality_of(:push_mode) }
 
-    it { should validate_inclusion_of(:push_mode).in_array(%w(0 1 2)) }
+    it { should validate_inclusion_of(:push_mode).in_array(%w[0 1 2]) }
 
     ## Attributes content
     it { expect(@mirror.active).to be true }

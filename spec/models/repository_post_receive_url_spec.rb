@@ -15,7 +15,7 @@ describe RepositoryPostReceiveUrl do
   it { should validate_presence_of(:url) }
   it { should validate_presence_of(:mode) }
 
-  it { should validate_uniqueness_of(:url).scoped_to(:repository_id) }
+  it { should validate_uniqueness_of(:url).case_insensitive.scoped_to(:repository_id) }
 
   it { should validate_inclusion_of(:mode).in_array(%i[github get]) }
 

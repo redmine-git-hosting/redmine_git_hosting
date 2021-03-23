@@ -56,7 +56,7 @@ describe GitolitePublicKey do
 
     it { is_expected.to validate_inclusion_of(:key_type).in_array(%w[0 1]) }
 
-    it { is_expected.to ensure_length_of(:title).is_at_most(60) }
+    it { is_expected.to validate_length_of(:title).is_at_most(60) }
 
     it { is_expected.not_to allow_value('toto@toto', 'ma_clé').for(:title) }
 

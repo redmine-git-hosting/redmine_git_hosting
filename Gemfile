@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Gitolite Admin repository management
-gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.2.0'
+gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.4.0'
 
 # Ruby/Rack Git Smart-HTTP Server Handler
 gem 'gitlab-grack', '~> 2.0.0', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_gemfile'
@@ -39,7 +39,7 @@ group :development, :test do
 
   gem 'shoulda'
   gem 'shoulda-context'
-  gem 'shoulda-matchers', '~> 2.7.0'
+  gem 'shoulda-matchers', '~> 4.0'
 
   gem 'database_cleaner-active_record'
   gem 'factory_bot_rails', '< 5.0'

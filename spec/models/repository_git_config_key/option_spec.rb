@@ -10,7 +10,7 @@ describe RepositoryGitConfigKey::Option do
   ## Validations
   it { should be_valid }
   it { should validate_presence_of(:key) }
-  it { should validate_uniqueness_of(:key).scoped_to(:repository_id) }
+  it { should validate_uniqueness_of(:key).case_insensitive.scoped_to(:type, :repository_id) }
   it { should allow_value('hookfoo', 'hookfoo.foo', 'hookfoo.foo.bar').for(:key) }
 
   context 'when key is updated' do
