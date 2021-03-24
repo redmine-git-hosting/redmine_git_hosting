@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'grack/auth'
+require 'grack/server'
 
 module RedmineGitHosting
   module Patches
@@ -19,15 +20,26 @@ module RedmineGitHosting
         # else
         #   @env['PATH_INFO'] = @request.path
         # end
+	    
+        path = @request.path_info
+        return [400] unless m = /((?:[^\/]+\/)*?[^\/]+\.git)(\/.*)$/.match(path).to_a  
+        @repo_path = m[1]
+        @req_route = m[2]
+          
+        return render_not_found("Repository not found") unless repository
+        return render_not_found("invalid route") unless has_route
 
-        if repository
-          auth!
-        else
-          render_not_found
-        end
+        auth!
       end
 
       private
+      def has_route
+        Grack::Server::SERVICES.each do |method, _, match|
+          next unless m = Regexp.new(match).match(@req_route)
+          return method.include? @request.request_method
+        end
+        false
+      end
 
       def auth!
         if @auth.provided?
@@ -53,15 +65,15 @@ module RedmineGitHosting
       end
 
       def authorized_request?
-        case git_cmd
-        when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
+        case git_method
+        when :pull
           if @user
             RedmineGitHosting::GitAccess.new.download_access_check(@user, repository, ssl: is_ssl?).allowed?
           else
             # Allow clone/fetch for public projects
             repository.public_project? || repository.public_repo?
           end
-        when *RedmineGitHosting::GitAccess::PUSH_COMMANDS
+        when :push
           # Push requires valid SSL
           if !is_ssl?
             logger.error 'SmartHttp : your are trying to push data without SSL!, exiting !'
@@ -75,24 +87,55 @@ module RedmineGitHosting
           false
         end
       end
-
-      def git_cmd
+	  
+	    def git_cmd
         if @request.get?
           @request.params['service']
         elsif @request.post?
           File.basename @request.path
+        else
+          nil
         end
+      end
+      
+      def git_method
+	    arr = @req_route.split('/', 5)[1...] # first item is empty string
+        puts arr
+	    return git_lfs_cmd(arr) if arr[0] == "info" && arr[1] == "lfs"
+        
+	    case git_cmd
+        when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
+          return :pull
+        when *RedmineGitHosting::GitAccess::PUSH_COMMANDS
+          return :push
+        end
+        
+        return nil
+      end
+
+      def git_lfs_cmd(arr)
+        case arr[2]
+        when "objects" 
+	        case @request.request_method
+          when "POST" # batch request
+            return :pull if arr[3] == "batch"
+          when "GET"
+            return :pull # file download
+          when "PUT"
+            return :push # file upload
+          end
+        when "locks"
+	        if @request.get?
+		        return :pull
+	        elsif @request.post?
+		        return :push if arr[3] == nil || arr[3] == "verify" || arr[4] == "unlock"
+	        end
+        end
+        return nil
       end
 
       def repository
-        @repository ||= repository_by_path @request.path_info
-      end
-
-      def repository_by_path(path)
-        if (m = %r{([^/]+/)*?[^/]+\.git}.match(path).to_a)
-          repo_path = m.first
-          Repository::Xitolite.find_by_path repo_path, loose: true
-        end
+        @repository ||= Repository::Xitolite.find_by_path @repo_path, loose: true
       end
 
       def is_ssl?
@@ -111,8 +154,8 @@ module RedmineGitHosting
         @request.env['HTTP_X_FORWARDED_SSL'].to_s == 'on'
       end
 
-      def render_not_found
-        [404, { 'Content-Type' => 'text/plain' }, ['Not Found']]
+      def render_not_found(msg = 'Not Found')
+        [404, { 'Content-Type' => 'text/plain' }, [msg]]
       end
 
       def logger

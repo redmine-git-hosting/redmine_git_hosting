@@ -4,7 +4,7 @@
 gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.4.0'
 
 # Ruby/Rack Git Smart-HTTP Server Handler
-gem 'gitlab-grack', '~> 2.0.0', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_gemfile'
+gem 'gitlab-grack', '~> 2.0.0', git: 'https://github.com/trobol/grack.git', require: 'grack', branch: 'git-lfs'
 
 # Memcached client for GitCache
 gem 'dalli'
