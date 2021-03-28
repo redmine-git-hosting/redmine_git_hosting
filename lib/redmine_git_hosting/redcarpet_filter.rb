@@ -19,15 +19,13 @@ module RedmineGitHosting
     # and convert into a DocumentFragment.
     #
     def call
-      html = self.class.renderer.render(@text)
+      html = self.class.renderer.render @text
       html.rstrip!
       html
     end
 
     def self.renderer
-      @renderer ||= begin
-        Redcarpet::Markdown.new(HTMLwithRouge, markdown_options)
-      end
+      @renderer ||= Redcarpet::Markdown.new HTMLwithRouge, markdown_options
     end
 
     def self.markdown_options

@@ -9,7 +9,7 @@ module RedmineGitHosting
         length = length.to_i
         secret = SecureRandom.base64(length * 2)
         secret = secret.gsub %r{[=_\-+/]}, ''
-        secret.split('').sample(length).join
+        secret.chars.sample(length).join
       end
     end
   end
