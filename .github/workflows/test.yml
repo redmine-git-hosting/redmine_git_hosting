@@ -127,7 +127,8 @@ jobs:
       - name: Install Ruby dependencies
         working-directory: redmine
         run: |
-          bundle install --jobs=4 --retry=3 --without development
+          bundle config set --local without 'development'
+          bundle install --jobs=4 --retry=3
 
       - name: Run Redmine rake tasks
         env:

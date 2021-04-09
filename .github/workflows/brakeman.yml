@@ -15,6 +15,14 @@ jobs:
         sudo apt-get install --yes --quiet
         pandoc
 
+    - name: Setup Gemfile
+      run: |
+        echo "source 'https://rubygems.org'" > Gemfile
+        echo "group :test do" >> Gemfile
+        echo "  gem 'brakeman', require: false" >> Gemfile
+        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
+        echo "end">> Gemfile
+
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -23,11 +31,6 @@ jobs:
 
     - name: Setup gems
       run: |
-        echo "source 'https://rubygems.org'" > Gemfile
-        echo "group :test do" >> Gemfile
-        echo "  gem 'brakeman', require: false" >> Gemfile
-        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
-        echo "end">> Gemfile
         bundle install --jobs 4 --retry 3
 
     - name: Run Brakeman
