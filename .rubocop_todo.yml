@@ -112,11 +112,6 @@ Lint/UnusedMethodArgument:
     - 'lib/redmine_git_hosting/mirror_keys_installer.rb'
     - 'spec/support/crud_controller_spec/helpers.rb'
 
-# Offense count: 1
-Lint/UriEscapeUnescape:
-  Exclude:
-    - 'contrib/hooks/post-receive/lib/git_hosting_http_helper.rb'
-
 # Offense count: 37
 Lint/UselessAssignment:
   Enabled: false
