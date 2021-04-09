@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['2.7', '2.6', '2.4']
+        ruby: ['2.7', '2.6', '2.5']
         redmine: ['4.1-stable', '4.2-stable', 'master']
         db: ['postgres', 'mysql']
         exclude:
