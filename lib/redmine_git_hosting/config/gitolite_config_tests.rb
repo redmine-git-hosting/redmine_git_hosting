@@ -23,7 +23,7 @@ module RedmineGitHosting
           begin
             FileUtils.mkdir_p @temp_dir_path
             FileUtils.chmod 0700, @temp_dir_path
-          rescue => e
+          rescue StandardError
             file_logger.error("Cannot create Gitolite Admin directory : '#{@temp_dir_path}'")
           end
         end
@@ -43,7 +43,7 @@ module RedmineGitHosting
             begin
               FileUtils.touch mytestfile
               FileUtils.rm mytestfile
-            rescue => e
+            rescue StandardError
               @temp_dir_writeable = false
             else
               @temp_dir_writeable = true
@@ -75,16 +75,14 @@ module RedmineGitHosting
       end
 
       def execute_sudo_test(user, &block)
-        begin
-          test = yield if block_given?
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          false
+        test = yield if block_given?
+      rescue RedmineGitHosting::Error::GitoliteCommandException
+        false
+      else
+        if test.match(/#{user}/)
+          true
         else
-          if test.match(/#{user}/)
-            true
-          else
-            false
-          end
+          false
         end
       end
     end

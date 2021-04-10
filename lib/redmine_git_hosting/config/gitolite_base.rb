@@ -13,7 +13,7 @@ module RedmineGitHosting
       end
 
       def redmine_user
-        @redmine_user ||= %x[whoami].chomp.strip
+        @redmine_user ||= `whoami`.chomp.strip
       end
 
       def gitolite_use_sudo?

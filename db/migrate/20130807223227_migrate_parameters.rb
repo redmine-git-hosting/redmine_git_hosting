@@ -67,96 +67,74 @@ class MigrateParameters < ActiveRecord::Migration[4.2]
     Setting.plugin_redmine_git_hosting&.each do |key, value|
       case key
       # Gitolite SSH Config
-      when 'gitUser' then
+      when 'gitUser'
         new_setting[:gitolite_user] = value
-
-      when 'sshServerLocalPort' then
+      when 'sshServerLocalPort'
         new_setting[:gitolite_server_port] = value
-
-      when 'gitoliteIdentityFile' then
+      when 'gitoliteIdentityFile'
         new_setting[:gitolite_ssh_private_key] = value
-
-      when 'gitoliteIdentityPublicKeyFile' then
+      when 'gitoliteIdentityPublicKeyFile'
         new_setting[:gitolite_ssh_public_key] = value
-
       # Gitolite Storage Config
-      when 'gitRepositoryBasePath' then
+      when 'gitRepositoryBasePath'
         new_setting[:gitolite_global_storage_dir] = value
-
-      when 'gitRedmineSubdir' then
+      when 'gitRedmineSubdir'
         new_setting[:gitolite_redmine_storage_dir] = value
-
-      when 'gitRecycleBasePath' then
+      when 'gitRecycleBasePath'
         new_setting[:gitolite_recycle_bin_dir] = value
-
       # Gitolite Global Config
-      when 'gitTempDataDir' then
+      when 'gitTempDataDir'
         new_setting[:gitolite_temp_dir] = value
-
-      when 'gitScriptDir' then
+      when 'gitScriptDir'
         new_setting[:gitolite_scripts_dir] = value
-
-      when 'gitConfigFile' then
+      when 'gitConfigFile'
         new_setting[:gitolite_config_file] = value
-
-      when 'gitRecycleExpireTime' then
+      when 'gitRecycleExpireTime'
         new_setting[:gitolite_recycle_bin_expiration_time] = value
-
-      when 'gitLockWaitTime' then
+      when 'gitLockWaitTime'
         new_setting[:gitolite_timeout] = value
 
       # Gitolite Hooks Config
-      when 'gitHooksAreAsynchronous' then
+      when 'gitHooksAreAsynchronous'
         new_setting[:gitolite_hooks_are_asynchronous] = value
-
-      when 'gitForceHooksUpdate' then
+      when 'gitForceHooksUpdate'
         new_setting[:gitolite_overwrite_existing_hooks] = value
-
-      when 'gitHooksDebug' then
+      when 'gitHooksDebug'
         new_setting[:gitolite_hooks_debug] = value
 
       # Gitolite Cache Config
-      when 'gitCacheMaxTime' then
+      when 'gitCacheMaxTime'
         new_setting[:gitolite_cache_max_time] = value
-
-      when 'gitCacheMaxSize' then
+      when 'gitCacheMaxSize'
         new_setting[:gitolite_cache_max_size] = value
-
-      when 'gitCacheMaxElements' then
+      when 'gitCacheMaxElements'
         new_setting[:gitolite_cache_max_elements] = value
 
       # Gitolite Access Config
-      when 'gitServer' then
+      when 'gitServer'
         new_setting[:ssh_server_domain] = value
-
-      when 'httpServer' then
+      when 'httpServer'
         new_setting[:http_server_domain] = value
         new_setting[:https_server_domain] = value
-
-      when 'httpServerSubdir' then
+      when 'httpServerSubdir'
         new_setting[:http_server_subdir] = value
-
-      when 'gitRepositoriesShowUrl' then
+      when 'gitRepositoriesShowUrl'
         new_setting[:show_repositories_url] = value
-
-      when 'gitDaemonDefault' then
+      when 'gitDaemonDefault'
         new_setting[:gitolite_daemon_by_default] = if value == 1
                                                      'true'
                                                    else
                                                      'false'
                                                    end
-
-      when 'gitHttpDefault' then
+      when 'gitHttpDefault'
         new_setting[:gitolite_http_by_default] = value
 
       # Redmine Config
-      when 'allProjectsUseGit' then
+      when 'allProjectsUseGit'
         new_setting[:all_projects_use_git] = value
-
-      when 'deleteGitRepositories' then
+      when 'deleteGitRepositories'
         new_setting[:delete_git_repositories] = value
-
-      when 'gitRepositoryHierarchy' then
+      when 'gitRepositoryHierarchy'
         if Additionals.true? value
           new_setting[:hierarchical_organisation] = 'true'
           new_setting[:unique_repo_identifier] = 'false'
@@ -172,7 +150,7 @@ class MigrateParameters < ActiveRecord::Migration[4.2]
 
     begin
       Setting.plugin_redmine_git_hosting = new_setting
-    rescue => e
+    rescue StandardError => e
       say "Error : #{e.message}"
     else
       say 'Done!'

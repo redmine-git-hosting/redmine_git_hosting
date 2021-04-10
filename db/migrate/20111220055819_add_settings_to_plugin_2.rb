@@ -18,7 +18,7 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration[4.2]
 
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 
@@ -41,7 +41,7 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration[4.2]
 
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 end

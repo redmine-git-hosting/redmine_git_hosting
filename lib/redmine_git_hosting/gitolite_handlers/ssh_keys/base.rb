@@ -2,9 +2,7 @@ module RedmineGitHosting
   module GitoliteHandlers
     module SshKeys
       class Base
-        attr_reader :admin
-        attr_reader :key
-        attr_reader :context
+        attr_reader :admin, :key, :context
 
         def initialize(admin, key, context)
           @admin   = admin

@@ -29,7 +29,7 @@ module RedmineGitHosting
       # +GitoliteCommandException+ with a meaningful error message.
       def execute(command, args = [], opts = {}, &block)
         Open3.capture3(command, *args, opts, &block)
-      rescue => e
+      rescue StandardError => e
         error_msg = "Exception occured executing `#{command} #{args.join(' ')}` : #{e.message}"
         RedmineGitHosting.logger.debug error_msg
         raise RedmineGitHosting::Error::GitoliteCommandException.new(command, error_msg)

@@ -9,7 +9,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
           mirror.save!
         end
         say "Success.  Changed #{RepositoryMirror.all.count} records."
-      rescue => e
+      rescue StandardError => e
         say 'Failed to attach repository mirrors to repositories.'
         say "Error: #{e.message}"
       end
@@ -26,7 +26,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
           prurl.save!
         end
         say "Success.  Changed #{RepositoryPostReceiveUrl.all.count} records."
-      rescue => e
+      rescue StandardError => e
         say 'Failed to attach repositories post-receive-urls to repositories.'
         say "Error: #{e.message}"
       end
@@ -61,7 +61,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
         say "Added redmine_git_hosting settings: 'gitRepositoryIdentUnique' => #{valuehash['gitRepositoryIdentUnique']}"
         Setting.plugin_redmine_git_hosting = valuehash
       end
-    rescue => e
+    rescue StandardError => e
       say "Error: #{e.message}"
     end
   end
@@ -76,7 +76,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
           mirror.save!
         end
         say "Success.  Changed #{RepositoryMirror.all.count} records."
-      rescue => e
+      rescue StandardError => e
         say 'Failed to re-attach repository mirrors to projects.'
         say "Error: #{e.message}"
       end
@@ -93,7 +93,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
           prurl.save!
         end
         say "Success.  Changed #{RepositoryPostReceiveUrl.all.count} records."
-      rescue => e
+      rescue StandardError => e
         say 'Failed to re-attach repository post-receive urls to projects.'
         say "Error: #{e.message}"
       end
@@ -119,7 +119,7 @@ class UpdateMultiRepoPerProject < ActiveRecord::Migration[4.2]
         say 'Removed redmine_git_hosting settings: gitRepositoryIdentUnique'
         Setting.plugin_redmine_git_hosting = valuehash
       end
-    rescue => e
+    rescue StandardError => e
       say "Error: #{e.message}"
     end
   end

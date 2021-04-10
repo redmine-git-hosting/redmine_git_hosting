@@ -36,7 +36,7 @@ module RedmineGitHosting
         ## may not exist on first migration
         begin
           value = Setting.plugin_redmine_git_hosting[setting]
-        rescue
+        rescue StandardError
           value = Redmine::Plugin.find('redmine_git_hosting').settings[:default][setting]
         else
           ## The Setting table exist but does not contain the value yet, fallback to default
@@ -79,7 +79,7 @@ module RedmineGitHosting
           ## Refresh Settings cache
           Setting.check_cache
           console_logger.info 'Success!'
-        rescue => e
+        rescue StandardError => e
           console_logger.error 'Failure.'
           console_logger.error e.message
         end

@@ -70,14 +70,12 @@ module GitHosting
         logger.info("  - Executing extra hook '#{extra_hook}'")
 
         IO.popen(extra_hook.to_s, 'w+') do |pipe|
-          begin
-            pipe.puts refs
-            pipe.close_write
-            logger.info pipe.read.to_s
-          rescue => e
-            logger.error "Error while executing hook #{extra_hook}"
-            logger.error e.message.to_s
-          end
+          pipe.puts refs
+          pipe.close_write
+          logger.info pipe.read.to_s
+        rescue StandardError => e
+          logger.error "Error while executing hook #{extra_hook}"
+          logger.error e.message.to_s
         end
       end
     end

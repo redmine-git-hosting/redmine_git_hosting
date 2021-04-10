@@ -21,11 +21,9 @@ module RedmineGitHosting
       # Pull up any matching repositories. Sort them (beginning is representation of time)
       #
       def trashed_objects
-        begin
-          find_trashed_object(source_path)
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          []
-        end
+        find_trashed_object(source_path)
+      rescue RedmineGitHosting::Error::GitoliteCommandException
+        []
       end
 
       def trashed_object
@@ -38,7 +36,7 @@ module RedmineGitHosting
         logger.info("Creating parent dir : '#{File.dirname(target_path)}'")
         RedmineGitHosting::Commands.sudo_mkdir_p(File.dirname(target_path))
         true
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+      rescue RedmineGitHosting::Error::GitoliteCommandException
         logger.error("Attempt to create parent dir for '#{trashed_object}' failed !")
         false
       end
@@ -47,7 +45,7 @@ module RedmineGitHosting
         RedmineGitHosting::Commands.sudo_move(trashed_object, target_path)
         logger.info('Done !')
         true
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+      rescue RedmineGitHosting::Error::GitoliteCommandException
         logger.error("Attempt to recover '#{trashed_object}' from Recycle Bin failed !")
         false
       end

@@ -17,7 +17,7 @@ class AddSettingsToPlugin3 < ActiveRecord::Migration[4.2]
 
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 
@@ -34,7 +34,7 @@ class AddSettingsToPlugin3 < ActiveRecord::Migration[4.2]
       say 'Removed redmine_git_hosting settings: gitDaemonDefault, gitHttpDefault, gitNotifyCIADefault, gitTempDataDir, gitScriptDir'
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 end

@@ -87,7 +87,7 @@ module RedmineGitHosting
       end
 
       def repository_by_path(path)
-        if m = /([^\/]+\/)*?[^\/]+\.git/.match(path).to_a
+        if (m = /([^\/]+\/)*?[^\/]+\.git/.match(path).to_a)
           repo_path = m.first
           Repository::Xitolite.find_by_path(repo_path, loose: true)
         end

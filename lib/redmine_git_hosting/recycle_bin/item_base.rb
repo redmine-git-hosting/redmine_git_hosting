@@ -1,10 +1,9 @@
 module RedmineGitHosting
   module RecycleBin
     module ItemBase
-      TRASH_DIR_SEP = '__'
+      TRASH_DIR_SEP = '__'.freeze
 
-      attr_reader :object_name
-      attr_reader :recycle_bin_dir
+      attr_reader :object_name, :recycle_bin_dir
 
       def initialize(recycle_bin_dir, object_name)
         @recycle_bin_dir = recycle_bin_dir

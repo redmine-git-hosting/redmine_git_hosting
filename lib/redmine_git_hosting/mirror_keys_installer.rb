@@ -13,7 +13,7 @@ module RedmineGitHosting
     class << self
       def mirroring_public_key(gitolite_ssh_public_key)
         format_mirror_key(File.read(gitolite_ssh_public_key))
-      rescue => e
+      rescue StandardError => e
         RedmineGitHosting.logger.error("Error while loading mirroring public key : #{e.inspect}")
         nil
       end
@@ -76,14 +76,14 @@ module RedmineGitHosting
     end
 
     def gitolite_ssh_public_key_content
-      File.read(gitolite_ssh_public_key)
-    rescue => e
+      File.read gitolite_ssh_public_key
+    rescue StandardError
       nil
     end
 
     def gitolite_ssh_private_key_content
-      File.read(gitolite_ssh_private_key)
-    rescue => e
+      File.read gitolite_ssh_private_key
+    rescue StandardError
       nil
     end
 
@@ -97,7 +97,7 @@ module RedmineGitHosting
 
     def install_file(source, destination, perms, &block)
       RedmineGitHosting::Commands.sudo_install_file(source, destination, perms)
-    rescue RedmineGitHosting::Error::GitoliteCommandException => e
+    rescue RedmineGitHosting::Error::GitoliteCommandException
       yield
       false
     end

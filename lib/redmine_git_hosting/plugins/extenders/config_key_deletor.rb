@@ -16,7 +16,7 @@ module RedmineGitHosting::Plugins::Extenders
 
     def delete_hook_param
       sudo_git('config', '--local', '--unset', delete_git_config_key)
-    rescue RedmineGitHosting::Error::GitoliteCommandException => e
+    rescue RedmineGitHosting::Error::GitoliteCommandException
       logger.error("Error while deleting Git config key '#{delete_git_config_key}' for repository '#{gitolite_repo_name}'")
     else
       logger.info("Git config key '#{delete_git_config_key}' successfully deleted for repository '#{gitolite_repo_name}'")

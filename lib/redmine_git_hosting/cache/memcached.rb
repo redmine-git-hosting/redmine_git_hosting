@@ -15,7 +15,7 @@ module RedmineGitHosting
             create_or_update_repo_references(repo_id, hashed_command)
             client.set(hashed_command, output)
             true
-          rescue => e
+          rescue StandardError => e
             logger.error "Memcached Adapter : could not insert in cache, this is the error : '#{e.message}'"
             false
           end

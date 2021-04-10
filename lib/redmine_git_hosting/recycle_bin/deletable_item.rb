@@ -24,7 +24,7 @@ module RedmineGitHosting
         RedmineGitHosting::Commands.sudo_move source_path, target_path
         logger.info 'Done !'
         true
-      rescue RedmineGitHosting::Error::GitoliteCommandException => e
+      rescue RedmineGitHosting::Error::GitoliteCommandException
         logger.error "Attempt to move '#{source_path}' to Recycle Bin failed!"
         false
       end

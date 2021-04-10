@@ -95,12 +95,13 @@ module RedmineGitHosting
       #
       def find_project_repository
         @project = Project.find(params[:id])
-        if params[:repository_id].present?
-          @repository = @project.repositories.find_by_identifier_param(params[:repository_id])
-        else
-          @repository = @project.repository
-        end
-        (render_404; return false) unless @repository
+        @repository = if params[:repository_id].present?
+                        @project.repositories.find_by_identifier_param(params[:repository_id])
+                      else
+                        @project.repository
+                      end
+        return render_404 unless @repository
+
         @path = params[:path].is_a?(Array) ? params[:path].join('/') : params[:path].to_s
         @rev = params[:rev].blank? ? @repository.default_branch : params[:rev].to_s.strip
         @rev_to = params[:rev_to]
@@ -122,7 +123,8 @@ module RedmineGitHosting
       def diff_with_options
         if params[:format] == 'diff'
           @diff = @repository.diff(@path, @rev, @rev_to, bypass_cache: true)
-          (show_error_not_found; return) unless @diff
+          return show_error_not_found unless @diff
+
           filename = "changeset_r#{@rev}"
           filename << "_r#{@rev_to}" if @rev_to
           send_data @diff.join, filename: "#{filename}.diff",
@@ -158,5 +160,5 @@ module RedmineGitHosting
 end
 
 unless RepositoriesController.included_modules.include?(RedmineGitHosting::Patches::RepositoriesControllerPatch)
-  RepositoriesController.send(:prepend, RedmineGitHosting::Patches::RepositoriesControllerPatch)
+  RepositoriesController.prepend RedmineGitHosting::Patches::RepositoriesControllerPatch
 end

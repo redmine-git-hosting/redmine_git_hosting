@@ -36,7 +36,7 @@ module Redmine
           def scm_command_version
             scm_version = scm_version_from_command_line.dup
             scm_version.force_encoding('ASCII-8BIT') if scm_version.respond_to?(:force_encoding)
-            if m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)})
+            if (m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)}))
               m[2].scan(%r{\d+}).collect(&:to_i)
             end
           end
@@ -57,18 +57,16 @@ module Redmine
         end
 
         def info
-          begin
-            Info.new(root_url: url, lastrev: lastrev('', nil))
-          rescue
-            nil
-          end
+          Info.new(root_url: url, lastrev: lastrev('', nil))
+        rescue StandardError
+          nil
         end
 
         def branches
           return @branches unless @branches.nil?
 
           @branches = []
-          cmd_args = %w|branch --no-color --verbose --no-abbrev|
+          cmd_args = %w[branch --no-color --verbose --no-abbrev]
           git_cmd(cmd_args) do |io|
             io.each_line do |line|
               branch_rev = line.match('\s*(\*?)\s*(.*?)\s*([0-9a-f]{40}).*$')
@@ -89,7 +87,7 @@ module Redmine
           return @tags unless @tags.nil?
 
           @tags = []
-          cmd_args = %w|tag|
+          cmd_args = %w[tag]
           git_cmd(cmd_args) do |io|
             @tags = io.readlines.sort!.map { |t| t.strip.force_encoding(Encoding::UTF_8) }
           end
@@ -128,7 +126,7 @@ module Redmine
           path ||= ''
           p = scm_iconv(@path_encoding, 'UTF-8', path)
           entries = Entries.new
-          cmd_args = %w|ls-tree -l|
+          cmd_args = %w[ls-tree -l]
           cmd_args << "HEAD:#{p}"          if identifier.nil?
           cmd_args << "#{identifier}:#{p}" if identifier
           git_cmd(cmd_args) do |io|
@@ -136,10 +134,10 @@ module Redmine
               e = line.chomp.to_s
               next unless e =~ /^\d+\s+(\w+)\s+([0-9a-f]{40})\s+([0-9-]+)\t(.+)$/
 
-              type = $1
-              sha  = $2
-              size = $3
-              name = $4
+              type = Regexp.last_match(1)
+              # sha  = Regexp.last_match(2)
+              size = Regexp.last_match(3)
+              name = Regexp.last_match(4)
               name.force_encoding(@path_encoding) if name.respond_to?(:force_encoding)
               full_path = p.empty? ? name : "#{p}/#{name}"
               n      = scm_iconv('UTF-8', @path_encoding, name)
@@ -162,7 +160,7 @@ module Redmine
         def lastrev(path, rev)
           return nil if path.nil?
 
-          cmd_args = %w|log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1|
+          cmd_args = %w[log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1]
           cmd_args << rev if rev
           cmd_args << '--' << path unless path.empty?
           lines = []
@@ -178,18 +176,18 @@ module Redmine
                            time: time,
                            message: nil,
                            paths: nil })
-          rescue NoMethodError => e
-            logger.error("The revision '#{path}' has a wrong format")
+          rescue NoMethodError
+            logger.error "The revision '#{path}' has a wrong format"
             nil
           end
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
         def revisions(path, identifier_from, identifier_to, options = {})
           revs = Revisions.new
-          cmd_args = %w|log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin|
+          cmd_args = %w[log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin]
           cmd_args << '--reverse' if options[:reverse]
           cmd_args << '-n' << options[:limit].to_i.to_s if options[:limit]
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path.present?
@@ -218,9 +216,8 @@ module Redmine
 
             io.each_line do |line|
               if line =~ /^commit ([0-9a-f]{40})(( [0-9a-f]{40})*)$/
-                key = 'commit'
-                value = $1
-                parents_str = $2
+                value = Regexp.last_match 1
+                parents_str = Regexp.last_match 2
                 if [1, 2].include? parsing_descr
                   parsing_descr = 0
                   revision = Revision.new({ identifier: changeset[:commit],
@@ -238,11 +235,11 @@ module Redmine
                   changeset = {}
                   files = []
                 end
-                changeset[:commit] = $1
+                changeset[:commit] = value
                 changeset[:parents] = parents_str.strip.split unless parents_str.nil? || parents_str == ''
               elsif parsing_descr.zero? && line =~ /^(\w+):\s*(.*)$/
-                key = $1
-                value = $2
+                key = Regexp.last_match 1
+                value = Regexp.last_match 2
                 if key == 'Author'
                   changeset[:author] = value
                 elsif key == 'CommitDate'
@@ -253,14 +250,14 @@ module Redmine
                 changeset[:description] = ''
               elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\t(.+)$/
                 parsing_descr = 2
-                fileaction    = $1
-                filepath      = $2
+                fileaction    = Regexp.last_match 1
+                filepath      = Regexp.last_match 2
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
                 files << { action: fileaction, path: p }
               elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/
                 parsing_descr = 2
-                fileaction    = $1
-                filepath      = $3
+                fileaction    = Regexp.last_match 1
+                filepath      = Regexp.last_match 3
                 p = scm_iconv('UTF-8', @path_encoding, filepath)
                 files << { action: fileaction, path: p }
               elsif (parsing_descr == 1) && line.chomp.to_s == ''
@@ -289,11 +286,9 @@ module Redmine
         rescue ScmCommandAborted => e
           err_msg = "git log error: #{e.message}"
           logger.error(err_msg)
-          if block_given?
-            raise CommandFailed, err_msg
-          else
-            revs
-          end
+          raise CommandFailed, err_msg if block_given?
+
+          revs
         end
 
         # Override the original method to accept options hash
@@ -322,11 +317,15 @@ module Redmine
 
         def annotate(path, identifier = nil)
           identifier = 'HEAD' if identifier.blank?
-          cmd_args = %w|blame --encoding=UTF-8|
+          cmd_args = %w[blame --encoding=UTF-8]
           cmd_args << '-p' << identifier << '--' << scm_iconv(@path_encoding, 'UTF-8', path)
           blame = Annotate.new
           content = nil
-          git_cmd(cmd_args) { |io| io.binmode; content = io.read }
+          git_cmd(cmd_args) do |io|
+            io.binmode
+            content = io.read
+          end
+
           # git annotates binary files
           return nil if binary_data?(content)
 
@@ -335,16 +334,16 @@ module Redmine
           authors_by_commit = {}
           content.split("\n").each do |line|
             if line =~ /^([0-9a-f]{39,40})\s.*/
-              identifier = $1
+              identifier = Regexp.last_match 1
             elsif line =~ /^author (.+)/
-              authors_by_commit[identifier] = $1.strip
+              authors_by_commit[identifier] = Regexp.last_match(1).strip
             elsif line =~ /^\t(.*)/
-              blame.add_line($1, Revision.new(identifier: identifier,
-                                              revision: identifier,
-                                              scmid: identifier,
-                                              author: authors_by_commit[identifier]))
+              blame.add_line(Regexp.last_match(1),
+                             Revision.new(identifier: identifier,
+                                          revision: identifier,
+                                          scmid: identifier,
+                                          author: authors_by_commit[identifier]))
               identifier = ''
-              author = ''
             end
           end
           blame
@@ -355,7 +354,7 @@ module Redmine
 
         def cat(path, identifier = nil)
           identifier = 'HEAD' if identifier.nil?
-          cmd_args = %w|show --no-color|
+          cmd_args = %w[show --no-color]
           cmd_args << "#{identifier}:#{scm_iconv(@path_encoding, 'UTF-8', path)}"
           cat = nil
           git_cmd(cmd_args) do |io|
@@ -415,10 +414,10 @@ module Redmine
         def archive(revision, format)
           cmd_args = ['archive']
           case format
-          when 'tar.gz' then
+          when 'tar.gz'
             cmd_args << '--format=tar.gz'
             cmd_args << '-7'
-          when 'zip' then
+          when 'zip'
             cmd_args << '--format=zip'
             cmd_args << '-7'
           else

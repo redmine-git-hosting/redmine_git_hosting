@@ -11,7 +11,7 @@ class AddSettingsToPlugin < ActiveRecord::Migration[4.2]
       Setting.plugin_redmine_git_hosting = valuehash
       say 'Added redmine_git_hosting settings: gitRecycleBasePath, getRecycleExpireTime, getLockWaitTime, httpServer'
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 
@@ -28,7 +28,7 @@ class AddSettingsToPlugin < ActiveRecord::Migration[4.2]
       say 'Removed redmine_git_hosting settings: gitRecycleBasePath, getRecycleExpireTime, getLockWaitTime, httpServer'
     end
     Setting.plugin_redmine_git_hosting = valuehash
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 end

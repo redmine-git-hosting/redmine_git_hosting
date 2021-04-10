@@ -18,7 +18,7 @@ module RedmineGitHosting
           begin
             client.set(hashed_command, output, ex: cache_time)
             true
-          rescue => e
+          rescue StandardError => e
             logger.error("Redis Adapter : could not insert in cache, this is the error : '#{e.message}'")
             false
           end

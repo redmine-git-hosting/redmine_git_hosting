@@ -142,23 +142,21 @@ module RedmineGitHosting
 
           begin
             RedmineGitHosting::Commands.sudo_move(old_path, new_path)
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          rescue RedmineGitHosting::Error::GitoliteCommandException
             logger.error("move_physical_repo(#{old_path}, #{new_path}) failed")
-            return false
+            false
           else
             logger.info("#{context} : done !")
-            return true
+            true
           end
         end
 
         def delete_directory!(dir, type)
-          begin
-            RedmineGitHosting::Commands.sudo_rm_rf(dir)
-            return true
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("#{context} : removing existing #{type} repository failed, exit !")
-            return false
-          end
+          RedmineGitHosting::Commands.sudo_rm_rf(dir)
+          true
+        rescue RedmineGitHosting::Error::GitoliteCommandException
+          logger.error("#{context} : removing existing #{type} repository failed, exit !")
+          false
         end
 
         def empty_repository?(dir)
@@ -170,13 +168,11 @@ module RedmineGitHosting
         end
 
         def create_parent_directory(new_parent_path)
-          begin
-            RedmineGitHosting::Commands.sudo_mkdir_p(new_parent_path)
-            return true
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
-            logger.error("#{context} : creation of parent path '#{new_parent_path}' failed, exit !")
-            return false
-          end
+          RedmineGitHosting::Commands.sudo_mkdir_p(new_parent_path)
+          true
+        rescue RedmineGitHosting::Error::GitoliteCommandException
+          logger.error("#{context} : creation of parent path '#{new_parent_path}' failed, exit !")
+          false
         end
       end
     end

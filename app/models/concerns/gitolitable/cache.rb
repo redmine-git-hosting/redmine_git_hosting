@@ -74,7 +74,7 @@ module Gitolitable
       end
     end
 
-    # Note: RedmineGitHosting::Cache doesn't know about repository object, it only knows *git_cache_id*.
+    # NOTE: RedmineGitHosting::Cache doesn't know about repository object, it only knows *git_cache_id*.
     #
     def empty_cache!
       RedmineGitHosting::Cache.clear_cache_for_repository(git_cache_id)

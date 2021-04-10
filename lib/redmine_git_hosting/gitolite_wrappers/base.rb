@@ -3,10 +3,7 @@ module RedmineGitHosting
     class Base
       include RedmineGitHosting::GitoliteAccessor::Methods
 
-      attr_reader :admin
-      attr_reader :object_id
-      attr_reader :options
-      attr_reader :gitolite_config
+      attr_reader :admin, :object_id, :options, :gitolite_config
 
       def initialize(admin, object_id, options = {})
         @admin           = admin
@@ -45,7 +42,7 @@ module RedmineGitHosting
       def gitolite_admin_repo_commit(message = '')
         logger.info("#{context} : commiting to Gitolite...")
         admin.save("#{context} : #{message}")
-      rescue => e
+      rescue StandardError => e
         logger.error(e.message)
       end
 

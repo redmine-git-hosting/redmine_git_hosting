@@ -2,10 +2,7 @@ module RedmineGitHosting
   module GitoliteHandlers
     module Repositories
       class Base
-        attr_reader :gitolite_config
-        attr_reader :repository
-        attr_reader :context
-        attr_reader :options
+        attr_reader :gitolite_config, :repository, :context, :options
 
         def initialize(gitolite_config, repository, context, options = {})
           @gitolite_config    = gitolite_config

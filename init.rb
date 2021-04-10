@@ -20,7 +20,7 @@ Redmine::Plugin.register :redmine_git_hosting do
        parent: :new_object
 
   begin
-    requires_redmine_plugin :additionals, version_or_higher: '3.0.1'
+    requires_redmine_plugin :additionals, version_or_higher: '3.0.2'
   rescue Redmine::PluginNotFound
     raise 'Please install additionals plugin (https://github.com/alphanodes/additionals)'
   end

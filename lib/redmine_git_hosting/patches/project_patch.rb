@@ -41,9 +41,9 @@ module RedmineGitHosting
       end
 
       def additional_constraints_on_identifier
-        if new_record? && identifier.present?
-          # Make sure that identifier does not match existing repository identifier
-          errors.add(:identifier, :taken) if Repository.find_by_identifier_and_type(identifier, 'Repository::Xitolite')
+        # Make sure that identifier does not match existing repository identifier
+        if new_record? && identifier.present? && Repository.find_by_identifier_and_type(identifier, 'Repository::Xitolite')
+          errors.add(:identifier, :taken)
         end
       end
     end

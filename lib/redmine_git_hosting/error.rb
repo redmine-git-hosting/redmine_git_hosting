@@ -15,8 +15,7 @@ module RedmineGitHosting
 
     # Used to register errors when pulling and pushing the conf file
     class GitoliteCommandException < GitoliteException
-      attr_reader :command
-      attr_reader :output
+      attr_reader :command, :output
 
       def initialize(command, output)
         @command = command

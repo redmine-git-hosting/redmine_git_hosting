@@ -45,7 +45,7 @@ module RedmineGitHosting::Plugins::Extenders
 
         ## Push
         push_commit(repo)
-      rescue => e
+      rescue StandardError => e
         logger.error("Error while creating README file for repository '#{gitolite_repo_name}'")
         logger.error(e.message)
       else

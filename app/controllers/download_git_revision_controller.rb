@@ -10,7 +10,7 @@ class DownloadGitRevisionController < ApplicationController
 
   def index
     send_data(@download.content, filename: @download.filename, type: @download.content_type)
-  rescue => e
+  rescue StandardError => e
     flash.now[:error] = l(:git_archive_timeout, timeout: e.output)
     render_404
   end

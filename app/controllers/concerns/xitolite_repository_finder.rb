@@ -3,7 +3,7 @@ module XitoliteRepositoryFinder
 
   def find_xitolite_repository
     @repository = Repository::Xitolite.find(find_repository_param)
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
     render_404
   else
     @project = @repository.project

@@ -22,12 +22,10 @@ module RedmineGitHosting
       end
 
       def gitolite_infos
-        begin
-          RedmineGitHosting::Commands.gitolite_infos
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          file_logger.error('Error while getting Gitolite infos, check your SSH keys (path, permissions) or your Git user.')
-          nil
-        end
+        RedmineGitHosting::Commands.gitolite_infos
+      rescue RedmineGitHosting::Error::GitoliteCommandException
+        file_logger.error('Error while getting Gitolite infos, check your SSH keys (path, permissions) or your Git user.')
+        nil
       end
 
       def gitolite_version
@@ -65,7 +63,7 @@ module RedmineGitHosting
         file_logger.debug('Getting Gitolite physical repositories list...')
         begin
           RedmineGitHosting::Commands.gitolite_repository_count
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        rescue RedmineGitHosting::Error::GitoliteCommandException
           file_logger.error('Error while getting Gitolite physical repositories list')
           0
         end

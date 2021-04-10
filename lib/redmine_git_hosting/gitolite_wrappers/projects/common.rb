@@ -25,7 +25,7 @@ module RedmineGitHosting
           logger.info("#{context} : cleaning repository path : '#{path}'")
           begin
             RedmineGitHosting::Commands.sudo_rmdir(path)
-          rescue RedmineGitHosting::Error::GitoliteCommandException => e
+          rescue RedmineGitHosting::Error::GitoliteCommandException
             logger.error("#{context} : error while cleaning repository path '#{path}'")
           end
         end

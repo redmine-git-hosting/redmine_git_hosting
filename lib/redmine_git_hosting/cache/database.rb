@@ -7,7 +7,7 @@ module RedmineGitHosting
           begin
             GitCache.create(command: command, command_output: output, repo_identifier: repo_id)
             true
-          rescue => e
+          rescue StandardError => e
             logger.error("DB Adapter : could not insert in cache, this is the error : '#{e.message}'")
             false
           end

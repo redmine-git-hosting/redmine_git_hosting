@@ -85,9 +85,9 @@ class RepositoryMirror < ActiveRecord::Base
   #
   def validate_refspec
     RedmineGitHosting::Validators.valid_git_refspec_path?(explicit_refspec)
-  rescue RedmineGitHosting::Error::InvalidRefspec::BadFormat => e
+  rescue RedmineGitHosting::Error::InvalidRefspec::BadFormat
     errors.add(:explicit_refspec, :bad_format)
-  rescue RedmineGitHosting::Error::InvalidRefspec::NullComponent => e
+  rescue RedmineGitHosting::Error::InvalidRefspec::NullComponent
     errors.add(:explicit_refspec, :have_null_component)
   end
 

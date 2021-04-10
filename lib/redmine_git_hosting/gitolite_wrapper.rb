@@ -37,24 +37,22 @@ module RedmineGitHosting
     # Return if issues.
     #
     def execute_action(action, object, options = {})
-      begin
-        admin = gitolite_admin
-      rescue Rugged::SshError => e
-        logger.error 'Invalid Gitolite Admin SSH Keys'
-        logger.error(e.message)
-      rescue Rugged::NetworkError => e
-        logger.error 'Access denied for Gitolite Admin SSH Keys'
-        logger.error(e.message)
-      rescue Rugged::OSError => e
-        logger.error 'Invalid connection params'
-        logger.error(e.message)
-      rescue Rugged::RepositoryError => e
-        logger.error "Gitolite couldn't write to its admin repo copy"
-        logger.error "Try recreating '#{gitolite_admin_dir}'"
-        logger.error(e.message)
-      else
-        call_gitolite_wrapper(action, admin, object, options)
-      end
+      admin = gitolite_admin
+    rescue Rugged::SshError => e
+      logger.error 'Invalid Gitolite Admin SSH Keys'
+      logger.error(e.message)
+    rescue Rugged::NetworkError => e
+      logger.error 'Access denied for Gitolite Admin SSH Keys'
+      logger.error(e.message)
+    rescue Rugged::OSError => e
+      logger.error 'Invalid connection params'
+      logger.error(e.message)
+    rescue Rugged::RepositoryError => e
+      logger.error "Gitolite couldn't write to its admin repo copy"
+      logger.error "Try recreating '#{gitolite_admin_dir}'"
+      logger.error(e.message)
+    else
+      call_gitolite_wrapper(action, admin, object, options)
     end
 
     def gitolite_admin
@@ -68,13 +66,11 @@ module RedmineGitHosting
     end
 
     def call_gitolite_wrapper(action, admin, object, options = {})
-      begin
-        klass = GitoliteWrappers::Base.find_by_action_name(action)
-      rescue RedmineGitHosting::Error::GitoliteWrapperException => e
-        logger.error(e.message)
-      else
-        klass.call(admin, object, options)
-      end
+      klass = GitoliteWrappers::Base.find_by_action_name(action)
+    rescue RedmineGitHosting::Error::GitoliteWrapperException => e
+      logger.error(e.message)
+    else
+      klass.call(admin, object, options)
     end
 
     def gitolite_admin_settings

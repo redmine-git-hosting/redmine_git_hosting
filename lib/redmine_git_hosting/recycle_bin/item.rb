@@ -16,7 +16,7 @@ module RedmineGitHosting
         begin
           RedmineGitHosting::Commands.sudo_rmdir(path, true)
           logger.info('Done !')
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        rescue RedmineGitHosting::Error::GitoliteCommandException
           logger.error("Errors while deleting '#{path}' from Recycle Bin !")
         end
       end

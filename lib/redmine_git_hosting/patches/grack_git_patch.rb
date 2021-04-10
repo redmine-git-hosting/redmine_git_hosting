@@ -28,7 +28,7 @@ module RedmineGitHosting
       #  * to get repository refs :
       #    003f91a7b1dad21020e96d52119c585881c02f2fae45 refs/heads/master
 
-      # Note : *service_rpc* also calls IO.popen but pass a block !.
+      # NOTE: *service_rpc* also calls IO.popen but pass a block !.
       # Passing a block to IO.popen auto-close the pipe/thread.
 
       def capture(command)
@@ -38,7 +38,7 @@ module RedmineGitHosting
 
         begin
           RedmineGitHosting::Utils::Exec.capture(cmd, args)
-        rescue => e
+        rescue StandardError
           logger.error('Problems while getting SmartHttp params')
           # Return empty string since the next method will call *chomp* on it
           ''

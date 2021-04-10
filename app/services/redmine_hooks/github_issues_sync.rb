@@ -119,7 +119,7 @@ module RedmineHooks
     end
 
     def find_user(url)
-      post_failed, user_data = http_get(url)
+      _post_failed, user_data = http_get(url)
       user_data = JSON.parse(user_data)
 
       user = User.find_by_mail(user_data['email'])

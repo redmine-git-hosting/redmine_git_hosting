@@ -23,10 +23,11 @@ module Gitolitable
           repo_conf['multimailhook.enabled'] = 'false'
         end
 
-        git_config_keys.each do |git|
-          repo_conf[git.key] = git.value
-        end if git_config_keys.any?
-
+        if git_config_keys.any?
+          git_config_keys.each do |git|
+            repo_conf[git.key] = git.value
+          end
+        end
       else
         # Disable repository
         repo_conf['http.uploadpack']       = 'false'
@@ -39,10 +40,11 @@ module Gitolitable
 
     def gitolite_options
       repo_conf = {}
+      return repo_conf unless git_option_keys.any?
 
       git_option_keys.each do |option|
         repo_conf[option.key] = option.value
-      end if git_option_keys.any?
+      end
 
       repo_conf
     end

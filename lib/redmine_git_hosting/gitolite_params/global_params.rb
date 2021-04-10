@@ -3,12 +3,7 @@ module RedmineGitHosting
     class GlobalParams
       include BaseParam
 
-      attr_reader :gitolite_hooks_url
-      attr_reader :debug_mode
-      attr_reader :async_mode
-
-      attr_reader :namespace
-      attr_reader :current_params
+      attr_reader :gitolite_hooks_url, :debug_mode, :async_mode, :namespace, :current_params
 
       def initialize
         # Params to set

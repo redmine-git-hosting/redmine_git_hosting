@@ -160,7 +160,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
   def set_fingerprint
     self.fingerprint = RedmineGitHosting::Utils::Ssh.ssh_fingerprint(key)
-  rescue RedmineGitHosting::Error::InvalidSshKey => e
+  rescue RedmineGitHosting::Error::InvalidSshKey
     errors.add(:key, :corrupted)
   end
 

@@ -3,9 +3,7 @@ module RedmineGitHosting
     class MailerParams
       include BaseParam
 
-      attr_reader :namespace
-      attr_reader :current_params
-      attr_reader :current_mailer_params
+      attr_reader :namespace, :current_params, :current_mailer_params
 
       def initialize
         ## Namespace where to set params

@@ -6,7 +6,7 @@ module RedmineGitHosting
       Plugins::GitolitePlugin.all_plugins.each do |plugin|
         plugin.new(repository, opts).send(step) if plugin.method_defined?(step)
       end
-    rescue => e
+    rescue StandardError => e
       RedmineGitHosting.logger.error e.message
     end
   end

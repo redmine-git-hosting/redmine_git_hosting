@@ -9,7 +9,7 @@ class AddSettingsToPlugin5 < ActiveRecord::Migration[4.2]
       say 'Added redmine_git_hosting settings: gitConfigFile, gitConfigHasAdminKey'
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 
@@ -23,7 +23,7 @@ class AddSettingsToPlugin5 < ActiveRecord::Migration[4.2]
       say 'Removed redmine_git_hosting settings: gitConfigFile, gitConfigHasAdminKey'
       Setting.plugin_redmine_git_hosting = valuehash
     end
-  rescue => e
+  rescue StandardError => e
     say e.message
   end
 end

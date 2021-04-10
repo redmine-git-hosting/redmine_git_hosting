@@ -67,7 +67,7 @@ module RedmineGitHosting
       def sudo_get_git_global_params(namespace)
         begin
           params = sudo_git('config', '--get-regexp', namespace).split("\n")
-        rescue RedmineGitHosting::Error::GitoliteCommandException => e
+        rescue RedmineGitHosting::Error::GitoliteCommandException
           logger.error("Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'")
           params = []
         end

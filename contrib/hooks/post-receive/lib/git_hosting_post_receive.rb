@@ -17,18 +17,16 @@ module GitHosting
     private
 
     def notify_redmine
-      logger.info('')
-      logger.info("Notifying Redmine about changes to this repository : '#{git_config.repository_name}' ...")
+      logger.info ''
+      logger.info "Notifying Redmine about changes to this repository : '#{git_config.repository_name}' ..."
 
       http_post(git_config.project_url, { params: http_post_data }) do |http, request|
-        begin
-          http.request(request) { |response| check_response(response) }
-        rescue => e
-          logger.error("HTTP_ERROR : #{e.message}")
-        end
+        http.request(request) { |response| check_response(response) }
+      rescue StandardError => e
+        logger.error "HTTP_ERROR : #{e.message}"
       end
 
-      logger.info('')
+      logger.info ''
     end
 
     def http_post_data

@@ -1,17 +1,17 @@
 module GlobalHelpers
   def create_user_with_permissions(project, permissions: [], login: nil)
-    role = Role.find_by_name('Manager')
+    role = Role.find_by_name 'Manager'
     role = FactoryBot.create(:role, name: 'Manager') if role.nil?
     role.permissions += permissions
     role.save!
 
-    if login.nil?
-      user = FactoryBot.create(:user)
-    else
-      user = FactoryBot.create(:user, login: login)
-    end
+    user = if login.nil?
+             FactoryBot.create :user
+           else
+             FactoryBot.create :user, login: login
+           end
 
-    member = Member.new(role_ids: [role.id], user_id: user.id)
+    member = Member.new role_ids: [role.id], user_id: user.id
     project.members << member
 
     user
@@ -78,14 +78,14 @@ module GlobalHelpers
   end
 
   def create_svn_repository(opts = {})
-    FactoryBot.create(:repository_svn, opts)
+    FactoryBot.create :repository_svn, opts
   end
 
   def load_yaml_fixture(fixture)
-    YAML.load(load_fixture(fixture))
+    YAML.safe_load load_fixture(fixture)
   end
 
   def load_fixture(fixture)
-    File.read(RedmineGitHosting.plugin_spec_dir('fixtures', fixture))
+    File.read RedmineGitHosting.plugin_spec_dir('fixtures', fixture)
   end
 end
