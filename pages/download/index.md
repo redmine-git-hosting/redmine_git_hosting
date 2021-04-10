@@ -30,7 +30,7 @@ layout: homepage
     <h2>Requirements</h2>
 
     <ul>
-      <li>Ruby: 2.4+</li>
+      <li>Ruby: 2.5+</li>
       <li>Git: 2.0+</li>
       <li>Redmine: 4.1+</li>
       <li>Gitolite: 3.0+</li>
