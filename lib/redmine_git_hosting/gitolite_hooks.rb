@@ -1,8 +1,6 @@
 module RedmineGitHosting
   module GitoliteHooks
     class << self
-      attr_writer :source_dir
-
       def register_hooks(&block)
         @gitolite_hooks ||= []
         class_eval(&block)
@@ -10,6 +8,10 @@ module RedmineGitHosting
 
       def registered_hooks
         @gitolite_hooks
+      end
+
+      def source_dir(source_dir)
+        @source_dir = source_dir
       end
 
       def hooks_installed?
