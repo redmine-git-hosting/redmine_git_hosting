@@ -31,9 +31,9 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_key_changed
-    if saved_changes.key?(:key)
+    if saved_changes&.key?(:key)
       self.key_has_changed = true
-      self.old_key         = key_change[0]
+      self.old_key         = saved_changes[:key][1]
     else
       self.key_has_changed = false
       self.old_key         = ''

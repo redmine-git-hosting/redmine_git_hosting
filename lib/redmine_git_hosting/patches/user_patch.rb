@@ -72,7 +72,7 @@ module RedmineGitHosting
       # We need to save it in virtual attribute to trigger Gitolite resync if changed.
       #
       def check_if_status_changed
-        self.status_has_changed = saved_changes.key?(:key)
+        self.status_has_changed = saved_changes&.key?(:status)
       end
 
       def stripped_login

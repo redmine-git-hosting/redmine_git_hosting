@@ -58,7 +58,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_default_branch_changed
-    self.default_branch_has_changed = saved_changes.key?(:default_branch)
+    self.default_branch_has_changed = saved_changes&.key?(:default_branch)
   end
 
   def check_urls_order_consistency
