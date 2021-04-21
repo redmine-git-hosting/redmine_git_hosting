@@ -53,12 +53,12 @@ class RepositoryGitExtra < ActiveRecord::Base
     end
   end
 
-  # This is Rails method : <attribute>_changed?
+  # This is Rails method :saved_changes
   # However, the value is cleared before passing the object to the controller.
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_default_branch_changed
-    self.default_branch_has_changed = default_branch_changed?
+    self.default_branch_has_changed = saved_changes.key?(:default_branch)
   end
 
   def check_urls_order_consistency

@@ -67,12 +67,12 @@ module RedmineGitHosting
 
       private
 
-      # This is Rails method : <attribute>_changed?
+      # This is Rails method : saved_changes
       # However, the value is cleared before passing the object to the controller.
       # We need to save it in virtual attribute to trigger Gitolite resync if changed.
       #
       def check_if_status_changed
-        self.status_has_changed = status_changed?
+        self.status_has_changed = saved_changes.key?(:key)
       end
 
       def stripped_login

@@ -6,7 +6,7 @@ class RepositoryGitExtrasController < RedmineGitHostingController
   helper :extend_repositories
 
   def update
-    @git_extra = @repository.extra
+    set_git_extra
     @git_extra.safe_attributes = params[:repository_git_extra]
 
     if @git_extra.save
@@ -18,7 +18,7 @@ class RepositoryGitExtrasController < RedmineGitHostingController
   end
 
   def sort_urls
-    @git_extra = @repository.extra
+    set_git_extra
     return unless request.post?
 
     if @git_extra.update(urls_order: params[:repository_git_extra])

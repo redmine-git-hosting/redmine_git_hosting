@@ -32,8 +32,9 @@ module ExtendRepositoriesHelper
     end
   end
 
-  def repository_branches_list(branches)
-    options_for_select branches.collect { |b| [b.to_s, b.to_s] }, selected: branches.find(&:is_default).to_s
+  def repository_branches_list(branches, selected: nil)
+    options_for_select branches.collect { |b| [b.to_s, b.to_s] },
+                       selected: selected.presence || branches.find(&:is_default).to_s
   end
 
   def render_repository_quick_jump(repository)

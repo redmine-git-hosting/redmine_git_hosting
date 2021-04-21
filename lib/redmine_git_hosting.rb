@@ -55,6 +55,12 @@ module RedmineGitHosting
       Logger::INFO
     end
   end
+
+  def additionals_help_items
+    [{ title: 'Git Hosting',
+       url: 'http://redmine-git-hosting.io/how-to/',
+       admin: true }]
+  end
 end
 
 # Set up autoload of patches

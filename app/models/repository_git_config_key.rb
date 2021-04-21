@@ -26,12 +26,12 @@ class RepositoryGitConfigKey < ActiveRecord::Base
 
   private
 
-  # This is Rails method : <attribute>_changed?
+  # This is Rails method : saved_changes
   # However, the value is cleared before passing the object to the controller.
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_key_changed
-    if key_changed?
+    if saved_changes.key?(:key)
       self.key_has_changed = true
       self.old_key         = key_change[0]
     else

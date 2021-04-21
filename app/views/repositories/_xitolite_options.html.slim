@@ -57,7 +57,9 @@
               p
                 = label_tag 'repository_git_extra[default_branch]', l(:label_repository_default_branch)
                 - if repository.branches.present?
-                  = f.select :default_branch, repository_branches_list(repository.branches)
+                  = f.select :default_branch,
+                             repository_branches_list(repository.branches,
+                                                      selected: @repository&.extra&.default_branch)
                 - else
                   span.label.label-info = repository.git_default_branch
 
