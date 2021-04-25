@@ -65,7 +65,6 @@ module RepositoryProtectedBranches
       new_ids = ids - current_ids
       new_ids.each do |id|
         object = klass.find_by id: id
-        puts "inspect: #{object.inspect}"
         next if object.nil?
 
         current_members.create principal_id: object.id, inherited_by: inherited_by

@@ -241,14 +241,15 @@ module Redmine
               elsif parsing_descr.zero? && line =~ /^(\w+):\s*(.*)$/
                 key = Regexp.last_match 1
                 value = Regexp.last_match 2
-                if key == 'Author'
+                case key
+                when 'Author'
                   changeset[:author] = value
-                elsif key == 'CommitDate'
+                when 'CommitDate'
                   changeset[:date] = value
                 end
               elsif parsing_descr.zero? && line.chomp.to_s == ''
                 parsing_descr = 1
-                changeset[:description] = ''
+                changeset[:description] = +''
               elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\t(.+)$/
                 parsing_descr = 2
                 fileaction    = Regexp.last_match 1
