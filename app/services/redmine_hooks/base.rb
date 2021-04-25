@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineHooks
   class Base
     attr_reader :object, :payloads
@@ -43,8 +45,8 @@ module RedmineHooks
       logger.error 'Failed!'
     end
 
-    def execute_hook(&block)
-      y = ''
+    def execute_hook
+      y = +''
       logger.info start_message
       y << "  - #{start_message} ... "
       yield y

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 require 'sshkey'
@@ -6,13 +8,13 @@ describe UsersController do
   describe 'GET #edit' do
     context 'with git hosting patch' do
       let(:user) { create_admin_user }
-      let(:user_key) do
+      let :user_key do
         create_ssh_key(user_id: user.id,
                        title: 'user_key',
                        key: SSHKey.generate(comment: 'faker_user_key@john_doe').ssh_public_key,
                        key_type: 0)
       end
-      let(:deploy_key) do
+      let :deploy_key do
         create_ssh_key(user_id: user.id,
                        title: 'deploy_key',
                        key: SSHKey.generate(comment: 'faker_deploy_key@john_doe').ssh_public_key,
@@ -20,7 +22,7 @@ describe UsersController do
       end
 
       it 'populates an array of gitolite_user_keys' do
-        set_session_user(user)
+        set_session_user user
         get :edit,
             params: { id: user.id }
 

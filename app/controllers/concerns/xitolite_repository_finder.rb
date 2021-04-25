@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module XitoliteRepositoryFinder
   extend ActiveSupport::Concern
 
   def find_xitolite_repository
-    @repository = Repository::Xitolite.find(find_repository_param)
+    @repository = Repository::Xitolite.find find_repository_param
   rescue ActiveRecord::RecordNotFound
     render_404
   else
@@ -22,7 +24,7 @@ module XitoliteRepositoryFinder
                                      ' exiting!'
       render_403
     else
-      RedmineGitHosting.logger.info("GoRedirector : access granted for repository '#{repository.gitolite_repository_name}'")
+      RedmineGitHosting.logger.info "GoRedirector : access granted for repository '#{repository.gitolite_repository_name}'"
       @repository = repository
     end
   end

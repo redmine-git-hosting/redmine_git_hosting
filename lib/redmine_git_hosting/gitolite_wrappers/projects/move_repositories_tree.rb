@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Projects
@@ -14,10 +16,10 @@ module RedmineGitHosting
               git_projects = project.self_and_descendants.uniq.select { |p| p.gitolite_repos.any? }
               next if git_projects.empty?
 
-              @delete_parent_path += handle_repositories_move(git_projects)
+              @delete_parent_path += handle_repositories_move git_projects
             end
             # Remove empty directories
-            clean_path(@delete_parent_path)
+            clean_path @delete_parent_path
           end
         end
 

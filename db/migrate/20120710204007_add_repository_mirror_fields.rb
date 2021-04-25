@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRepositoryMirrorFields < ActiveRecord::Migration[4.2]
   def change
     add_column :repository_mirrors, :push_mode, :integer, default: 0

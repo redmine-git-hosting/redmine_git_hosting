@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExtendChangesetsNotifiedCia < ActiveRecord::Migration[4.2]
   def up
     add_column :changesets, :notified_cia, :integer, default: 0
@@ -5,7 +7,7 @@ class ExtendChangesetsNotifiedCia < ActiveRecord::Migration[4.2]
 
   def down
     # Deal with fact that one of next migrations doesn't restore :notified_cia
-    remove_column :changesets, :notified_cia if column_exists?(:changesets, :notified_cia)
+    remove_column :changesets, :notified_cia if column_exists? :changesets, :notified_cia
   end
 
   def column_exists?(table_name, column_name)

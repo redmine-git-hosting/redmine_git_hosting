@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PluginSettingsValidation
   module GitoliteConfig
     extend ActiveSupport::Concern
@@ -16,12 +18,12 @@ module PluginSettingsValidation
                    :git_config_email
 
       before_validation do
-        self.gitolite_config_file       = strip_value(gitolite_config_file)
-        self.gitolite_identifier_prefix = strip_value(gitolite_identifier_prefix)
-        self.gitolite_temp_dir          = strip_value(gitolite_temp_dir)
-        self.git_config_username        = strip_value(git_config_username)
-        self.git_config_email           = strip_value(git_config_email)
-        self.gitolite_recycle_bin_expiration_time = strip_value(gitolite_recycle_bin_expiration_time)
+        self.gitolite_config_file       = strip_value gitolite_config_file
+        self.gitolite_identifier_prefix = strip_value gitolite_identifier_prefix
+        self.gitolite_temp_dir          = strip_value gitolite_temp_dir
+        self.git_config_username        = strip_value git_config_username
+        self.git_config_email           = strip_value git_config_email
+        self.gitolite_recycle_bin_expiration_time = strip_value gitolite_recycle_bin_expiration_time
       end
 
       # Validates Gitolite Config File
@@ -39,7 +41,7 @@ module PluginSettingsValidation
       validate  :tmp_dir_is_absolute
 
       after_validation do
-        self.gitolite_recycle_bin_expiration_time = convert_time(gitolite_recycle_bin_expiration_time)
+        self.gitolite_recycle_bin_expiration_time = convert_time gitolite_recycle_bin_expiration_time
 
         if gitolite_config_file == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
           self.gitolite_identifier_strip_user_id = 'false'
@@ -51,11 +53,11 @@ module PluginSettingsValidation
     private
 
     def gitolite_config_file_is_relative
-      errors.add(:gitolite_config_file, 'must be relative') if gitolite_config_file.starts_with?('/')
+      errors.add :gitolite_config_file, 'must be relative' if gitolite_config_file.starts_with? '/'
     end
 
     def tmp_dir_is_absolute
-      errors.add(:gitolite_temp_dir, 'must be absolute') unless gitolite_temp_dir.starts_with?('/')
+      errors.add :gitolite_temp_dir, 'must be absolute' unless gitolite_temp_dir.starts_with? '/'
     end
   end
 end

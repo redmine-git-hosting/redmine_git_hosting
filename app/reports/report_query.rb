@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module ReportQuery
   private
 
   def all_changesets
-    @all_changesets ||= Changeset.where(repository_id: repository.id)
+    @all_changesets ||= Changeset.where repository_id: repository.id
   end
 
   def all_changes
@@ -10,11 +12,11 @@ module ReportQuery
   end
 
   def all_commits_by_day
-    @all_commits_by_day ||= all_changesets.group(:commit_date)
+    @all_commits_by_day ||= all_changesets.group :commit_date
   end
 
   def all_changes_by_day
-    @all_changes_by_day ||= all_changes.group(:commit_date)
+    @all_changes_by_day ||= all_changes.group :commit_date
   end
 
   def redmine_committers

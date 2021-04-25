@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryGitConfigKeysController < RedmineGitHostingController
   include RedmineGitHosting::GitoliteAccessor::Methods
 
@@ -21,7 +23,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     @git_config_key.safe_attributes = params[:repository_git_config_key]
     return render action: 'new' unless @git_config_key.save
 
-    flash[:notice] = l(:notice_git_config_key_created)
+    flash[:notice] = l :notice_git_config_key_created
     call_use_case_and_redirect
   end
 
@@ -29,17 +31,17 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
     @git_config_key.safe_attributes = params[:repository_git_config_key]
     return render action: 'edit' unless @git_config_key.save
 
-    flash[:notice] = l(:notice_git_config_key_updated)
+    flash[:notice] = l :notice_git_config_key_updated
     options = @git_config_key.key_has_changed? ? { delete_git_config_key: @git_config_key.old_key } : {}
-    call_use_case_and_redirect(options)
+    call_use_case_and_redirect options
   end
 
   def destroy
     return unless @git_config_key.destroy
 
-    flash[:notice] = l(:notice_git_config_key_deleted)
+    flash[:notice] = l :notice_git_config_key_deleted
     options = { delete_git_config_key: @git_config_key.key }
-    call_use_case_and_redirect(options)
+    call_use_case_and_redirect options
   end
 
   private
@@ -61,13 +63,13 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
   end
 
   def find_repository_git_config_key
-    @git_config_key = @repository.git_keys.find(params[:id])
+    @git_config_key = @repository.git_keys.find params[:id]
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
-  def call_use_case(opts = {})
-    options = opts.merge(message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'")
-    gitolite_accessor.update_repository(@repository, options)
+  def call_use_case(**opts)
+    options = opts.merge message: "Rebuild Git config keys respository : '#{@repository.gitolite_repository_name}'"
+    gitolite_accessor.update_repository @repository, **options
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     module Base
@@ -51,7 +53,11 @@ module RedmineGitHosting
         Setting.check_cache
 
         ## Get actual values
-        valuehash = Setting.plugin_redmine_git_hosting.clone rescue {}
+        valuehash = begin
+          Setting.plugin_redmine_git_hosting.clone
+        rescue StandardError
+          {}
+        end
 
         ## Update!
         changes = 0
@@ -59,7 +65,7 @@ module RedmineGitHosting
         default_hash.each do |key, value|
           next if valuehash[key] == value
 
-          console_logger.info("Changing '#{key}' : #{valuehash[key]} => #{value}")
+          console_logger.info "Changing '#{key}' : #{valuehash[key]} => #{value}"
           valuehash[key] = value
           changes += 1
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Redmine Permissions
 require 'redmine_permissions'
 
@@ -40,7 +42,7 @@ module RedmineGitHosting
   end
 
   def logfile
-    Rails.root.join('log/git_hosting.log')
+    Rails.root.join 'log/git_hosting.log'
   end
 
   def loglevel

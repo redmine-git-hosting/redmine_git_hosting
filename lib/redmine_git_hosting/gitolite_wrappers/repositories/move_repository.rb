@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Repositories
@@ -11,13 +13,13 @@ module RedmineGitHosting
         end
 
         def repository
-          @repository ||= Repository.find_by_id(object_id)
+          @repository ||= Repository.find_by id: object_id
         end
 
         def move_repository
           admin.transaction do
-            move_gitolite_repository(repository)
-            gitolite_admin_repo_commit(repository.gitolite_repository_name)
+            move_gitolite_repository repository
+            gitolite_admin_repo_commit repository.gitolite_repository_name
           end
 
           # Fetch changeset

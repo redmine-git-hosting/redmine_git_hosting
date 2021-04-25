@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryMirrors
   class Base
     attr_reader :mirror, :repository

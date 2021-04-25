@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     module Mirroring
       extend self
 
       def mirroring_public_key
-        @mirroring_public_key ||= MirrorKeysInstaller.mirroring_public_key(gitolite_ssh_public_key)
+        @mirroring_public_key ||= MirrorKeysInstaller.mirroring_public_key gitolite_ssh_public_key
       end
 
       def mirroring_keys_installed?

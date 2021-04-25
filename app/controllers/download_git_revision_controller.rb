@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DownloadGitRevisionController < ApplicationController
   include XitoliteRepositoryFinder
 
@@ -9,9 +11,9 @@ class DownloadGitRevisionController < ApplicationController
   helper :git_hosting
 
   def index
-    send_data(@download.content, filename: @download.filename, type: @download.content_type)
+    send_data @download.content, filename: @download.filename, type: @download.content_type
   rescue StandardError => e
-    flash.now[:error] = l(:git_archive_timeout, timeout: e.output)
+    flash.now[:error] = l :git_archive_timeout, timeout: e.output
     render_404
   end
 
@@ -22,11 +24,11 @@ class DownloadGitRevisionController < ApplicationController
   end
 
   def can_download_git_revision
-    render_403 unless User.current.allowed_to_download?(@repository)
+    render_403 unless User.current.allowed_to_download? @repository
   end
 
   def set_download
-    @download = Repositories::DownloadRevision.new(@repository, download_revision, download_format)
+    @download = Repositories::DownloadRevision.new @repository, download_revision, download_format
   end
 
   def download_revision
@@ -40,7 +42,7 @@ class DownloadGitRevisionController < ApplicationController
   def validate_download
     return if @download.valid_commit?
 
-    flash.now[:error] = l(:error_download_revision_no_such_commit, commit: download_revision)
+    flash.now[:error] = l :error_download_revision_no_such_commit, commit: download_revision
     render_404
   end
 end

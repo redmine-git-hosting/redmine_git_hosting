@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Patches
     module DashboardContentProjectPatch

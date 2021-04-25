@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 
 class RepositoryPostReceiveUrl < ActiveRecord::Base
@@ -23,9 +25,9 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   serialize :triggers, Array
 
   ## Scopes
-  scope :active, -> { where(active: true) }
-  scope :inactive, -> { where(active: false) }
-  scope :sorted, -> { order(:url) }
+  scope :active, -> { where active: true }
+  scope :inactive, -> { where active: false }
+  scope :sorted, -> { order :url }
 
   ## Callbacks
   before_validation :strip_whitespace

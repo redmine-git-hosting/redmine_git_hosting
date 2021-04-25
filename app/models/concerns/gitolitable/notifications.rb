@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Notifications
     extend ActiveSupport::Concern

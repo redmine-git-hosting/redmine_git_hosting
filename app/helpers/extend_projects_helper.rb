@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module ExtendProjectsHelper
   def render_feature(repository, feature)
     method = "#{feature}_feature"
-    label, css_class, enabled = send(method, repository)
+    label, css_class, enabled = send method, repository
 
     # Get css class
     base_class = ['icon-git']
@@ -11,7 +13,7 @@ module ExtendProjectsHelper
     # Get label
     base_label = []
     base_label << label
-    base_label << "(#{l(:label_disabled)})" unless enabled
+    base_label << "(#{l :label_disabled})" unless enabled
 
     tag.i '', title: base_label.join(' '), class: base_class
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GitCache < ActiveRecord::Base
   include Redmine::SafeAttributes
 

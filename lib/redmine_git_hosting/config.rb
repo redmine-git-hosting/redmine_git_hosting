@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     GITHUB_ISSUE = 'https://github.com/jbox-web/redmine_git_hosting/issues'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUniqueIndexes < ActiveRecord::Migration[4.2]
   def up
     add_index :repository_git_extras, :repository_id, unique: true

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryMirrorsHelper
   # Mirror Mode
   def mirror_mode(mirror)
@@ -14,10 +16,10 @@ module RepositoryMirrorsHelper
       result = []
       result << tag.li(l(:all_branches)) if mirror.include_all_branches
       result << tag.li(l(:all_tags)) if mirror.include_all_tags
-      result << tag.li(mirror.explicit_refspec) if max_refspec.zero? || ((1..max_refspec) === mirror.explicit_refspec.length)
+      result << tag.li(mirror.explicit_refspec) if max_refspec.zero? || ((1..max_refspec).include? mirror.explicit_refspec.length)
       result << tag.li(l(:explicit)) if max_refspec.positive? && (mirror.explicit_refspec.length > max_refspec)
 
-      tag.ul(safe_join(result), class: 'list-unstyled') if result.any?
+      tag.ul safe_join(result), class: 'list-unstyled' if result.any?
     end
   end
 

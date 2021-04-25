@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Utils
     module Git
       extend self
 
       REF_COMPONENT_PART  = '[\\.\\-\\w_\\*]+'
-      REF_COMPONENT_REGEX = /\A(refs\/)?((#{REF_COMPONENT_PART})\/)?(#{REF_COMPONENT_PART}(\/#{REF_COMPONENT_PART})*)\z/
+      REF_COMPONENT_REGEX = %r{\A(refs/)?((#{REF_COMPONENT_PART})/)?(#{REF_COMPONENT_PART}(/#{REF_COMPONENT_PART})*)\z}
 
       # Parse a reference component. Two possibilities:
       #
@@ -12,8 +14,8 @@ module RedmineGitHosting
       # 2) name
       #
       def parse_refspec(spec)
-        parsed_refspec = spec.match(REF_COMPONENT_REGEX)
-        return nil if parsed_refspec.nil?
+        parsed_refspec = spec.match REF_COMPONENT_REGEX
+        return if parsed_refspec.nil?
 
         if parsed_refspec[1]
           # Should be first class.  If no type component, return fail

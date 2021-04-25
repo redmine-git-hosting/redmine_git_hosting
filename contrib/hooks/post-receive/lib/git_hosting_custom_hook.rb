@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHosting
   class CustomHook
     attr_reader :repo_path, :refs, :git_config
@@ -10,7 +12,7 @@ module GitHosting
 
     def exec
       ## Execute extra hooks
-      extra_hooks = get_extra_hooks
+      extra_hooks = additional_extra_hooks
       return if extra_hooks.nil? || extra_hooks.none?
 
       logger.info 'Calling additional post-receive hooks...'
@@ -20,36 +22,36 @@ module GitHosting
 
     private
 
-    def get_extra_hooks
+    def additional_extra_hooks
       # Get global extra hooks
-      logger.debug('Looking for additional global post-receive hooks...')
-      global_extra_hooks = get_executables('hooks/post-receive.d')
+      logger.debug 'Looking for additional global post-receive hooks...'
+      global_extra_hooks = get_executables 'hooks/post-receive.d'
       if global_extra_hooks.empty?
-        logger.debug('  - No global hooks found')
+        logger.debug '  - No global hooks found'
       else
-        logger.debug("  - Global hooks found : #{global_extra_hooks}")
+        logger.debug "  - Global hooks found : #{global_extra_hooks}"
       end
 
-      logger.debug('')
+      logger.debug ''
 
       # Get local extra hooks
-      logger.debug('Looking for additional local post-receive hooks...')
-      local_extra_hooks = get_executables('hooks/post-receive.local.d')
+      logger.debug 'Looking for additional local post-receive hooks...'
+      local_extra_hooks = get_executables 'hooks/post-receive.local.d'
       if local_extra_hooks.empty?
-        logger.debug('  - No local hooks found')
+        logger.debug '  - No local hooks found'
       else
-        logger.debug("  - Local hooks found : #{local_extra_hooks}")
+        logger.debug "  - Local hooks found : #{local_extra_hooks}"
       end
 
-      logger.debug('')
+      logger.debug ''
 
       global_extra_hooks + local_extra_hooks
     end
 
     def get_executables(directory)
       executables = []
-      if File.directory?(directory)
-        Dir.foreach(directory) do |item|
+      if File.directory? directory
+        Dir.foreach directory do |item|
           next if ['.', '..'].include? item
 
           # Use full relative path
@@ -67,9 +69,9 @@ module GitHosting
     def call_extra_hooks(extra_hooks)
       # Call each exectuble found with the parameters we got
       extra_hooks.each do |extra_hook|
-        logger.info("  - Executing extra hook '#{extra_hook}'")
+        logger.info "  - Executing extra hook '#{extra_hook}'"
 
-        IO.popen(extra_hook.to_s, 'w+') do |pipe|
+        IO.popen extra_hook.to_s, 'w+' do |pipe|
           pipe.puts refs
           pipe.close_write
           logger.info pipe.read.to_s
@@ -81,7 +83,7 @@ module GitHosting
     end
 
     def logger
-      @logger ||= GitHosting::HookLogger.new(loglevel: git_config.loglevel)
+      @logger ||= GitHosting::HookLogger.new loglevel: git_config.loglevel
     end
   end
 end

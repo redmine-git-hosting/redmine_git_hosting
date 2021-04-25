@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grack/git'
 
 module RedmineGitHosting
@@ -5,18 +7,18 @@ module RedmineGitHosting
     module GrackGitPatch
       def initialize(git_path, repo_path, user)
         @user = user
-        super(git_path, repo_path)
+        super git_path, repo_path
       end
 
       # Override original *valid_repo?* method to test directory presence with Sudo
       def valid_repo?
-        directory_exists?(repo)
+        directory_exists? repo
       end
 
       # Override original *command* method to prefix the command with Sudo and other args.
       #
       def command(cmd)
-        git_command_with_sudo(cmd)
+        git_command_with_sudo cmd
       end
 
       # Override original *capture* method because the original IO.popen().read let zombie process behind.
@@ -37,9 +39,9 @@ module RedmineGitHosting
         args = command
 
         begin
-          RedmineGitHosting::Utils::Exec.capture(cmd, args)
+          RedmineGitHosting::Utils::Exec.capture cmd, args
         rescue StandardError
-          logger.error('Problems while getting SmartHttp params')
+          logger.error 'Problems while getting SmartHttp params'
           # Return empty string since the next method will call *chomp* on it
           ''
         end
@@ -66,16 +68,16 @@ module RedmineGitHosting
       private
 
       def directory_exists?(dir)
-        RedmineGitHosting::Commands.sudo_dir_exists?(dir)
+        RedmineGitHosting::Commands.sudo_dir_exists? dir
       end
 
       # We sometimes need to add *--git-dir* arg to Git command otherwise
       # Git looks for the repository in the current path.
       def git_command_with_sudo(params)
-        if command_require_chdir?(params.last)
-          git_command_with_chdir.concat(params)
+        if command_require_chdir? params.last
+          git_command_with_chdir.concat params
         else
-          git_command_without_chdir.concat(params)
+          git_command_without_chdir.concat params
         end
       end
 
@@ -106,12 +108,12 @@ module RedmineGitHosting
       end
 
       def repository_object
-        @repository_object ||= Repository::Xitolite.find_by_path(@repo, loose: true)
+        @repository_object ||= Repository::Xitolite.find_by_path @repo, loose: true
       end
     end
   end
 end
 
-unless Grack::Git.included_modules.include?(RedmineGitHosting::Patches::GrackGitPatch)
+unless Grack::Git.included_modules.include? RedmineGitHosting::Patches::GrackGitPatch
   Grack::Git.prepend RedmineGitHosting::Patches::GrackGitPatch
 end

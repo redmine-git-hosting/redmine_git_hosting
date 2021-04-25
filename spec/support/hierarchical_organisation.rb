@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'hierarchical_organisation' do
   ##############################################################
   #                                                            #
@@ -96,27 +98,27 @@ RSpec.shared_context 'hierarchical_organisation' do
   }.freeze
 
   def build_collection_of_non_unique_repositories
-    @repository_1 = build_git_repository(project: @project_child, is_default: true)
+    @repository_1 = build_git_repository project: @project_child, is_default: true
     @repository_1.valid?
-    @repository_2 = build_git_repository(project: @project_child, identifier: 'repo-test')
+    @repository_2 = build_git_repository project: @project_child, identifier: 'repo-test'
     @repository_2.valid?
 
-    @repository_3 = build_git_repository(project: @project_parent, is_default: true)
+    @repository_3 = build_git_repository project: @project_parent, is_default: true
     @repository_3.valid?
-    @repository_4 = build_git_repository(project: @project_parent, identifier: 'repo-test')
+    @repository_4 = build_git_repository project: @project_parent, identifier: 'repo-test'
     @repository_4.valid?
   end
 
   def create_collection_of_non_unique_repositories
-    @repository_1 = create_git_repository(project: @project_child, is_default: true)
-    @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
+    @repository_1 = create_git_repository project: @project_child, is_default: true
+    @repository_2 = create_git_repository project: @project_child, identifier: 'repo-test'
 
-    @repository_3 = create_git_repository(project: @project_parent, is_default: true)
-    @repository_4 = create_git_repository(project: @project_parent, identifier: 'repo-test')
+    @repository_3 = create_git_repository project: @project_parent, is_default: true
+    @repository_4 = create_git_repository project: @project_parent, identifier: 'repo-test'
   end
 
   context 'when hierarchical_organisation with non_unique_identifier: fast tests' do
-    before(:all) do
+    before :all do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
       build_collection_of_non_unique_repositories
@@ -161,15 +163,15 @@ RSpec.shared_context 'hierarchical_organisation' do
         create_collection_of_non_unique_repositories
       end
 
-      let(:repo1) { Repository::Xitolite.find_by_path(@repository_1.url, loose: true) }
-      let(:repo2) { Repository::Xitolite.find_by_path(@repository_2.url, loose: true) }
-      let(:repo3) { Repository::Xitolite.find_by_path(@repository_3.url, loose: true) }
-      let(:repo4) { Repository::Xitolite.find_by_path(@repository_4.url, loose: true) }
+      let(:repo1) { Repository::Xitolite.find_by_path @repository_1.url, loose: true }
+      let(:repo2) { Repository::Xitolite.find_by_path @repository_2.url, loose: true }
+      let(:repo3) { Repository::Xitolite.find_by_path @repository_3.url, loose: true }
+      let(:repo4) { Repository::Xitolite.find_by_path @repository_4.url, loose: true }
 
-      let(:git_cache_id1) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_1.url) }
-      let(:git_cache_id2) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_2.url) }
-      let(:git_cache_id3) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_3.url) }
-      let(:git_cache_id4) { Repository::Xitolite.repo_path_to_git_cache_id(@repository_4.url) }
+      let(:git_cache_id1) { Repository::Xitolite.repo_path_to_git_cache_id @repository_1.url }
+      let(:git_cache_id2) { Repository::Xitolite.repo_path_to_git_cache_id @repository_2.url }
+      let(:git_cache_id3) { Repository::Xitolite.repo_path_to_git_cache_id @repository_3.url }
+      let(:git_cache_id4) { Repository::Xitolite.repo_path_to_git_cache_id @repository_4.url }
 
       describe 'repositories should match' do
         it { expect(repo1).to eq @repository_1 }

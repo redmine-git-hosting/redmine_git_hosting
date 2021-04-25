@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'gitolite'
 
 module RedmineGitHosting
@@ -8,69 +10,71 @@ module RedmineGitHosting
     #
     # action: An API action defined in one of the gitolite/* classes.
     #
-    def resync_gitolite(action, object, options = {})
+    def resync_gitolite(action, object, **options)
       # Symbolize keys before using them
-      action  = action.to_sym
-      options = options.symbolize_keys
+      action = action.to_sym
+
+      # NOTE: this could no longer be used. Are there any non-symbolized keys?
+      # options = options.symbolize_keys
 
       # Flush cache if needed
-      flush_cache(options)
+      flush_cache options
 
       # Return if the action is only to flush cache on Sidekiq side
       if action == :flush_settings_cache
-        logger.info('Settings cache flushed!')
+        logger.info 'Settings cache flushed!'
       else
-        execute_action(action, object, options)
+        execute_action action, object, **options
       end
     end
 
     private
 
-    def flush_cache(options = {})
-      if options.key?(:flush_cache) && options[:flush_cache] == true
-        logger.info('Flush Settings Cache !')
-        Setting.check_cache if Setting.respond_to?(:check_cache)
-      end
+    def flush_cache(flush_cache: false, **_)
+      return unless flush_cache
+
+      logger.info 'Flush Settings Cache !'
+      Setting.check_cache if Setting.respond_to? :check_cache
     end
 
     # Be sure to have a Gitolite::GitoliteAdmin object.
     # Return if issues.
     #
-    def execute_action(action, object, options = {})
+    def execute_action(action, object, **options)
       admin = gitolite_admin
     rescue Rugged::SshError => e
       logger.error 'Invalid Gitolite Admin SSH Keys'
-      logger.error(e.message)
+      logger.error e.message
     rescue Rugged::NetworkError => e
       logger.error 'Access denied for Gitolite Admin SSH Keys'
-      logger.error(e.message)
+      logger.error e.message
     rescue Rugged::OSError => e
       logger.error 'Invalid connection params'
-      logger.error(e.message)
+      logger.error e.message
     rescue Rugged::RepositoryError => e
       logger.error "Gitolite couldn't write to its admin repo copy"
       logger.error "Try recreating '#{gitolite_admin_dir}'"
-      logger.error(e.message)
+      logger.error e.message
     else
-      call_gitolite_wrapper(action, admin, object, options)
+      call_gitolite_wrapper action, admin, object, **options
     end
 
     def gitolite_admin
       RedmineGitHosting::Config.create_temp_dir
-      logger.debug("Accessing gitolite-admin.git at '#{gitolite_admin_dir}'")
-      ::Gitolite::GitoliteAdmin.new(gitolite_admin_dir, gitolite_admin_settings)
+      logger.debug "Accessing gitolite-admin.git at '#{gitolite_admin_dir}'"
+      ::Gitolite::GitoliteAdmin.new gitolite_admin_dir, gitolite_admin_settings
     end
 
     def gitolite_admin_dir
       RedmineGitHosting::Config.gitolite_admin_dir
     end
 
-    def call_gitolite_wrapper(action, admin, object, options = {})
-      klass = GitoliteWrappers::Base.find_by_action_name(action)
+    def call_gitolite_wrapper(action, admin, object, **options)
+      klass = GitoliteWrappers::Base.find_by action_name: action
     rescue RedmineGitHosting::Error::GitoliteWrapperException => e
-      logger.error(e.message)
+      logger.error e.message
     else
-      klass.call(admin, object, options)
+      klass.call admin, object, **options
     end
 
     def gitolite_admin_settings

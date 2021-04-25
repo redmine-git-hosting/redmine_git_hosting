@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   class GitoliteHook
     class << self
       def def_field(*names)
         class_eval do
           names.each do |name|
-            define_method(name) do |*args|
+            define_method name do |*args|
               args.empty? ? instance_variable_get("@#{name}") : instance_variable_set("@#{name}", *args)
             end
           end
@@ -22,17 +24,17 @@ module RedmineGitHosting
     end
 
     def source_path
-      File.join(source_dir, source)
+      File.join source_dir, source
     end
 
     def destination_path
-      File.join(gitolite_hooks_dir, destination)
+      File.join gitolite_hooks_dir, destination
     end
 
     def parent_path
-      dirname = File.dirname(destination)
+      dirname = File.dirname destination
       dirname = '' if dirname == '.'
-      File.join(gitolite_hooks_dir, dirname)
+      File.join gitolite_hooks_dir, dirname
     end
 
     def filemode
@@ -51,18 +53,18 @@ module RedmineGitHosting
 
     def install!
       if !file_exists?
-        logger.info("Hook '#{name}' does not exist, installing it ...")
+        logger.info "Hook '#{name}' does not exist, installing it ..."
         install_hook
       elsif hook_file_has_changed?
-        logger.warn("Hook '#{name}' is already present but it's not ours!")
+        logger.warn "Hook '#{name}' is already present but it's not ours!"
         if force_update?
-          logger.info("Restoring '#{name}' hook since forceInstallHook == true")
+          logger.info "Restoring '#{name}' hook since forceInstallHook == true"
           install_hook
         else
-          logger.info("Leaving '#{name}' hook untouched since forceInstallHook == false")
+          logger.info "Leaving '#{name}' hook untouched since forceInstallHook == false"
         end
       else
-        logger.info("Hook '#{name}' is correcly installed")
+        logger.info "Hook '#{name}' is correcly installed"
       end
       installed?
     end
@@ -73,7 +75,7 @@ module RedmineGitHosting
       create_parent_dir unless directory_exists?
       return unless install_hook_file
 
-      logger.info("Hook '#{name}' installed")
+      logger.info "Hook '#{name}' installed"
       update_gitolite
     end
 
@@ -91,18 +93,18 @@ module RedmineGitHosting
     end
 
     def file_exists?
-      RedmineGitHosting::Commands.sudo_file_exists?(destination_path)
+      RedmineGitHosting::Commands.sudo_file_exists? destination_path
     end
 
     def install_hook_file
-      logger.info("Installing hook '#{source_path}' in '#{destination_path}'")
+      logger.info "Installing hook '#{source_path}' in '#{destination_path}'"
       begin
-        content = File.read(source_path)
+        content = File.read source_path
       rescue Errno::ENOENT => e
-        logger.error("Errors while installing hook '#{e.message}'")
+        logger.error "Errors while installing hook '#{e.message}'"
         false
       else
-        RedmineGitHosting::Commands.sudo_install_file(content, destination_path, filemode)
+        RedmineGitHosting::Commands.sudo_install_file content, destination_path, filemode
       end
     end
 
@@ -115,18 +117,18 @@ module RedmineGitHosting
     end
 
     def directory_exists?
-      RedmineGitHosting::Commands.sudo_dir_exists?(parent_path)
+      RedmineGitHosting::Commands.sudo_dir_exists? parent_path
     end
 
     def create_parent_dir
-      logger.info("Installing hook directory '#{parent_path}'")
+      logger.info "Installing hook directory '#{parent_path}'"
 
       begin
-        RedmineGitHosting::Commands.sudo_mkdir_p(parent_path)
+        RedmineGitHosting::Commands.sudo_mkdir_p parent_path
         true
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        logger.error("Problems installing hook directory '#{parent_path}'")
-        logger.error(e.output)
+        logger.error "Problems installing hook directory '#{parent_path}'"
+        logger.error e.output
         false
       end
     end

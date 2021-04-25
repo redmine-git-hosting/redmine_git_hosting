@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGitolitePublicKeys < ActiveRecord::Migration[4.2]
   def change
     create_table :gitolite_public_keys do |t|

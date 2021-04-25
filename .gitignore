@@ -9,3 +9,4 @@ custom_hooks.rb
 /ssh_keys/redmine_gitolite_admin_id_rsa*
 .DS_Store
 coverage/
+.enable_dev

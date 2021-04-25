@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShrinkGitNotifications < ActiveRecord::Migration[4.2]
   def up
     add_column :repository_git_extras, :notification_sender, :string

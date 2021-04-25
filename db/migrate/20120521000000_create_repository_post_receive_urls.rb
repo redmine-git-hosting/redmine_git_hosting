@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRepositoryPostReceiveUrls < ActiveRecord::Migration[4.2]
   def change
     create_table :repository_post_receive_urls do |t|

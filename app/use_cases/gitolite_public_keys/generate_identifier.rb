@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 module GitolitePublicKeys
   class GenerateIdentifier
-    DEPLOY_PSEUDO_USER = 'deploy_key'.freeze
+    DEPLOY_PSEUDO_USER = 'deploy_key'
 
     attr_reader :public_key, :user, :skip_auto_increment
 
-    def initialize(public_key, user, opts = {})
+    def initialize(public_key, user, skip_auto_increment: false)
       @public_key          = public_key
       @user                = user
-      @skip_auto_increment = opts.delete(:skip_auto_increment) { false }
+      @skip_auto_increment = skip_auto_increment
     end
 
     class << self
-      def call(public_key, user, opts = {})
-        new(public_key, user, opts).call
+      def call(public_key, user, skip_auto_increment: false)
+        new(public_key, user, skip_auto_increment: skip_auto_increment).call
       end
     end
 
@@ -44,7 +46,7 @@ module GitolitePublicKeys
     def set_identifier_for_deploy_key
       count = 0
       begin
-        key_id = generate_deploy_key_identifier(count)
+        key_id = generate_deploy_key_identifier count
         count += 1
       end while user.gitolite_public_keys.deploy_key.map(&:owner).include?(key_id.split('@')[0])
       key_id

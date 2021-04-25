@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryPostReceiveUrlsController do
@@ -8,7 +10,7 @@ describe RepositoryPostReceiveUrlsController do
   end
 
   def create_object
-    FactoryBot.create(:repository_post_receive_url, repository_id: @repository.id)
+    FactoryBot.create :repository_post_receive_url, repository_id: @repository.id
   end
 
   def success_url

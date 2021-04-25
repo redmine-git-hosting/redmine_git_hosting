@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :repository_deployment_credential do
     perm { 'RW+' }

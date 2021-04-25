@@ -1,21 +1,21 @@
-h3 = l(:label_my_public_keys)
+h3 = l :label_my_public_keys
 
 fieldset.public_key_view
-  legend = l(:label_current_user_keys)
+  legend = l :label_current_user_keys
   = render partial: 'gitolite_public_keys/ssh_keys',
            locals: { ssh_keys: @gitolite_user_keys }
 
 br
 
 fieldset.public_key_view
-  legend = l(:label_current_deploy_keys)
+  legend = l :label_current_deploy_keys
   = render partial: 'gitolite_public_keys/ssh_keys',
            locals: { ssh_keys: @gitolite_deploy_keys, deploy_keys: true }
 
 br
 
 fieldset.public_key_view
-  legend = l(:label_public_key_new)
+  legend = l :label_public_key_new
   = render partial: 'gitolite_public_keys/form', locals: { user: @user }
 
 - content_for :header_tags do

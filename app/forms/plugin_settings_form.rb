@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PluginSettingsForm
   class << self
     def add_accessor(*args)

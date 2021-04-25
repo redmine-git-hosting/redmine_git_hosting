@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryDeploymentCredentialsHelper
   def build_list_of_keys(user_keys, other_keys, disabled_keys)
     option_array = [[l(:label_deployment_credential_select_deploy_key), -1]]

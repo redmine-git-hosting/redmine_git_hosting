@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BaseForm
   extend ActiveSupport::Concern
 
@@ -14,10 +16,10 @@ module BaseForm
 
   def submit(attributes = {})
     attributes.each do |name, value|
-      send("#{name}=", value)
+      send "#{name}=", value
     end
     if valid?
-      valid_form_submitted if respond_to?(:valid_form_submitted)
+      valid_form_submitted if respond_to? :valid_form_submitted
       true
     else
       false

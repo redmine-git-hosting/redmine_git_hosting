@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'watchers_helper'
 
 # This patch fix http://www.redmine.org/issues/12348
@@ -21,9 +23,9 @@ module RedmineGitHosting
 
       def watchers_list_with_git_hosting(object)
         remove_allowed = User.current.allowed_to? "delete_#{object.class.name.underscore}_watchers".tr('/', '_').to_sym, object.project
-        content = ''.html_safe
+        content = +''.html_safe
         object.watcher_users.preload(:email_address).each do |user|
-          s = ''.html_safe
+          s = +''.html_safe
           s << avatar(user, size: '16').to_s
           s << link_to_user(user, class: 'user')
           if remove_allowed
@@ -46,6 +48,6 @@ module RedmineGitHosting
   end
 end
 
-unless WatchersHelper.included_modules.include?(RedmineGitHosting::Patches::WatchersHelperPatch)
+unless WatchersHelper.included_modules.include? RedmineGitHosting::Patches::WatchersHelperPatch
   WatchersHelper.prepend RedmineGitHosting::Patches::WatchersHelperPatch
 end

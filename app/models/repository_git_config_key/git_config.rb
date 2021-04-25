@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryGitConfigKey::GitConfig < RepositoryGitConfigKey
   VALID_CONFIG_KEY_REGEX = /\A[a-zA-Z0-9]+\.[a-zA-Z0-9.]+\z/
 

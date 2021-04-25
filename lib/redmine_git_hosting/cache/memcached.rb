@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dalli'
 require 'digest/sha1'
 
@@ -9,11 +11,11 @@ module RedmineGitHosting
           logger.debug "Memcached Adapter : inserting cache entry for repository '#{repo_id}'"
 
           # Create a SHA256 of the Git command as key id
-          hashed_command = hash_key(command)
+          hashed_command = hash_key command
 
           begin
-            create_or_update_repo_references(repo_id, hashed_command)
-            client.set(hashed_command, output)
+            create_or_update_repo_references repo_id, hashed_command
+            client.set hashed_command, output
             true
           rescue StandardError => e
             logger.error "Memcached Adapter : could not insert in cache, this is the error : '#{e.message}'"
@@ -21,8 +23,8 @@ module RedmineGitHosting
           end
         end
 
-        def get_cache(repo_id, command)
-          client.get(hash_key(command))
+        def get_cache(_repo_id, command)
+          client.get hash_key(command)
         end
 
         def flush_cache!
@@ -38,17 +40,17 @@ module RedmineGitHosting
 
         def clear_cache_for_repository(repo_id)
           # Create a SHA256 of the repo_id as key id
-          hashed_repo_id = hash_key(repo_id)
+          hashed_repo_id = hash_key repo_id
           # Find repository references in Memcached
-          repo_references = client.get(hashed_repo_id)
+          repo_references = client.get hashed_repo_id
           return true if repo_references.nil?
 
           # Delete reference keys
           repo_references = repo_references.split(',').reject(&:empty?)
-          repo_references.map { |key| client.delete(key) }
+          repo_references.map { |key| client.delete key }
           logger.info "Memcached Adapter : removed '#{repo_references.size}' expired cache entries for repository '#{repo_id}'"
           # Reset references count
-          client.set(hashed_repo_id, '', max_cache_time, raw: true)
+          client.set hashed_repo_id, '', max_cache_time, raw: true
         end
 
         # Return true. If cache is full, Memcached drop the oldest objects to add new ones.
@@ -76,7 +78,7 @@ module RedmineGitHosting
         end
 
         def client
-          @client ||= Dalli::Client.new('localhost:11211', memcached_options)
+          @client ||= Dalli::Client.new 'localhost:11211', memcached_options
         end
 
         def memcached_options

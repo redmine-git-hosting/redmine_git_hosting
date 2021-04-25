@@ -1,18 +1,18 @@
 .contextual
-  = render_repository_quick_jump(@repository)
+  = render_repository_quick_jump @repository
 
 h2
   = link_to l(:label_settings), settings_project_path(@project, tab: 'repositories')
   '
   = Additionals::LIST_SEPARATOR
-  = l(:label_repository)
+  = l :label_repository
   '
   = Additionals::LIST_SEPARATOR
   = @repository.redmine_name
 
 .splitcontent
   .splitcontentleft
-    = call_hook(:view_repository_edit_top, repository: @repository, project: @project)
+    = call_hook :view_repository_edit_top, repository: @repository, project: @project
 
     = labelled_form_for :repository, @repository, url: repository_path(@repository), html: { method: :put, id: 'repository-form' } do |f|
       = render partial: 'form', locals: { f: f }
@@ -21,4 +21,4 @@ h2
     #xitolite-options style='vertical-align: top;'
       = render 'xitolite_options', repository: @repository
 
-= call_hook(:view_repository_edit_bottom, repository: @repository, project: @project)
+= call_hook :view_repository_edit_bottom, repository: @repository, project: @project

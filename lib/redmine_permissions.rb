@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Redmine::AccessControl.map do |main|
   main.permission :create_gitolite_ssh_key, gitolite_public_keys: %i[index create destroy], require: :loggedin
 

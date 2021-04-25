@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'net/http'
 require 'net/https'
@@ -8,21 +10,21 @@ module RedmineGitHosting
     module Http
       extend self
 
-      def http_post(url, opts = {})
+      def http_post(url, **opts)
         data = opts.delete(:data) { {} }
         data = serialize_data data
         http, request = build_post_request url, data
         send_http_request http, request
       end
 
-      def http_get(url, _opts = {})
+      def http_get(url, **_)
         http, request = build_get_request url
         send_http_request http, request
       end
 
       def valid_url?(url)
-        uri = URI.parse(url)
-        uri.is_a?(URI::HTTP)
+        uri = URI.parse url
+        uri.is_a? URI::HTTP
       rescue URI::InvalidURIError
         false
       end
@@ -42,7 +44,7 @@ module RedmineGitHosting
       def build_post_request(url, data)
         uri, http = build_http_request url
         request = Net::HTTP::Post.new uri.request_uri
-        request.basic_auth(uri.user, uri.password) if uri.user.present? && uri.password.present?
+        request.basic_auth uri.user, uri.password if uri.user.present? && uri.password.present?
         request.set_form_data data
         [http, request]
       end
@@ -65,11 +67,11 @@ module RedmineGitHosting
       end
 
       def send_http_request(http, request)
-        message = ''
+        message = +''
 
         begin
           res = http.start { |openhttp| openhttp.request request }
-          if res.is_a?(Net::HTTPSuccess)
+          if res.is_a? Net::HTTPSuccess
             message = res.body
             failed = false
           else

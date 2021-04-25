@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'roles_controller'
 
 module RedmineGitHosting
@@ -7,34 +9,34 @@ module RedmineGitHosting
 
       def create
         super
-        call_gitolite('created')
+        call_gitolite 'created'
       end
 
       def update
         super
-        call_gitolite('modified')
+        call_gitolite 'modified'
       end
 
       def destroy
         super
-        call_gitolite('deleted')
+        call_gitolite 'deleted'
       end
 
       def permissions
         super
-        call_gitolite('modified') if request.post?
+        call_gitolite 'modified' if request.post?
       end
 
       private
 
       def call_gitolite(message)
         options = { message: "Role has been #{message}, resync all projects (active or closed)..." }
-        gitolite_accessor.update_projects('active_or_closed', options)
+        gitolite_accessor.update_projects 'active_or_closed', options
       end
     end
   end
 end
 
-unless RolesController.included_modules.include?(RedmineGitHosting::Patches::RolesControllerPatch)
+unless RolesController.included_modules.include? RedmineGitHosting::Patches::RolesControllerPatch
   RolesController.prepend RedmineGitHosting::Patches::RolesControllerPatch
 end

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe Project do
-  before(:all) do
-    @project    = create(:project)
-    @git_repo_1 = create_git_repository(project: @project, is_default: true)
-    @git_repo_2 = create_git_repository(project: @project, identifier: 'git-repo-test')
-    @svn_repo_1 = create_svn_repository(project: @project, identifier: 'svn-repo-test', url: 'http://svn-repo-test')
+  before :all do
+    @project    = create :project
+    @git_repo_1 = create_git_repository project: @project, is_default: true
+    @git_repo_2 = create_git_repository project: @project, identifier: 'git-repo-test'
+    @svn_repo_1 = create_svn_repository project: @project, identifier: 'svn-repo-test', url: 'http://svn-repo-test'
   end
 
   subject { @project }

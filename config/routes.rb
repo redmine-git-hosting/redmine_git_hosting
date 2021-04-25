@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   # Handle the public keys plugin to my/account.
   scope 'my' do
@@ -41,7 +43,7 @@ Rails.application.routes.draw do
   # Enable SmartHTTP Grack support
   mount Grack::Bundle.new({}),
         at: RedmineGitHosting::Config.http_server_subdir,
-        constraints: ->(request) { %r{[-/\w.]+\.git/}.match(request.path_info) },
+        constraints: ->(request) { %r{[-/\w.]+\.git/}.match request.path_info },
         via: %i[get post]
 
   # Post Receive Hooks

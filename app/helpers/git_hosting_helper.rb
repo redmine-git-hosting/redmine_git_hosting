@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHostingHelper
   def present(object, klass = nil, *args)
     klass ||= "#{object.class.base_class}Presenter".constantize
@@ -6,7 +8,7 @@ module GitHostingHelper
     presenter
   end
 
-  def checked_image_with_exclamation(checked = true)
+  def checked_image_with_exclamation(checked:)
     checked ? image_tag('toggle_check.png') : image_tag('exclamation.png')
   end
 

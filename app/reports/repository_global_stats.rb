@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class RepositoryGlobalStats < ReportBase
   def build
     data = {}
     data[l(:label_total_commits)]               = total_commits
     data[l(:label_total_contributors)]          = committers
-    data[l(:label_first_commit_date)]           = format_date(first_commit.commit_date)
-    data[l(:label_latest_commit_date)]          = format_date(last_commit.commit_date)
-    data[l(:label_active_for)]                  = "#{active_for} #{l(:days, active_for)}"
+    data[l(:label_first_commit_date)]           = format_date first_commit.commit_date
+    data[l(:label_latest_commit_date)]          = format_date last_commit.commit_date
+    data[l(:label_active_for)]                  = "#{active_for} #{l :days, active_for}"
     data[l(:label_average_commit_per_day)]      = average_commit_per_day
     data[l(:label_average_contributor_commits)] = average_contributor_commits
     data

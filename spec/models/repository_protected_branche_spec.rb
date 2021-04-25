@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryProtectedBranche do
-  let(:protected_branch) { build(:repository_protected_branche) }
+  let(:protected_branch) { build :repository_protected_branche }
 
   subject { protected_branch }
 
@@ -23,8 +25,8 @@ describe RepositoryProtectedBranche do
 
   describe '#users' do
     it 'should return an array of users' do
-      user  = build(:user)
-      group = build(:group)
+      user  = build :user
+      group = build :group
       expect(protected_branch).to receive(:members).and_return([user, user, group])
       expect(protected_branch.users).to eq [user]
     end
@@ -32,8 +34,8 @@ describe RepositoryProtectedBranche do
 
   describe '#groups' do
     it 'should return an array of groups' do
-      user  = build(:user)
-      group = build(:group)
+      user  = build :user
+      group = build :group
       expect(protected_branch).to receive(:members).and_return([group, user, group])
       expect(protected_branch.groups).to eq [group]
     end
@@ -41,8 +43,8 @@ describe RepositoryProtectedBranche do
 
   describe '#allowed_users' do
     it 'should return an array of gitolite identifiers' do
-      user1 = build(:user)
-      user2 = build(:user)
+      user1 = build :user
+      user2 = build :user
       expect(protected_branch).to receive(:users).and_return([user1, user2])
       expect(protected_branch.allowed_users).to eq [user1.gitolite_identifier, user2.gitolite_identifier]
     end

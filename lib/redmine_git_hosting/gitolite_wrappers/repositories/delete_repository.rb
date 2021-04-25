@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Repositories
@@ -16,15 +18,15 @@ module RedmineGitHosting
 
         def delete_repository
           admin.transaction do
-            delete_gitolite_repository(repository)
-            gitolite_admin_repo_commit(repository[:repo_name])
+            delete_gitolite_repository repository
+            gitolite_admin_repo_commit repository[:repo_name]
           end
 
           # Call Gitolite plugins
-          logger.info('Execute Gitolite Plugins')
+          logger.info 'Execute Gitolite Plugins'
 
           # Move repository to RecycleBin
-          RedmineGitHosting::Plugins.execute(:post_delete, repository)
+          RedmineGitHosting::Plugins.execute :post_delete, repository
         end
       end
     end

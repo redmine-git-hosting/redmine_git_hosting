@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module RedmineHooks
@@ -19,11 +21,11 @@ module RedmineHooks
     private
 
     def github_issue
-      GithubIssue.find_by_github_id params[:issue][:id]
+      GithubIssue.find_by github_id: params[:issue][:id]
     end
 
     def redmine_issue
-      Issue.find_by_subject params[:issue][:title]
+      Issue.find_by subject: params[:issue][:title]
     end
 
     def sync_with_github
@@ -38,11 +40,11 @@ module RedmineHooks
                           create_redmine_issue
                         else
                           ## Create relation and update issue
-                          update_redmine_issue(redmine_issue)
+                          update_redmine_issue redmine_issue
                         end
       else
         ## We have one relation, update issue
-        redmine_issue = update_redmine_issue(github_issue.issue)
+        redmine_issue = update_redmine_issue github_issue.issue
       end
 
       if create_relation
@@ -52,11 +54,11 @@ module RedmineHooks
         github_issue.save!
       end
 
-      if params.key?(:comment)
-        issue_journal = GithubComment.find_by_github_id(params[:comment][:id])
+      if params.key? :comment
+        issue_journal = GithubComment.find_by github_id: params[:comment][:id]
 
         if issue_journal.nil?
-          issue_journal = create_issue_journal(github_issue.issue)
+          issue_journal = create_issue_journal github_issue.issue
 
           github_comment = GithubComment.new
           github_comment.github_id = params[:comment][:id]
@@ -67,17 +69,17 @@ module RedmineHooks
     end
 
     def create_redmine_issue
-      logger.info('Github Issues Sync : create new issue')
+      logger.info 'Github Issues Sync : create new issue'
 
       issue             = project.issues.new
-      issue.tracker_id  = project.trackers.first.try(:id)
+      issue.tracker_id  = project.trackers.first.try :id
       issue.subject     = params[:issue][:title].chomp[0, 255]
       issue.description = params[:issue][:body]
       issue.updated_on  = params[:issue][:updated_at]
       issue.created_on  = params[:issue][:created_at]
 
       ## Get user mail
-      user = find_user(params[:issue][:user][:url])
+      user = find_user params[:issue][:user][:url]
       issue.author = user
 
       issue.save!
@@ -85,7 +87,7 @@ module RedmineHooks
     end
 
     def create_issue_journal(issue)
-      logger.info("Github Issues Sync : create new journal for issue '##{issue.id}'")
+      logger.info "Github Issues Sync : create new journal for issue '##{issue.id}'"
 
       journal = Journal.new
       journal.journalized_id = issue.id
@@ -94,7 +96,7 @@ module RedmineHooks
       journal.created_on = params[:comment][:created_at]
 
       ## Get user mail
-      user = find_user(params[:comment][:user][:url])
+      user = find_user params[:comment][:user][:url]
       journal.user_id = user.id
 
       journal.save!
@@ -102,7 +104,7 @@ module RedmineHooks
     end
 
     def update_redmine_issue(issue)
-      logger.info("Github Issues Sync : update issue '##{issue.id}'")
+      logger.info "Github Issues Sync : update issue '##{issue.id}'"
 
       issue.status_id = if params[:issue][:state] == 'closed'
                           5
@@ -119,13 +121,13 @@ module RedmineHooks
     end
 
     def find_user(url)
-      _post_failed, user_data = http_get(url)
-      user_data = JSON.parse(user_data)
+      _post_failed, user_data = http_get url
+      user_data = JSON.parse user_data
 
-      user = User.find_by_mail(user_data['email'])
+      user = User.find_by mail: user_data['email']
 
       if user.nil?
-        logger.info("Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous")
+        logger.info "Github Issues Sync : cannot find user '#{user_data['email']}' in Redmine, use anonymous"
         user = User.anonymous
         user.mail = user_data['email']
         user.firstname = user_data['name']

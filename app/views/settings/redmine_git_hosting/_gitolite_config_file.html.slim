@@ -1,8 +1,8 @@
 / Gitolite Config File
 ruby:
-  gitolite_config_file = RedmineGitHosting::Config.get_setting(:gitolite_config_file)
-  gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting(:gitolite_identifier_prefix)
-  gitolite_identifier_strip_user_id = RedmineGitHosting::Config.get_setting(:gitolite_identifier_strip_user_id, true)
+  gitolite_config_file = RedmineGitHosting::Config.get_setting :gitolite_config_file
+  gitolite_identifier_prefix = RedmineGitHosting::Config.get_setting :gitolite_identifier_prefix
+  gitolite_identifier_strip_user_id = RedmineGitHosting::Config.get_setting :gitolite_identifier_strip_user_id, true
   disable_button = gitolite_config_file == RedmineGitHosting::Config::GITOLITE_DEFAULT_CONFIG_FILE
 
 h3 = l :label_gitolite_config_file

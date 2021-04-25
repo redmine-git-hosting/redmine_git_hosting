@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArchivedRepositoriesController < RepositoriesController
   skip_before_action :authorize
   skip_before_action :find_project_repository, only: :index

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   before_action :check_xitolite_permissions
   before_action :find_repository_post_receive_url, except: %i[index new create]
@@ -19,7 +21,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
     @post_receive_url.safe_attributes = params[:repository_post_receive_url]
     return render action: 'new' unless @post_receive_url.save
 
-    flash[:notice] = l(:notice_post_receive_url_created)
+    flash[:notice] = l :notice_post_receive_url_created
     render_js_redirect
   end
 
@@ -27,14 +29,14 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
     @post_receive_url.safe_attributes = params[:repository_post_receive_url]
     return render action: 'edit' unless @post_receive_url.save
 
-    flash[:notice] = l(:notice_post_receive_url_updated)
+    flash[:notice] = l :notice_post_receive_url_updated
     render_js_redirect
   end
 
   def destroy
     return unless @post_receive_url.destroy
 
-    flash[:notice] = l(:notice_post_receive_url_deleted)
+    flash[:notice] = l :notice_post_receive_url_deleted
     render_js_redirect
   end
 
@@ -45,7 +47,7 @@ class RepositoryPostReceiveUrlsController < RedmineGitHostingController
   end
 
   def find_repository_post_receive_url
-    @post_receive_url = @repository.post_receive_urls.find(params[:id])
+    @post_receive_url = @repository.post_receive_urls.find params[:id]
   rescue ActiveRecord::RecordNotFound
     render_404
   end

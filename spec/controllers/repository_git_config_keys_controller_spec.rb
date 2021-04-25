@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryGitConfigKeysController do
@@ -8,7 +10,7 @@ describe RepositoryGitConfigKeysController do
   end
 
   def create_object
-    FactoryBot.create(:repository_git_config_key, repository_id: @repository.id)
+    FactoryBot.create :repository_git_config_key, repository_id: @repository.id
   end
 
   def success_url

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Projects
@@ -9,9 +11,9 @@ module RedmineGitHosting
 
           admin.transaction do
             @delete_parent_path = []
-            @delete_parent_path += handle_repositories_move(git_projects)
+            @delete_parent_path += handle_repositories_move git_projects
             # Remove empty directories
-            clean_path(@delete_parent_path)
+            clean_path @delete_parent_path
           end
         end
 
@@ -20,7 +22,7 @@ module RedmineGitHosting
         end
 
         def projects
-          @projects ||= Project.find_by_id(object_id).self_and_descendants
+          @projects ||= Project.find_by(id: object_id).self_and_descendants
         end
       end
     end

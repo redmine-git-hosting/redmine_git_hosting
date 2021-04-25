@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Global
@@ -6,12 +8,12 @@ module RedmineGitHosting
 
         def call
           if all_repository_config.nil?
-            logger.info("#{context} : RW access on all Gitolite repositories already disabled.")
-            return
+            logger.info "#{context} : RW access on all Gitolite repositories already disabled."
+            nil
           else
             admin.transaction do
               remove_redmine_key
-              gitolite_admin_repo_commit('Disable RW access on all Gitolite repositories')
+              gitolite_admin_repo_commit 'Disable RW access on all Gitolite repositories'
             end
           end
         end
@@ -19,18 +21,18 @@ module RedmineGitHosting
         def remove_redmine_key
           # RedmineGitHosting key must be in [RW+][''] group
           # Return if those groups are absent : it means that our key is not here
-          return if perms.empty? || !perms[0]['RW+'].include?('')
+          return if perms.empty? || perms[0]['RW+'].exclude?('')
 
           # Check for key presence
-          return unless users.include?(redmine_gitolite_key)
+          return unless users.include? redmine_gitolite_key
 
           # Delete the key
-          repo_conf.permissions[0]['RW+'][''].delete(redmine_gitolite_key)
+          repo_conf.permissions[0]['RW+'][''].delete redmine_gitolite_key
 
           # We cannot remove this repository as it may contains other configuration that we didn't check.
           # Instead add a dummy key so the repo_conf is still valid for Gitolite
           # RW+ = <empty string> is not valid
-          repo_conf.permissions[0]['RW+'][''].push('DUMMY_REDMINE_KEY') if repo_conf.permissions[0]['RW+'][''].empty?
+          repo_conf.permissions[0]['RW+'][''].push 'DUMMY_REDMINE_KEY' if repo_conf.permissions[0]['RW+'][''].empty?
         end
       end
     end

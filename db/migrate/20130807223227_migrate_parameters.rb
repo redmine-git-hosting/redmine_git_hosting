@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateParameters < ActiveRecord::Migration[4.2]
   def up
     ## Prepare default values in case we install Redmine from scratch

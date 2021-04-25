@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddColumnsToRepositoryGitExtra < ActiveRecord::Migration[4.2]
   def up
     return if RepositoryGitExtra.column_names.include? 'git_notify'

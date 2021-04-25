@@ -1,5 +1,5 @@
 div
-  - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
+  - if User.current.git_allowed_to? :create_repository_git_config_keys, @repository
     .contextual
       = link_to l(:label_git_config_key_add),
                 new_repository_git_config_key_path(@repository, type: 'git_config'),
@@ -7,15 +7,15 @@ div
                 class: 'icon icon-add'
 
   h3
-    = l(:label_git_config_keys)
+    = l :label_git_config_keys
     '
-    = link_to "(#{l(:label_gitolite_documentation)})",
+    = link_to "(#{l :label_gitolite_documentation})",
               'https://gitolite.com/gitolite/git-config.html',
               class: 'external'
 
   = render 'config_keys', git_config_keys: @repository_git_config_keys
 
-  - if User.current.git_allowed_to?(:create_repository_git_config_keys, @repository)
+  - if User.current.git_allowed_to? :create_repository_git_config_keys, @repository
     .contextual
       = link_to l(:label_git_option_key_add),
                 new_repository_git_config_key_path(@repository, type: 'git_option'),
@@ -23,9 +23,9 @@ div
                 class: 'icon icon-add'
 
   h3
-    = l(:label_git_option_keys)
+    = l :label_git_option_keys
     '
-    = link_to "(#{l(:label_gitolite_documentation)})",
+    = link_to "(#{l :label_gitolite_documentation})",
               'https://gitolite.com/gitolite/options.html',
               class: 'external'
 

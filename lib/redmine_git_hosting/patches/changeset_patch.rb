@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'changeset'
 
 module RedmineGitHosting
@@ -12,7 +14,7 @@ module RedmineGitHosting
         data[:added]     = added_files
         data[:modified]  = modified_files
         data[:removed]   = removed_files
-        data[:url]       = url_for_revision(revision)
+        data[:url]       = url_for_revision revision
         data
       end
 
@@ -21,23 +23,23 @@ module RedmineGitHosting
       end
 
       def author_name
-        RedmineGitHosting::Utils::Git.author_name(committer)
+        RedmineGitHosting::Utils::Git.author_name committer
       end
 
       def author_email
-        RedmineGitHosting::Utils::Git.author_email(committer)
+        RedmineGitHosting::Utils::Git.author_email committer
       end
 
       def added_files
-        filechanges_by_action('A')
+        filechanges_by_action 'A'
       end
 
       def modified_files
-        filechanges_by_action('M')
+        filechanges_by_action 'M'
       end
 
       def removed_files
-        filechanges_by_action('D')
+        filechanges_by_action 'D'
       end
 
       def filechanges_by_action(action)
@@ -55,6 +57,6 @@ module RedmineGitHosting
   end
 end
 
-unless Changeset.included_modules.include?(RedmineGitHosting::Patches::ChangesetPatch)
+unless Changeset.included_modules.include? RedmineGitHosting::Patches::ChangesetPatch
   Changeset.prepend RedmineGitHosting::Patches::ChangesetPatch
 end

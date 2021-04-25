@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redmine'
 require 'redmine_git_hosting'
 
@@ -9,7 +11,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   url         'http://redmine-git-hosting.io/'
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
-  settings(partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings)
+  settings partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings
   requires_redmine version_or_higher: '4.1.0'
 
   menu :project_menu,

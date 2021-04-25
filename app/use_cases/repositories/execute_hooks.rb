@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Repositories
   class ExecuteHooks
     attr_reader :repository, :hook_type, :payloads
@@ -15,7 +17,7 @@ module Repositories
     end
 
     def call
-      send("execute_#{hook_type}_hook")
+      send "execute_#{hook_type}_hook"
     end
 
     private
@@ -25,16 +27,16 @@ module Repositories
     end
 
     def execute_fetch_changesets_hook
-      RedmineHooks::FetchChangesets.call(repository)
+      RedmineHooks::FetchChangesets.call repository
     end
 
     def execute_update_mirrors_hook
       message = 'Notifying mirrors about changes to this repository:'
-      y = ''
+      y = +''
 
       ## Post to each post-receive URL
       if repository.mirrors.active.any?
-        logger.info(message)
+        logger.info message
         y << "\n#{message}\n"
 
         repository.mirrors.active.each do |mirror|
@@ -47,11 +49,11 @@ module Repositories
 
     def execute_call_webservices_hook
       message = 'Notifying post receive urls about changes to this repository:'
-      y = ''
+      y = +''
 
       ## Post to each post-receive URL
       if repository.post_receive_urls.active.any?
-        logger.info(message)
+        logger.info message
         y << "\n#{message}\n"
 
         repository.post_receive_urls.active.each do |post_receive_url|

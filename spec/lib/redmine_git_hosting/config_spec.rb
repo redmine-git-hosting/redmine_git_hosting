@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../../spec_helper"
 
 describe RedmineGitHosting::Config do
@@ -14,14 +16,14 @@ describe RedmineGitHosting::Config do
 
   GITOLITE_VERSION_2.each do |gitolite_version|
     it 'should recognize Gitolite2' do
-      version = RedmineGitHosting::Config.find_version(gitolite_version)
+      version = RedmineGitHosting::Config.find_version gitolite_version
       expect(version).to eq 2
     end
   end
 
   GITOLITE_VERSION_3.each do |gitolite_version|
     it 'should recognize Gitolite3' do
-      version = RedmineGitHosting::Config.find_version(gitolite_version)
+      version = RedmineGitHosting::Config.find_version gitolite_version
       expect(version).to eq 3
     end
   end

@@ -30,14 +30,14 @@ div
               = mirror_mode mirror
 
             td.tick
-              = checked_image_with_exclamation mirror.active?
+              = checked_image_with_exclamation checked: mirror.active?
 
             td.buttons
-              - if User.current.git_allowed_to?(:push_repository_mirrors, @repository)
+              - if User.current.git_allowed_to? :push_repository_mirrors, @repository
                 = link_to font_awesome_icon('fas_rocket', post_text: l(:label_mirror_push), class: 'fa-lg'),
                           push_repository_mirror_path(@repository, mirror), remote: true
 
-              - if User.current.git_allowed_to?(:edit_repository_mirrors, @repository)
+              - if User.current.git_allowed_to? :edit_repository_mirrors, @repository
                 = link_to l(:button_edit), edit_repository_mirror_path(@repository, mirror), remote: true, class: 'icon icon-edit'
                 = link_to l(:button_delete),
                           repository_mirror_path(@repository, mirror),

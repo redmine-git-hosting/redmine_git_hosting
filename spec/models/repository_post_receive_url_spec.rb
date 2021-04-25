@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryPostReceiveUrl do
-  let(:post_receive_url) { build(:repository_post_receive_url) }
+  let(:post_receive_url) { build :repository_post_receive_url }
 
   subject { post_receive_url }
 

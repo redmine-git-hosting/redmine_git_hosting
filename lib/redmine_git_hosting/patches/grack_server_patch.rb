@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'grack/server'
 
 module RedmineGitHosting
@@ -7,8 +9,8 @@ module RedmineGitHosting
       # Also pass the *@env['REMOTE_USER']* variable to the Git constructor so we
       # can pass it to Gitolite hooks later.
       def get_git(path)
-        path = gitolite_path(path)
-        Grack::Git.new(@config[:git_path], path, @env['REMOTE_USER'])
+        path = gitolite_path path
+        Grack::Git.new @config[:git_path], path, @env['REMOTE_USER']
       end
 
       private
@@ -22,6 +24,6 @@ module RedmineGitHosting
   end
 end
 
-unless Grack::Server.included_modules.include?(RedmineGitHosting::Patches::GrackServerPatch)
+unless Grack::Server.included_modules.include? RedmineGitHosting::Patches::GrackServerPatch
   Grack::Server.prepend RedmineGitHosting::Patches::GrackServerPatch
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteAccessor
     extend self
@@ -10,48 +12,48 @@ module RedmineGitHosting
       end
     end
 
-    def create_ssh_key(ssh_key, opts = {})
+    def create_ssh_key(ssh_key, **opts)
       logger.info "User '#{User.current.login}' has added a SSH key"
-      resync_gitolite :add_ssh_key, ssh_key.id, opts
+      resync_gitolite :add_ssh_key, ssh_key.id, **opts
     end
 
-    def destroy_ssh_key(ssh_key, opts = {})
-      ssh_key = ssh_key.data_for_destruction if ssh_key.is_a?(GitolitePublicKey)
+    def destroy_ssh_key(ssh_key, **opts)
+      ssh_key = ssh_key.data_for_destruction if ssh_key.is_a? GitolitePublicKey
       logger.info "User '#{User.current.login}' has deleted a SSH key"
-      resync_gitolite :delete_ssh_key, ssh_key, opts
+      resync_gitolite :delete_ssh_key, ssh_key, **opts
     end
 
-    def resync_ssh_keys(opts = {})
+    def resync_ssh_keys(**opts)
       logger.info 'Forced resync of all ssh keys...'
-      resync_gitolite :resync_ssh_keys, 'all', opts
+      resync_gitolite :resync_ssh_keys, 'all', **opts
     end
 
-    def regenerate_ssh_keys(opts = {})
+    def regenerate_ssh_keys(**opts)
       logger.info 'Forced regenerate of all ssh keys...'
-      resync_gitolite :regenerate_ssh_keys, 'all', opts
+      resync_gitolite :regenerate_ssh_keys, 'all', **opts
     end
 
-    def create_repository(repository, opts = {})
+    def create_repository(repository, **opts)
       logger.info "User '#{User.current.login}' has created a new repository '#{repository.gitolite_repository_name}'"
-      resync_gitolite :add_repository, repository.id, opts
+      resync_gitolite :add_repository, repository.id, **opts
     end
 
-    def update_repository(repository, opts = {})
+    def update_repository(repository, **opts)
       logger.info "User '#{User.current.login}' has modified repository '#{repository.gitolite_repository_name}'"
-      resync_gitolite :update_repository, repository.id, opts
+      resync_gitolite :update_repository, repository.id, **opts
     end
 
-    def move_repository(repository, opts = {})
+    def move_repository(repository, **opts)
       logger.info "User '#{User.current.login}' has moved repository '#{repository.gitolite_repository_name}'"
-      resync_gitolite :move_repository, repository.id, opts
+      resync_gitolite :move_repository, repository.id, **opts
     end
 
-    def destroy_repository(repository, opts = {})
+    def destroy_repository(repository, **opts)
       logger.info "User '#{User.current.login}' has removed repository '#{repository.gitolite_repository_name}'"
-      resync_gitolite :delete_repository, repository.data_for_destruction, opts
+      resync_gitolite :delete_repository, repository.data_for_destruction, **opts
     end
 
-    def destroy_repositories(repositories, opts = {})
+    def destroy_repositories(repositories, **opts)
       message = opts.delete(:message) { ' ' }
       logger.info message
       repositories.each do |repository|
@@ -59,10 +61,10 @@ module RedmineGitHosting
       end
     end
 
-    def update_projects(projects, opts = {})
+    def update_projects(projects, **opts)
       message = opts.delete(:message) { ' ' }
       logger.info message
-      resync_gitolite :update_projects, projects, opts
+      resync_gitolite :update_projects, projects, **opts
     end
 
     def move_project_hierarchy(project)
@@ -90,7 +92,7 @@ module RedmineGitHosting
     end
 
     def flush_settings_cache
-      resync_gitolite :flush_settings_cache, 'flush!', { flush_cache: true }
+      resync_gitolite :flush_settings_cache, 'flush!', flush_cache: true
     end
 
     def enable_rw_access
@@ -109,14 +111,14 @@ module RedmineGitHosting
       RedmineGitHosting.logger
     end
 
-    def resync_gitolite(command, object, options = {})
+    def resync_gitolite(command, object, **options)
       bypass = options.key?(:bypass_sidekiq) && options[:bypass_sidekiq] == true
 
       if RedmineGitHosting::Config.gitolite_use_sidekiq? &&
          RedmineGitHosting::Config.sidekiq_available? && !bypass
-        GithostingShellWorker.maybe_do command, object, options
+        GithostingShellWorker.maybe_do command, object, **options
       else
-        GitoliteWrapper.resync_gitolite command, object, options
+        GitoliteWrapper.resync_gitolite command, object, **options
       end
     end
   end

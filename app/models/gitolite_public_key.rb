@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GitolitePublicKey < ActiveRecord::Base
   include Redmine::SafeAttributes
 
@@ -30,9 +32,9 @@ class GitolitePublicKey < ActiveRecord::Base
   validate :key_uniqueness
 
   ## Scopes
-  scope :user_key,   -> { where(key_type: KEY_TYPE_USER) }
-  scope :deploy_key, -> { where(key_type: KEY_TYPE_DEPLOY) }
-  scope :sorted, -> { order(:title, :created_at) }
+  scope :user_key,   -> { where key_type: KEY_TYPE_USER }
+  scope :deploy_key, -> { where key_type: KEY_TYPE_DEPLOY }
+  scope :sorted, -> { order :title, :created_at }
 
   ## Callbacks
   before_validation :strip_whitespace
@@ -80,21 +82,21 @@ class GitolitePublicKey < ActiveRecord::Base
   # This is due to the new gitolite multi-keys organization
   # using folders. See https://gitolite.com/gitolite/users.html
   def gitolite_path
-    File.join('keydir', RedmineGitHosting::Config.gitolite_key_subdir, user.gitolite_identifier, location, owner) + '.pub'
+    "#{File.join 'keydir', RedmineGitHosting::Config.gitolite_key_subdir, user.gitolite_identifier, location, owner}.pub"
   end
 
   # Make sure that current identifier is consistent with current user login.
   # This method explicitly overrides the static nature of the identifier
-  def reset_identifiers(opts = {})
+  def reset_identifiers(**opts)
     # Fix identifier
     self.identifier = nil
     self.fingerprint = nil
 
-    self.identifier = GitolitePublicKeys::GenerateIdentifier.call(self, user, opts)
+    self.identifier = GitolitePublicKeys::GenerateIdentifier.call self, user, **opts
     set_fingerprint
 
     # Need to override the "never change identifier" constraint
-    save(validate: false)
+    save validate: false
   end
 
   # Key type checking functions
@@ -134,8 +136,16 @@ class GitolitePublicKey < ActiveRecord::Base
   def strip_whitespace
     return unless new_record?
 
-    self.title = title.strip rescue ''
-    self.key   = key.strip rescue ''
+    self.title = begin
+      title.strip
+    rescue StandardError
+      ''
+    end
+    self.key = begin
+      key.strip
+    rescue StandardError
+      ''
+    end
   end
 
   # Remove control characters from key
@@ -144,7 +154,7 @@ class GitolitePublicKey < ActiveRecord::Base
   def remove_control_characters
     return unless new_record?
 
-    self.key = RedmineGitHosting::Utils::Ssh.sanitize_ssh_key(key)
+    self.key = RedmineGitHosting::Utils::Ssh.sanitize_ssh_key key
   end
 
   # Returns the unique identifier for this key based on the key_type
@@ -153,15 +163,15 @@ class GitolitePublicKey < ActiveRecord::Base
   # For deployment keys, we use an incrementing number.
   #
   def set_identifier
-    return nil if user_id.nil?
+    return if user_id.nil?
 
-    self.identifier ||= GitolitePublicKeys::GenerateIdentifier.call(self, user)
+    self.identifier ||= GitolitePublicKeys::GenerateIdentifier.call self, user
   end
 
   def set_fingerprint
-    self.fingerprint = RedmineGitHosting::Utils::Ssh.ssh_fingerprint(key)
+    self.fingerprint = RedmineGitHosting::Utils::Ssh.ssh_fingerprint key
   rescue RedmineGitHosting::Error::InvalidSshKey
-    errors.add(:key, :corrupted)
+    errors.add :key, :corrupted
   end
 
   def has_not_been_changed
@@ -169,7 +179,7 @@ class GitolitePublicKey < ActiveRecord::Base
 
     %w[identifier key user_id key_type title fingerprint].each do |attribute|
       method = "#{attribute}_changed?"
-      errors.add(attribute, :cannot_change) if send(method)
+      errors.add attribute, :cannot_change if send method
     end
   end
 
@@ -183,21 +193,21 @@ class GitolitePublicKey < ActiveRecord::Base
   end
 
   def key_not_admin
-    errors.add(:key, :taken_by_gitolite_admin) if fingerprint == RedmineGitHosting::Config.gitolite_ssh_public_key_fingerprint
+    errors.add :key, :taken_by_gitolite_admin if fingerprint == RedmineGitHosting::Config.gitolite_ssh_public_key_fingerprint
   end
 
   def key_uniqueness
     return unless new_record?
 
-    existing = GitolitePublicKey.find_by_fingerprint(fingerprint)
+    existing = GitolitePublicKey.find_by fingerprint: fingerprint
     return unless existing
 
     if existing.user == User.current
-      errors.add(:key, :taken_by_you, name: existing.title)
+      errors.add :key, :taken_by_you, name: existing.title
     elsif User.current.admin?
-      errors.add(:key, :taken_by_other, login: existing.user.login, name: existing.title)
+      errors.add :key, :taken_by_other, login: existing.user.login, name: existing.title
     else
-      errors.add(:key, :taken_by_someone)
+      errors.add :key, :taken_by_someone
     end
   end
 end

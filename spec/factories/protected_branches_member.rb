@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :protected_branch_user_member, class: 'ProtectedBranchesMember' do
     association  :protected_branch, factory: :repository_protected_branche

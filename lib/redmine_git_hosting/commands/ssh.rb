@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Commands
     module Ssh
@@ -6,7 +8,7 @@ module RedmineGitHosting
       # Return only the output from the ssh command.
       #
       def ssh_capture(*params)
-        cmd = ssh.concat(params)
+        cmd = ssh.concat params
 
         capture cmd
       end
@@ -17,7 +19,7 @@ module RedmineGitHosting
       # Returns stdout, stderr and the exit code
       #
       def ssh_shell(*params)
-        cmd = ssh.concat(params)
+        cmd = ssh.concat params
 
         execute cmd
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryContributorsStats < ReportBase
   def initialize(repository)
     super
@@ -11,7 +13,7 @@ class RepositoryContributorsStats < ReportBase
       commits = {}
 
       committer_hash[:committers].each do |committer|
-        commits = commits.merge(count_changes_for_committer(committer)) { |key, oldval, newval| newval + oldval }
+        commits = commits.merge(count_changes_for_committer(committer)) { |_key, oldval, newval| newval + oldval }
       end
 
       commits = commits.sort.to_h
@@ -22,7 +24,7 @@ class RepositoryContributorsStats < ReportBase
       commits_data[:categories]    = commits.keys
       commits_data[:series]        = []
       commits_data[:series] << { name: l(:label_commit_plural), data: commits.values }
-      data.push(commits_data)
+      data.push commits_data
     end
 
     data
@@ -32,7 +34,7 @@ class RepositoryContributorsStats < ReportBase
     merged = commits_per_author_with_aliases
     data = {}
 
-    data[:categories] = merged.pluck(:name)
+    data[:categories] = merged.pluck :name
     data[:series] = []
     data[:series] << { name: l(:label_commit_plural), data: merged.pluck(:commits) }
     data[:series] << { name: l(:label_change_plural), data: merged.pluck(:changes) }

@@ -20,7 +20,7 @@
       code.shell.syntaxhl
         = link_to l(:label_download_and_install_git), 'https://git-scm.com/download', class: 'external'
         br
-        == render_shell_text "git config --global user.name \"#{User.current.name(:firstname_lastname)}\""
+        == render_shell_text "git config --global user.name \"#{User.current.name :firstname_lastname}\""
         br
         == render_shell_text "git config --global user.email #{User.current.mail || 'mail@example.com'}"
         - if !User.current.anonymous? && User.current.gitolite_public_keys.empty?
@@ -78,11 +78,11 @@
   h3 = l :label_repository_plural
   ul.repository.git
     - @repositories.sort.each do |repo|
-      li class="#{'repository git' if repo.is_a?(Repository::Xitolite)}"
-        = link_to_repository(repo, @repository)
-        - if User.current.allowed_to?(:manage_repository, @project)
+      li class="#{'repository git' if repo.is_a? Repository::Xitolite}"
+        = link_to_repository repo, @repository
+        - if User.current.allowed_to? :manage_repository, @project
           '
-          = link_to "(#{l(:label_settings)})", edit_repository_path(repo)
+          = link_to "(#{l :label_settings})", edit_repository_path(repo)
 
 javascript:
   $(document).ready(function() { setGitUrlsInstructions('.git_url'); });

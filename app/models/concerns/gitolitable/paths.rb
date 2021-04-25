@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Paths
     extend ActiveSupport::Concern
@@ -43,14 +45,14 @@ module Gitolitable
     # (with 'repositories' the Gitolite storage directory).
     #
     def gitolite_repository_path
-      File.join(RedmineGitHosting::Config.gitolite_global_storage_dir, gitolite_repository_name_with_extension)
+      File.join RedmineGitHosting::Config.gitolite_global_storage_dir, gitolite_repository_name_with_extension
     end
 
     # This is the full absolute path to the Gitolite repository.
     # Example : /home/git/repositories/redmine/blabla/test-blabla/uuuuuuuuuuu/oooooo.git
     #
     def gitolite_full_repository_path
-      File.join(RedmineGitHosting::Config.gitolite_home_dir, gitolite_repository_path)
+      File.join RedmineGitHosting::Config.gitolite_home_dir, gitolite_repository_path
     end
 
     # A syntaxic sugar used to move repository from a location to an other
@@ -81,10 +83,10 @@ module Gitolitable
       p = project
       while p.parent
         parent_id = p.parent.identifier.to_s
-        parent_parts.unshift(parent_id)
+        parent_parts.unshift parent_id
         p = p.parent
       end
-      parent_parts.join('/')
+      parent_parts.join '/'
     end
   end
 end

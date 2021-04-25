@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module RecycleBin
     class Manager
@@ -9,14 +11,14 @@ module RedmineGitHosting
       end
 
       def content
-        load_recycle_bin_content(get_recycle_bin_content)
+        load_recycle_bin_content get_recycle_bin_content
       rescue RedmineGitHosting::Error::GitoliteCommandException
         []
       end
 
       def delete_expired_content(expiration_time)
         expired_content = load_recycle_bin_content(get_expired_content(expiration_time))
-        logger.info("Removing #{expired_content.length} expired objects from Recycle Bin :")
+        logger.info "Removing #{expired_content.length} expired objects from Recycle Bin :"
         expired_content.map(&:destroy!)
       rescue RedmineGitHosting::Error::GitoliteCommandException
         []
@@ -41,7 +43,7 @@ module RedmineGitHosting
       end
 
       def load_recycle_bin_content(content_list = [])
-        content_list.map { |dir| RedmineGitHosting::RecycleBin::Item.new(dir) }
+        content_list.map { |dir| RedmineGitHosting::RecycleBin::Item.new dir }
       end
 
       def get_recycle_bin_content
@@ -59,11 +61,11 @@ module RedmineGitHosting
       end
 
       def create_recycle_bin_directory
-        RedmineGitHosting::Commands.sudo_mkdir_p(recycle_bin_dir)
-        RedmineGitHosting::Commands.sudo_chmod('770', recycle_bin_dir)
+        RedmineGitHosting::Commands.sudo_mkdir_p recycle_bin_dir
+        RedmineGitHosting::Commands.sudo_chmod '770', recycle_bin_dir
         true
       rescue RedmineGitHosting::Error::GitoliteCommandException
-        logger.error("Attempt to create recycle bin directory '#{recycle_bin_dir}' failed !")
+        logger.error "Attempt to create recycle bin directory '#{recycle_bin_dir}' failed !"
         false
       end
     end

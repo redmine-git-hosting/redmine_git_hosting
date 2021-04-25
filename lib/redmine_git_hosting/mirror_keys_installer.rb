@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   class MirrorKeysInstaller
     attr_reader :gitolite_home_dir, :gitolite_ssh_public_key, :gitolite_ssh_private_key
 
-    GITOLITE_MIRRORING_KEYS_NAME = 'redmine_gitolite_admin_id_rsa_mirroring'.freeze
+    GITOLITE_MIRRORING_KEYS_NAME = 'redmine_gitolite_admin_id_rsa_mirroring'
 
     def initialize(gitolite_home_dir, gitolite_ssh_public_key, gitolite_ssh_private_key)
       @gitolite_home_dir        = gitolite_home_dir
@@ -14,7 +16,7 @@ module RedmineGitHosting
       def mirroring_public_key(gitolite_ssh_public_key)
         format_mirror_key(File.read(gitolite_ssh_public_key))
       rescue StandardError => e
-        RedmineGitHosting.logger.error("Error while loading mirroring public key : #{e.inspect}")
+        RedmineGitHosting.logger.error "Error while loading mirroring public key : #{e.inspect}"
         nil
       end
 
@@ -37,27 +39,27 @@ module RedmineGitHosting
     end
 
     def install!
-      logger.info('Installing Redmine Gitolite mirroring SSH keys ...')
+      logger.info 'Installing Redmine Gitolite mirroring SSH keys ...'
       installed = install_public_key && install_private_key && install_mirroring_script
-      logger.info('Done!')
+      logger.info 'Done!'
       installed
     end
 
     def install_public_key
-      install_file(gitolite_ssh_public_key_content, gitolite_ssh_public_key_dest_path, '644') do
-        logger.error("Failed to install Redmine Git Hosting mirroring SSH public key : #{e.output}")
+      install_file gitolite_ssh_public_key_content, gitolite_ssh_public_key_dest_path, '644' do
+        logger.error "Failed to install Redmine Git Hosting mirroring SSH public key : #{e.output}"
       end
     end
 
     def install_private_key
-      install_file(gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600') do
-        logger.error("Failed to install Redmine Git Hosting mirroring SSH private key : #{e.output}")
+      install_file gitolite_ssh_private_key_content, gitolite_ssh_private_key_dest_path, '600' do
+        logger.error "Failed to install Redmine Git Hosting mirroring SSH private key : #{e.output}"
       end
     end
 
     def install_mirroring_script
-      install_file(mirroring_script_content, RedmineGitHosting::Config.gitolite_mirroring_script, '700') do
-        logger.error("Failed to install Redmine Git Hosting mirroring script : #{e.output}")
+      install_file mirroring_script_content, RedmineGitHosting::Config.gitolite_mirroring_script, '700' do
+        logger.error "Failed to install Redmine Git Hosting mirroring script : #{e.output}"
       end
     end
 
@@ -88,15 +90,15 @@ module RedmineGitHosting
     end
 
     def gitolite_ssh_public_key_dest_path
-      File.join(gitolite_home_dir, '.ssh', "#{GITOLITE_MIRRORING_KEYS_NAME}.pub")
+      File.join gitolite_home_dir, '.ssh', "#{GITOLITE_MIRRORING_KEYS_NAME}.pub"
     end
 
     def gitolite_ssh_private_key_dest_path
-      File.join(gitolite_home_dir, '.ssh', GITOLITE_MIRRORING_KEYS_NAME)
+      File.join gitolite_home_dir, '.ssh', GITOLITE_MIRRORING_KEYS_NAME
     end
 
-    def install_file(source, destination, perms, &block)
-      RedmineGitHosting::Commands.sudo_install_file(source, destination, perms)
+    def install_file(source, destination, perms)
+      RedmineGitHosting::Commands.sudo_install_file source, destination, perms
     rescue RedmineGitHosting::Error::GitoliteCommandException
       yield
       false

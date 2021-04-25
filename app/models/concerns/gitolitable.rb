@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   extend ActiveSupport::Concern
   include Gitolitable::Authorizations

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module RecycleBin
     class DeletableItem
@@ -15,7 +17,7 @@ module RedmineGitHosting
       end
 
       def target_path
-        @target_path ||= File.join(recycle_bin_dir, "#{Time.now.to_i.to_s}#{TRASH_DIR_SEP}#{trash_name}.git")
+        @target_path ||= File.join recycle_bin_dir, "#{Time.now.to_i}#{TRASH_DIR_SEP}#{trash_name}.git"
       end
 
       private

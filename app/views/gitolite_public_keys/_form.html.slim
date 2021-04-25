@@ -7,7 +7,7 @@
   p
     = f.text_field :title, label: :label_identifier_can_be_arbitrary, required: true, style: 'width: 97%;'
 
-  - if can_create_deployment_keys_for_some_project(@user)
+  - if can_create_deployment_keys_for_some_project @user
     p
       = f.select :key_type,
                   options_for_select([[l(:label_user_key), 0], [l(:label_deploy_key), 1]]),
@@ -22,8 +22,9 @@
                   cols: nil,
                   rows: nil
   em
-    = l(:label_cut_and_paste)
+    = l :label_cut_and_paste
   br
   br
   = submit_tag l(:button_create), name: 'create_button'
-  = submit_tag l(:button_cancel), name: 'cancel_button'
+  '
+  = cancel_button_tag my_account_path

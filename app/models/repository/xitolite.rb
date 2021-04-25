@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
 class Repository::Xitolite < Repository::Git
@@ -43,24 +45,22 @@ class Repository::Xitolite < Repository::Git
   # Override the original method to accept options hash
   # which may contain *bypass_cache* flag.
   #
-  def diff(path, rev, rev_to, opts = {})
-    scm.diff(path, rev, rev_to, opts)
+  def diff(path, rev, rev_to, **opts)
+    scm.diff path, rev, rev_to, **opts
   end
 
   def rev_list(revision, args = [])
-    scm.rev_list(revision, args)
+    scm.rev_list revision, args
   end
 
-  def rev_parse(revision)
-    scm.rev_parse(revision)
-  end
+  delegate :rev_parse, to: :scm
 
   def archive(revision, format = 'tar')
-    scm.archive(revision, format)
+    scm.archive revision, format
   end
 
   def mirror_push(url, branch, args = [])
-    scm.mirror_push(url, branch, args)
+    scm.mirror_push url, branch, args
   end
 
   private
@@ -69,6 +69,6 @@ class Repository::Xitolite < Repository::Git
     return unless Additionals.true? create_readme
     return unless Additionals.true? enable_git_annex
 
-    errors.add(:base, :invalid_options)
+    errors.add :base, :invalid_options
   end
 end

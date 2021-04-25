@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :redmine_git_hosting do
   namespace :ci do
     unless Rails.env.production?
@@ -18,12 +20,12 @@ namespace :redmine_git_hosting do
       puts "gitolite_admin_dir : #{gitolite_admin_dir}"
       puts ''
 
-      ls_dir(gitolite_temp_dir)
-      ls_dir("#{gitolite_temp_dir}/git")
-      ls_dir("#{gitolite_temp_dir}/git/gitolite-admin.git")
+      ls_dir gitolite_temp_dir
+      ls_dir "#{gitolite_temp_dir}/git"
+      ls_dir "#{gitolite_temp_dir}/git/gitolite-admin.git"
 
       begin
-        repo = Rugged::Repository.new(gitolite_admin_dir)
+        repo = Rugged::Repository.new gitolite_admin_dir
         puts "git repo work dir  : #{repo.workdir}"
         puts "git repo path      : #{repo.path}"
         puts ''

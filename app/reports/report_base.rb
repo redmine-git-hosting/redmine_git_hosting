@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReportBase
   include Redmine::I18n
   include ReportHelper

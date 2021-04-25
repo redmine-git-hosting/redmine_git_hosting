@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Cache
     extend ActiveSupport::Concern
@@ -13,7 +15,7 @@ module Gitolitable
         # Translate repository path into a unique ID for use in caching of git commands.
         #
         def repo_path_to_git_cache_id(repo_path)
-          repo = find_by_path(repo_path, loose: true)
+          repo = find_by_path repo_path, loose: true
           repo ? repo.git_cache_id : nil
         end
 
@@ -35,25 +37,25 @@ module Gitolitable
         # <MatchData "blabla2.git" 1:nil 2:nil 3:"blabla2" 4:".git">
         #
         def find_by_path(path, flags = {})
-          parseit = path.match(/\A.*?(([^\/]+)\/)?([^\/]+?)(\.git)?\z/)
-          return nil if parseit.nil?
+          parseit = path.match %r{\A.*?(([^/]+)/)?([^/]+?)(\.git)?\z}
+          return if parseit.nil?
 
-          project = Project.find_by_identifier(parseit[3])
+          project = Project.find_by identifier: parseit[3]
 
           # return default or first repo with blank identifier (or first Git repo--very rare?)
           if project
             project.repository || project.repo_blank_ident || project.gitolite_repos.first
 
           elsif repo_ident_unique? || flags[:loose] && parseit[2].nil?
-            find_by_identifier(parseit[3])
+            find_by identifier: parseit[3]
 
           elsif parseit[2]
-            project = Project.find_by_identifier(parseit[2])
+            project = Project.find_by identifier: parseit[2]
 
             if project.nil?
-              find_by_identifier(parseit[3])
+              find_by identifier: parseit[3]
             else
-              find_by_identifier_and_project_id(parseit[3], project.id) || (flags[:loose] && find_by_identifier(parseit[3]))
+              find_by(identifier: parseit[3], project_id: project.id) || (flags[:loose] && find_by(identifier: parseit[3]))
             end
           end
         end
@@ -77,7 +79,7 @@ module Gitolitable
     # NOTE: RedmineGitHosting::Cache doesn't know about repository object, it only knows *git_cache_id*.
     #
     def empty_cache!
-      RedmineGitHosting::Cache.clear_cache_for_repository(git_cache_id)
+      RedmineGitHosting::Cache.clear_cache_for_repository git_cache_id
     end
   end
 end

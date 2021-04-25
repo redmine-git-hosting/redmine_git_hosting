@@ -64,14 +64,48 @@ Performance/ChainArrayAllocation:
 Style/AutoResourceCleanup:
   Enabled: true
 
+Style/ExpandPathArguments:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Metrics/ParameterLists:
+  Enabled: true
+  CountKeywordArgs: false
+
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - '/**/*.rsb'
+
+Style/OptionHash:
+  Enabled: true
+  SuspiciousParamNames:
+    - options
+    - api_options
+    - opts
+    - args
+    - params
+    - parameters
+    - settings
+  Exclude:
+    - lib/redmine_git_hosting/patches/*.rb
+
+Style/ReturnNil:
+  Enabled: true
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+  AllowParenthesesInMultilineCall: true
+  AllowParenthesesInChaining: true
+  EnforcedStyle: omit_parentheses
 
 Style/Documentation:
-  Enabled: false
-
-# required for travis/ci (symbolic links problem)
-Style/ExpandPathArguments:
   Enabled: false
 
 Style/HashTransformKeys:

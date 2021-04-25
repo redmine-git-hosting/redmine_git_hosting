@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryGitExtra < ActiveRecord::Base
   include Redmine::SafeAttributes
 
@@ -49,7 +51,7 @@ class RepositoryGitExtra < ActiveRecord::Base
 
   def validate_urls_order
     urls_order.each do |url|
-      errors.add(:urls_order, :invalid) unless ALLOWED_URLS.include?(url)
+      errors.add :urls_order, :invalid unless ALLOWED_URLS.include? url
     end
   end
 
@@ -58,7 +60,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_default_branch_changed
-    self.default_branch_has_changed = saved_changes&.key?(:default_branch)
+    self.default_branch_has_changed = saved_changes&.key? :default_branch
   end
 
   def check_urls_order_consistency

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'member'
 
 module RedmineGitHosting
@@ -15,10 +17,10 @@ module RedmineGitHosting
 
       def update_project
         options = { message: "Membership changes on project '#{project}', update!" }
-        gitolite_accessor.update_projects([project.id], options)
+        gitolite_accessor.update_projects [project.id], options
       end
     end
   end
 end
 
-Member.prepend RedmineGitHosting::Patches::MemberPatch unless Member.included_modules.include?(RedmineGitHosting::Patches::MemberPatch)
+Member.prepend RedmineGitHosting::Patches::MemberPatch unless Member.included_modules.include? RedmineGitHosting::Patches::MemberPatch

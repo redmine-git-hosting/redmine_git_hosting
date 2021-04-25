@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RedmineGitHosting::GitoliteHooks.register_hooks do
   # Set source dir
   source_dir Rails.root.join('plugins/redmine_git_hosting/contrib/hooks').to_s

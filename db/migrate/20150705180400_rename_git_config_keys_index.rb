@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameGitConfigKeysIndex < ActiveRecord::Migration[4.2]
   def up
     remove_index :repository_git_config_keys, %i[key repository_id]

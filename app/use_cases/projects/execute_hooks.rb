@@ -1,27 +1,29 @@
+# frozen_string_literal: true
+
 module Projects
   class ExecuteHooks
     attr_reader :project, :hook_type, :params
 
-    def initialize(project, hook_type, params = {})
+    def initialize(project, hook_type, **params)
       @project    = project
       @hook_type  = hook_type
       @params     = params
     end
 
     class << self
-      def call(project, hook_type, params = {})
-        new(project, hook_type, params).call
+      def call(project, hook_type, **params)
+        new(project, hook_type, **params).call
       end
     end
 
     def call
-      send("execute_#{hook_type}_hook")
+      send "execute_#{hook_type}_hook"
     end
 
     private
 
     def execute_github_hook
-      RedmineHooks::GithubIssuesSync.call(project, params)
+      RedmineHooks::GithubIssuesSync.call project, **params
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateProtectedBranchesMembers < ActiveRecord::Migration[4.2]
   def change
     create_table :protected_branches_members do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSettingsToPlugin2 < ActiveRecord::Migration[4.2]
   def up
     # Add some new settings to settings page, if they don't exist
@@ -7,7 +9,7 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration[4.2]
     valuehash['gitRepositoryHierarchy'] ||= 'true'
 
     # Fix httpServer by removing directory components
-    valuehash['httpServer'] = (valuehash['httpServer'][%r{^[^\/]*}])
+    valuehash['httpServer'] = (valuehash['httpServer'][%r{^[^/]*}])
 
     if Setting.plugin_redmine_git_hosting != valuehash
       say 'Added redmine_git_hosting settings: httpServerSubdir, gitRedmineSubdir, gitRepositoryHierarchy'
@@ -25,12 +27,12 @@ class AddSettingsToPlugin2 < ActiveRecord::Migration[4.2]
   def down
     # Remove above settings from plugin page
     valuehash = Setting.plugin_redmine_git_hosting.clone
-    valuehash.delete('httpServerSubdir')
-    valuehash.delete('gitRedmineSubdir')
-    valuehash.delete('gitRepositoryHierarchy')
+    valuehash.delete 'httpServerSubdir'
+    valuehash.delete 'gitRedmineSubdir'
+    valuehash.delete 'gitRepositoryHierarchy'
 
     # Restore redmine root directory to httpServer (remove trailing '/')
-    valuehash['httpServer'] = RedmineGitHosting::Config.my_root_url
+    valuehash['httpServer'] = RedmineGitHosting::Config.my_root_url ssl: false
 
     if Setting.plugin_redmine_git_hosting != valuehash
       say 'Removed redmine_git_hosting settings: httpServerSubdir, gitRedmineSubdir, gitRepositoryHierarchy'

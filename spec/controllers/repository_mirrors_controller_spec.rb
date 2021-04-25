@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryMirrorsController do
@@ -8,7 +10,7 @@ describe RepositoryMirrorsController do
   end
 
   def create_object
-    FactoryBot.create(:repository_mirror, repository_id: @repository.id)
+    FactoryBot.create :repository_mirror, repository_id: @repository.id
   end
 
   def success_url
@@ -54,7 +56,7 @@ describe RepositoryMirrorsController do
   describe 'GET #push' do
     context 'with sufficient permissions' do
       it 'renders the :push view' do
-        set_session_user(@member_user)
+        set_session_user @member_user
         get :push,
             params: { repository_id: @repository.id, id: @object.id }
       end
@@ -62,10 +64,10 @@ describe RepositoryMirrorsController do
 
     context 'with unsufficient permissions' do
       it 'renders 403' do
-        set_session_user(@anonymous_user)
+        set_session_user @anonymous_user
         get :push,
             params: { repository_id: @repository.id, id: @object.id }
-        check_status(403)
+        check_status 403
       end
     end
   end

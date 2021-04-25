@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryGitExtra do
-  let(:git_extra) { build(:repository_git_extra) }
+  let(:git_extra) { build :repository_git_extra }
 
   subject { git_extra }
 

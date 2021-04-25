@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting::Plugins::Sweepers
   class BaseSweeper < RedmineGitHosting::Plugins::GitolitePlugin
     attr_reader :repository_data, :gitolite_repo_name, :gitolite_repo_path, :delete_repository, :git_cache_id

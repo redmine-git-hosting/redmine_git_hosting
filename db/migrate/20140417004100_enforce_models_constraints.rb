@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnforceModelsConstraints < ActiveRecord::Migration[4.2]
   def up
     change_column :git_caches, :command_output, :binary, limit: 16_777_216

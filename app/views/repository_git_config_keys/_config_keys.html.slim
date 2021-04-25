@@ -13,7 +13,7 @@
           td
             span.label.label-success = git_config_key.value
           td.buttons
-            - if User.current.git_allowed_to?(:edit_repository_git_config_keys, @repository)
+            - if User.current.git_allowed_to? :edit_repository_git_config_keys, @repository
               = link_to l(:button_edit),
                         edit_repository_git_config_key_path(@repository, git_config_key),
                         class: 'icon icon-edit'

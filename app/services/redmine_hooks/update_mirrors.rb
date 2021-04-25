@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineHooks
   class UpdateMirrors < Base
     def call
@@ -6,7 +8,7 @@ module RedmineHooks
           out << call_mirror
         else
           out << "#{skip_message}\n"
-          logger.info(skip_message)
+          logger.info skip_message
         end
       end
     end
@@ -35,9 +37,9 @@ module RedmineHooks
     private
 
     def check_ref_spec
-      refspec_parse = RedmineGitHosting::Validators.valid_git_refspec?(mirror.explicit_refspec)
+      refspec_parse = RedmineGitHosting::Validators.valid_git_refspec? mirror.explicit_refspec
       payloads.each do |payload|
-        next unless (splitpath = RedmineGitHosting::Utils::Git.parse_refspec(payload[:ref]))
+        next unless (splitpath = RedmineGitHosting::Utils::Git.parse_refspec payload[:ref])
 
         return true if payload[:ref] == refspec_parse[1] # Explicit Reference Spec complete path
         return true if splitpath[:name] == refspec_parse[1] # Explicit Reference Spec no type
@@ -48,11 +50,11 @@ module RedmineHooks
     end
 
     def call_mirror
-      push_failed, push_message = RepositoryMirrors::Push.call(mirror)
+      push_failed, push_message = RepositoryMirrors::Push.call mirror
 
       if push_failed
         log_hook_failed
-        logger.error(push_message)
+        logger.error push_message
         failure_message
       else
         log_hook_succeeded

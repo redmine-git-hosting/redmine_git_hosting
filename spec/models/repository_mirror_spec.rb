@@ -1,23 +1,23 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryMirror do
-  VALID_URLS = [
-    'ssh://user@host.xz:2222/path/to/repo.git',
-    'ssh://user@host.xz/path/to/repo.git',
-    'ssh://user-name@long.host-domain.xz/path.git',
-    'ssh://host.xz:2222/path/to/repo.git',
-    'ssh://host.xz/path/to/repo.git',
-    'ssh://user@host.xz/path/to/repo.git',
-    'ssh://host.xz/path/to/repo.git',
-    'ssh://user@host.xz/~user/path/to/repo.git',
-    'ssh://host.xz/~user/path/to/repo.git',
-    'ssh://user@host.xz/~/path/to/repo.git',
-    'ssh://host.xz/~/path/to/repo.git',
-    'ssh://host.xz/~/path.to/repo.git'
-  ]
+  VALID_URLS = ['ssh://user@host.xz:2222/path/to/repo.git',
+                'ssh://user@host.xz/path/to/repo.git',
+                'ssh://user-name@long.host-domain.xz/path.git',
+                'ssh://host.xz:2222/path/to/repo.git',
+                'ssh://host.xz/path/to/repo.git',
+                'ssh://user@host.xz/path/to/repo.git',
+                'ssh://host.xz/path/to/repo.git',
+                'ssh://user@host.xz/~user/path/to/repo.git',
+                'ssh://host.xz/~user/path/to/repo.git',
+                'ssh://user@host.xz/~/path/to/repo.git',
+                'ssh://host.xz/~/path/to/repo.git',
+                'ssh://host.xz/~/path.to/repo.git'].freeze
 
-  def build_mirror(opts = {})
-    build(:repository_mirror, opts)
+  def build_mirror(**opts)
+    build(:repository_mirror, **opts)
   end
 
   def expect_invalid_refspec(refspec)
@@ -29,8 +29,8 @@ describe RepositoryMirror do
   end
 
   describe 'Valid RepositoryMirror creation' do
-    before(:each) do
-      @mirror = build(:repository_mirror)
+    before :each do
+      @mirror = build :repository_mirror
     end
 
     subject { @mirror }
@@ -144,10 +144,10 @@ describe RepositoryMirror do
 
   context 'when many mirror are saved' do
     before do
-      create(:repository_mirror, active: true)
-      create(:repository_mirror, active: true)
-      create(:repository_mirror, active: false)
-      create(:repository_mirror, active: false)
+      create :repository_mirror, active: true
+      create :repository_mirror, active: true
+      create :repository_mirror, active: false
+      create :repository_mirror, active: false
     end
 
     it { expect(RepositoryMirror.active.length).to be == 3 }

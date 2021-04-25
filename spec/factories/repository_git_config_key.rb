@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :repository_git_config_key_base, class: 'RepositoryGitConfigKey' do
     sequence(:key) { |n| "hookfoo.foo#{n}" }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteHandlers
     module SshKeys
@@ -31,7 +33,7 @@ module RedmineGitHosting
         end
 
         def build_gitolite_key(key)
-          ::Gitolite::SSHKey.new(key.type, key.blob, key.email, key.owner, key.location)
+          ::Gitolite::SSHKey.new key.type, key.blob, key.email, key.owner, key.location
         end
       end
     end

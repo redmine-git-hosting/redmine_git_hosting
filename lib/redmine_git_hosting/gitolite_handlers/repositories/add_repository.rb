@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteHandlers
     module Repositories
@@ -5,16 +7,16 @@ module RedmineGitHosting
         def call
           if !configuration_exists?
             # Create repository in Gitolite
-            log_repo_not_exist('create it ...')
+            log_repo_not_exist 'create it ...'
             create_repository_config
 
           elsif configuration_exists? && force
             # Recreate repository in Gitolite
-            log_repo_already_exist('force mode !')
+            log_repo_already_exist 'force mode !'
             recreate_repository_config
 
           else
-            log_repo_already_exist('exit !')
+            log_repo_already_exist 'exit !'
           end
         end
 

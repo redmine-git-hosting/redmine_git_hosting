@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteHandlers
     module Repositories
       class DeleteRepository < Base
         def call
           if configuration_exists?
-            log_ok_and_continue('delete it ...')
+            log_ok_and_continue 'delete it ...'
 
             # Delete Gitolite repository
             delete_repository_config
           else
-            log_repo_not_exist('exit !')
+            log_repo_not_exist 'exit !'
           end
         end
 

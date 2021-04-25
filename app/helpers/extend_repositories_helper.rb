@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ExtendRepositoriesHelper
   def encoding_field(form, _repository)
     tag.p do
@@ -53,7 +55,7 @@ module ExtendRepositoriesHelper
   end
 
   def icon_for_url_type(url_type)
-    font_awesome_icon(RepositoryGitExtra::URLS_ICONS[url_type][:icon])
+    font_awesome_icon RepositoryGitExtra::URLS_ICONS[url_type][:icon]
   end
 
   def label_for_url_type(url_type)
@@ -64,6 +66,6 @@ module ExtendRepositoriesHelper
     projects = Project.active
                       .where(Project.allowed_to_condition(User.current, :manage_repository))
                       .where.not(id: project.id)
-    project_tree_options_for_select(projects, selected: project) if projects.any?
+    project_tree_options_for_select projects, selected: project if projects.any?
   end
 end

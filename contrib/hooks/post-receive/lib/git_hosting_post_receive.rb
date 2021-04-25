@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHosting
   class PostReceive
     include HttpHelper
@@ -20,8 +22,8 @@ module GitHosting
       logger.info ''
       logger.info "Notifying Redmine about changes to this repository : '#{git_config.repository_name}' ..."
 
-      http_post(git_config.project_url, { params: http_post_data }) do |http, request|
-        http.request(request) { |response| check_response(response) }
+      http_post git_config.project_url, params: http_post_data do |http, request|
+        http.request(request) { |response| check_response response }
       rescue StandardError => e
         logger.error "HTTP_ERROR : #{e.message}"
       end
@@ -30,7 +32,7 @@ module GitHosting
     end
 
     def http_post_data
-      git_config.post_data.merge('refs[]' => parsed_refs)
+      git_config.post_data.merge 'refs[]' => parsed_refs
     end
 
     def parsed_refs
@@ -45,15 +47,15 @@ module GitHosting
     def check_response(response)
       if response.code.to_i == 200
         response.read_body do |body_frag|
-          body_frag.split("\n").each { |line| logger.info(line) }
+          body_frag.split("\n").each { |line| logger.info line }
         end
       else
-        logger.error("  - Error while notifying Redmine ! (status code: #{response.code})")
+        logger.error "  - Error while notifying Redmine ! (status code: #{response.code})"
       end
     end
 
     def logger
-      @logger ||= GitHosting::HookLogger.new(loglevel: git_config.loglevel)
+      @logger ||= GitHosting::HookLogger.new loglevel: git_config.loglevel
     end
   end
 end

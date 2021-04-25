@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class RepositoryPresenter < SimpleDelegator
   attr_reader :repository
 
   def initialize(repository, template)
-    super(template)
+    super template
     @repository = repository
   end
 
@@ -17,7 +19,7 @@ class RepositoryPresenter < SimpleDelegator
   end
 
   def git_urls_box
-    tag.div(class: 'git_url_box', id: urls_container_id) do
+    tag.div class: 'git_url_box', id: urls_container_id do
       render_git_urls +
         render_git_url_text +
         render_permissions +
@@ -28,15 +30,15 @@ class RepositoryPresenter < SimpleDelegator
   private
 
   def render_git_urls
-    tag.ul(render_url_list, class: 'git_url_list')
+    tag.ul render_url_list, class: 'git_url_list'
   end
 
   def render_url_list
-    s = ''
+    s = []
     repository.available_urls_sorted.each do |key, value|
       s << tag.li(link_to(key.upcase, 'javascript:void(0)').html_safe, options_for_git_url(key, value))
     end
-    s.html_safe
+    safe_join s
   end
 
   def options_for_git_url(_key, value)

@@ -17,11 +17,8 @@ jobs:
 
     - name: Setup Gemfile
       run: |
-        echo "source 'https://rubygems.org'" > Gemfile
-        echo "group :test do" >> Gemfile
-        echo "  gem 'brakeman', require: false" >> Gemfile
-        echo "  gem 'pandoc-ruby', require: false" >> Gemfile
-        echo "end">> Gemfile
+        touch .enable_dev
+        sed -i "3isource 'https://rubygems.org'" Gemfile
 
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1

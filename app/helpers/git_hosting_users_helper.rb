@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHostingUsersHelper
   def user_settings_tabs
     tabs = super

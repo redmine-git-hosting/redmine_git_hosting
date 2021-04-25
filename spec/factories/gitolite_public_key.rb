@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :gitolite_public_key do
     sequence(:title) { |n| "test-key#{n}" }

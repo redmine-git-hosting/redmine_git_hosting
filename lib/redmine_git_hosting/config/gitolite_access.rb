@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     module GitoliteAccess
@@ -32,19 +34,19 @@ module RedmineGitHosting
       end
 
       def http_root_url
-        my_root_url false
+        my_root_url ssl: false
       end
 
       def https_root_url
-        my_root_url true
+        my_root_url
       end
 
       def redmine_root_url
         Redmine::Utils.relative_url_root
       end
 
-      def my_root_url(ssl = false)
-        server_domain = if ssl && https_server_domain != ''
+      def my_root_url(ssl: true)
+        server_domain = if ssl && https_server_domain.present?
                           https_server_domain
                         else
                           http_server_domain
@@ -52,7 +54,7 @@ module RedmineGitHosting
 
         # Remove any path from httpServer.
         # No trailing /.
-        File.join(server_domain[/^[^\/]*/], redmine_root_url, '/')[0..-2]
+        File.join(server_domain[%r{^[^/]*}], redmine_root_url, '/')[0..-2]
       end
     end
   end

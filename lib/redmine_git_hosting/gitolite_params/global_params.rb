@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteParams
     class GlobalParams
@@ -15,7 +17,7 @@ module RedmineGitHosting
         @namespace = RedmineGitHosting::Config.gitolite_hooks_namespace
 
         # Get current params
-        @current_params = get_git_config_params(@namespace)
+        @current_params = get_git_config_params @namespace
 
         # Build hash of installed params
         @installed = {}
@@ -29,9 +31,9 @@ module RedmineGitHosting
       end
 
       def install!
-        @installed['redmineurl'] = set_git_config_param(namespace, 'redmineurl', gitolite_hooks_url)
-        @installed['debugmode']  = set_git_config_param(namespace, 'debugmode', debug_mode)
-        @installed['asyncmode']  = set_git_config_param(namespace, 'asyncmode', async_mode)
+        @installed['redmineurl'] = set_git_config_param namespace, 'redmineurl', gitolite_hooks_url
+        @installed['debugmode']  = set_git_config_param namespace, 'debugmode', debug_mode
+        @installed['asyncmode']  = set_git_config_param namespace, 'asyncmode', async_mode
         @installed
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRepositoryMirrors < ActiveRecord::Migration[4.2]
   def change
     create_table :repository_mirrors do |t|

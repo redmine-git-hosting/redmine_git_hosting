@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Projects
@@ -8,8 +10,8 @@ module RedmineGitHosting
           admin.transaction do
             git_projects.each do |project|
               if project.gitolite_repos.any?
-                handle_project_update(project)
-                gitolite_admin_repo_commit(project.identifier)
+                handle_project_update project
+                gitolite_admin_repo_commit project.identifier
               end
             end
           end
@@ -29,7 +31,7 @@ module RedmineGitHosting
             when 'active_or_closed'
               Project.active_or_closed.includes(:repositories).all
             else
-              object_id.map { |project_id| Project.find_by_id(project_id) }
+              object_id.map { |project_id| Project.find_by id: project_id }
             end
         end
 

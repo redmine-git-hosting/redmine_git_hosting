@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     module GitoliteCache
@@ -16,7 +18,7 @@ module RedmineGitHosting
       end
 
       def gitolite_cache_adapter
-        get_setting(:gitolite_cache_adapter)
+        get_setting :gitolite_cache_adapter
       end
     end
   end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting::Plugins::Extenders
   class BaseExtender < RedmineGitHosting::Plugins::GitolitePlugin
     attr_reader :repository, :recovered, :gitolite_repo_name, :gitolite_repo_path, :git_default_branch, :options
 
-    def initialize(repository, options = {})
+    def initialize(repository, **options)
       @repository         = repository
       @recovered          = options.delete(:recovered) { false }
       @gitolite_repo_name = repository.gitolite_repository_name

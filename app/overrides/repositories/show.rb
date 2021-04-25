@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Deface::Override.new virtual_path: 'repositories/show',
                      name: 'show-repositories-hook-bottom',
                      insert_before: 'erb[silent]:contains("other_formats_links")',

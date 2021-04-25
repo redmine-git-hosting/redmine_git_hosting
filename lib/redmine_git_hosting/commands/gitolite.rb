@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Commands
     module Gitolite
@@ -16,21 +18,21 @@ module RedmineGitHosting
       def sudo_gitolite_query_rc(param)
         sudo_capture('gitolite', 'query-rc', param).try(:chomp)
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        logger.error("Can't retrieve Gitolite param : #{e.output}")
+        logger.error "Can't retrieve Gitolite param : #{e.output}"
         nil
       end
 
       def sudo_update_gitolite!
         if gitolite_command.nil?
-          logger.error("gitolite_command is nil, can't update Gitolite !")
+          logger.error "gitolite_command is nil, can't update Gitolite !"
           return
         end
-        logger.info("Running '#{gitolite_command.join(' ')}' on the Gitolite install ...")
+        logger.info "Running '#{gitolite_command.join ' '}' on the Gitolite install ..."
         begin
           sudo_shell(*gitolite_command)
           true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error(e.output)
+          logger.error e.output
           false
         end
       end
@@ -43,12 +45,12 @@ module RedmineGitHosting
       #
       def sudo_repository_empty?(repo_path)
         if gitolite_home_dir.nil?
-          logger.info('gitolite_home_dir is not set, because of incomplete/incorrect gitolite setup')
+          logger.info 'gitolite_home_dir is not set, because of incomplete/incorrect gitolite setup'
           return true
         end
 
-        repo_path = File.join(gitolite_home_dir, repo_path, 'objects')
-        count = sudo_git_objects_count(repo_path)
+        repo_path = File.join gitolite_home_dir, repo_path, 'objects'
+        count = sudo_git_objects_count repo_path
         count.to_i.zero?
       end
 
@@ -62,7 +64,7 @@ module RedmineGitHosting
         begin
           sudo_capture(*cmd)
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Can't retrieve Git objects count : #{e.output}")
+          logger.error "Can't retrieve Git objects count : #{e.output}"
           0
         end
       end

@@ -1,4 +1,4 @@
-require_dependency 'user'
+# frozen_string_literal: true
 
 module RedmineGitHosting
   module Patches
@@ -24,7 +24,7 @@ module RedmineGitHosting
       # with its login name as a prefix for readibility.
       def gitolite_identifier
         identifier = [RedmineGitHosting::Config.gitolite_identifier_prefix, stripped_login]
-        identifier.concat(['_', id]) unless RedmineGitHosting::Config.gitolite_identifier_strip_user_id?
+        identifier.concat ['_', id] unless RedmineGitHosting::Config.gitolite_identifier_strip_user_id?
         identifier.join
       end
 
@@ -38,7 +38,7 @@ module RedmineGitHosting
       end
 
       def allowed_to_manage_repository?(repository)
-        !roles_for_project(repository.project).select { |role| role.allowed_to?(:manage_repository) }.empty?
+        !roles_for_project(repository.project).select { |role| role.allowed_to? :manage_repository }.empty?
       end
 
       def allowed_to_commit?(repository)
@@ -72,7 +72,7 @@ module RedmineGitHosting
       # We need to save it in virtual attribute to trigger Gitolite resync if changed.
       #
       def check_if_status_changed
-        self.status_has_changed = saved_changes&.key?(:status)
+        self.status_has_changed = saved_changes&.key? :status
       end
 
       def stripped_login
@@ -82,4 +82,4 @@ module RedmineGitHosting
   end
 end
 
-User.prepend RedmineGitHosting::Patches::UserPatch unless User.included_modules.include?(RedmineGitHosting::Patches::UserPatch)
+User.prepend RedmineGitHosting::Patches::UserPatch unless User.included_modules.include? RedmineGitHosting::Patches::UserPatch

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../../spec_helper"
 
 describe RepositoryGitConfigKey::Option do
-  before(:each) do
-    @git_config_key = build(:repository_git_option_key)
+  before :each do
+    @git_config_key = build :repository_git_option_key
   end
 
   subject { @git_config_key }

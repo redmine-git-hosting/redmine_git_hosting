@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RedmineGitHostingController < ApplicationController
   include XitoliteRepositoryFinder
 
@@ -25,22 +27,22 @@ class RedmineGitHostingController < ApplicationController
   end
 
   def check_required_permissions
-    return render_403 unless @project.module_enabled?(:repository)
+    return render_403 unless @project.module_enabled? :repository
     return true if User.current.admin?
-    return render_403 unless User.current.allowed_to_manage_repository?(@repository)
+    return render_403 unless User.current.allowed_to_manage_repository? @repository
   end
 
   def check_xitolite_permissions
     case action_name
     when 'index', 'show'
       perm = "view_#{controller_name}".to_sym
-      render_403 unless User.current.git_allowed_to?(perm, @repository)
+      render_403 unless User.current.git_allowed_to? perm, @repository
     when 'new', 'create'
       perm = "create_#{controller_name}".to_sym
-      render_403 unless User.current.git_allowed_to?(perm, @repository)
+      render_403 unless User.current.git_allowed_to? perm, @repository
     when 'edit', 'update', 'destroy'
       perm = "edit_#{controller_name}".to_sym
-      render_403 unless User.current.git_allowed_to?(perm, @repository)
+      render_403 unless User.current.git_allowed_to? perm, @repository
     end
   end
 
@@ -61,12 +63,12 @@ class RedmineGitHostingController < ApplicationController
   end
 
   def success_url
-    url_for(controller: 'repositories', action: 'edit', id: @repository.id, tab: @tab)
+    url_for controller: 'repositories', action: 'edit', id: @repository.id, tab: @tab
   end
 
-  def call_use_case_and_redirect(opts = {})
+  def call_use_case_and_redirect(**opts)
     # Update Gitolite repository
-    call_use_case(opts)
+    call_use_case(**opts)
     render_js_redirect
   end
 end

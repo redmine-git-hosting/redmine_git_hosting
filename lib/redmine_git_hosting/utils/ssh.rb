@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Utils
     module Ssh
       extend self
 
       def ssh_fingerprint(key)
-        file = Tempfile.new('keytest')
-        file.write(key)
+        file = Tempfile.new 'keytest'
+        file.write key
         file.close
 
         begin
-          output = Utils::Exec.capture('ssh-keygen', ['-l', '-f', file.path])
+          output = Utils::Exec.capture 'ssh-keygen', ['-l', '-f', file.path]
         rescue RedmineGitHosting::Error::GitoliteCommandException
           raise RedmineGitHosting::Error::InvalidSshKey, "Invalid Ssh Key : #{key}"
         else

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Users
     extend ActiveSupport::Concern
@@ -47,19 +49,19 @@ module Gitolitable
     end
 
     def rewind_users
-      @rewind_users ||= users.select { |u| u.allowed_to?(:manage_repository, project) }
+      @rewind_users ||= users.select { |u| u.allowed_to? :manage_repository, project }
                              .map(&:gitolite_identifier)
                              .sort
     end
 
     def write_users
-      @write_users ||= users.select { |u| u.allowed_to?(:commit_access, project) }
+      @write_users ||= users.select { |u| u.allowed_to? :commit_access, project }
                             .map(&:gitolite_identifier)
                             .sort - rewind_users
     end
 
     def read_users
-      @read_users ||= users.select { |u| u.allowed_to?(:view_changesets, project) }
+      @read_users ||= users.select { |u| u.allowed_to? :view_changesets, project }
                            .map(&:gitolite_identifier)
                            .sort - rewind_users - write_users
     end

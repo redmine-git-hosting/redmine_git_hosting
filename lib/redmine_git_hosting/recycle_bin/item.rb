@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module RecycleBin
     class Item
@@ -8,16 +10,16 @@ module RedmineGitHosting
       end
 
       def size
-        RedmineGitHosting::Commands.sudo_get_dir_size(path)
+        RedmineGitHosting::Commands.sudo_get_dir_size path
       end
 
       def destroy!
-        logger.info("Deleting '#{path}' from Recycle Bin")
+        logger.info "Deleting '#{path}' from Recycle Bin"
         begin
-          RedmineGitHosting::Commands.sudo_rmdir(path, true)
-          logger.info('Done !')
+          RedmineGitHosting::Commands.sudo_rmdir path, force: true
+          logger.info 'Done !'
         rescue RedmineGitHosting::Error::GitoliteCommandException
-          logger.error("Errors while deleting '#{path}' from Recycle Bin !")
+          logger.error "Errors while deleting '#{path}' from Recycle Bin !"
         end
       end
 

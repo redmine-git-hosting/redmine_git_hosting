@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Urls
     extend ActiveSupport::Concern
@@ -19,7 +21,7 @@ module Gitolitable
     end
 
     def ssh_url
-      url = "ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}"
+      url = +"ssh://#{RedmineGitHosting::Config.gitolite_user}@#{RedmineGitHosting::Config.ssh_server_domain}"
 
       url << if RedmineGitHosting::Config.gitolite_server_port == '22'
                "/#{git_access_path}"

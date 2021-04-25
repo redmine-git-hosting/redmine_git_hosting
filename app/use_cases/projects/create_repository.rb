@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Projects
   class CreateRepository < Base
     def call
@@ -8,7 +10,7 @@ module Projects
 
     def create_project_repository
       # Create new repository
-      repository = Repository.factory('Xitolite')
+      repository = Repository.factory 'Xitolite'
       repository.is_default = true
       repository.extra_info = {}
       repository.extra_info['extra_report_last_commit'] = '1'
@@ -17,7 +19,7 @@ module Projects
       project.repositories << repository
 
       # Create it in Gitolite
-      Repositories::Create.call(repository, creation_options)
+      Repositories::Create.call repository, creation_options
     end
 
     def creation_options

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Commands
     module Git
@@ -13,9 +15,9 @@ module RedmineGitHosting
       #
       def sudo_git(*params)
         cmd = if RedmineGitHosting::Config.gitolite_use_sudo?
-                sudo_git_cmd.concat(params)
+                sudo_git_cmd.concat params
               else
-                ['git'].concat(params)
+                ['git'].concat params
               end
 
         capture cmd
@@ -30,35 +32,35 @@ module RedmineGitHosting
       end
 
       def sudo_unset_git_global_param(key)
-        logger.info("Unset Git global parameter : #{key}")
+        logger.info "Unset Git global parameter : #{key}"
 
         begin
-          _, _, code = sudo_shell('git', 'config', '--global', '--unset', key)
+          _, _, code = sudo_shell 'git', 'config', '--global', '--unset', key
           true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
           if code == 5
             true
           else
-            logger.error("Error while removing Git global parameter : #{key}")
-            logger.error(e.output)
+            logger.error "Error while removing Git global parameter : #{key}"
+            logger.error e.output
             false
           end
         end
       end
 
       def sudo_set_git_global_param(namespace, key, value)
-        key = prefix_key(namespace, key)
+        key = prefix_key namespace, key
 
-        return sudo_unset_git_global_param(key) if value == ''
+        return sudo_unset_git_global_param key if value.blank?
 
-        logger.info("Set Git global parameter : #{key} (#{value})")
+        logger.info "Set Git global parameter : #{key} (#{value})"
 
         begin
-          sudo_git('config', '--global', key, value)
+          sudo_git 'config', '--global', key, value
           true
         rescue RedmineGitHosting::Error::GitoliteCommandException => e
-          logger.error("Error while setting Git global parameter : #{key} (#{value})")
-          logger.error(e.output)
+          logger.error "Error while setting Git global parameter : #{key} (#{value})"
+          logger.error e.output
           false
         end
       end
@@ -68,17 +70,17 @@ module RedmineGitHosting
         begin
           params = sudo_git('config', '--get-regexp', namespace).split("\n")
         rescue RedmineGitHosting::Error::GitoliteCommandException
-          logger.error("Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'")
+          logger.error "Problems to retrieve Gitolite hook parameters in Gitolite config 'namespace : #{namespace}'"
           params = []
         end
 
-        git_config_as_hash(namespace, params)
+        git_config_as_hash namespace, params
       end
 
       def git_version
-        sudo_git('--version')
+        sudo_git '--version'
       rescue RedmineGitHosting::Error::GitoliteCommandException => e
-        logger.error("Can't retrieve Git version: #{e.output}")
+        logger.error "Can't retrieve Git version: #{e.output}"
         'unknown'
       end
 

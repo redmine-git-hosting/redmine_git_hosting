@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting::Plugins
   class GitolitePlugin
     class << self
@@ -30,16 +32,16 @@ module RedmineGitHosting::Plugins
     end
 
     def repository_empty?
-      RedmineGitHosting::Commands.sudo_repository_empty?(gitolite_repo_path)
+      RedmineGitHosting::Commands.sudo_repository_empty? gitolite_repo_path
     end
 
     def directory_exists?(dir)
-      RedmineGitHosting::Commands.sudo_dir_exists?(dir)
+      RedmineGitHosting::Commands.sudo_dir_exists? dir
     end
 
     def sudo_git(*params)
       cmd = RedmineGitHosting::Commands.sudo_git_args_for_repo(gitolite_repo_path, git_args).concat(params)
-      RedmineGitHosting::Commands.capture(cmd, git_opts)
+      RedmineGitHosting::Commands.capture cmd, git_opts
     end
 
     # You may override this method to prepend args like environment variables

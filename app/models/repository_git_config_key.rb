@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryGitConfigKey < ActiveRecord::Base
   include Redmine::SafeAttributes
 
@@ -31,7 +33,7 @@ class RepositoryGitConfigKey < ActiveRecord::Base
   # We need to save it in virtual attribute to trigger Gitolite resync if changed.
   #
   def check_if_key_changed
-    if saved_changes&.key?(:key)
+    if saved_changes&.key? :key
       self.key_has_changed = true
       self.old_key         = saved_changes[:key][1]
     else

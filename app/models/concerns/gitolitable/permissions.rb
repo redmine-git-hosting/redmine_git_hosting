@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Permissions
     extend ActiveSupport::Concern
 
     def build_gitolite_permissions(old_perms = {})
-      permissions_builder.build(self, gitolite_users, old_perms)
+      permissions_builder.build self, gitolite_users, old_perms
     end
 
     # We assume here that ':gitolite_config_file' is different than 'gitolite.conf'
@@ -15,7 +17,7 @@ module Gitolitable
       if protected_branches_available? || RedmineGitHosting::Config.gitolite_identifier_prefix == ''
         {}
       else
-        extract_permissions(current_permissions)
+        extract_permissions current_permissions
       end
     end
 
@@ -44,10 +46,10 @@ module Gitolitable
 
           user_list.each do |user|
             # ignore these users
-            next if SKIP_USERS.include?(user)
+            next if SKIP_USERS.include? user
 
             # backup users that are not Redmine users
-            new_user_list.push(user) unless user.include?(RedmineGitHosting::Config.gitolite_identifier_prefix)
+            new_user_list.push user unless user.include? RedmineGitHosting::Config.gitolite_identifier_prefix
           end
 
           old_permissions[perm][branch] = new_user_list if new_user_list.any?

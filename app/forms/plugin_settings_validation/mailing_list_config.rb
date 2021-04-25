@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PluginSettingsValidation
   module MailingListConfig
     extend ActiveSupport::Concern
@@ -11,8 +13,8 @@ module PluginSettingsValidation
                    :gitolite_notify_global_exclude
 
       before_validation do
-        self.gitolite_notify_global_include = filter_email_list(gitolite_notify_global_include)
-        self.gitolite_notify_global_exclude = filter_email_list(gitolite_notify_global_exclude)
+        self.gitolite_notify_global_include = filter_email_list gitolite_notify_global_include
+        self.gitolite_notify_global_exclude = filter_email_list gitolite_notify_global_exclude
       end
 
       validates :gitolite_notify_by_default,            presence: true, inclusion: { in: RedmineGitHosting::Validators::BOOLEAN_FIELDS }
@@ -28,7 +30,7 @@ module PluginSettingsValidation
       intersection = gitolite_notify_global_include & gitolite_notify_global_exclude
       return unless intersection.count.positive?
 
-      errors.add(:base, 'duplicated entries detected in gitolite_notify_global_include and gitolite_notify_global_exclude')
+      errors.add :base, 'duplicated entries detected in gitolite_notify_global_include and gitolite_notify_global_exclude'
     end
   end
 end

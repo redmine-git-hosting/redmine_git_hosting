@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PluginSettingsValidation
   module GitoliteAccessConfig
     extend ActiveSupport::Concern
@@ -12,10 +14,10 @@ module PluginSettingsValidation
                    :gitolite_http_by_default
 
       before_validation do
-        self.ssh_server_domain   = strip_value(ssh_server_domain)
-        self.http_server_domain  = strip_value(http_server_domain)
-        self.https_server_domain = strip_value(https_server_domain)
-        self.http_server_subdir  = strip_value(http_server_subdir)
+        self.ssh_server_domain   = strip_value ssh_server_domain
+        self.http_server_domain  = strip_value http_server_domain
+        self.https_server_domain = strip_value https_server_domain
+        self.http_server_subdir  = strip_value http_server_subdir
       end
 
       validates :ssh_server_domain,   presence: true, format: { with: RedmineGitHosting::Validators::DOMAIN_REGEX }
@@ -31,7 +33,7 @@ module PluginSettingsValidation
     private
 
     def http_server_subdir_is_relative
-      errors.add(:http_server_subdir, 'must be relative') if http_server_subdir.starts_with?('/')
+      errors.add :http_server_subdir, 'must be relative' if http_server_subdir.starts_with? '/'
     end
   end
 end

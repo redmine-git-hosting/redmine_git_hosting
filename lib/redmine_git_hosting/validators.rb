@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Validators
     extend self
@@ -6,10 +8,10 @@ module RedmineGitHosting
     # ssh://git@redmine.example.org/project1/project2/project3/project4.git
     # ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
     #
-    GIT_SSH_URL_REGEX = /\A(ssh:\/\/)([\w\-\.@]+)(\:\d+)?([\w\/\-\.~]+)(\.git)?\z/i
+    GIT_SSH_URL_REGEX = %r{\A(ssh://)([\w\-.@]+)(:\d+)?([\w/\-.~]+)(\.git)?\z}i.freeze
 
     def valid_git_ssh_url?(url)
-      url.match(GIT_SSH_URL_REGEX)
+      url.match GIT_SSH_URL_REGEX
     end
 
     # Validate a Git refspec
@@ -19,11 +21,11 @@ module RedmineGitHosting
     GIT_REFSPEC_REGEX = /\A\+?([^:]*)(:([^:]*))?\z/.freeze
 
     def valid_git_refspec?(refspec)
-      refspec.match(GIT_REFSPEC_REGEX)
+      refspec.match GIT_REFSPEC_REGEX
     end
 
     def valid_git_refspec_path?(refspec)
-      refspec_parsed = valid_git_refspec?(refspec)
+      refspec_parsed = valid_git_refspec? refspec
       if refspec_parsed.nil? || !valid_refspec_path?(refspec_parsed[1]) || !valid_refspec_path?(refspec_parsed[3])
         raise RedmineGitHosting::Error::InvalidRefspec::BadFormat
       elsif !refspec_parsed[1] || refspec_parsed[1] == ''
@@ -46,11 +48,11 @@ module RedmineGitHosting
     DOMAIN_REGEX = /\A[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(:\d+)?\z/i.freeze
 
     def valid_domain?(domain)
-      domain.match(DOMAIN_REGEX)
+      domain.match DOMAIN_REGEX
     end
 
     def valid_email?(email)
-      email.match(URI::MailTo::EMAIL_REGEXP)
+      email.match URI::MailTo::EMAIL_REGEXP
     end
 
     # Validate that data passed through forms are boolean-like.
@@ -58,7 +60,7 @@ module RedmineGitHosting
     BOOLEAN_FIELDS = %w[true false 0 1].freeze
 
     def valid_boolean_field?(field)
-      BOOLEAN_FIELDS.include?(field)
+      BOOLEAN_FIELDS.include? field
     end
   end
 end

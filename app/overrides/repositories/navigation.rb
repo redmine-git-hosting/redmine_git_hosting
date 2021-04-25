@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Deface::Override.new virtual_path: 'repositories/_navigation',
                      name: 'show-repositories-hook-navigation',
                      insert_before: 'erb[loud]:contains("label_statistics")',

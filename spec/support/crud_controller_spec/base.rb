@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CrudControllerSpec
   module Base
     extend ActiveSupport::Concern
@@ -5,7 +7,7 @@ module CrudControllerSpec
     included do
       include CrudControllerSpec::Helpers
 
-      before(:all) do
+      before :all do
         @project        = create_project 'git_project'
         @repository     = find_or_create_git_repository project: @project, identifier: 'git_repository'
         @repository2    = find_or_create_git_repository project: @project, identifier: 'git_repository2'
@@ -17,7 +19,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('index')
         describe 'GET #index' do
           context 'with sufficient permissions' do
-            before(:each) { set_session_user(@member_user) }
+            before(:each) { set_session_user @member_user }
 
             it 'renders the :index view' do
               check_index_template
@@ -54,7 +56,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('new')
         describe 'GET #new' do
           context 'with sufficient permissions' do
-            before(:each) { set_session_user(@member_user) }
+            before(:each) { set_session_user @member_user }
 
             it 'assigns a new @object variable' do
               check_new_variable main_variable, tested_klass
@@ -77,7 +79,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('create')
         describe 'POST #create' do
           context 'with sufficient permissions' do
-            before(:each) do
+            before :each do
               set_session_user @member_user
               allow(controller).to receive(:call_use_case)
             end
@@ -115,7 +117,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('edit')
         describe 'GET #edit' do
           context 'with sufficient permissions' do
-            before(:each) { set_session_user(@member_user) }
+            before(:each) { set_session_user @member_user }
 
             context 'with existing object' do
               it 'assigns the requested object to @object' do
@@ -158,7 +160,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('update')
         describe 'PUT #update' do
           context 'with sufficient permissions' do
-            before(:each) do
+            before :each do
               set_session_user @member_user
               allow(controller).to receive(:call_use_case)
             end
@@ -204,7 +206,7 @@ module CrudControllerSpec
       unless respond_to?(:skip_actions) && skip_actions.include?('destroy')
         describe 'DELETE #destroy' do
           context 'with sufficient permissions' do
-            before(:each) do
+            before :each do
               set_session_user @member_user
               allow(controller).to receive(:call_use_case)
             end

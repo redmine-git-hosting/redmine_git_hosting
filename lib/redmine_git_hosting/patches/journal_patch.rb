@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'journal'
 
 module RedmineGitHosting
@@ -12,4 +14,4 @@ module RedmineGitHosting
   end
 end
 
-Journal.prepend RedmineGitHosting::Patches::JournalPatch unless Journal.included_modules.include?(RedmineGitHosting::Patches::JournalPatch)
+Journal.prepend RedmineGitHosting::Patches::JournalPatch unless Journal.included_modules.include? RedmineGitHosting::Patches::JournalPatch

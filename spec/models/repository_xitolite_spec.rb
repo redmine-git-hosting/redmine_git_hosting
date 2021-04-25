@@ -1,25 +1,27 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe Repository::Xitolite do
-  GIT_USER = 'git'.freeze
+  GIT_USER = 'git'
 
-  before(:all) do
+  before :all do
     Setting.plugin_redmine_git_hosting[:gitolite_redmine_storage_dir] = 'redmine/'
     Setting.plugin_redmine_git_hosting[:http_server_subdir] = 'git/'
     User.current = nil
 
-    @project_parent = FactoryBot.create(:project, identifier: 'project-parent')
-    @project_child  = FactoryBot.create(:project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false)
+    @project_parent = FactoryBot.create :project, identifier: 'project-parent'
+    @project_child  = FactoryBot.create :project, identifier: 'project-child', parent_id: @project_parent.id, is_public: false
   end
 
   describe 'common_tests : fast tests' do
-    before(:each) do
+    before :each do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
-      @repository_1 = build_git_repository(project: @project_child, is_default: true)
+      @repository_1 = build_git_repository project: @project_child, is_default: true
       @repository_1.valid?
-      @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64), git_https: true)
+      @repository_1.build_extra default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64), git_https: true
     end
 
     subject { @repository_1 }
@@ -130,7 +132,7 @@ describe Repository::Xitolite do
         }
 
         it 'should return a Hash of Git url' do
-          @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
+          @user = create_user_with_permissions @project_child, login: 'redmine-test-user'
           User.current = @user
           @project_child.is_public = true
           @repository_1.extra[:git_daemon] = true
@@ -163,7 +165,7 @@ describe Repository::Xitolite do
         my_hash = { ssh: { url: "ssh://#{GIT_USER}@localhost/redmine/project-parent/project-child.git", committer: 'true' } }
 
         it 'should return a Hash of Git url' do
-          @user = create_user_with_permissions(@project_child, login: 'redmine-test-user')
+          @user = create_user_with_permissions @project_child, login: 'redmine-test-user'
           User.current = @user
           @repository_1.extra[:git_daemon] = false
           @repository_1.extra[:git_http]   = false
@@ -240,11 +242,11 @@ describe Repository::Xitolite do
       Setting.plugin_redmine_git_hosting[:hierarchical_organisation] = 'true'
       Setting.plugin_redmine_git_hosting[:unique_repo_identifier] = 'false'
 
-      @repository_1 = create_git_repository(project: @project_child, is_default: true)
-      extra = @repository_1.build_extra(default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64))
+      @repository_1 = create_git_repository project: @project_child, is_default: true
+      extra = @repository_1.build_extra default_branch: 'master', key: RedmineGitHosting::Utils::Crypto.generate_secret(64)
       extra.save!
 
-      @repository_2 = create_git_repository(project: @project_child, identifier: 'repo-test')
+      @repository_2 = create_git_repository project: @project_child, identifier: 'repo-test'
     end
 
     context 'when blank identifier' do

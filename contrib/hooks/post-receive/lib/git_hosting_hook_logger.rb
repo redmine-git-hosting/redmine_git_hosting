@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 module GitHosting
   class HookLogger
     attr_reader :loglevel
 
-    def initialize(opts = {})
-      @loglevel = opts.delete(:loglevel) { 'info' }
+    def initialize(loglevel: 'info')
+      @loglevel = loglevel
     end
 
     def debug(message)
-      write(message) if loglevel == 'debug'
+      write message if loglevel == 'debug'
     end
 
     def info(message)
-      write(message)
+      write message
     end
 
     def error(message)
-      write(message)
+      write message
     end
 
     private

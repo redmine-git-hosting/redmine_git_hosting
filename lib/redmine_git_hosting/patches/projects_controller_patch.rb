@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'projects_controller'
 
 module RedmineGitHosting
@@ -25,7 +27,7 @@ module RedmineGitHosting
           # Hm... something about parent hierarchy changed.  Update us and our children
           move_project_hierarchy
         else
-          update_project("Set Git daemon for repositories of project : '#{@project}'")
+          update_project "Set Git daemon for repositories of project : '#{@project}'"
         end
       end
 
@@ -35,27 +37,27 @@ module RedmineGitHosting
         # Destroy project
         super
         # Destroy repositories
-        destroy_repositories(repositories_list) if api_request? || params[:confirm]
+        destroy_repositories repositories_list if api_request? || params[:confirm]
       end
 
       def archive
         super
-        update_project_hierarchy("User '#{User.current.login}' has archived project '#{@project}', update it !")
+        update_project_hierarchy "User '#{User.current.login}' has archived project '#{@project}', update it !"
       end
 
       def unarchive
         super
-        update_project("User '#{User.current.login}' has unarchived project '#{@project}', update it !")
+        update_project "User '#{User.current.login}' has unarchived project '#{@project}', update it !"
       end
 
       def close
         super
-        update_project_hierarchy("User '#{User.current.login}' has closed project '#{@project}', update it !")
+        update_project_hierarchy "User '#{User.current.login}' has closed project '#{@project}', update it !"
       end
 
       def reopen
         super
-        update_project_hierarchy("User '#{User.current.login}' has reopened project '#{@project}', update it !")
+        update_project_hierarchy "User '#{User.current.login}' has reopened project '#{@project}', update it !"
       end
 
       private
@@ -74,26 +76,26 @@ module RedmineGitHosting
       #
       def create_project_repository
         if @project.module_enabled?('repository') && RedmineGitHosting::Config.all_projects_use_git?
-          if Setting.enabled_scm.include?('Xitolite')
-            Projects::CreateRepository.call(@project)
+          if Setting.enabled_scm.include? 'Xitolite'
+            Projects::CreateRepository.call @project
           else
-            flash[:error] = l(:error_xitolite_repositories_disabled)
+            flash[:error] = l :error_xitolite_repositories_disabled
           end
         end
       end
 
       def move_project_hierarchy
-        gitolite_accessor.move_project_hierarchy(@project)
+        gitolite_accessor.move_project_hierarchy @project
       end
 
       def update_project(message)
         options = { message: message }
-        Projects::Update.call(@project, options)
+        Projects::Update.call @project, options
       end
 
       def update_project_hierarchy(message)
         options = { message: message }
-        gitolite_accessor.update_projects(hierarchy_to_update, options)
+        gitolite_accessor.update_projects hierarchy_to_update, options
       end
 
       def hierarchy_to_update
@@ -103,7 +105,7 @@ module RedmineGitHosting
 
       def destroy_repositories(repositories_list)
         options = { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
-        gitolite_accessor.destroy_repositories(repositories_list, options)
+        gitolite_accessor.destroy_repositories repositories_list, options
       end
 
       def repositories_to_destroy
@@ -115,8 +117,8 @@ module RedmineGitHosting
         # Only take projects that have Git repos.
         git_projects = projects.uniq.select { |p| p.gitolite_repos.any? }
 
-        git_projects.reverse.each do |project|
-          project.gitolite_repos.reverse.each do |repository|
+        git_projects.reverse_each do |project|
+          project.gitolite_repos.reverse_each do |repository|
             destroy_repositories << repository.data_for_destruction
           end
         end
@@ -127,6 +129,6 @@ module RedmineGitHosting
   end
 end
 
-unless ProjectsController.included_modules.include?(RedmineGitHosting::Patches::ProjectsControllerPatch)
-  ProjectsController.send(:prepend, RedmineGitHosting::Patches::ProjectsControllerPatch)
+unless ProjectsController.included_modules.include? RedmineGitHosting::Patches::ProjectsControllerPatch
+  ProjectsController.prepend RedmineGitHosting::Patches::ProjectsControllerPatch
 end

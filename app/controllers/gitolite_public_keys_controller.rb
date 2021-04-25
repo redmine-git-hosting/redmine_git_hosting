@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GitolitePublicKeysController < ApplicationController
   include RedmineGitHosting::GitoliteAccessor::Methods
 
@@ -18,8 +20,8 @@ class GitolitePublicKeysController < ApplicationController
       @gitolite_public_key = @user.gitolite_public_keys.new
       @gitolite_public_key.safe_attributes = params[:gitolite_public_key]
       if @gitolite_public_key.save
-        create_ssh_key(@gitolite_public_key)
-        flash[:notice] = l(:notice_public_key_created, title: view_context.keylabel(@gitolite_public_key))
+        create_ssh_key @gitolite_public_key
+        flash[:notice] = l :notice_public_key_created, title: view_context.keylabel(@gitolite_public_key)
       else
         flash[:error] = @gitolite_public_key.errors.full_messages.to_sentence
       end
@@ -34,8 +36,8 @@ class GitolitePublicKeysController < ApplicationController
 
     if @gitolite_public_key.user == @user || @user.admin?
       if @gitolite_public_key.destroy
-        destroy_ssh_key(@gitolite_public_key)
-        flash[:notice] = l(:notice_public_key_deleted, title: view_context.keylabel(@gitolite_public_key))
+        destroy_ssh_key @gitolite_public_key
+        flash[:notice] = l :notice_public_key_deleted, title: view_context.keylabel(@gitolite_public_key)
       end
       redirect_to @redirect_url
     else
@@ -56,7 +58,7 @@ class GitolitePublicKeysController < ApplicationController
   def set_user_from_params
     @user = params[:user_id] == 'current' ? User.current : User.find_by(id: params[:user_id])
     if @user
-      @cancel_url = @redirect_url = url_for(controller: 'users', action: 'edit', id: params[:user_id], tab: 'keys')
+      @cancel_url = @redirect_url = url_for controller: 'users', action: 'edit', id: params[:user_id], tab: 'keys'
     else
       render_404
     end
@@ -65,24 +67,24 @@ class GitolitePublicKeysController < ApplicationController
   def set_user_from_current_user
     if User.current.allowed_to_create_ssh_keys?
       @user = User.current
-      @redirect_url = url_for(controller: 'gitolite_public_keys', action: 'index')
-      @cancel_url = url_for(controller: 'my', action: 'account')
+      @redirect_url = url_for controller: 'gitolite_public_keys', action: 'index'
+      @cancel_url = url_for controller: 'my', action: 'account'
     else
       render_403
     end
   end
 
   def find_gitolite_public_key
-    @gitolite_public_key = @user.gitolite_public_keys.find(params[:id])
+    @gitolite_public_key = @user.gitolite_public_keys.find params[:id]
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
   def create_ssh_key(ssh_key)
-    gitolite_accessor.create_ssh_key(ssh_key)
+    gitolite_accessor.create_ssh_key ssh_key
   end
 
   def destroy_ssh_key(ssh_key)
-    gitolite_accessor.destroy_ssh_key(ssh_key)
+    gitolite_accessor.destroy_ssh_key ssh_key
   end
 end

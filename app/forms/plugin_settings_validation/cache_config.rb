@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PluginSettingsValidation
   module CacheConfig
     extend ActiveSupport::Concern

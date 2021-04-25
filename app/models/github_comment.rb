@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GithubComment < ActiveRecord::Base
   ## Relations
   belongs_to :journal

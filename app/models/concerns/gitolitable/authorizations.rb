@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Authorizations
     extend ActiveSupport::Concern
@@ -31,7 +33,7 @@ module Gitolitable
     # These are for repository URLs
 
     def urls_are_viewable?
-      User.current.allowed_to?(:view_changesets, project)
+      User.current.allowed_to? :view_changesets, project
     end
 
     def ssh_access_available?

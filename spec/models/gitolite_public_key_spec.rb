@@ -1,28 +1,30 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe GitolitePublicKey do
   SSH_KEY_0 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpqFJzsx3wTi3t3X/eOizU6rdtNQoqg5uSjL89F+Ojjm2/sah3ouzx+3E461FDYaoJL58Qs9eRhL+ev0BY7k' \
               'hYXph8nIVDzNEjhLqjevX+YhpaW9Ll7V807CwAyvMNm08aup/NrrlI/jO+At348/ivJrfO7ClcPhq4+Id9RZfvbrKaitGOURD7q6Bd7xjUjELUN8wmYxu5zvx/' \
               '2n/5woVdBUMXamTPxOY5y6DxTNJ+EYzrCr+bNb7459rWUvBHUQGI2fXDGmFpGiv6ShKRhRtwob1JHI8QC9OtxonrIUesa2dW6RFneUaM7tfRfffC704Uo7yuSs' \
-              'wb7YK+p1A9QIt5 nicolas@tchoum'.freeze
+              'wb7YK+p1A9QIt5 nicolas@tchoum'
   SSH_KEY_1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz0pLXcQWS4gLUimUSLwDOvEmQF8l8EKoj0LjxOyM3y2dpLsn0aiqS0ecA0G/ROomaawop8EZGFetoJKJM46' \
               '8OZlx2aKoQemzvFIq0Mn1ZhcrlA1alAsDYqzZI8iHO4JIS3YbeLLkVGAlYA+bmA5enXN9mGhC9cgoMC79EZiLD9XvOw4iXDjqXaCzFZHU1shMWwaJfpyxBm+Mx' \
               's2vtZzwETDqeu9rohNMl60dODf6+JoXYiahP+B+P2iKlL7ORb1YsAH/4ZMsVgRckj8snb4uc3XgwLRNNw+oB78ApZGr0j3Zc32U9rpmulbHIroWO07OV4Xspln' \
-              'u8lhGvfodA2gjb nicolas@tchoum'.freeze
+              'u8lhGvfodA2gjb nicolas@tchoum'
   SSH_KEY_2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5+JfM82k03J98GWL6ghJ4TYM8DbvDnVh1s1rUDNlM/1U5rwbgXHOR4xV3lulgYEYRtYeMoL3rt4ZpEyXWkO' \
               'reOVsUlkW66SZJR5aGVTNJOLX7HruEDqj7RWlt0u0MH6DgBVAJimQrxYN50jYD4XnDUjb/qv55EhPvbJ3jcAb3zuyRXMKZYGNVzVFLUagbvVaOwR23csWSLDTs' \
               'AEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pRHOq' \
-              'RcZHcOgIhKiaLX nicolas@tchoum'.freeze
+              'RcZHcOgIhKiaLX nicolas@tchoum'
   SSH_KEY_3 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/pSRh11xbadAh24fQlc0i0dneG0lI+DCkng+bVmumgRvfD0w79vcJ2U1qir2ChjpNvi2n96HUGIEGNV60/V' \
               'G05JY70mEb//YVBmQ3w0QPO7toEWNms9SQlwR0PN6tarATumFik4MI+8M23P6W8O8OYwsnMmYwaiEU5hDopH88x74MQKjPiRSrhMkGiThMZhLVK6j8yfNPoj9y' \
               'UxPBWc7zsMCC2uAOfR5Fg6hl2TKGxTi0vecTh1csDcO2agXx42RRiZeIQbv9j0IJjVL8KhXvbndVnJRjGGbxQFAedicw8OrPH7jz6NimmaTooqU9SwaPInK/x3' \
-              'omd297/zzcQm3p nicolas@tchoum'.freeze
+              'omd297/zzcQm3p nicolas@tchoum'
   SSH_KEY_4 = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCScLGus1vrZ9OyzOj3TtYa+IHUp5V+2hwcMW7pphGIAPRi5Pe6GwSbSV5GnanerOH9ucmEREaCIdGOzO2zV' \
               'I35e3RD6wTeW28Ck7JN1r2LSgSvXGvxGyzu0H4Abf66Kajt+lN0/71tbFtoTaJTGSYE3W0rNU6OQBvHf1o4wIyBEFm3cu+e2OrmW/nVIqk8hCN2cU/0OutOWT+' \
               'vaRLbIU3VQmHftqa4NVxdc4OG48vpZxlJwKexqAHj8Ok/sn3k4CIo8zR0vRaeGPqAmOpm84uEfRWoA71NNS4tIhENlikuD5SJIdyXE9d8CwGTth4jP9/BNT0y4' \
-              'C8cGYljjUWkx3v nicolas@tchoum'.freeze
+              'C8cGYljjUWkx3v nicolas@tchoum'
 
-  before(:all) do
+  before :all do
     @user1 = create_user 'git_user1'
     @user2 = create_user 'git_user2'
   end
@@ -34,8 +36,8 @@ describe GitolitePublicKey do
   end
 
   describe 'Valid SSH key build' do
-    before(:each) do
-      @ssh_key = build_ssh_key(title: 'test-key')
+    before :each do
+      @ssh_key = build_ssh_key title: 'test-key'
     end
 
     subject { @ssh_key }
@@ -110,7 +112,7 @@ describe GitolitePublicKey do
   end
 
   describe 'Valid SSH key creation' do
-    let(:ssh_key) { create_ssh_key(user_id: @user1.id, title: 'test-key') }
+    let(:ssh_key) { create_ssh_key user_id: @user1.id, title: 'test-key' }
 
     subject { ssh_key }
 
@@ -209,7 +211,7 @@ describe GitolitePublicKey do
   end
 
   context 'when SSH key already exist' do
-    before { create_ssh_key(user_id: @user1.id, title: 'test-key2') }
+    before { create_ssh_key user_id: @user1.id, title: 'test-key2' }
 
     ## Test uniqueness validation
     context 'and title is already taken' do
@@ -253,10 +255,10 @@ describe GitolitePublicKey do
 
   context 'when many keys are saved' do
     before do
-      create_ssh_key(user: @user1, title: 'active1', key: SSH_KEY_1, key_type: 1)
-      create_ssh_key(user: @user1, title: 'active2', key: SSH_KEY_2, key_type: 1)
-      create_ssh_key(user: @user2, title: 'active3', key: SSH_KEY_3)
-      create_ssh_key(user: @user2, title: 'active4', key: SSH_KEY_4)
+      create_ssh_key user: @user1, title: 'active1', key: SSH_KEY_1, key_type: 1
+      create_ssh_key user: @user1, title: 'active2', key: SSH_KEY_2, key_type: 1
+      create_ssh_key user: @user2, title: 'active3', key: SSH_KEY_3
+      create_ssh_key user: @user2, title: 'active4', key: SSH_KEY_4
     end
 
     it 'should have 6 keys' do

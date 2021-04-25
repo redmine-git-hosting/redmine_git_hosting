@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteParams
     class MailerParams
@@ -10,7 +12,7 @@ module RedmineGitHosting
         @namespace = 'multimailhook'
 
         ## Get current params
-        @current_params        = get_git_config_params(@namespace)
+        @current_params        = get_git_config_params @namespace
         @current_mailer_params = get_mailer_params
 
         # Build hash of installed params
@@ -30,7 +32,7 @@ module RedmineGitHosting
         mailer_params.each do |param|
           next if current_mailer_params[param].empty?
 
-          @installed[param] = set_git_config_param(namespace, param, current_mailer_params[param])
+          @installed[param] = set_git_config_param namespace, param, current_mailer_params[param]
         end
         @installed
       end

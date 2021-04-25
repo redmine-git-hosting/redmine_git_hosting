@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineHooks
   class CallWebservices < Base
     include HttpHelper
@@ -65,7 +67,7 @@ module RedmineHooks
     def extract_payloads
       new_payloads = []
       payloads.each do |payload|
-        data = RedmineGitHosting::Utils::Git.parse_refspec(payload[:ref])
+        data = RedmineGitHosting::Utils::Git.parse_refspec payload[:ref]
         new_payloads << payload if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
       end
       new_payloads
@@ -85,7 +87,7 @@ module RedmineHooks
 
     def call_webservice
       if use_method == :http_post && split_payloads?
-        y = ''
+        y = +''
         payloads_to_send.each do |payload|
           y << do_call_webservice(payload)
         end

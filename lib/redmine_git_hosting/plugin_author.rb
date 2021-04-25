@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   class PluginAuthor
     attr_reader :author
@@ -7,7 +9,7 @@ module RedmineGitHosting
     end
 
     def name
-      RedmineGitHosting::Utils::Git.author_name(author)
+      RedmineGitHosting::Utils::Git.author_name author
     end
 
     def email

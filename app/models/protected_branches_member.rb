@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProtectedBranchesMember < ActiveRecord::Base
   include Redmine::SafeAttributes
 
@@ -14,10 +16,10 @@ class ProtectedBranchesMember < ActiveRecord::Base
   private
 
   def remove_dependent_objects
-    return unless principal.class.name == 'Group'
+    return unless principal.instance_of? Group
 
     principal.users.each do |user|
-      member = self.class.find_by_principal_id_and_inherited_by(user.id, principal.id)
+      member = self.class.find_by principal_id: user.id, inherited_by: principal.id
       member&.destroy!
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryPostReceiveUrlsHelper
   # Post-receive Mode
   def post_receive_mode(prurl)

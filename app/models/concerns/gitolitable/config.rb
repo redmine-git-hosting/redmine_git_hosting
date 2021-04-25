@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gitolitable
   module Config
     extend ActiveSupport::Concern
@@ -16,7 +18,7 @@ module Gitolitable
 
         if git_notification_available?
           repo_conf['multimailhook.enabled']     = 'true'
-          repo_conf['multimailhook.mailinglist'] = mailing_list.join(', ')
+          repo_conf['multimailhook.mailinglist'] = mailing_list.join ', '
           repo_conf['multimailhook.from']        = sender_address
           repo_conf['multimailhook.emailPrefix'] = email_prefix
         else

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryGitConfigKeysHelper
   def git_config_key_options
     [

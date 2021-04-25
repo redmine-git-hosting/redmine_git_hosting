@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class CreateGitRepositoryExtras < ActiveRecord::Migration[4.2]
   def up
-    drop_table :git_repository_extras if table_exists?(:git_repository_extras)
+    drop_table :git_repository_extras if table_exists? :git_repository_extras
 
     create_table :git_repository_extras do |t|
       t.column :repository_id, :integer
@@ -10,9 +12,9 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration[4.2]
       t.column :key,           :string
     end
 
-    drop_table :git_hook_keys if table_exists?('git_hook_keys')
-    remove_column :repositories, :git_daemon if column_exists?(:repositories, :git_daemon)
-    remove_column :repositories, :git_http if column_exists?(:repositories, :git_http)
+    drop_table :git_hook_keys if table_exists? 'git_hook_keys'
+    remove_column :repositories, :git_daemon if column_exists? :repositories, :git_daemon
+    remove_column :repositories, :git_http if column_exists? :repositories, :git_http
   end
 
   def down
@@ -20,7 +22,7 @@ class CreateGitRepositoryExtras < ActiveRecord::Migration[4.2]
   end
 
   def table_exists?(name)
-    ActiveRecord::Base.connection.tables.include?(name)
+    ActiveRecord::Base.connection.tables.include? name
   end
 
   def column_exists?(table_name, column_name)

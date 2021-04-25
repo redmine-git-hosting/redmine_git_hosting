@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shellwords'
 require 'digest/sha1'
 
@@ -63,7 +65,7 @@ module GitHosting
       post_data['clear_time']   = clear_time
       post_data['encoded_time'] = auth_token
       config.each_key do |key|
-        post_data[key] = config[key] unless IGNORE_PARAMS.include?(key)
+        post_data[key] = config[key] unless IGNORE_PARAMS.include? key
       end
       post_data
     end
@@ -73,7 +75,7 @@ module GitHosting
     end
 
     def auth_token
-      Digest::SHA1.hexdigest(clear_time.to_s + repository_key)
+      Digest::SHA1.hexdigest clear_time.to_s + repository_key
     end
 
     # Detect blank params in config.
@@ -87,14 +89,14 @@ module GitHosting
 
     def load_gitolite_vars
       REDMINE_PARAMS.each do |var_name|
-        var_value = get_gitolite_config(var_name)
-        var_name = sanitize(var_name)
+        var_value = get_gitolite_config var_name
+        var_name = sanitize var_name
         @config[var_name] = var_value
       end
     end
 
     def get_gitolite_config(var_name)
-      `git config #{Shellwords.escape(var_name)}`.chomp.strip
+      `git config #{Shellwords.escape var_name}`.chomp.strip
     end
 
     def sanitize(var_name)

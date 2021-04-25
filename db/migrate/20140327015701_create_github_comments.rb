@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGithubComments < ActiveRecord::Migration[4.2]
   def change
     create_table :github_comments do |t|

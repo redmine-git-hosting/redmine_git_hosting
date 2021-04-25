@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'net/http'
 require 'net/https'
@@ -12,12 +14,12 @@ module GitHosting
 
     private
 
-    def build_post_request(url, opts = {})
+    def build_post_request(url, **opts)
       # Get params
       params = opts.delete(:params) { {} }
 
       # Build request
-      uri, http = build_http_request url, opts
+      uri, http = build_http_request url, **opts
       request = Net::HTTP::Post.new uri.request_uri
 
       # Set request
@@ -27,11 +29,7 @@ module GitHosting
       [http, request]
     end
 
-    def build_http_request(url, opts = {})
-      # Get HTTP options
-      open_timeout = opts.delete(:open_timeout) { 5 }
-      read_timeout = opts.delete(:read_timeout) { 10 }
-
+    def build_http_request(url, open_timeout: 5, read_timeout: 10)
       uri  = URI url
       http = Net::HTTP.new uri.host, uri.port
       if uri.scheme == 'https'
@@ -49,14 +47,14 @@ module GitHosting
 
     def send_http_request(http, request)
       if block_given?
-        yield(http, request)
+        yield http, request
       else
-        one_shot_request(http, request)
+        one_shot_request http, request
       end
     end
 
     def one_shot_request(http, request)
-      message = ''
+      message = +''
       begin
         res = http.start { |openhttp| openhttp.request request }
         if res.is_a? Net::HTTPSuccess

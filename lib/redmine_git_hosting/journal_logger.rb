@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   # @see https://github.com/theforeman/journald-logger
   if defined? ::Journald::Logger

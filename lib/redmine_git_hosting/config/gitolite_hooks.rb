@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Config
     module GitoliteHooks
@@ -12,26 +14,26 @@ module RedmineGitHosting
       end
 
       def gitolite_hooks_debug
-        get_setting(:gitolite_hooks_debug, true)
+        get_setting :gitolite_hooks_debug, true
       end
 
       def gitolite_hooks_are_asynchronous
-        get_setting(:gitolite_hooks_are_asynchronous, true)
+        get_setting :gitolite_hooks_are_asynchronous, true
       end
 
       def gitolite_overwrite_existing_hooks?
-        get_setting(:gitolite_overwrite_existing_hooks, true)
+        get_setting :gitolite_overwrite_existing_hooks, true
       end
 
       def gitolite_local_code_dir
-        @gitolite_local_code_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc('LOCAL_CODE')
+        @gitolite_local_code_dir ||= RedmineGitHosting::Commands.sudo_gitolite_query_rc 'LOCAL_CODE'
       end
 
       def gitolite_hooks_dir
         if gitolite_version == 3
-          File.join(gitolite_local_code_dir, 'hooks', 'common')
+          File.join gitolite_local_code_dir, 'hooks', 'common'
         else
-          File.join(gitolite_home_dir, '.gitolite', 'hooks', 'common')
+          File.join gitolite_home_dir, '.gitolite', 'hooks', 'common'
         end
       end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Repositories
   class Create < Base
     def call
@@ -8,7 +10,7 @@ module Repositories
     private
 
     def set_repository_extra
-      extra = repository.build_extra(default_extra_options)
+      extra = repository.build_extra default_extra_options
       extra.save!
     end
 
@@ -55,7 +57,7 @@ module Repositories
     end
 
     def create_repository
-      gitolite_accessor.create_repository(repository, options)
+      gitolite_accessor.create_repository repository, options
     end
   end
 end

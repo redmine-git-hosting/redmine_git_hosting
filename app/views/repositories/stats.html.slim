@@ -4,13 +4,13 @@ h2 = l :label_statistics
   ul
     li
       a href="#statistics-global"
-        = l(:label_repository_statistics_global)
+        = l :label_repository_statistics_global
     li
       a href="#statistics-commits"
-        = l(:label_repository_statistics_commits)
+        = l :label_repository_statistics_commits
     li
       a href="#statistics-contributors"
-        = l(:label_repository_statistics_contributors)
+        = l :label_repository_statistics_contributors
   #statistics-global
     = render 'repositories/statistics/global', repository: @repository
   #statistics-commits
@@ -25,8 +25,8 @@ p = link_to l(:button_back), action: 'show', id: @project
 - html_title(l(:label_repository), l(:label_statistics))
 
 - content_for :header_tags do
-  = javascript_include_tag('highcharts/highcharts', plugin: 'redmine_git_hosting')
-  = javascript_include_tag('highcharts/modules/drilldown', plugin: 'redmine_git_hosting')
+  = javascript_include_tag 'highcharts/highcharts', plugin: 'redmine_git_hosting'
+  = javascript_include_tag 'highcharts/modules/drilldown', plugin: 'redmine_git_hosting'
   = stylesheet_link_tag 'application', plugin: 'redmine_git_hosting'
   = javascript_include_tag 'set_highcharts', plugin: 'redmine_git_hosting'
 

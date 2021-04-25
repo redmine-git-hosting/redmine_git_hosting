@@ -1,4 +1,4 @@
-require_dependency 'issue'
+# frozen_string_literal: true
 
 module RedmineGitHosting
   module Patches
@@ -12,4 +12,4 @@ module RedmineGitHosting
   end
 end
 
-Issue.prepend RedmineGitHosting::Patches::IssuePatch unless Issue.included_modules.include?(RedmineGitHosting::Patches::IssuePatch)
+Issue.prepend RedmineGitHosting::Patches::IssuePatch unless Issue.included_modules.include? RedmineGitHosting::Patches::IssuePatch

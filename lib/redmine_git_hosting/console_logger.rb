@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module ConsoleLogger
     extend self
 
-    def title(message, &block)
-      info("\n * #{message}:")
-      yield if block_given?
-      info(" Done!\n\n")
+    def title(message)
+      info "\n * #{message}:"
+      yield if block
+      info " Done!\n\n"
     end
 
     def debug(message)
@@ -31,7 +33,7 @@ module RedmineGitHosting
     private
 
     def to_console(message)
-      puts message # rubocop: disable Rails/Output
+      puts message
     end
 
     def logger

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteHandlers
     module Repositories
       class Base
         attr_reader :gitolite_config, :repository, :context, :options
 
-        def initialize(gitolite_config, repository, context, options = {})
+        def initialize(gitolite_config, repository, context, **options)
           @gitolite_config    = gitolite_config
           @repository         = repository
           @context            = context
@@ -13,8 +15,8 @@ module RedmineGitHosting
         end
 
         class << self
-          def call(gitolite_config, repository, context, options = {})
-            new(gitolite_config, repository, context, options).call
+          def call(gitolite_config, repository, context, **options)
+            new(gitolite_config, repository, context, **options).call
           end
         end
 
@@ -29,7 +31,7 @@ module RedmineGitHosting
         end
 
         def backup_old_perms
-          @old_perms = repository.backup_gitolite_permissions(gitolite_repo_conf.permissions[0])
+          @old_perms = repository.backup_gitolite_permissions gitolite_repo_conf.permissions[0]
         end
 
         def configuration_exists?
@@ -45,10 +47,10 @@ module RedmineGitHosting
           repo_conf = build_repository_config
 
           # Update permissions
-          repo_conf.permissions = repository.build_gitolite_permissions(@old_perms)
+          repo_conf.permissions = repository.build_gitolite_permissions @old_perms
 
           # Add it to Gitolite
-          gitolite_config.add_repo(repo_conf)
+          gitolite_config.add_repo repo_conf
 
           # Return repository conf
           repo_conf
@@ -59,7 +61,7 @@ module RedmineGitHosting
         end
 
         def delete_repository_config
-          gitolite_config.rm_repo(gitolite_repo_name)
+          gitolite_config.rm_repo gitolite_repo_name
         end
 
         def recreate_repository_config
@@ -74,32 +76,32 @@ module RedmineGitHosting
         end
 
         def build_repository_config
-          repo_conf = ::Gitolite::Config::Repo.new(repository.gitolite_repository_name)
+          repo_conf = ::Gitolite::Config::Repo.new repository.gitolite_repository_name
 
           repository.git_config.each do |key, value|
-            repo_conf.set_git_config(key, value)
+            repo_conf.set_git_config key, value
           end
 
           repository.gitolite_options.each do |key, value|
-            repo_conf.set_gitolite_option(key, value)
+            repo_conf.set_gitolite_option key, value
           end
 
           repo_conf
         end
 
         def log_ok_and_continue(message)
-          logger.info("#{context} : repository '#{gitolite_repo_name}' exists in Gitolite, #{message}")
-          logger.debug("#{context} : repository path '#{gitolite_repo_path}'")
+          logger.info "#{context} : repository '#{gitolite_repo_name}' exists in Gitolite, #{message}"
+          logger.debug "#{context} : repository path '#{gitolite_repo_path}'"
         end
 
         def log_repo_not_exist(message)
-          logger.warn("#{context} : repository '#{gitolite_repo_name}' does not exist in Gitolite, #{message}")
-          logger.debug("#{context} : repository path '#{gitolite_repo_path}'")
+          logger.warn "#{context} : repository '#{gitolite_repo_name}' does not exist in Gitolite, #{message}"
+          logger.debug "#{context} : repository path '#{gitolite_repo_path}'"
         end
 
         def log_repo_already_exist(message)
-          logger.warn("#{context} : repository '#{gitolite_repo_name}' already exists in Gitolite, #{message}")
-          logger.debug("#{context} : repository path '#{gitolite_repo_path}'")
+          logger.warn "#{context} : repository '#{gitolite_repo_name}' already exists in Gitolite, #{message}"
+          logger.debug "#{context} : repository path '#{gitolite_repo_path}'"
         end
       end
     end

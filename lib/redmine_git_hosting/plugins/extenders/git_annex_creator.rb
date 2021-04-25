@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting::Plugins::Extenders
   class GitAnnexCreator < BaseExtender
     attr_reader :enable_git_annex
@@ -32,7 +34,7 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def install_git_annex
-      sudo_git('annex', 'init')
+      sudo_git 'annex', 'init'
     rescue RedmineGitHosting::Error::GitoliteCommandException
       logger.error "Error while enabling GitAnnex for repository '#{gitolite_repo_name}'"
     else

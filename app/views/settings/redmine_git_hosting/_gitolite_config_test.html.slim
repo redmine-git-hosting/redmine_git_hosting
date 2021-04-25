@@ -2,21 +2,21 @@ h3 = l :label_permissions_header
 
 table.list.git-results
   tr
-    td = l(:label_temp_dir_writeable)
+    td = l :label_temp_dir_writeable
     td = render_temp_dir_writeable(RedmineGitHosting::Config.temp_dir_writeable?(reset: true), RedmineGitHosting::Config.gitolite_admin_dir)
 
   tr
-    td = l(:label_redmine_user)
+    td = l :label_redmine_user
     td
       span.label.label-success = RedmineGitHosting::Config.redmine_user
 
   tr
-    td = l(:label_gitolite_user)
+    td = l :label_gitolite_user
     td
       span.label.label-success = RedmineGitHosting::Config.gitolite_user
 
   tr
-    td = l(:label_sudo_redmine_to_gitolite_user)
+    td = l :label_sudo_redmine_to_gitolite_user
     td
       = image_tag(RedmineGitHosting::Config.can_redmine_sudo_to_gitolite_user? ? 'true.png' : 'exclamation.png')
 
@@ -42,21 +42,21 @@ table.list.git-results
       - if RedmineGitHosting::Config.gitolite_local_code_dir
         span.label.label-success = RedmineGitHosting::Config.gitolite_local_code_dir
       - else
-        = image_tag('exclamation.png')
+        = image_tag 'exclamation.png'
 
   - gitolite_checks = RedmineGitHosting::Config.check_hooks_install!
 
   tr
     td = l :label_gitolite_hooks_installed
-    td = render_gitolite_params_status(gitolite_checks[:hook_files])
+    td = render_gitolite_params_status gitolite_checks[:hook_files]
 
   tr
     td = l :label_gitolite_hooks_params_installed
-    td = render_gitolite_params_status(gitolite_checks[:global_params])
+    td = render_gitolite_params_status gitolite_checks[:global_params]
 
   tr
     td = l :label_gitolite_mailer_params_installed
-    td = render_gitolite_params_status(gitolite_checks[:mailer_params])
+    td = render_gitolite_params_status gitolite_checks[:mailer_params]
 
   tr
     td = l :label_mirroring_keys_installed
@@ -70,10 +70,10 @@ table.list.git-results
 
   tr
     td = l :label_gitolite_version
-    td = render_gitolite_version(RedmineGitHosting::Config.gitolite_version)
+    td = render_gitolite_version RedmineGitHosting::Config.gitolite_version
 
   tr
-    td = l(:label_gitolite_repository_count)
+    td = l :label_gitolite_repository_count
     td
       span.label.label-success = RedmineGitHosting::Config.gitolite_repository_count
 
@@ -81,6 +81,7 @@ table.list.git-results
     td = l :label_gitolite_rugged_features
     td
       = render_rugged_mandatory_features
+      '
       = render_rugged_optional_features
 
 br
@@ -90,5 +91,5 @@ fieldset.box.tabular
 
 br
 fieldset.box.tabular
-  legend = l(:label_path_directories)
+  legend = l :label_path_directories
   pre == (ENV['PATH']).gsub(/:/, '<br/>')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   class GitAccessStatus
     attr_accessor :status, :message
@@ -8,7 +10,7 @@ module RedmineGitHosting
       @message = message
     end
 
-    def to_json
+    def to_json(*_args)
       { status: @status, message: @message }.to_json
     end
   end

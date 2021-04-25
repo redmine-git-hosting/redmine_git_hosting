@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'sys_controller'
 
 module RedmineGitHosting
@@ -18,6 +20,6 @@ module RedmineGitHosting
   end
 end
 
-unless SysController.included_modules.include?(RedmineGitHosting::Patches::SysControllerPatch)
+unless SysController.included_modules.include? RedmineGitHosting::Patches::SysControllerPatch
   SysController.prepend RedmineGitHosting::Patches::SysControllerPatch
 end

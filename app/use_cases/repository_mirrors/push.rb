@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RepositoryMirrors
   class Push < Base
     def call
@@ -13,7 +15,7 @@ module RepositoryMirrors
         push_failed = true
       end
 
-      return push_failed, push_message
+      [push_failed, push_message]
     end
 
     def command

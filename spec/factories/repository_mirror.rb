@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :repository_mirror do
     sequence(:url) { |n| "ssh://git@example.com:22/john_doe/john_doe/john_doe_#{n}.git" }

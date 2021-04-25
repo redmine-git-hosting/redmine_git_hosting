@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration[4.2]
   def up
-    drop_table :git_cia_notifications if table_exists?(:git_cia_notifications)
+    drop_table :git_cia_notifications if table_exists? :git_cia_notifications
 
     create_table :git_cia_notifications do |t|
       t.column :repository_id, :integer
@@ -8,12 +10,12 @@ class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration[4.2]
     end
 
     # Speed up searches
-    add_index(:git_cia_notifications, :scmid)
+    add_index :git_cia_notifications, :scmid
 
     # Make sure uniqueness of the two columns, :scmid, :repository_id
-    add_index(:git_cia_notifications, %i[scmid repository_id], unique: true)
+    add_index :git_cia_notifications, %i[scmid repository_id], unique: true
 
-    remove_column :changesets, :notified_cia if column_exists?(:changesets, :notified_cia)
+    remove_column :changesets, :notified_cia if column_exists? :changesets, :notified_cia
   end
 
   def down
@@ -21,7 +23,7 @@ class MoveNotifiedCiaToGitCiaNotifications < ActiveRecord::Migration[4.2]
   end
 
   def table_exists?(name)
-    ActiveRecord::Base.connection.tables.include?(name)
+    ActiveRecord::Base.connection.tables.include? name
   end
 
   def column_exists?(table_name, column_name)

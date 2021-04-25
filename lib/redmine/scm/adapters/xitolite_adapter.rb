@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redmine/scm/adapters/abstract_adapter'
 
 # XitoliteAdapter inherits from GitAdapter but some classes which are define directly in GitAdapter are not inherited
@@ -35,9 +37,9 @@ module Redmine
 
           def scm_command_version
             scm_version = scm_version_from_command_line.dup
-            scm_version.force_encoding('ASCII-8BIT') if scm_version.respond_to?(:force_encoding)
-            if (m = scm_version.match(%r{\A(.*?)((\d+\.)+\d+)}))
-              m[2].scan(%r{\d+}).collect(&:to_i)
+            scm_version.force_encoding 'ASCII-8BIT' if scm_version.respond_to? :force_encoding
+            if (m = scm_version.match(/\A(.*?)((\d+\.)+\d+)/))
+              m[2].scan(/\d+/).collect(&:to_i)
             end
           end
 
@@ -52,12 +54,10 @@ module Redmine
           @path_encoding = path_encoding.presence || 'UTF-8'
         end
 
-        def path_encoding
-          @path_encoding
-        end
+        attr_reader :path_encoding
 
         def info
-          Info.new(root_url: url, lastrev: lastrev('', nil))
+          Info.new root_url: url, lastrev: lastrev('', nil)
         rescue StandardError
           nil
         end
@@ -67,10 +67,10 @@ module Redmine
 
           @branches = []
           cmd_args = %w[branch --no-color --verbose --no-abbrev]
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             io.each_line do |line|
-              branch_rev = line.match('\s*(\*?)\s*(.*?)\s*([0-9a-f]{40}).*$')
-              bran = GitBranch.new(branch_rev[2].to_s.force_encoding(Encoding::UTF_8))
+              branch_rev = line.match '\s*(\*?)\s*(.*?)\s*([0-9a-f]{40}).*$'
+              bran = GitBranch.new branch_rev[2].to_s.force_encoding(Encoding::UTF_8)
               bran.revision =  branch_rev[3]
               bran.scmid    =  branch_rev[3]
               bran.is_default = (branch_rev[1] == '*')
@@ -79,7 +79,7 @@ module Redmine
           end
           @branches.sort!
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           []
         end
 
@@ -88,18 +88,18 @@ module Redmine
 
           @tags = []
           cmd_args = %w[tag]
-          git_cmd(cmd_args) do |io|
-            @tags = io.readlines.sort!.map { |t| t.strip.force_encoding(Encoding::UTF_8) }
+          git_cmd cmd_args do |io|
+            @tags = io.readlines.sort!.map { |t| t.strip.force_encoding Encoding::UTF_8 }
           end
           @tags
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           []
         end
 
         def default_branch
           bras = branches
-          return nil if bras.nil?
+          return if bras.nil?
 
           default_bras = bras.select { |x| x.is_default == true }
           return default_bras.first.to_s unless default_bras.empty?
@@ -109,39 +109,39 @@ module Redmine
         end
 
         def entry(path = nil, identifier = nil)
-          parts = path.to_s.split(%r{[\/\\]}).select(&:present?)
+          parts = path.to_s.split(%r{[/\\]}).select(&:present?)
           search_path = parts[0..-2].join('/')
           search_name = parts[-1]
           if search_path.blank? && search_name.blank?
             # Root entry
-            Entry.new(path: '', kind: 'dir')
+            Entry.new path: '', kind: 'dir'
           else
             # Search for the entry in the parent directory
-            es = entries(search_path, identifier, report_last_commit: false)
+            es = entries search_path, identifier, report_last_commit: false
             es ? es.detect { |e| e.name == search_name } : nil
           end
         end
 
-        def entries(path = nil, identifier = nil, options = {})
+        def entries(path = nil, identifier = nil, **options)
           path ||= ''
-          p = scm_iconv(@path_encoding, 'UTF-8', path)
+          p = scm_iconv @path_encoding, 'UTF-8', path
           entries = Entries.new
           cmd_args = %w[ls-tree -l]
           cmd_args << "HEAD:#{p}"          if identifier.nil?
           cmd_args << "#{identifier}:#{p}" if identifier
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             io.each_line do |line|
               e = line.chomp.to_s
               next unless e =~ /^\d+\s+(\w+)\s+([0-9a-f]{40})\s+([0-9-]+)\t(.+)$/
 
-              type = Regexp.last_match(1)
+              type = Regexp.last_match 1
               # sha  = Regexp.last_match(2)
-              size = Regexp.last_match(3)
-              name = Regexp.last_match(4)
-              name.force_encoding(@path_encoding) if name.respond_to?(:force_encoding)
+              size = Regexp.last_match 3
+              name = Regexp.last_match 4
+              name.force_encoding @path_encoding if name.respond_to? :force_encoding
               full_path = p.empty? ? name : "#{p}/#{name}"
-              n      = scm_iconv('UTF-8', @path_encoding, name)
-              full_p = scm_iconv('UTF-8', @path_encoding, full_path)
+              n      = scm_iconv 'UTF-8', @path_encoding, name
+              full_p = scm_iconv 'UTF-8', @path_encoding, full_path
               next if entries.detect { |entry| entry.name == name }
 
               entries << Entry.new({ name: n,
@@ -153,12 +153,12 @@ module Redmine
           end
           entries.sort_by_name
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           []
         end
 
         def lastrev(path, rev)
-          return nil if path.nil?
+          return if path.nil?
 
           cmd_args = %w[log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1]
           cmd_args << rev if rev
@@ -168,7 +168,7 @@ module Redmine
           begin
             id = lines[0].split[1]
             author = lines[1].match('Author:\s+(.*)$')[1]
-            time = Time.parse(lines[4].match('CommitDate:\s+(.*)$')[1])
+            time = Time.parse lines[4].match('CommitDate:\s+(.*)$')[1]
 
             Revision.new({ identifier: id,
                            scmid: id,
@@ -185,7 +185,7 @@ module Redmine
           nil
         end
 
-        def revisions(path, identifier_from, identifier_to, options = {})
+        def revisions(path, identifier_from, identifier_to, **options)
           revs = Revisions.new
           cmd_args = %w[log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin]
           cmd_args << '--reverse' if options[:reverse]
@@ -193,9 +193,10 @@ module Redmine
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path.present?
           revisions = []
           if identifier_from || identifier_to
-            revisions << ''
-            revisions[0] << "#{identifier_from}.." if identifier_from
-            revisions[0] << identifier_to.to_s if identifier_to
+            rev_line = +''
+            rev_line << "#{identifier_from}.." if identifier_from
+            rev_line << identifier_to.to_s if identifier_to
+            revisions << rev_line
           else
             revisions += options[:includes] if options[:includes].present?
             revisions += options[:excludes].map { |r| "^#{r}" } if options[:excludes].present?
@@ -203,7 +204,7 @@ module Redmine
 
           git_cmd(cmd_args, { write_stdin: true }) do |io|
             io.binmode
-            io.puts(revisions.join("\n"))
+            io.puts revisions.join("\n")
             io.close_write
 
             files = []
@@ -252,13 +253,13 @@ module Redmine
                 parsing_descr = 2
                 fileaction    = Regexp.last_match 1
                 filepath      = Regexp.last_match 2
-                p = scm_iconv('UTF-8', @path_encoding, filepath)
+                p = scm_iconv 'UTF-8', @path_encoding, filepath
                 files << { action: fileaction, path: p }
               elsif [1, 2].include?(parsing_descr) && line =~ /^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/
                 parsing_descr = 2
                 fileaction    = Regexp.last_match 1
                 filepath      = Regexp.last_match 3
-                p = scm_iconv('UTF-8', @path_encoding, filepath)
+                p = scm_iconv 'UTF-8', @path_encoding, filepath
                 files << { action: fileaction, path: p }
               elsif (parsing_descr == 1) && line.chomp.to_s == ''
                 parsing_descr = 2
@@ -285,7 +286,7 @@ module Redmine
           revs
         rescue ScmCommandAborted => e
           err_msg = "git log error: #{e.message}"
-          logger.error(err_msg)
+          logger.error err_msg
           raise CommandFailed, err_msg if block_given?
 
           revs
@@ -294,7 +295,7 @@ module Redmine
         # Override the original method to accept options hash
         # which may contain *bypass_cache* flag and pass the options hash to *git_cmd*.
         #
-        def diff(path, identifier_from, identifier_to = nil, opts = {})
+        def diff(path, identifier_from, identifier_to = nil, **opts)
           path ||= ''
           cmd_args = []
           if identifier_to
@@ -304,14 +305,14 @@ module Redmine
           end
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
           diff = []
-          git_cmd(cmd_args, opts) do |io|
+          git_cmd cmd_args, opts do |io|
             io.each_line do |line|
               diff << line
             end
           end
           diff
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
@@ -321,13 +322,13 @@ module Redmine
           cmd_args << '-p' << identifier << '--' << scm_iconv(@path_encoding, 'UTF-8', path)
           blame = Annotate.new
           content = nil
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             io.binmode
             content = io.read
           end
 
           # git annotates binary files
-          return nil if binary_data?(content)
+          return if binary_data? content
 
           identifier = ''
           # git shows commit author on the first occurrence only
@@ -348,22 +349,22 @@ module Redmine
           end
           blame
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
         def cat(path, identifier = nil)
           identifier = 'HEAD' if identifier.nil?
           cmd_args = %w[show --no-color]
-          cmd_args << "#{identifier}:#{scm_iconv(@path_encoding, 'UTF-8', path)}"
+          cmd_args << "#{identifier}:#{scm_iconv @path_encoding, 'UTF-8', path}"
           cat = nil
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             io.binmode
             cat = io.read
           end
           cat
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
@@ -375,7 +376,7 @@ module Redmine
           cmd_args << 'log' << '--no-color' << '--pretty=format:%cd' << '--name-status' << '-1' << rev
           cmd_args << '--' <<  scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
           changed_files = []
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             io.each_line do |line|
               changed_files << line
             end
@@ -387,12 +388,12 @@ module Redmine
         #
         def rev_list(revision, args)
           cmd_args = ['rev-list', *args, revision]
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             @revisions_list = io.readlines.map(&:strip)
           end
           @revisions_list
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           []
         end
 
@@ -400,12 +401,12 @@ module Redmine
         #
         def rev_parse(revision)
           cmd_args = ['rev-parse', '--quiet', '--verify', revision]
-          git_cmd(cmd_args) do |io|
+          git_cmd cmd_args do |io|
             @parsed_revision = io.readlines.map(&:strip).first
           end
           @parsed_revision
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
@@ -424,13 +425,13 @@ module Redmine
             cmd_args << '--format=tar'
           end
           cmd_args << revision
-          git_cmd(cmd_args, bypass_cache: true) do |io|
+          git_cmd cmd_args, bypass_cache: true do |io|
             io.binmode
             @content = io.read
           end
           @content
         rescue ScmCommandAborted => e
-          logger.error(e.message)
+          logger.error e.message
           nil
         end
 
@@ -460,7 +461,7 @@ module Redmine
           bypass_cache = options.delete(:bypass_cache) { false }
 
           # Build git command line
-          cmd_str = prepare_command(args)
+          cmd_str = prepare_command args
 
           # Insert cache between shell execution and caller
           if !git_cache_id.nil? && git_cache_enabled? && !bypass_cache
@@ -476,7 +477,7 @@ module Redmine
           # Concat with Redmine args
           full_args += args
           # Quote args
-          full_args.map { |e| shell_quote(e.to_s) }.join(' ')
+          full_args.map { |e| shell_quote e.to_s }.join(' ')
         end
 
         # Compute string from repo_path that should be same as: repo.git_cache_id
@@ -484,10 +485,10 @@ module Redmine
         # We perform caching here to speed this up, since this function gets called
         # many times during the course of a repository lookup.
         def git_cache_id
-          logger.debug("Lookup for git_cache_id with repository path '#{repo_path}' ... ")
-          @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id(repo_path)
-          logger.warn("Unable to find git_cache_id for '#{repo_path}', bypass cache... ") if @git_cache_id.nil?
-          logger.debug("git_cache_id found : #{@git_cache_id}") unless @git_cache_id.nil?
+          logger.debug "Lookup for git_cache_id with repository path '#{repo_path}' ... "
+          @git_cache_id ||= Repository::Xitolite.repo_path_to_git_cache_id repo_path
+          logger.warn "Unable to find git_cache_id for '#{repo_path}', bypass cache... " if @git_cache_id.nil?
+          logger.debug "git_cache_id found : #{@git_cache_id}" unless @git_cache_id.nil?
           @git_cache_id
         end
 
@@ -496,7 +497,7 @@ module Redmine
         end
 
         def git_mirror_cmd
-          RedmineGitHosting::Commands.sudo_git_args_for_repo(repo_path, git_push_args)
+          RedmineGitHosting::Commands.sudo_git_args_for_repo repo_path, git_push_args
         end
 
         def git_push_args

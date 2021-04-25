@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'setting'
 
 module RedmineGitHosting
@@ -11,7 +13,7 @@ module RedmineGitHosting
 
       module ClassMethods
         def check_cache
-          settings_updated_on = Setting.maximum(:updated_on)
+          settings_updated_on = Setting.maximum :updated_on
           if settings_updated_on && @cached_cleared_on <= settings_updated_on
             clear_cache
             RedmineGitHosting::Config.check_cache
@@ -22,4 +24,4 @@ module RedmineGitHosting
   end
 end
 
-Setting.prepend RedmineGitHosting::Patches::SettingPatch unless Setting.included_modules.include?(RedmineGitHosting::Patches::SettingPatch)
+Setting.prepend RedmineGitHosting::Patches::SettingPatch unless Setting.included_modules.include? RedmineGitHosting::Patches::SettingPatch

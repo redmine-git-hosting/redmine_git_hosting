@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rugged'
 
 module RedmineGitHosting::Plugins::Extenders
@@ -30,44 +32,44 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def do_create_readme_file
-      logger.info("Creating README file for repository '#{gitolite_repo_name}'")
+      logger.info "Creating README file for repository '#{gitolite_repo_name}'"
       temp_dir = Dir.mktmpdir
 
       begin
         ## Clone repository
-        repo = clone_repo(temp_dir)
+        repo = clone_repo temp_dir
 
         ## Create file
-        index = create_file(repo)
+        index = create_file repo
 
         ## Create commit
-        create_commit(repo, index)
+        create_commit repo, index
 
         ## Push
-        push_commit(repo)
+        push_commit repo
       rescue StandardError => e
-        logger.error("Error while creating README file for repository '#{gitolite_repo_name}'")
-        logger.error(e.message)
+        logger.error "Error while creating README file for repository '#{gitolite_repo_name}'"
+        logger.error e.message
       else
-        logger.info('README file successfully created.')
+        logger.info 'README file successfully created.'
       ensure
         FileUtils.rm_rf temp_dir
       end
     end
 
     def clone_repo(temp_dir)
-      Rugged::Repository.clone_at(repository.ssh_url, temp_dir, credentials: credentials)
+      Rugged::Repository.clone_at repository.ssh_url, temp_dir, credentials: credentials
     end
 
     def create_file(repo)
-      oid = repo.write("## #{gitolite_repo_name}", :blob)
+      oid = repo.write "## #{gitolite_repo_name}", :blob
       index = repo.index
-      index.add(path: 'README.md', oid: oid, mode: 0100644)
+      index.add path: 'README.md', oid: oid, mode: 0o100644
       index
     end
 
     def create_commit(repo, index)
-      commit_tree = index.write_tree(repo)
+      commit_tree = index.write_tree repo
       Rugged::Commit.create(repo,
                             author: commit_author,
                             committer: commit_author,
@@ -78,7 +80,7 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def push_commit(repo)
-      repo.push('origin', [remote_branch], credentials: credentials)
+      repo.push 'origin', [remote_branch], credentials: credentials
     end
 
     def remote_branch

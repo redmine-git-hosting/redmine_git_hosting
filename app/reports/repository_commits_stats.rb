@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryCommitsStats < ReportBase
   def commits_per_month
     data = {}
@@ -27,7 +29,7 @@ class RepositoryCommitsStats < ReportBase
 
   def commits_per_weekday
     data = {}
-    data[:name] = l(:label_commit_plural)
+    data[:name] = l :label_commit_plural
     data[:data] = []
     total_commits_by_weekday.each do |key, value|
       data[:data] << [key, value]
@@ -38,11 +40,11 @@ class RepositoryCommitsStats < ReportBase
   private
 
   def total_commits_by_month
-    total_by_month_for(:commits_by_day)
+    total_by_month_for :commits_by_day
   end
 
   def total_changes_by_month
-    total_by_month_for(:changes_by_day)
+    total_by_month_for :changes_by_day
   end
 
   def total_commits_by_day
@@ -55,7 +57,7 @@ class RepositoryCommitsStats < ReportBase
     @total_changes_by_day = nil
     changes = {}
     Changeset.where(repository_id: repository.id).includes(:filechanges).order(:commit_date).each do |changeset|
-      changes[changeset.commit_date] = 0 unless changes.key?(changeset.commit_date)
+      changes[changeset.commit_date] = 0 unless changes.key? changeset.commit_date
       changes[changeset.commit_date] += changeset.filechanges.size
     end
     @total_changes_by_day = changes
@@ -63,7 +65,7 @@ class RepositoryCommitsStats < ReportBase
   end
 
   def total_commits_by_hour
-    total_by_hour_for(:commits_by_hour)
+    total_by_hour_for :commits_by_hour
   end
 
   def total_commits_by_weekday

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class RepositoryProtectedBranche < ActiveRecord::Base
   include Redmine::SafeAttributes
   VALID_PERMS  = ['RW+', 'RW', 'R', '-'].freeze
-  DEFAULT_PERM = 'RW+'.freeze
+  DEFAULT_PERM = 'RW+'
 
   acts_as_positioned
 
@@ -19,12 +21,12 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
 
   ## Scopes
-  default_scope { order(position: :asc) }
-  scope :sorted, -> { order(:path) }
+  default_scope { order position: :asc }
+  scope :sorted, -> { order :path }
 
   class << self
     def clone_from(parent)
-      parent = find_by(id: parent) unless parent.is_a? RepositoryProtectedBranche
+      parent = find_by id: parent unless parent.is_a? RepositoryProtectedBranche
       copy = new
       copy.attributes = parent.attributes
       copy.repository = parent.repository
@@ -35,11 +37,11 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   # Accessors
   #
   def users
-    members.select { |m| m.class.name == 'User' }.uniq
+    members.select { |m| m.instance_of? User }.uniq
   end
 
   def groups
-    members.select { |m| m.class.name == 'Group' }.uniq
+    members.select { |m| m.instance_of? Group }.uniq
   end
 
   def allowed_users

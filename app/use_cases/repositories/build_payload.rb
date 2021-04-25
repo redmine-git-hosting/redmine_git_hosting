@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Repositories
   class BuildPayload < Base
     def initialize(*args)
@@ -21,7 +23,7 @@ module Repositories
     def build_payloads
       refs.each do |ref|
         # Get revisions range
-        range = get_revisions_from_ref(ref)
+        range = get_revisions_from_ref ref
         next if range.nil?
 
         @payloads << build_payload(ref, range)
@@ -33,18 +35,18 @@ module Repositories
       oldhead, newhead, refname = ref.split ','
 
       # Only pay attention to branch updates
-      return nil unless refname.match(/refs\/heads\//)
+      return unless refname.match? %r{refs/heads/}
 
       # Get branch name
-      branch_name = refname.gsub('refs/heads/', '')
+      branch_name = refname.gsub 'refs/heads/', ''
 
-      if newhead.match(/\A0{40}\z/)
+      if newhead.match?(/\A0{40}\z/)
         # Deleting a branch
-        logger.info("Deleting branch '#{branch_name}'")
+        logger.info "Deleting branch '#{branch_name}'"
         range = nil
-      elsif oldhead.match(/\A0{40}\z/)
+      elsif oldhead.match?(/\A0{40}\z/)
         # Creating a branch
-        logger.info("Creating branch '#{branch_name}'")
+        logger.info "Creating branch '#{branch_name}'"
         range = newhead
       else
         range = "#{oldhead}..#{newhead}"
@@ -54,8 +56,8 @@ module Repositories
     end
 
     def build_payload(ref, range)
-      revisions_in_range = get_revisions_in_range(range)
-      logger.debug("Revisions in range : #{revisions_in_range.join(' ')}")
+      revisions_in_range = get_revisions_in_range range
+      logger.debug "Revisions in range : #{revisions_in_range.join ' '}"
 
       # Get refs
       oldhead, newhead, refname = ref.split ','
@@ -68,7 +70,7 @@ module Repositories
     def build_commits_list(revisions_in_range)
       commits_list = []
       revisions_in_range.each do |rev|
-        changeset = repository.find_changeset_by_name(rev)
+        changeset = repository.find_changeset_by_name rev
         next if changeset.nil?
 
         commits_list << changeset.github_payload
@@ -77,7 +79,7 @@ module Repositories
     end
 
     def get_revisions_in_range(range)
-      repository.rev_list(range, ['--reverse'])
+      repository.rev_list range, ['--reverse']
     end
   end
 end

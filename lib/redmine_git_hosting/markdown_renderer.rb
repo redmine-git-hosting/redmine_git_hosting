@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'html/pipeline'
 require 'task_list/filter'
 require 'task_list/railtie'
@@ -13,7 +15,7 @@ module RedmineGitHosting
     private
 
     def pipeline
-      HTML::Pipeline.new(filters)
+      HTML::Pipeline.new filters
     end
 
     def filters

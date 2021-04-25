@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
+
 # This file was placed here by Redmine Git Hosting. It makes sure that your pushed commits
 # will be processed properly.
 

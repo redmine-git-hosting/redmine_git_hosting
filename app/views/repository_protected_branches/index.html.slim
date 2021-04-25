@@ -6,8 +6,8 @@ div
                 remote: true, class: 'icon icon-add'
 
   h3
-    = l(:label_protected_branches)
-    = link_to "(#{l(:label_gitolite_documentation)})", 'https://gitolite.com/gitolite/conf.html#rules', class: 'external'
+    = l :label_protected_branches
+    = link_to "(#{l :label_gitolite_documentation})", 'https://gitolite.com/gitolite/conf.html#rules', class: 'external'
 
   - if @repository_protected_branches.any?
     table#protected_branches.list[
@@ -44,7 +44,7 @@ div
                 - cnt += 1
 
             td.buttons
-              - if User.current.git_allowed_to?(:edit_repository_protected_branches, @repository)
+              - if User.current.git_allowed_to? :edit_repository_protected_branches, @repository
                 = link_to l(:button_edit),
                           edit_repository_protected_branch_path(@repository, protected_branch),
                           remote: true,

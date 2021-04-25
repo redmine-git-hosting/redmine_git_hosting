@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSettingsToPlugin < ActiveRecord::Migration[4.2]
   def up
     # Add some new settings to settings page, if they don't exist
@@ -5,7 +7,7 @@ class AddSettingsToPlugin < ActiveRecord::Migration[4.2]
     valuehash['gitRecycleBasePath'] ||= 'recycle_bin/'
     valuehash['gitRecycleExpireTime'] ||= '24.0'
     valuehash['gitLockWaitTime'] ||= '10'
-    valuehash['httpServer'] ||= RedmineGitHosting::Config.my_root_url
+    valuehash['httpServer'] ||= RedmineGitHosting::Config.my_root_url ssl: false
 
     if Setting.plugin_redmine_git_hosting != valuehash
       Setting.plugin_redmine_git_hosting = valuehash
@@ -18,10 +20,10 @@ class AddSettingsToPlugin < ActiveRecord::Migration[4.2]
   def down
     # Remove above settings from plugin page
     valuehash = Setting.plugin_redmine_git_hosting.clone
-    valuehash.delete('gitRecycleBasePath')
-    valuehash.delete('gitRecycleExpireTime')
-    valuehash.delete('gitLockWaitTime')
-    valuehash.delete('gitLockWaitTime')
+    valuehash.delete 'gitRecycleBasePath'
+    valuehash.delete 'gitRecycleExpireTime'
+    valuehash.delete 'gitLockWaitTime'
+    valuehash.delete 'gitLockWaitTime'
 
     if Setting.plugin_redmine_git_hosting != valuehash
       Setting.plugin_redmine_git_hosting = valuehash

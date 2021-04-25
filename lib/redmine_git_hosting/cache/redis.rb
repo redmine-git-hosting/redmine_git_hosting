@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redis'
 require 'digest/sha1'
 
@@ -6,36 +8,36 @@ module RedmineGitHosting
     class Redis < AbstractCache
       class << self
         def set_cache(repo_id, command, output)
-          logger.debug("Redis Adapter : inserting cache entry for repository '#{repo_id}'")
+          logger.debug "Redis Adapter : inserting cache entry for repository '#{repo_id}'"
 
           # Create a SHA256 of the Git command as key id
-          hashed_command = hash_key(repo_id, command)
+          hashed_command = hash_key repo_id, command
 
           # If *max_cache_time* is set to -1 (until next commit) then
           # set the cache time to 1 day (we don't know when will be the next commit)
           cache_time = max_cache_time.to_i.negative? ? 86_400 : max_cache_time
 
           begin
-            client.set(hashed_command, output, ex: cache_time)
+            client.set hashed_command, output, ex: cache_time
             true
           rescue StandardError => e
-            logger.error("Redis Adapter : could not insert in cache, this is the error : '#{e.message}'")
+            logger.error "Redis Adapter : could not insert in cache, this is the error : '#{e.message}'"
             false
           end
         end
 
         def get_cache(repo_id, command)
-          logger.debug("Redis Adapter : getting cache entry for repository '#{repo_id}'")
-          client.get(hash_key(repo_id, command))
+          logger.debug "Redis Adapter : getting cache entry for repository '#{repo_id}'"
+          client.get hash_key(repo_id, command)
         end
 
         def flush_cache!
           deleted = 0
-          client.scan_each(match: all_entries) do |key|
-            client.del(key)
+          client.scan_each match: all_entries do |key|
+            client.del key
             deleted += 1
           end
-          logger.info("Redis Adapter : removed '#{deleted}' expired cache entries among all repositories")
+          logger.info "Redis Adapter : removed '#{deleted}' expired cache entries among all repositories"
         end
 
         # Return true, this is done automatically by Redis with the
@@ -47,11 +49,11 @@ module RedmineGitHosting
 
         def clear_cache_for_repository(repo_id)
           deleted = 0
-          client.scan_each(match: all_entries_for_repo(repo_id)) do |key|
-            client.del(key)
+          client.scan_each match: all_entries_for_repo(repo_id) do |key|
+            client.del key
             deleted += 1
           end
-          logger.info("Redis Adapter : removed '#{deleted}' expired cache entries for repository '#{repo_id}'")
+          logger.info "Redis Adapter : removed '#{deleted}' expired cache entries for repository '#{repo_id}'"
         end
 
         # Return true.
@@ -71,7 +73,7 @@ module RedmineGitHosting
         end
 
         def all_entries_for_repo(repo_id)
-          "#{redis_namespace}:#{digest(repo_id)}:*"
+          "#{redis_namespace}:#{digest repo_id}:*"
         end
 
         # Prefix each key with *git_hosting_cache:* to store them in a subdirectory.
@@ -79,7 +81,7 @@ module RedmineGitHosting
         # Make SHA256 of the Git command as identifier
         #
         def hash_key(repo_id, command)
-          "#{redis_namespace}:#{digest(repo_id)}:#{digest(command)}"
+          "#{redis_namespace}:#{digest repo_id}:#{digest command}"
         end
 
         def digest(string)
@@ -87,7 +89,7 @@ module RedmineGitHosting
         end
 
         def client
-          @client ||= ::Redis.new(redis_options)
+          @client ||= ::Redis.new redis_options
         end
 
         # Specify the Redis DB.

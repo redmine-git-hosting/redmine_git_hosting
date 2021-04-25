@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PermissionsBuilder
   class ProtectedBranches < Base
     attr_reader :permissions
@@ -17,7 +19,7 @@ module PermissionsBuilder
         perms = {}
         perms[branch.permissions] = {}
         perms[branch.permissions][branch.path] = branch.allowed_users unless branch.allowed_users.empty?
-        permissions.push(perms)
+        permissions.push perms
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'repository'
 
 module RedmineGitHosting
@@ -11,6 +13,6 @@ module RedmineGitHosting
   end
 end
 
-unless Repository.included_modules.include?(RedmineGitHosting::Patches::RepositoryPatch)
+unless Repository.included_modules.include? RedmineGitHosting::Patches::RepositoryPatch
   Repository.prepend RedmineGitHosting::Patches::RepositoryPatch
 end

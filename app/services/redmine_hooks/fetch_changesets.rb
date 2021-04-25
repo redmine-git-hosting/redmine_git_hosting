@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineHooks
   class FetchChangesets < Base
     def call

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Repositories
   class DownloadRevision
     attr_reader :repository, :revision, :format, :gitolite_repository_path, :commit_id, :content_type, :filename
@@ -10,15 +12,15 @@ module Repositories
 
       @valid_commit  = false
       @commit_id     = nil
-      @content_type  = ''
-      @filename      = ''
+      @content_type  = +''
+      @filename      = +''
 
       validate_revision
       fill_data
     end
 
     def content
-      repository.archive(commit_id, format)
+      repository.archive commit_id, format
     end
 
     def valid_commit?
@@ -50,7 +52,7 @@ module Repositories
 
       # well, let check if this is a valid commit
       commit = revision if commit.nil?
-      commit = repository.rev_parse(commit)
+      commit = repository.rev_parse commit
 
       if commit == ''
         @valid_commit = false

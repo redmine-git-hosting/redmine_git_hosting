@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module GitoliteWrappers
     module Global
@@ -15,7 +17,7 @@ module RedmineGitHosting
         end
 
         def rw_access_config
-          repo_conf = ::Gitolite::Config::Repo.new(all_repository)
+          repo_conf = ::Gitolite::Config::Repo.new all_repository
           repo_conf.permissions = rw_access_perms
           repo_conf
         end

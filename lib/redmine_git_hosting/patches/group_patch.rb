@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'group'
 
 module RedmineGitHosting
@@ -28,4 +30,4 @@ module RedmineGitHosting
   end
 end
 
-Group.prepend RedmineGitHosting::Patches::GroupPatch unless Group.included_modules.include?(RedmineGitHosting::Patches::GroupPatch)
+Group.prepend RedmineGitHosting::Patches::GroupPatch unless Group.included_modules.include? RedmineGitHosting::Patches::GroupPatch

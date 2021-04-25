@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Projects
   class Update < Base
     def call
@@ -18,7 +20,7 @@ module Projects
     end
 
     def resync
-      gitolite_accessor.update_projects([project.id], options)
+      gitolite_accessor.update_projects [project.id], **options
     end
   end
 end

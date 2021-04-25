@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path "#{File.dirname __FILE__}/../spec_helper"
 
 describe RepositoryDeploymentCredential do
@@ -10,22 +12,22 @@ describe RepositoryDeploymentCredential do
                'TsAEI9JzaxMKvCNRwk3jFepiCovXbw+g0iyvJdp0+AJpC57ZupyxHeX9J2oz7im2UaHHqLa2qUZL6c4PNV/D2p0Bts4Tcnn3OFPL90RF/ao0tjiUFxM3ti8pR' \
                'HOqRcZHcOgIhKiaLX nicolas@tchoum'
 
-  before(:all) do
-    users = create_list(:user, 2)
+  before :all do
+    users = create_list :user, 2
     @user1 = users[0]
     @user2 = users[1]
 
-    @deploy_key = create(:gitolite_public_key, user: @user1, key_type: 1, title: 'foo1', key: DEPLOY_KEY)
-    @user_key   = create(:gitolite_public_key, user: @user1, key_type: 0, title: 'foo2', key: USER_KEY)
+    @deploy_key = create :gitolite_public_key, user: @user1, key_type: 1, title: 'foo1', key: DEPLOY_KEY
+    @user_key   = create :gitolite_public_key, user: @user1, key_type: 0, title: 'foo2', key: USER_KEY
   end
 
-  def build_deployment_credential(opts = {})
-    build(:repository_deployment_credential, opts)
+  def build_deployment_credential(**opts)
+    build(:repository_deployment_credential, **opts)
   end
 
   describe 'Valid RepositoryDeploymentCredential creation' do
-    before(:each) do
-      @deployment_credential = build_deployment_credential(user: @user1, gitolite_public_key: @deploy_key)
+    before :each do
+      @deployment_credential = build_deployment_credential user: @user1, gitolite_public_key: @deploy_key
     end
 
     subject { @deployment_credential }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module Error
     # Used to register errors when pulling and pushing the conf file
@@ -18,6 +20,7 @@ module RedmineGitHosting
       attr_reader :command, :output
 
       def initialize(command, output)
+        super()
         @command = command
         @output  = output
       end

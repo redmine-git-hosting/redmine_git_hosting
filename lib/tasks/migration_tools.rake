@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :redmine_git_hosting do
   namespace :migration_tools do
     desc 'Fix migration numbers (add missing trailing 0 to some migrations)'
@@ -11,26 +13,26 @@ namespace :redmine_git_hosting do
         puts "new_name : #{new_name}"
 
         # Get the old migration name
-        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
-                 " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
-                 " '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
+        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
+                 " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
+                 " '#{ActiveRecord::Base.connection.quote_string old_name}';"
         result = ActiveRecord::Base.connection.execute query
 
         # If present, rename
         if result.to_a.present?
-          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
-                  " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
-                  " '#{ActiveRecord::Base.connection.quote_string(old_name)}';"
+          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
+                  " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
+                  " '#{ActiveRecord::Base.connection.quote_string old_name}';"
           ActiveRecord::Base.connection.execute query
 
-          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string('schema_migrations')} (VERSION)" \
-                  " VALUES ('#{ActiveRecord::Base.connection.quote_string(new_name)}');"
+          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} (VERSION)" \
+                  " VALUES ('#{ActiveRecord::Base.connection.quote_string new_name}');"
           ActiveRecord::Base.connection.execute query
         else
           # Check the new name is present
-          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string('schema_migrations')}" \
-                   " WHERE #{ActiveRecord::Base.connection.quote_string('version')} =" \
-                   " '#{ActiveRecord::Base.connection.quote_string(new_name)}';"
+          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
+                   " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
+                   " '#{ActiveRecord::Base.connection.quote_string new_name}';"
           result = ActiveRecord::Base.connection.execute query
 
           if result.to_a.empty?
@@ -55,7 +57,7 @@ namespace :redmine_git_hosting do
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Delete SSH key #{ssh_key.identifier}"
-        RedmineGitHosting::GitoliteAccessor.destroy_ssh_key(ssh_key, bypass_sidekiq: true)
+        RedmineGitHosting::GitoliteAccessor.destroy_ssh_key ssh_key, bypass_sidekiq: true
         ssh_key.reset_identifiers
       end
       puts ''
@@ -65,13 +67,13 @@ namespace :redmine_git_hosting do
 
       GitolitePublicKey.all.each do |ssh_key|
         puts "  - Add SSH key : #{ssh_key.identifier}"
-        RedmineGitHosting::GitoliteAccessor.create_ssh_key(ssh_key, bypass_sidekiq: true)
+        RedmineGitHosting::GitoliteAccessor.create_ssh_key ssh_key, bypass_sidekiq: true
       end
 
       puts ''
 
       options = { message: 'Gitolite configuration has been modified, resync all projects...', bypass_sidekiq: true }
-      RedmineGitHosting::GitoliteAccessor.update_projects('all', options)
+      RedmineGitHosting::GitoliteAccessor.update_projects 'all', options
 
       puts 'Done!'
     end
@@ -84,7 +86,7 @@ namespace :redmine_git_hosting do
 
       Repository::Git.all.each do |repository|
         # Don't update real Git repositories
-        next if repository.url.start_with?('/')
+        next if repository.url.start_with? '/'
 
         # Don't update orphan repositories
         if repository.project.nil?
@@ -100,7 +102,7 @@ namespace :redmine_git_hosting do
           puts repository.identifier
         end
 
-        repository.update_attribute(:type, 'Repository::Xitolite')
+        repository.update_attribute :type, 'Repository::Xitolite'
         puts 'Done!'
         puts ''
       end
@@ -130,7 +132,7 @@ namespace :redmine_git_hosting do
             default_branch: 'master',
             key: RedmineGitHosting::Utils::Crypto.generate_secret(64)
           }
-          extra = repository.build_extra(default_extra_options)
+          extra = repository.build_extra default_extra_options
           extra.save!
         end
         puts '   Done!'

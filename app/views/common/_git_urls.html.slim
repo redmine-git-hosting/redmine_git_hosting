@@ -10,7 +10,7 @@
       $('.clipboard-button').tooltip();
     })
 
-- repositories ||= Array.wrap(repository)
+- repositories ||= Array.wrap repository
 - if repositories.map(&:available_urls_sorted).any?
   - repositories.sort_by { |r| r.is_default ? 0 : 1 }.each do |repository|
     - next if repository.available_urls_sorted.empty?
@@ -20,4 +20,4 @@
         = p.git_urls_box
 
 - else
-  #git_url_box = l(:label_repository_access_not_configured)
+  #git_url_box = l :label_repository_access_not_configured

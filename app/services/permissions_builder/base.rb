@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PermissionsBuilder
   class Base
     attr_reader :repository, :gitolite_users, :old_permissions

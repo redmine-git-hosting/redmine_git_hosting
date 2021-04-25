@@ -5,7 +5,7 @@ div
                 new_repository_post_receive_url_path(@repository),
                 remote: true, class: 'icon icon-add'
 
-  h3 = l(:label_post_receive_urls)
+  h3 = l :label_post_receive_urls
 
   - if @repository_post_receive_urls.any?
     table.list
@@ -27,10 +27,10 @@ div
               = post_receive_mode post_receive_url
 
             td.tick
-              = checked_image_with_exclamation post_receive_url.active?
+              = checked_image_with_exclamation checked: post_receive_url.active?
 
             td.tick
-              = checked_image_with_exclamation post_receive_url.use_triggers?
+              = checked_image_with_exclamation checked: post_receive_url.use_triggers?
 
             td
               - post_receive_url.triggers.each do |trigger|
@@ -38,7 +38,7 @@ div
                   = trigger
 
             td.buttons
-              - if User.current.git_allowed_to?(:edit_repository_post_receive_urls, @repository)
+              - if User.current.git_allowed_to? :edit_repository_post_receive_urls, @repository
                 = link_to l(:button_edit),
                           edit_repository_post_receive_url_path(@repository, post_receive_url),
                           remote: true,

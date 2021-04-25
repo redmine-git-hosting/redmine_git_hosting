@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameTableDeploymentCredentials < ActiveRecord::Migration[4.2]
   def up
     remove_index :deployment_credentials, :gitolite_public_key_id

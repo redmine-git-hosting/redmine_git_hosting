@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RedmineGitHosting
   module RedminePluginLoader
     extend self
@@ -23,7 +25,7 @@ module RedmineGitHosting
     end
 
     def authors_file
-      plugin_dir('AUTHORS')
+      plugin_dir 'AUTHORS'
     end
 
     def settings
@@ -31,43 +33,43 @@ module RedmineGitHosting
     end
 
     def global_settings
-      load_setting_file(global_settings_file)
+      load_setting_file global_settings_file
     end
 
     def local_settings
-      load_setting_file(local_settings_file)
+      load_setting_file local_settings_file
     end
 
     def default_settings
-      load_setting_file(default_settings_file)
+      load_setting_file default_settings_file
     end
 
     def default_settings_file
-      plugin_lib_dir('default_settings.yml')
+      plugin_lib_dir 'default_settings.yml'
     end
 
     def global_settings_file
-      Rails.root.join("#{plugin_name}.yml")
+      Rails.root.join "#{plugin_name}.yml"
     end
 
     def local_settings_file
-      plugin_dir('settings.yml')
+      plugin_dir 'settings.yml'
     end
 
     def plugin_patches_dir
-      plugin_lib_dir(plugin_name, 'patches')
+      plugin_lib_dir plugin_name, 'patches'
     end
 
     def plugin_hooks_dir
-      plugin_lib_dir(plugin_name, 'hooks')
+      plugin_lib_dir plugin_name, 'hooks'
     end
 
     def plugin_locales_dir
-      plugin_conf_dir('locales', '**', '*.yml')
+      plugin_conf_dir 'locales', '**', '*.yml'
     end
 
     def required_lib_dirs
-      plugin_lib_dir(plugin_name, '**', '*.rb')
+      plugin_lib_dir plugin_name, '**', '*.rb'
     end
 
     def plugin_dir(*dirs)
@@ -108,7 +110,7 @@ module RedmineGitHosting
     def load_authors_file
       return [] unless File.exist? authors_file
 
-      File.read(authors_file).split("\n").map { |a| RedmineGitHosting::PluginAuthor.new(a) }
+      File.read(authors_file).split("\n").map { |a| RedmineGitHosting::PluginAuthor.new a }
     end
 
     def hook_file?(file)
@@ -122,18 +124,18 @@ module RedmineGitHosting
 
     def autoload_libs!
       Dir.glob(required_lib_dirs).each do |file|
-        require_dependency file unless skip_lib_file?(file)
+        require_dependency file unless skip_lib_file? file
       end
     end
 
     def autoload_paths!
       autoloaded_paths.each do |dir|
-        ActiveSupport::Dependencies.autoload_paths += [dir] if Dir.exist?(dir)
+        ActiveSupport::Dependencies.autoload_paths += [dir] if Dir.exist? dir
       end
     end
 
     def autoload_locales!
-      ::I18n.load_path += Dir.glob(plugin_locales_dir)
+      ::I18n.load_path += Dir.glob plugin_locales_dir
     end
   end
 end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module GitolitePluginSettingsHelper
   def render_gitolite_params_status(params)
     tag.ul class: 'list-unstyled' do
-      content = ''
+      content = +''
       params.each do |param, installed|
         content << tag.li do
           image_tag(image_for_param(installed), style: 'vertical-align: bottom; padding-right: 5px;') +
@@ -13,7 +15,7 @@ module GitolitePluginSettingsHelper
   end
 
   def label_for_param(param, install_status)
-    install_status == 2 ? "#{param} (#{l(:label_gitolite_hook_untouched)})" : param
+    install_status == 2 ? "#{param} (#{l :label_gitolite_hook_untouched})" : param
   end
 
   def image_for_param(install_status)
@@ -30,7 +32,7 @@ module GitolitePluginSettingsHelper
   def render_gitolite_version(version)
     if version.nil?
       css_class = 'label label-error'
-      label = l(:label_unknown_gitolite_version)
+      label = l :label_unknown_gitolite_version
     else
       css_class = 'label label-success'
       label = version
@@ -103,26 +105,23 @@ module GitolitePluginSettingsHelper
   end
 
   def render_rugged_mandatory_features
-    content = ''
+    content = []
     RedmineGitHosting::Config.rugged_mandatory_features.each do |feature|
-      opts = if RedmineGitHosting::Config.rugged_features.include?(feature)
-               { class: 'label label-success' }
-             else
-               { class: 'label label-error' }
-             end
-      content << "#{tag.span feature, opts}\n"
+      classes = if RedmineGitHosting::Config.rugged_features.include? feature
+                  'label label-success'
+                else
+                  'label label-error'
+                end
+      content << tag.span(feature, class: classes)
     end
-    content.html_safe
+    safe_join content, ' '
   end
 
   def render_rugged_optional_features
-    content = ''
+    content = []
     RedmineGitHosting::Config.rugged_features.each do |feature|
-      unless RedmineGitHosting::Config.rugged_mandatory_features.include?(feature)
-        opts = { class: 'label label-success' }
-        content << tag.span(feature, opts)
-      end
+      content << tag.span(feature, class: 'label label-success') unless RedmineGitHosting::Config.rugged_mandatory_features.include? feature
     end
-    content.html_safe
+    safe_join content, ' '
   end
 end
