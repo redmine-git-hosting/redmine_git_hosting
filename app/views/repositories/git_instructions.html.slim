@@ -18,7 +18,7 @@
       | :
     pre
       code.shell.syntaxhl
-        = link_to l(:label_download_and_install_git), 'https://git-scm.com/download', class: 'external'
+        = link_to_external l(:label_download_and_install_git), 'https://git-scm.com/download'
         br
         == render_shell_text "git config --global user.name \"#{User.current.name :firstname_lastname}\""
         br

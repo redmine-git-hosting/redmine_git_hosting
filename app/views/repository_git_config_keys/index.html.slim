@@ -9,9 +9,8 @@ div
   h3
     = l :label_git_config_keys
     '
-    = link_to "(#{l :label_gitolite_documentation})",
-              'https://gitolite.com/gitolite/git-config.html',
-              class: 'external'
+    = link_to_external "(#{l :label_gitolite_documentation})",
+                       'https://gitolite.com/gitolite/git-config.html'
 
   = render 'config_keys', git_config_keys: @repository_git_config_keys
 
@@ -25,8 +24,7 @@ div
   h3
     = l :label_git_option_keys
     '
-    = link_to "(#{l :label_gitolite_documentation})",
-              'https://gitolite.com/gitolite/options.html',
-              class: 'external'
+    = link_to_external "(#{l :label_gitolite_documentation})",
+                       'https://gitolite.com/gitolite/options.html'
 
   = render 'config_keys', git_config_keys: @repository_git_option_keys

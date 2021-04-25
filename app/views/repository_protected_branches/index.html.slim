@@ -7,7 +7,9 @@ div
 
   h3
     = l :label_protected_branches
-    = link_to "(#{l :label_gitolite_documentation})", 'https://gitolite.com/gitolite/conf.html#rules', class: 'external'
+    '
+    = link_to_external "(#{l :label_gitolite_documentation})",
+                       'https://gitolite.com/gitolite/conf.html#rules'
 
   - if @repository_protected_branches.any?
     table#protected_branches.list[
