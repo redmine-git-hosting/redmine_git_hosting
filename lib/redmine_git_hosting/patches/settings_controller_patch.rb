@@ -66,8 +66,8 @@ module RedmineGitHosting
         end
       end
 
-      def execute_post_actions(old_settings, opts = {})
-        Settings::Apply.call old_settings, opts
+      def execute_post_actions(old_settings, options)
+        Settings::Apply.call old_settings, options
       end
     end
   end
