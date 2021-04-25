@@ -4,14 +4,14 @@ module Repositories
   class ExecuteHooks
     attr_reader :repository, :hook_type, :payloads
 
-    def initialize(repository, hook_type, payloads = {})
+    def initialize(repository, hook_type, payloads = nil)
       @repository = repository
       @hook_type  = hook_type
       @payloads   = payloads
     end
 
     class << self
-      def call(repository, hook_type, payloads = {})
+      def call(repository, hook_type, payloads = nil)
         new(repository, hook_type, payloads).call
       end
     end

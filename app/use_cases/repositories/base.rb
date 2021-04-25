@@ -6,15 +6,15 @@ module Repositories
 
     attr_reader :repository, :options, :project
 
-    def initialize(repository, **opts)
+    def initialize(repository, opts = nil)
       @repository = repository
       @options    = opts
       @project    = repository.project
     end
 
     class << self
-      def call(repository, **opts)
-        new(repository, **opts).call
+      def call(repository, opts = nil)
+        new(repository, opts).call
       end
     end
 

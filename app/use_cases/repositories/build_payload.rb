@@ -35,7 +35,7 @@ module Repositories
       oldhead, newhead, refname = ref.split ','
 
       # Only pay attention to branch updates
-      return unless refname.match? %r{refs/heads/}
+      return unless refname.include? 'refs/heads/'
 
       # Get branch name
       branch_name = refname.gsub 'refs/heads/', ''
