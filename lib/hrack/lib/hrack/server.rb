@@ -6,7 +6,7 @@ module Hrack
   class Server
     attr_reader :params
 
-    PLAIN_TYPE = { 'Content-Type' => 'text/plain' }
+    PLAIN_TYPE = { 'Content-Type' => 'text/plain' }.freeze
 
     def initialize(config = {}); end
 
@@ -45,7 +45,7 @@ module Hrack
     end
 
     def post_receive_github
-      Projects::ExecuteHooks.call @project, :github, params
+      Projects::ExecuteHooks.call @project, :github, **params
       render_200 'OK!'
     end
 

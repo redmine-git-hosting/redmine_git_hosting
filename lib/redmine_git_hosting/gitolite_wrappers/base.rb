@@ -28,7 +28,7 @@ module RedmineGitHosting
           @wrappers ||= {}
         end
 
-        def for_action_name(action)
+        def for_action(action)
           unless wrappers.key? action
             raise RedmineGitHosting::Error::GitoliteWrapperException, "No available Wrapper for action '#{action}' found."
           end

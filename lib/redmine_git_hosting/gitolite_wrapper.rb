@@ -70,7 +70,7 @@ module RedmineGitHosting
     end
 
     def call_gitolite_wrapper(action, admin, object, **options)
-      klass = GitoliteWrappers::Base.for_action_name action
+      klass = GitoliteWrappers::Base.for_action action
     rescue RedmineGitHosting::Error::GitoliteWrapperException => e
       logger.error e.message
     else
