@@ -13,6 +13,7 @@ module Redmine
       class XitoliteAdapter < AbstractAdapter
         # Git executable name
         XITOLITE_BIN = Redmine::Configuration['scm_git_command'] || 'git'
+        GIT_DEFAULT_BRANCH_NAMES = %w[main master].freeze
 
         class GitBranch < Branch
           attr_accessor :is_default
@@ -36,11 +37,10 @@ module Redmine
           end
 
           def scm_command_version
-            scm_version = scm_version_from_command_line.dup
-            scm_version.force_encoding 'ASCII-8BIT' if scm_version.respond_to? :force_encoding
-            if (m = scm_version.match(/\A(.*?)((\d+\.)+\d+)/))
-              m[2].scan(/\d+/).collect(&:to_i)
-            end
+            scm_version = scm_version_from_command_line.b
+            return unless (m = scm_version.match(/\A(.*?)((\d+\.)+\d+)/))
+
+            m[2].scan(/\d+/).collect(&:to_i)
           end
 
           # Change from the original method
@@ -63,14 +63,16 @@ module Redmine
         end
 
         def branches
-          return @branches unless @branches.nil?
+          return @branches if @branches
 
           @branches = []
           cmd_args = %w[branch --no-color --verbose --no-abbrev]
           git_cmd cmd_args do |io|
             io.each_line do |line|
               branch_rev = line.match '\s*(\*?)\s*(.*?)\s*([0-9a-f]{40}).*$'
-              bran = GitBranch.new branch_rev[2].to_s.force_encoding(Encoding::UTF_8)
+              next unless branch_rev
+
+              bran = GitBranch.new scm_iconv('UTF-8', @path_encoding, branch_rev[2])
               bran.revision =  branch_rev[3]
               bran.scmid    =  branch_rev[3]
               bran.is_default = (branch_rev[1] == '*')
@@ -84,12 +86,12 @@ module Redmine
         end
 
         def tags
-          return @tags unless @tags.nil?
+          return @tags if @tags
 
           @tags = []
           cmd_args = %w[tag]
           git_cmd cmd_args do |io|
-            @tags = io.readlines.sort!.map { |t| t.strip.force_encoding Encoding::UTF_8 }
+            @tags = io.readlines.sort!.map { |t| scm_iconv 'UTF-8', @path_encoding, t.strip }
           end
           @tags
         rescue ScmCommandAborted => e
@@ -98,14 +100,13 @@ module Redmine
         end
 
         def default_branch
-          bras = branches
-          return if bras.nil?
+          return if branches.blank?
 
-          default_bras = bras.select { |x| x.is_default == true }
-          return default_bras.first.to_s unless default_bras.empty?
-
-          master_bras = bras.select { |x| x.to_s == 'master' }
-          master_bras.empty? ? bras.first.to_s : 'master'
+          (
+            branches.detect(&:is_default) ||
+            branches.detect { |b| GIT_DEFAULT_BRANCH_NAMES.include?(b.to_s) } ||
+            branches.first
+          ).to_s
         end
 
         def entry(path = nil, identifier = nil)
@@ -161,6 +162,7 @@ module Redmine
           return if path.nil?
 
           cmd_args = %w[log --no-color --encoding=UTF-8 --date=iso --pretty=fuller --no-merges -n 1]
+          cmd_args << '--no-renames' if self.class.client_version_above? [2, 9]
           cmd_args << rev if rev
           cmd_args << '--' << path unless path.empty?
           lines = []
@@ -188,6 +190,7 @@ module Redmine
         def revisions(path, identifier_from, identifier_to, **options)
           revs = Revisions.new
           cmd_args = %w[log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin]
+          cmd_args << '--no-renames' if self.class.client_version_above? [2, 9]
           cmd_args << '--reverse' if options[:reverse]
           cmd_args << '-n' << options[:limit].to_i.to_s if options[:limit]
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) if path.present?
@@ -206,13 +209,9 @@ module Redmine
             io.binmode
             io.puts revisions.join("\n")
             io.close_write
-
             files = []
             changeset = {}
-
-            # 0: not parsing desc or files
-            # 1: parsing desc
-            # 2: parsing files
+            # 0: not parsing desc or files, 1: parsing desc, 2: parsing files
             parsing_descr = 0
 
             io.each_line do |line|
@@ -304,6 +303,7 @@ module Redmine
           else
             cmd_args << 'show' << '--no-color' << identifier_from
           end
+          cmd_args << '--no-renames' if self.class.client_version_above? [2, 9]
           cmd_args << '--' << scm_iconv(@path_encoding, 'UTF-8', path) unless path.empty?
           diff = []
           git_cmd cmd_args, opts do |io|
@@ -367,6 +367,18 @@ module Redmine
         rescue ScmCommandAborted => e
           logger.error e.message
           nil
+        end
+
+        def valid_name?(name)
+          return false unless name.is_a? String
+
+          return false if name.start_with? '-', '/', 'refs/heads/', 'refs/remotes/'
+          return false if name == 'HEAD'
+
+          git_cmd ['show-ref', '--heads', '--tags', '--quiet', '--', name]
+          true
+        rescue ScmCommandAborted
+          false
         end
 
         # Added to be compatible with EmailDiff plugin
