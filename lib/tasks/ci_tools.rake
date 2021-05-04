@@ -2,7 +2,7 @@
 
 namespace :redmine_git_hosting do
   namespace :ci do
-    unless Rails.env.production?
+    if Rails.env.development? || Rails.env.test?
       RSpec::Core::RakeTask.new do |task|
         task.rspec_opts = '--pattern plugins/redmine_git_hosting/spec/\*\*\{,/\*/\*\*\}/\*_spec.rb --color'
       end
