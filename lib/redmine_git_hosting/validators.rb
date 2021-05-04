@@ -6,7 +6,7 @@ module RedmineGitHosting
 
     # Validate a Git SSH urls
     # ssh://git@redmine.example.org/project1/project2/project3/project4.git
-    # ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
+    # ssh://git@redmine.example.org:22/project1/project2/project3/project4.git
     #
     GIT_SSH_URL_REGEX = %r{\A(ssh://)([\w\-.@]+)(:\d+)?([\w/\-.~]+)(\.git)?\z}i.freeze
 

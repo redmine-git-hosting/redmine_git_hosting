@@ -19,7 +19,7 @@ class RepositoryMirror < ActiveRecord::Base
 
   ## Only allow SSH format
   ## ssh://git@redmine.example.org/project1/project2/project3/project4.git
-  ## ssh://git@redmine.example.org:2222/project1/project2/project3/project4.git
+  ## ssh://git@redmine.example.org:22/project1/project2/project3/project4.git
   validates :url, presence: true,
                   uniqueness: { case_sensitive: false, scope: :repository_id },
                   format: { with: RedmineGitHosting::Validators::GIT_SSH_URL_REGEX }
