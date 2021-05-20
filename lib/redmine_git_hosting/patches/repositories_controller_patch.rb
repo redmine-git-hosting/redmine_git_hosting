@@ -125,7 +125,7 @@ module RedmineGitHosting
           @diff = @repository.diff @path, @rev, @rev_to, bypass_cache: true
           return show_error_not_found unless @diff
 
-          filename = "changeset_r#{@rev}"
+          filename = +"changeset_r#{@rev}"
           filename << "_r#{@rev_to}" if @rev_to
           send_data @diff.join, filename: "#{filename}.diff",
                                 type: 'text/x-patch',

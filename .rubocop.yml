@@ -119,3 +119,7 @@ Naming/VariableNumber:
 
 Layout/SpaceBeforeBrackets:
   Enabled: false
+
+Rails/EnvironmentVariableAccess:
+  Enabled: true
+  AllowReads: true
