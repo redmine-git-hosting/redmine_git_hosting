@@ -2,6 +2,8 @@
 PLUGIN ICON
 */
 
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
+
 #admin-menu a.redmine-git-hosting::before {
   font-family: Font Awesome\ 5 Brands;
   font-size: 1.4em;

@@ -1,3 +1,5 @@
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
+
 /*
 PLUGIN SETTINGS
 */
@@ -11,7 +13,7 @@ PLUGIN SETTINGS
 }
 
 .git_hosting_access_box p {
-  padding-left:100px;
+  padding-left: 100px;
   margin-top: 8px;
   margin-bottom: 8px;
 }
@@ -25,7 +27,7 @@ PLUGIN SETTINGS
   font-style: italic;
   font-weight: bold;
   font-size: 110%;
-  color: #467AA7;
+  color: #467aa7;
 }
 
 #settings p {
@@ -33,14 +35,12 @@ PLUGIN SETTINGS
   margin-top: 15px;
 }
 
-
 /*
 REPOSITORY EDIT
 */
 #repository-tabs li i {
   padding-right: 10px;
 }
-
 
 /*
 REPOSITORY VIEW
@@ -57,15 +57,6 @@ REPOSITORY VIEW
   padding-left: 0;
 }
 
-#git_hosting_download_buttons {
-  margin-top: 20px;
-}
-
-#git_hosting_download_buttons ul li {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
 #sidebar li.git_url {
   margin: 0;
 }
@@ -80,33 +71,6 @@ REPOSITORY VIEW
   margin-top: 0;
 }
 
-#git_hosting_download_buttons i {
-  color: #FFFFFF;
-  padding-right: 10px;
-}
-
-#git_hosting_download_buttons .button {
-  background: none repeat scroll 0 0 #2996CC;
-  border: 1px solid #E0E2E3;
-  border-color: rgba(0, 0, 0, 0);
-  border-radius: 4px;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  height: 32px;
-  line-height: 30px;
-  margin-bottom: 1px;
-  margin-top: 1px;
-  -moz-appearance: none;
-  padding: 0 14px;
-  vertical-align: middle;
-  text-align: center;
-  transition: background-color 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
-}
-
-
 /*
 REPOSITORY SETTINGS
 */
@@ -117,39 +81,36 @@ REPOSITORY SETTINGS
   width: 190px;
 }
 
-
 /*
 MISC
 */
-.git_hosting_spacer { display: block; height: 10px; clear: both; }
+.git_hosting_spacer {
+  display: block;
+  height: 10px;
+  clear: both;
+}
 
 td.buttons { width: 20%; }
 
 .select_key_type { margin-left: 10px; }
 
-
 /*
 STATISTICS
 */
 #statistics-global {
-  color: #FFFFFF;
+  color: #fff;
   font-weight: bold;
 }
 
-.thumbnails:before, .thumbnails:after {
+.thumbnails::before,
+.thumbnails::after {
   content: '';
   display: table;
   line-height: 0;
 }
 
-.thumbnails:after {
+.thumbnails::after {
   clear: both;
-}
-
-.thumbnails:before, .thumbnails:after {
-  content: "";
-  display: table;
-  line-height: 0;
 }
 
 .thumbnails {
@@ -157,22 +118,14 @@ STATISTICS
   margin-left: -20px;
 }
 
-#statistics-global .thumbnail {
-  background: none repeat scroll 0 0 #3498DB;
-  padding: 10px;
-}
-
 .thumbnail {
-  position: relative;
-}
-
-.thumbnail {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
   display: block;
   line-height: 20px;
   padding: 4px;
+  position: relative;
   transition: all 0.2s ease-in-out 0s;
 }
 
@@ -180,6 +133,11 @@ STATISTICS
   float: left;
   margin-bottom: 20px;
   margin-left: 20px;
+}
+
+#statistics-global .thumbnail {
+  background: none repeat scroll 0 0 #3498db;
+  padding: 10px;
 }
 
 .span4 {
@@ -208,8 +166,8 @@ STATISTICS
 }
 
 .thumbnail h5 {
-  background: none repeat scroll 0 0 #1ABC9C;
-  color: #FFFFFF;
+  background: none repeat scroll 0 0 #1abc9c;
+  color: #fff;
   padding: 10px;
   position: absolute;
   right: 10px;
@@ -228,7 +186,7 @@ STATISTICS
 }
 
 .thumbnail h4 small {
-  color: #999999;
+  color: #999;
   font-weight: normal;
   line-height: 1;
 }
@@ -248,16 +206,15 @@ li.url_type {
   font-size: 11.844px;
   font-weight: bold;
   line-height: 14px;
-  color: #ffffff;
+  color: #fff;
   vertical-align: baseline;
   white-space: nowrap;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   border-radius: 3px;
-  background-color: #999999;
+  background-color: #999;
 }
 
-
-.label:empty
+.label:empty {
   display: none;
 }
 
@@ -287,10 +244,12 @@ table.git-results td {
   padding: 5px;
 }
 
-table.git-results ul, table.git-results li {
+table.git-results ul,
+table.git-results li {
   padding-left: 0;
 }
 
-ul.list-unstyled, ol.list-unstyled {
+ul.list-unstyled,
+ol.list-unstyled {
   list-style-type: none;
 }
