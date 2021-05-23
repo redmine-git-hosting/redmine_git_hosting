@@ -409,3 +409,4 @@ de:
   text_scm_command_not_available_git_hosting: SCM command nicht verfügbar. Bitte überprüfe die Einstellungen im Adminbereich des Redmine Git Hosting Plugin.
   label_install_hook_results: Install hook results
   label_repository_url_plural: Repository URLs
+  label_repository/xitolite_watchers: Beobachter
