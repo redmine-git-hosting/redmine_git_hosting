@@ -88,7 +88,7 @@ module RedmineGitHosting
         end
       end
 	  
-	    def git_cmd
+      def git_cmd
         if @request.get?
           @request.params['service']
         elsif @request.post?
@@ -99,9 +99,8 @@ module RedmineGitHosting
       end
       
       def git_method
-	    arr = @req_route.split('/', 5)[1...] # first item is empty string
-        puts arr
-	    return git_lfs_cmd(arr) if arr[0] == "info" && arr[1] == "lfs"
+	arr = @req_route.split('/', 5)[1...] # first item is empty string
+	return git_lfs_cmd(arr) if arr[0] == "info" && arr[1] == "lfs"
         
 	    case git_cmd
         when *RedmineGitHosting::GitAccess::DOWNLOAD_COMMANDS
