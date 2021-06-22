@@ -24,7 +24,7 @@ module RedmineGitHosting
       def watchers_list_with_git_hosting(object)
         remove_allowed = User.current.allowed_to? "delete_#{object.class.name.underscore}_watchers".tr('/', '_').to_sym, object.project
         content = +''.html_safe
-        object.watcher_users.preload(:email_address).each do |user|
+        object.watcher_users.each do |user|
           s = +''.html_safe
           s << avatar(user, size: '16').to_s
           s << link_to_user(user, class: 'user')
