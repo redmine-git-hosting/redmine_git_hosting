@@ -101,9 +101,9 @@ Install Puma gem :
 
     redmine$ gem install puma
 
-Create the Puma config file ```/home/redmine/etc/puma.rb``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/puma.rb).
+Create the Puma config file ```/home/redmine/etc/puma.rb``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/master/contrib/scripts/puma.rb).
 
-Then create the Puma start script ```/home/redmine/bin/server_puma.sh``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/server_puma.sh) and make it executable :
+Then create the Puma start script ```/home/redmine/bin/server_puma.sh``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/master/contrib/scripts/server_puma.sh) and make it executable :
 
     redmine$ chmod +x /home/redmine/bin/server_puma.sh
 
@@ -143,7 +143,7 @@ This is a sample conf for Nginx :
 #### **(step 7)** Create Debian init script
 ***
 
-If you're using Debian you can create the file ```/etc/init.d/redmine``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/devel/contrib/scripts/redmine).
+If you're using Debian you can create the file ```/etc/init.d/redmine``` with this [content](https://github.com/jbox-web/redmine_git_hosting/blob/master/contrib/scripts/redmine).
 
 This way, you can manage Redmine independantly of Nginx :
 
