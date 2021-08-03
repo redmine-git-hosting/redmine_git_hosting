@@ -11,7 +11,7 @@ module CrudControllerSpec
         @project        = create_project 'git_project'
         @repository     = find_or_create_git_repository project: @project, identifier: 'git_repository'
         @repository2    = find_or_create_git_repository project: @project, identifier: 'git_repository2'
-        @member_user    = create_user_with_permissions @project, member_user_options
+        @member_user    = create_user_with_permissions @project, **member_user_options
         @anonymous_user = create_anonymous_user
         @object         = create_object
       end
@@ -86,21 +86,21 @@ module CrudControllerSpec
 
             context 'with valid attributes' do
               it 'saves the new object in the database' do
-                check_counter_incremented_on_create tested_klass, valid_params_for_create
+                check_counter_incremented_on_create tested_klass, **valid_params_for_create
               end
 
               it 'redirects to the repository page' do
-                check_create_status 200, valid_params_for_create
+                check_create_status 200, **valid_params_for_create
               end
             end
 
             context 'with invalid attributes' do
               it 'does not save the new object in the database' do
-                check_counter_not_changed_on_create tested_klass, invalid_params_for_create
+                check_counter_not_changed_on_create tested_klass, **invalid_params_for_create
               end
 
               it 're-renders the :new template' do
-                check_create_template :create, invalid_params_for_create
+                check_create_template :create, **invalid_params_for_create
               end
             end
           end
@@ -108,7 +108,7 @@ module CrudControllerSpec
           context 'with unsufficient permissions' do
             it 'renders 403' do
               set_session_user @anonymous_user
-              check_create_status 403, valid_params_for_create
+              check_create_status 403, **valid_params_for_create
             end
           end
         end
@@ -167,29 +167,29 @@ module CrudControllerSpec
 
             context 'with valid attributes' do
               it 'located the requested @object' do
-                check_update_variable main_variable, @object, valid_params_for_update
+                check_update_variable main_variable, @object, **valid_params_for_update
               end
 
               it 'changes @object attributes' do
-                check_attribute_has_changed updated_attribute, updated_attribute_value, valid_params_for_update
+                check_attribute_has_changed updated_attribute, updated_attribute_value, **valid_params_for_update
               end
 
               it 'redirects to the repository page' do
-                check_update_status 200, valid_params_for_update
+                check_update_status 200, **valid_params_for_update
               end
             end
 
             context 'with invalid attributes' do
               it 'located the requested @object' do
-                check_update_variable main_variable, @object, invalid_params_for_update
+                check_update_variable main_variable, @object, **invalid_params_for_update
               end
 
               it 'does not change @object attributes' do
-                check_attribute_has_not_changed updated_attribute, invalid_params_for_update
+                check_attribute_has_not_changed updated_attribute, **invalid_params_for_update
               end
 
               it 're-renders the :edit template' do
-                check_update_template invalid_params_for_update
+                check_update_template(**invalid_params_for_update)
               end
             end
           end
@@ -197,7 +197,7 @@ module CrudControllerSpec
           context 'with unsufficient permissions' do
             it 'renders 403' do
               set_session_user @anonymous_user
-              check_update_status 403, valid_params_for_update
+              check_update_status 403, **valid_params_for_update
             end
           end
         end

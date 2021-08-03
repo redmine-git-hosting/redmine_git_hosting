@@ -33,7 +33,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
     flash[:notice] = l :notice_git_config_key_updated
     options = @git_config_key.key_has_changed? ? { delete_git_config_key: @git_config_key.old_key } : {}
-    call_use_case_and_redirect options
+    call_use_case_and_redirect(**options)
   end
 
   def destroy
@@ -41,7 +41,7 @@ class RepositoryGitConfigKeysController < RedmineGitHostingController
 
     flash[:notice] = l :notice_git_config_key_deleted
     options = { delete_git_config_key: @git_config_key.key }
-    call_use_case_and_redirect options
+    call_use_case_and_redirect(**options)
   end
 
   private

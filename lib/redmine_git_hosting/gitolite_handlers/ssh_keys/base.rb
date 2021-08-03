@@ -29,7 +29,7 @@ module RedmineGitHosting
         end
 
         def find_gitolite_key(owner, location)
-          admin.ssh_keys[owner].find_all { |k| k.location == location && k.owner == owner }.first
+          admin.ssh_keys[owner].find { |k| k.location == location && k.owner == owner }
         end
 
         def build_gitolite_key(key)

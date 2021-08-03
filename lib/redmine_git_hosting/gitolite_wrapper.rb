@@ -18,7 +18,7 @@ module RedmineGitHosting
       # options = options.symbolize_keys
 
       # Flush cache if needed
-      flush_cache options
+      flush_cache(**options)
 
       # Return if the action is only to flush cache on Sidekiq side
       if action == :flush_settings_cache

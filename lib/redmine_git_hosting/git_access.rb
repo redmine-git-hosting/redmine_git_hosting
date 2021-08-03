@@ -20,11 +20,9 @@ module RedmineGitHosting
       return smart_http_is_disabled! repository unless smart_http_enabled_for_upload? repository
 
       # Then check user permissions
-      if actor.is_a? User
-        user_upload_access_check actor, repository
-      else
-        raise 'Wrong actor'
-      end
+      raise 'Wrong actor' unless actor.is_a? User
+
+      user_upload_access_check actor, repository
     end
 
     def user_download_access_check(user, repository)

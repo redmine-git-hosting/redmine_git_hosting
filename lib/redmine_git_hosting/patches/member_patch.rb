@@ -17,7 +17,7 @@ module RedmineGitHosting
 
       def update_project
         options = { message: "Membership changes on project '#{project}', update!" }
-        gitolite_accessor.update_projects [project.id], options
+        gitolite_accessor.update_projects [project.id], **options
       end
     end
   end

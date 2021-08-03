@@ -16,7 +16,7 @@ module CrudControllerSpec
     ##### SHOW
 
     def check_api_response(status, **opts)
-      get :show, params: merge_options(opts).merge(format: 'json')
+      get :show, params: merge_options(**opts).merge(format: 'json')
       check_status status
     end
 
@@ -40,64 +40,64 @@ module CrudControllerSpec
     ##### CREATE
 
     def check_create_template(_template, **opts)
-      xhr_post merge_options opts
+      post :create, params: merge_options(**opts), xhr: true
     end
 
     def check_create_status(status, **opts)
-      xhr_post merge_options opts
+      post :create, params: merge_options(**opts), xhr: true
       check_status status
     end
 
     def check_counter_incremented_on_create(klass, **opts)
-      expect { xhr_post merge_options(opts) }.to change(klass, :count).by(1)
+      expect { post :create, params: merge_options(**opts), xhr: true }.to change(klass, :count).by(1)
     end
 
     def check_counter_not_changed_on_create(klass, **opts)
-      expect { xhr_post merge_options(opts) }.not_to change(klass, :count)
+      expect { post :create, params: merge_options(**opts), xhr: true }.not_to change(klass, :count)
     end
 
     ##### EDIT
 
     def check_edit_variable(_variable, _value, **opts)
-      get :edit, params: merge_options(opts), xhr: true
+      get :edit, params: merge_options(**opts), xhr: true
     end
 
     def check_edit_template(**opts)
-      get :edit, params: merge_options(opts), xhr: true
+      get :edit, params: merge_options(**opts), xhr: true
       assert_response :success
     end
 
     def check_edit_status(status, **opts)
-      get :edit, params: merge_options(opts), xhr: true
+      get :edit, params: merge_options(**opts), xhr: true
       check_status status
     end
 
     ##### UPDATE
 
     def check_update_variable(_variable, _value, **opts)
-      xhr_put merge_options(opts)
+      put :update, params: merge_options(**opts), xhr: true
       @object.reload
     end
 
     def check_attribute_has_changed(method, value, **opts)
-      xhr_put merge_options(opts)
+      put :update, params: merge_options(**opts), xhr: true
       @object.reload
       check_equality(@object.send(method), value)
     end
 
     def check_attribute_has_not_changed(method, **opts)
       old_value = @object.send method
-      xhr_put merge_options(opts)
+      put :update, params: merge_options(**opts), xhr: true
       @object.reload
       check_equality(@object.send(method), old_value)
     end
 
     def check_update_template(**opts)
-      xhr_put merge_options(opts)
+      put :update, params: merge_options(**opts), xhr: true
     end
 
     def check_update_status(status, **opts)
-      xhr_put merge_options(opts)
+      put :update, params: merge_options(**opts), xhr: true
       check_status status
     end
 
@@ -118,7 +118,8 @@ module CrudControllerSpec
       { repository_id: @repository.id }.clone
     end
 
-    def merge_options(**opts)
+    def merge_options(opts)
+      opts ||= {}
       base_options.merge opts
     end
 
@@ -132,14 +133,6 @@ module CrudControllerSpec
 
     def check_equality(variable, value)
       expect(variable).to eq value
-    end
-
-    def xhr_post(**opts)
-      post :create, params: opts, xhr: true
-    end
-
-    def xhr_put(**opts)
-      put :update, params: opts, xhr: true
     end
   end
 end

@@ -26,7 +26,7 @@ class GitolitePublicKey < ActiveRecord::Base
   validates :key_type,    presence: true, numericality: { only_integer: true },
                           inclusion: { in: [KEY_TYPE_USER, KEY_TYPE_DEPLOY] }
 
-  validate :has_not_been_changed
+  validate :not_been_changed?
   validate :key_correctness
   validate :key_not_admin
   validate :key_uniqueness
@@ -64,15 +64,15 @@ class GitolitePublicKey < ActiveRecord::Base
   #
   #
   # keydir/
-  # ├── redmine_git_hosting
-  # │   └── redmine_admin_1
-  # │       ├── redmine_test_key
-  # │       │   └── redmine_admin_1.pub
-  # │       ├── redmine_deploy_key_1
-  # │       │   └── redmine_admin_1.pub
-  # │       └── redmine_deploy_key_2
-  # │           └── redmine_admin_1.pub
-  # └── redmine_gitolite_admin_id_rsa.pub
+  #   redmine_git_hosting
+  #     redmine_admin_1
+  #       redmine_test_key
+  #         redmine_admin_1.pub
+  #       redmine_deploy_key_1
+  #         redmine_admin_1.pub
+  #       redmine_deploy_key_2
+  #         redmine_admin_1.pub
+  #   redmine_gitolite_admin_id_rsa.pub
   #
   #
   # The root folder for this user is the user's identifier
@@ -174,7 +174,7 @@ class GitolitePublicKey < ActiveRecord::Base
     errors.add :key, :corrupted
   end
 
-  def has_not_been_changed
+  def not_been_changed?
     return if new_record?
 
     %w[identifier key user_id key_type title fingerprint].each do |attribute|

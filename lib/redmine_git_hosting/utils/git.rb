@@ -6,7 +6,7 @@ module RedmineGitHosting
       extend self
 
       REF_COMPONENT_PART  = '[\\.\\-\\w_\\*]+'
-      REF_COMPONENT_REGEX = %r{\A(refs/)?((#{REF_COMPONENT_PART})/)?(#{REF_COMPONENT_PART}(/#{REF_COMPONENT_PART})*)\z}
+      REF_COMPONENT_REGEX = %r{\A(refs/)?((#{REF_COMPONENT_PART})/)?(#{REF_COMPONENT_PART}(/#{REF_COMPONENT_PART})*)\z}.freeze
 
       # Parse a reference component. Two possibilities:
       #

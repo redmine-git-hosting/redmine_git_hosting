@@ -93,8 +93,6 @@ Style/OptionHash:
     - params
     - parameters
     - settings
-  Exclude:
-    - lib/redmine_git_hosting/patches/*.rb
 
 Style/ReturnNil:
   Enabled: true

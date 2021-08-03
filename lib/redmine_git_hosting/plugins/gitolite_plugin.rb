@@ -12,11 +12,11 @@ module RedmineGitHosting::Plugins
       end
 
       def sweepers
-        plugins.select { |p| p.name.demodulize == 'BaseSweeper' }.first.subclasses
+        plugins.find { |p| p.name.demodulize == 'BaseSweeper' }.subclasses
       end
 
       def extenders
-        plugins.select { |p| p.name.demodulize == 'BaseExtender' }.first.subclasses
+        plugins.find { |p| p.name.demodulize == 'BaseExtender' }.subclasses
       end
 
       def inherited(klass)

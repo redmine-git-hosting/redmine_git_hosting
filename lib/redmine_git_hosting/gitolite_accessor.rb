@@ -61,7 +61,7 @@ module RedmineGitHosting
       end
     end
 
-    def update_projects(projects, **opts)
+    def update_projects(projects, opts)
       message = opts.delete(:message) { ' ' }
       logger.info message
       resync_gitolite :update_projects, projects, **opts
