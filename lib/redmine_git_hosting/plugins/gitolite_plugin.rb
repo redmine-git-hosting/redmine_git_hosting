@@ -41,7 +41,7 @@ module RedmineGitHosting::Plugins
 
     def sudo_git(*params)
       cmd = RedmineGitHosting::Commands.sudo_git_args_for_repo(gitolite_repo_path, git_args).concat(params)
-      RedmineGitHosting::Commands.capture cmd, git_opts
+      RedmineGitHosting::Commands.capture cmd, **git_opts
     end
 
     # You may override this method to prepend args like environment variables

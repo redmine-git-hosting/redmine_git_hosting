@@ -453,7 +453,8 @@ module Redmine
         def mirror_push(mirror_url, branch = nil, args = [])
           cmd_args = git_mirror_cmd.concat(['push', *args, mirror_url, branch]).compact
           cmd = cmd_args.shift
-          RedmineGitHosting::Utils::Exec.capture(cmd, cmd_args, { merge_output: true })
+
+          RedmineGitHosting::Utils::Exec.capture cmd, cmd_args, merge_output: true
         end
 
         class Revision < Redmine::Scm::Adapters::Revision
