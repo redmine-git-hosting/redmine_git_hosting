@@ -50,7 +50,8 @@ module RedmineGitHosting
       end
 
       def update_projects
-        gitolite_accessor.update_projects projects_to_update, message: "Status of '#{@user.login}' has changed, update projects"
+        gitolite_accessor.update_projects projects_to_update,
+                                          message: "Status of '#{@user.login}' has changed, update projects"
       end
 
       def projects_to_update

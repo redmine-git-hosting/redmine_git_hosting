@@ -83,8 +83,11 @@ module Settings
       if value_has_changed?(:gitolite_config_file)       ||
          value_has_changed?(:gitolite_identifier_prefix) ||
          value_has_changed?(:gitolite_identifier_strip_user_id)
-        options = { message: 'Gitolite configuration has been modified, resync all projects (active, closed, archived)...' }
-        gitolite_accessor.update_projects 'all', options
+
+        gitolite_accessor.update_projects(
+          'all',
+          message: 'Gitolite configuration has been modified, resync all projects (active, closed, archived)...'
+        )
       end
     end
 
@@ -96,8 +99,8 @@ module Settings
          value_has_changed?(:gitolite_notify_global_exclude)
 
         # Need to update everyone!
-        options = { message: 'Gitolite configuration has been modified, resync all active projects...' }
-        gitolite_accessor.update_projects 'active', options
+        gitolite_accessor.update_projects 'active',
+                                          message: 'Gitolite configuration has been modified, resync all active projects...'
       end
     end
 
@@ -118,9 +121,12 @@ module Settings
     end
 
     def do_resync_projects
+      return unless resync_projects
+
       ## A resync has been asked within the interface, update all projects in force mode
-      options = { message: 'Forced resync of all projects (active, closed, archived)...', force: true }
-      gitolite_accessor.update_projects 'all', options if resync_projects
+      gitolite_accessor.update_projects 'all',
+                                        message: 'Forced resync of all projects (active, closed, archived)...',
+                                        force: true
     end
 
     def do_resync_ssh_keys

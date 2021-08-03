@@ -72,9 +72,9 @@ namespace :redmine_git_hosting do
 
       puts ''
 
-      options = { message: 'Gitolite configuration has been modified, resync all projects...', bypass_sidekiq: true }
-      RedmineGitHosting::GitoliteAccessor.update_projects 'all', options
-
+      RedmineGitHosting::GitoliteAccessor.update_projects 'all',
+                                                          message: 'Gitolite configuration has been modified, resync all projects...',
+                                                          bypass_sidekiq: true
       puts 'Done!'
     end
 

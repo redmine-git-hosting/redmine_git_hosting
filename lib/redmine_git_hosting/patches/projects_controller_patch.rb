@@ -89,13 +89,11 @@ module RedmineGitHosting
       end
 
       def update_project(message)
-        options = { message: message }
-        Projects::Update.call @project, options
+        Projects::Update.call @project, message: message
       end
 
       def update_project_hierarchy(message)
-        options = { message: message }
-        gitolite_accessor.update_projects hierarchy_to_update, options
+        gitolite_accessor.update_projects hierarchy_to_update, message: message
       end
 
       def hierarchy_to_update
