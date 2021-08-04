@@ -38,13 +38,19 @@ describe RedmineHooks::CallWebservices do
 
     context 'when triggers is set to master' do
       it 'should return the master payload' do
-        web_hook = build_web_hook global_payload, use_triggers: true, triggers: ['master']
+        web_hook = build_web_hook global_payload, use_triggers: true, mode: :github, triggers: ['master']
         expect(web_hook.needs_push?).to be true
+        expect(web_hook.with_empty_payload?).to be false
         expect(web_hook.payloads_to_send).to eq master_payload
       end
-    end
 
-    context 'when triggers is set to master' do
+      it 'should return the empty payload if mode is post' do
+        web_hook = build_web_hook global_payload, use_triggers: true, mode: :post, triggers: ['master']
+        expect(web_hook.needs_push?).to be true
+        expect(web_hook.with_empty_payload?).to be true
+        expect(web_hook.payloads_to_send).to eq [web_hook.empty_payload]
+      end
+
       it 'should not be found in branches payload and return false' do
         web_hook = build_web_hook branches_payload, use_triggers: true, triggers: ['master']
         expect(web_hook.needs_push?).to be false

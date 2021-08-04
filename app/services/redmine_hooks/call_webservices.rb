@@ -29,7 +29,6 @@ module RedmineHooks
     end
 
     def needs_push?
-      return true if post_receive_url.mode == :post
       return false if payloads.empty?
       return true unless use_triggers?
       return false if post_receive_url.triggers.empty?
@@ -52,13 +51,21 @@ module RedmineHooks
       "This url doesn't need to be notified"
     end
 
+    def with_empty_payload?
+      post_receive_url.mode == :post
+    end
+
+    def empty_payload
+      { empty: true }
+    end
+
     private
 
     def set_payloads_to_send
-      @payloads_to_send = if post_receive_url.mode == :post
-                            {}
-                          elsif use_triggers?
+      @payloads_to_send = if use_triggers?
                             extract_payloads
+                          elsif with_empty_payload?
+                            empty_payload
                           else
                             payloads
                           end
@@ -68,7 +75,9 @@ module RedmineHooks
       new_payloads = []
       payloads.each do |payload|
         data = RedmineGitHosting::Utils::Git.parse_refspec payload[:ref]
-        new_payloads << payload if data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
+        next unless data[:type] == 'heads' && post_receive_url.triggers.include?(data[:name])
+
+        new_payloads << (with_empty_payload? ? empty_payload : payload)
       end
       new_payloads
     end
