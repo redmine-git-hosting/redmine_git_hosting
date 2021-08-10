@@ -137,7 +137,7 @@ de:
   label_git_config_key_create: Neuen Git Config Key erzeugen
   label_git_config_key_delete: Git Config Key löschen
   label_git_config_key_edit: Git Config Key bearbeiten
-  label_git_config_keys: Git Config Keys
+  label_git_config_keys: Git Konfigurationsoptionen
   label_git_config_username_desc: Wird als Autor Name in Commits verwendet
   label_git_config_username: Git Autor Name
   label_git_daemon: Git Daemon
@@ -410,3 +410,5 @@ de:
   label_install_hook_results: Install hook results
   label_repository_url_plural: Repository URLs
   label_repository/xitolite_watchers: Beobachter
+  label_repository_git_config_key: Git Konfigurationsschlüssel
+  label_repository_git_option_key: Gitolite Konfigurationsschlüssel

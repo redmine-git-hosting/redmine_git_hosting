@@ -406,3 +406,5 @@ es:
   label_install_hook_results: Install hook results
   label_repository_url_plural: Repository URLs
   label_repository/xitolite_watchers: Watchers
+  label_repository_git_config_key: Git config key
+  label_repository_git_option_key: Gitolite config key
