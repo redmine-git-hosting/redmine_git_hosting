@@ -49,6 +49,9 @@ Rails/ApplicationJob:
 Rails/ApplicationRecord:
   Enabled: false
 
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+
 Rails/CreateTableWithTimestamps:
   Enabled: false
 

@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-# Redmine Permissions
-require 'redmine_permissions'
-
-# Redmine Menus
-require 'redmine_menus'
-
 # Redmine Hooks
 require 'redmine_git_hosting/hooks'
 

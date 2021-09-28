@@ -14,6 +14,42 @@ Redmine::Plugin.register :redmine_git_hosting do
   settings partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings
   requires_redmine version_or_higher: '4.1.0'
 
+  permission :create_gitolite_ssh_key, gitolite_public_keys: %i[index create destroy], require: :loggedin
+
+  project_module :repository do
+    permission :create_repository_mirrors, repository_mirrors: %i[new create]
+    permission :view_repository_mirrors,   repository_mirrors: %i[indexshow]
+    permission :edit_repository_mirrors,   repository_mirrors: %i[edit update destroy]
+    permission :push_repository_mirrors,   repository_mirrors: [:push]
+
+    permission :create_repository_post_receive_urls, repository_post_receive_urls: %i[new create]
+    permission :view_repository_post_receive_urls,   repository_post_receive_urls: %i[index show]
+    permission :edit_repository_post_receive_urls,   repository_post_receive_urls: %i[edit update destroy]
+
+    permission :create_repository_deployment_credentials, repository_deployment_credentials: %i[new create]
+    permission :view_repository_deployment_credentials,   repository_deployment_credentials: %i[index show]
+    permission :edit_repository_deployment_credentials,   repository_deployment_credentials: %i[edit update destroy]
+
+    permission :create_repository_git_config_keys, repository_git_config_keys: %i[new create]
+    permission :view_repository_git_config_keys,   repository_git_config_keys: %i[index show]
+    permission :edit_repository_git_config_keys,   repository_git_config_keys: %i[edit update destroy]
+
+    permission :create_repository_protected_branches, repository_protected_branches: %i[new create]
+    permission :view_repository_protected_branches,   repository_protected_branches: %i[index show]
+    permission :edit_repository_protected_branches,   repository_protected_branches: %i[edit update destroy]
+
+    permission :view_repository_xitolite_watchers,   repositories: :show
+    permission :add_repository_xitolite_watchers,    watchers: :create
+    permission :delete_repository_xitolite_watchers, watchers: :destroy
+
+    permission :download_git_revision, download_git_revision: :index
+  end
+
+  menu :admin_menu,
+       :redmine_git_hosting,
+       { controller: 'settings', action: 'plugin', id: 'redmine_git_hosting' },
+       caption: :redmine_git_hosting
+
   menu :project_menu,
        :new_repository,
        { controller: 'repositories', action: 'new' },
@@ -22,7 +58,7 @@ Redmine::Plugin.register :redmine_git_hosting do
        parent: :new_object
 
   begin
-    requires_redmine_plugin :additionals, version_or_higher: '3.0.2'
+    requires_redmine_plugin :additionals, version_or_higher: '3.0.3'
   rescue Redmine::PluginNotFound
     raise 'Please install additionals plugin (https://github.com/alphanodes/additionals)'
   end
