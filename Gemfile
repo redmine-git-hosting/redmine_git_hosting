@@ -16,7 +16,7 @@ gem 'redis'
 # Markdown rendering
 gem 'deckar01-task_list'
 gem 'escape_utils'
-gem 'html-pipeline'
+gem 'html-pipeline', '~> 2.13.2'
 gem 'rinku'
 
 # Syntaxic coloration
