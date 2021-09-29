@@ -103,7 +103,7 @@ module RedmineGitHosting
     def load_setting_file(file)
       return {} unless File.exist? file
 
-      data = YAML.safe_load(ERB.new(IO.read(file)).result) || {}
+      data = YAML.safe_load(ERB.new(File.read(file)).result) || {}
       data.symbolize_keys
     end
 

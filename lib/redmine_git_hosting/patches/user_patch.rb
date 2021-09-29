@@ -29,7 +29,7 @@ module RedmineGitHosting
       end
 
       def gitolite_projects
-        projects.uniq.select { |p| p.gitolite_repos.any? }
+        projects.select { |p| p.gitolite_repos.any? }
       end
 
       # Syntaxic sugar
