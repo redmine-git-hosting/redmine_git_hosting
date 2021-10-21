@@ -14,9 +14,6 @@ module RedmineGitHosting
       # Symbolize keys before using them
       action = action.to_sym
 
-      # NOTE: this could no longer be used. Are there any non-symbolized keys?
-      # options = options.symbolize_keys
-
       # Flush cache if needed
       flush_cache(**options)
 
