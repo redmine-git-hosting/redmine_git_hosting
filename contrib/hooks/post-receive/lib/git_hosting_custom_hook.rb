@@ -52,7 +52,7 @@ module GitHosting
       executables = []
       if File.directory? directory
         Dir.foreach directory do |item|
-          next if ['.', '..'].include? item
+          next if ['.', '..', '__pycache__'].include? item
 
           # Use full relative path
           path = "#{directory}/#{item}"
