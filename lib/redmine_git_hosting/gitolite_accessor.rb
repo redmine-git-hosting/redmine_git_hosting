@@ -116,9 +116,9 @@ module RedmineGitHosting
 
       if RedmineGitHosting::Config.gitolite_use_sidekiq? &&
          RedmineGitHosting::Config.sidekiq_available? && !bypass
-        GithostingShellWorker.maybe_do command, object, **options
+        GithostingShellWorker.maybe_do command, object, options
       else
-        GitoliteWrapper.resync_gitolite command, object, **options
+        GitoliteWrapper.resync_gitolite command, object, options
       end
     end
   end
