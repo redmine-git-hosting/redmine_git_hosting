@@ -33,7 +33,7 @@ module RedmineGitHosting
         return unless repo.is_a? Repository::Xitolite
 
         options = { message: "Watcher changes on repository '#{repo}', update!" }
-        gitolite_accessor.update_repository repo, options
+        gitolite_accessor.update_repository repo, **options
       end
     end
   end

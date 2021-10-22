@@ -103,7 +103,7 @@ module RedmineGitHosting
 
       def destroy_repositories(repositories_list)
         options = { message: "User '#{User.current.login}' has destroyed project '#{@project}', delete all Gitolite repositories !" }
-        gitolite_accessor.destroy_repositories repositories_list, options
+        gitolite_accessor.destroy_repositories repositories_list, **options
       end
 
       def repositories_to_destroy
