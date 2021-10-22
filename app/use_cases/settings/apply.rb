@@ -17,7 +17,7 @@ module Settings
     end
 
     class << self
-      def call(previous_settings, **options)
+      def call(previous_settings, options)
         new(previous_settings, **options).call
       end
     end

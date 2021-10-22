@@ -58,7 +58,7 @@ module RedmineGitHosting
           Setting.send "plugin_#{@plugin.id}=", settings_form.params
 
           # Execute post actions
-          execute_post_actions old_settings, **options.to_unsafe_h.symbolize_keys
+          execute_post_actions old_settings, options.to_unsafe_h.symbolize_keys
 
           flash[:notice] = l :notice_successful_update
         else

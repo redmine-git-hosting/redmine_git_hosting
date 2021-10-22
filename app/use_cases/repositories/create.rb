@@ -57,7 +57,7 @@ module Repositories
     end
 
     def create_repository
-      gitolite_accessor.create_repository repository, options
+      gitolite_accessor.create_repository repository, **options
     end
   end
 end
