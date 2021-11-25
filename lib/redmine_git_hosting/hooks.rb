@@ -28,7 +28,7 @@ module RedmineGitHosting
 
       return '' if readme_file.nil?
 
-      content = get_formated_text repository, readme_file, rev
+      content = get_formatted_text repository, readme_file, rev
 
       context[:controller].send :render_to_string, partial: 'repositories/readme', locals: { html: content }
     end
@@ -48,7 +48,7 @@ module RedmineGitHosting
       (repository.entries(path, rev) || []).find { |f| f.name =~ /README((\.).*)?/i }
     end
 
-    def get_formated_text(repository, file, rev)
+    def get_formatted_text(repository, file, rev)
       raw_readme_text = Redmine::CodesetUtil.to_utf8_by_setting repository.cat(file.path, rev)
 
       if redmine_file? file
@@ -57,7 +57,7 @@ module RedmineGitHosting
       elsif github_file? file
         RedmineGitHosting::MarkdownRenderer.to_html raw_readme_text
       else
-        GitHub::Markup.render file.path, raw_readme_text
+        GitHub::Markup.render(file.path, raw_readme_text).gsub("\n", '<br/>')
       end
     end
 
