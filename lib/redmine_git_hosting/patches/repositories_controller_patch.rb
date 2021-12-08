@@ -83,11 +83,11 @@ module RedmineGitHosting
       end
 
       def create_readme_file?
-        Additionals.true? @repository.create_readme
+        RedminePluginKit.true? @repository.create_readme
       end
 
       def enable_git_annex?
-        Additionals.true? @repository.enable_git_annex
+        RedminePluginKit.true? @repository.enable_git_annex
       end
 
       REV_PARAM_RE = /\A[a-f0-9]*\Z/i

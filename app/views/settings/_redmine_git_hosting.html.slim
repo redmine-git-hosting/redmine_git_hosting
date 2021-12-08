@@ -5,14 +5,16 @@
 span
   = l :label_need_help
   ' :
-  = link_to l(:label_redmine_git_hosting_wiki), RedmineGitHosting::Config::GITHUB_WIKI, class: 'external'
+  = link_to_external l(:label_redmine_git_hosting_wiki),
+                     RedmineGitHosting::Config::GITHUB_WIKI
 
 br
 
 span
   = l :label_open_issue
   ' :
-  = link_to l(:label_redmine_git_hosting_issue), RedmineGitHosting::Config::GITHUB_ISSUE, class: 'external'
+  = link_to_external l(:label_redmine_git_hosting_issue),
+                     RedmineGitHosting::Config::GITHUB_ISSUE
 
 br
 br

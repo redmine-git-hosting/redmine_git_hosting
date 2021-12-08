@@ -28,7 +28,7 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def create_readme_file?
-      Additionals.true? create_readme_file
+      RedminePluginKit.true? create_readme_file
     end
 
     def do_create_readme_file

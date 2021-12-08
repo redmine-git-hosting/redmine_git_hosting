@@ -137,7 +137,7 @@ class MigrateParameters < ActiveRecord::Migration[4.2]
       when 'deleteGitRepositories'
         new_setting[:delete_git_repositories] = value
       when 'gitRepositoryHierarchy'
-        if Additionals.true? value
+        if RedminePluginKit.true? value
           new_setting[:hierarchical_organisation] = 'true'
           new_setting[:unique_repo_identifier] = 'false'
         else

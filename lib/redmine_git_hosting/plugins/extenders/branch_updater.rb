@@ -17,7 +17,7 @@ module RedmineGitHosting::Plugins::Extenders
     private
 
     def update_default_branch?
-      Additionals.true? update_default_branch
+      RedminePluginKit.true? update_default_branch
     end
 
     def do_update_default_branch

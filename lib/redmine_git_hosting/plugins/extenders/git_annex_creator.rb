@@ -26,7 +26,7 @@ module RedmineGitHosting::Plugins::Extenders
     end
 
     def enable_git_annex?
-      Additionals.true? enable_git_annex
+      RedminePluginKit.true? enable_git_annex
     end
 
     def git_annex_installed?

@@ -58,7 +58,7 @@ class RepositoryPresenter < SimpleDelegator
   end
 
   def committer_label(value)
-    Additionals.true?(value[:committer]) ? l(:label_read_write_permission) : l(:label_read_only_permission)
+    RedminePluginKit.true?(value[:committer]) ? l(:label_read_write_permission) : l(:label_read_only_permission)
   end
 
   def element_name

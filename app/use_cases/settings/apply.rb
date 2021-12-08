@@ -148,7 +148,7 @@ module Settings
     end
 
     def do_add_redmine_rw_access
-      if Additionals.true? current_setting(:redmine_has_rw_access_on_all_repos)
+      if RedminePluginKit.true? current_setting(:redmine_has_rw_access_on_all_repos)
         gitolite_accessor.enable_rw_access
       else
         gitolite_accessor.disable_rw_access

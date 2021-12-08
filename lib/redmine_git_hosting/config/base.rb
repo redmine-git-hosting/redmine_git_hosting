@@ -13,7 +13,7 @@ module RedmineGitHosting
 
       def get_setting(setting, bool = false)
         if bool
-          Additionals.true? do_get_setting(setting)
+          RedminePluginKit.true? do_get_setting(setting)
         else
           do_get_setting setting
         end

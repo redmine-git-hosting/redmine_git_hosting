@@ -15,7 +15,7 @@ module RedmineGitHosting::Plugins::Sweepers
     private
 
     def delete_repository?
-      Additionals.true? delete_repository
+      RedminePluginKit.true? delete_repository
     end
   end
 end

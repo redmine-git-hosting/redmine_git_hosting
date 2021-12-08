@@ -66,8 +66,8 @@ class Repository::Xitolite < Repository::Git
   private
 
   def valid_repository_options
-    return unless Additionals.true? create_readme
-    return unless Additionals.true? enable_git_annex
+    return if RedminePluginKit.false? create_readme
+    return if RedminePluginKit.false? enable_git_annex
 
     errors.add :base, :invalid_options
   end
