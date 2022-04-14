@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 module Hrack
-  require 'hrack/bundle'
+  module Version
+  end
+  VERSION = '1.0.0'
 end

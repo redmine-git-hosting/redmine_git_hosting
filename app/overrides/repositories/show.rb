@@ -11,3 +11,8 @@ Deface::Override.new virtual_path: 'repositories/show',
                      insert_before: 'erb[silent]:contains("html_title")',
                      original: '2a0a09659d76066b896016c72527d479c69463ec',
                      partial: 'hooks/show_repositories_sidebar'
+
+module Repositories
+  module Show
+  end
+end

@@ -69,5 +69,5 @@ Rails.configuration.to_prepare do
   # Redmine SCM adapter
   require_dependency 'redmine/scm/adapters/xitolite_adapter'
 
-  require 'hrack/init'
+  require 'hrack/bundle'
 end

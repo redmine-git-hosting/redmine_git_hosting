@@ -2,7 +2,6 @@
 
 require 'rack/builder'
 require 'rack/parser'
-require 'hrack/server'
 
 module Hrack
   module Bundle

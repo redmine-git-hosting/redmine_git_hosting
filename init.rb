@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'redmine'
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib"
+
 require 'redmine_git_hosting'
 
 Redmine::Plugin.register :redmine_git_hosting do
