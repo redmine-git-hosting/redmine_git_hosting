@@ -187,7 +187,7 @@ module Redmine
           nil
         end
 
-        def revisions(path, identifier_from, identifier_to, **options)
+        def revisions(path, identifier_from, identifier_to, options={})
           revs = Revisions.new
           cmd_args = %w[log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents --stdin]
           cmd_args << '--no-renames' if self.class.client_version_above? [2, 9]
