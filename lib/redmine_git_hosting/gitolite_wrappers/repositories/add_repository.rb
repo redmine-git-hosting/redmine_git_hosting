@@ -35,7 +35,7 @@ module RedmineGitHosting
           logger.info 'Execute Gitolite Plugins'
 
           # Create README file or initialize GitAnnex
-          RedmineGitHosting::Plugins.execute :post_create, repository, options.merge(recovered: @recovered)
+          RedmineGitHosting::Plugins.execute :post_create, repository, **options.merge(recovered: @recovered)
 
           # Fetch changeset
           repository.fetch_changesets

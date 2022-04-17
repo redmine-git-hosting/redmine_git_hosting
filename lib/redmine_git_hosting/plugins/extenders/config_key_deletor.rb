@@ -4,8 +4,8 @@ module RedmineGitHosting::Plugins::Extenders
   class ConfigKeyDeletor < BaseExtender
     attr_reader :delete_git_config_key
 
-    def initialize(*args)
-      super
+    def initialize(repository, **options)
+      super(repository, **options)
       @delete_git_config_key = options.delete(:delete_git_config_key) { '' }
     end
 
