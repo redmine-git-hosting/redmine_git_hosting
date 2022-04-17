@@ -4,8 +4,8 @@ module RedmineGitHosting::Plugins::Extenders
   class GitAnnexCreator < BaseExtender
     attr_reader :enable_git_annex
 
-    def initialize(*args)
-      super
+    def initialize(repository, **options)
+      super(repository, **options)
       @enable_git_annex = options.delete(:enable_git_annex) { false }
     end
 

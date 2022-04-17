@@ -6,8 +6,8 @@ module RedmineGitHosting::Plugins::Extenders
   class ReadmeCreator < BaseExtender
     attr_reader :create_readme_file
 
-    def initialize(*args)
-      super
+    def initialize(repository, **options)
+      super(repository, **options)
       @create_readme_file = options.delete(:create_readme_file) { false }
     end
 

@@ -26,7 +26,7 @@ module RedmineGitHosting
           logger.info 'Execute Gitolite Plugins'
 
           # Delete Git Config Keys
-          RedmineGitHosting::Plugins.execute :post_update, repository, options
+          RedmineGitHosting::Plugins.execute :post_update, repository, **options
 
           # Fetch changeset
           repository.fetch_changesets
