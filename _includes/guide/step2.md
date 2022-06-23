@@ -13,8 +13,9 @@ Assuming that you have Redmine installed :
     # Then Redmine Git Hosting plugin
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/jbox-web/redmine_git_hosting.git
-    redmine$ cd redmine_git_hosting/
-    redmine$ git checkout {{ site.data.project.release.version }}
+    # last release version is broken, use master branch till next version released!
+    # redmine$ cd redmine_git_hosting/
+    # redmine$ git checkout {{ site.data.project.release.version }}
 
     # Install gems and migrate database
     redmine$ cd REDMINE_ROOT
