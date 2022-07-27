@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'redmine'
-require 'redmine_git_hosting'
 
 Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
