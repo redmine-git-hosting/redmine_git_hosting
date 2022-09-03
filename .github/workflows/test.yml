@@ -93,6 +93,7 @@ jobs:
           libmysqlclient-dev
           libssh2-1
           libssh2-1-dev
+          pkg-config
           subversion
 
       - name: Setup Ruby
@@ -125,6 +126,7 @@ jobs:
         working-directory: redmine
         run: |
           bundle config set --local without 'development'
+          bundle config build.rugged --with-ssh
           bundle install --jobs=4 --retry=3
 
       - name: Run Redmine rake tasks
