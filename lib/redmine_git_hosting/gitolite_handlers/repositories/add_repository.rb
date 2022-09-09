@@ -32,8 +32,8 @@ module RedmineGitHosting
 
         def initialize(gitolite_config, repository, context, **options)
           super(gitolite_config, repository, context, **options)
-          @force     = options.delete(:force) { false }
-          @old_perms = options.delete(:old_perms) { {} }
+          @force     = @options.delete(:force) { false }
+          @old_perms = @options.delete(:old_perms) { {} }
         end
       end
     end
