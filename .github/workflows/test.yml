@@ -70,7 +70,10 @@ jobs:
       - name: Checkout redmine_sidekiq
         uses: actions/checkout@v2
         with:
-          repository: ogom/redmine_sidekiq
+          # TODO Switch back to the original repo, once the "fix-rails-6" PR gets accepted
+          # repository: ogom/redmine_sidekiq
+          repository: dosyfier/redmine_sidekiq
+          ref: fix-rails-6
           path: redmine/plugins/redmine_sidekiq
 
       - name: Checkout gitolite
