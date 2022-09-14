@@ -70,7 +70,7 @@ jobs:
       - name: Checkout redmine_sidekiq
         uses: actions/checkout@v2
         with:
-          # TODO Switch back to the original repo, once the "fix-rails-6" PR gets accepted
+          # TODO Switch back to the original repo, once https://github.com/ogom/redmine_sidekiq/pull/16 is released
           # repository: ogom/redmine_sidekiq
           repository: dosyfier/redmine_sidekiq
           ref: fix-rails-6
