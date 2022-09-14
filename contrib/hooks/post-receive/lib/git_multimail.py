@@ -1,8 +1,8 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
-__version__ = '1.5.0'
+__version__ = '1.6.0'
 
-# Copyright (c) 2015-2016 Matthieu Moy and others
+# Copyright (c) 2015-2022 Matthieu Moy and others
 # Copyright (c) 2012-2014 Michael Haggerty and others
 # Derived from contrib/hooks/post-receive-email, which is
 # Copyright (c) 2007 Andy Parkins
@@ -95,7 +95,7 @@ if PYTHON3:
     unicode = str
 
     def write_str(f, msg):
-        # Try outputing with the default encoding. If it fails,
+        # Try outputting with the default encoding. If it fails,
         # try UTF-8.
         try:
             f.buffer.write(msg.encode(sys.getdefaultencoding()))
@@ -2129,7 +2129,7 @@ class SMTPMailer(Mailer):
                 # equivalent to
                 #     self.smtp.ehlo()
                 #     self.smtp.starttls()
-                # with acces to the ssl layer
+                # with access to the ssl layer
                 self.smtp.ehlo()
                 if not self.smtp.has_extn("starttls"):
                     raise smtplib.SMTPException("STARTTLS extension not supported by server")
@@ -2148,13 +2148,13 @@ class SMTPMailer(Mailer):
                         cert_reqs=ssl.CERT_NONE
                         )
                     self.environment.get_logger().error(
-                        '*** Warning, the server certificat is not verified (smtp) ***\n'
+                        '*** Warning, the server certificate is not verified (smtp) ***\n'
                         '***          set the option smtpCACerts                   ***\n'
                         )
                 if not hasattr(self.smtp.sock, "read"):
                     # using httplib.FakeSocket with Python 2.5.x or earlier
                     self.smtp.sock.read = self.smtp.sock.recv
-                self.smtp.file = smtplib.SSLFakeFile(self.smtp.sock)
+                self.smtp.file = self.smtp.sock.makefile('rb')
                 self.smtp.helo_resp = None
                 self.smtp.ehlo_resp = None
                 self.smtp.esmtp_features = {}
@@ -2194,7 +2194,7 @@ class SMTPMailer(Mailer):
             # turn comma-separated list into Python list if needed.
             if is_string(to_addrs):
                 to_addrs = [email for (name, email) in getaddresses([to_addrs])]
-            self.smtp.sendmail(self.envelopesender, to_addrs, msg)
+            self.smtp.sendmail(self.envelopesender, to_addrs, msg.encode('utf8'))
         except socket.timeout:
             self.environment.get_logger().error(
                 '*** Error sending email ***\n'
@@ -2955,9 +2955,19 @@ class ComputeFQDNEnvironmentMixin(FQDNEnvironmentMixin):
 
     def __init__(self, **kw):
         super(ComputeFQDNEnvironmentMixin, self).__init__(
-            fqdn=socket.getfqdn(),
+            fqdn=self.get_fqdn(),
             **kw
             )
+
+    def get_fqdn(self):
+        fqdn = socket.getfqdn()
+        # Sometimes, socket.getfqdn() returns localhost or
+        # localhost.localhost, which isn't very helpful. In this case,
+        # fall-back to socket.gethostname() which may return an actual
+        # hostname.
+        if fqdn == 'localhost' or fqdn == 'localhost.localdomain':
+            fqdn = socket.gethostname()
+        return fqdn
 
 
 class PusherDomainEnvironmentMixin(ConfigEnvironmentMixin):
@@ -3189,7 +3199,7 @@ class ProjectdescEnvironmentMixin(Environment):
         self.COMPUTED_KEYS += ['projectdesc']
 
     def get_projectdesc(self):
-        """Return a one-line descripition of the project."""
+        """Return a one-line description of the project."""
 
         git_dir = get_git_dir()
         try:
