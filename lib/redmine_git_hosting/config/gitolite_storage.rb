@@ -23,5 +23,7 @@ module RedmineGitHosting
         nil
       end
     end
+
+    extend Config::GitoliteStorage
   end
 end

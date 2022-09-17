@@ -205,5 +205,7 @@ module RedmineGitHosting
         sudo_cat destination_path
       end
     end
+
+    extend Commands::Sudo
   end
 end

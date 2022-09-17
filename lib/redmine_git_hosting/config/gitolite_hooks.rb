@@ -57,5 +57,7 @@ module RedmineGitHosting
         RedmineGitHosting::GitoliteParams::GlobalParams.new.install!
       end
     end
+
+    extend Config::GitoliteHooks
   end
 end

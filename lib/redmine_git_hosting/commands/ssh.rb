@@ -53,5 +53,7 @@ module RedmineGitHosting
         ]
       end
     end
+
+    extend Commands::Ssh
   end
 end
