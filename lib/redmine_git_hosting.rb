@@ -56,14 +56,3 @@ module RedmineGitHosting
        admin: true }]
   end
 end
-
-# Set up autoload of patches
-Rails.configuration.to_prepare do
-  # Redmine Git Hosting Libs and Patches
-  RedmineGitHosting.load_plugin!
-
-  # Redmine SCM adapter
-  require_dependency 'redmine/scm/adapters/xitolite_adapter'
-
-  require 'hrack/bundle'
-end
