@@ -32,7 +32,7 @@ describe GitolitePublicKey do
   # There is an isolation issue in tests.
   # Try to workaround it...
   def test_user
-    'redmine_git_user1_12'
+    'redmine_git_user1_13'
   end
 
   describe 'Valid SSH key build' do

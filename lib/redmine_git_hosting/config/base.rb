@@ -99,5 +99,7 @@ module RedmineGitHosting
         RedmineGitHosting.logger
       end
     end
+
+    extend Config::Base
   end
 end

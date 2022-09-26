@@ -84,5 +84,7 @@ module RedmineGitHosting
         /#{user}/.match?(test)
       end
     end
+
+    extend Config::GitoliteConfigTests
   end
 end

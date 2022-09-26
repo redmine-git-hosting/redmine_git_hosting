@@ -57,5 +57,7 @@ module RedmineGitHosting
         File.join(server_domain[%r{^[^/]*}], redmine_root_url, '/')[0..-2]
       end
     end
+
+    extend Config::GitoliteAccess
   end
 end

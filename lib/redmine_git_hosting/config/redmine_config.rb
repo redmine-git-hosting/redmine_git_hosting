@@ -49,5 +49,7 @@ module RedmineGitHosting
         (get_setting(:gitolite_recycle_bin_expiration_time).to_f * 60).to_i
       end
     end
+
+    extend Config::RedmineConfig
   end
 end
