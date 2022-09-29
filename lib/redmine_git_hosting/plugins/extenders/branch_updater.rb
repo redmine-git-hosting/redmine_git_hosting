@@ -4,8 +4,8 @@ module RedmineGitHosting::Plugins::Extenders
   class BranchUpdater < BaseExtender
     attr_reader :update_default_branch
 
-    def initialize(*args)
-      super
+    def initialize(repository, **options)
+      super(repository, **options)
       @update_default_branch = options.delete(:update_default_branch) { false }
     end
 

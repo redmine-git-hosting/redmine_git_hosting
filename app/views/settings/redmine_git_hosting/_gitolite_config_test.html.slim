@@ -92,4 +92,4 @@ fieldset.box.tabular
 br
 fieldset.box.tabular
   legend = l :label_path_directories
-  pre == (ENV['PATH']).gsub(/:/, '<br/>')
+  pre == ENV.fetch('PATH', nil).gsub(/:/, '<br/>')

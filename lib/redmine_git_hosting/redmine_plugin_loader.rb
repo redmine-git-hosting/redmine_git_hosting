@@ -119,7 +119,7 @@ module RedmineGitHosting
 
     def skip_lib_file?(file)
       # Exclude Redmine Views Hooks from Rails loader to avoid multiple calls to hooks on reload in dev environment.
-      true if hook_file?(file) || (file.include?('journal_logger.rb') && !Object.const_defined?('Account'))
+      true if hook_file?(file) || (file.include?('journal_logger.rb') && !Object.const_defined?(:Account))
     end
 
     def autoload_libs!

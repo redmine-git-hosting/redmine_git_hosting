@@ -21,5 +21,7 @@ module RedmineGitHosting
         get_setting :gitolite_cache_adapter
       end
     end
+
+    extend Config::GitoliteCache
   end
 end

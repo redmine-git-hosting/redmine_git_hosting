@@ -25,5 +25,7 @@ module RedmineGitHosting
         RedmineGitHosting.logger
       end
     end
+
+    extend Commands::Base
   end
 end

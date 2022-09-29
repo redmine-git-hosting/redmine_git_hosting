@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+source 'https://rubygems.org'
+
 # Gitolite Admin repository management
-gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.4.0'
+gem 'gitolite-rugged', git: 'https://github.com/jbox-web/gitolite-rugged.git', tag: '1.5.0'
 
 # Ruby/Rack Git Smart-HTTP Server Handler
 gem 'gitlab-grack', '~> 2.0.0', git: 'https://github.com/jbox-web/grack.git', require: 'grack', branch: 'fix_gemfile'
@@ -16,9 +18,7 @@ gem 'hiredis'
 gem 'redis'
 
 # Markdown rendering
-gem 'deckar01-task_list'
 gem 'escape_utils'
-gem 'html-pipeline', '~> 2.13.2'
 gem 'rinku'
 
 # Syntaxic coloration

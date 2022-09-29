@@ -62,7 +62,7 @@ module RedmineGitHosting
       # Notes : this method is called in *service_rpc* (not overriden)
       #
       def popen_env
-        { 'PATH' => ENV['PATH'] }
+        { 'PATH' => ENV.fetch('PATH', nil) }
       end
 
       private

@@ -21,5 +21,7 @@ module RedmineGitHosting
         get_setting :gitolite_notify_global_exclude
       end
     end
+
+    extend Config::GitoliteNotifications
   end
 end

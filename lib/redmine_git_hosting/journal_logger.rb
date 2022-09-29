@@ -36,5 +36,8 @@ module RedmineGitHosting
         end
       end
     end
+  else
+    module JournalLogger
+    end
   end
 end

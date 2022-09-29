@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'redmine'
-require 'redmine_git_hosting'
+$LOAD_PATH.unshift "#{File.dirname __FILE__}/lib"
 
 Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
@@ -67,6 +66,12 @@ end
 # This *must stay after* Redmine::Plugin.register statement
 # because it needs to access to plugin settings...
 # so we need the plugin to be fully registered...
-Rails.configuration.to_prepare do
-  require_dependency 'load_gitolite_hooks'
-end
+require_dependency 'load_gitolite_hooks'
+
+# Autoload Git Hosting Libs and Patches
+RedmineGitHosting.load_plugin!
+
+# Redmine SCM adapter
+require_dependency 'redmine/scm/adapters/xitolite_adapter'
+
+require 'hrack/bundle'

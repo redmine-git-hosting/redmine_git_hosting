@@ -8,7 +8,7 @@ require 'uri'
 module GitHosting
   module HttpHelper
     def http_post(url, opts = {}, &block)
-      http, request = build_post_request url, opts
+      http, request = build_post_request url, **opts
       send_http_request http, request, &block
     end
 

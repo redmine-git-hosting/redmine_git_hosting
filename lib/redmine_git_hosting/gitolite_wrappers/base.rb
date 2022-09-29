@@ -49,19 +49,19 @@ module RedmineGitHosting
       end
 
       def create_gitolite_repository(repository)
-        GitoliteHandlers::Repositories::AddRepository.call gitolite_config, repository, context, options
+        GitoliteHandlers::Repositories::AddRepository.call gitolite_config, repository, context, **options
       end
 
       def update_gitolite_repository(repository)
-        GitoliteHandlers::Repositories::UpdateRepository.call gitolite_config, repository, context, options
+        GitoliteHandlers::Repositories::UpdateRepository.call gitolite_config, repository, context, **options
       end
 
       def delete_gitolite_repository(repository)
-        GitoliteHandlers::Repositories::DeleteRepository.call gitolite_config, repository, context, options
+        GitoliteHandlers::Repositories::DeleteRepository.call gitolite_config, repository, context, **options
       end
 
       def move_gitolite_repository(repository)
-        GitoliteHandlers::Repositories::MoveRepository.call gitolite_config, repository, context, options
+        GitoliteHandlers::Repositories::MoveRepository.call gitolite_config, repository, context, **options
       end
 
       def create_gitolite_key(key)

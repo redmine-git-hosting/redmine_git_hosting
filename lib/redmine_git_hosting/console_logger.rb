@@ -6,7 +6,7 @@ module RedmineGitHosting
 
     def title(message)
       info "\n * #{message}:"
-      yield if block
+      yield if block_given?
       info " Done!\n\n"
     end
 

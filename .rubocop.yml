@@ -124,3 +124,11 @@ Layout/SpaceBeforeBrackets:
 Rails/EnvironmentVariableAccess:
   Enabled: true
   AllowReads: true
+
+# Hrack::Server requires the `initialize` method
+Style/RedundantInitialize:
+  Enabled: false
+
+# Because our unit tests assert that
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false

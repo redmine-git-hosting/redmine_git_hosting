@@ -19,5 +19,7 @@ module RedmineGitHosting
         File.join gitolite_home_dir, '.ssh', 'run_gitolite_admin_ssh'
       end
     end
+
+    extend Config::Mirroring
   end
 end

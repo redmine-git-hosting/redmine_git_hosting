@@ -72,3 +72,6 @@ end
 ].each do |file|
   require_dependency file if File.exist? file
 end
+
+module LoadGitoliteHooks
+end

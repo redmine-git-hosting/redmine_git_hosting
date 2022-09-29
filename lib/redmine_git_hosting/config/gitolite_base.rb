@@ -111,5 +111,7 @@ module RedmineGitHosting
         get_setting :gitolite_log_level
       end
     end
+
+    extend Config::GitoliteBase
   end
 end

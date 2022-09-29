@@ -120,5 +120,7 @@ module RedmineGitHosting
         value_hash
       end
     end
+
+    extend Commands::Git
   end
 end

@@ -72,5 +72,7 @@ module RedmineGitHosting
         end
       end
     end
+
+    extend Config::GitoliteInfos
   end
 end

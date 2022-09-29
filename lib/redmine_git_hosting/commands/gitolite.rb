@@ -79,5 +79,7 @@ module RedmineGitHosting
         RedmineGitHosting::Config.gitolite_home_dir
       end
     end
+
+    extend Commands::Gitolite
   end
 end
