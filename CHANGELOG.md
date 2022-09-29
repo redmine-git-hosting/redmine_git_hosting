@@ -1,5 +1,20 @@
 # Changelog
 
+## 6.0.0 - 2022-09-29
+
+### Added
+
+- Support for Redmine 5.0
+
+### Changed
+
+- Lots of bug fixes
+
+### BREAKING CHANGE
+
+- Redmine 5.0+ is required
+- Ruby 2.7+ is required
+
 ## 5.0.0 - 2020-12-24 🎄
 
 ### Added
