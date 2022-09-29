@@ -124,3 +124,7 @@ Layout/SpaceBeforeBrackets:
 Rails/EnvironmentVariableAccess:
   Enabled: true
   AllowReads: true
+
+# Hrack::Server requires the `initialize` method
+Style/RedundantInitialize:
+    Enabled: false
