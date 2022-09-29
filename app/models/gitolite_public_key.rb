@@ -16,7 +16,6 @@ class GitolitePublicKey < ActiveRecord::Base
   has_many   :repository_deployment_credentials, dependent: :destroy
 
   ## Validations
-  validates :user_id,     presence: true
 
   validates :title,       presence: true, uniqueness: { case_sensitive: false, scope: :user_id },
                           length: { maximum: TITLE_LENGTH_LIMIT }, format: /\A[a-z0-9_\-]*\z/i

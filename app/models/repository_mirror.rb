@@ -15,7 +15,6 @@ class RepositoryMirror < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id, presence: true
 
   ## Only allow SSH format
   ## ssh://git@redmine.example.org/project1/project2/project3/project4.git

@@ -16,7 +16,6 @@ class RepositoryProtectedBranche < ActiveRecord::Base
   has_many   :members, through: :protected_branches_members, source: :principal
 
   ## Validations
-  validates :repository_id, presence: true
   validates :path,          presence: true, uniqueness: { case_sensitive: true, scope: %i[permissions repository_id] }
   validates :permissions,   presence: true, inclusion: { in: VALID_PERMS }
 

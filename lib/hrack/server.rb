@@ -8,8 +8,6 @@ module Hrack
 
     PLAIN_TYPE = { 'Content-Type' => 'text/plain' }.freeze
 
-    def initialize(config = {}); end
-
     def call(env)
       dup._call env
     end

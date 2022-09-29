@@ -12,7 +12,6 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id, presence: true
 
   # Only allow HTTP(s) format
   validates :url, presence: true,
