@@ -10,8 +10,6 @@ entries:
       items:
         - title: Get started
           url: /get_started/
-        - title: How to migrate
-          url: /how-to/migrate/
         - title: How to upgrade
           url: /how-to/upgrade/
         - title: How to maintain

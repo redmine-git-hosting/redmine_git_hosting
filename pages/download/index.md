@@ -8,8 +8,7 @@ layout: homepage
   <div class="col-lg-6">
     <h2>Stable version</h2>
     <p>This is the latest stable version : <span class="label label-success">{{ site.data.project.release.version }}</span></p>
-    <p>Once downloaded, follow the <a href="{{ site.baseurl }}/get_started/">Step by Step installation guide</a> or the
-      <a href="{{ site.baseurl }}/how-to/migrate/">Step by Step migration guide</a>.</p>
+    <p>Once downloaded, follow the <a href="{{ site.baseurl }}/get_started/">Step by Step installation guide</a>.</p>
 
     <ul class="release-downloads">
       <li>

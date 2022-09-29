@@ -3,7 +3,6 @@ title: How-To
 permalink: /how-to/
 ---
 
-* [How to migrate]({{ site.base_url }}/how-to/migrate/)
 * [How to upgrade]({{ site.base_url }}/how-to/upgrade/)
 * [How to maintain]({{ site.base_url }}/how-to/maintain/)
 * [How to remove]({{ site.base_url }}/how-to/remove/)
