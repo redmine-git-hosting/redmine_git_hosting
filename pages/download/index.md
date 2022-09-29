@@ -29,11 +29,11 @@ layout: homepage
     <h2>Requirements</h2>
 
     <ul>
-      <li>Ruby: 2.5+</li>
+      <li>Ruby: 2.7+</li>
       <li>Git: 2.0+</li>
-      <li>Redmine: 4.1+</li>
+      <li>Redmine: 5.0+</li>
       <li>Gitolite: 3.0+</li>
-      <li>Database: MySQL or Postgres</li>
+      <li>Database: MySQL, MariaDB or Postgres</li>
     </ul>
   </div>
 </div>
