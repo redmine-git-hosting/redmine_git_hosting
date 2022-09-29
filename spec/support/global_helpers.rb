@@ -86,7 +86,7 @@ module GlobalHelpers
   def load_yaml_fixture(fixture)
     if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
       YAML.load load_fixture(fixture), # rubocop: disable Security/YAMLLoad
-        permitted_classes: [Symbol, Time]
+                permitted_classes: [Symbol, Time]
     else
       YAML.load load_fixture(fixture) # rubocop: disable Security/YAMLLoad
     end

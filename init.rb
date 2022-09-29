@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib"
+$LOAD_PATH.unshift "#{File.dirname __FILE__}/lib"
 
 Redmine::Plugin.register :redmine_git_hosting do
   name        'Redmine Git Hosting Plugin'
