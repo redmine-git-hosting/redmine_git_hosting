@@ -25,7 +25,7 @@ class RepositoryGitExtra < ActiveRecord::Base
   belongs_to :repository
 
   ## Validations
-  validates :repository_id, uniqueness: true
+  validates :repository_id,       presence: true, uniqueness: true
   validates :default_branch,      presence: true
   validates :key,                 presence: true
   validates :notification_sender, format: { with: URI::MailTo::EMAIL_REGEXP, allow_blank: true }

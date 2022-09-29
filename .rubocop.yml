@@ -127,4 +127,8 @@ Rails/EnvironmentVariableAccess:
 
 # Hrack::Server requires the `initialize` method
 Style/RedundantInitialize:
-    Enabled: false
+  Enabled: false
+
+# Because our unit tests assert that
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false

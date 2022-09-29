@@ -15,10 +15,11 @@ class RepositoryDeploymentCredential < ActiveRecord::Base
   belongs_to :user
 
   ## Validations
-  validates :repository_id,
-            uniqueness: { scope: :gitolite_public_key_id }
+  validates :repository_id,          presence: true,
+                                     uniqueness: { scope: :gitolite_public_key_id }
 
-  validates :gitolite_public_key_id, exclusion: { in: [-1] }
+  validates :gitolite_public_key_id, presence: true, exclusion: { in: [-1] }
+  validates :user_id,                presence: true
   validates :perm,                   presence: true,
                                      inclusion: { in: VALID_PERMS }
 

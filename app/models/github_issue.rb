@@ -6,5 +6,5 @@ class GithubIssue < ActiveRecord::Base
 
   ## Validations
   validates :github_id, presence: true
-  validates :issue_id, uniqueness: { scope: :github_id }
+  validates :issue_id,  presence: true, uniqueness: { scope: :github_id }
 end
