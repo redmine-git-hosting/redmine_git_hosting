@@ -13,26 +13,26 @@ namespace :redmine_git_hosting do
         puts "new_name : #{new_name}"
 
         # Get the old migration name
-        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
-                 " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
-                 " '#{ActiveRecord::Base.connection.quote_string old_name}';"
+        query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} " \
+                 "WHERE #{ActiveRecord::Base.connection.quote_string 'version'} = " \
+                 "'#{ActiveRecord::Base.connection.quote_string old_name}';"
         result = ActiveRecord::Base.connection.execute query
 
         # If present, rename
         if result.to_a.present?
-          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
-                  " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
-                  " '#{ActiveRecord::Base.connection.quote_string old_name}';"
+          query = "DELETE FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} " \
+                  "WHERE #{ActiveRecord::Base.connection.quote_string 'version'} = " \
+                  "'#{ActiveRecord::Base.connection.quote_string old_name}';"
           ActiveRecord::Base.connection.execute query
 
-          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} (VERSION)" \
-                  " VALUES ('#{ActiveRecord::Base.connection.quote_string new_name}');"
+          query = "INSERT INTO #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} (VERSION) " \
+                  "VALUES ('#{ActiveRecord::Base.connection.quote_string new_name}');"
           ActiveRecord::Base.connection.execute query
         else
           # Check the new name is present
-          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'}" \
-                   " WHERE #{ActiveRecord::Base.connection.quote_string 'version'} =" \
-                   " '#{ActiveRecord::Base.connection.quote_string new_name}';"
+          query  = "SELECT * FROM #{ActiveRecord::Base.connection.quote_string 'schema_migrations'} " \
+                   "WHERE #{ActiveRecord::Base.connection.quote_string 'version'} = " \
+                   "'#{ActiveRecord::Base.connection.quote_string new_name}';"
           result = ActiveRecord::Base.connection.execute query
 
           if result.to_a.empty?
