@@ -58,4 +58,4 @@ Install [missing dependencies](http://redmine-git-hosting.io/get_started/#step-1
     redmine$ bundle clean --force
     redmine$ bundle install --without development test
     redmine$ gem uninstall rugged
-    redmine$ gem install rugged -v='0.22.2'
+    redmine$ gem install rugged -- --with-ssh
