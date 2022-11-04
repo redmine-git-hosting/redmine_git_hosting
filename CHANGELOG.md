@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.1 - 2022-11-04
+
+### Changed
+
+- Don't use sidekick 7 beta version
+
 ## 6.0.0 - 2022-09-29
 
 ### Added
