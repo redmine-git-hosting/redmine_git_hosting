@@ -15,7 +15,7 @@ Looking for maintainers, mail me if you're interested.
 
 ## Installation
 
-The installation guide is [here](http://redmine-git-hosting.io/get_started/). The migration guide is [here](http://redmine-git-hosting.io/how-to/migrate/).
+The installation guide is [here](http://redmine-git-hosting.io/get_started/).
 
 Read the documentation and more on the [project's website](http://redmine-git-hosting.io/).
 
