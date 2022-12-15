@@ -23,5 +23,5 @@ permalink: /how-to/upgrade/
 
     # Install gems and run migrations
     redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development test
+    redmine$ bundle install
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting

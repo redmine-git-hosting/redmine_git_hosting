@@ -19,7 +19,9 @@ Assuming that you have Redmine installed :
 
     # Install gems and migrate database
     redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development test
+    redmine$ bundle config set --local without 'development:test'
+    redmine$ bundle config set --local build.rugged --with-ssh
+    redmine$ bundle install
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=additionals
     redmine$ bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_git_hosting
 

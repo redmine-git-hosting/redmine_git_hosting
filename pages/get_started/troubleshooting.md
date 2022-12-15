@@ -56,6 +56,6 @@ Install [missing dependencies](http://redmine-git-hosting.io/get_started/#step-1
 
     redmine$ cd REDMINE_ROOT
     redmine$ bundle clean --force
-    redmine$ bundle install --without development test
-    redmine$ gem uninstall rugged
-    redmine$ gem install rugged -- --with-ssh
+    redmine$ bundle config set --local without 'development:test'
+    redmine$ bundle config set --local build.rugged --with-ssh
+    redmine$ bundle install

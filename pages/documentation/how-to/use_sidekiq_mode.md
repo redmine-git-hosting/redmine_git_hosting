@@ -23,7 +23,7 @@ There are additional steps to pass if you want to use the plugin in Sidekiq mode
     redmine$ cd REDMINE_ROOT/plugins
     redmine$ git clone https://github.com/ogom/redmine_sidekiq.git
     redmine$ cd REDMINE_ROOT
-    redmine$ bundle install --without development test
+    redmine$ bundle install
 
 
 #### **(step 3)** Switch mode
