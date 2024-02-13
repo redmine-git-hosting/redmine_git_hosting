@@ -37,7 +37,7 @@ module Gitolitable
     end
 
     def ssh_access_available?
-      git_ssh_enabled? && !git_annex_enabled? && User.current.allowed_to_commit?(self)
+      git_ssh_enabled? && !git_annex_enabled? && (User.current.allowed_to_commit?(self) || User.current.allowed_to_clone?(self))
     end
 
     def https_access_available?
