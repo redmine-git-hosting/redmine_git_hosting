@@ -1,0 +1,6 @@
+0.5.0
+
+  * Remove methods make_*_anchor
+  * Add method make_headline
+  * Parse tags inside link text
+

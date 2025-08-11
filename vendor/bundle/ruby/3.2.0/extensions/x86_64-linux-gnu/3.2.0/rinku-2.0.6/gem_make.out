@@ -1,0 +1,22 @@
+current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rinku-2.0.6/ext/rinku
+/usr/bin/ruby3.2 -I/usr/lib/ruby/vendor_ruby extconf.rb
+creating Makefile
+
+current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rinku-2.0.6/ext/rinku
+make DESTDIR\= sitearchdir\=./.gem.20250811-3453-qpi9xn sitelibdir\=./.gem.20250811-3453-qpi9xn clean
+
+current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rinku-2.0.6/ext/rinku
+make DESTDIR\= sitearchdir\=./.gem.20250811-3453-qpi9xn sitelibdir\=./.gem.20250811-3453-qpi9xn
+compiling autolink.c
+compiling buffer.c
+compiling rinku.c
+compiling rinku_rb.c
+compiling utf8.c
+linking shared-object rinku.so
+
+current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rinku-2.0.6/ext/rinku
+make DESTDIR\= sitearchdir\=./.gem.20250811-3453-qpi9xn sitelibdir\=./.gem.20250811-3453-qpi9xn install
+/usr/bin/install -c -m 0755 rinku.so ./.gem.20250811-3453-qpi9xn
+
+current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rinku-2.0.6/ext/rinku
+make DESTDIR\= sitearchdir\=./.gem.20250811-3453-qpi9xn sitelibdir\=./.gem.20250811-3453-qpi9xn clean

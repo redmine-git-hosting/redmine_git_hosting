@@ -1,0 +1,122 @@
+# Default application configuration that all configurations inherit from.
+#
+# This is an opinionated list of which hooks are valuable to run and what their
+# out of the box settings should be.
+
+# Whether to ignore frontmatter at the beginning of Slim documents for
+# frameworks such as Jekyll/Middleman
+skip_frontmatter: false
+
+linters:
+  CommentControlStatement:
+    enabled: true
+
+  ConsecutiveControlStatements:
+    enabled: true
+    max_consecutive: 2
+
+  ControlStatementSpacing:
+    enabled: true
+
+  EmbeddedEngines:
+    enabled: false
+    forbidden_engines: []
+
+  EmptyControlStatement:
+    enabled: true
+
+  EmptyLines:
+    enabled: true
+
+  FileLength:
+    enabled: false
+    max: 300
+
+  InstanceVariables:
+    enabled: false
+    include:
+      # Include only partial templates by default
+      - app/views/**/_*.html.slim
+
+  LineLength:
+    enabled: true
+    max: 80
+
+  RedundantDiv:
+    enabled: true
+
+  RuboCop:
+    enabled: true
+    # These cops are incredibly noisy since the Ruby we extract from Slim
+    # templates isn't well-formatted, so we ignore them.
+    # WARNING: If you define this list in your own .slim-lint.yml file, you'll
+    # be overriding the list defined here.
+    ignored_cops:
+      - Layout/ArgumentAlignment
+      - Layout/ArrayAlignment
+      - Layout/BlockAlignment
+      - Layout/ClosingParenthesisIndentation
+      - Layout/EmptyLineAfterGuardClause
+      - Layout/EndAlignment
+      - Layout/FirstArgumentIndentation
+      - Layout/FirstArrayElementIndentation
+      - Layout/FirstHashElementIndentation
+      - Layout/FirstParameterIndentation
+      - Layout/HashAlignment
+      - Layout/IndentationConsistency
+      - Layout/IndentationWidth
+      - Layout/InitialIndentation
+      - Layout/LineEndStringConcatenationIndentation
+      - Layout/LineLength
+      - Layout/MultilineArrayBraceLayout
+      - Layout/MultilineAssignmentLayout
+      - Layout/MultilineHashBraceLayout
+      - Layout/MultilineMethodCallBraceLayout
+      - Layout/MultilineMethodCallIndentation
+      - Layout/MultilineMethodDefinitionBraceLayout
+      - Layout/MultilineOperationIndentation
+      - Layout/ParameterAlignment
+      - Layout/TrailingEmptyLines
+      - Layout/TrailingWhitespace
+      - Lint/Void
+      - Metrics/BlockLength
+      - Metrics/BlockNesting
+      - Naming/FileName
+      - Style/FrozenStringLiteralComment
+      - Style/IdenticalConditionalBranches
+      - Style/IfUnlessModifier
+      - Style/Next
+      - Style/WhileUntilDo
+      - Style/WhileUntilModifier
+
+  StrictLocalsMissing:
+    enabled: false
+    include:
+      # Include only Rails partial templates by default
+      - app/views/**/_*.html.slim
+
+  Tab:
+    enabled: true
+
+  Tag:
+    enabled: false
+    forbidden_tags: []
+
+  TagAttribute:
+    enabled: false
+    forbidden_attributes: []
+
+  TagCase:
+    enabled: true
+
+  TrailingBlankLines:
+    enabled: true
+
+  TrailingWhitespace:
+    enabled: true
+
+  QuoteConsistency:
+    enabled: false
+
+  Zwsp:
+    enabled: false

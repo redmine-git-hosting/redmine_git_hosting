@@ -1,0 +1,1960 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:9 (project)"
+    message: |
+      The system is: Linux - 6.11.0-1018-azure - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:9 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/cc 
+      Build flags: -fPIC
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/3.31.6/CompilerIdC/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:9 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_47490/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_47490.dir/build.make CMakeFiles/cmTC_47490.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt'
+        Building C object CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o
+        /usr/bin/cc   -fPIC    -v -o CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_47490.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fPIC -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccJYOf38.s
+        GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: 38987c28e967c64056a6454abdef726e
+        COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/'
+         as -v --64 -o CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o /tmp/ccJYOf38.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.'
+        Linking C executable cmTC_47490
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_47490.dir/link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'cmTC_47490' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_47490.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccttk5rG.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_47490 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccttk5rG.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_47490 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'cmTC_47490' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_47490.'
+        /usr/bin/cc -fPIC   -v -Wl,-v CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -o cmTC_47490
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:9 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:9 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_47490/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_47490.dir/build.make CMakeFiles/cmTC_47490.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-IdIyCt']
+        ignore line: [Building C object CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/usr/bin/cc   -fPIC    -v -o CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_47490.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fPIC -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccJYOf38.s]
+        ignore line: [GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 38987c28e967c64056a6454abdef726e]
+        ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o /tmp/ccJYOf38.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_47490]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_47490.dir/link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-o' 'cmTC_47490' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_47490.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccttk5rG.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_47490 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccttk5rG.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_47490] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccttk5rG.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_47490 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_47490.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'C': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:9 (project)"
+    message: |
+      Running the C compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "CMakeLists.txt:102 (include)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e360a/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e360a.dir/build.make CMakeFiles/cmTC_e360a.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne'
+        Building C object CMakeFiles/cmTC_e360a.dir/src.c.o
+        /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fPIC  -o CMakeFiles/cmTC_e360a.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne/src.c
+        Linking C executable cmTC_e360a
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e360a.dir/link.txt --verbose=1
+        /usr/bin/cc -fPIC  CMakeFiles/cmTC_e360a.dir/src.c.o -o cmTC_e360a
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-GHwWne'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSourceCompiles.cmake:89 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckStructHasMember.cmake:79 (CHECK_SOURCE_COMPILES)"
+      - "cmake/FindStatNsec.cmake:3 (check_struct_has_member)"
+      - "CMakeLists.txt:103 (include)"
+    checks:
+      - "Performing Test HAVE_STRUCT_STAT_ST_MTIM"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRUCT_STAT_ST_MTIM"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_f20d3/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_f20d3.dir/build.make CMakeFiles/cmTC_f20d3.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4'
+        Building C object CMakeFiles/cmTC_f20d3.dir/src.c.o
+        /usr/bin/cc -DHAVE_STRUCT_STAT_ST_MTIM  -fPIC  -o CMakeFiles/cmTC_f20d3.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4/src.c
+        Linking C executable cmTC_f20d3
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f20d3.dir/link.txt --verbose=1
+        /usr/bin/cc -fPIC  CMakeFiles/cmTC_f20d3.dir/src.c.o -o cmTC_f20d3
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aaKmb4'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSourceCompiles.cmake:89 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckStructHasMember.cmake:79 (CHECK_SOURCE_COMPILES)"
+      - "cmake/FindStatNsec.cmake:5 (check_struct_has_member)"
+      - "CMakeLists.txt:103 (include)"
+    checks:
+      - "Performing Test HAVE_STRUCT_STAT_ST_MTIMESPEC"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRUCT_STAT_ST_MTIMESPEC"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_047c9/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_047c9.dir/build.make CMakeFiles/cmTC_047c9.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD'
+        Building C object CMakeFiles/cmTC_047c9.dir/src.c.o
+        /usr/bin/cc -DHAVE_STRUCT_STAT_ST_MTIMESPEC  -fPIC  -o CMakeFiles/cmTC_047c9.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD/src.c
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD/src.c: In function ‘main’:
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD/src.c:7:34: error: ‘struct stat’ has no member named ‘st_mtimespec’
+            7 |   (void)sizeof(((struct stat *)0)->st_mtimespec);
+              |                                  ^~
+        gmake[1]: *** [CMakeFiles/cmTC_047c9.dir/build.make:81: CMakeFiles/cmTC_047c9.dir/src.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-wybGjD'
+        gmake: *** [Makefile:134: cmTC_047c9/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSourceCompiles.cmake:89 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckStructHasMember.cmake:79 (CHECK_SOURCE_COMPILES)"
+      - "cmake/FindStatNsec.cmake:7 (check_struct_has_member)"
+      - "CMakeLists.txt:103 (include)"
+    checks:
+      - "Performing Test HAVE_STRUCT_STAT_MTIME_NSEC"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRUCT_STAT_MTIME_NSEC"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_05cd8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_05cd8.dir/build.make CMakeFiles/cmTC_05cd8.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj'
+        Building C object CMakeFiles/cmTC_05cd8.dir/src.c.o
+        /usr/bin/cc -DHAVE_STRUCT_STAT_MTIME_NSEC  -fPIC  -o CMakeFiles/cmTC_05cd8.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj/src.c
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj/src.c: In function ‘main’:
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj/src.c:6:34: error: ‘struct stat’ has no member named ‘st_mtime_nsec’
+            6 |   (void)sizeof(((struct stat *)0)->st_mtime_nsec);
+              |                                  ^~
+        gmake[1]: *** [CMakeFiles/cmTC_05cd8.dir/build.make:81: CMakeFiles/cmTC_05cd8.dir/src.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lbybqj'
+        gmake: *** [Makefile:134: cmTC_05cd8/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSourceCompiles.cmake:89 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckStructHasMember.cmake:79 (CHECK_SOURCE_COMPILES)"
+      - "cmake/FindStatNsec.cmake:11 (check_struct_has_member)"
+      - "CMakeLists.txt:103 (include)"
+    checks:
+      - "Performing Test HAVE_STRUCT_STAT_NSEC"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRUCT_STAT_NSEC"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_bfa90/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_bfa90.dir/build.make CMakeFiles/cmTC_bfa90.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu'
+        Building C object CMakeFiles/cmTC_bfa90.dir/src.c.o
+        /usr/bin/cc -DHAVE_STRUCT_STAT_NSEC  -fPIC  -o CMakeFiles/cmTC_bfa90.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu/src.c
+        Linking C executable cmTC_bfa90
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bfa90.dir/link.txt --verbose=1
+        /usr/bin/cc -fPIC  CMakeFiles/cmTC_bfa90.dir/src.c.o -o cmTC_bfa90
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-z8z2uu'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "cmake/Findfutimens.cmake:13 (check_function_exists)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Looking for futimens"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_FUTIMENS"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_1e9c1/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_1e9c1.dir/build.make CMakeFiles/cmTC_1e9c1.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA'
+        Building C object CMakeFiles/cmTC_1e9c1.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=futimens -o CMakeFiles/cmTC_1e9c1.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA/CheckFunctionExists.c
+        Linking C executable cmTC_1e9c1
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e9c1.dir/link.txt --verbose=1
+        /usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=futimens CMakeFiles/cmTC_1e9c1.dir/CheckFunctionExists.c.o -o cmTC_1e9c1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-niBPpA'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:101 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WALL_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WALL_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_60355/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_60355.dir/build.make CMakeFiles/cmTC_60355.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB'
+        Building C object CMakeFiles/cmTC_60355.dir/src.c.o
+        /usr/bin/cc -DIS_WALL_SUPPORTED  -D_GNU_SOURCE -fPIC    -Wall -o CMakeFiles/cmTC_60355.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB/src.c
+        Linking C executable cmTC_60355
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_60355.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC  CMakeFiles/cmTC_60355.dir/src.c.o -o cmTC_60355
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-WRZUoB'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:102 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WEXTRA_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WEXTRA_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_71bd3/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_71bd3.dir/build.make CMakeFiles/cmTC_71bd3.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN'
+        Building C object CMakeFiles/cmTC_71bd3.dir/src.c.o
+        /usr/bin/cc -DIS_WEXTRA_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall    -Wextra -o CMakeFiles/cmTC_71bd3.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN/src.c
+        Linking C executable cmTC_71bd3
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_71bd3.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall  CMakeFiles/cmTC_71bd3.dir/src.c.o -o cmTC_71bd3
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1YZ5KN'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:125 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WDOCUMENTATION_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WDOCUMENTATION_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_900c5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_900c5.dir/build.make CMakeFiles/cmTC_900c5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g'
+        Building C object CMakeFiles/cmTC_900c5.dir/src.c.o
+        /usr/bin/cc -DIS_WDOCUMENTATION_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra    -Wdocumentation -o CMakeFiles/cmTC_900c5.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g/src.c
+        cc: error: unrecognized command-line option '-Wdocumentation'
+        gmake[1]: *** [CMakeFiles/cmTC_900c5.dir/build.make:81: CMakeFiles/cmTC_900c5.dir/src.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uiJe9g'
+        gmake: *** [Makefile:134: cmTC_900c5/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:6 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:126 (disable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WNO_DOCUMENTATION_DEPRECATED_SYNC_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WNO_DOCUMENTATION_DEPRECATED_SYNC_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_b6948/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_b6948.dir/build.make CMakeFiles/cmTC_b6948.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT'
+        Building C object CMakeFiles/cmTC_b6948.dir/src.c.o
+        /usr/bin/cc -DIS_WNO_DOCUMENTATION_DEPRECATED_SYNC_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra    -Wno-documentation-deprecated-sync -o CMakeFiles/cmTC_b6948.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT/src.c
+        Linking C executable cmTC_b6948
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b6948.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra  CMakeFiles/cmTC_b6948.dir/src.c.o -o cmTC_b6948
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-7L0xGT'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:6 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:127 (disable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WNO_MISSING_FIELD_INITIALIZERS_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WNO_MISSING_FIELD_INITIALIZERS_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0d173/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_0d173.dir/build.make CMakeFiles/cmTC_0d173.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L'
+        Building C object CMakeFiles/cmTC_0d173.dir/src.c.o
+        /usr/bin/cc -DIS_WNO_MISSING_FIELD_INITIALIZERS_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync    -Wno-missing-field-initializers -o CMakeFiles/cmTC_0d173.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L/src.c
+        Linking C executable cmTC_0d173
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d173.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync  CMakeFiles/cmTC_0d173.dir/src.c.o -o cmTC_0d173
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-sXHq0L'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:128 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WMISSING_DECLARATIONS_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WMISSING_DECLARATIONS_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_4aea2/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_4aea2.dir/build.make CMakeFiles/cmTC_4aea2.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05'
+        Building C object CMakeFiles/cmTC_4aea2.dir/src.c.o
+        /usr/bin/cc -DIS_WMISSING_DECLARATIONS_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers    -Wmissing-declarations -o CMakeFiles/cmTC_4aea2.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05/src.c
+        Linking C executable cmTC_4aea2
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4aea2.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers  CMakeFiles/cmTC_4aea2.dir/src.c.o -o cmTC_4aea2
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dmxd05'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:129 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WSTRICT_ALIASING_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WSTRICT_ALIASING_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_fb383/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_fb383.dir/build.make CMakeFiles/cmTC_fb383.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ'
+        Building C object CMakeFiles/cmTC_fb383.dir/src.c.o
+        /usr/bin/cc -DIS_WSTRICT_ALIASING_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations    -Wstrict-aliasing -o CMakeFiles/cmTC_fb383.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ/src.c
+        Linking C executable cmTC_fb383
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fb383.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations  CMakeFiles/cmTC_fb383.dir/src.c.o -o cmTC_fb383
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-aa4PHZ'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:130 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WSTRICT_PROTOTYPES_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WSTRICT_PROTOTYPES_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_fb961/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_fb961.dir/build.make CMakeFiles/cmTC_fb961.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg'
+        Building C object CMakeFiles/cmTC_fb961.dir/src.c.o
+        /usr/bin/cc -DIS_WSTRICT_PROTOTYPES_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing    -Wstrict-prototypes -o CMakeFiles/cmTC_fb961.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg/src.c
+        Linking C executable cmTC_fb961
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fb961.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing  CMakeFiles/cmTC_fb961.dir/src.c.o -o cmTC_fb961
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-kVLzZg'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:131 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WDECLARATION_AFTER_STATEMENT_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WDECLARATION_AFTER_STATEMENT_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_85817/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_85817.dir/build.make CMakeFiles/cmTC_85817.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7'
+        Building C object CMakeFiles/cmTC_85817.dir/src.c.o
+        /usr/bin/cc -DIS_WDECLARATION_AFTER_STATEMENT_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes    -Wdeclaration-after-statement -o CMakeFiles/cmTC_85817.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7/src.c
+        Linking C executable cmTC_85817
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_85817.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes  CMakeFiles/cmTC_85817.dir/src.c.o -o cmTC_85817
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-s8zcp7'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:132 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WSHIFT_COUNT_OVERFLOW_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WSHIFT_COUNT_OVERFLOW_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e7558/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e7558.dir/build.make CMakeFiles/cmTC_e7558.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi'
+        Building C object CMakeFiles/cmTC_e7558.dir/src.c.o
+        /usr/bin/cc -DIS_WSHIFT_COUNT_OVERFLOW_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement    -Wshift-count-overflow -o CMakeFiles/cmTC_e7558.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi/src.c
+        Linking C executable cmTC_e7558
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e7558.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement  CMakeFiles/cmTC_e7558.dir/src.c.o -o cmTC_e7558
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-NakmEi'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:133 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WUNUSED_CONST_VARIABLE_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WUNUSED_CONST_VARIABLE_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_88870/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_88870.dir/build.make CMakeFiles/cmTC_88870.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM'
+        Building C object CMakeFiles/cmTC_88870.dir/src.c.o
+        /usr/bin/cc -DIS_WUNUSED_CONST_VARIABLE_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow    -Wunused-const-variable -o CMakeFiles/cmTC_88870.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM/src.c
+        Linking C executable cmTC_88870
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88870.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow  CMakeFiles/cmTC_88870.dir/src.c.o -o cmTC_88870
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Wv5HXM'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:134 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WUNUSED_FUNCTION_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WUNUSED_FUNCTION_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_017c8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_017c8.dir/build.make CMakeFiles/cmTC_017c8.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF'
+        Building C object CMakeFiles/cmTC_017c8.dir/src.c.o
+        /usr/bin/cc -DIS_WUNUSED_FUNCTION_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable    -Wunused-function -o CMakeFiles/cmTC_017c8.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF/src.c
+        Linking C executable cmTC_017c8
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_017c8.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable  CMakeFiles/cmTC_017c8.dir/src.c.o -o cmTC_017c8
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CgYxZF'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:135 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WINT_CONVERSION_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WINT_CONVERSION_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6bcd1/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6bcd1.dir/build.make CMakeFiles/cmTC_6bcd1.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9'
+        Building C object CMakeFiles/cmTC_6bcd1.dir/src.c.o
+        /usr/bin/cc -DIS_WINT_CONVERSION_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function    -Wint-conversion -o CMakeFiles/cmTC_6bcd1.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9/src.c
+        Linking C executable cmTC_6bcd1
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6bcd1.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function  CMakeFiles/cmTC_6bcd1.dir/src.c.o -o cmTC_6bcd1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HvTKU9'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:136 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WC11_EXTENSIONS_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WC11_EXTENSIONS_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_40885/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_40885.dir/build.make CMakeFiles/cmTC_40885.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m'
+        Building C object CMakeFiles/cmTC_40885.dir/src.c.o
+        /usr/bin/cc -DIS_WC11_EXTENSIONS_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion    -Wc11-extensions -o CMakeFiles/cmTC_40885.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m/src.c
+        cc: error: unrecognized command-line option '-Wc11-extensions'; did you mean '-Wc++11-extensions'?
+        gmake[1]: *** [CMakeFiles/cmTC_40885.dir/build.make:81: CMakeFiles/cmTC_40885.dir/src.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-j6o78m'
+        gmake: *** [Makefile:134: cmTC_40885/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:137 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WC99_C11_COMPAT_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WC99_C11_COMPAT_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e5a7f/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e5a7f.dir/build.make CMakeFiles/cmTC_e5a7f.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U'
+        Building C object CMakeFiles/cmTC_e5a7f.dir/src.c.o
+        /usr/bin/cc -DIS_WC99_C11_COMPAT_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion    -Wc99-c11-compat -o CMakeFiles/cmTC_e5a7f.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U/src.c
+        Linking C executable cmTC_e5a7f
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e5a7f.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion  CMakeFiles/cmTC_e5a7f.dir/src.c.o -o cmTC_e5a7f
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-CxOT5U'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:146 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WFORMAT_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WFORMAT_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_874b0/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_874b0.dir/build.make CMakeFiles/cmTC_874b0.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD'
+        Building C object CMakeFiles/cmTC_874b0.dir/src.c.o
+        /usr/bin/cc -DIS_WFORMAT_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat    -Wformat -o CMakeFiles/cmTC_874b0.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD/src.c
+        Linking C executable cmTC_874b0
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_874b0.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat  CMakeFiles/cmTC_874b0.dir/src.c.o -o cmTC_874b0
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2V6HUD'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "cmake/DefaultCFlags.cmake:147 (enable_warnings)"
+      - "CMakeLists.txt:109 (include)"
+    checks:
+      - "Performing Test IS_WFORMAT_SECURITY_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WFORMAT_SECURITY_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_54031/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_54031.dir/build.make CMakeFiles/cmTC_54031.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0'
+        Building C object CMakeFiles/cmTC_54031.dir/src.c.o
+        /usr/bin/cc -DIS_WFORMAT_SECURITY_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat    -Wformat-security -o CMakeFiles/cmTC_54031.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0/src.c
+        Linking C executable cmTC_54031
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_54031.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat  CMakeFiles/cmTC_54031.dir/src.c.o -o cmTC_54031
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uAX5e0'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:2 (add_c_flag_if_supported)"
+      - "deps/http-parser/CMakeLists.txt:6 (enable_warnings)"
+    checks:
+      - "Performing Test IS_WIMPLICIT_FALLTHROUGH_1_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WIMPLICIT_FALLTHROUGH_1_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_16113/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_16113.dir/build.make CMakeFiles/cmTC_16113.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH'
+        Building C object CMakeFiles/cmTC_16113.dir/src.c.o
+        /usr/bin/cc -DIS_WIMPLICIT_FALLTHROUGH_1_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security    -Wimplicit-fallthrough=1 -o CMakeFiles/cmTC_16113.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH/src.c
+        Linking C executable cmTC_16113
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_16113.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_16113.dir/src.c.o -o cmTC_16113
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-4BrFeH'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:5 (check_include_file)"
+    checks:
+      - "Looking for dirent.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_DIRENT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_d6531/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_d6531.dir/build.make CMakeFiles/cmTC_d6531.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou'
+        Building C object CMakeFiles/cmTC_d6531.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_d6531.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou/CheckIncludeFile.c
+        Linking C executable cmTC_d6531
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d6531.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_d6531.dir/CheckIncludeFile.c.o -o cmTC_d6531
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-jhoyou'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:6 (check_include_file)"
+    checks:
+      - "Looking for stdint.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_b25f2/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_b25f2.dir/build.make CMakeFiles/cmTC_b25f2.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j'
+        Building C object CMakeFiles/cmTC_b25f2.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_b25f2.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j/CheckIncludeFile.c
+        Linking C executable cmTC_b25f2
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b25f2.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_b25f2.dir/CheckIncludeFile.c.o -o cmTC_b25f2
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-uj9R3j'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:7 (check_include_file)"
+    checks:
+      - "Looking for inttypes.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_INTTYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_28ce7/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_28ce7.dir/build.make CMakeFiles/cmTC_28ce7.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz'
+        Building C object CMakeFiles/cmTC_28ce7.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_28ce7.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz/CheckIncludeFile.c
+        Linking C executable cmTC_28ce7
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_28ce7.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_28ce7.dir/CheckIncludeFile.c.o -o cmTC_28ce7
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-QGA1kz'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:8 (check_include_file)"
+    checks:
+      - "Looking for sys/stat.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_SYS_STAT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_dbb4e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_dbb4e.dir/build.make CMakeFiles/cmTC_dbb4e.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW'
+        Building C object CMakeFiles/cmTC_dbb4e.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_dbb4e.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW/CheckIncludeFile.c
+        Linking C executable cmTC_dbb4e
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dbb4e.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_dbb4e.dir/CheckIncludeFile.c.o -o cmTC_dbb4e
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-1kGjMW'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:9 (check_include_file)"
+    checks:
+      - "Looking for sys/types.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7a316/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7a316.dir/build.make CMakeFiles/cmTC_7a316.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk'
+        Building C object CMakeFiles/cmTC_7a316.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_7a316.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk/CheckIncludeFile.c
+        Linking C executable cmTC_7a316
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a316.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_7a316.dir/CheckIncludeFile.c.o -o cmTC_7a316
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-mGDIDk'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:10 (check_include_file)"
+    checks:
+      - "Looking for unistd.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_UNISTD_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_2dee4/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_2dee4.dir/build.make CMakeFiles/cmTC_2dee4.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z'
+        Building C object CMakeFiles/cmTC_2dee4.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_2dee4.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z/CheckIncludeFile.c
+        Linking C executable cmTC_2dee4
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2dee4.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_2dee4.dir/CheckIncludeFile.c.o -o cmTC_2dee4
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-0WxP0z'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:11 (check_include_file)"
+    checks:
+      - "Looking for windows.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_WINDOWS_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_1f3fe/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_1f3fe.dir/build.make CMakeFiles/cmTC_1f3fe.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9'
+        Building C object CMakeFiles/cmTC_1f3fe.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_1f3fe.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9/CheckIncludeFile.c
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9/CheckIncludeFile.c:1:10: fatal error: windows.h: No such file or directory
+            1 | #include <windows.h>
+              |          ^~~~~~~~~~~
+        compilation terminated.
+        gmake[1]: *** [CMakeFiles/cmTC_1f3fe.dir/build.make:81: CMakeFiles/cmTC_1f3fe.dir/CheckIncludeFile.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-nkp0T9'
+        gmake: *** [Makefile:134: cmTC_1f3fe/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:13 (check_function_exists)"
+    checks:
+      - "Looking for bcopy"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_BCOPY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_1fe2b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_1fe2b.dir/build.make CMakeFiles/cmTC_1fe2b.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE'
+        Building C object CMakeFiles/cmTC_1fe2b.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=bcopy -o CMakeFiles/cmTC_1fe2b.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function ‘bcopy’; expected ‘void(const void *, void *, long unsigned int)’ [-Wbuiltin-declaration-mismatch]
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        cc1: note: unrecognized command-line option ‘-Wno-documentation-deprecated-sync’ may have been intended to silence earlier diagnostics
+        Linking C executable cmTC_1fe2b
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1fe2b.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=bcopy CMakeFiles/cmTC_1fe2b.dir/CheckFunctionExists.c.o -o cmTC_1fe2b
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-swJlWE'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:14 (check_function_exists)"
+    checks:
+      - "Looking for memmove"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_MEMMOVE"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_587e2/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_587e2.dir/build.make CMakeFiles/cmTC_587e2.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF'
+        Building C object CMakeFiles/cmTC_587e2.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=memmove -o CMakeFiles/cmTC_587e2.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function ‘memmove’; expected ‘void *(void *, const void *, long unsigned int)’ [-Wbuiltin-declaration-mismatch]
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF/CheckFunctionExists.c:1:1: note: ‘memmove’ is declared in header ‘<string.h>’
+          +++ |+#include <string.h>
+            1 | #ifdef CHECK_FUNCTION_EXISTS
+        cc1: note: unrecognized command-line option ‘-Wno-documentation-deprecated-sync’ may have been intended to silence earlier diagnostics
+        Linking C executable cmTC_587e2
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_587e2.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=memmove CMakeFiles/cmTC_587e2.dir/CheckFunctionExists.c.o -o cmTC_587e2
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-rRpwlF'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:15 (check_function_exists)"
+    checks:
+      - "Looking for strerror"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRERROR"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_25490/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_25490.dir/build.make CMakeFiles/cmTC_25490.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH'
+        Building C object CMakeFiles/cmTC_25490.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strerror -o CMakeFiles/cmTC_25490.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH/CheckFunctionExists.c
+        Linking C executable cmTC_25490
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25490.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strerror CMakeFiles/cmTC_25490.dir/CheckFunctionExists.c.o -o cmTC_25490
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-MJ8MOH'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:16 (check_function_exists)"
+    checks:
+      - "Looking for strtoll"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRTOLL"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_13119/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_13119.dir/build.make CMakeFiles/cmTC_13119.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb'
+        Building C object CMakeFiles/cmTC_13119.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strtoll -o CMakeFiles/cmTC_13119.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb/CheckFunctionExists.c
+        Linking C executable cmTC_13119
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_13119.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strtoll CMakeFiles/cmTC_13119.dir/CheckFunctionExists.c.o -o cmTC_13119
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-2zsyFb'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:17 (check_function_exists)"
+    checks:
+      - "Looking for strtoq"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STRTOQ"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_43102/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_43102.dir/build.make CMakeFiles/cmTC_43102.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF'
+        Building C object CMakeFiles/cmTC_43102.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strtoq -o CMakeFiles/cmTC_43102.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF/CheckFunctionExists.c
+        Linking C executable cmTC_43102
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_43102.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=strtoq CMakeFiles/cmTC_43102.dir/CheckFunctionExists.c.o -o cmTC_43102
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-HaSLyF'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "deps/pcre/CMakeLists.txt:18 (check_function_exists)"
+    checks:
+      - "Looking for _strtoi64"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE__STRTOI64"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_9d780/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_9d780.dir/build.make CMakeFiles/cmTC_9d780.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM'
+        Building C object CMakeFiles/cmTC_9d780.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=_strtoi64 -o CMakeFiles/cmTC_9d780.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM/CheckFunctionExists.c
+        Linking C executable cmTC_9d780
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9d780.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_9d780.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `_strtoi64'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=_strtoi64 CMakeFiles/cmTC_9d780.dir/CheckFunctionExists.c.o -o cmTC_9d780
+        gmake[1]: *** [CMakeFiles/cmTC_9d780.dir/build.make:102: cmTC_9d780] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-Dr2yXM'
+        gmake: *** [Makefile:134: cmTC_9d780/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:264 (check_include_file)"
+      - "deps/pcre/CMakeLists.txt:20 (check_type_size)"
+    checks:
+      - "Looking for stddef.h"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_STDDEF_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_5e336/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_5e336.dir/build.make CMakeFiles/cmTC_5e336.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd'
+        Building C object CMakeFiles/cmTC_5e336.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_5e336.dir/CheckIncludeFile.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd/CheckIncludeFile.c
+        Linking C executable cmTC_5e336
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5e336.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_5e336.dir/CheckIncludeFile.c.o -o cmTC_5e336
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-W6Cdqd'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:156 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:283 (__check_type_size_impl)"
+      - "deps/pcre/CMakeLists.txt:20 (check_type_size)"
+    checks:
+      - "Check size of long long"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_LONG_LONG"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_a000c/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_a000c.dir/build.make CMakeFiles/cmTC_a000c.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3'
+        Building C object CMakeFiles/cmTC_a000c.dir/LONG_LONG.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_a000c.dir/LONG_LONG.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3/LONG_LONG.c
+        Linking C executable cmTC_a000c
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a000c.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_a000c.dir/LONG_LONG.c.o -o cmTC_a000c
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-TNasf3'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:156 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:283 (__check_type_size_impl)"
+      - "deps/pcre/CMakeLists.txt:21 (check_type_size)"
+    checks:
+      - "Check size of unsigned long long"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "HAVE_UNSIGNED_LONG_LONG"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_cf80d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_cf80d.dir/build.make CMakeFiles/cmTC_cf80d.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY'
+        Building C object CMakeFiles/cmTC_cf80d.dir/UNSIGNED_LONG_LONG.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_cf80d.dir/UNSIGNED_LONG_LONG.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY/UNSIGNED_LONG_LONG.c
+        Linking C executable cmTC_cf80d
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cf80d.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_cf80d.dir/UNSIGNED_LONG_LONG.c.o -o cmTC_cf80d
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-5iIXIY'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:6 (add_c_flag_if_supported)"
+      - "deps/pcre/CMakeLists.txt:23 (disable_warnings)"
+    checks:
+      - "Performing Test IS_WNO_UNUSED_FUNCTION_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WNO_UNUSED_FUNCTION_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_b3d59/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_b3d59.dir/build.make CMakeFiles/cmTC_b3d59.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie'
+        Building C object CMakeFiles/cmTC_b3d59.dir/src.c.o
+        /usr/bin/cc -DIS_WNO_UNUSED_FUNCTION_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security    -Wno-unused-function -o CMakeFiles/cmTC_b3d59.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie/src.c
+        Linking C executable cmTC_b3d59
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b3d59.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_b3d59.dir/src.c.o -o cmTC_b3d59
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-A9r0Ie'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "cmake/AddCFlagIfSupported.cmake:25 (check_c_compiler_flag)"
+      - "cmake/EnableWarnings.cmake:6 (add_c_flag_if_supported)"
+      - "deps/pcre/CMakeLists.txt:24 (disable_warnings)"
+    checks:
+      - "Performing Test IS_WNO_IMPLICIT_FALLTHROUGH_SUPPORTED"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -Wno-unused-function"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "IS_WNO_IMPLICIT_FALLTHROUGH_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_096f6/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_096f6.dir/build.make CMakeFiles/cmTC_096f6.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6'
+        Building C object CMakeFiles/cmTC_096f6.dir/src.c.o
+        /usr/bin/cc -DIS_WNO_IMPLICIT_FALLTHROUGH_SUPPORTED  -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -Wno-unused-function    -Wno-implicit-fallthrough -o CMakeFiles/cmTC_096f6.dir/src.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6/src.c
+        Linking C executable cmTC_096f6
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_096f6.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -Wno-unused-function  CMakeFiles/cmTC_096f6.dir/src.c.o -o cmTC_096f6
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-tzQDl6'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckPrototypeDefinition.cmake:107 (try_compile)"
+      - "src/CMakeLists.txt:61 (check_prototype_definition)"
+    checks:
+      - "Checking prototype qsort_r for GIT_QSORT_R_BSD"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "GIT_QSORT_R_BSD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_133cf/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_133cf.dir/build.make CMakeFiles/cmTC_133cf.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk'
+        Building C object CMakeFiles/cmTC_133cf.dir/CheckPrototypeDefinition.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_133cf.dir/CheckPrototypeDefinition.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:6: error: conflicting types for ‘qsort_r’; have ‘void(void *, size_t,  size_t,  void *, int (*)(void *, const void *, const void *))’ {aka ‘void(void *, long unsigned int,  long unsigned int,  void *, int (*)(void *, const void *, const void *))’}
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |      ^~~~~~~
+        In file included from /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:1:
+        /usr/include/stdlib.h:973:13: note: previous declaration of ‘qsort_r’ with type ‘void(void *, size_t,  size_t,  int (*)(const void *, const void *, void *), void *)’ {aka ‘void(void *, long unsigned int,  long unsigned int,  int (*)(const void *, const void *, void *), void *)’}
+          973 | extern void qsort_r (void *__base, size_t __nmemb, size_t __size,
+              |             ^~~~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c: In function ‘qsort_r’:
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:20: warning: unused parameter ‘base’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |              ~~~~~~^~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:33: warning: unused parameter ‘nmemb’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |                          ~~~~~~~^~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:47: warning: unused parameter ‘size’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |                                        ~~~~~~~^~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:59: warning: unused parameter ‘thunk’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |                                                     ~~~~~~^~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk/CheckPrototypeDefinition.c:14:72: warning: unused parameter ‘compar’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, void *thunk, int (*compar)(void *, const void *, const void *)) {
+              |                                                                  ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        At top level:
+        cc1: note: unrecognized command-line option ‘-Wno-documentation-deprecated-sync’ may have been intended to silence earlier diagnostics
+        gmake[1]: *** [CMakeFiles/cmTC_133cf.dir/build.make:81: CMakeFiles/cmTC_133cf.dir/CheckPrototypeDefinition.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-UrKGjk'
+        gmake: *** [Makefile:134: cmTC_133cf/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckPrototypeDefinition.cmake:107 (try_compile)"
+      - "src/CMakeLists.txt:65 (check_prototype_definition)"
+    checks:
+      - "Checking prototype qsort_r for GIT_QSORT_R_GNU"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "GIT_QSORT_R_GNU"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6d15f/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6d15f.dir/build.make CMakeFiles/cmTC_6d15f.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g'
+        Building C object CMakeFiles/cmTC_6d15f.dir/CheckPrototypeDefinition.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  -o CMakeFiles/cmTC_6d15f.dir/CheckPrototypeDefinition.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c: In function ‘qsort_r’:
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c:14:20: warning: unused parameter ‘base’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+              |              ~~~~~~^~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c:14:33: warning: unused parameter ‘nmemb’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+              |                          ~~~~~~~^~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c:14:47: warning: unused parameter ‘size’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+              |                                        ~~~~~~~^~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c:14:59: warning: unused parameter ‘compar’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+              |                                                     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g/CheckPrototypeDefinition.c:14:110: warning: unused parameter ‘arg’ [-Wunused-parameter]
+           14 | void qsort_r(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *, void *), void *arg) {
+              |                                                                                                        ~~~~~~^~~
+        At top level:
+        cc1: note: unrecognized command-line option ‘-Wno-documentation-deprecated-sync’ may have been intended to silence earlier diagnostics
+        Linking C executable cmTC_6d15f
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6d15f.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security  CMakeFiles/cmTC_6d15f.dir/CheckPrototypeDefinition.c.o -o cmTC_6d15f
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-cs3B3g'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "src/CMakeLists.txt:69 (check_function_exists)"
+    checks:
+      - "Looking for qsort_s"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "GIT_QSORT_S"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_79397/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_79397.dir/build.make CMakeFiles/cmTC_79397.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm'
+        Building C object CMakeFiles/cmTC_79397.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=qsort_s -o CMakeFiles/cmTC_79397.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm/CheckFunctionExists.c
+        Linking C executable cmTC_79397
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_79397.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_79397.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `qsort_s'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=qsort_s CMakeFiles/cmTC_79397.dir/CheckFunctionExists.c.o -o cmTC_79397
+        gmake[1]: *** [CMakeFiles/cmTC_79397.dir/build.make:102: cmTC_79397] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-x489Gm'
+        gmake: *** [Makefile:134: cmTC_79397/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "src/CMakeLists.txt:73 (check_function_exists)"
+    checks:
+      - "Looking for getentropy"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "GIT_RAND_GETENTROPY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ee97d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ee97d.dir/build.make CMakeFiles/cmTC_ee97d.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn'
+        Building C object CMakeFiles/cmTC_ee97d.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=getentropy -o CMakeFiles/cmTC_ee97d.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn/CheckFunctionExists.c
+        Linking C executable cmTC_ee97d
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ee97d.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=getentropy CMakeFiles/cmTC_ee97d.dir/CheckFunctionExists.c.o -o cmTC_ee97d
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-KYQrvn'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "src/CMakeLists.txt:74 (check_function_exists)"
+    checks:
+      - "Looking for getloadavg"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "GIT_RAND_GETLOADAVG"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_bdd77/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_bdd77.dir/build.make CMakeFiles/cmTC_bdd77.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE'
+        Building C object CMakeFiles/cmTC_bdd77.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=getloadavg -o CMakeFiles/cmTC_bdd77.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE/CheckFunctionExists.c
+        Linking C executable cmTC_bdd77
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bdd77.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=getloadavg CMakeFiles/cmTC_bdd77.dir/CheckFunctionExists.c.o -o cmTC_bdd77
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-VbovWE'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "src/CMakeLists.txt:106 (check_library_exists)"
+    checks:
+      - "Looking for clock_gettime in rt"
+    directories:
+      source: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW"
+      binary: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/cmake"
+    buildResult:
+      variable: "NEED_LIBRT"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6378e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6378e.dir/build.make CMakeFiles/cmTC_6378e.dir/build
+        gmake[1]: Entering directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW'
+        Building C object CMakeFiles/cmTC_6378e.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=clock_gettime -o CMakeFiles/cmTC_6378e.dir/CheckFunctionExists.c.o -c /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW/CheckFunctionExists.c
+        Linking C executable cmTC_6378e
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6378e.dir/link.txt --verbose=1
+        /usr/bin/cc -D_GNU_SOURCE -fPIC -Wall -Wextra -Wno-documentation-deprecated-sync -Wno-missing-field-initializers -Wmissing-declarations -Wstrict-aliasing -Wstrict-prototypes -Wdeclaration-after-statement -Wshift-count-overflow -Wunused-const-variable -Wunused-function -Wint-conversion -Wc99-c11-compat -Wformat -Wformat-security -DCHECK_FUNCTION_EXISTS=clock_gettime CMakeFiles/cmTC_6378e.dir/CheckFunctionExists.c.o -o cmTC_6378e   -L/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW/time.h  -Wl,-rpath,/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW/time.h -lrt
+        gmake[1]: Leaving directory '/home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build/CMakeFiles/CMakeScratch/TryCompile-lTJXxW'
+        
+      exitCode: 0
+...

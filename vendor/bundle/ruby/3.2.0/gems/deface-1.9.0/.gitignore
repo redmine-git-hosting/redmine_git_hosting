@@ -1,0 +1,10 @@
+*.swp
+.DS_Store
+pkg
+Gemfile.lock
+coverage/
+.bundle/
+gemfiles/*.lock
+/.idea
+/sandbox
+*.gem

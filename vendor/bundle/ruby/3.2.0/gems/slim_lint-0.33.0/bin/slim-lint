@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'slim_lint/cli'
+
+logger = SlimLint::Logger.new($stdout)
+exit SlimLint::CLI.new(logger).run(ARGV)

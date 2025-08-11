@@ -1,0 +1,217 @@
+# -*- mode: org; mode: auto-fill; -*-
+#+title:   Changelog
+#+startup: showeverything
+
+* 0.9.10 / 2014-12-09
+
+- Add option to disable Rubypants
+
+* 0.9.9 / 2014-08-30
+
+- Bugfix for comment regex
+
+* 0.9.8 / 2014-08-11
+
+- Bugfix for =#+OPTIONS= values parsing
+
+* 0.9.7 / 2014-06-22
+
+ - Custom markup support for exporters via YAML files (by [[https://github.com/gnusosa][@gnusosa]])
+ - Bugfix: Recognize =#+RESULTS:= block from named blocks
+
+* 0.9.6 / 2014-05-06
+
+ - Support named results blocks
+
+* 0.9.5 / 2014-04-24
+
+ - Small bugfix to remove warning due to VERSION being repeated
+
+* 0.9.4 / 2014-04-18
+
+ - Track block names within the line properties
+ - Add option to skip syntax highlighting explicitly
+
+* 0.9.3 / 2014-03-25
+
+ - Fix code blocks prepended comma stripping
+
+* 0.9.2 / 2014-03-22
+
+ - Fix Org mode syntax for escaping html: Syntax actually now is =@@html:<text>@@=
+
+ - Fix =#=TITLE:= to render as a h1 headline
+
+ - Remove rewriting links to =.org= files as =.html=
+
+ - Implement =:exports= options for code blocks
+
+* 0.9.1 / 2014-02-13
+
+ - Backport =CGI::escapeHTML= function from Ruby to have same output among different Ruby versions
+
+* 0.9.0 / 2014-02-08
+
+ - Add explicit enable or disable of include file feature
+ - Add lang attribute to src code block to support syntax highlight in Github
+
+* 0.8.3 / 2014-02-02
+
+ - Bugfix :: Two backslashes =\\= at the end of the line make a line break without breaking paragraph.
+ - Bugfix :: Fix inline formatting not working for definition lists
+ - Add basic markdown exporter
+
+* 0.8.2 / 2013-11-09
+
+ - Manage the #=INCLUDE tag in org files (contribution by pierre-lecocq)
+ - #=INCLUDE is disabled by default. Needs either =ORG_RUBY_INCLUDE_ROOT= or 
+   =ORG_RUBY_ENABLE_INCLUDE_FILES= environment variables in order to be enabled.
+ - Link abbreviations with =#+LINK= tag are supported (by pierre-lecocq too, thanks!)
+ - Strip prepended commas added by Emacs Org mode to src/example blocks
+
+* 0.8.1 / 2013-02-17
+
+ - Fix for html escaping when code is inline
+
+* 0.8.0 / 2013-02-10
+
+ - A lot of refactoring work and bugfixes contributed by vonavi (many thanks!)
+ - Raw HTML is supported with =#+html=
+ - Code indentation for code blocks is fixed now
+ - Support for definition lists is improved
+ - Bugfix for when including headlines in center and quote blocks.
+ - Indentation of HTML output improved
+ - Improvements to entities support for Textile and HTML outputs
+
+* 0.7.2 / 2012-10-07
+
+ - Many fixes to the regular expressions used for emphasis, contributed by [[http://github.com/vonavi][vonavi]]
+ - Bug fix for when a table starts with a headline, thanks to [[http://github/til][til]]
+ - Asterisk can be used for definition lists too
+ - Use text lexer as default option for Pygments and Coderay when no language is specified
+
+* 0.7.1 / 2012-08-04
+
+ - Make source code blocks from lisp dialects use Pygments scheme lexer
+ - Bugfix: Make Coderay fallback to text lexer when unsupported lang is set
+
+* 0.7.0 / 2012-07-08
+
+ - Highlight source code blocks using Pygments or CodeRay when available
+
+* 0.6.4 / 2012-07-08
+
+ - Fixed lists behavior when code fragments, tables and examples were present
+ - Remove code tags with lang class and use instead src-:lang like org-exporter
+ - Fixed property drawers to consider properties with hyphens like :noweb-ref:
+
+* 0.6.3 / 2012-05-22
+
+ - Minor enhancement: Correct handling of .org URIs in HTML markup routine (thanks, rayl)
+
+* 0.6.1 / 2012-04-14
+
+ - Added encoding directive to support Ruby 1.9.2
+ - Headlines with the =COMMENT= keyword, and the =PROPERTIES= drawer are not exported
+ - Angle links in Org mode are embedded in anchor tags on html output
+ - =#+=BEGIN/END_SRC= lang code blocks are embedded in code tags with class that specifies the coding language
+ - Fixed bug in code blocks when a colon was at the beginning
+ - More than five dashes create an horizontal rule in html output
+
+* 0.6.0 / 2011-09-03
+
+ - Added support for a "header offset" -- turns one star into an H2, etc. (thanks, niku)
+ - The anchor text for a link can now be an image, and will get an img tag (thanks, punchagan)
+ - Fixed bug in tables; only the first row is a header even if others have divider lines (thanks, leathekd)
+ - Fixed bug in the list regular expression; lists require a space after the item delimiter (thanks, punchagan)
+ - Lots from ruediger:
+  * subscript / superscript
+  * definition lists
+  * centered text
+  * symbol replacement
+
+* 0.5.3 / 2010-02-15
+
+ - Minor enhancement: Displays inline images
+
+* 0.5.2 / 2010-01-05
+
+ - Refactored to improve layering.
+
+* 0.5.1 / 2009-12-30
+
+ - Minor enhancement: Recognize lines starting with ":" as examples.
+ - Minor enhancement: Recognize #=BEGIN_SRC as source blocks
+ - Minor enhancement: Add "src" and "example" classes to <pre> blocks.
+
+* 0.5.0 / 2009-12-30
+
+ - Parse (but not necessarily *use*) in-buffer settings. The following
+  in-buffer settings *are* used:
+  * Understand the #=TITLE: directive.
+  * Exporting todo keywords (option todo:t)
+  * Numbering headlines (option num:t)
+  * Skipping text before the first headline (option skip:t)
+  * Skipping tables (option |:nil)
+  * Custom todo keywords
+  * EXPORT_SELECT_TAGS and EXPORT_EXLUDE_TAGS for controlling parts of
+    the tree to export
+ - Rewrite "file:(blah).org" links to "http:(blah).html" links. This
+  makes the inter-links to other org-mode files work.
+ - Uses <th> tags inside table rows that precede table separators.
+ - Bugfixes:
+  * Headings now have HTML escaped.
+
+* 0.4.2 / 2009-12-29
+
+ - Got rid of the extraneous newline at the start of code blocks.
+ - Everything now shows up in code blocks, even org-mode metadata.
+ - Fixed bugs:
+  * Regressed smart double quotes with HTML escaping. Added a test
+    case and fixed the regression.
+
+* 0.4.1 / 2009-12-29
+
+ - HTML is now escaped by default
+ - org-mode comments will show up in a code block.
+
+* 0.4.0 / 2009-12-28
+
+ - The first thing output in HTML gets the class "title"
+ - HTML output is now indented
+ - Proper support for multi-paragraph list items.
+ - Fixed bugs:
+  * "rake spec" wouldn't work on Linux. Needed "require 'rubygems'".
+
+* 0.3.0 / 2009-12-27
+
+ - Uses rubypants to get better typography (smart quotes, elipses, etc.).
+ - Fixed bugs:
+  * Tables and lists did not get properly closed at the end of file
+  * You couldn't do inline formatting inside table cells
+  * Characters in PRE blocks were not HTML escaped.
+
+* 0.2.0 / 2009-12-26
+
+ - Renamed the gem to org-ruby
+ - Added =to_html= for HTML output
+ - Now supports the following inline markup: 
+  * bold
+  * italic
+  * code
+  * verbatim
+  * underline
+  * strikethrough
+ - Continued code cleanup and refactoring
+
+* 0.1.0 / 2009-12-23
+
+ - Added support for block code
+ - Added support for list items that wrap in the org source
+ - Major code cleanup:
+   Added =OutputBuffer= class that should make the code more maintainable.
+
+* 0.0.2 / 2009-12-21
+
+ - Initial version. Handles tables (but not headers), headlines,
+  paragraphs, block quotes, strong & emphasis formatting.

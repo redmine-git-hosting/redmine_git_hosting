@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+require 'org-ruby'
+require 'optparse'
+
+options = {}
+options_parser = OptionParser.new do |opts|
+  options[:help] = false
+  options[:format] = :html
+  
+  opts.banner = "Usage: org-ruby <file> [options]"
+
+  opts.on("-h", "--help", "Show this message") do |v|
+    options[:help] = true
+  end
+
+  opts.on("-d", "--debug", "Run with $DEBUG true") do |v|
+    options[:debug] = true
+  end
+
+  opts.on("-m", "--markup <file>", "Set Custom Markup file") do |f|
+    options[:markup_file] = f
+  end
+
+  opts.on("-t", "--translate FORMAT", [:html, :textile, :markdown],
+          "Translate the ORG file to the specified format.") do |v|
+    options[:format] = v
+  end
+
+  opts.on("-v", "--version", "Print version") do |v|
+    options[:version] = true
+  end
+end
+
+begin
+  options_parser.parse!
+
+  if options[:version]
+    puts OrgRuby::VERSION
+    exit
+  end
+
+  if (ARGV.length == 0) then
+    puts options_parser
+  else
+    data = IO.read(ARGV[0])
+    p = Orgmode::Parser.new(data, (options[:markup_file] ? {:markup_file => options[:markup_file]} : {}))
+    $DEBUG = true if options[:debug]
+    puts p.to_html if options[:format] == :html
+    puts p.to_textile if options[:format] == :textile
+    puts p.to_markdown if options[:format] == :markdown
+  end
+rescue OptionParser::ParseError
+  puts options_parser
+end

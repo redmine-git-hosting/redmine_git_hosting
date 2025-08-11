@@ -1,0 +1,11 @@
+rvm:
+  - 2.4
+  - 2.5
+  - 2.6
+  - jruby
+
+# Workaround for `NoMethodError: undefined method 'spec' for nil:NilClass`,
+# see https://travis-ci.org/jmcnevin/rubypants/jobs/167182556
+# and https://github.com/travis-ci/travis-ci/issues/5239
+before_install:
+  - gem install bundler

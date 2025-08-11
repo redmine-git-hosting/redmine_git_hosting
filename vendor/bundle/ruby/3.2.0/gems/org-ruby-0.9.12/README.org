@@ -1,0 +1,217 @@
+#+startup: showeverything
+
+* OrgRuby
+
+[[https://secure.travis-ci.org/wallyqs/org-ruby.png?branch=master]]
+
+An [[http://orgmode.org][Org-mode]] parser written in Ruby.
+
+/Originally by Brian Dewey/
+
+** Installation
+
+#+BEGIN_SRC ruby
+gem install org-ruby
+#+END_SRC
+
+** Usage
+
+From Ruby:
+
+#+BEGIN_SRC ruby
+  require 'org-ruby'
+
+  # Renders HTML
+  Orgmode::Parser.new("* Hello world!").to_html
+  # => "<h1>Hello world!</h1>\n"
+
+  # Renders Textile
+  Orgmode::Parser.new("* Hello world!").to_textile
+  # => "h1. Hello world!\n" 
+
+  # Renders Markdown
+  Orgmode::Parser.new("* Hello world!").to_markdown
+  # => "# Hello world!\n" 
+
+  # Renders HTML with custom markup
+  Orgmode::Parser.new("* *Custom* /Markup/", { markup_file: "html.tags.yml" }).to_html
+  # => "<h1><strong>Custom</strong> <em>Markup</em></h1>\n"
+
+  # Renders Markdown with custom markup
+  Orgmode::Parser.new("* *Custom* /Markup/", { markup_file: "md.tags.yml"}).to_markdown
+  # => "# __Custom__ _Markup_\n"
+#+END_SRC
+
+The supported output exporters can be also called from the command line:
+
+#+BEGIN_SRC sh
+     org-ruby --translate html         sample.org
+     org-ruby --translate textile      sample.org
+     org-ruby --translate markdown     sample.org
+     org-ruby --markup html.tags.yml   sample.org
+     org-ruby --markup md.tags.yml --translate markdown sample.org
+#+END_SRC
+
+** Current status
+
+Not all of the [[http://orgmode.org/manual/][Org mode features]] are implemented yet.
+Currently, the development of the gem is mostly oriented towards
+giving support for exporting Org mode into other formats.
+
+Brief list of features supported:
+
+- Converts Org mode files to HTML, Textile or Markdown.
+- Supports tables, block quotes, code blocks, and html blocks
+- Supports bold, italic, underline, strikethrough, and code inline formatting.
+- Supports hyperlinks
+- Supports lists
+- Supports footnotes
+- Supports =.org= views in Rails through Tilt.
+- Code syntax highlight of code blocks using Pygments.rb or Coderay when available
+
+** Custom Markup
+
+Org-ruby supports custom markups for HTML and Markdown. The custom
+markup needs to be in the form of a YAML file with the following keys
+and values:
+
+*** HTML Blocktags
+
+#+BEGIN_SRC yaml
+  ---
+  :HtmlBlockTag:
+    :paragraph: p
+    :ordered_list: ol
+    :unordered_list: ul
+    :list_item: li
+    :definition_list: dl
+    :definition_term: dt
+    :definition_descr: dd
+    :table: table
+    :table_row: tr
+    :quote: blockquote
+    :example: pre
+    :src: pre
+    :inline_example: pre
+    :center: div
+    :heading1: h1
+    :heading2: h2
+    :heading3: h3
+    :heading4: h4
+    :heading5: h5
+    :heading6: h6
+    :title: h1
+#+END_SRC
+
+For example, you only want to change the blockquote HTML tag to be
+translated, your YAML file would look like this:
+
+#+BEGIN_SRC yaml
+  ---
+  :HtmlBlockTag:
+    :quote: pre
+#+END_SRC     
+
+This will change the HTML markup to be translated in the blockquote
+element.
+
+*** HTML Emphasis:
+     
+#+BEGIN_SRC yaml
+  ---
+  :Tags:
+    "*":
+      :open: b
+      :close: b
+    "/": 
+      :open: i
+      :close: i 
+    "_":  
+      :open: span style=\"text-decoration:underline;\"
+      :close: span
+    "=":   
+      :open: code
+      :close: code
+    "~":   
+      :open: code
+      :close:  code
+    "+":
+      :open: del
+      :close: del 
+#+END_SRC
+
+Let's say that you prefer =<strong>= over =<b>= in the Bold emphasis
+element of Org-mode, your YAML file should look like this:
+
+#+BEGIN_SRC yaml
+  ---
+  :Tags:
+    "*":
+      :open: strong
+      :close: strong
+    "/":
+      :open: em
+      :close: em
+#+END_SRC
+
+*** Markdown:
+
+#+BEGIN_SRC yaml
+  ---
+  :MarkdownMap:
+    "*": "**"
+    "/": "*"
+    "_": "*"
+    "=": "`"
+    "~": "`"
+    "+": "~~"
+#+END_SRC    
+
+Let's say that you prefer underscores for Bold and Italics elements in
+Markdown, your YAML file should look like this:
+
+#+BEGIN_SRC yaml
+  ---
+  :MarkdownMap:
+    "*": "__"
+    "/": "_"
+#+END_SRC
+
+** Contributing
+
+- If you see a feature missing, please create an issue so that the maintainer considers its implementation
+- Also, PRs are always welcome! Before submitting make sure to check what breaks by running =rake spec=
+
+** Projects using it
+
+- Used at [[https://github.com/github/markup][github/markup]] for rendering =.org= files
+- The [[https://github.com/gollum/gollum][Gollum]] project uses it too
+- [[https://www.gitlab.com/][Gitlab]] includes it for rendering Org files with syntax highlighting
+- Can be used with Jekyll for building a site: [[https://github.com/wallyqs/yet-another-jekyll-org-template][example here]]
+
+** License
+
+#+BEGIN_SRC 
+ (The MIT License)
+
+ Copyright (c) 2009 Brian Dewey
+
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ 'Software'), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ 
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#+END_SRC
