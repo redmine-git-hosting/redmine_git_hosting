@@ -16,16 +16,16 @@ checking for ttyname_r()... yes
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.1/ext/io/console
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-s6o7gp sitelibdir\=./.gem.20250811-3453-s6o7gp clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-huazbz sitelibdir\=./.gem.20250811-6951-huazbz clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.1/ext/io/console
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-s6o7gp sitelibdir\=./.gem.20250811-3453-s6o7gp
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-huazbz sitelibdir\=./.gem.20250811-6951-huazbz
 compiling console.c
 linking shared-object io/console.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.1/ext/io/console
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-s6o7gp sitelibdir\=./.gem.20250811-3453-s6o7gp install
-/usr/bin/install -c -m 0755 console.so ./.gem.20250811-3453-s6o7gp/io
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-huazbz sitelibdir\=./.gem.20250811-6951-huazbz install
+/usr/bin/install -c -m 0755 console.so ./.gem.20250811-6951-huazbz/io
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/io-console-0.8.1/ext/io/console
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-s6o7gp sitelibdir\=./.gem.20250811-3453-s6o7gp clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-huazbz sitelibdir\=./.gem.20250811-6951-huazbz clean

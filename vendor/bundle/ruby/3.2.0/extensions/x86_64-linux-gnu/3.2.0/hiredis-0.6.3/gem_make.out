@@ -11,10 +11,10 @@ checking for rb_thread_fd_select()... yes
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/hiredis-0.6.3/ext/hiredis_ext
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-xj0nry sitelibdir\=./.gem.20250811-3453-xj0nry clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4rcw8z sitelibdir\=./.gem.20250811-6951-4rcw8z clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/hiredis-0.6.3/ext/hiredis_ext
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-xj0nry sitelibdir\=./.gem.20250811-3453-xj0nry
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4rcw8z sitelibdir\=./.gem.20250811-6951-4rcw8z
 compiling connection.c
 connection.c: In function ‘connection_read’:
 connection.c:458:24: warning: passing argument 2 of ‘__get_reply’ discards ‘volatile’ qualifier from pointer target type [-Wdiscarded-qualifiers]
@@ -28,8 +28,8 @@ compiling reader.c
 linking shared-object hiredis/ext/hiredis_ext.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/hiredis-0.6.3/ext/hiredis_ext
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-xj0nry sitelibdir\=./.gem.20250811-3453-xj0nry install
-/usr/bin/install -c -m 0755 hiredis_ext.so ./.gem.20250811-3453-xj0nry/hiredis/ext
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4rcw8z sitelibdir\=./.gem.20250811-6951-4rcw8z install
+/usr/bin/install -c -m 0755 hiredis_ext.so ./.gem.20250811-6951-4rcw8z/hiredis/ext
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/hiredis-0.6.3/ext/hiredis_ext
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-xj0nry sitelibdir\=./.gem.20250811-3453-xj0nry clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4rcw8z sitelibdir\=./.gem.20250811-6951-4rcw8z clean

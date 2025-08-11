@@ -144,7 +144,7 @@ CMake Deprecation Warning at CMakeLists.txt:7 (cmake_minimum_required):
  * SSH, SSH transport support
  * iconv, iconv encoding conversion support
 
--- Configuring done (5.0s)
+-- Configuring done (3.7s)
 -- Generating done (0.1s)
 -- Build files have been written to: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/vendor/libgit2/build
  -- /usr/bin/gmake
@@ -153,10 +153,10 @@ checking for git2.h... yes
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/ext/rugged
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-171rk0 sitelibdir\=./.gem.20250811-3453-171rk0 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-6pnyiz sitelibdir\=./.gem.20250811-6951-6pnyiz clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/ext/rugged
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-171rk0 sitelibdir\=./.gem.20250811-3453-171rk0
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-6pnyiz sitelibdir\=./.gem.20250811-6951-6pnyiz
 compiling rugged.c
 compiling rugged_allocator.c
 compiling rugged_backend.c
@@ -192,8 +192,8 @@ compiling rugged_tree.c
 linking shared-object rugged/rugged.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/ext/rugged
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-171rk0 sitelibdir\=./.gem.20250811-3453-171rk0 install
-/usr/bin/install -c -m 0755 rugged.so ./.gem.20250811-3453-171rk0/rugged
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-6pnyiz sitelibdir\=./.gem.20250811-6951-6pnyiz install
+/usr/bin/install -c -m 0755 rugged.so ./.gem.20250811-6951-6pnyiz/rugged
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/rugged-1.5.1/ext/rugged
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-171rk0 sitelibdir\=./.gem.20250811-3453-171rk0 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-6pnyiz sitelibdir\=./.gem.20250811-6951-6pnyiz clean

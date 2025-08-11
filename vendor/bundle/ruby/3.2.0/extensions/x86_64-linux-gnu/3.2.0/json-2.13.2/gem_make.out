@@ -10,16 +10,16 @@ checking for cpuid.h... yes
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/json-2.13.2/ext/json/ext/parser
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-wtwki6 sitelibdir\=./.gem.20250811-3453-wtwki6 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-eqp38x sitelibdir\=./.gem.20250811-6951-eqp38x clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/json-2.13.2/ext/json/ext/parser
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-wtwki6 sitelibdir\=./.gem.20250811-3453-wtwki6
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-eqp38x sitelibdir\=./.gem.20250811-6951-eqp38x
 compiling parser.c
 linking shared-object json/ext/parser.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/json-2.13.2/ext/json/ext/parser
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-wtwki6 sitelibdir\=./.gem.20250811-3453-wtwki6 install
-/usr/bin/install -c -m 0755 parser.so ./.gem.20250811-3453-wtwki6/json/ext
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-eqp38x sitelibdir\=./.gem.20250811-6951-eqp38x install
+/usr/bin/install -c -m 0755 parser.so ./.gem.20250811-6951-eqp38x/json/ext
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/json-2.13.2/ext/json/ext/parser
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-wtwki6 sitelibdir\=./.gem.20250811-3453-wtwki6 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-eqp38x sitelibdir\=./.gem.20250811-6951-eqp38x clean

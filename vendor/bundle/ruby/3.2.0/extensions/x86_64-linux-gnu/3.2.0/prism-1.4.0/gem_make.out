@@ -6,10 +6,10 @@ checking for whether -fvisibility=hidden is accepted as CFLAGS... yes
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/prism-1.4.0/ext/prism
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-i3ulno sitelibdir\=./.gem.20250811-3453-i3ulno clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4h1k4 sitelibdir\=./.gem.20250811-6951-4h1k4 clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/prism-1.4.0/ext/prism
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-i3ulno sitelibdir\=./.gem.20250811-3453-i3ulno
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4h1k4 sitelibdir\=./.gem.20250811-6951-4h1k4
 compiling api_node.c
 compiling api_pack.c
 compiling ./../../src/diagnostic.c
@@ -37,8 +37,8 @@ compiling ./../../src/token_type.c
 linking shared-object prism/prism.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/prism-1.4.0/ext/prism
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-i3ulno sitelibdir\=./.gem.20250811-3453-i3ulno install
-/usr/bin/install -c -m 0755 prism.so ./.gem.20250811-3453-i3ulno/prism
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4h1k4 sitelibdir\=./.gem.20250811-6951-4h1k4 install
+/usr/bin/install -c -m 0755 prism.so ./.gem.20250811-6951-4h1k4/prism
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/prism-1.4.0/ext/prism
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-i3ulno sitelibdir\=./.gem.20250811-3453-i3ulno clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-4h1k4 sitelibdir\=./.gem.20250811-6951-4h1k4 clean

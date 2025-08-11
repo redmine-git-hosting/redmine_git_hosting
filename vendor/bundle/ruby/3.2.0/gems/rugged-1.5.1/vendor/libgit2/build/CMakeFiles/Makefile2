@@ -343,9 +343,9 @@ src/libgit2/CMakeFiles/libgit2.dir/clean:
 # Target rules for target src/libgit2/CMakeFiles/libgit2package.dir
 
 # All Build rule for target.
-src/libgit2/CMakeFiles/libgit2package.dir/all: deps/http-parser/CMakeFiles/http-parser.dir/all
-src/libgit2/CMakeFiles/libgit2package.dir/all: deps/pcre/CMakeFiles/pcre.dir/all
 src/libgit2/CMakeFiles/libgit2package.dir/all: src/libgit2/CMakeFiles/libgit2.dir/all
+src/libgit2/CMakeFiles/libgit2package.dir/all: deps/pcre/CMakeFiles/pcre.dir/all
+src/libgit2/CMakeFiles/libgit2package.dir/all: deps/http-parser/CMakeFiles/http-parser.dir/all
 src/libgit2/CMakeFiles/libgit2package.dir/all: deps/ntlmclient/CMakeFiles/ntlmclient.dir/all
 src/libgit2/CMakeFiles/libgit2package.dir/all: src/util/CMakeFiles/util.dir/all
 	$(MAKE) $(MAKESILENT) -f src/libgit2/CMakeFiles/libgit2package.dir/build.make src/libgit2/CMakeFiles/libgit2package.dir/depend

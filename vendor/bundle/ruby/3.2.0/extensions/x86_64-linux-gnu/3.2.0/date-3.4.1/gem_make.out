@@ -6,10 +6,10 @@ checking for altzone in time.h with  -Werror... no
 creating Makefile
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/date-3.4.1/ext/date
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-ep0nm3 sitelibdir\=./.gem.20250811-3453-ep0nm3 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-f78m87 sitelibdir\=./.gem.20250811-6951-f78m87 clean
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/date-3.4.1/ext/date
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-ep0nm3 sitelibdir\=./.gem.20250811-3453-ep0nm3
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-f78m87 sitelibdir\=./.gem.20250811-6951-f78m87
 compiling date_core.c
 compiling date_parse.c
 compiling date_strftime.c
@@ -17,8 +17,8 @@ compiling date_strptime.c
 linking shared-object date_core.so
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/date-3.4.1/ext/date
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-ep0nm3 sitelibdir\=./.gem.20250811-3453-ep0nm3 install
-/usr/bin/install -c -m 0755 date_core.so ./.gem.20250811-3453-ep0nm3
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-f78m87 sitelibdir\=./.gem.20250811-6951-f78m87 install
+/usr/bin/install -c -m 0755 date_core.so ./.gem.20250811-6951-f78m87
 
 current directory: /home/runner/work/redmine_git_hosting/redmine_git_hosting/vendor/bundle/ruby/3.2.0/gems/date-3.4.1/ext/date
-make DESTDIR\= sitearchdir\=./.gem.20250811-3453-ep0nm3 sitelibdir\=./.gem.20250811-3453-ep0nm3 clean
+make DESTDIR\= sitearchdir\=./.gem.20250811-6951-f78m87 sitelibdir\=./.gem.20250811-6951-f78m87 clean
