@@ -2,7 +2,7 @@
 
 require 'uri'
 
-class RepositoryPostReceiveUrl < ActiveRecord::Base
+class RepositoryPostReceiveUrl < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
   include Redmine::SafeAttributes
 
   ## Attributes
@@ -22,7 +22,7 @@ class RepositoryPostReceiveUrl < ActiveRecord::Base
   validates :mode, presence: true, inclusion: { in: %i[github get post] }
 
   ## Serializations
-  serialize :triggers, Array
+  serialize :triggers, type: Array
 
   ## Scopes
   scope :active, -> { where active: true }

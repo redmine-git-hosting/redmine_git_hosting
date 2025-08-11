@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryDeploymentCredential < ActiveRecord::Base
+class RepositoryDeploymentCredential < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
   include Redmine::SafeAttributes
 
   VALID_PERMS  = ['R', 'RW+'].freeze

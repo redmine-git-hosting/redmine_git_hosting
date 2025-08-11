@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GithubComment < ActiveRecord::Base
+class GithubComment < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
   ## Relations
   belongs_to :journal
 

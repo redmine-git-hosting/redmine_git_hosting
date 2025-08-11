@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryGitConfigKey < ActiveRecord::Base
+class RepositoryGitConfigKey < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
   include Redmine::SafeAttributes
 
   ## Attributes

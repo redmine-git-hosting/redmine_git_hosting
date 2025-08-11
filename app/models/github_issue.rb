@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GithubIssue < ActiveRecord::Base
+class GithubIssue < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
   ## Relations
   belongs_to :issue
 
