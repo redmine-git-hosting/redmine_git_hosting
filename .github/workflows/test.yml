@@ -121,7 +121,7 @@ jobs:
         run: |
           sudo useradd --create-home git
           sudo -n -u git -i mkdir bin
-          sudo -n -u git -i bash $GITHUB_WORKSPACE/gitolite/install -to /home/git/bin
+          sudo -n -u git -i perl $GITHUB_WORKSPACE/gitolite/install -to /home/git/bin
           sudo cp plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub /home/git/
           sudo chown git.git /home/git/redmine_gitolite_admin_id_rsa.pub
           sudo -n -u git -i bin/gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
