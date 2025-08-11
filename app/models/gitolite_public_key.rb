@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GitolitePublicKey < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
+class GitolitePublicKey < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   TITLE_LENGTH_LIMIT = 60

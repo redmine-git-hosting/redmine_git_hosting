@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryMirror < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
+class RepositoryMirror < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   PUSHMODE_MIRROR       = 0

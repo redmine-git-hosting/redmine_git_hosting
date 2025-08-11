@@ -2,7 +2,7 @@
 
 require 'uri'
 
-class RepositoryPostReceiveUrl < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
+class RepositoryPostReceiveUrl < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   ## Attributes

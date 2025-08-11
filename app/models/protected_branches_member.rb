@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProtectedBranchesMember < (defined?(ApplicationRecord) == 'constant' ? ApplicationRecord : ActiveRecord::Base)
+class ProtectedBranchesMember < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   ## Attributes
