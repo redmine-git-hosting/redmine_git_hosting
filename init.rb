@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   author_url  'settings/plugin/redmine_git_hosting/authors'
 
   settings partial: 'settings/redmine_git_hosting', default: RedmineGitHosting.settings
-  requires_redmine version_or_higher: '4.1.0'
+  requires_redmine version_or_higher: '6.0.0'
 
   permission :create_gitolite_ssh_key, gitolite_public_keys: %i[index create destroy], require: :loggedin
 

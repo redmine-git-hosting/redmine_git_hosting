@@ -1,5 +1,23 @@
 # Changelog
 
+## 7.0.0 - TBD
+
+### Added
+
+- Support for Redmine 6.0
+
+### Changed
+
+- Update all models to inherit from ApplicationRecord instead of ActiveRecord::Base
+- Fix serialize syntax for Rails 7 compatibility using `type:` parameter
+- Update minimum Ruby version requirement to 3.0+
+
+### BREAKING CHANGE
+
+- Redmine 6.0+ is required
+- Ruby 3.0+ is required
+- Removed support for Redmine 5.x
+
 ## 6.0.1 - 2022-11-04
 
 ### Changed
