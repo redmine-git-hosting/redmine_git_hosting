@@ -13,4 +13,3 @@ node_modules/
 yarn.lock
 coverage/
 .enable_dev
-vendor/bundle
