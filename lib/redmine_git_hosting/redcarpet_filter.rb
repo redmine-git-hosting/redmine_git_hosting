@@ -2,46 +2,35 @@
 
 require 'html/pipeline/filter'
 require 'html/pipeline/text_filter'
-require 'redcarpet'
-require 'rouge'
-require 'rouge/plugins/redcarpet'
 
 module RedmineGitHosting
-  class HTMLwithRouge < Redcarpet::Render::HTML
-    include Rouge::Plugins::Redcarpet
-  end
-
   class RedcarpetFilter < HTML::Pipeline::TextFilter
     def initialize(text, context = nil, result = nil)
       super text, context, result
       @text = @text.delete "\r"
     end
 
-    # Convert Markdown to HTML using the best available implementation
-    # and convert into a DocumentFragment.
+    # Convert Markdown to HTML using Redmine's WikiFormatting system
+    # for consistency with Redmine's text formatting configuration.
     #
     def call
-      html = self.class.renderer.render @text
+      html = markdown_formatter.new(@text).to_html
       html.rstrip!
       html
     end
 
-    def self.renderer
-      @renderer ||= Redcarpet::Markdown.new HTMLwithRouge, markdown_options
-    end
+    private
 
-    def self.markdown_options
-      @markdown_options ||= {
-        fenced_code_blocks: true,
-        lax_spacing: true,
-        strikethrough: true,
-        autolink: true,
-        tables: true,
-        underline: true,
-        highlight: true
-      }.freeze
+    def markdown_formatter
+      # Find the markdown formatter from Redmine's WikiFormatting system
+      formatter_name = Redmine::WikiFormatting.format_names.find { |name| name =~ /markdown/i }
+      
+      if formatter_name
+        Redmine::WikiFormatting.formatter_for(formatter_name)
+      else
+        # Fallback to textile formatter if no markdown formatter is available
+        Redmine::WikiFormatting.formatter_for('textile')
+      end
     end
-
-    private_class_method :markdown_options
   end
 end
