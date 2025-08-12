@@ -32,7 +32,7 @@ gem 'RedCloth'
 gem 'rack-parser', require: 'rack/parser'
 
 # temp autoloading fix
-gem 'sidekiq'
+gem 'sidekiq', '<7'
 gem 'sshkey'
 
 group :development, :test do
