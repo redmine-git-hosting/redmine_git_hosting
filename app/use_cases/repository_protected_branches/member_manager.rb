@@ -38,11 +38,11 @@ module RepositoryProtectedBranches
     end
 
     def create_user_member(ids, current_ids, opts = {}, &block)
-      create_member(ids, current_ids, User, opts, &block)
+      create_member(ids, current_ids, User, **opts, &block)
     end
 
     def create_group_member(ids, current_ids, opts = {}, &block)
-      create_member(ids, current_ids, Group, opts, &block)
+      create_member(ids, current_ids, Group, **opts, &block)
     end
 
     def add_user_from_group(user, group_id)
