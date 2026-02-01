@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class RepositoryGitExtra < ActiveRecord::Base
+class RepositoryGitExtra < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
 
-  SMART_HTTP_OPTIONS = [[l(:label_disabled), '0'],
-                        [l(:label_http_only), '3'],
-                        [l(:label_https_only), '1'],
-                        [l(:label_https_and_http), '2']].freeze
+  SMART_HTTP_OPTIONS = [[I18n.t(:label_disabled), '0'],
+                        [I18n.t(:label_http_only), '3'],
+                        [I18n.t(:label_https_only), '1'],
+                        [I18n.t(:label_https_and_http), '2']].freeze
 
   ALLOWED_URLS = %w[ssh http https go git git_annex].freeze
 
@@ -33,7 +33,11 @@ class RepositoryGitExtra < ActiveRecord::Base
   validate :validate_urls_order
 
   ## Serializations
-  serialize :urls_order, Array
+  if RedmineGitHosting.old_redmine?
+    serialize :urls_order, Array
+  else
+    serialize :urls_order, type: Array
+  end
 
   ## Callbacks
   before_save :check_urls_order_consistency

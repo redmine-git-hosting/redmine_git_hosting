@@ -32,7 +32,11 @@ describe GitolitePublicKey do
   # There is an isolation issue in tests.
   # Try to workaround it...
   def test_user
-    'redmine_git_user1_13'
+    if RedmineGitHosting.old_redmine?
+      'redmine_git_user1_13'
+    else
+      'redmine_git_user1_18'
+    end
   end
 
   describe 'Valid SSH key build' do

@@ -10,7 +10,13 @@ module RedmineGitHosting
       def self.prepended(base)
         base.class_eval do
           helper :git_hosting
-          helper :additionals_clipboardjs
+
+          if RedmineGitHosting.old_additionals?
+            helper :additionals_clipboardjs
+          else
+            helper :additionals_clipboard
+          end
+
           helper :extend_projects
         end
       end

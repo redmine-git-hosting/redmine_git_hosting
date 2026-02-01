@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoryProtectedBrancheWrapped < RepositoryProtectedBranche
-  serialize :user_list, Array
+  if RedmineGitHosting.old_redmine?
+    serialize :user_list, Array
+  else
+    serialize :user_list, type: Array
+  end
 end
 
 class MigrateProtectedBranchesUsers < ActiveRecord::Migration[4.2]

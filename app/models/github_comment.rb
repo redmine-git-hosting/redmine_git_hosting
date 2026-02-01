@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GithubComment < ActiveRecord::Base
+class GithubComment < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   ## Relations
   belongs_to :journal
 

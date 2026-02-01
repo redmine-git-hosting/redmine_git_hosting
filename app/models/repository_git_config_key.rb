@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryGitConfigKey < ActiveRecord::Base
+class RepositoryGitConfigKey < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
 
   ## Attributes

@@ -1,0 +1,222 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: ${{ matrix.redmine[0] }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - '3.4'
+          - '3.3'
+          - '3.2'
+          - '3.1'
+          - '3.0'
+        redmine:
+          # we must follow "additionals" Redmine plugin version constraints
+          # see: https://github.com/alphanodes/additionals/blob/main/CHANGELOG.md
+          # [redmine_version, additionals_version]
+          - ['5.0-stable', '3.2.0']
+          - ['5.1-stable', '3.4.0']
+          - ['6.0-stable', '4.0.0']
+          - ['6.1-stable', '4.3.0']
+        db:
+          - 'postgres'
+          - 'mysql'
+
+        exclude:
+          - ruby: '3.4'
+            redmine: ['5.0-stable', '3.2.0']
+          - ruby: '3.4'
+            redmine: ['5.1-stable', '3.4.0']
+          - ruby: '3.4'
+            redmine: ['6.0-stable', '4.0.0']
+
+          - ruby: '3.3'
+            redmine: ['5.0-stable', '3.2.0']
+          - ruby: '3.3'
+            redmine: ['5.1-stable', '3.4.0']
+
+          - ruby: '3.2'
+            redmine: ['5.0-stable', '3.2.0']
+
+          - ruby: '3.1'
+            redmine: ['6.1-stable', '4.3.0']
+
+          - ruby: '3.0'
+            redmine: ['5.1-stable', '3.4.0']
+          - ruby: '3.0'
+            redmine: ['6.0-stable', '4.0.0']
+          - ruby: '3.0'
+            redmine: ['6.1-stable', '4.3.0']
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mysql:
+        image: mysql:9.6
+        env:
+          MYSQL_ROOT_PASSWORD: 'BestPasswordEver'
+        ports:
+          # will assign a random free host port
+          - 3306/tcp
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Verify MySQL connection from host
+        run: |
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports[3306] }} -uroot -pBestPasswordEver -e "SHOW DATABASES"
+        if: matrix.db == 'mysql'
+
+      # install system deps
+      - name: Install package dependencies
+        run: |
+          sudo apt-get update --yes --quiet &&
+          sudo apt-get install --yes --quiet \
+            build-essential \
+            cmake \
+            libgpg-error-dev \
+            libicu-dev \
+            libpq-dev \
+            libmysqlclient-dev \
+            libssh2-1 \
+            libssh2-1-dev \
+            pkg-config \
+            subversion
+
+      # install redmine
+      - name: Checkout redmine
+        uses: actions/checkout@v6
+        with:
+          repository: redmine/redmine
+          path: redmine
+          ref: ${{ matrix.redmine[0] }}
+
+      # install redmine_git_hosting plugin
+      - name: Checkout redmine_git_hosting
+        uses: actions/checkout@v6
+        with:
+          path: redmine/plugins/redmine_git_hosting
+
+      # install additionals plugin
+      - name: Checkout additionals
+        uses: actions/checkout@v6
+        with:
+          repository: AlphaNodes/additionals
+          path: redmine/plugins/additionals
+          ref: ${{ matrix.redmine[1] }}
+
+      # install sidekiq plugin
+      - name: Checkout redmine_sidekiq
+        uses: actions/checkout@v6
+        with:
+          repository: redmine-git-hosting/redmine_sidekiq
+          path: redmine/plugins/redmine_sidekiq
+
+      # install gitolite
+      - name: Checkout gitolite
+        uses: actions/checkout@v6
+        with:
+          repository: sitaramc/gitolite
+          path: gitolite
+
+      # configure gitolite
+      - name: Install admin ssh key
+        working-directory: redmine
+        run: |
+          ssh-keygen -N '' -f plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
+
+      - name: Install Gitolite
+        working-directory: redmine
+        run: |
+          sudo useradd --create-home git
+          sudo chmod 755 /home/git /home/runner
+          sudo -n -u git -i mkdir bin
+          sudo -n -u git -i $GITHUB_WORKSPACE/gitolite/install -to /home/git/bin
+          sudo cp plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub /home/git/
+          sudo chown git.git /home/git/redmine_gitolite_admin_id_rsa.pub
+          sudo -n -u git -i bin/gitolite setup -pk redmine_gitolite_admin_id_rsa.pub
+
+      # configure ruby dependencies
+      - name: Setup Ruby dependencies
+        working-directory: redmine
+        if: matrix.redmine[0] == '6.0-stable' || matrix.redmine[0] == '6.1-stable'
+        run: |
+          echo "gem 'observer'" > Gemfile.local
+          echo "gem 'redcarpet'" >> Gemfile.local
+
+      - name: Setup Bundler
+        working-directory: redmine
+        run: |
+          mkdir .bundle
+          {
+            echo '---'
+            echo 'BUNDLE_BUILD__RUGGED: "--with-ssh"'
+            echo 'BUNDLE_WITHOUT: "development"'
+          } > .bundle/config
+
+      - name: Prepare Redmine source
+        working-directory: redmine
+        run: |
+          cp plugins/redmine_git_hosting/contrib/github/database-${{ matrix.db }}.yml config/database.yml
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: redmine
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      # configure redmine
+      - name: Run Redmine rake tasks
+        working-directory: redmine
+        env:
+          RAILS_ENV: test
+          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+        run: |
+          bundle exec rake generate_secret_token
+          bundle exec rake db:create db:migrate redmine:plugins:migrate
+          bundle exec rake db:test:prepare
+
+      - name: Install rspec file
+        working-directory: redmine
+        run: |
+          mkdir spec
+          cp plugins/redmine_git_hosting/spec/root_spec_helper.rb spec/spec_helper.rb
+
+      # run tests
+      - name: Run tests
+        working-directory: redmine
+        env:
+          RAILS_ENV: test
+          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+        run: bundle exec rake redmine_git_hosting:ci:all
+
+      - name: Run uninstall test
+        working-directory: redmine
+        env:
+          RAILS_ENV: test
+          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+        run: bundle exec rake redmine:plugins:migrate NAME=redmine_git_hosting VERSION=0

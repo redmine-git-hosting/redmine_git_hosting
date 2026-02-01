@@ -55,4 +55,16 @@ module RedmineGitHosting
        url: 'http://redmine-git-hosting.io/how-to/',
        admin: true }]
   end
+
+  def old_redmine?
+    Gem::Version.new(Redmine::VERSION) < Gem::Version.new("6.0.0")
+  end
+
+  def old_additionals?
+    if old_redmine?
+      true
+    else
+      Gem::Version.new(Additionals::VERSION) < Gem::Version.new("4.2.0")
+    end
+  end
 end

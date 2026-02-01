@@ -11,7 +11,13 @@ module RedmineGitHosting
           before_action :set_current_tab, only: :edit
 
           helper :git_hosting
-          helper :additionals_clipboardjs
+
+          if RedmineGitHosting.old_additionals?
+            helper :additionals_clipboardjs
+          else
+            helper :additionals_clipboard
+          end
+
           helper :watchers
 
           # Load ExtendRepositoriesHelper so we can call our

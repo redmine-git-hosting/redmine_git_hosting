@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GithubIssue < ActiveRecord::Base
+class GithubIssue < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   ## Relations
   belongs_to :issue
 

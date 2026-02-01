@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryProtectedBranche < ActiveRecord::Base
+class RepositoryProtectedBranche < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
   VALID_PERMS  = ['RW+', 'RW', 'R', '-'].freeze
   DEFAULT_PERM = 'RW+'

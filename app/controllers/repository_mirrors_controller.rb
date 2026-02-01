@@ -6,7 +6,11 @@ class RepositoryMirrorsController < RedmineGitHostingController
 
   accept_api_auth :index, :show
 
-  helper :additionals_clipboardjs
+  if RedmineGitHosting.old_additionals?
+    helper :additionals_clipboardjs
+  else
+    helper :additionals_clipboard
+  end
 
   def index
     @repository_mirrors = @repository.mirrors.sorted

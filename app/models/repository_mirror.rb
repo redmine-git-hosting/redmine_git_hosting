@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RepositoryMirror < ActiveRecord::Base
+class RepositoryMirror < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
 
   PUSHMODE_MIRROR       = 0

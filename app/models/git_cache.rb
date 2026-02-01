@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GitCache < ActiveRecord::Base
+class GitCache < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
 
   CACHE_ADAPTERS = [%w[Database database],
