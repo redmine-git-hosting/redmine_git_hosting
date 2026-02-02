@@ -13,7 +13,7 @@ module RedmineGitHosting
         end
 
         def ssh_key
-          @ssh_key ||= object_id.symbolize_keys
+          @ssh_key ||= rails_object_id.symbolize_keys
         end
       end
     end

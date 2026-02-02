@@ -5,18 +5,18 @@ module RedmineGitHosting
     class Base
       include RedmineGitHosting::GitoliteAccessor::Methods
 
-      attr_reader :admin, :object_id, :options, :gitolite_config
+      attr_reader :admin, :rails_object_id, :options, :gitolite_config
 
-      def initialize(admin, object_id, **options)
+      def initialize(admin, rails_object_id, **options)
         @admin           = admin
-        @object_id       = object_id
+        @rails_object_id = rails_object_id
         @options         = options
         @gitolite_config = admin.config
       end
 
       class << self
-        def call(admin, object_id, **options)
-          new(admin, object_id, **options).call
+        def call(admin, rails_object_id, **options)
+          new(admin, rails_object_id, **options).call
         end
 
         def inherited(klass)

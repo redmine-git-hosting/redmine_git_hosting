@@ -13,7 +13,7 @@ module RedmineGitHosting
         end
 
         def repository
-          @repository ||= Repository.find_by id: object_id
+          @repository ||= Repository.find_by id: rails_object_id
         end
 
         def create_repository

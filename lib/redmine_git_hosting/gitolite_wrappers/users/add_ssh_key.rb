@@ -13,7 +13,7 @@ module RedmineGitHosting
         end
 
         def ssh_key
-          @ssh_key ||= GitolitePublicKey.find_by id: object_id
+          @ssh_key ||= GitolitePublicKey.find_by id: rails_object_id
         end
       end
     end

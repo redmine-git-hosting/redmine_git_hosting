@@ -23,7 +23,7 @@ module RedmineGitHosting
 
         def projects
           @projects ||=
-            case object_id
+            case rails_object_id
             when 'all'
               Project.includes(:repositories).all
             when 'active'
@@ -31,7 +31,7 @@ module RedmineGitHosting
             when 'active_or_closed'
               Project.active_or_closed.includes(:repositories).all
             else
-              object_id.map { |project_id| Project.find_by id: project_id }
+              rails_object_id.map { |project_id| Project.find_by id: project_id }
             end
         end
 
