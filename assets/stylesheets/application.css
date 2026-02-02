@@ -144,7 +144,7 @@ STATISTICS
   width: 300px;
 }
 
-[class*="span"] {
+[class*="span"]:not(body) {
   float: left;
   margin-left: 20px;
   min-height: 1px;
