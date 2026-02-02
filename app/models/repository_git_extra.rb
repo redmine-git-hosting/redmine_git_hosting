@@ -2,11 +2,12 @@
 
 class RepositoryGitExtra < RedmineGitHosting.old_redmine? ? ActiveRecord::Base : ApplicationRecord
   include Redmine::SafeAttributes
+  include Redmine::I18n
 
-  SMART_HTTP_OPTIONS = [[I18n.t(:label_disabled), '0'],
-                        [I18n.t(:label_http_only), '3'],
-                        [I18n.t(:label_https_only), '1'],
-                        [I18n.t(:label_https_and_http), '2']].freeze
+  SMART_HTTP_OPTIONS = [[l(:label_disabled), '0'],
+                        [l(:label_http_only), '3'],
+                        [l(:label_https_only), '1'],
+                        [l(:label_https_and_http), '2']].freeze
 
   ALLOWED_URLS = %w[ssh http https go git git_annex].freeze
 
