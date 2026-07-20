@@ -49,16 +49,23 @@ module RedmineGitHosting
         def time_limit
           return if max_cache_time.to_i.negative? # No expiration needed
 
-          current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.zone.now
+          current_time = utc_default_timezone? ? Time.now.utc : Time.zone.now
           current_time - max_cache_time
         end
 
         def valid_cache_entry?(cached_entry_date)
           return true if max_cache_time.to_i.negative? # No expiration needed
 
-          current_time = ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.zone.now
+          current_time = utc_default_timezone? ? Time.now.utc : Time.zone.now
           expired = current_time.to_i - cached_entry_date.to_i > max_cache_time
           !expired
+        end
+
+        def utc_default_timezone?
+          # +ActiveRecord::Base.default_timezone+ was removed in Rails 7 and
+          # replaced by +ActiveRecord.default_timezone+.
+          timezone = ActiveRecord.respond_to?(:default_timezone) ? ActiveRecord.default_timezone : ActiveRecord::Base.default_timezone
+          timezone == :utc
         end
       end
     end
