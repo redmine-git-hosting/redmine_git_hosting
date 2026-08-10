@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   mount Grack::Bundle.new({}),
         at: RedmineGitHosting::Config.http_server_subdir,
         constraints: ->(request) { %r{[-/\w.]+\.git/}.match request.path_info },
-        via: %i[get post]
+        via: %i[get post put]
 
   # Post Receive Hooks
   mount Hrack::Bundle.new({}), at: 'githooks/post-receive/:type/:projectid', via: [:post]
