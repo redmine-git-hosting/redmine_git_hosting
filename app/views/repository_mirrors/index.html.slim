@@ -53,7 +53,7 @@ div
 
   div style='margin: 2px 3px; width: 99%;'
     div
-      = clipboardjs_button_for 'mirror_pubkey'
+      = 'mirror_pubkey'
 
       span style='margin-left: 10px;'
         = l :label_mirror_help
@@ -62,6 +62,6 @@ div
     .git_hosting_spacer
 
     textarea#mirror_pubkey readonly='readonly' style='height: 100px; width: 99%; font-family: sans-serif;'
-      = RedmineGitHosting::Config.mirroring_public_key
+      = render_text_with_clipboard RedmineGitHosting::Config.mirroring_public_key
 
   .git_hosting_spacer

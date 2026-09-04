@@ -22,8 +22,7 @@ class RepositoryPresenter < SimpleDelegator
     tag.div class: 'git_url_box', id: urls_container_id do
       render_git_urls +
         render_git_url_text +
-        render_permissions +
-        render_clipboard_button
+        render_permissions
     end
   end
 
@@ -46,15 +45,11 @@ class RepositoryPresenter < SimpleDelegator
   end
 
   def render_git_url_text
-    tag.input '', class: 'git_url_text', id: url_text_container_id, readonly: 'readonly'
+    tag.input class: 'git_url_text', id: url_text_container_id, readonly: 'readonly'
   end
 
   def render_permissions
     tag.div tag.span('', id: permissions_container_id), class: 'git_url_permissions'
-  end
-
-  def render_clipboard_button
-    clipboardjs_button_for url_text_container_id
   end
 
   def committer_label(value)
