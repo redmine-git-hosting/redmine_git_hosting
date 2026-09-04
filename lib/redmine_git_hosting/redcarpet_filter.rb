@@ -2,8 +2,8 @@
 
 require 'html/pipeline/filter'
 require 'html/pipeline/text_filter'
-require 'redcarpet'
 require 'rouge'
+require 'redcarpet'
 require 'rouge/plugins/redcarpet'
 
 module RedmineGitHosting

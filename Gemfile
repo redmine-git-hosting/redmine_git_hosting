@@ -35,6 +35,13 @@ gem 'rack-parser', require: 'rack/parser'
 # gem 'sidekiq', '<7'
 gem 'sshkey'
 
+# HTML pipeline and sanitization
+gem "html-pipeline", "~> 2.13.2"
+gem "sanitize", "~> 7.0"
+
+# Markdown support
+gem 'redcarpet', '~> 3.6.0'
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
