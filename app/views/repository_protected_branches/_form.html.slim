@@ -14,7 +14,7 @@
     .row
       .col-md-6
         h4
-          = font_awesome_icon 'fas_user', post_text: l(:label_user_plural), class: 'fa-lg'
+          = additionals_icon 'fas_user', post_text: l(:label_user_plural), class: 'fa-lg'
 
         - @project.users_available.each do |user|
           p style='padding: 0px;'
@@ -25,7 +25,7 @@
 
       .col-md-6
         h4
-          = font_awesome_icon 'fas_users', post_text: l(:label_group_plural), class: 'fa-lg'
+          = additionals_icon 'fas_users', post_text: l(:label_group_plural), class: 'fa-lg'
 
         - @project.groups_available.each do |group|
           p style= 'padding: 0px;'

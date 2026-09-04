@@ -55,7 +55,7 @@ module ExtendRepositoriesHelper
   end
 
   def icon_for_url_type(url_type)
-    font_awesome_icon RepositoryGitExtra::URLS_ICONS[url_type][:icon]
+    additionals_icon RepositoryGitExtra::URLS_ICONS[url_type][:icon]
   end
 
   def label_for_url_type(url_type)

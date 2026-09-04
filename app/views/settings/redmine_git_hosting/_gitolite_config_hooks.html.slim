@@ -2,7 +2,7 @@
 - gitolite_hooks_url = RedmineGitHosting::Config.get_setting :gitolite_hooks_url
 
 .contextual
-  = link_to font_awesome_icon('fas_rocket', post_text: l(:label_install_gitolite_hooks), class: 'fa-lg'),
+  = link_to additionals_icon('fas_rocket', post_text: l(:label_install_gitolite_hooks), class: 'fa-lg'),
             install_gitolite_hooks_path('redmine_git_hosting'),
             remote: true
 
