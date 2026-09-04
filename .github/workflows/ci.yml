@@ -21,7 +21,7 @@ jobs:
           # we must follow "additionals" Redmine plugin version constraints
           # see: https://github.com/alphanodes/additionals/blob/main/CHANGELOG.md
           # [redmine_version, additionals_version]
-          - ['7.0-stable', '4.6.0']
+          - ['7.0-stable', '2e896b154cda01b6b259a321925bb662ba2046f5'] # The hash should be additionnals 4.6.0
         db:
           - 'postgres'
           - 'mysql'
