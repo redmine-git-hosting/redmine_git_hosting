@@ -13,48 +13,19 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '3.4'
-          - '3.3'
           - '3.2'
-          - '3.1'
-          - '3.0'
+          - '3.3'
+          - '3.4'
+          - '4.0'
         redmine:
           # we must follow "additionals" Redmine plugin version constraints
           # see: https://github.com/alphanodes/additionals/blob/main/CHANGELOG.md
           # [redmine_version, additionals_version]
-          - ['5.0-stable', '3.2.0']
-          - ['5.1-stable', '3.4.0']
-          - ['6.0-stable', '4.0.0']
-          - ['6.1-stable', '4.3.0']
+          - ['7.0-stable', '4.6.0']
         db:
           - 'postgres'
           - 'mysql'
 
-        exclude:
-          - ruby: '3.4'
-            redmine: ['5.0-stable', '3.2.0']
-          - ruby: '3.4'
-            redmine: ['5.1-stable', '3.4.0']
-          - ruby: '3.4'
-            redmine: ['6.0-stable', '4.0.0']
-
-          - ruby: '3.3'
-            redmine: ['5.0-stable', '3.2.0']
-          - ruby: '3.3'
-            redmine: ['5.1-stable', '3.4.0']
-
-          - ruby: '3.2'
-            redmine: ['5.0-stable', '3.2.0']
-
-          - ruby: '3.1'
-            redmine: ['6.1-stable', '4.3.0']
-
-          - ruby: '3.0'
-            redmine: ['5.1-stable', '3.4.0']
-          - ruby: '3.0'
-            redmine: ['6.0-stable', '4.0.0']
-          - ruby: '3.0'
-            redmine: ['6.1-stable', '4.3.0']
 
     services:
       postgres:
@@ -162,10 +133,8 @@ jobs:
       # configure ruby dependencies
       - name: Setup Ruby dependencies
         working-directory: redmine
-        if: matrix.redmine[0] == '6.0-stable' || matrix.redmine[0] == '6.1-stable'
         run: |
           echo "gem 'observer'" > Gemfile.local
-          echo "gem 'redcarpet'" >> Gemfile.local
 
       - name: Setup Bundler
         working-directory: redmine

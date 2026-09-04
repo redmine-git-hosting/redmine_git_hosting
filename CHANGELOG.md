@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0 - 2026-XX-XX
+
+### BREAKING CHANGE
+
+- Redmine 7.0+ is required
+- additionals 4.6.0 is required for https://github.com/alphanodes/additionals/commit/1281a2758539a5146020440c986c306f4bcc2c33
+
 ## 6.0.1 - 2022-11-04
 
 ### Changed
